@@ -1,5 +1,4 @@
 include(GenerateExportHeader)
-add_compiler_export_flags()
 
 if(MGL_HAVE_FLTK)
 	mgl_add_lib(fltk fltk.cpp ../include/mgl2/fltk.h)

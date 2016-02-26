@@ -43,7 +43,6 @@ if(MGL_HAVE_OPENGL)
 endif(MGL_HAVE_OPENGL)
 
 include(GenerateExportHeader)
-add_compiler_export_flags()
 mgl_add_lib(mgl ${mgl_src} ${mgl_hdr})
 generate_export_header(mgl EXPORT_FILE_NAME ../include/mgl2/dllexport.h)
 

@@ -1,5 +1,4 @@
 include(GenerateExportHeader)
-add_compiler_export_flags()
 
 if(enable-qt5)
 	include(../../cmake-qt5.txt)

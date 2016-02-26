@@ -6,6 +6,9 @@ endif()
 project( MathGL )
 
 set(MGL_DEP_LIBS)
+set(CMAKE_C_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are:
@@ -262,7 +265,7 @@ int main(int argc, char *args[]) {
 int ch = getopt(argc, args, \"1:2:3:4:5:6:7:8:9:hno:L:C:A:s:S:q:\"); return 0; }" MGL_HAVE_GETOPT)
 if(NOT MGL_HAVE_GETOPT)
 	include_directories(${MathGL_SOURCE_DIR}/addons/getopt)
-	set(getopt_lib getopt)
+	set(getopt_lib-static getopt-static)
 endif(NOT MGL_HAVE_GETOPT)
 
 if(enable-double)

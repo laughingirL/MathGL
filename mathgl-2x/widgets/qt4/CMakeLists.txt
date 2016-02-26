@@ -1,5 +1,4 @@
 include(GenerateExportHeader)
-add_compiler_export_flags()
 
 if(enable-qt4)
 	include(../../cmake-qt4.txt)

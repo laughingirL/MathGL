@@ -1,14 +1,19 @@
 add_executable(make_pas make_pas.cpp)
 
 add_executable(mglconv mglconv.cpp)
-target_link_libraries(mglconv mgl ${getopt_lib})
+if(MSVC)
+set(link_type -static)
+else(MSVC)
+set(link_type)
+endif(MSVC)
+target_link_libraries(mglconv mgl${link_type} ${getopt_lib-static})
 install(
 	TARGETS mglconv
 	RUNTIME DESTINATION bin
 )
 
 add_executable(mgl.cgi mglcgi.cpp)
-target_link_libraries(mgl.cgi mgl)
+target_link_libraries(mgl.cgi mgl${link_type})
 install(
 	TARGETS mgl.cgi
 # should be /usr/lib/cgi-bin/
@@ -19,11 +24,11 @@ if(QT_ENABLED)
 	add_executable(mglview mglview.cpp)
 	if(enable-qt5)
 		include(../cmake-qt5.txt)
-		target_link_libraries(mglview mgl-qt5 ${getopt_lib})
+		target_link_libraries(mglview mgl-qt5${link_type} ${getopt_lib-static})
 		qt5_use_modules(mglview ${MGL_QT5_LIBS})
 	else(enable-qt5)
 		include(../cmake-qt4.txt)
-		target_link_libraries(mglview mgl-qt4 ${getopt_lib})
+		target_link_libraries(mglview mgl-qt4${link_type} ${getopt_lib-static})
 		qt4_use_modules(mglview ${MGL_QT4_LIBS})
 	endif(enable-qt5)
 
