@@ -319,7 +319,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 				case 'P':	mgl_printf(fp, gz, "np %g %g mt m_P %sdr\n",x0,y0,str);	break;
 				case 'X':	mgl_printf(fp, gz, "np %g %g mt m_X %sdr\n",x0,y0,str);	break;
 				case 'C':	mgl_printf(fp, gz, "%g %g m_o %g %g m_c %sdr\n",x0,y0,x0,y0,str);	break;
-				default:	mgl_printf(fp, gz, "%g %g m_c %sfill\n",x0,y0,str);
+				case '.':	mgl_printf(fp, gz, "%g %g m_c %sfill\n",x0,y0,str);
 			}
 		}
 		else if(q.type==3)	// quad
@@ -497,7 +497,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			case '*':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g\"/>\n",
 							x-s,y,x+s,y,x-0.6*s,y-0.8*s,x+0.6*s,y+0.8*s,x+0.6*s,y-0.8*s,x-0.6*s,y+0.8*s);	break;
-			default:
+			case '.':
 				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n",
 							int(cp.r[0]),int(cp.r[1]),int(cp.r[2]),x,y);	break;
 			}

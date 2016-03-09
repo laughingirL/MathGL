@@ -1,3 +1,11 @@
+2.3.4.1 Released 14 March
+
+* Compatibility changes for MS VisualStudio, MacOS, Win64.
+* Bugfix for legend export into EPS and SVG.
+* Improve Surf3*() drawing.
+* Force NAN if divided by 0 in formulas.
+
+
 2.3.4 Released 13 February 2016
 
 * Add mglData::Pulse() for determining pulse parameters.
