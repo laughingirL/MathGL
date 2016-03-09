@@ -357,8 +357,8 @@ void Fl_MGLView::exec_pause()
 	}
 	if(mutex)
 	{
-		if(pauseC)	pthread_mutex_trylock(mutex);
-		else	pthread_mutex_unlock(mutex);
+		pthread_mutex_trylock(mutex);
+		if(!pauseC)	pthread_mutex_unlock(mutex);
 	}
 #endif
 }

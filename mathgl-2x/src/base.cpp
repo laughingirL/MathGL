@@ -135,6 +135,8 @@ mglBase::mglBase()
 	Pnt.set_mutex(lockClf);
 	Prm.set_mutex(lockClf);
 //	Txt.set_mutex(&lockClf);
+#else
+	lockClf = NULL;
 #endif
 	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
 	AMin.Set(0,0,0,0);	AMax.Set(1,1,1,1);
