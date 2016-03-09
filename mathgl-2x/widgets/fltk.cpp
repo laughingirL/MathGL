@@ -175,6 +175,14 @@ void Fl_MathGL::update()
 		const char *buf = mgl_get_mess(gr);
 		if(*buf)	fl_message("%s",buf);
 	}
+	else if(mgl_get_num_frame(gr)>0)
+	{
+		mgl_set_alpha(gr,flag&1);	mgl_set_light(gr,flag&2);
+		if(tet_val)	tet = tet_val->value();
+		if(phi_val)	phi = phi_val->value();
+		mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,-phi,-tet,0);
+		mgl_get_frame(gr,0);
+	}
 	if(mgl_get_width(gr)!=w() || mgl_get_height(gr)!=h())
 		size(mgl_get_width(gr), mgl_get_height(gr));
 	gr->AskStop(false);	redraw();

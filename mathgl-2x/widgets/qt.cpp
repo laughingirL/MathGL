@@ -332,6 +332,12 @@ void QMathGL::update()
 		setlocale(LC_NUMERIC, "");
 		gr->AskStop(false);	afterPlot();
 	}
+	else if(mgl_get_num_frame(gr)>0)
+	{
+		mgl_set_alpha(gr,alpha);	mgl_set_light(gr,light);
+//		mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,-phi,-tet,0);
+		mgl_get_frame(gr,0);	afterPlot();
+	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::afterPlot()

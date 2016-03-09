@@ -145,6 +145,8 @@ int main(int argc,char **argv)
 	case '3':	gr = new mglQT(sample_3,"3D plots");	break;
 	case 'd':	gr = new mglQT(sample_d,"Dual plots");	break;
 	case 't':	gr = new mglQT(test_wnd,"Testing");	break;
+	case 'f':	gr = new mglQT("Frame drawing");
+				gr->NewFrame();	gr->Box();	gr->EndFrame();	break;
 #if MGL_HAVE_PTHR_WIDGET
 	case 'm':	gr = new mglQT(&dr,"Multi-threading test");
 	dr.SetWnd(gr);	dr.Run();	break;

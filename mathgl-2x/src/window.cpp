@@ -86,20 +86,24 @@ void mglCanvasWnd::DelFrame(long i)
 //-----------------------------------------------------------------------------
 void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, void (*reload)(void *p))
 {
-	ResetFrames();
-	if(get(MGL_CLF_ON_UPD))	DefaultPlotParam();
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
-	// use frames for quickly redrawing while adding/changing primitives
-	if(mgl_is_frames(this))	NewFrame();
+	if(draw)
+	{
+		ResetFrames();
+		if(get(MGL_CLF_ON_UPD))	DefaultPlotParam();
+		const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+		// use frames for quickly redrawing while adding/changing primitives
+		if(mgl_is_frames(this))	NewFrame();
 
-	int n = draw ? draw(this,par) : 0;
-	if(n<NumFig && n>=0)	NumFig = n;
-	DrawFunc = draw;		FuncPar = par;
-	LoadFunc = reload;
+		int n = draw(this,par);
+		if(n<NumFig && n>=0)	NumFig = n;
+		DrawFunc = draw;		FuncPar = par;
+		LoadFunc = reload;
 
-	if(mgl_is_frames(this))	EndFrame();
-	if(n>=0)	SetCurFig(0);
-	setlocale(LC_NUMERIC, loc.c_str());
+		if(mgl_is_frames(this))	EndFrame();
+		if(n>=0)	SetCurFig(0);
+		setlocale(LC_NUMERIC, loc.c_str());
+	}
+	else	LoadFunc = 0;
 }
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvasWnd::GetBits()
