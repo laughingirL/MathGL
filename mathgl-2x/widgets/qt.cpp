@@ -330,14 +330,15 @@ void QMathGL::update()
 		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
 		if(mgl_is_frames(gr))	mgl_end_frame(gr);
 		setlocale(LC_NUMERIC, "");
-		gr->AskStop(false);	afterPlot();
+		gr->AskStop(false);
 	}
 	else if(mgl_get_num_frame(gr)>0)
 	{
 		mgl_set_alpha(gr,alpha);	mgl_set_light(gr,light);
 //		mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,-phi,-tet,0);
-		mgl_get_frame(gr,0);	afterPlot();
+		mgl_get_frame(gr,0);
 	}
+	afterPlot();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::afterPlot()

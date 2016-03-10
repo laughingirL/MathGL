@@ -125,7 +125,9 @@ int main(int argc,char **argv)
 	else	printf("You may specify argument '1', '2', '3', 'd' for viewing examples of 1d, 2d, 3d, dual plotting,\nor 'm' for multi-threading sample.\n");
 	switch(key)
 	{
-	case '0':	gr = new mglFLTK((mglDraw *)NULL,"1D plots");	break;
+	case '0':	gr = new mglFLTK((mglDraw *)NULL,"1D plots");
+				gr->Rotate(40,60);	gr->Box();	gr->Light(true);
+				gr->FSurf("sin(4*pi*x*y)");	gr->Update();	break;
 	case '1':	gr = new mglFLTK(sample_1,"1D plots");	break;
 	case '2':	gr = new mglFLTK(sample_2,"2D plots");	break;
 	case '3':	gr = new mglFLTK(sample_3,"3D plots");	break;
@@ -139,8 +141,6 @@ int main(int argc,char **argv)
 #endif
 	default:	gr = new mglFLTK(sample,"Drop and waves");	break;
 	}
-	if(key=='0')
-	{	gr->Rotate(40,60);	gr->Box();	gr->Light(true);	gr->FSurf("sin(4*pi*x*y)");	gr->Update();	}
 	gr->Run();	return 0;
 }
 #endif

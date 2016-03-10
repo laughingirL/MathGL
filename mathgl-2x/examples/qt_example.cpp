@@ -139,12 +139,14 @@ int main(int argc,char **argv)
 	else	printf("You may specify argument '1', '2', '3', 'd' for viewing examples of 1d, 2d, 3d, dual plotting,\nor 'm' for multi-threading sample.\n");
 	switch(key)
 	{
-	case '0':	gr = new mglQT((mglDraw *)NULL,"1D plots");	break;
+	case '0':	gr = new mglQT((mglDraw *)NULL,"1D plots");
+				gr->Rotate(40,60);	gr->Box();	gr->Light(true);
+				gr->FSurf("sin(4*pi*x*y)");	gr->Update();	break;
 	case '1':	gr = new mglQT(sample_1,"1D plots");	break;
 	case '2':	gr = new mglQT(sample_2,"2D plots");	break;
 	case '3':	gr = new mglQT(sample_3,"3D plots");	break;
 	case 'd':	gr = new mglQT(sample_d,"Dual plots");	break;
-	case 't':	gr = new mglQT(test_wnd,"Testing");	break;
+	case 't':	gr = new mglQT(test_wnd,"Testing");		break;
 	case 'f':	gr = new mglQT("Frame drawing");
 				gr->NewFrame();	gr->Box();	gr->EndFrame();	break;
 #if MGL_HAVE_PTHR_WIDGET
@@ -153,8 +155,6 @@ int main(int argc,char **argv)
 #endif
 	default: 	gr = new mglQT(sample,"Drop and waves");	break;
 	}
-	if(key=='0')
-	{	gr->Rotate(40,60);	gr->Box();	gr->Light(true);	gr->FSurf("sin(4*pi*x*y)");	gr->Update();	}
 	gr->Run();	return 0;
 }
 #endif
