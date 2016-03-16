@@ -1,6 +1,6 @@
 /***************************************************************************
  * exec.cpp is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -3411,6 +3411,16 @@ int mgls_ifs3d(mglGraph *, long, mglArg *a, const char *k, const char *)
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int mgls_ifsfile(mglGraph *, long, mglArg *a, const char *k, const char *)
+{
+	mglData *f = dynamic_cast<mglData*>(a[0].d);
+	if(!f)	return 1;
+	int res = 0;
+	if (!strcmp(k, "dssn"))	f->Set(mglIFSfile(a[1].s.c_str(), a[2].s.c_str(), mgl_int(a[3].v)));
+	else if (!strcmp(k, "dssnn"))	f->Set(mglIFSfile(a[1].s.c_str(), a[2].s.c_str(), mgl_int(a[3].v), mgl_int(a[4].v)));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{"addlegend","Add legend entry","addlegend 'txt' 'fmt'", mgls_addlegend,15},
 	{"addto","Add data or number","addto Var Dat|Var num", mgls_addto ,3},
@@ -3541,6 +3551,7 @@ mglCommand mgls_base_cmd[] = {
 	{"if","Conditional operator","if val|Dat ['cond']", 0, 6},
 	{"ifs2d", "Computes the attractor of an IFS", "ifs2d F A n [skip]|Fx Fy A n [skip]", mgls_ifs2d, 4},
 	{"ifs3d", "Computes the attractor of an IFS for 3d case", "ifs3d F A n [skip]", mgls_ifs3d, 4},
+	{"ifsfile", "Computes the attractor of an IFS with parameters from *.ifs file", "ifsfile F 'fname' 'name' n [skip]", mgls_ifsfile, 4},
 	{"import","Import data from PNG picture","import Dat 'fname' 'scheme' [v1 v2]", mgls_import ,4},
 	{"info","Print message or information about the data","info Dat [detail]|'message'|const", mgls_info ,3},
 	{"inplot","Set position of plot in picture","x1 x2 y1 y2 [rel]", mgls_inplot ,5},

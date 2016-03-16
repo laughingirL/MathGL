@@ -1,6 +1,6 @@
 /***************************************************************************
  * data_cf.h is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -201,6 +201,9 @@ uintptr_t MGL_EXPORT mgl_data_ifs_2d_(uintptr_t *A, long *n, long *skip);
 /** NOTE: A.nx must be >= 13. */
 HMDT MGL_EXPORT mgl_data_ifs_3d(HCDT A, long n, long skip);
 uintptr_t MGL_EXPORT mgl_data_ifs_3d_(uintptr_t *A, long *n, long *skip);
+/// Get array which is n-th points {x[i],y[i],z[i]} for iterated function system (fractal) defined in *.ifs file 'fname' and named as 'name'
+HMDT MGL_EXPORT mgl_data_ifs_file(const char *fname, const char *name, long n, long skip);
+uintptr_t mgl_data_ifs_file_(const char *fname, const char *name, long *n, long *skip,int l,int m);
 
 /// Returns pointer to data element [i,j,k]
 MGL_EXPORT mreal *mgl_data_value(HMDT dat, long i,long j,long k);

@@ -2695,7 +2695,7 @@ There is difference in indirect access functions. Function @ref{subdata} use use
 subplot 1 1 0 '':title 'SubData vs Evaluate'
 new in 9 'x^3/1.1':plot in 'ko ':box
 new arg 99 '4*x+4'
-evaluate e in arg:plot e 'b.'; legend 'Evaluate'
+evaluate e in arg off:plot e 'b.'; legend 'Evaluate'
 subdata s in arg:plot s 'r.';legend 'SubData'
 legend 2
 @end verbatim

@@ -1,6 +1,6 @@
 /***************************************************************************
  * samples.cpp is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -105,7 +105,7 @@ void smgl_refill(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_indirect="subplot 1 1 0 '':title 'SubData vs Evaluate'\n"
 "new in 9 'x^3/1.1':plot in 'ko ':box\nnew arg 99 '4*x+4'\n"
-"evaluate e in arg:plot e 'b.'; legend 'Evaluate'\n"
+"evaluate e in arg off:plot e 'b.'; legend 'Evaluate'\n"
 "subdata s in arg:plot s 'r.';legend 'SubData'\nlegend 2";
 void smgl_indirect(mglGraph *gr)
 {
@@ -113,7 +113,7 @@ void smgl_indirect(mglGraph *gr)
 	mglData in(9), arg(99), e, s;
 	gr->Fill(in,"x^3/1.1");	gr->Fill(arg,"4*x+4");
 	gr->Plot(in,"ko ");		gr->Box();
-	e = in.Evaluate(arg);	gr->Plot(e,"b.","legend 'Evaluate'");
+	e = in.Evaluate(arg,false);	gr->Plot(e,"b.","legend 'Evaluate'");
 	s = in.SubData(arg);	gr->Plot(s,"r.","legend 'SubData'");
 	gr->Legend(2);
 }

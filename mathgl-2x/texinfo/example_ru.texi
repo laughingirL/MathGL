@@ -3899,7 +3899,7 @@ int sample(mglGraph *gr)
   mglData in(9), arg(99), e, s;
   gr->Fill(in,"x^3/1.1"); gr->Fill(arg,"4*x+4");
   gr->Plot(in,"ko ");     gr->Box();
-  e = in.Evaluate(arg);   gr->Plot(e,"b.","legend 'Evaluate'");
+  e = in.Evaluate(arg,false); gr->Plot(e,"b.","legend 'Evaluate'");
   s = in.SubData(arg);    gr->Plot(s,"r.","legend 'SubData'");
   gr->Legend(2);
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
  * cont.cpp is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -411,14 +411,14 @@ void MGL_EXPORT mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const c
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	mglDataV zz(n, m);
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 	{
 		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 		mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
-		zz.Fill(z0,z0);
+		mglDataV zz(n, m);	zz.Fill(z0,z0);
 		mgl_cont_gen(gr,v0,z,x,y,&zz,gr->GetC(s,v0),text,j);
 	}
 	gr->EndGroup();
@@ -526,21 +526,20 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContFGen");	return;	}
 
-	register long i,j;
 	gr->Reserve(8*n*m);
 	long *kk = new long[4*n], l1,l2, r1,r2, t1,t2, u1,u2, b1,b2, d1,d2, p[8],num;
 	memset(kk,-1,2*n*sizeof(long));
-	for(i=0;i<n-1;i++)	// add intersection points for first line
+	for(long i=0;i<n-1;i++)	// add intersection points for first line
 	{
 		mgl_add_range(gr,a,x,y,z, i,0,1,0, c,u1,u2, ak,v1,v2);
 		kk[4*i]=u1;		kk[4*i+1]=u2;
 		mgl_add_edges(gr,a,x,y,z, i,0,1,0, c,d1,d2, ak,v1,v2);
 		kk[4*i+2]=d1;		kk[4*i+3]=d2;
 	}
-	for(j=1;j<m;j++)	// add intersection points
+	for(long j=1;j<m;j++)	// add intersection points
 	{
 		mgl_add_range(gr,a,x,y,z, 0,j-1,0,1, c,r1,r2, ak,v1,v2);
-		for(i=0;i<n-1;i++)
+		for(long i=0;i<n-1;i++)
 		{
 			l1 = r1;		l2 = r2;	num=0;
 			t1 = kk[4*i];	t2 = kk[4*i+1];
@@ -681,14 +680,14 @@ void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	mglDataV zz(n, m);
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx()-1;i++)	for(long j=0;j<z->GetNz();j++)
 	{
 		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 		mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
-		zz.Fill(z0,z0);
+		mglDataV zz(n, m);	zz.Fill(z0,z0);
 		mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,gr->GetC(s,v0),j);
 	}
 	gr->EndGroup();
@@ -782,14 +781,14 @@ void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	}
 	// x, y -- have the same size z
 	mreal dc = nc>1 ? 1/(MGL_FEPSILON*(nc-1)) : 0;
-	mglDataV zz(n, m);
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx()-1;i++)	for(long j=0;j<z->GetNz();j++)
 	{
 		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 		mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
-		zz.Fill(z0,z0);
+		mglDataV zz(n, m);	zz.Fill(z0,z0);
 		mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,s+i*dc,j);
 	}
 	gr->EndGroup();
@@ -891,13 +890,13 @@ void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	mglDataV zz(n, m);
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 	{
 		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 		mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)	z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
-		zz.Fill(z0,z0);
+		mglDataV zz(n, m);	zz.Fill(z0,z0);
 		mreal dv = (gr->Max.c-gr->Min.c)/8;
 		if(i>0)	dv = v->v(i-1)-v->v(i);
 		else if(i<v->GetNx()-1)	dv = v->v(i)-v->v(i+1);
@@ -1070,6 +1069,7 @@ void MGL_EXPORT mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT 
 
 	_mgl_slice s;
 	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
 		register mreal v0 = v->v(i);
@@ -1234,6 +1234,7 @@ void MGL_EXPORT mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT
 	long ss=gr->AddTexture(sch);
 	_mgl_slice s;
 	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
 		register mreal v0 = v->v(i);
@@ -1458,6 +1459,7 @@ void MGL_EXPORT mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	// x, y -- have the same size z
 	int wire = mglchr(sch,'#')?1:0;
 	if(mglchr(sch,'.'))	wire = 2;
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 	{
 		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}

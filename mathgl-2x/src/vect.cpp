@@ -1,6 +1,6 @@
 /***************************************************************************
  * vect.cpp is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -498,23 +498,24 @@ void MGL_EXPORT mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_
 //	Flow 2d series
 //
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
+void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, HCDT x, HCDT y, HCDT ax, HCDT ay, long ss, bool vv)
 {
-	long n=100*(ax.nx+ax.ny);
-	bool nboth = x.nx*x.ny!=ax.nx*ax.ny || y.nx*y.ny!=ax.nx*ax.ny;
+	long n=100*(ax->GetNx()+ax->GetNy());
+	bool nboth = x->GetNx()*x->GetNy()!=ax->GetNx()*ax->GetNy() || y->GetNx()*y->GetNy()!=ax->GetNx()*ax->GetNy();
 
 	mglPoint *pp = new mglPoint[n], dp;
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
-	mglPoint nx(ax.nx,ax.ny);
+	mglPoint nx(ax->GetNx(),ax->GetNy());
 
-	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=2,acc=dt/20;
+	mreal dt = 0.5/(ax->GetNx() > ax->GetNy() ? ax->GetNx() : ax->GetNy());
+	mreal e,f,g,ff[4],gg[4],h,s=2,acc=dt/20;
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;	v = -v;	s *= -1;}
 	long k=0;
 	bool end = false;
 	if(nboth) do{
 		mglPoint dif;
-		pp[k].x = x.Spline1(dif,u,0,0);	f = ax.Spline1(u,v,0)/dif.x;
-		pp[k].y = y.Spline1(dif,v,0,0);	g = ay.Spline1(u,v,0)/dif.x;
+		pp[k].x = x->Spline1(dif,u,0,0);	f = ax->Spline1(u,v,0)/dif.x;
+		pp[k].y = y->Spline1(dif,v,0,0);	g = ay->Spline1(u,v,0)/dif.x;
 		pp[k].z = zVal;
 		if(mgl_isbad(f+g))	break;
 		else	for(long m=0;m<k-1;m+=10)	// determines encircle
@@ -525,16 +526,16 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
-		x.Spline1(dif,e,0,0);	f = ax.Spline1(e,h,0)/dif.x;
-		y.Spline1(dif,h,0,0);	g = ay.Spline1(e,h,0)/dif.x;
+		x->Spline1(dif,e,0,0);	f = ax->Spline1(e,h,0)/dif.x;
+		y->Spline1(dif,h,0,0);	g = ay->Spline1(e,h,0)/dif.x;
 		h = 1+hypot(f,g);	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		e = u+ff[1]/2;	h = v+gg[1]/2;
-		x.Spline1(dif,e,0,0);	f = ax.Spline1(e,h,0)/dif.x;
-		y.Spline1(dif,h,0,0);	g = ay.Spline1(e,h,0)/dif.x;
+		x->Spline1(dif,e,0,0);	f = ax->Spline1(e,h,0)/dif.x;
+		y->Spline1(dif,h,0,0);	g = ay->Spline1(e,h,0)/dif.x;
 		h = 1+hypot(f,g);	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		e = u+ff[2];	h = v+gg[2];
-		x.Spline1(dif,e,0,0);	f = ax.Spline1(e,h,0)/dif.x;
-		y.Spline1(dif,h,0,0);	g = ay.Spline1(e,h,0)/dif.x;
+		x->Spline1(dif,e,0,0);	f = ax->Spline1(e,h,0)/dif.x;
+		y->Spline1(dif,h,0,0);	g = ay->Spline1(e,h,0)/dif.x;
 		h = 1+hypot(f,g);	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		v += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
@@ -544,9 +545,9 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	else do{
 		mglPoint dif;
 		register mreal xu,xv,yu,yv,det,xx,yy;
-		pp[k].x = x.Spline1(dif,u,v,0);	xu=dif.x;	xv=dif.y;
-		pp[k].y = y.Spline1(dif,u,v,0);	yu=dif.x;	yv=dif.y;
-		xx = ax.Spline1(u,v,0);	yy = ay.Spline1(u,v,0);
+		pp[k].x = x->Spline1(dif,u,v,0);	xu=dif.x;	xv=dif.y;
+		pp[k].y = y->Spline1(dif,u,v,0);	yu=dif.x;	yv=dif.y;
+		xx = ax->Spline1(u,v,0);	yy = ay->Spline1(u,v,0);
 		det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		pp[k].z = zVal;
 		if(mgl_isbad(f+g))	break;
@@ -558,21 +559,21 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
-			x.Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
-			y.Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
-			xx = ax.Spline1(e,h,0);	yy = ay.Spline1(e,h,0);
+			x->Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
+			y->Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
+			xx = ax->Spline1(e,h,0);	yy = ay->Spline1(e,h,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		h = 1+hypot(f,g);	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		e = u+ff[1]/2;	h = v+gg[1]/2;
-			x.Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
-			y.Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
-			xx = ax.Spline1(e,h,0);	yy = ay.Spline1(e,h,0);
+			x->Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
+			y->Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
+			xx = ax->Spline1(e,h,0);	yy = ay->Spline1(e,h,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		h = 1+hypot(f,g);	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		e = u+ff[2];	h = v+gg[2];
-			x.Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
-			y.Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
-			xx = ax.Spline1(e,h,0);	yy = ay.Spline1(e,h,0);
+			x->Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
+			y->Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
+			xx = ax->Spline1(e,h,0);	yy = ay->Spline1(e,h,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		h = 1+hypot(f,g);	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
@@ -583,7 +584,7 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	if(k>1)
 	{
 		long j,a=long(0.3*gr->GetArrowSize()/fabs(dt));
-		gr->Reserve(k);		j = gr->AddPnt(pp[0],pp[0].c);
+		gr->Reserve(k);	j = gr->AddPnt(pp[0],pp[0].c);
 		for(long i=1;i<k;i++)
 		{
 			long jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
@@ -611,32 +612,36 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	// allocate memory
 	mreal zVal = gr->Min.z;
 	bool cnt=!mglchr(sch,'#');
-	mglData xx(x), yy(y), bx(ax), by(ay);
 
+	std::vector<mreal> u, v;
+	for(long i=0;i<num;i++)
+	{
+		mreal t = (i+1.)/(num+1.);
+		u.push_back(0);		v.push_back(t);
+		u.push_back(0);		v.push_back(-t);
+		u.push_back(1);		v.push_back(t);
+		u.push_back(-1);	v.push_back(-t);
+		u.push_back(t);		v.push_back(0);
+		u.push_back(-t);	v.push_back(0);
+		u.push_back(t);		v.push_back(1);
+		u.push_back(-t);	v.push_back(-1);
+		if(cnt)
+		{
+			u.push_back(t);		v.push_back(0.5);
+			u.push_back(-t);	v.push_back(-0.5);
+			u.push_back(0.5);	v.push_back(t);
+			u.push_back(-0.5);	v.push_back(-t);
+		}
+	}
 	for(long k=0;k<ax->GetNz();k++)
 	{
 		if(gr->NeedStop())	break;
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-		for(long i=0;i<num;i++)	for(int s=-1;s<=1;s+=2)
-		{
-			mreal u,v;
-			if(gr->NeedStop())	{	i=num;	s=2;	continue;	}
-			u = 0;	v = (i+1.)/(num+1.);
-			flow(gr, zVal, s*u, s*v, xx, yy, bx, by,ss,vv);
-			u = 1;	v = (i+1.)/(num+1.);
-			flow(gr, zVal, s*u, s*v, xx, yy, bx, by,ss,vv);
-			u = (i+1.)/(num+1.);	v = 0;
-			flow(gr, zVal, s*u, s*v, xx, yy, bx, by,ss,vv);
-			u = (i+1.)/(num+1.);	v = 1;
-			flow(gr, zVal, s*u, s*v, xx, yy, bx, by,ss,vv);
-			if(cnt)
-			{
-				u = 0.5;	v = (i+1.)/(num+1.);
-				flow(gr, zVal, s*u, s*v, xx, yy, bx, by,ss,vv);
-				u = (i+1.)/(num+1.);	v = 0.5;
-				flow(gr, zVal, s*u, s*v, xx, yy, bx, by,ss,vv);
-			}
-		}
+		HMDT bx=mgl_data_subdata(ax,-1,-1,k), by=mgl_data_subdata(ay,-1,-1,k);
+#pragma omp parallel for
+		for(long i=0;i<long(u.size());i++)	if(!gr->NeedStop())
+			flow(gr, zVal, u[i], v[i], x, y, bx, by,ss,vv);
+		mgl_delete_data(bx);	mgl_delete_data(by);
 	}
 	gr->EndGroup();
 }
@@ -701,8 +706,7 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 			v = (j0-(dxu*dy-dx*dyu)/d)/m;
 		}
 	}
-	mglData xx(x), yy(y), bx(ax), by(ay);
-	flow(gr, z0, u, v, xx, yy, bx, by,ss,vv);
+	flow(gr, z0, u, v, x, y, ax, ay,ss,vv);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -729,17 +733,17 @@ void MGL_EXPORT mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, ui
 //	Flow 3d series
 //
 //-----------------------------------------------------------------------------
-void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss,bool vv, bool xo, bool zo)
+void flow(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az,long ss,bool vv, bool xo, bool zo)
 {
-	static long n=100*(ax.nx+ax.ny+ax.nz);
-	long nn = ax.nx*ax.ny*ax.nz;
-	bool nboth = x.nx*x.ny*x.nz!=nn || y.nx*y.ny*y.nz!=nn || z.nx*z.ny*z.nz!=nn;
+	static long n=100*(ax->GetNx()+ax->GetNy()+ax->GetNz());
+	long nn = ax->GetNN();
+	bool nboth = x->GetNN()!=nn || y->GetNN()!=nn || z->GetNN()!=nn;
 	mglPoint *pp = new mglPoint[n], dp;
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
-	mglPoint nx(ax.nx,ax.ny,ax.nz);
+	mglPoint nx(ax->GetNx(),ax->GetNy(),ax->GetNz());
 
-	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
-	nn = (nn > ax.nz ? nn : ax.nz);
+	nn = (ax->GetNx() > ax->GetNy() ? ax->GetNz() : ax->GetNy());
+	nn = (nn > ax->GetNz() ? nn : ax->GetNz());
 	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=2,u1,v1,w1,acc=dt/20;
 	if(u<0 || v<0 || w<0)
 	{	dt = -dt;	u = -u;	v = -v;	w = -w;	s *= -1;}
@@ -747,9 +751,9 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 	bool end = false;
 	if(nboth) do{
 		mglPoint dif;
-		pp[k].x = x.Spline1(dif,u,0,0);	e = ax.Spline1(u,v,w)/dif.x;
-		pp[k].y = y.Spline1(dif,v,0,0);	f = ay.Spline1(u,v,w)/dif.x;
-		pp[k].z = z.Spline1(dif,w,0,0);	g = az.Spline1(u,v,w)/dif.x;
+		pp[k].x = x->Spline1(dif,u,0,0);	e = ax->Spline1(u,v,w)/dif.x;
+		pp[k].y = y->Spline1(dif,v,0,0);	f = ay->Spline1(u,v,w)/dif.x;
+		pp[k].z = z->Spline1(dif,w,0,0);	g = az->Spline1(u,v,w)/dif.x;
 		if(mgl_isbad(e+f+g))	end = true;
 		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
@@ -760,21 +764,21 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
-		x.Spline1(dif,u1,0,0);	e = ax.Spline1(u1,v1,w1)/dif.x;
-		y.Spline1(dif,v1,0,0);	f = ay.Spline1(u1,v1,w1)/dif.x;
-		z.Spline1(dif,w1,0,0);	g = az.Spline1(u1,v1,w1)/dif.x;
+		x->Spline1(dif,u1,0,0);	e = ax->Spline1(u1,v1,w1)/dif.x;
+		y->Spline1(dif,v1,0,0);	f = ay->Spline1(u1,v1,w1)/dif.x;
+		z->Spline1(dif,w1,0,0);	g = az->Spline1(u1,v1,w1)/dif.x;
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[1]=e*dt/h;	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		u1 = u+ee[1]/2;	v1 = v+ff[1]/2;	w1 = w+gg[1]/2;
-		x.Spline1(dif,u1,0,0);	e = ax.Spline1(u1,v1,w1)/dif.x;
-		y.Spline1(dif,v1,0,0);	f = ay.Spline1(u1,v1,w1)/dif.x;
-		z.Spline1(dif,w1,0,0);	g = az.Spline1(u1,v1,w1)/dif.x;
+		x->Spline1(dif,u1,0,0);	e = ax->Spline1(u1,v1,w1)/dif.x;
+		y->Spline1(dif,v1,0,0);	f = ay->Spline1(u1,v1,w1)/dif.x;
+		z->Spline1(dif,w1,0,0);	g = az->Spline1(u1,v1,w1)/dif.x;
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[2]=e*dt/h;	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		u1 = u+ee[2];	v1 = v+ff[2];	w1 = w+gg[2];
-		x.Spline1(dif,u1,0,0);	e = ax.Spline1(u1,v1,w1)/dif.x;
-		y.Spline1(dif,v1,0,0);	f = ay.Spline1(u1,v1,w1)/dif.x;
-		z.Spline1(dif,w1,0,0);	g = az.Spline1(u1,v1,w1)/dif.x;
+		x->Spline1(dif,u1,0,0);	e = ax->Spline1(u1,v1,w1)/dif.x;
+		y->Spline1(dif,v1,0,0);	f = ay->Spline1(u1,v1,w1)/dif.x;
+		z->Spline1(dif,w1,0,0);	g = az->Spline1(u1,v1,w1)/dif.x;
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[3]=e*dt/h;	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ee[0]/6+ee[1]/3+ee[2]/3+ee[3]/6;
@@ -786,10 +790,10 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 	else do{
 		mglPoint dif;
 		register mreal xu,xv,xw,yu,yv,yw,zv,zu,zw,det,xx,yy,zz;
-		pp[k].x = x.Spline1(dif,u,v,w);	xu=dif.x;	xv=dif.y;	xw=dif.z;
-		pp[k].y = y.Spline1(dif,u,v,w);	yu=dif.x;	yv=dif.y;	yw=dif.z;
-		pp[k].z = z.Spline1(dif,u,v,w);	zu=dif.x;	zv=dif.y;	zw=dif.z;
-		xx = ax.Spline1(u,v,w);	yy = ay.Spline1(u,v,w);	zz = az.Spline1(u,v,w);
+		pp[k].x = x->Spline1(dif,u,v,w);	xu=dif.x;	xv=dif.y;	xw=dif.z;
+		pp[k].y = y->Spline1(dif,u,v,w);	yu=dif.x;	yv=dif.y;	yw=dif.z;
+		pp[k].z = z->Spline1(dif,u,v,w);	zu=dif.x;	zv=dif.y;	zw=dif.z;
+		xx = ax->Spline1(u,v,w);	yy = ay->Spline1(u,v,w);	zz = az->Spline1(u,v,w);
 		det = -xu*yv*zw+xv*yu*zw+xu*yw*zv-xw*yu*zv-xv*yw*zu+xw*yv*zu;
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
@@ -804,9 +808,9 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
-		x.Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax.Spline1(u1,v1,w1);
-		y.Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay.Spline1(u1,v1,w1);
-		z.Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az.Spline1(u1,v1,w1);
+		x->Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax->Spline1(u1,v1,w1);
+		y->Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay->Spline1(u1,v1,w1);
+		z->Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az->Spline1(u1,v1,w1);
 		det = -xu*yv*zw+xv*yu*zw+xu*yw*zv-xw*yu*zv-xv*yw*zu+xw*yv*zu;
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
@@ -814,9 +818,9 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[1]=e*dt/h;	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		u1 = u+ee[1]/2;	v1 = v+ff[1]/2;	w1 = w+gg[1]/2;
-		x.Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax.Spline1(u1,v1,w1);
-		y.Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay.Spline1(u1,v1,w1);
-		z.Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az.Spline1(u1,v1,w1);
+		x->Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax->Spline1(u1,v1,w1);
+		y->Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay->Spline1(u1,v1,w1);
+		z->Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az->Spline1(u1,v1,w1);
 		det = -xu*yv*zw+xv*yu*zw+xu*yw*zv-xw*yu*zv-xv*yw*zu+xw*yv*zu;
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
@@ -824,9 +828,9 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[2]=e*dt/h;	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		u1 = u+ee[2];	v1 = v+ff[2];	w1 = w+gg[2];
-		x.Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax.Spline1(u1,v1,w1);
-		y.Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay.Spline1(u1,v1,w1);
-		z.Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az.Spline1(u1,v1,w1);
+		x->Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax->Spline1(u1,v1,w1);
+		y->Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay->Spline1(u1,v1,w1);
+		z->Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az->Spline1(u1,v1,w1);
 		det = -xu*yv*zw+xv*yu*zw+xu*yw*zv-xw*yu*zv-xv*yw*zu+xw*yv*zu;
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
@@ -885,33 +889,37 @@ void MGL_EXPORT mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	long ss = gr->AddTexture(sch);
 	bool vv = mglchr(sch,'v'), xo = mglchr(sch,'x'), zo = mglchr(sch,'z');
 
-	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
-	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)	for(int s=-1;s<=1;s+=2)
+	std::vector<mreal> u, v, w;
+	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
 	{
-		mreal u,v,w;
-		if(gr->NeedStop())	{	i=j=num;	s=2;	continue;	}
-		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0;
-		flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
-		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 1;
-		flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
-		u = 0;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-		flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
-		u = 1;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-		flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
-		u = (i+1.)/(num+1.);	v = 0;	w = (j+1.)/(num+1.);
-		flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
-		u = (i+1.)/(num+1.);	v = 1;	w = (j+1.)/(num+1.);
-		flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
+		mreal t = (i+1.)/(num+1.), s = (j+1.)/(num+1.);
+		u.push_back(t);		v.push_back(s);		w.push_back(0);
+		u.push_back(-t);	v.push_back(-s);	w.push_back(0);
+		u.push_back(t);		v.push_back(s);		w.push_back(1);
+		u.push_back(-t);	v.push_back(-s);	w.push_back(-1);
+
+		u.push_back(t);		v.push_back(0);		w.push_back(s);
+		u.push_back(-t);	v.push_back(0);		w.push_back(-s);
+		u.push_back(t);		v.push_back(1);		w.push_back(s);
+		u.push_back(-t);	v.push_back(-1);	w.push_back(-s);
+
+		u.push_back(0);		v.push_back(s);		w.push_back(t);
+		u.push_back(0);		v.push_back(-s);	w.push_back(-t);
+		u.push_back(1);		v.push_back(s);		w.push_back(t);
+		u.push_back(-1);	v.push_back(-s);	w.push_back(-t);
 		if(cnt)
 		{
-			u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0.5;
-			flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
-			u = 0.5;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-			flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
-			u = (i+1.)/(num+1.);	v = 0.5;	w = (j+1.)/(num+1.);
-			flow(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
+			u.push_back(t);		v.push_back(s);		w.push_back(0.5);
+			u.push_back(-t);	v.push_back(-s);	w.push_back(-0.5);
+			u.push_back(t);		v.push_back(0.5);	w.push_back(s);
+			u.push_back(-t);	v.push_back(-0.5);	w.push_back(-s);
+			u.push_back(0.5);	v.push_back(s);		w.push_back(t);
+			u.push_back(-0.5);	v.push_back(-s);	w.push_back(-t);
 		}
 	}
+#pragma omp parallel for
+	for(long i=0;i<long(u.size());i++)	if(!gr->NeedStop())
+		flow(gr, u[i], v[i], w[i], x, y, z, ax, ay, az,ss,vv,xo,zo);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -984,8 +992,7 @@ void MGL_EXPORT mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, 
 			w = (i0+(dx*(dyv*dzu-dyu*dzv)+dxu*(dy*dzv-dyv*dz)+dxv*(dyu*dz-dy*dzu))/d)/l;
 		}
 	}
-	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
-	flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv,xo,zo);
+	flow(gr, u, v, w, x, y, z, ax, ay, az,ss,vv,xo,zo);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -1075,25 +1082,25 @@ void MGL_EXPORT mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const c
 //	Pipe 2d series
 //
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, double r0,long sc)
+void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, HCDT x, HCDT y, HCDT ax, HCDT ay, double r0,long sc)
 {
-	long n=100*(ax.nx+ax.ny);
-	bool nboth = x.nx*x.ny!=ax.nx*ax.ny || y.nx*y.ny!=ax.nx*ax.ny;
+	long n=100*(ax->GetNx()+ax->GetNy());
+	bool nboth = x->GetNx()*x->GetNy()!=ax->GetNx()*ax->GetNy() || y->GetNx()*y->GetNy()!=ax->GetNx()*ax->GetNy();
 
 	mglPoint *pp = new mglPoint[n], dp;
 	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
-	mglPoint nx(ax.nx,ax.ny);
+	mglPoint nx(ax->GetNx(),ax->GetNy());
 
-	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=2,acc=dt/20;
+	mreal dt = 0.5/(ax->GetNx() > ax->GetNy() ? ax->GetNx() : ax->GetNy()),e,f,g,ff[4],gg[4],h,s=2,acc=dt/20;
 	mreal ss = 16./mgl_ipow(gr->Max.c - gr->Min.c,2);
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;	v = -v;	s *= -1;}
 	long k=0;
 	bool end = false;
 	if(nboth) do{
 		mglPoint dif;
-		pp[k].x = x.Spline1(dif,u,0,0);	f = ax.Spline1(u,v,0)/dif.x;
-		pp[k].y = y.Spline1(dif,v,0,0);	g = ay.Spline1(u,v,0)/dif.x;
+		pp[k].x = x->Spline1(dif,u,0,0);	f = ax->Spline1(u,v,0)/dif.x;
+		pp[k].y = y->Spline1(dif,v,0,0);	g = ay->Spline1(u,v,0)/dif.x;
 		pp[k].z = zVal;
 		if(mgl_isbad(f+g))	end = true;
 		else	for(long m=0;m<k-1;m+=10)	// determines encircle
@@ -1106,16 +1113,16 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
-		x.Spline1(dif,e,0,0);	f = ax.Spline1(e,h,0)/dif.x;
-		y.Spline1(dif,h,0,0);	g = ay.Spline1(e,h,0)/dif.x;
+		x->Spline1(dif,e,0,0);	f = ax->Spline1(e,h,0)/dif.x;
+		y->Spline1(dif,h,0,0);	g = ay->Spline1(e,h,0)/dif.x;
 		h = 1+hypot(f,g);	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		e = u+ff[1]/2;	h = v+gg[1]/2;
-		x.Spline1(dif,e,0,0);	f = ax.Spline1(e,h,0)/dif.x;
-		y.Spline1(dif,h,0,0);	g = ay.Spline1(e,h,0)/dif.x;
+		x->Spline1(dif,e,0,0);	f = ax->Spline1(e,h,0)/dif.x;
+		y->Spline1(dif,h,0,0);	g = ay->Spline1(e,h,0)/dif.x;
 		h = 1+hypot(f,g);	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		e = u+ff[2];	h = v+gg[2];
-		x.Spline1(dif,e,0,0);	f = ax.Spline1(e,h,0)/dif.x;
-		y.Spline1(dif,h,0,0);	g = ay.Spline1(e,h,0)/dif.x;
+		x->Spline1(dif,e,0,0);	f = ax->Spline1(e,h,0)/dif.x;
+		y->Spline1(dif,h,0,0);	g = ay->Spline1(e,h,0)/dif.x;
 		h = 1+hypot(f,g);	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		v += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
@@ -1125,9 +1132,9 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 	else do{
 		mglPoint dif;
 		register mreal xu,xv,yu,yv,det,xx,yy;
-			pp[k].x = x.Spline1(dif,u,v,0);	xu=dif.x;	xv=dif.y;
-			pp[k].y = y.Spline1(dif,u,v,0);	yu=dif.x;	yv=dif.y;
-			xx = ax.Spline1(u,v,0);	yy = ay.Spline1(u,v,0);
+			pp[k].x = x->Spline1(dif,u,v,0);	xu=dif.x;	xv=dif.y;
+			pp[k].y = y->Spline1(dif,u,v,0);	yu=dif.x;	yv=dif.y;
+			xx = ax->Spline1(u,v,0);	yy = ay->Spline1(u,v,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		pp[k].z = zVal;
 		if(mgl_isbad(f+g))	end = true;
@@ -1141,21 +1148,21 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
-			x.Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
-			y.Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
-			xx = ax.Spline1(e,h,0);	yy = ay.Spline1(e,h,0);
+			x->Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
+			y->Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
+			xx = ax->Spline1(e,h,0);	yy = ay->Spline1(e,h,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		h = 1+hypot(f,g);	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		e = u+ff[1]/2;	h = v+gg[1]/2;
-			x.Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
-			y.Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
-			xx = ax.Spline1(e,h,0);	yy = ay.Spline1(e,h,0);
+			x->Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
+			y->Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
+			xx = ax->Spline1(e,h,0);	yy = ay->Spline1(e,h,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		h = 1+hypot(f,g);	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		e = u+ff[2];	h = v+gg[2];
-			x.Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
-			y.Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
-			xx = ax.Spline1(e,h,0);	yy = ay.Spline1(e,h,0);
+			x->Spline1(dif,e,h,0);	xu=dif.x;	xv=dif.y;
+			y->Spline1(dif,e,h,0);	yu=dif.x;	yv=dif.y;
+			xx = ax->Spline1(e,h,0);	yy = ay->Spline1(e,h,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		h = 1+hypot(f,g);	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
@@ -1216,31 +1223,35 @@ void MGL_EXPORT mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	bool cnt=!mglchr(sch,'#');
 	if(mglchr(sch,'i'))	r0 = -fabs(r0);
 
-	mglData xx(x), yy(y), bx(ax), by(ay);
+	std::vector<mreal> u, v;
+	for(long i=0;i<num;i++)
+	{
+		mreal t = (i+1.)/(num+1.);
+		u.push_back(0);		v.push_back(t);
+		u.push_back(0);		v.push_back(-t);
+		u.push_back(1);		v.push_back(t);
+		u.push_back(-1);	v.push_back(-t);
+		u.push_back(t);		v.push_back(0);
+		u.push_back(-t);	v.push_back(0);
+		u.push_back(t);		v.push_back(1);
+		u.push_back(-t);	v.push_back(-1);
+		if(cnt)
+		{
+			u.push_back(t);		v.push_back(0.5);
+			u.push_back(-t);	v.push_back(-0.5);
+			u.push_back(0.5);	v.push_back(t);
+			u.push_back(-0.5);	v.push_back(-t);
+		}
+	}
 	for(long k=0;k<ax->GetNz();k++)
 	{
 		if(gr->NeedStop())	break;
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-		for(long i=0;i<num;i++)	for(int s=-1;s<=1;s+=2)
-		{
-			mreal u,v;
-			if(gr->NeedStop())	{	i=num;	s=2;	continue;	}
-			u = 0;	v = (i+1.)/(num+1.);
-			flowr(gr, zVal, s*u, s*v, xx, yy, bx, by,r0,ss);
-			u = 1;	v = (i+1.)/(num+1.);
-			flowr(gr, zVal, s*u, s*v, xx, yy, bx, by,r0,ss);
-			u = (i+1.)/(num+1.);	v = 0;
-			flowr(gr, zVal, s*u, s*v, xx, yy, bx, by,r0,ss);
-			u = (i+1.)/(num+1.);	v = 1;
-			flowr(gr, zVal, s*u, s*v, xx, yy, bx, by,r0,ss);
-			if(cnt)
-			{
-				u = 0.5;	v = (i+1.)/(num+1.);
-				flowr(gr, zVal, s*u, s*v, xx, yy, bx, by,r0,ss);
-				u = (i+1.)/(num+1.);	v = 0.5;
-				flowr(gr, zVal, s*u, s*v, xx, yy, bx, by,r0,ss);
-			}
-		}
+		HMDT bx=mgl_data_subdata(ax,-1,-1,k), by=mgl_data_subdata(ay,-1,-1,k);
+#pragma omp parallel for
+		for(long i=0;i<long(u.size());i++)	if(!gr->NeedStop())
+			flowr(gr, zVal, u[i], v[i], x, y, bx, by,r0,ss);
+		mgl_delete_data(bx);	mgl_delete_data(by);
 	}
 	gr->EndGroup();
 }
@@ -1267,18 +1278,18 @@ void MGL_EXPORT mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const 
 //	Pipe 3d series
 //
 //-----------------------------------------------------------------------------
-void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, double r0,long sc)
+void flowr(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, double r0,long sc)
 {
-	static long n=100*(ax.nx+ax.ny+ax.nz);
-	long nn = ax.nx*ax.ny*ax.nz;
-	bool nboth = x.nx*x.ny*x.nz!=nn || y.nx*y.ny*y.nz!=nn || z.nx*z.ny*z.nz!=nn;
+	static long n=100*(ax->GetNx()+ax->GetNy()+ax->GetNz());
+	long nn = ax->GetNN();
+	bool nboth = x->GetNN()!=nn || y->GetNN()!=nn || z->GetNN()!=nn;
 	mglPoint *pp = new mglPoint[n], dp;
 	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
-	mglPoint nx(ax.nx,ax.ny,ax.nz);
+	mglPoint nx(ax->GetNx(),ax->GetNy(),ax->GetNz());
 
-	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
-	nn = (nn > ax.nz ? nn : ax.nz);
+	nn = (ax->GetNx() > ax->GetNy() ? ax->GetNx() : ax->GetNy());
+	nn = (nn > ax->GetNz() ? nn : ax->GetNz());
 	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=2,u1,v1,w1,acc=dt/20;
 	mreal ss = 16./mgl_ipow(gr->Max.c - gr->Min.c,2);
 
@@ -1288,9 +1299,9 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 	bool end = false;
 	if(nboth) do{
 		mglPoint dif;
-		pp[k].x = x.Spline1(dif,u,0,0);	e = ax.Spline1(u,v,w)/dif.x;
-		pp[k].y = y.Spline1(dif,v,0,0);	f = ay.Spline1(u,v,w)/dif.x;
-		pp[k].z = z.Spline1(dif,w,0,0);	g = az.Spline1(u,v,w)/dif.x;
+		pp[k].x = x->Spline1(dif,u,0,0);	e = ax->Spline1(u,v,w)/dif.x;
+		pp[k].y = y->Spline1(dif,v,0,0);	f = ay->Spline1(u,v,w)/dif.x;
+		pp[k].z = z->Spline1(dif,w,0,0);	g = az->Spline1(u,v,w)/dif.x;
 		if(mgl_isbad(e+f+g))	end = true;
 		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
@@ -1302,21 +1313,21 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
-		x.Spline1(dif,u1,0,0);	e = ax.Spline1(u1,v1,w1)/dif.x;
-		y.Spline1(dif,v1,0,0);	f = ay.Spline1(u1,v1,w1)/dif.x;
-		z.Spline1(dif,w1,0,0);	g = az.Spline1(u1,v1,w1)/dif.x;
+		x->Spline1(dif,u1,0,0);	e = ax->Spline1(u1,v1,w1)/dif.x;
+		y->Spline1(dif,v1,0,0);	f = ay->Spline1(u1,v1,w1)/dif.x;
+		z->Spline1(dif,w1,0,0);	g = az->Spline1(u1,v1,w1)/dif.x;
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[1]=e*dt/h;	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		u1 = u+ee[1]/2;	v1 = v+ff[1]/2;	w1 = w+gg[1]/2;
-		x.Spline1(dif,u1,0,0);	e = ax.Spline1(u1,v1,w1)/dif.x;
-		y.Spline1(dif,v1,0,0);	f = ay.Spline1(u1,v1,w1)/dif.x;
-		z.Spline1(dif,w1,0,0);	g = az.Spline1(u1,v1,w1)/dif.x;
+		x->Spline1(dif,u1,0,0);	e = ax->Spline1(u1,v1,w1)/dif.x;
+		y->Spline1(dif,v1,0,0);	f = ay->Spline1(u1,v1,w1)/dif.x;
+		z->Spline1(dif,w1,0,0);	g = az->Spline1(u1,v1,w1)/dif.x;
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[2]=e*dt/h;	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		u1 = u+ee[2];	v1 = v+ff[2];	w1 = w+gg[2];
-		x.Spline1(dif,u1,0,0);	e = ax.Spline1(u1,v1,w1)/dif.x;
-		y.Spline1(dif,v1,0,0);	f = ay.Spline1(u1,v1,w1)/dif.x;
-		z.Spline1(dif,w1,0,0);	g = az.Spline1(u1,v1,w1)/dif.x;
+		x->Spline1(dif,u1,0,0);	e = ax->Spline1(u1,v1,w1)/dif.x;
+		y->Spline1(dif,v1,0,0);	f = ay->Spline1(u1,v1,w1)/dif.x;
+		z->Spline1(dif,w1,0,0);	g = az->Spline1(u1,v1,w1)/dif.x;
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[3]=e*dt/h;	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ee[0]/6+ee[1]/3+ee[2]/3+ee[3]/6;
@@ -1328,10 +1339,10 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 	else do{
 		mglPoint dif;
 		register mreal xu,xv,xw,yu,yv,yw,zv,zu,zw,det,xx,yy,zz;
-		pp[k].x = x.Spline1(dif,u,v,w);	xu=dif.x;	xv=dif.y;	xw=dif.z;
-		pp[k].y = y.Spline1(dif,u,v,w);	yu=dif.x;	yv=dif.y;	yw=dif.z;
-		pp[k].z = z.Spline1(dif,u,v,w);	zu=dif.x;	zv=dif.y;	zw=dif.z;
-		xx = ax.Spline1(u,v,w);	yy = ay.Spline1(u,v,w);	zz = az.Spline1(u,v,w);
+		pp[k].x = x->Spline1(dif,u,v,w);	xu=dif.x;	xv=dif.y;	xw=dif.z;
+		pp[k].y = y->Spline1(dif,u,v,w);	yu=dif.x;	yv=dif.y;	yw=dif.z;
+		pp[k].z = z->Spline1(dif,u,v,w);	zu=dif.x;	zv=dif.y;	zw=dif.z;
+		xx = ax->Spline1(u,v,w);	yy = ay->Spline1(u,v,w);	zz = az->Spline1(u,v,w);
 		det = -xu*yv*zw+xv*yu*zw+xu*yw*zv-xw*yu*zv-xv*yw*zu+xw*yv*zu;
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
@@ -1347,9 +1358,9 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
-		x.Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax.Spline1(u1,v1,w1);
-		y.Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay.Spline1(u1,v1,w1);
-		z.Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az.Spline1(u1,v1,w1);
+		x->Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax->Spline1(u1,v1,w1);
+		y->Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay->Spline1(u1,v1,w1);
+		z->Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az->Spline1(u1,v1,w1);
 		det = -xu*yv*zw+xv*yu*zw+xu*yw*zv-xw*yu*zv-xv*yw*zu+xw*yv*zu;
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
@@ -1357,9 +1368,9 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[1]=e*dt/h;	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		u1 = u+ee[1]/2;	v1 = v+ff[1]/2;	w1 = w+gg[1]/2;
-		x.Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax.Spline1(u1,v1,w1);
-		y.Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay.Spline1(u1,v1,w1);
-		z.Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az.Spline1(u1,v1,w1);
+		x->Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax->Spline1(u1,v1,w1);
+		y->Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay->Spline1(u1,v1,w1);
+		z->Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az->Spline1(u1,v1,w1);
 		det = -xu*yv*zw+xv*yu*zw+xu*yw*zv-xw*yu*zv-xv*yw*zu+xw*yv*zu;
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
@@ -1367,9 +1378,9 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		h = 1+sqrt(e*e+f*f+g*g);
 		ee[2]=e*dt/h;	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		u1 = u+ee[2];	v1 = v+ff[2];	w1 = w+gg[2];
-		x.Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax.Spline1(u1,v1,w1);
-		y.Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay.Spline1(u1,v1,w1);
-		z.Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az.Spline1(u1,v1,w1);
+		x->Spline1(dif,u1,v1,w1);	xu=dif.x;	xv=dif.y;	xw=dif.z;	xx = ax->Spline1(u1,v1,w1);
+		y->Spline1(dif,u1,v1,w1);	yu=dif.x;	yv=dif.y;	yw=dif.z;	yy = ay->Spline1(u1,v1,w1);
+		z->Spline1(dif,u1,v1,w1);	zu=dif.x;	zv=dif.y;	zw=dif.z;	zz = az->Spline1(u1,v1,w1);
 		det = -xu*yv*zw+xv*yu*zw+xu*yw*zv-xw*yu*zv-xv*yw*zu+xw*yv*zu;
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
@@ -1433,33 +1444,37 @@ void MGL_EXPORT mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	long ss = gr->AddTexture(sch);
 	bool cnt=!mglchr(sch,'#');
 
-	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
-	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)	for(int s=-1;s<=1;s+=2)
+	std::vector<mreal> u, v, w;
+	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
 	{
-		mreal u,v,w;
-		if(gr->NeedStop())	{	i=j=num;	s=2;	continue;	}
-		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0;
-		flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
-		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 1;
-		flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
-		u = 0;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-		flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
-		u = 1;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-		flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
-		u = (i+1.)/(num+1.);	v = 0;	w = (j+1.)/(num+1.);
-		flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
-		u = (i+1.)/(num+1.);	v = 1;	w = (j+1.)/(num+1.);
-		flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
+		mreal t = (i+1.)/(num+1.), s = (j+1.)/(num+1.);
+		u.push_back(t);		v.push_back(s);		w.push_back(0);
+		u.push_back(-t);	v.push_back(-s);	w.push_back(0);
+		u.push_back(t);		v.push_back(s);		w.push_back(1);
+		u.push_back(-t);	v.push_back(-s);	w.push_back(-1);
+
+		u.push_back(t);		v.push_back(0);		w.push_back(s);
+		u.push_back(-t);	v.push_back(0);		w.push_back(-s);
+		u.push_back(t);		v.push_back(1);		w.push_back(s);
+		u.push_back(-t);	v.push_back(-1);	w.push_back(-s);
+
+		u.push_back(0);		v.push_back(s);		w.push_back(t);
+		u.push_back(0);		v.push_back(-s);	w.push_back(-t);
+		u.push_back(1);		v.push_back(s);		w.push_back(t);
+		u.push_back(-1);	v.push_back(-s);	w.push_back(-t);
 		if(cnt)
 		{
-			u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0.5;
-			flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
-			u = 0.5;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-			flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
-			u = (i+1.)/(num+1.);	v = 0.5;	w = (j+1.)/(num+1.);
-			flowr(gr, s*u, s*v, s*w, xx, yy, zz, bx, by, bz,r0,ss);
+			u.push_back(t);		v.push_back(s);		w.push_back(0.5);
+			u.push_back(-t);	v.push_back(-s);	w.push_back(-0.5);
+			u.push_back(t);		v.push_back(0.5);	w.push_back(s);
+			u.push_back(-t);	v.push_back(-0.5);	w.push_back(-s);
+			u.push_back(0.5);	v.push_back(s);		w.push_back(t);
+			u.push_back(-0.5);	v.push_back(-s);	w.push_back(-t);
 		}
 	}
+#pragma omp parallel for
+	for(long i=0;i<long(u.size());i++)	if(!gr->NeedStop())
+		flowr(gr, u[i], v[i], w[i], x, y, z, ax, ay, az,r0,ss);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------

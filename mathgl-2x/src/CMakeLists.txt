@@ -5,7 +5,7 @@ set(mgl_src
 	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
 	fit.cpp font.cpp obj.cpp other.cpp parser.cpp pde.cpp pixel.cpp
 	plot.cpp prim.cpp surf.cpp vect.cpp volume.cpp evalc.cpp
-	s_hull/s_hull_pro.cpp window.cpp
+	s_hull/s_hull_pro.cpp window.cpp fractal.cpp
 )
 
 set(mgl_hdr

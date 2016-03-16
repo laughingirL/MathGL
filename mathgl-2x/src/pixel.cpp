@@ -1,6 +1,6 @@
 /***************************************************************************
  * pixel.cpp is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -915,7 +915,6 @@ void mglCanvas::combine(unsigned char *c1, const unsigned char *c2) const
 	if(c2[3])
 	{
 		const register unsigned a1=c1[3], a2=c2[3];
-		if(a2==255 || a1==0)	{	memcpy(c1,c2,4);	return; }
 		if((Flag&3)==0)
 		{
 			register unsigned b1=255-a2;
@@ -934,10 +933,10 @@ void mglCanvas::combine(unsigned char *c1, const unsigned char *c2) const
 		else if((Flag&3)==2)
 		{
 			register unsigned b1,b2,b3;
-			b1 = (c1[0]*a1 + c2[0]*a2)/256;		c1[0] = b1<255 ? b1 : 255;
-			b2 = (c1[1]*a1 + c2[1]*a2)/256;		c1[1] = b2<255 ? b2 : 255;
-			b3 = (c1[2]*a1 + c2[2]*a2)/256;		c1[2] = b3<255 ? b3 : 255;
-			c1[3] = a1+a2>255? 255 : a1+a2;
+			b1 = (c1[0]*a1 + c2[0]*a2)/255;	c1[0] = b1<255 ? b1 : 255;
+			b2 = (c1[1]*a1 + c2[1]*a2)/255;	c1[1] = b2<255 ? b2 : 255;
+			b3 = (c1[2]*a1 + c2[2]*a2)/255;	c1[2] = b3<255 ? b3 : 255;
+			c1[3] = 255;
 		}
 	}
 }

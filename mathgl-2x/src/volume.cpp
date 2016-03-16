@@ -1,6 +1,6 @@
 /***************************************************************************
  * surf.cpp is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -289,7 +289,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 				{	ky2[i1] = kk.size();	kk.push_back(mglPoint(i,j+d,k));	}
 			}
 			if(k>0)
-			{	
+			{
 				mreal d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{	kz[i1] = kk.size();		kk.push_back(mglPoint(i,j,k+d-1));	}
@@ -301,7 +301,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 			mglPoint &u = kk[i];
 			mreal cc = c->linear(u.x,u.y,u.z), bb = b->linear(u.x,u.y,u.z);
 			if(mgl_isnan(cc) || mgl_isnan(bb))	u.c = -1;	else
-			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
+			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) :
 					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
 					gr->GetC(ss,cc), mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l), gr->GetA(bb));
 		}
@@ -310,7 +310,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 			mglPoint &u = kk[i];
 			mreal cc = c->linear(u.x,u.y,u.z);
 			if(mgl_isnan(cc))	u.c = -1;	else
-			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
+			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) :
 					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
 					gr->GetC(ss,cc), mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
 		}
@@ -319,18 +319,18 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 			mglPoint &u = kk[i];
 			mreal bb = b->linear(u.x,u.y,u.z);
 			if(mgl_isnan(bb))	u.c = -1;	else
-			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
+			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) :
 					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
 					cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l), gr->GetA(bb));
 		}
 		else	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
-			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
+			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) :
 					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
 					cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
 		}
-		
+
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	delete []kx1;	delete []kx2;	delete []ky1;
@@ -424,20 +424,21 @@ void MGL_EXPORT mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, 
 	long num = mgl_isnan(r)?3:long(r+0.5);
 	if(b->GetNx()==num && b->GetNy()==1 && b->GetNz()==1)
 	{
-		mreal v,a0=gr->AlphaDef;
+		mreal a0=gr->AlphaDef;
 		for(long i=0;i<num;i++)
 		{
-			v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
+			mreal v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 			gr->AlphaDef = gr->GetA(b->v(i));
 			mgl_surf3_xyz_val(gr,v,x,y,z,a,sch,0);
 		}
 		gr->AlphaDef = a0;
 	}
-	else for(long i=0;i<num;i++)
-	{
-		mreal v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
-		mgl_surf3a_xyz_val(gr,v,x,y,z,a,b,sch,0);
-	}
+	else
+		for(long i=0;i<num;i++)
+		{
+			mreal v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
+			mgl_surf3a_xyz_val(gr,v,x,y,z,a,b,sch,0);
+		}
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
@@ -620,50 +621,43 @@ void MGL_EXPORT mgl_beam_val(HMGL gr, double val, HCDT tr, HCDT g1, HCDT g2, HCD
 	if(tr->GetNx()<3 || tr->GetNy()<n || g1->GetNx()<3 || g1->GetNy()<n || g2->GetNx()<3 || g2->GetNy()<n)
 	{	gr->SetWarn(mglWarnDim,"Beam");	return;	}
 	mglData x(a),y(a),z(a),b(a);
-	register long i,j,k,i0;
 	mreal asum0=1;	r = fabs(r);
-	if(flag & 4)	for(j=0;j<m*l;j++)	asum0 += a->vthr(j)*a->vthr(j);
+	if(flag & 4)	for(long j=0;j<m*l;j++)	asum0 += a->vthr(j)*a->vthr(j);
 	if(asum0==0)	{	gr->SetWarn(mglWarnZero,"Beam");	return;	}
-	for(i=0;i<n;i++)
+#pragma omp parallel for
+	for(long i=0;i<n;i++)
 	{
-		if(gr->NeedStop())	break;
+		if(gr->NeedStop())	continue;
 		if(flag & 4)
 		{
 			mreal asum=0, amax=0;
-			for(j=0;j<m*l;j++)
+			for(long j=0;j<m*l;j++)
 			{
 				register mreal aa = a->vthr(j+m*l*i);
 				asum += aa*aa;	amax = amax>aa ? amax : aa;
 			}
 			amax = amax?sqrt(asum/asum0)/amax:0;
-#pragma omp parallel for
-			for(j=0;j<m*l;j++)	b.a[j+m*l*i] = b.a[j+m*l*i]*amax;
+			for(long j=0;j<m*l;j++)	b.a[j+m*l*i] = b.a[j+m*l*i]*amax;
 		}
-		if(flag & 1)
-#pragma omp parallel for collapse(2)
-			for(j=0;j<m;j++)	for(k=0;k<l;k++)
-			{
-				i0 = j+m*(k+l*i);
-				x.a[i0] = 2*j/(m-1.)-1;
-				y.a[i0] = 2*k/(l-1.)-1;
-				z.a[i0] = gr->Max.z*i/(n-1.);
-			}
-		else
-#pragma omp parallel for collapse(2)
-			for(j=0;j<m;j++)	for(k=0;k<l;k++)
-			{
-				i0 = j+m*(k+l*i);
-				x.a[i0] = tr->v(0,i) + g1->v(0,i)*(2*j/(m-1.)-1)*r + g2->v(0,i)*(2*k/(l-1.)-1)*r;
-				y.a[i0] = tr->v(1,i) + g1->v(1,i)*(2*j/(m-1.)-1)*r + g2->v(1,i)*(2*k/(l-1.)-1)*r;
-				z.a[i0] = tr->v(2,i) + g1->v(2,i)*(2*j/(m-1.)-1)*r + g2->v(2,i)*(2*k/(l-1.)-1)*r;
-			}
-		if(flag & 2)
-#pragma omp parallel for collapse(2)
-			for(j=0;j<m;j++)	for(k=0;k<l;k++)
-			{
-				long i0 = j+m*(k+l*i);
-				x.a[i0] = hypot(x.a[i0],y.a[i0]);
-			}
+		if(flag & 1)	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
+		{
+			register long i0 = j+m*(k+l*i);
+			x.a[i0] = 2*j/(m-1.)-1;
+			y.a[i0] = 2*k/(l-1.)-1;
+			z.a[i0] = gr->Max.z*i/(n-1.);
+		}
+		else	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
+		{
+			register long i0 = j+m*(k+l*i);
+			x.a[i0] = tr->v(0,i) + g1->v(0,i)*(2*j/(m-1.)-1)*r + g2->v(0,i)*(2*k/(l-1.)-1)*r;
+			y.a[i0] = tr->v(1,i) + g1->v(1,i)*(2*j/(m-1.)-1)*r + g2->v(1,i)*(2*k/(l-1.)-1)*r;
+			z.a[i0] = tr->v(2,i) + g1->v(2,i)*(2*j/(m-1.)-1)*r + g2->v(2,i)*(2*k/(l-1.)-1)*r;
+		}
+		if(flag & 2)	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
+		{
+			register long i0 = j+m*(k+l*i);
+			x.a[i0] = hypot(x.a[i0],y.a[i0]);
+		}
 	}
 	mgl_surf3_xyz_val(gr,val,&x,&y,&z,&b,stl,0);
 }

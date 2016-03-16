@@ -1,5 +1,6 @@
 2.3.4.1 Released 14 March
 
+* Add 'ifsfile' for reading IFS fractal parameters from *.ifs file.
 * Compatibility changes for MS VisualStudio, MacOS, Win64.
 * Bugfix for legend export into EPS and SVG.
 * Improve Surf3*() drawing.

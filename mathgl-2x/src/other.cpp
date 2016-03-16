@@ -1,6 +1,6 @@
 /***************************************************************************
  * other.cpp is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -171,6 +171,7 @@ void MGL_EXPORT mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 	gr->SetPenPal(sch);
 
 	a = fill_slice_x(gr,sv,a,xx,yy,zz,aa);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
 		register mreal v0 = v->v(i);
@@ -196,6 +197,7 @@ void MGL_EXPORT mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 	gr->SetPenPal(sch);
 
 	a = fill_slice_y(gr,sv,a,xx,yy,zz,aa);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
 		register mreal v0 = v->v(i);
@@ -221,6 +223,7 @@ void MGL_EXPORT mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 	gr->SetPenPal(sch);
 
 	a = fill_slice_z(gr,sv,a,xx,yy,zz,aa);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
 		register mreal v0 = v->v(i);
@@ -303,6 +306,7 @@ void MGL_EXPORT mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 	long ss=gr->AddTexture(sch);
 
 	a = fill_slice_x(gr,sv,a,xx,yy,zz,aa);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
 		register mreal v0 = v->v(i);
@@ -323,6 +327,7 @@ void MGL_EXPORT mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 	long ss=gr->AddTexture(sch);
 
 	a = fill_slice_y(gr,sv,a,xx,yy,zz,aa);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
 		register mreal v0 = v->v(i);
@@ -343,6 +348,7 @@ void MGL_EXPORT mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 	long ss=gr->AddTexture(sch);
 
 	a = fill_slice_z(gr,sv,a,xx,yy,zz,aa);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
 		register mreal v0 = v->v(i);

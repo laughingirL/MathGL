@@ -1,6 +1,6 @@
 /***************************************************************************
  * abstract.h is part of Math Graphic Library
- * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2016 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -239,6 +239,34 @@ public:
 	/// Find if any nonzero value of formula
 	inline bool FindAny(const char *cond) const
 	{	return mgl_data_find_any(this,cond);	}
+
+	/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+	inline mreal Spline(mreal x,mreal y=0,mreal z=0) const
+	{	return value(x,y,z);	}
+	/// Interpolate by cubic spline the data to given point x,\a y,\a z which normalized in range [0, 1]
+	inline mreal Spline1(mreal x,mreal y=0,mreal z=0) const
+	{	return value(x*(GetNx()-1),y*(GetNy()-1),z*(GetNz()-1));	}
+	/// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+	inline mreal Spline(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
+	{	return valueD(x,y,z, &(dif.x),&(dif.y), &(dif.z));	}
+	/// Interpolate by cubic spline the data and return its derivatives at given point x,\a y,\a z which normalized in range [0, 1]
+	inline mreal Spline1(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
+	{	mreal res=valueD(x*(GetNx()-1),y*(GetNy()-1),z*(GetNz()-1), &(dif.x),&(dif.y), &(dif.z));
+		dif.x*=GetNx()>1?GetNx()-1:1;	dif.y*=GetNy()>1?GetNy()-1:1;	dif.z*=GetNz()>1?GetNz()-1:1;	return res;	}
+
+	/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+	inline mreal Linear(mreal x,mreal y=0,mreal z=0)	const
+	{	return mgl_data_linear_ext(this,x,y,z,0,0,0);	}
+	/// Interpolate by line the data to given point x,\a y,\a z which normalized in range [0, 1]
+	inline mreal Linear1(mreal x,mreal y=0,mreal z=0) const
+	{	return mgl_data_linear_ext(this,x*(GetNx()-1),y*(GetNy()-1),z*(GetNz()-1),0,0,0);	}
+	/// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+	inline mreal Linear(mglPoint &dif, mreal x,mreal y=0,mreal z=0)	const
+	{	return mgl_data_linear_ext(this,x,y,z, &(dif.x),&(dif.y), &(dif.z));	}
+	/// Interpolate by line the data and return its derivatives at given point x,\a y,\a z which normalized in range [0, 1]
+	inline mreal Linear1(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
+	{	mreal res=mgl_data_linear_ext(this,x*(GetNx()-1),y*(GetNy()-1),z*(GetNz()-1), &(dif.x),&(dif.y), &(dif.z));
+		dif.x*=GetNx()>1?GetNx()-1:1;	dif.y*=GetNy()>1?GetNy()-1:1;	dif.z*=GetNz()>1?GetNz()-1:1;	return res;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for color ID
