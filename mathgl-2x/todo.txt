@@ -57,7 +57,9 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
-6. Update Qt and UDAV figures
+1. Update Qt and UDAV figures
+2. Replace some @code by @ref
+3. Docs + sample about '*' in flow() and pipe().
 
 ============= UDAV =============
 

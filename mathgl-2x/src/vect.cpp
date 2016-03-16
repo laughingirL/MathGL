@@ -614,7 +614,13 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	bool cnt=!mglchr(sch,'#');
 
 	std::vector<mreal> u, v;
-	for(long i=0;i<num;i++)
+	if(mglchr(sch,'*'))	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
+	{
+		mreal t = (i+1.)/(num+1.), s = (j+1.)/(num+1.);
+		u.push_back(s);		v.push_back(t);
+		u.push_back(-s);		v.push_back(-t);
+	}
+	else	for(long i=0;i<num;i++)
 	{
 		mreal t = (i+1.)/(num+1.);
 		u.push_back(0);		v.push_back(t);
@@ -1224,7 +1230,13 @@ void MGL_EXPORT mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	if(mglchr(sch,'i'))	r0 = -fabs(r0);
 
 	std::vector<mreal> u, v;
-	for(long i=0;i<num;i++)
+	if(mglchr(sch,'*'))	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
+	{
+		mreal t = (i+1.)/(num+1.), s = (j+1.)/(num+1.);
+		u.push_back(s);		v.push_back(t);
+		u.push_back(-s);		v.push_back(-t);
+	}
+	else	for(long i=0;i<num;i++)
 	{
 		mreal t = (i+1.)/(num+1.);
 		u.push_back(0);		v.push_back(t);
