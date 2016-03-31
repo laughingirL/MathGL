@@ -512,6 +512,15 @@ inline mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, m
 /// Saves result of ODE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
 inline mglData mglODE(const char *df, const char *var, const mglDataA &ini, mreal dt=0.1, mreal tmax=10)
 {	return mglData(true, mgl_ode_solve_str(df,var, &ini, dt, tmax));	}
+//-----------------------------------------------------------------------------
+/// Get array as solution of tridiagonal matrix solution a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
+/** String \a how may contain:
+ * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
+ * 'h' for using hexagonal matrix at x-y plain,
+ * 'c' for using periodical boundary conditions. */
+inline mglData mglTriMat(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataA &D, const char *how)
+{	return mglData(true, mgl_data_trimat(&A, &B, &C, &D, how));	}
+//-----------------------------------------------------------------------------
 /// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du
 inline mglData mglJacobian(const mglDataA &x, const mglDataA &y)
 {	return mglData(true, mgl_jacobian_2d(&x, &y));	}

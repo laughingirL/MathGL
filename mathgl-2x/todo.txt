@@ -47,6 +47,13 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 11. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 12. Parallel drawing in QMathGL.
 
+13. Skew -- like rotate + centered (Affine geometry)
+14. SkewPlot -- like stickplot without rotation
+15. GrayScale flag/option -- brightness=(0.3 red + 0.59 green + 0.11 * blue) ???
+16. Add symbol '?' in arguments of MGL commands to select proper variant (like "plot dat 'b'?'k'")
+17. Speed up QMathGL + option to whole redraw instead of view
+18. Add HMDT|HADT TriMat(A,B,C,D) for прогонка. Options: 'x','y','z','h','c'
+
 ZZ. Update *.i for new functions {before release!!!}
 
 

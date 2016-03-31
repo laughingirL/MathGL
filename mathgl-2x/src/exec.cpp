@@ -3003,6 +3003,18 @@ int MGL_NO_EXPORT mgls_ode(mglGraph *, long , mglArg *a, const char *k, const ch
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_trimat(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(c && !strcmp(k,"ddddds"))
+		*c = mglTriMatC(*(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s.c_str());
+	else if(d && !strcmp(k,"ddddds"))
+		*d = mglTriMat(*(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s.c_str());
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_pde(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -3682,6 +3694,7 @@ mglCommand mgls_base_cmd[] = {
 	{"triangulate","Find triangles of randomly placed points","triangulate Res Xdat Ydat [er]|Res Xdat Ydat Zdat [er]", mgls_triangulate ,4},
 	{"tricont","Draw contour lines for surface of triangles","tricont Idat Xdat Ydat Cdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt']|Vdat Idat Xdat Ydat Cdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt']", mgls_tricont ,0},
 	{"tricontv","Draw contour tubes for surface of triangles","tricontv Idat Xdat Ydat Cdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt']|Vdat Idat Xdat Ydat Cdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt']", mgls_tricontv ,0},
+	{"trimat","Solve tridiagonal matrix","trimat Res A B C D 'how'", mgls_trimat ,4},
 	{"triplot","Draw surface of triangles","triplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_triplot ,0},
 	{"tube","Draw curve by tube","tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube ,7},
 	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks ,14},

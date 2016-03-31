@@ -482,6 +482,14 @@ inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA
 inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mglData &zz, mreal r=1, mreal k0=100)
 {	return mglDataC(true, mgl_qo3d_solve_c(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy, &zz));	}
 //-----------------------------------------------------------------------------
+/// Get array as solution of tridiagonal matrix solution a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
+/** String \a how may contain:
+ * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
+ * 'h' for using hexagonal matrix at x-y plain,
+ * 'c' for using periodical boundary conditions. */
+inline mglDataC mglTriMatC(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataC &D, const char *how)
+{	return mglDataC(true, mgl_datac_trimat(&A, &B, &C, &D, how));	}
+//-----------------------------------------------------------------------------
 /// Get sub-array of the data with given fixed indexes
 inline mglDataC mglSubDataC(const mglDataA &dat, long xx, long yy=-1, long zz=-1)
 {	return mglDataC(true,mgl_datac_subdata(&dat,xx,yy,zz));	}
