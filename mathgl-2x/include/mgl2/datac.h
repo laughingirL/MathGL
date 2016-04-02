@@ -487,8 +487,8 @@ inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA
  * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
  * 'h' for using hexagonal matrix at x-y plain,
  * 'c' for using periodical boundary conditions. */
-inline mglDataC mglTriMatC(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataC &D, const char *how)
-{	return mglDataC(true, mgl_datac_trimat(&A, &B, &C, &D, how));	}
+inline mglDataC mglTridMatC(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataC &D, const char *how)
+{	return mglDataC(true, mgl_datac_tridmat(&A, &B, &C, &D, how));	}
 //-----------------------------------------------------------------------------
 /// Get sub-array of the data with given fixed indexes
 inline mglDataC mglSubDataC(const mglDataA &dat, long xx, long yy=-1, long zz=-1)

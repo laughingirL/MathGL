@@ -518,8 +518,8 @@ inline mglData mglODE(const char *df, const char *var, const mglDataA &ini, mrea
  * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
  * 'h' for using hexagonal matrix at x-y plain,
  * 'c' for using periodical boundary conditions. */
-inline mglData mglTriMat(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataA &D, const char *how)
-{	return mglData(true, mgl_data_trimat(&A, &B, &C, &D, how));	}
+inline mglData mglTridMat(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataA &D, const char *how)
+{	return mglData(true, mgl_data_tridmat(&A, &B, &C, &D, how));	}
 //-----------------------------------------------------------------------------
 /// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du
 inline mglData mglJacobian(const mglDataA &x, const mglDataA &y)

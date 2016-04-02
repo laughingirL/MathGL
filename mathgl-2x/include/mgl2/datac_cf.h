@@ -94,8 +94,8 @@ void MGL_EXPORT mgl_datac_set_values_(uintptr_t *d, const char *val, int *nx, in
  * 'h' for using hexagonal matrix at x-y plain,
  * 'c' for using periodical boundary conditions.
  * NOTE: It work for flat data model only (i.e. for a[i,j]==a[i+nx*j]) */
-HADT MGL_EXPORT mgl_datac_trimat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how);
-uintptr_t MGL_EXPORT mgl_datac_trimat_(uintptr_t *A, uintptr_t *B, uintptr_t *C, uintptr_t *D, const char *how, int);
+HADT MGL_EXPORT mgl_datac_tridmat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how);
+uintptr_t MGL_EXPORT mgl_datac_tridmat_(uintptr_t *A, uintptr_t *B, uintptr_t *C, uintptr_t *D, const char *how, int);
 
 /// Returns pointer to internal data array
 MGL_EXPORT dual *mgl_datac_data(HADT dat);

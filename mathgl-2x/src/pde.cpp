@@ -1031,39 +1031,34 @@ uintptr_t MGL_EXPORT mgl_jacobian_3d_(uintptr_t* x, uintptr_t* y, uintptr_t* z)
 template <class T> void mgl_progonka_s(const T *A, const T *B, const T *C, const T *D, T *a, long n)
 {
 	T *aa=a, *bb=a+n, *uu=a+2*n;
-	aa[1] = -B[0]/C[0];	bb[1] = D[0]/C[0];
-	for(long i=1;i<n-1;i++)
+	aa[0] = -C[0]/B[0];	bb[0] = D[0]/B[0];
+	for(long i=1;i<n;i++)
 	{
 		register T a=A[i],b=B[i],c=C[i],d=D[i];
-		aa[i+1] = - b/(a*aa[i]+c);
-		bb[i+1] = (d-a*bb[i])/(a*aa[i]+c);
+		aa[i] = -c/(b+a*aa[i-1]);
+		bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
 	}
-	uu[n-1] = (D[n-1]-A[n-1]*bb[n-1])/(C[n-1]+A[n-1]*aa[n-1]);
-	for(long i=n-1;i>0;i--)	uu[i-1] = aa[i]*uu[i]+bb[i];
+	uu[n-1] = bb[n-1];
+	for(long i=n-2;i>=0;i--)	uu[i] = bb[i]+aa[i]*uu[i+1];
 }
-template <class T> void mgl_progonka_p(const T *A, const T *B, const T *C, const T *D, T *a, long n)
+template <class T> void mgl_progonka_p(const T *A, const T *B, const T *C, const T *D, T *dat, long n)
 {
-	T *aa=a, *bb=a+n, *gg=a+2*n, *pp=a+3*n, *qq=a+4*n, *uu=a+5*n;
-	aa[1] = -B[0]/C[0];	bb[1] = D[0]/C[0];	gg[1] = -A[0]/C[0];
-	for(long i=1;i<n-1;i++)
+	T *aa=dat, *bb=dat+n, *gg=dat+2*n, *uu=dat+3*n;
+	aa[0] = -C[0]/B[0];	bb[0] = D[0]/B[0];	gg[0] = -A[0]/B[0];
+	for(long i=1;i<n;i++)
 	{
 		register T a=A[i],b=B[i],c=C[i],d=D[i];
-		aa[i+1] = -b/(a*aa[i]+c);
-		bb[i+1] = (d-a*bb[i])/(a*aa[i]+c);
-		gg[i+1] = -a*gg[i]/(a*aa[i]+c);
+		aa[i] = -c/(b+a*aa[i-1]);
+		bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
+		gg[i] = -a*gg[i-1]/(b+a*aa[i-1]);
 	}
-	pp[n-2]=bb[n-1];	qq[n-2]=aa[n-1]+gg[n-1];
-	for(long i=n-2;i>0;i--)
-	{
-		pp[i-1] = aa[i]*pp[i]+bb[i];
-		qq[i-1] = aa[i]*qq[i]+gg[i];
-	}
-	T un = (pp[0]*aa[n-1]+bb[n-1])/(1.-gg[n-1]-qq[0]*aa[n-1]);
+	register T a=A[n-1],b=B[n-1],c=-(b+aa[n-2]*a),d=D[n-1];
+	register T un = (c*bb[n-1]+d-a*bb[n-2])/(c-c*gg[n-1]+b+a*gg[n-2]+a*aa[n-2]);
 	uu[n-1] = un;
-	for(long i=0;i<n-1;i++)	uu[i] = pp[i]+un*qq[i];
+	for(long i=n-2;i>=0;i--)	uu[i] = bb[i]+aa[i]*uu[i+1]+gg[i]*un;
 }
 //-----------------------------------------------------------------------------
-HMDT MGL_EXPORT mgl_data_trimat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
+HMDT MGL_EXPORT mgl_data_tridmat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
 {
 	const long nx=D->GetNx(),ny=D->GetNy(),nz=D->GetNz(), nn=nx*ny*nz;
 	if(A->GetNN()!=nn || B->GetNN()!=nn || C->GetNN()!=nn || D->GetNN()!=nn)	return 0;
@@ -1073,52 +1068,55 @@ HMDT MGL_EXPORT mgl_data_trimat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
 		if(mglchr(how,'x'))
 #pragma omp parallel
 		{
-			mglData T(nx,10);	mreal *uu=T.a+5*nx;
+			mglData T(nx,8);	mreal *uu=T.a+3*nx;
+			mreal *aa=T.a+4*nx, *bb=T.a+5*nx, *cc=T.a+6*nx, *dd=T.a+7*nx;
 #pragma omp for collapse(2)
 			for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)
 			{
-				long i0 = nx*(j+ny*k);
 				for(long i=0;i<nx;i++)
 				{
-					T.a[i+6*nx] = A->vthr(i0+i);	T.a[i+7*nx] = B->vthr(i0+i);
-					T.a[i+8*nx] = C->vthr(i0+i);	T.a[i+9*nx] = D->vthr(i0+i);
+					aa[j] = A->v(i,j,k);	bb[j] = B->v(i,j,k);
+					cc[j] = C->v(i,j,k);	dd[j] = D->v(i,j,k);
 				}
-				mgl_progonka_p<mreal>(T.a+6*nx,T.a+7*nx,T.a+8*nx,T.a+9*nx,T.a,nx);
+				mgl_progonka_p<mreal>(aa,bb,cc,dd,T.a,nx);
+				register long i0 = nx*(j+ny*k);
 				for(long i=0;i<nx;i++)	r->a[i+i0] = uu[i];
 			}
 		}
 		else if(mglchr(how,'y'))
 #pragma omp parallel
 		{
-			mglData T(ny,10);	mreal *uu=T.a+5*ny;
+			mglData T(ny,8);	mreal *uu=T.a+3*ny;
+			mreal *aa=T.a+4*ny, *bb=T.a+5*ny, *cc=T.a+6*ny, *dd=T.a+7*ny;
 #pragma omp for collapse(2)
 			for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)
 			{
-				long i0 = i+nx*ny*k;
 				for(long j=0;j<ny;j++)
 				{
-					T.a[j+6*ny] = A->vthr(i0+j*nx);	T.a[j+7*ny] = B->vthr(i0+j*nx);
-					T.a[j+8*ny] = C->vthr(i0+j*nx);	T.a[j+9*ny] = D->vthr(i0+j*nx);
+					aa[j] = A->v(i,j,k);	bb[j] = B->v(i,j,k);
+					cc[j] = C->v(i,j,k);	dd[j] = D->v(i,j,k);
 				}
-				mgl_progonka_p<mreal>(T.a+6*ny,T.a+7*ny,T.a+8*ny,T.a+9*ny,T.a,ny);
+				mgl_progonka_p<mreal>(aa,bb,cc,dd,T.a,ny);
+				register long i0 = i+nx*ny*k;
 				for(long j=0;j<ny;j++)	r->a[j*nx+i0] = uu[j];
 			}
 		}
 		else if(mglchr(how,'z'))
 #pragma omp parallel
 		{
-			mglData T(nz,10);	mreal *uu=T.a+5*nz;
+			mglData T(nz,8);	mreal *uu=T.a+3*nz;
+			mreal *aa=T.a+4*nz, *bb=T.a+5*nz, *cc=T.a+6*nz, *dd=T.a+7*nz;
 			const long ns=nx*ny;
 #pragma omp for collapse(2)
 			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
-				long i0 = i+nx*j;
 				for(long k=0;k<nz;j++)
 				{
-					T.a[k+6*nz] = A->vthr(i0+k*ns);	T.a[k+7*nz] = B->vthr(i0+k*ns);
-					T.a[k+8*nz] = C->vthr(i0+k*ns);	T.a[k+9*nz] = D->vthr(i0+k*ns);
+					aa[j] = A->v(i,j,k);	bb[j] = B->v(i,j,k);
+					cc[j] = C->v(i,j,k);	dd[j] = D->v(i,j,k);
 				}
-				mgl_progonka_p<mreal>(T.a+6*nz,T.a+7*nz,T.a+8*nz,T.a+9*nz,T.a,nz);
+				mgl_progonka_p<mreal>(aa,bb,cc,dd,T.a,nz);
+				register long i0 = i+nx*j;
 				for(long k=0;k<nz;k++)	r->a[k*ns+i0] = uu[k];
 			}
 		}
@@ -1128,52 +1126,55 @@ HMDT MGL_EXPORT mgl_data_trimat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
 		if(mglchr(how,'x'))
 #pragma omp parallel
 		{
-			mglData T(nx,7);	mreal *uu=T.a+2*nx;
+			mglData T(nx,8);	mreal *uu=T.a+2*nx;
+			mreal *aa=T.a+4*nx, *bb=T.a+5*nx, *cc=T.a+6*nx, *dd=T.a+7*nx;
 #pragma omp for collapse(2)
 			for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)
 			{
-				long i0 = nx*(j+ny*k);
 				for(long i=0;i<nx;i++)
 				{
-					T.a[i+3*nx] = A->vthr(i0+i);	T.a[i+4*nx] = B->vthr(i0+i);
-					T.a[i+5*nx] = C->vthr(i0+i);	T.a[i+6*nx] = D->vthr(i0+i);
+					aa[j] = A->v(i,j,k);	bb[j] = B->v(i,j,k);
+					cc[j] = C->v(i,j,k);	dd[j] = D->v(i,j,k);
 				}
-				mgl_progonka_s<mreal>(T.a+3*nx,T.a+4*nx,T.a+5*nx,T.a+6*nx,T.a,nx);
+				mgl_progonka_s<mreal>(aa,bb,cc,dd,T.a,nx);
+				register long i0 = nx*(j+ny*k);
 				for(long i=0;i<nx;i++)	r->a[i+i0] = uu[i];
 			}
 		}
 		else if(mglchr(how,'y'))
 #pragma omp parallel
 		{
-			mglData T(ny,7);	mreal *uu=T.a+2*ny;
+			mglData T(ny,8);	mreal *uu=T.a+2*ny;
+			mreal *aa=T.a+4*ny, *bb=T.a+5*ny, *cc=T.a+6*ny, *dd=T.a+7*ny;
 #pragma omp for collapse(2)
 			for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)
 			{
-				long i0 = i+nx*ny*k;
 				for(long j=0;j<ny;j++)
 				{
-					T.a[j+3*ny] = A->vthr(i0+j*nx);	T.a[j+4*ny] = B->vthr(i0+j*nx);
-					T.a[j+5*ny] = C->vthr(i0+j*nx);	T.a[j+6*ny] = D->vthr(i0+j*nx);
+					aa[j] = A->v(i,j,k);	bb[j] = B->v(i,j,k);
+					cc[j] = C->v(i,j,k);	dd[j] = D->v(i,j,k);
 				}
-				mgl_progonka_s<mreal>(T.a+3*ny,T.a+4*ny,T.a+5*ny,T.a+6*ny,T.a,ny);
+				mgl_progonka_s<mreal>(aa,bb,cc,dd,T.a,ny);
+				register long i0 = i+nx*ny*k;
 				for(long j=0;j<ny;j++)	r->a[j*nx+i0] = uu[j];
 			}
 		}
 		else if(mglchr(how,'z'))
 #pragma omp parallel
 		{
-			mglData T(nz,7);	mreal *uu=T.a+2*nz;
+			mglData T(nz,8);	mreal *uu=T.a+3*nz;
+			mreal *aa=T.a+4*nz, *bb=T.a+5*nz, *cc=T.a+6*nz, *dd=T.a+7*nz;
 			const long ns=nx*ny;
 #pragma omp for collapse(2)
 			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
-				long i0 = i+nx*j;
 				for(long k=0;k<nz;j++)
 				{
-					T.a[k+3*nz] = A->vthr(i0+k*ns);	T.a[k+4*nz] = B->vthr(i0+k*ns);
-					T.a[k+5*nz] = C->vthr(i0+k*ns);	T.a[k+6*nz] = D->vthr(i0+k*ns);
+					aa[j] = A->v(i,j,k);	bb[j] = B->v(i,j,k);
+					cc[j] = C->v(i,j,k);	dd[j] = D->v(i,j,k);
 				}
-				mgl_progonka_s<mreal>(T.a+3*nz,T.a+4*nz,T.a+5*nz,T.a+6*nz,T.a,nz);
+				mgl_progonka_s<mreal>(aa,bb,cc,dd,T.a,nz);
+				register long i0 = i+nx*j;
 				for(long k=0;k<nz;k++)	r->a[k*ns+i0] = uu[k];
 			}
 		}
@@ -1181,81 +1182,84 @@ HMDT MGL_EXPORT mgl_data_trimat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
 	return r;
 }
 //-----------------------------------------------------------------------------
-uintptr_t MGL_EXPORT mgl_data_trimat_(uintptr_t *A, uintptr_t *B, uintptr_t *C, uintptr_t *D, const char *how, int l)
+uintptr_t MGL_EXPORT mgl_data_tridmat_(uintptr_t *A, uintptr_t *B, uintptr_t *C, uintptr_t *D, const char *how, int l)
 {	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
-	uintptr_t r = uintptr_t(mgl_data_trimat(_DA_(A),_DA_(B),_DA_(C),_DA_(D),s));
+	uintptr_t r = uintptr_t(mgl_data_tridmat(_DA_(A),_DA_(B),_DA_(C),_DA_(D),s));
 	delete []s;	return r;
 }
 //-----------------------------------------------------------------------------
-HADT MGL_EXPORT mgl_datac_trimat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
+HADT MGL_EXPORT mgl_datac_tridmat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
 {
 	const long nx=D->GetNx(),ny=D->GetNy(),nz=D->GetNz(), nn=nx*ny*nz;
 	if(A->GetNN()!=nn || B->GetNN()!=nn || C->GetNN()!=nn || D->GetNN()!=nn)	return 0;
 	mglDataC *r = new mglDataC(nx,ny,nz);
-	const mglDataC *aa = dynamic_cast<const mglDataC *>(A);
-	const mglDataC *bb = dynamic_cast<const mglDataC *>(B);
-	const mglDataC *cc = dynamic_cast<const mglDataC *>(C);
-	const mglDataC *dd = dynamic_cast<const mglDataC *>(D);
+	const mglDataC *aC = dynamic_cast<const mglDataC *>(A);
+	const mglDataC *bC = dynamic_cast<const mglDataC *>(B);
+	const mglDataC *cC = dynamic_cast<const mglDataC *>(C);
+	const mglDataC *dC = dynamic_cast<const mglDataC *>(D);
 	if(mglchr(how,'c'))
 	{
 		if(mglchr(how,'x'))
 #pragma omp parallel
 		{
-			mglDataC T(nx,10);	dual *uu=T.a+5*nx;
+			mglDataC T(nx,8);	dual *uu=T.a+3*nx;
+			dual *aa=T.a+4*nx, *bb=T.a+5*nx, *cc=T.a+6*nx, *dd=T.a+7*nx;
 #pragma omp for collapse(2)
 			for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)
 			{
 				long i0 = nx*(j+ny*k);
-				if(aa)	for(long i=0;i<nx;i++)	T.a[i+6*nx] = aa->a[i0+i];
-				else	for(long i=0;i<nx;i++)	T.a[i+6*nx] = A->vthr(i0+i);
-				if(bb)	for(long i=0;i<nx;i++)	T.a[i+7*nx] = bb->a[i0+i];
-				else	for(long i=0;i<nx;i++)	T.a[i+7*nx] = B->vthr(i0+i);
-				if(cc)	for(long i=0;i<nx;i++)	T.a[i+8*nx] = cc->a[i0+i];
-				else	for(long i=0;i<nx;i++)	T.a[i+8*nx] = C->vthr(i0+i);
-				if(dd)	for(long i=0;i<nx;i++)	T.a[i+9*nx] = dd->a[i0+i];
-				else	for(long i=0;i<nx;i++)	T.a[i+9*nx] = D->vthr(i0+i);
-				mgl_progonka_p<dual>(T.a+6*nx,T.a+7*nx,T.a+8*nx,T.a+9*nx,T.a,nx);
+				if(aC)	for(long i=0;i<nx;i++)	aa[i] = aC->a[i0+i];
+				else	for(long i=0;i<nx;i++)	aa[i] = A->v(i,j,k);
+				if(bC)	for(long i=0;i<nx;i++)	bb[i] = bC->a[i0+i];
+				else	for(long i=0;i<nx;i++)	bb[i] = B->v(i,j,k);
+				if(cC)	for(long i=0;i<nx;i++)	cc[i] = cC->a[i0+i];
+				else	for(long i=0;i<nx;i++)	cc[i] = C->v(i,j,k);
+				if(dC)	for(long i=0;i<nx;i++)	dd[i] = dC->a[i0+i];
+				else	for(long i=0;i<nx;i++)	dd[i] = D->v(i,j,k);
+				mgl_progonka_p<dual>(aa,bb,cc,dd,T.a,nx);
 				for(long i=0;i<nx;i++)	r->a[i+i0] = uu[i];
 			}
 		}
 		else if(mglchr(how,'y'))
 #pragma omp parallel
 		{
-			mglDataC T(ny,10);	dual *uu=T.a+5*ny;
+			mglDataC T(ny,8);	dual *uu=T.a+3*ny;
+			dual *aa=T.a+4*ny, *bb=T.a+5*ny, *cc=T.a+6*ny, *dd=T.a+7*ny;
 #pragma omp for collapse(2)
 			for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)
 			{
 				long i0 = i+nx*ny*k;
-				if(aa)	for(long j=0;j<ny;j++)	T.a[j+6*ny] = aa->a[i0+j*nx];
-				else	for(long j=0;j<ny;j++)	T.a[j+6*ny] = A->vthr(i0+j*nx);
-				if(bb)	for(long j=0;j<ny;j++)	T.a[j+7*ny] = bb->a[i0+j*nx];
-				else	for(long j=0;j<ny;j++)	T.a[j+7*ny] = B->vthr(i0+j*nx);
-				if(cc)	for(long j=0;j<ny;j++)	T.a[j+8*ny] = cc->a[i0+j*nx];
-				else	for(long j=0;j<ny;j++)	T.a[j+8*ny] = C->vthr(i0+j*nx);
-				if(dd)	for(long j=0;j<ny;j++)	T.a[j+9*ny] = dd->a[i0+j*nx];
-				else	for(long j=0;j<ny;j++)	T.a[j+9*ny] = D->vthr(i0+j*nx);
-				mgl_progonka_p<dual>(T.a+6*ny,T.a+7*ny,T.a+8*ny,T.a+9*ny,T.a,ny);
+				if(aC)	for(long j=0;j<ny;j++)	aa[i] = aC->a[i0+j*nx];
+				else	for(long j=0;j<ny;j++)	aa[i] = A->v(i,j,k);
+				if(bC)	for(long j=0;j<ny;j++)	bb[i] = bC->a[i0+j*nx];
+				else	for(long j=0;j<ny;j++)	bb[i] = B->v(i,j,k);
+				if(cC)	for(long j=0;j<ny;j++)	cc[i] = cC->a[i0+j*nx];
+				else	for(long j=0;j<ny;j++)	cc[i] = C->v(i,j,k);
+				if(dC)	for(long j=0;j<ny;j++)	dd[i] = dC->a[i0+j*nx];
+				else	for(long j=0;j<ny;j++)	dd[i] = D->v(i,j,k);
+				mgl_progonka_p<dual>(aa,bb,cc,dd,T.a,ny);
 				for(long j=0;j<ny;j++)	r->a[j*nx+i0] = uu[j];
 			}
 		}
 		else if(mglchr(how,'z'))
 #pragma omp parallel
 		{
-			mglDataC T(nz,10);	dual *uu=T.a+5*nz;
+			mglDataC T(nz,8);	dual *uu=T.a+3*nz;
+			dual *aa=T.a+4*nz, *bb=T.a+5*nz, *cc=T.a+6*nz, *dd=T.a+7*nz;
 			const long ns=nx*ny;
 #pragma omp for collapse(2)
 			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
 				long i0 = i+nx*j;
-				if(aa)	for(long k=0;k<nz;j++)	T.a[k+6*nz] = aa->a[i0+k*ns];
-				else	for(long k=0;k<nz;j++)	T.a[k+6*nz] = A->vthr(i0+k*ns);
-				if(bb)	for(long k=0;k<nz;j++)	T.a[k+7*nz] = bb->a[i0+k*ns];
-				else	for(long k=0;k<nz;j++)	T.a[k+7*nz] = B->vthr(i0+k*ns);
-				if(cc)	for(long k=0;k<nz;j++)	T.a[k+8*nz] = cc->a[i0+k*ns];
-				else	for(long k=0;k<nz;j++)	T.a[k+8*nz] = C->vthr(i0+k*ns);
-				if(dd)	for(long k=0;k<nz;j++)	T.a[k+9*nz] = dd->a[i0+k*ns];
-				else	for(long k=0;k<nz;j++)	T.a[k+9*nz] = D->vthr(i0+k*ns);
-				mgl_progonka_p<dual>(T.a+6*nz,T.a+7*nz,T.a+8*nz,T.a+9*nz,T.a,nz);
+				if(aC)	for(long k=0;k<nz;j++)	aa[i] = aC->a[i0+k*ns];
+				else	for(long k=0;k<nz;j++)	aa[i] = A->v(i,j,k);
+				if(bC)	for(long k=0;k<nz;j++)	bb[i] = bC->a[i0+k*ns];
+				else	for(long k=0;k<nz;j++)	bb[i] = B->v(i,j,k);
+				if(cC)	for(long k=0;k<nz;j++)	cc[i] = cC->a[i0+k*ns];
+				else	for(long k=0;k<nz;j++)	cc[i] = C->v(i,j,k);
+				if(dC)	for(long k=0;k<nz;j++)	dd[i] = dC->a[i0+k*ns];
+				else	for(long k=0;k<nz;j++)	dd[i] = D->v(i,j,k);
+				mgl_progonka_p<dual>(aa,bb,cc,dd,T.a,nz);
 				for(long k=0;k<nz;k++)	r->a[k*ns+i0] = uu[k];
 			}
 		}
@@ -1265,61 +1269,64 @@ HADT MGL_EXPORT mgl_datac_trimat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how
 		if(mglchr(how,'x'))
 #pragma omp parallel
 		{
-			mglDataC T(nx,7);	dual *uu=T.a+2*nx;
+			mglDataC T(nx,8);	dual *uu=T.a+2*nx;
+			dual *aa=T.a+4*nx, *bb=T.a+5*nx, *cc=T.a+6*nx, *dd=T.a+7*nx;
 #pragma omp for collapse(2)
 			for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)
 			{
 				long i0 = nx*(j+ny*k);
-				if(aa)	for(long i=0;i<nx;i++)	T.a[i+3*nx] = aa->a[i0+i];
-				else	for(long i=0;i<nx;i++)	T.a[i+3*nx] = A->vthr(i0+i);
-				if(bb)	for(long i=0;i<nx;i++)	T.a[i+4*nx] = bb->a[i0+i];
-				else	for(long i=0;i<nx;i++)	T.a[i+4*nx] = B->vthr(i0+i);
-				if(cc)	for(long i=0;i<nx;i++)	T.a[i+5*nx] = cc->a[i0+i];
-				else	for(long i=0;i<nx;i++)	T.a[i+5*nx] = C->vthr(i0+i);
-				if(dd)	for(long i=0;i<nx;i++)	T.a[i+6*nx] = dd->a[i0+i];
-				else	for(long i=0;i<nx;i++)	T.a[i+6*nx] = D->vthr(i0+i);
-				mgl_progonka_s<dual>(T.a+3*nx,T.a+4*nx,T.a+5*nx,T.a+6*nx,T.a,nx);
+				if(aC)	for(long i=0;i<nx;i++)	aa[i] = aC->a[i0+i];
+				else	for(long i=0;i<nx;i++)	aa[i] = A->v(i,j,k);
+				if(bC)	for(long i=0;i<nx;i++)	bb[i] = bC->a[i0+i];
+				else	for(long i=0;i<nx;i++)	bb[i] = B->v(i,j,k);
+				if(cC)	for(long i=0;i<nx;i++)	cc[i] = cC->a[i0+i];
+				else	for(long i=0;i<nx;i++)	cc[i] = C->v(i,j,k);
+				if(dC)	for(long i=0;i<nx;i++)	dd[i] = dC->a[i0+i];
+				else	for(long i=0;i<nx;i++)	dd[i] = D->v(i,j,k);
+				mgl_progonka_s<dual>(aa,bb,cc,dd,T.a,nx);
 				for(long i=0;i<nx;i++)	r->a[i+i0] = uu[i];
 			}
 		}
 		else if(mglchr(how,'y'))
 #pragma omp parallel
 		{
-			mglDataC T(ny,7);	dual *uu=T.a+2*ny;
+			mglDataC T(ny,8);	dual *uu=T.a+2*ny;
+			dual *aa=T.a+4*ny, *bb=T.a+5*ny, *cc=T.a+6*ny, *dd=T.a+7*ny;
 #pragma omp for collapse(2)
 			for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)
 			{
 				long i0 = i+nx*ny*k;
-				if(aa)	for(long j=0;j<ny;j++)	T.a[j+3*ny] = aa->a[i0+j*nx];
-				else	for(long j=0;j<ny;j++)	T.a[j+3*ny] = A->vthr(i0+j*nx);
-				if(bb)	for(long j=0;j<ny;j++)	T.a[j+4*ny] = bb->a[i0+j*nx];
-				else	for(long j=0;j<ny;j++)	T.a[j+4*ny] = B->vthr(i0+j*nx);
-				if(cc)	for(long j=0;j<ny;j++)	T.a[j+5*ny] = cc->a[i0+j*nx];
-				else	for(long j=0;j<ny;j++)	T.a[j+5*ny] = C->vthr(i0+j*nx);
-				if(dd)	for(long j=0;j<ny;j++)	T.a[j+6*ny] = dd->a[i0+j*nx];
-				else	for(long j=0;j<ny;j++)	T.a[j+6*ny] = D->vthr(i0+j*nx);
-				mgl_progonka_s<dual>(T.a+3*ny,T.a+4*ny,T.a+5*ny,T.a+6*ny,T.a,ny);
+				if(aC)	for(long j=0;j<ny;j++)	aa[i] = aC->a[i0+j*nx];
+				else	for(long j=0;j<ny;j++)	aa[i] = A->v(i,j,k);
+				if(bC)	for(long j=0;j<ny;j++)	bb[i] = bC->a[i0+j*nx];
+				else	for(long j=0;j<ny;j++)	bb[i] = B->v(i,j,k);
+				if(cC)	for(long j=0;j<ny;j++)	cc[i] = cC->a[i0+j*nx];
+				else	for(long j=0;j<ny;j++)	cc[i] = C->v(i,j,k);
+				if(dC)	for(long j=0;j<ny;j++)	dd[i] = dC->a[i0+j*nx];
+				else	for(long j=0;j<ny;j++)	dd[i] = D->v(i,j,k);
+				mgl_progonka_s<dual>(aa,bb,cc,dd,T.a,ny);
 				for(long j=0;j<ny;j++)	r->a[j*nx+i0] = uu[j];
 			}
 		}
 		else if(mglchr(how,'z'))
 #pragma omp parallel
 		{
-			mglDataC T(nz,7);	dual *uu=T.a+2*nz;
+			mglDataC T(nz,8);	dual *uu=T.a+2*nz;
+			dual *aa=T.a+4*nz, *bb=T.a+5*nz, *cc=T.a+6*nz, *dd=T.a+7*nz;
 			const long ns=nx*ny;
 #pragma omp for collapse(2)
 			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
 				long i0 = i+nx*j;
-				if(aa)	for(long k=0;k<nz;j++)	T.a[k+3*nz] = aa->a[i0+k*ns];
-				else	for(long k=0;k<nz;j++)	T.a[k+3*nz] = A->vthr(i0+k*ns);
-				if(bb)	for(long k=0;k<nz;j++)	T.a[k+4*nz] = bb->a[i0+k*ns];
-				else	for(long k=0;k<nz;j++)	T.a[k+4*nz] = B->vthr(i0+k*ns);
-				if(cc)	for(long k=0;k<nz;j++)	T.a[k+5*nz] = cc->a[i0+k*ns];
-				else	for(long k=0;k<nz;j++)	T.a[k+5*nz] = C->vthr(i0+k*ns);
-				if(dd)	for(long k=0;k<nz;j++)	T.a[k+6*nz] = dd->a[i0+k*ns];
-				else	for(long k=0;k<nz;j++)	T.a[k+6*nz] = D->vthr(i0+k*ns);
-				mgl_progonka_s<dual>(T.a+3*nz,T.a+4*nz,T.a+5*nz,T.a+6*nz,T.a,nz);
+				if(aC)	for(long k=0;k<nz;j++)	aa[i] = aC->a[i0+k*ns];
+				else	for(long k=0;k<nz;j++)	aa[i] = A->v(i,j,k);
+				if(bC)	for(long k=0;k<nz;j++)	bb[i] = bC->a[i0+k*ns];
+				else	for(long k=0;k<nz;j++)	bb[i] = B->v(i,j,k);
+				if(cC)	for(long k=0;k<nz;j++)	cc[i] = cC->a[i0+k*ns];
+				else	for(long k=0;k<nz;j++)	cc[i] = C->v(i,j,k);
+				if(dC)	for(long k=0;k<nz;j++)	dd[i] = dC->a[i0+k*ns];
+				else	for(long k=0;k<nz;j++)	dd[i] = D->v(i,j,k);
+				mgl_progonka_s<dual>(aa,bb,cc,dd,T.a,nz);
 				for(long k=0;k<nz;k++)	r->a[k*ns+i0] = uu[k];
 			}
 		}
@@ -1327,9 +1334,9 @@ HADT MGL_EXPORT mgl_datac_trimat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how
 	return r;
 }
 //-----------------------------------------------------------------------------
-uintptr_t MGL_EXPORT mgl_datac_trimat_(uintptr_t *A, uintptr_t *B, uintptr_t *C, uintptr_t *D, const char *how, int l)
+uintptr_t MGL_EXPORT mgl_datac_tridmat_(uintptr_t *A, uintptr_t *B, uintptr_t *C, uintptr_t *D, const char *how, int l)
 {	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
-	uintptr_t r = uintptr_t(mgl_datac_trimat(_DA_(A),_DA_(B),_DA_(C),_DA_(D),s));
+	uintptr_t r = uintptr_t(mgl_datac_tridmat(_DA_(A),_DA_(B),_DA_(C),_DA_(D),s));
 	delete []s;	return r;
 }
 //-----------------------------------------------------------------------------
