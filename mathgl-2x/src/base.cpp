@@ -130,7 +130,7 @@ mglBase::mglBase()
 //	Txt.set_mutex(&mutexClf);
 #endif
 #if MGL_HAVE_OMP
-	lockClf = new omp_lock_t;	
+	lockClf = new omp_lock_t;
 	omp_init_lock((omp_lock_t*)lockClf);
 	Pnt.set_mutex(lockClf);
 	Prm.set_mutex(lockClf);
@@ -340,6 +340,11 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	if(ci<0 || ci>=(long)Txt.size())	ci=0;	// NOTE never should be here!!!
 	const mglTexture &txt=Txt[ci];
 	txt.GetC(c,a,q);	// RGBA color
+	if(get(MGL_GRAY_MODE))
+	{
+		float h = 0.3*q.r + 0.59*q.g + 0.11*q.b;
+		q.r = q.g = q.b = h;
+	}
 
 	// add gap for texture coordinates for compatibility with OpenGL
 	const mreal gap = 0./MGL_TEXTURE_COLOURS;

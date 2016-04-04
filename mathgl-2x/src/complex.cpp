@@ -1086,22 +1086,28 @@ void MGL_EXPORT mgl_datac_diffr(HADT d, const char *how, mreal q)
 {
 	if(!how || *how==0)	return;
 	long nx=d->nx,ny=d->ny,nz=d->nz,ll=strlen(how);
-	long p[4]={0,0,(mglchr(how,'a')||mglchr(how,'r'))?1:0,0};
+	long p[4]={0,0,0,0};
 	dual qq=q;
 	for(long i=0;i<ll;i++)	if(how[i]>='0' && how[i]<='9')	p[3] = how[i]-'0';
+	bool axial = mglchr(how,'r')||mglchr(how,'r');
 	if(mglchr(how,'z') && nz>1)
 	{
-		p[0]=nz;	p[1]=nx*ny;
+		p[0]=nz;	p[1]=nx*ny;	p[2]=0;
 		mglStartThreadC(mgl_difr,0,nx*ny,0,&qq,0,p);
 	}
-	if(mglchr(how,'y') && ny>1)
+	if(mglchr(how,'y') && ny>1 && !axial)
 	{
-		p[0]=ny;	p[1]=nx;
+		p[0]=ny;	p[1]=nx;	p[2]=0;
 		mglStartThreadC(mgl_difr,0,nx*nz,0,&qq,0,p);
 	}
-	if((mglchr(how,'x')||mglchr(how,'r')) && nx>1)
+	if(mglchr(how,'x') && nx>1 && !axial)
 	{
-		p[0]=nx;	p[1]=1;
+		p[0]=nx;	p[1]=1;	p[2]=0;
+		mglStartThreadC(mgl_difr,0,ny*nz,0,&qq,0,p);
+	}
+	if(axial && nx>1)
+	{
+		p[0]=nx;	p[1]=1;	p[2]=1;
 		mglStartThreadC(mgl_difr,0,ny*nz,0,&qq,0,p);
 	}
 }

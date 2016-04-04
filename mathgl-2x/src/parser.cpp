@@ -135,7 +135,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 //-----------------------------------------------------------------------------
 mglParser::mglParser(bool setsize)
 {
-	InUse = 1;	curGr = 0;
+	InUse = 1;	curGr = 0;	Variant = 0;
 	Skip=Stop=for_br=false;
 	memset(for_stack,0,40*sizeof(int));
 	memset(if_stack,0,40*sizeof(int));
@@ -298,11 +298,27 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 	{
 		mglDataA *v;	mglNum *f;
 		a[n-1].type = -1;
-		if(arg[n][0]=='|')	a[n-1].type = -1;
-		else if(arg[n][0]=='\'')	// this is string (simplest case)
+		std::wstring str = arg[n];
+		size_t i1=0, i2=str.length(), j=0;
+		bool s=true;
+		for(size_t i=0;i<i2;i++)
+		{
+			if(str[i]=='\'')	s = !s;
+			if(s && str[i]=='?')
+			{
+				if(j<Variant)	i1=i+1;
+				else	i2=i;
+				j++;
+			}
+		}
+		str = str.substr(i1,i2-i1);
+
+		if(str.empty())	a[n-1].type = -2;
+		else if(str[0]=='|')	a[n-1].type = -1;
+		else if(str[0]=='\'')	// this is string (simplest case)
 		{
 			a[n-1].type = 1;
-			std::wstring &w=arg[n],f;
+			std::wstring &w=str,f;
 			wchar_t buf[32];
 			long i,i1,ll=w.length();
 			for(i=1;i<ll;i++)
@@ -335,51 +351,51 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 				else	a[n-1].w += w[i];
 			}
 		}
-		else if(arg[n][0]=='{')
+		else if(str[0]=='{')
 		{	// this is temp data
 			mglData *u=new mglData;
-			std::wstring s = arg[n].substr(1,arg[n].length()-2);
+			std::wstring s = str.substr(1,str.length()-2);
 			a[n-1].w = u->s = L"/*"+s+L"*/";
 			a[n-1].type = 0;
 			ParseDat(gr, s, *u);	a[n-1].d = u;
 			u->temp=true;	DataList.push_back(u);
 		}
-		else if((v = FindVar(arg[n].c_str()))!=0)	// try to find normal variables (for data creation)
+		else if((v = FindVar(str.c_str()))!=0)	// try to find normal variables (for data creation)
 		{	a[n-1].type=0;	a[n-1].d=v;	a[n-1].w=v->s;	}
-		else if((f = FindNum(arg[n].c_str()))!=0)	// try to find normal number (for data creation)
+		else if((f = FindNum(str.c_str()))!=0)	// try to find normal number (for data creation)
 		{	a[n-1].type=2;	a[n-1].d=0;	a[n-1].v=f->d;	a[n-1].c=f->c;	a[n-1].w = f->s;	}
-		else if(arg[n][0]=='!')	// complex array is asked
+		else if(str[0]=='!')	// complex array is asked
 		{	// parse all numbers and formulas by unified way
-			HADT d = mglFormulaCalcC(arg[n].substr(1), this, DataList);
+			HADT d = mglFormulaCalcC(str.substr(1), this, DataList);
 			if(d->GetNN()==1)
 			{
-				if(CheckForName(arg[n].substr(1)))
+				if(CheckForName(str.substr(1)))
 				{	a[n-1].type = 2;	a[n-1].v = d->v(0);	a[n-1].c = d->a[0];	}
 				else
-				{	a[n-1].type = 0;	a[n-1].d = AddVar(arg[n].c_str());	}
+				{	a[n-1].type = 0;	a[n-1].d = AddVar(str.c_str());	}
 				delete d;
 			}
 			else
 			{
-				a[n-1].w = L"/*"+arg[n]+L"*/";
+				a[n-1].w = L"/*"+str+L"*/";
 				d->temp=true;	DataList.push_back(d);
 				a[n-1].type = 0;	a[n-1].d = d;
 			}
 		}
 		else
 		{	// parse all numbers and formulas by unified way
-			HMDT d = mglFormulaCalc(arg[n], this, DataList);
+			HMDT d = mglFormulaCalc(str, this, DataList);
 			if(d->GetNN()==1)
 			{
-				if(CheckForName(arg[n]))
+				if(CheckForName(str))
 				{	a[n-1].type = 2;	a[n-1].c = a[n-1].v = d->v(0);	}
 				else
-				{	a[n-1].type = 0;	a[n-1].d = AddVar(arg[n].c_str());	}
+				{	a[n-1].type = 0;	a[n-1].d = AddVar(str.c_str());	}
 				delete d;
 			}
 			else
 			{
-				a[n-1].w = L"/*"+arg[n]+L"*/";
+				a[n-1].w = L"/*"+str+L"*/";
 				d->temp=true;	DataList.push_back(d);
 				a[n-1].type = 0;	a[n-1].d = d;
 			}
@@ -655,8 +671,14 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				std::wstring a1 = arg[1], a2=arg[2];	res = 0;
 				if(a1[0]=='\'')	a1 = a1.substr(1,a1.length()-2);
 				if(a2[0]=='\'')	a2 = a2.substr(1,a2.length()-2);
-				mgl_rk_step_w(this, a1.c_str(), a2.c_str(), (k>=3 && a[2].type==2)?a[2].v:1);
+				mgl_rk_step_w(this, a1.c_str(), a2.c_str(), (k>3 && a[2].type==2)?a[2].v:1);
 			}
+			delete []a;	delete []arg;	return res;
+		}
+		if(!arg[0].compare(L"variant"))
+		{
+			int res=1;
+			if(k==2 && a[0].type==2)	{	SetVariant(a[0].v);	res=0;	}
 			delete []a;	delete []arg;	return res;
 		}
 		if(!arg[0].compare(L"call"))
@@ -1300,4 +1322,7 @@ void MGL_EXPORT mgl_rk_step_(uintptr_t *p, const char *eqs, const char *vars, do
 {	char *e=new char[l+1];	memcpy(e,eqs,l);	e[l]=0;
 	char *s=new char[m+1];	memcpy(s,vars,m);	s[m]=0;
 	mgl_rk_step(_PR_,e,s,*dt);	delete []e;	delete []s;	}
+//---------------------------------------------------------------------------
+void MGL_EXPORT mgl_parser_variant(HMPR p, int var)	{	p->SetVariant(var);	}
+void MGL_EXPORT mgl_parser_variant_(uintptr_t *p, int *var)	{	mgl_parser_variant(_PR_,*var);	}
 //---------------------------------------------------------------------------

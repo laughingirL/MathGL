@@ -2161,6 +2161,9 @@ public:
 	/// Execute and draw script from the file
 	inline void Execute(mglGraph *gr, FILE *fp, bool print=false)
 	{	mgl_parse_file(gr->Self(), pr, fp, print);	}
+	/// Set variant of argument(s) separated by '?' to be used
+	inline void SetVariant(int var=0)
+	{	mgl_parser_variant(pr, var);	}
 
 	/// Return type of command: 0 - not found, 1 - other data plot, 2 - func plot,
 	///		3 - setup, 4 - data handle, 5 - data create, 6 - subplot, 7 - program

@@ -1,5 +1,7 @@
 2.3.4.1 Released 14 March
 
+* Add 'tridmat' for tridiagonal matrix algorithm.
+* Add 'diffract' for single step diffraction calculation.
 * Add 'ifsfile' for reading IFS fractal parameters from *.ifs file.
 * Add style '*' for 2d versions of Pipe() and Flow() to draw threads from points inside axis range.
 * Compatibility changes for MS VisualStudio, MacOS, Win64.

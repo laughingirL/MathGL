@@ -641,6 +641,9 @@ void MGL_EXPORT mgl_parser_allow_dll_call_(uintptr_t* p, int *a);
 /// Set flag to stop script parsing
 void MGL_EXPORT mgl_parser_stop(HMPR p);
 void MGL_EXPORT mgl_parser_stop_(uintptr_t* p);
+/// Set variant of argument(s) separated by '?' to be used
+void MGL_EXPORT mgl_parser_variant(HMPR p, int var);
+void MGL_EXPORT mgl_parser_variant_(uintptr_t* p, int *var);
 
 /// Return type of command: 0 - not found, 1 - data plot, 2 - other plot,
 ///		3 - setup, 4 - data handle, 5 - data create, 6 - subplot, 7 - program

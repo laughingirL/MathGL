@@ -112,14 +112,16 @@ line dashing style (see @ref{Line styles});
 
 stop color scheme parsing (see @ref{Color scheme});
 
-range operation in @ref{MGL scripts}.
+range operation in @ref{MGL scripts};
+
+separator of commands in @ref{MGL scripts}.
 
 @item ;
 line dashing style (see @ref{Line styles});
 
 one of mask for face filling (see @ref{Color scheme});
 
-end of an option in @ref{MGL scripts} or in @ref{Command options}.
+start of an option in @ref{MGL scripts} or in @ref{Command options}.
 
 @item <
 one of marks (see @ref{Line styles});
@@ -176,7 +178,9 @@ set to draw edges for @ref{cone};
 
 set to draw filled boxes for @ref{boxs};
 
-reduce text size inside a string (see @ref{Font styles}).
+reduce text size inside a string (see @ref{Font styles});
+
+operation in @ref{Textual formulas}.
 
 @item ^
 one of marks (see @ref{Line styles});

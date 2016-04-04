@@ -171,6 +171,7 @@ void MGL_EXPORT mgl_difr_grid_old(dual *a,int n,int step,dual q,int Border,dual 
 		memcpy(b,d,n*sizeof(dual));
 		switch(Border)
 		{
+			default:
 			case 0:		// zero at border
 				b[0] = 0;	b[n-1] = 0;		break;
 			case 1:		// constant at border

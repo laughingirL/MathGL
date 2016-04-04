@@ -3015,6 +3015,14 @@ int MGL_NO_EXPORT mgls_tridmat(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_diffract(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(c && !strcmp(k,"dsn"))	c->Diffraction(a[1].s.c_str(), a[2].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_pde(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -3515,6 +3523,7 @@ mglCommand mgls_base_cmd[] = {
 	{"dew","Draw dew plot","dew Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_dew ,11},
 	{"diff","Numerically differentiate data","diff Var 'dir'", mgls_diff ,16},
 	{"diff2","Numerically double differentiate data","diff2 Var 'dir'", mgls_diff2 ,16},
+	{"diffract","Step for pulse diffraction","diffract Res 'how' q", mgls_diffract ,16},
 	{"diffuse","Set diffusive light brightness","diffuse val", mgls_diffuse ,2},
 	{"divto","Divide by data or number","divto Var Dat|Var num", mgls_divto ,3},
 	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']|Xdat Ydat Zdat Adat ['fmt']|Xdat Ydat Zdat Cdat Adat ['fmt']", mgls_dots ,9},
@@ -3699,6 +3708,7 @@ mglCommand mgls_base_cmd[] = {
 	{"tube","Draw curve by tube","tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube ,7},
 	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks ,14},
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var ,4},
+	{"variant","Select variant of plot style(s)","variant var", 0, 6},
 	{"vect","Draw vector field","vect Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']|Udat Vdat Wdat ['fmt']|Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_vect ,11},
 	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3 ,11},
 	{"version","Print MathGL version or check if it is valid","version |'ver'", mgls_version, 2},

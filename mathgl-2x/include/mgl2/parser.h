@@ -160,6 +160,8 @@ public:
 	void DeleteVar(const wchar_t *name);
 	/// Delete all data variables
 	void DeleteAll();
+	/// Set variant of argument(s) separated by '?' to be used
+	inline void SetVariant(int var=0)	{	Variant = var<=0?0:var;	}
 private:
 //	long parlen;		///< Length of parameter strings
 	std::wstring par[40];	///< Parameter for substituting instead of $1, ..., $9
@@ -175,6 +177,7 @@ private:
 	int for_stack[40];	///< The order of for-variables
 	int for_addr;		///< Flag for saving address in variable (for_addr-1)
 	bool for_br;		///< Break is switched on (skip all comands until 'next')
+	unsigned Variant;	///< Select variant of argument(s) separated by '?'
 
 	/// Parse command
 	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const std::wstring &var, const wchar_t *opt);
