@@ -66,6 +66,14 @@ int MGL_NO_EXPORT mgls_alpha(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_gray(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(k[0]==0)	gr->Gray(true);
+	else if(!strcmp(k,"n"))	gr->Gray(a[0].v!=0);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_pendelta(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -3561,6 +3569,7 @@ mglCommand mgls_base_cmd[] = {
 	{"fsurf","Plot surface by formula","fsurf 'z(x,y)' ['fmt']|'x(u,v)' 'y(u,v)' 'z(u,v)' ['fmt']", mgls_fsurf ,1},
 	{"func","Start function definition and stop execution of main script","func 'name' [narg]", 0, 6},
 	{"grad","Draw gradient lines for scalar field","grad Phi ['fmt' num]|Xdat Ydat Phi ['fmt' num]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad ,8},
+	{"gray","Switch on/off gray-scale mode","gray [val]", mgls_gray ,2},
 	{"grid","Draw grid","grid ['dir' 'fmt']", mgls_grid ,12},
 	{"grid2","Draw grid for data array(s)","grid Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid2 ,8},
 	{"grid3","Draw grid at slices of 3D data","grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3 ,9},

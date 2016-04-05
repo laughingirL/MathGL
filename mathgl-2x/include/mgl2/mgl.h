@@ -69,6 +69,8 @@ public:
 
 	/// Set the transparency on/off.
 	inline void Alpha(bool enable)			{	mgl_set_alpha(gr, enable);	}
+	/// Set the gray-scale mode on/off.
+	inline void Gray(bool enable)			{	mgl_set_gray(gr, enable);	}
 	/// Set default value of alpha-channel
 	inline void SetAlphaDef(double alpha)	{	mgl_set_alpha_default(gr, alpha);	}
 	/// Set the transparency type (0 - usual, 1 - glass, 2 - lamp)

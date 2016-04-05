@@ -83,6 +83,7 @@ void MGL_EXPORT mgl_clear_frame(HMGL gr)
 void MGL_EXPORT mgl_set_transp_type(HMGL gr, int type)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTranspType(type);	}
 void MGL_EXPORT mgl_set_alpha(HMGL gr, int enable)	{	gr->Alpha(enable);	}
+void MGL_EXPORT mgl_set_gray(HMGL gr, int enable)	{	gr->set(enable, MGL_GRAY_MODE);	}
 void MGL_EXPORT mgl_set_fog(HMGL gr, double d, double dz)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Fog(d,dz);	}
 void MGL_EXPORT mgl_set_light(HMGL gr, int enable)	{	gr->Light(enable);	}
@@ -191,6 +192,7 @@ void MGL_EXPORT mgl_clear_frame_(uintptr_t *gr)			{	_GR_->ClearFrame();	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_transp_type_(uintptr_t *gr, int *type)		{	_GR_->SetTranspType(*type);	}
 void MGL_EXPORT mgl_set_alpha_(uintptr_t *gr, int *enable)			{	_GR_->Alpha(*enable);	}
+void MGL_EXPORT mgl_set_gray_(uintptr_t *gr, int *enable)			{	_GR_->set(*enable, MGL_GRAY_MODE);	}
 void MGL_EXPORT mgl_set_fog_(uintptr_t *gr, mreal *d, mreal *dz)	{	_GR_->Fog(*d, *dz);		}
 void MGL_EXPORT mgl_set_light_(uintptr_t *gr, int *enable)			{	_GR_->Light(*enable);	}
 void MGL_EXPORT mgl_set_attach_light_(uintptr_t *gr, int *enable)	{	_GR_->AttachLight(*enable);	}

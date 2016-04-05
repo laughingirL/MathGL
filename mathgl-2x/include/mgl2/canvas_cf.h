@@ -388,6 +388,9 @@ void MGL_EXPORT mgl_set_transp_type_(uintptr_t *gr, int *kind);
 /// Set the transparency on/off.
 void MGL_EXPORT mgl_set_alpha(HMGL gr, int enable);
 void MGL_EXPORT mgl_set_alpha_(uintptr_t *gr, int *enable);
+/// Set the gray-scale mode on/off.
+void MGL_EXPORT mgl_set_gray(HMGL gr, int enable);
+void MGL_EXPORT mgl_set_gray_(uintptr_t *gr, int *enable);
 /// Set the fog distance or switch it off (if d=0).
 void MGL_EXPORT mgl_set_fog(HMGL gr, double d, double dz);
 void MGL_EXPORT mgl_set_fog_(uintptr_t *gr, mreal *dist, mreal *dz);

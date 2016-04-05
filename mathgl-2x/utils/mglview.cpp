@@ -41,9 +41,10 @@ int main(int argc, char **argv)
 {
 	char iname[256]="";
 	mgl_suppress_warn(true);
+	bool gray = false;
 	while(1)
 	{
-		int ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hL:s:");
+		int ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hL:s:g:v:");
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
 		else if(ch=='s')
 		{
@@ -56,6 +57,8 @@ int main(int argc, char **argv)
 				fclose(fp);
 			}
 		}
+		else if(ch=='v')	p.SetVariant(atoi(optarg));
+		else if(ch=='g')	gray= atoi(optarg);
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
 		else if(ch=='h' || (ch==-1 && optind>=argc))
 		{
@@ -65,6 +68,8 @@ int main(int argc, char **argv)
 				"\t-1 str       set str as argument $1 for script\n"
 				"\t...          ...\n"
 				"\t-9 str       set str as argument $9 for script\n"
+				"\t-g val       set gray-scale mode (val=0|1)\n"
+				"\t-v val       set variant of arguments\n"
 				"\t-s opt       set MGL script for setting up the plot\n"
 				"\t-L loc       set locale to loc\n"
 				"\t-            get script from standard input\n"
@@ -93,6 +98,8 @@ int main(int argc, char **argv)
 	mgl_ask_func = mgl_ask_gets;
 	mgl_ask_func = mgl_ask_qt;
 	mglQT gr(mgld?NULL:show, *iname?iname:"mglview");
+	if(gray)	gr.Gray(gray);
+
 	if(mgld)
 	{
 		gr.Setup(false);
