@@ -68,6 +68,7 @@ D. Docs about JS interface
 4. Docs about 'tridmat'
 5. Docs about 'diffract'
 6. Docs about 'variant' + about "var1?var2?var3?..."
+7. Docs about *.ifs format
 8. Docs about 'gray'
 
 ============= UDAV =============
