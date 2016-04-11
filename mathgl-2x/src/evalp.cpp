@@ -692,6 +692,12 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 			HMDT res = mgl_datac_imag(a1);
 			mgl_delete_datac(a1);	return res;
 		}
+		else if(!nm.compare(L"norm"))
+		{
+			HADT a1 = mglFormulaCalcC(str, arg, head);
+			HMDT res = mgl_datac_norm(a1);
+			mgl_delete_datac(a1);	return res;
+		}
 #if MGL_HAVE_GSL
 		else if(!nm.compare(L"i") && n>0)
 			return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Inu);
@@ -745,9 +751,10 @@ dual MGL_LOCAL_CONST sqrtc(dual x);	//{	return sqrt(x);	}
 dual MGL_LOCAL_CONST logc(dual x);	//{	return log(x);	}
 dual MGL_LOCAL_CONST absc(dual x);	//{	return abs(x);	}
 dual MGL_LOCAL_CONST argc(dual x);	//{	return arg(x);	}
-dual MGL_LOCAL_CONST lgc(dual x);		//{	return log10(x);}
-dual MGL_LOCAL_CONST realc(dual x)	{	return real(x);	}
-dual MGL_LOCAL_CONST imagc(dual x)	{	return dual(0,imag(x));	}
+dual MGL_LOCAL_CONST lgc(dual x);	//{	return log10(x);}
+dual MGL_LOCAL_CONST realc(dual x);	//{	return real(x);	}
+dual MGL_LOCAL_CONST imagc(dual x);	//{	return imag(x);	}
+dual MGL_LOCAL_CONST normc(dual x);	//{	return norm(x);	}
 //-----------------------------------------------------------------------------
 /// Parse string and substitute the script argument
 // All numbers are presented as mglData(1). Do boundary checking.
@@ -976,7 +983,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			else if(!nm.compare(L"acosh"))	return mglApplyFuncC(str, arg, head, acoshc);
 			else if(!nm.compare(L"atanh"))	return mglApplyFuncC(str, arg, head, atanhc);
 			else if(!nm.compare(L"arg"))	return mglApplyFuncC(str, arg, head, argc);
-			else if(!nm.compare(L"abs"))		return mglApplyFuncC(str, arg, head, absc);
+			else if(!nm.compare(L"abs"))	return mglApplyFuncC(str, arg, head, absc);
 		}
 		else if(nm[0]=='c')
 		{
@@ -1008,6 +1015,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			for(long i=0;i<res->GetNN();i++)	a[i] = dual(mgl_rnd(), mgl_rnd());	return res;	}
 		else if(!nm.compare(L"real"))	return mglApplyFuncC(str, arg, head, realc);
 		else if(!nm.compare(L"imag"))	return mglApplyFuncC(str, arg, head, imagc);
+		else if(!nm.compare(L"norm"))	return mglApplyFuncC(str, arg, head, normc);
 	}
 	HADT res = new mglDataC;	res->a[0]=NAN;	return res;
 }

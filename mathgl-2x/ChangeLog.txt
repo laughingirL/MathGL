@@ -4,6 +4,7 @@
 * Add 'diffract' for single step diffraction calculation.
 * Add 'ifsfile' for reading IFS fractal parameters from *.ifs file.
 * Add style '*' for 2d versions of Pipe() and Flow() to draw threads from points inside axis range.
+* Add "norm()" to the list of known functions
 * Compatibility changes for MS VisualStudio, MacOS, Win64.
 * Bugfix for legend export into EPS and SVG.
 * Improve Surf3*() drawing.

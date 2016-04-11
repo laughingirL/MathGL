@@ -61,6 +61,9 @@ EQ_LG,		// decimal logarithm of x, lg(x) = ln(x)/ln(10)
 EQ_ABS,		// absolute value
 EQ_ARG,		// argument (or phase) of complex number
 EQ_CONJ,	// complex conjugate
+EQ_REAL,	// real part
+EQ_IMAG,	// imaginary part
+EQ_NORM,	// square of absolute value |u|^2
 EQ_LAST		// id of last entry
 };
 //-----------------------------------------------------------------------------
@@ -173,6 +176,9 @@ mglFormulaC::mglFormulaC(const char *string)
 		else if(!strcmp(name,"abs")) Kod=EQ_ABS;
 		else if(!strcmp(name,"arg")) Kod=EQ_ARG;
 		else if(!strcmp(name,"conj")) Kod=EQ_CONJ;
+		else if(!strcmp(name,"real")) Kod=EQ_REAL;
+		else if(!strcmp(name,"imag")) Kod=EQ_IMAG;
+		else if(!strcmp(name,"norm")) Kod=EQ_NORM;
 		else {	delete []str;	return;	}	// unknown function
 		n=mglFindInText(str,",");
 		if(n>=0)
@@ -255,12 +261,15 @@ dual MGL_LOCAL_CONST logc(dual x)	{	return log(x);	}
 dual MGL_LOCAL_CONST absc(dual x)	{	return abs(x);	}
 dual MGL_LOCAL_CONST argc(dual x)	{	return arg(x);	}
 dual MGL_LOCAL_CONST lgc(dual x)	{	return log10(x);}
+dual MGL_LOCAL_CONST realc(dual x)	{	return real(x);	}
+dual MGL_LOCAL_CONST imagc(dual x)	{	return imag(x);	}
+dual MGL_LOCAL_CONST normc(dual x)	{	return norm(x);	}
 //-----------------------------------------------------------------------------
 typedef dual (*func_1)(dual);
 typedef dual (*func_2)(dual, dual);
 static const func_2 f2[EQ_SIN-EQ_LT] = {cltc,cgtc,ceqc,addc,subc,mulc,divc,ipwc,powc,llgc};
 static const func_1 f1[EQ_LAST-EQ_SIN] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc,coshc,tanhc,
-					asinhc,acoshc,atanhc,sqrtc,expc,expi,logc,lgc,absc,argc,conjc};
+					asinhc,acoshc,atanhc,sqrtc,expc,expi,logc,lgc,absc,argc,conjc,realc,imagc,normc};
 // evaluation of embedded (included) expressions
 dual mglFormulaC::CalcIn(const dual *a1) const
 {

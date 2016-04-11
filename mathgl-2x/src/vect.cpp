@@ -618,7 +618,7 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	{
 		mreal t = (i+1.)/(num+1.), s = (j+1.)/(num+1.);
 		u.push_back(s);		v.push_back(t);
-		u.push_back(-s);		v.push_back(-t);
+		u.push_back(-s);	v.push_back(-t);
 	}
 	else	for(long i=0;i<num;i++)
 	{
