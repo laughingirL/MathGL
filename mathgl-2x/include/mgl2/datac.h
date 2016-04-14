@@ -445,6 +445,9 @@ using mglDataA::Momentum;
 	/// Set the value in given cell of the data
 	void set_v(mreal val, long i,long j=0,long k=0)	{	mgl_datac_set_value(this,val,i,j,k);	}
 #endif
+	/// Get the complex value in given cell of the data
+	dual vc(long i,long j=0,long k=0) const	{	return a[i+nx*(j+ny*k)];	}
+	dual vcthr(long i) const	{	return a[i];	}
 	/// Get the interpolated value and its derivatives in given data cell without border checking
 	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
 	{	dual aa,ax,ay,az;	mreal res;

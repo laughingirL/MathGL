@@ -167,7 +167,10 @@ public:
 	inline mreal linearD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0)	const
 	{	return mgl_data_linear_ext(this,x,y,z,dx,dy,dz);	}
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
-	virtual mreal vthr(long i) const = 0;
+	virtual mreal vthr(long i) const
+	{	return v(i%GetNx(), (i/GetNx())%GetNy(), i/(GetNx()*GetNy()));	}
+	virtual dual vc(long i,long j=0,long k=0) const	{	return v(i,j,k);	}
+	virtual dual vcthr(long i) const	{	return vthr(i);	}
 	virtual long GetNx() const = 0;
 	virtual long GetNy() const = 0;
 	virtual long GetNz() const = 0;
