@@ -158,18 +158,18 @@ mglBase::~mglBase()
 	ClearEq();	ClearPrmInd();	delete fnt;
 	Pnt.set_mutex(0);	Prm.set_mutex(0);	//Txt.set_mutex(0);
 #if MGL_HAVE_PTHREAD
-	pthread_mutex_destroy(&mutexPnt,0);
-	pthread_mutex_destroy(&mutexTxt,0);
-	pthread_mutex_destroy(&mutexSub,0);
-	pthread_mutex_destroy(&mutexLeg,0);
-	pthread_mutex_destroy(&mutexPrm,0);
-	pthread_mutex_destroy(&mutexPtx,0);
-	pthread_mutex_destroy(&mutexStk,0);
-	pthread_mutex_destroy(&mutexGrp,0);
-	pthread_mutex_destroy(&mutexGlf,0);
-	pthread_mutex_destroy(&mutexAct,0);
-	pthread_mutex_destroy(&mutexDrw,0);
-	pthread_mutex_destroy(&mutexClf,0);
+	pthread_mutex_destroy(&mutexPnt);
+	pthread_mutex_destroy(&mutexTxt);
+	pthread_mutex_destroy(&mutexSub);
+	pthread_mutex_destroy(&mutexLeg);
+	pthread_mutex_destroy(&mutexPrm);
+	pthread_mutex_destroy(&mutexPtx);
+	pthread_mutex_destroy(&mutexStk);
+	pthread_mutex_destroy(&mutexGrp);
+	pthread_mutex_destroy(&mutexGlf);
+	pthread_mutex_destroy(&mutexAct);
+	pthread_mutex_destroy(&mutexDrw);
+	pthread_mutex_destroy(&mutexClf);
 #endif
 #if MGL_HAVE_OMP
 	omp_destroy_lock((omp_lock_t*)lockClf);
