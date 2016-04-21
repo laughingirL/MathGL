@@ -28,8 +28,7 @@ if(QT_ENABLED)
 		qt5_use_modules(mglview ${MGL_QT5_LIBS})
 	else(enable-qt5)
 		include(../cmake-qt4.txt)
-		target_link_libraries(mglview mgl-qt4${link_type} ${getopt_lib-static})
-		qt4_use_modules(mglview ${MGL_QT4_LIBS})
+		target_link_libraries(mglview mgl-qt4${link_type} ${getopt_lib-static} ${MGL_QT4_LIBS})
 	endif(enable-qt5)
 
 	install(
