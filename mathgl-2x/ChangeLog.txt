@@ -1,5 +1,21 @@
 2.3.4.1 Released 14 March
 
+* Greatly update mgltex (by Diego Sejas Viscarra)
+	- New package options:
+		o gray: To activate gray-scale mode for graphics.
+		o color: To activate color mode for figures.
+		o 0v, 1v, 2v: To indicate the variant of arguments in MGL scripts.
+	- New commands:
+		o \mglgray: The same effect as the "gray" and "color" package options, but with local effect.
+		o \mglvariant: Can be used to indicate the variant of arguments, but with local effect.
+	- The "mglcommon" environment has been renamed as "mglsetupscript". "mglcommon" is still available for backwards compatibility, but its use is deprecated.
+	- The option "scale" for environments and commands is no longer the same as the "scale" command from the "graphicx" package.
+	- New environment and command options: gray, scale, quality, variant.
+	- The command "\mglswitch", "\mglcomments" and "\mglgray" now accept "0" and "1" as argument, as equivalents of the "off" and "on" options. ("off" and "on" are still available.)
+	- The documentation has been reordered and is more congruent. (Maybe I'll make future changes, but small ones.)
+	- The bugfix for MiKtex has been fully implemented.
+	- Some minor bugfixes and speedups.
+
 * Add 'tridmat' for tridiagonal matrix algorithm.
 * Add 'diffract' for single step diffraction calculation.
 * Add 'ifsfile' for reading IFS fractal parameters from *.ifs file.
@@ -9,6 +25,7 @@
 * Bugfix for legend export into EPS and SVG.
 * Improve Surf3*() drawing.
 * Force NAN if divided by 0 in formulas.
+* Option "-S" of mglconv now perform scaling in any cases
 
 
 2.3.4 Released 13 February 2016

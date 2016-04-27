@@ -1170,9 +1170,9 @@ void MGL_NO_EXPORT mgl_progonka_pr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, l
 	aa[0] =-c0/b0;	bb[0] = d0/b0;	gg[0] =-a0/b0;
 	for(long i=1;i<n;i++)
 	{
-		register long ii=i0+di*i;
+		register long ii=i0+di*i, il=i0+di*((i+1)%n);
 		mreal a=A->vthr(ii), b=B->vthr(ii), c=C->vthr(ii);
-		mreal d=difr?-a*D->vthr(ii-di)+(2.-b)*D->vthr(ii)-c*D->vthr(ii+di):D->vthr(ii);
+		mreal d=difr?-a*D->vthr(ii-di)+(2.-b)*D->vthr(ii)-c*D->vthr(il):D->vthr(ii);
 		aa[i] = -c/(b+a*aa[i-1]);
 		bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
 		gg[i] = -a*gg[i-1]/(b+a*aa[i-1]);

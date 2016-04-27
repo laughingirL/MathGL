@@ -134,6 +134,7 @@ int main(int argc, char *argv[])
 		{	mglprintf(ss,64,L"%g",v);	var.push_back(ss);	}
 	}
 	bool gif = !strcmp(oname+strlen(oname)-4,".gif");
+	gr.SetSize(600,400);	// specially call for "S" option
 	if(var.size()>1)	// there is animation
 	{
 		if(gif)	gr.StartGIF(oname);
