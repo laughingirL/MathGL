@@ -160,9 +160,13 @@ void MGL_EXPORT mgl_gridplot(HMGL gr, int nx, int ny, int i, double dd)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_stickplot(HMGL gr, int num, int i, double tet, double phi)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->StickPlot(num, i, tet, phi);	}
+void MGL_EXPORT mgl_shearplot(HMGL gr, int num, int i, double sx, double sy, double xd, double yd)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->ShearPlot(num, i, sx, sy, xd, yd);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_aspect(HMGL gr, double Ax,double Ay,double Az)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Aspect(Ax,Ay,Az);	}
+void MGL_EXPORT mgl_shear(HMGL gr, double Sx,double Sy)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Shear(Sx,Sy);	}
 void MGL_EXPORT mgl_rotate(HMGL gr, double TetX,double TetZ,double TetY)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Rotate(TetX,TetZ,TetY);	}
 void MGL_EXPORT mgl_view(HMGL gr, double TetX,double TetZ,double TetY)
@@ -238,6 +242,8 @@ void MGL_EXPORT mgl_gridplot_(uintptr_t *gr, int *nx, int *ny, int *i, mreal *d)
 {	mgl_gridplot(_GR_,*nx,*ny,*i,*d);	}
 void MGL_EXPORT mgl_stickplot_(uintptr_t *gr, int *num, int *i, mreal *tet, mreal *phi)
 {	_GR_->StickPlot(*num, *i, *tet, *phi);	}
+void MGL_EXPORT mgl_shearplot_(uintptr_t *gr, int *num, int *i, mreal *sy, mreal *sx, mreal *xd, mreal *yd)
+{	_GR_->ShearPlot(*num,*i,*sx,*sy,*xd,*yd);	}
 
 void MGL_EXPORT mgl_title_(uintptr_t *gr, const char *title, const char *stl, mreal *size, int l,int m)
 {	char *t=new char[l+1];	memcpy(t,title,l);	t[l]=0;
@@ -245,6 +251,8 @@ void MGL_EXPORT mgl_title_(uintptr_t *gr, const char *title, const char *stl, mr
 	_GR_->Title(t,s,*size);	delete []s;	delete []t;	}
 void MGL_EXPORT mgl_aspect_(uintptr_t *gr, mreal *Ax, mreal *Ay, mreal *Az)
 {	_GR_->Aspect(*Ax,*Ay,*Az);	}
+void MGL_EXPORT mgl_shear_(uintptr_t *gr, mreal *Sx, mreal *Sy)
+{	_GR_->Shear(*Sx,*Sy);	}
 void MGL_EXPORT mgl_rotate_(uintptr_t *gr, mreal *TetX, mreal *TetZ, mreal *TetY)
 {	_GR_->Rotate(*TetX,*TetZ,*TetY);	}
 void MGL_EXPORT mgl_view_(uintptr_t *gr, mreal *TetX, mreal *TetZ, mreal *TetY)

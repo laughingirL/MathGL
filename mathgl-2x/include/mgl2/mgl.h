@@ -306,6 +306,9 @@ public:
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	inline void StickPlot(int num, int i, double tet, double phi)
 	{	mgl_stickplot(gr,num,i,tet,phi);	}
+	/// Put further plotting in cell of stick sheared on sx, sy.
+	inline void ShearPlot(int num, int i, mreal sx, mreal sy, mreal xd=1, mreal yd=0)
+	{	mgl_shearplot(gr,num,i,sx,sy,xd,yd);	}
 
 	/// Set factor of plot size
 	inline void SetPlotFactor(double val)
@@ -326,6 +329,9 @@ public:
 	/// Set aspect ratio for further plotting.
 	inline void Aspect(double Ax,double Ay,double Az=1)
 	{	mgl_aspect(gr, Ax, Ay, Az);		}
+	/// Shear a further plotting.
+	inline void Shear(double Sx,double Sy)
+	{	mgl_shear(gr, Sx, Sy);		}
 	/// Rotate a further plotting.
 	inline void Rotate(double TetX,double TetZ=0,double TetY=0)
 	{	mgl_rotate(gr, TetX, TetZ, TetY);	}

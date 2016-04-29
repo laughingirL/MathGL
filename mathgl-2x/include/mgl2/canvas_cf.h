@@ -482,6 +482,9 @@ void MGL_EXPORT mgl_gridplot_(uintptr_t *gr, int *nx, int *ny, int *m, mreal *d)
 /// Put further plotting in cell of stick rotated on angles tet, phi.
 void MGL_EXPORT mgl_stickplot(HMGL gr, int num, int ind, double tet, double phi);
 void MGL_EXPORT mgl_stickplot_(uintptr_t *gr, int *num, int *i, mreal *tet, mreal *phi);
+/// Put further plotting in cell of stick sheared on sx, sy.
+void MGL_EXPORT mgl_shearplot(HMGL gr, int num, int ind, double sx, double sy, double xd, double yd);
+void MGL_EXPORT mgl_shearplot_(uintptr_t *gr, int *num, int *i, mreal *sy, mreal *sx, mreal *xd, mreal *yd);
 /// Add title for current subplot/inplot.
 /** Style '#' draw box around the title. */
 void MGL_EXPORT mgl_title(HMGL gr, const char *title, const char *stl, double size);
@@ -494,6 +497,9 @@ void MGL_EXPORT mgl_set_plotfactor_(uintptr_t *gr, mreal *val);
 /// Set aspect ratio for further plotting.
 void MGL_EXPORT mgl_aspect(HMGL gr, double Ax,double Ay,double Az);
 void MGL_EXPORT mgl_aspect_(uintptr_t *gr, mreal *Ax, mreal *Ay, mreal *Az);
+/// Set aspect ratio for further plotting.
+void MGL_EXPORT mgl_shear(HMGL gr, double Sx,double Sz);
+void MGL_EXPORT mgl_shear_(uintptr_t *gr, mreal *Sx, mreal *Sy);
 /// Rotate a further plotting.
 void MGL_EXPORT mgl_rotate(HMGL gr, double TetX,double TetZ,double TetY);
 void MGL_EXPORT mgl_rotate_(uintptr_t *gr, mreal *TetX, mreal *TetZ, mreal *TetY);

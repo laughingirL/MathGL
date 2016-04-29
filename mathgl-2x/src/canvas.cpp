@@ -763,7 +763,7 @@ void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 		mreal fz=exp(M_LN10*floor(0.5+log10(fabs(dz/dx))));
 		if(Ay>0)	fy*=Ay;
 		if(Az>0)	fz*=Az;
-		Ax = Height*dx;	Ay = Width*dy*fy;	Az = Depth*dz*fz;
+		Ax = inH*dx;	Ay = inW*dy*fy;	Az = sqrt(inW*inH)*dz*fz;
 	}
 	mreal a = fabs(Ax) > fabs(Ay) ? fabs(Ax) : fabs(Ay);
 	a = a > fabs(Az) ? a : fabs(Az);
@@ -773,6 +773,32 @@ void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 	B.b[1] *= Ay;	B.b[4] *= Ay;	B.b[7] *= Ay;
 	B.b[2] *= Az;	B.b[5] *= Az;	B.b[8] *= Az;
 	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Shear(mreal Sx,mreal Sy)
+{
+	mreal R[6], Fx=1+fabs(Sx)*inH/inW, Fy=1+fabs(Sy)*inW/inH;
+	memcpy(R,B.b,6*sizeof(mreal));
+	B.b[0] = (R[0]+Sx*R[3])/Fx;	B.b[1] = (R[1]+Sx*R[4])/Fx;	B.b[2] = (R[2]+Sx*R[5])/Fx;
+	B.b[3] = (R[3]+Sy*R[0])/Fy;	B.b[4] = (R[4]+Sy*R[1])/Fy;	B.b[5] = (R[5]+Sy*R[2])/Fy;
+	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::ShearPlot(int num, int id, mreal sx, mreal sy, mreal xd, mreal yd)
+{
+	InPlot(0,1,0,1,true);
+	if(!(fabs(xd)<=1 && fabs(yd)<=1))	{	xd=1;	yd=0;	}
+	mreal wx,wy,dx,dy,wf,hf,x1,y1;
+	int ix=sy>=0?id:num-id-1, iy=sx>=0?id:num-id-1;
+	for(int i=0;i<3;i++)	// iterations to solve cubic equation
+	{
+		wx = fabs(sx)*inH/inW;	dx = xd + yd*wx;	wf = 1+wx+(num-1)*fabs(dx);
+		wy = fabs(sy)*inW/inH;	dy = yd + xd*wy;	hf = 1+wy+(num-1)*fabs(dy);
+		x1=(dx>=0?ix:(ix-num+1))*dx;
+		y1=(dy>=0?iy:(iy-num+1))*dy;
+		InPlot(x1/wf,(x1+1+wx)/wf,y1/hf,(y1+1+wy)/hf,true);
+	}
+	Shear(sx,sy);
 }
 //-----------------------------------------------------------------------------
 //	Lighting and transparency

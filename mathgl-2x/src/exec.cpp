@@ -138,6 +138,13 @@ int MGL_NO_EXPORT mgls_aspect(mglGraph *gr, long , mglArg *a, const char *k, con
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_shear(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"nn"))	gr->Shear(a[0].v, a[1].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_axial(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -2398,6 +2405,14 @@ int MGL_NO_EXPORT mgls_stickplot(mglGraph *gr, long , mglArg *a, const char *k, 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_shearplot(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"nnnn"))	gr->ShearPlot(mgl_int(a[0].v), mgl_int(a[1].v), a[2].v, a[3].v);
+	else if(!strcmp(k,"nnnnnn"))	gr->ShearPlot(mgl_int(a[0].v), mgl_int(a[1].v), a[2].v, a[3].v, a[4].v, a[5].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_pipe(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -3672,6 +3687,8 @@ mglCommand mgls_base_cmd[] = {
 	{"setsize","Set picture size","setsize width height", mgls_setsize ,2},
 	{"setsizescl","Set scaling factor for further setsize","setsizescl val", mgls_setsizescl ,2},
 	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew ,16},
+	{"shear","Shear plot","shear valx valy", mgls_shear ,5},
+	{"shearplot","Set position of plot inside cell of sheared stick", "shearplot num ind sx sy [xd yd]", mgls_shearplot ,5},
 	{"sinfft","Sin-Fourier transform at some direction","sinfft Dat 'dir'", mgls_sinfft ,16},
 	{"smooth","Smooth data","smooth Dat [kind 'dir']", mgls_smooth ,16},
 	{"solve","Find root Dat_{i,j,k}=val (inverse evaluate)","solve Res Dat val 'dir' [Idat norm]", mgls_solve ,4},
@@ -3682,7 +3699,7 @@ mglCommand mgls_base_cmd[] = {
 	{"step","Draw step plot for 1D data","step Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_step ,7},
 	{"stfa","Draw STFA diagram","stfa Udat Vdat dn ['fmt']|Xdat Ydat Udat Vdat dn ['fmt']", mgls_stfa ,10},
 	{"stfad","Do STFA transform","stfad Res Real Imag dn ['dir']", mgls_stfad ,4},
-	{"stickplot","Set position of plot inside cell of stick", "stickplot num ind tet phi", mgls_stickplot ,5},
+	{"stickplot","Set position of plot inside cell of rotated stick", "stickplot num ind tet phi", mgls_stickplot ,5},
 	{"stop","Stop execution","stop", 0, 6},
 	{"subdata","Extract sub-array","subdata Res Dat nx [ny nz]", mgls_subdata ,4},
 	{"subplot","Set position of plot","subplot m n pos ['style' dx dy]", mgls_subplot ,5},

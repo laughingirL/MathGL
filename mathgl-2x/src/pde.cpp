@@ -1275,9 +1275,9 @@ void MGL_NO_EXPORT mgl_progonka_pc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, lo
 	aa[0] =-c0/b0;	bb[0] = d0/b0;	gg[0] =-a0/b0;
 	for(long i=1;i<n;i++)
 	{
-		register long ii=i0+di*i;
+		register long ii=i0+di*i, il=i0+di*((i+1)%n);
 		dual a=A->vcthr(ii), b=B->vcthr(ii), c=C->vcthr(ii);
-		dual d=difr?-a*D->vcthr(ii-di)+(2.-b)*D->vcthr(ii)-c*D->vcthr(ii+di):D->vcthr(ii);
+		dual d=difr?-a*D->vcthr(ii-di)+(2.-b)*D->vcthr(ii)-c*D->vcthr(il):D->vcthr(ii);
 		aa[i] = -c/(b+a*aa[i-1]);
 		bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
 		gg[i] = -a*gg[i-1]/(b+a*aa[i-1]);

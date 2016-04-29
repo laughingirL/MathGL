@@ -146,6 +146,8 @@ using mglBase::Light;
 
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	void StickPlot(int num, int i, mreal tet, mreal phi);
+	/// Put further plotting in cell of stick sheared on sx, sy
+	void ShearPlot(int num, int i, mreal sx, mreal sy, mreal xd, mreal yd);
 	/// Put further plotting in some region of whole frame surface.
 	inline void InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel=true)
 	{	InPlot(B,x1,x2,y1,y2,rel);	}
@@ -156,6 +158,8 @@ using mglBase::Light;
 	void Title(const wchar_t *title,const char *stl="#",mreal size=-2);
 	/// Set aspect ratio for further plotting.
 	void Aspect(mreal Ax,mreal Ay,mreal Az);
+	/// Shear a further plotting.
+	void Shear(mreal Sx,mreal Sy);
 	/// Rotate a further plotting.
 	void Rotate(mreal TetX,mreal TetZ,mreal TetY=0);
 	/// Rotate a further plotting around vector {x,y,z}.

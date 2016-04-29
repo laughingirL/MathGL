@@ -47,9 +47,6 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 11. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 12. Parallel drawing in QMathGL.
 
-13. Skew -- like rotate + centered (Affine geometry)
-14. SkewPlot -- like stickplot without rotation
-15. GrayScale flag/option -- brightness=(0.3 red + 0.59 green + 0.11 * blue) ???
 17. Speed up QMathGL + option to whole redraw instead of view
 
 ZZ. Update *.i for new functions {before release!!!}
@@ -65,13 +62,15 @@ D. Docs about JS interface
 1. Update Qt and UDAV figures
 2. Replace some @code by @ref
 3. Docs + sample about '*' in flow() and pipe().
-4. Docs about 'tridmat'
+4. Docs about 'tridmat' + sample
 5. Docs about 'diffract'
 6. Docs about 'variant' + about "var1?var2?var3?..."
 7. Docs about *.ifs format
 8. Docs about 'gray'
 9. Docs about 'setsizescl'
 10. Docs about Widget(), mgl_qt_widget(), mgl_fltk_widget()
+11. Docs about 'shear'
+12. Docs about 'shearplot'
 
 ============= UDAV =============
 
