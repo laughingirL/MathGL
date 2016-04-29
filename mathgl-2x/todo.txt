@@ -71,7 +71,7 @@ D. Docs about JS interface
 7. Docs about *.ifs format
 8. Docs about 'gray'
 9. Docs about 'setsizescl'
-
+10. Docs about Widget(), mgl_qt_widget(), mgl_fltk_widget()
 
 ============= UDAV =============
 

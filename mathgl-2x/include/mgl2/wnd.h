@@ -80,6 +80,8 @@ public:
 	mglWnd() : mglGraph(-1)	{}
 	virtual ~mglWnd() {	mgl_use_graph(gr,-255);	}
 	virtual int Run()=0;		///< Run main loop for event handling
+	/// Return pointer to widget used for plotting
+	virtual void *Widget()	{	return NULL;	}
 
 	inline void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)
 	{	mgl_wnd_toggle_alpha(gr);	}

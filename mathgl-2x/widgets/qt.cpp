@@ -1331,6 +1331,11 @@ HMGL MGL_EXPORT mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *t
 	g->Window(0,0,draw,title,par,load);
 	return g;
 }
+void* mgl_qt_widget(HMGL gr)
+{
+	mglCanvasQT *g = dynamic_cast<mglCanvasQT *>(gr);
+	return g?g->QMGL:NULL;
+}
 int MGL_EXPORT mgl_qt_run()	{	return (qApp)?qApp->exec():-1;	}
 //-----------------------------------------------------------------------------
 uintptr_t MGL_EXPORT mgl_create_graph_qt_(const char *title, int l)
