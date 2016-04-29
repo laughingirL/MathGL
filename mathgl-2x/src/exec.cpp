@@ -1653,6 +1653,13 @@ int MGL_NO_EXPORT mgls_setsize(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_setsizescl(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"n"))	gr->SetSizeScl(a[0].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_sphere(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
@@ -3663,6 +3670,7 @@ mglCommand mgls_base_cmd[] = {
 	{"savehdf","Save data to HDF5 file","savehdf Dat 'file' 'id'", mgls_savehdf ,3},
 	{"scanfile","Get fromated data from file","scanfile Dat 'fname 'templ'", mgls_scanfile ,4},
 	{"setsize","Set picture size","setsize width height", mgls_setsize ,2},
+	{"setsizescl","Set scaling factor for further setsize","setsizescl val", mgls_setsizescl ,2},
 	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew ,16},
 	{"sinfft","Sin-Fourier transform at some direction","sinfft Dat 'dir'", mgls_sinfft ,16},
 	{"smooth","Smooth data","smooth Dat [kind 'dir']", mgls_smooth ,16},
