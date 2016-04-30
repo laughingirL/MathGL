@@ -354,6 +354,9 @@ using mglDataA::Momentum;
 	 *  By default quadratic averaging over 5 points is used. */
 	inline void Smooth(const char *dirs="xyz",mreal delta=0)
 	{	mgl_datac_smooth(this,dirs,delta);	}
+	/// Limit the data to be inside [-v,v], keeping the original sign
+	inline void Limit(mreal v)
+	{	mgl_datac_limit(this, v);	}
 
 	/// Hankel transform
 	inline void Hankel(const char *dir)	{	mgl_datac_hankel(this,dir);	}

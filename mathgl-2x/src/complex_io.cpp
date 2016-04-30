@@ -945,3 +945,14 @@ void MGL_EXPORT mgl_datac_save_hdf_(uintptr_t *d, const char *fname, const char 
 	char *t=new char[n+1];		memcpy(t,data,n);	t[n]=0;
 	mgl_datac_save_hdf(_DC_,s,t,*rewrite);	delete []s;	delete []t;	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_limit(HADT d, mreal v)
+{
+	long n = d->GetNN();
+	dual *a = d->a;
+	#pragma omp parallel for
+	for(long i=0;i<n;i++)
+	{	mreal b = abs(a[i]);	if(b>v)	a[i] *= v/b;	}
+}
+void MGL_EXPORT mgl_datac_limit_(uintptr_t *d, mreal *v)
+{	mgl_datac_limit(_DC_, *v);	}
+//-----------------------------------------------------------------------------

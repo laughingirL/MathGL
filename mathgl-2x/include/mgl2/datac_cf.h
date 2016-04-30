@@ -205,6 +205,10 @@ void MGL_EXPORT mgl_datac_modify_(uintptr_t *dat, const char *eq,int *dim,int);
 void MGL_EXPORT mgl_datac_modify_vw(HADT dat, const char *eq,HCDT vdat,HCDT wdat);
 void MGL_EXPORT mgl_datac_modify_vw_(uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat,int);
 
+/// Limit the data to be inside [-v,v], keeping the original sign
+void MGL_EXPORT mgl_datac_limit(HADT dat, mreal v);
+void MGL_EXPORT mgl_datac_limit_(uintptr_t *dat, mreal *v);
+
 /// Put value to data element(s)
 void MGL_EXPORT mgl_datac_put_val(HADT dat, dual val, long i, long j, long k);
 void MGL_EXPORT mgl_datac_put_val_(uintptr_t *dat, dual *val, int *i, int *j, int *k);

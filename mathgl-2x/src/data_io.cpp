@@ -1256,3 +1256,14 @@ uintptr_t MGL_EXPORT mgl_data_column_(uintptr_t *d, const char *eq,int l)
 	uintptr_t r = uintptr_t(mgl_data_column(_DT_,s));
 	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_limit(HMDT d, mreal v)
+{
+	long n = d->GetNN();
+	mreal *a = d->a;
+	#pragma omp parallel for
+	for(long i=0;i<n;i++)
+	{	mreal b = fabs(a[i]);	if(b>v)	a[i] *= v/b;	}
+}
+void MGL_EXPORT mgl_data_limit_(uintptr_t *d, mreal *v)
+{	mgl_data_limit(_DT_, *v);	}
+//-----------------------------------------------------------------------------

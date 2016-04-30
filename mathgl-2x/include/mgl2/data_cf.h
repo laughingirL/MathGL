@@ -138,6 +138,9 @@ void MGL_EXPORT mgl_data_norm_(uintptr_t *dat, mreal *v1,mreal *v2,int *sym,int 
 /// Normalize the data to range [v1,v2] slice by slice
 void MGL_EXPORT mgl_data_norm_slice(HMDT dat, mreal v1,mreal v2,char dir,long keep_en,long sym);
 void MGL_EXPORT mgl_data_norm_slice_(uintptr_t *dat, mreal *v1,mreal *v2,char *dir,int *keep_en,int *sym,int l);
+/// Limit the data to be inside [-v,v], keeping the original sign
+void MGL_EXPORT mgl_data_limit(HMDT dat, mreal v);
+void MGL_EXPORT mgl_data_limit_(uintptr_t *dat, mreal *v);
 /// Get sub-array of the data with given fixed indexes
 HMDT MGL_EXPORT mgl_data_subdata(HCDT dat, long xx,long yy,long zz);
 uintptr_t MGL_EXPORT mgl_data_subdata_(uintptr_t *dat, int *xx,int *yy,int *zz);

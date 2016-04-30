@@ -87,48 +87,69 @@
 %   \makeatother
 % \egroup
 %
-% \changes{v1.0}{2014/09/27}{Initial version}
-% \changes{v2.0}{2014/11/23}{Possible bugfix by adding \texttt{\textbackslash expandafter} to commands to ignore/write lines of MGL code}
-% \changes{v2.0}{2014/11/23}{Add environment \texttt{mglsignature} that adds a commentary every MGL script}
-% \changes{v2.0}{2014/11/23}{Eliminate line ignoring commands to create more elegant scripts, due to the a new command that adds comments to the scripts}
-% \changes{v2.0}{2014/11/23}{Move the MGL \emph{stop} command from the \texttt{\textbackslash{}AtEndDocument} command to the \texttt{\textbackslash{}mgl@func} buffer}
-% \changes{v3.0}{/2015/03/29}{Add detection of changes in MGL scripts to speed up compilation time (only changed scripts are recompiled)}
-% \changes{v3.0}{/2015/03/29}{Add command \texttt{\textbackslash mgldir}, \texttt{\textbackslash mglscriptsdir}, \texttt{\textbackslash mglgraphicsdir} and \texttt{\textbackslash mglbackupsdir} to specify a main directory for \textsf{\mglTeX} and directories for the creation of scripts, graphics and backups}
-% \changes{v3.0}{/2015/03/29}{Add the \texttt{\textbackslash mglquality} command to specify a default quality}
-% \changes{v3.0}{/2015/03/29}{Add the \texttt{\textbackslash mglwidth} and \texttt{\textbackslash mglheight} commands to specify the default size of the images produced}
-% \changes{v3.0}{/2015/03/29}{Add the \texttt{\textbackslash mglsettings} command to configure behavior of the package}
-% \changes{v3.0}{/2015/03/29}{Improve environment \texttt{mglsignature} by adding the possibility of using \LaTeX{} commands inside it}
-% \changes{v4.0}{/2015/08/17}{Completely rewrite of \textsf{\mglTeX}}
-% \changes{v4.0}{/2015/08/17}{\textsf{\mglTeX} now depends of the \textsf{verbatim} package}
-% \changes{v4.0}{/2015/08/17}{All environments write their contents \emph{verbatim}}
-% \changes{v4.0}{/2015/08/17}{Add package options \texttt{0q}, \ldots, \texttt{8q} to specify quality}
-% \changes{v4.0}{/2015/08/17}{Add the \texttt{\textbackslash mglpaths} command to add directories to the search paths for MGL scripts}
-% \changes{v4.0}{/2015/08/17}{Add the \texttt{\textbackslash mglname} command to force clousure of the current main script, its compilation, and the opening of a new main script}
-% \changes{v4.0}{/2015/08/17}{Add the option \texttt{label} to the \texttt{mgl} environment in order to override the automatic naming of the script and corresponding image}
-% \changes{v4.0}{/2015/08/17}{Add the option \texttt{label} to the \texttt{mglverbatim} environment to name the verbatim code}
-% \changes{v4.0}{/2015/08/17}{Add the option \texttt{separator} to the command \texttt{\textbackslash mglplot} to brake the code into different physical text lines}
-% \changes{v4.0}{/2015/08/17}{Add the option \texttt{path} to the commands \texttt{\textbackslash mglgraphics} and \texttt{\textbackslash mglinclude} to force a path to search MGL scripts}
-% \changes{v4.0}{/2015/08/17}{Make verbatim-like environments and \texttt{\textbackslash mglinclude} command more visually elegant}
-% \changes{v4.0}{/2015/08/17}{Numbering in verbatim-like environments is optional now}
-% \changes{v4.0}{/2015/08/17}{Add the command \texttt{\textbackslash listofmglscripts} to create a list of all MGL scripts included verbatim in the document}
-% \changes{v4.0}{/2015/08/17}{Add the command \texttt{\textbackslash mglTeXwVer} that prints the name of the package with its version in a coherent manner, and separated by an unbreakable space}
-% \changes{v4.0}{/2015/08/17}{Verbatim-like environments and the \texttt{\textbackslash mglinclude} command have starred versions wich prevent the command \texttt{\textbackslash listofmglscripts} to list them}
-% \changes{v4.0}{/2015/08/17}{Remove \texttt{mglsignature} environment for being considered useless, and to avoid interference with the detection of changes in MGL scripts, to speed up script writing and to make the package less resource-consuming}
-% \changes{v4.0}{/2015/08/17}{Remove the \texttt{\textbackslash mglwidth} and \texttt{\textbackslash mglheight} commands for being considered useless}
-% \changes{v4.0}{/2015/08/17}{Remove the \texttt{\textbackslash MGL@setkeys} command, since it isn't needed as first thought}
-% \changes{v4.0}{/2015/08/17}{Many improvements, including, but not limited to, speed up, increased coherence and cleanness of the code, less resource consumption}
-% \changes{v4.0}{/2015/08/17}{Many bugfixes}
+% \changes{\textbf{v1.0 ------------}}{2014/09/27}{Initial version}
 %
-% \changes{v4.1}{/2016/01/28}{Add the command \texttt{\textbackslash mglimgext} to specify locally the extension to save the generated graphics}
-% \changes{v4.1}{/2016/01/28}{Add the command \texttt{\textbackslash mglswitch}, which replaces \texttt{\textbackslash mgltexon} and \texttt{\textbackslash mgltexoff}}
-% \changes{v4.1}{/2016/01/28}{Rename the commands \texttt{\textbackslash mgltexon} as \texttt{\textbackslash MGL@switch@on} and \texttt{\textbackslash mgltexoff} as \texttt{\textbackslash MGL@switch@off} in order to avoid the user from unpurposely overwriting them}
-% \changes{v4.1}{/2016/01/28}{The command \texttt{\textbackslash mglcomments} has been reimplemented to accept one mandatory argument: \texttt{\textbackslash mglcomments\{on\}} replaces the old \texttt{\textbackslash mglcomments}, while \texttt{\textbackslash mglcomments\{off\}} replaces the old \texttt{\textbackslash mglnocomments}}
-% \changes{v4.1}{/2016/01/28}{Remove the command \texttt{\textbackslash mglnocomments} (rendered useless by the new implementation of \texttt{\textbackslash mglcomments})}
-% \changes{v4.1}{/2016/01/28}{Remove the command \texttt{\textbackslash mglTeXwVer} (rendered useless by the implementation of the starred version of \texttt{\textbackslash mglTeX})}
-% \changes{v4.1}{/2016/01/28}{Restore the command \texttt{\textbackslash mglsettings}, which was unintentionally deleted in version~4.0}
-% \changes{v4.1}{/2016/01/28}{Expand the key-val list family for the command \texttt{\textbackslash mglsettings}}
-% \changes{v4.1}{/2016/01/28}{Reimplement the \texttt{\textbackslash @MGL@comments@} switch}
-% \changes{v4.1}{/2016/01/28}{A starred version of the command \texttt{\textbackslash mglTeX} has been implemented, which prints the version of the package besides its name}
+%
+% \changes{\textbf{v2.0 ------------}}{2014/11/23}{Possible bugfix by adding \texttt{\textbackslash expandafter} to commands to ignore/write lines of MGL code}
+% \changes{\textbf{v2.0 ------------}}{2014/11/23}{Added environment \texttt{mglsignature} that adds a commentary every MGL script}
+% \changes{\textbf{v2.0 ------------}}{2014/11/23}{Eliminated line ignoring commands to create more elegant scripts, due to the a new command that adds comments to the scripts}
+% \changes{\textbf{v2.0 ------------}}{2014/11/23}{Moved the MGL \emph{stop} command from the \texttt{\textbackslash{}AtEndDocument} command to the \texttt{\textbackslash{}mgl@func} buffer}
+%
+%
+% \changes{\textbf{v3.0 ------------}}{/2015/03/29}{Added detection of changes in MGL scripts to speed up compilation time (only changed scripts are recompiled)}
+% \changes{\textbf{v3.0 ------------}}{/2015/03/29}{Added command \texttt{\textbackslash mgldir}, \texttt{\textbackslash mglscriptsdir}, \texttt{\textbackslash mglgraphicsdir} and \texttt{\textbackslash mglbackupsdir} to specify a main directory for \textsf{\mglTeX} and directories for the creation of scripts, graphics and backups}
+% \changes{\textbf{v3.0 ------------}}{/2015/03/29}{Added the \texttt{\textbackslash mglquality} command to specify a default quality}
+% \changes{\textbf{v3.0 ------------}}{/2015/03/29}{Added the \texttt{\textbackslash mglwidth} and \texttt{\textbackslash mglheight} commands to specify the default size of the images produced}
+% \changes{\textbf{v3.0 ------------}}{/2015/03/29}{Added the \texttt{\textbackslash mglsettings} command to configure behavior of the package}
+% \changes{\textbf{v3.0 ------------}}{/2015/03/29}{Improved environment \texttt{mglsignature} by adding the possibility of using \LaTeX{} commands inside it}
+%
+%
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Complete rewrite of \textsf{\mglTeX}}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{\textsf{\mglTeX} now depends of the \textsf{verbatim} package}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{All environments write their contents \emph{verbatim}}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added package options \texttt{0q}, \ldots, \texttt{8q} to specify quality}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added the \texttt{\textbackslash mglpaths} command to add directories to the search paths for MGL scripts}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added the \texttt{\textbackslash mglname} command to force clousure of the current main script, its compilation, and the opening of a new main script}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added the option \texttt{label} to the \texttt{mgl} environment in order to override the automatic naming of the script and corresponding image}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added the option \texttt{label} to the \texttt{mglverbatim} environment to name the verbatim code}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added the option \texttt{separator} to the command \texttt{\textbackslash mglplot} to brake the code into different physical text lines}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added the option \texttt{path} to the commands \texttt{\textbackslash mglgraphics} and \texttt{\textbackslash mglinclude} to force a path to search MGL scripts}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Verbatim-like environments and \texttt{\textbackslash mglinclude} command are more visually elegant now}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Numbering in verbatim-like environments is optional now}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added the command \texttt{\textbackslash listofmglscripts} to create a list of all MGL scripts included verbatim in the document}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Added the command \texttt{\textbackslash mglTeXwVer} that prints the name of the package with its version in a coherent manner, and separated by an unbreakable space}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Verbatim-like environments and the \texttt{\textbackslash mglinclude} command have starred versions wich prevent the command \texttt{\textbackslash listofmglscripts} to list them}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Removed \texttt{mglsignature} environment for being considered useless, and to avoid interference with the detection of changes in MGL scripts, to speed up script writing and to make the package less resource-consuming}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Removed the \texttt{\textbackslash mglwidth} and \texttt{\textbackslash mglheight} commands for being considered useless}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Removed the \texttt{\textbackslash MGL@setkeys} command, since it isn't needed as first thought}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Many improvements, including, but not limited to, speed up, increased coherence and cleanness of the code, less resource consumption}
+% \changes{\textbf{v4.0 ------------}}{/2015/08/17}{Many bugfixes}
+%
+%
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{Added the command \texttt{\textbackslash mglimgext} to specify locally the extension to save the generated graphics}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{Added the command \texttt{\textbackslash mglswitch}, which replaces \texttt{\textbackslash mgltexon} and \texttt{\textbackslash mgltexoff}}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{Renamed the commands \texttt{\textbackslash mgltexon} as \texttt{\textbackslash MGL@switch@on} and \texttt{\textbackslash mgltexoff} as \texttt{\textbackslash MGL@switch@off} in order to avoid the user from unpurposely overwriting them}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{The command \texttt{\textbackslash mglcomments} has been reimplemented to accept one mandatory argument: \texttt{\textbackslash mglcomments\{on\}} replaces the old \texttt{\textbackslash mglcomments}, while \texttt{\textbackslash mglcomments\{off\}} replaces the old \texttt{\textbackslash mglnocomments}}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{Removed the command \texttt{\textbackslash mglnocomments} (rendered useless by the new implementation of \texttt{\textbackslash mglcomments})}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{Removed the command \texttt{\textbackslash mglTeXwVer} (rendered useless by the implementation of the starred version of \texttt{\textbackslash mglTeX})}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{Restored the command \texttt{\textbackslash mglsettings}, which was unintentionally deleted in version~4.0}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{Expanded the key-val list family for the command \texttt{\textbackslash mglsettings}}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{Reimplemented the \texttt{\textbackslash @MGL@comments@} switch}
+% \changes{\textbf{v4.1 ------------}}{/2016/01/28}{A starred version of the command \texttt{\textbackslash mglTeX} has been implemented, which prints the version of the package besides its name}
+%
+%
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New package options \texttt{gray}, \texttt{color} to activate/deactivate gray-scale mode for graphics}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New package options \texttt{0v}, \texttt{1v}, \texttt{2v} to select variant of arguments in MGL scripts}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New package option \texttt{9q} for setting quality to \texttt{9} (for testing purposes of the author)}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New commands: \texttt{\textbackslash mglgray} (to activate/deactivate) gray-scale mode locally, and \texttt{\textbackslash mglvariant} (to set variant of arguments in MGL scripts locally)}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Renamed environment \texttt{mglcommon} to \texttt{mglsetupscript} (\texttt{mglcommon} is still available, but deprecated)}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Renamed command \texttt{\textbackslash mglcommonscriptname} to \texttt{mglsetupscriptname}}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Renamed command \texttt{\textbackslash MGL@graph@ext} to \texttt{\textbackslash MGL@imgext}}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Renamed family \texttt{MGL@keys} as \texttt{MGL@gr@keys} for consistency}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Reorganized and updated documentation}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{\mglTeX{} now depends on the \texttt{ifpdf} package}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{The MGL code line \texttt{setsize~600~400} is now written to the main script in order for the scaling options and commands to work}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Some minor bugfixes}
 %
 % \GetFileInfo{mgltex.sty}
 %
@@ -150,7 +171,7 @@
 % \DoNotIndex{\endcenter,\everypar,\fbox,\fboxrule,\frenchspacing,\g@addto@macro,\global,\hb@xt@,\hbadness,\hfil,\hfill}
 % \DoNotIndex{\hrule,\hskip,\hss,\if@minipage,\if@tempswa,\ifhmode,\ifnum,\interlinepenalty,\itemindent,\kern,\l@chapter}
 % \DoNotIndex{\l@section,\large,\leavevmode,\MakeUppercase,\newdimen,\nobreak,\nopagebreak,\normalfont,\null,\numberline}
-% \DoNotIndex{\p@,\par,\unpenalty,\usecounter,\@ifstar,\^}
+% \DoNotIndex{\p@,\par,\unpenalty,\usecounter,\@ifstar,\^,\iffalse,\iftrue,\ifpdf}
 %
 % \title{The \textsf{\mglTeX} package\thanks{This document corresponds to \textsf{\mglTeX}~\fileversion, dated \filedate.}}
 % \author{Diego Sejas Viscarra\\\texttt{dsejas.mathematics@gmail.com}}
@@ -179,13 +200,14 @@
 % \begin{enumerate}
 %   \item Any meta-variable that contain the word \emph{directory} indicates the name of a directory, in the form of an absolute or relative path, ending with the slash (``/'') character.
 %   \item Any meta-variable that contain the word \emph{subdirectory} indicates a relative path ending with the slash (``/'') character.
-%   \item \meta{$x_1\vert x_2\vert\ldots\vert x_n$} indicates that any of the values $x_1$, $x_2$, \ldots, $x_n$ can be placed there.
+%   \item \meta{$x_1\vert x_2\vert\ldots\vert x_n$} indicates that any of the values $x_1$, $x_2$, \ldots, $x_n$ can be placed there. A special case is \meta{$x_1\vert x_2\vert\ldots$}, where no upper limit is set.
+%   \item The possible values of a meta-variable could also be indicated by a property. For example \meta{$x:x>0$} indicates that any positive value can be used in that location.
 %   \item A meta-variable of the form \meta{list of something} or \meta{something list} indicate a comma-separated list of values of type $\meta{something}$; if only one value is used, no comma is needed.
-% \item A meta-variable with underscores (``\_'') in its description indicate that spaces should not be used in that location.
+% \item A meta-variable with underscores (``|_|'') in its description indicate that spaces should not be used in that location.
 % \item \meta{key-val list} refers to a list of \meta{key}=\meta{value} pairs of options, where \meta{key} is a keyword name for an option and \meta{value} is a value assigned to it.
 % \end{enumerate}
 %
-% As is conventional for \LaTeX{} packages, the commands and environments of \textsf{\mglTeX} accept optional commands inside brackets and mandatory arguments inside curly braces.
+% As is conventional for \LaTeX{} packages, the commands and environments of \textsf{\mglTeX} accept optional commands inside brackets ("|[|" and "|]|"), and mandatory arguments inside curly braces ("|{|" and "|}|").
 %
 % \section{Usage}
 % \noindent The simplest way to load \textsf{\mglTeX} to a \LaTeX{} document is to write the command
@@ -207,7 +229,7 @@
 %   \item \textbf{gray:} To create the MGL graphics in gray-scale mode.
 %   \item \textbf{color:} To create the MGL graphics in color mode.
 %   \item \textbf{1x, \ldots, 9x:} To specify the scale for the creation of graphics (|1x| is normal scaling, |2x| is twice as bigger, etc).
-%   \item \textbf{0q, \ldots, 8q:} To specify the quality for the creation of graphics. An info message indicating the characteristics of the chosen quality is printed in the .log file according to the following table:
+%   \item \textbf{0q, \ldots, 9q:} To specify the quality for the creation of graphics. An info message indicating the characteristics of the chosen quality is printed in the .log file according to the following table:
 % \begin{center}
 %   \DeleteShortVerb{\|}
 %   \begin{tabular}{|c|l|}
@@ -233,6 +255,8 @@
 %     & (not implemented yet)\\
 %     \hline
 %     $8$ & Draw dots instead of primitives (extremely fast)\\
+%     \hline
+%     $9$ & No drawing (for testing purposes)\\
 %     \hline
 %   \end{tabular}
 %   \MakeShortVerb{\|}
@@ -297,8 +321,11 @@
 % \end{center}
 % Here, \meta{key-val list} can have the following optional arguments:
 % \begin{itemize}
-%   \item \textbf{bb, bbllx, bblly, bburx, bbury, natwidth, natheight, hiresbb, viewport, trim, angle, origin, width, height, totalheight, keepaspectratio, clip, draft, type, ext, read, command:} These are the same options of the |\includegraphics| command from the \textsf{graphicx} package. Note the option |scale| is missing in this list.
-%   \item \textbf{gray, scale, quality, variant:} These are the same as the package options |gray|, |scale|, |quality| and |variant|, respectively, but their effect is \emph{private}, meaning that they only affect the current script/image.
+%   \item \textbf{bb, bbllx, bblly, bburx, bbury, natwidth, natheight, hiresbb, viewport, trim, angle, origin, width, height, totalheight, keepaspectratio, scale, clip, draft, type, ext, read, command:} These are the same options of the |\includegraphics| command from the \textsf{graphicx} package.
+%   \item \textbf{gray:} Can be used to activate (|gray=on| or |gray=1|) or deactivate (|gray=off| or |gray=0|) gray-scale mode \emph{only for the current graphic.}
+%   \item \textbf{mglscale:} Any positive value for this option is used to physically scale the resulting image file, i.g., |mglscale=2| will create an image file twice as bigger.
+%   \item \textbf{quality:} Sets the quality of the current graphic. Valid values are integers between |0| and |9|.
+%   \item \textbf{variant:} Sets the variant of argument for the commands in the current script.
 %   \item \textbf{imgext:} Can be used to set the extension for the current image.
 %   \item \textbf{label:} Can be used to indicate a name for the corresponding graphic (otherwise, an automatic naming will be applied)
 % \end{itemize}
@@ -327,8 +354,11 @@
 %
 % \DescribeEnv{mglcode} It has the same function as the |mgl| environment, but the corresponding code is written to a separate script, whose name is specified as mandatory argument. It accepts the following optional arguments:
 % \begin{itemize}
-%   \item \textbf{bb, bbllx, bblly, bburx, bbury, natwidth, natheight, hiresbb, viewport, trim, angle, origin, width, height, totalheight, keepaspectratio, clip, draft, type, ext, read, command:} These are the same options of the |\includegraphics| command from the \textsf{graphicx} package. Note the option |scale| is missing in this list.
-%   \item \textbf{gray, scale, quality, variant:} These are the same as the package options |gray|, |scale|, |quality| and |variant|, respectively, but their effect is \emph{private}, meaning that they only affect the current script/image.
+%   \item \textbf{bb, bbllx, bblly, bburx, bbury, natwidth, natheight, hiresbb, viewport, trim, angle, origin, width, height, totalheight, keepaspectratio, scale, clip, draft, type, ext, read, command:} These are the same options of the |\includegraphics| command from the \textsf{graphicx} package.
+%   \item \textbf{gray:} Can be used to activate (|gray=on| or |gray=1|) or deactivate (|gray=off| or |gray=0|) gray-scale mode \emph{only for the current graphic.}
+%   \item \textbf{mglscale:} Any positive value for this option is used to physically scale the resulting image file, i.g., |mglscale=2| will create an image file twice as bigger.
+%   \item \textbf{quality:} Sets the quality of the current graphic. Valid values are integers between |0| and |9|.
+%   \item \textbf{variant:} Sets the variant of argument for the commands in the current script.
 %   \item \textbf{imgext:} Can be used to set the extension for the current image.
 % \end{itemize}
 % \begin{center}
@@ -399,8 +429,11 @@
 %
 % \DescribeMacro{\mglplot} This command is used for fast generation of graphics with default settings, and can be used in parallel with the |mglsetup| environment. It accepts one mandatory argument which consists of MGL instructions, separated by the symbol ``:'', and can span through various text lines. It accepts the following optional arguments:
 % \begin{itemize}
-%   \item \textbf{bb, bbllx, bblly, bburx, bbury, natwidth, natheight, hiresbb, viewport, trim, angle, origin, width, height, totalheight, keepaspectratio, clip, draft, type, ext, read, command:} These are the same options of the |\includegraphics| command from the \textsf{graphicx} package. Note the option |scale| is missing in this list.
-%   \item \textbf{gray, scale, quality, variant:} These are the same as the package options |gray|, |scale|, |quality| and |variant|, respectively, but their effect is \emph{private}, meaning that they only affect the current script/image.
+%   \item \textbf{bb, bbllx, bblly, bburx, bbury, natwidth, natheight, hiresbb, viewport, trim, angle, origin, width, height, totalheight, keepaspectratio, scale, clip, draft, type, ext, read, command:} These are the same options of the |\includegraphics| command from the \textsf{graphicx} package.
+%   \item \textbf{gray:} Can be used to activate (|gray=on| or |gray=1|) or deactivate (|gray=off| or |gray=0|) gray-scale mode \emph{only for the current graphic.}
+%   \item \textbf{mglscale:} Any positive value for this option is used to physically scale the resulting image file, i.g., |mglscale=2| will create an image file twice as bigger.
+%   \item \textbf{quality:} Sets the quality of the current graphic. Valid values are integers between |0| and |9|.
+%   \item \textbf{variant:} Sets the variant of argument for the commands in the current script.
 %   \item \textbf{imgext:} Can be used to set the extension for the current image.
 %   \item \textbf{label:} Can be used to indicate a name for the corresponding graphic (otherwise, an automatic naming will be applied)
 %   \item \textbf{setup:} Specifies a keyword associated to a |mglsetup| block, which will be executed before the code in the mandatory argument.
@@ -543,8 +576,11 @@
 %
 % \DescribeMacro{\mglgraphics} This command takes the name of an external MGL script as mandatory argument, which will be automatically executed, and the resulting image will be included. The same optional arguments accepted by this command are:
 % \begin{itemize}
-%   \item \textbf{bb, bbllx, bblly, bburx, bbury, natwidth, natheight, hiresbb, viewport, trim, angle, origin, width, height, totalheight, keepaspectratio, clip, draft, type, ext, read, command:} These are the same options of the |\includegraphics| command from the \textsf{graphicx} package. Note the option |scale| is missing in this list.
-%   \item \textbf{gray, scale, quality, variant:} These are the same as the package options |gray|, |scale|, |quality| and |variant|, respectively, but their effect is \emph{private}, meaning that they only affect the current script/image.
+%   \item \textbf{bb, bbllx, bblly, bburx, bbury, natwidth, natheight, hiresbb, viewport, trim, angle, origin, width, height, totalheight, keepaspectratio, clip, draft, type, ext, read, command:} These are the same options of the |\includegraphics| command from the \textsf{graphicx} package.
+%   \item \textbf{gray:} Can be used to activate (|gray=on| or |gray=1|) or deactivate (|gray=off| or |gray=0|) gray-scale mode \emph{only for the current graphic.}
+%   \item \textbf{mglscale:} Any positive value for this option is used to physically scale the resulting image file, i.g., |mglscale=2| will create an image file twice as bigger.
+%   \item \textbf{quality:} Sets the quality of the current graphic. Valid values are integers between |0| and |9|.
+%   \item \textbf{variant:} Sets the variant of argument for the commands in the current script.
 %   \item \textbf{imgext:} Can be used to set the extension for the current image.
 %   \item \textbf{path:} Can be used to specify the location of the script.
 % \end{itemize}
@@ -638,7 +674,7 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglscale|\marg{1\,$\vert$2\,$\vert$\ldots\,$\vert$9}\\[0.25em]
+%     |\mglscale|\marg{$x:x>0$}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -670,6 +706,8 @@
 %     \hline
 %     $8$ & Draw dots instead of primitives (extremely fast)\\
 %     \hline
+%     $9$ & No drawing (for testing purposes)\\
+%     \hline
 %   \end{tabular}
 %   \MakeShortVerb{\|}
 % \end{center}
@@ -677,7 +715,7 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglquality|\marg{0\,$\vert$1\,$\vert$\ldots\,$\vert$8}\\[0.25em]
+%     |\mglquality|\marg{0\,$\vert$1\,$\vert$\ldots\,$\vert$9}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -786,9 +824,9 @@
 %     \hline
 %     gray & \meta{off\,$\vert$on\,$\vert$0\,$\vert$1} & Turn off/on gray-scale mode\\
 %     \hline
-%     scale & \meta{1\,$\vert$2\,$\vert$\ldots\,$\vert$9} & Scale for creation of graphics\\
+%     mglscale & \meta{$x:x>0$} & Scale for creation of graphics\\
 %     \hline
-%     quality & \meta{0\,$\vert$1\,$\vert$\ldots\,$\vert$8} & Quality for creation of graphics\\
+%     quality & \meta{0\,$\vert$1\,$\vert$\ldots\,$\vert$9} & Quality for creation of graphics\\
 %     \hline
 %     variant & \meta{0\,$\vert$1\,$\vert$\ldots} & Variant of arguments for MGL commands\\
 %     \hline
@@ -930,6 +968,7 @@
 %    \end{macrocode}
 % \end{macro}\end{macro}\end{macro}\end{macro}
 % \begin{macro}{\MGL@test@switch}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New command to verify and validate switching arguments}
 % It is called by a command to test whether the user has passed the option |off|, |on|, |0| (equivalent to |off|) or |1| (equivalent to |on|); if the option is correct, it is replaced by its equivalent, otherwise, a warning is issued. It takes two arguments: the first one is the option to test, the second one is the name of the command calling this macro.
 %    \begin{macrocode}
 \def\MGL@test@switch#1#2{%
@@ -1108,14 +1147,16 @@
 % \end{macro}
 %
 % \begin{macro}{\mglscale}\begin{macro}{\MGL@scale}
-% |\mglscale| sets the value of the |\MGL@scale| macro, which is used later to specify the default scaling for graphics. It only accepts integer values from $1$ to $9$, otherwise it issues a warning and restarts the scaling to $1$. In order to be able to check the validity of the value passed by the user, we first set the |\MGL@scale| macro to that value and test it with the |\ifcase| conditional; if the value is valid, we do nothing, but if it is invalid, we issue a warning and overwrite |\MGL@scale| to $1$.
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Now accepts any positive value}
+% |\mglscale| sets the value of the |\MGL@scale| macro, which is used later to specify the default scaling for graphics. It only accepts positive values, otherwise it issues a warning and restarts the scaling to $1$. In order to be able to check the validity of the value passed by the user, we first set the |\MGL@scale| macro to that value and test it with the |\ifdim| conditional.\footnote{We can't use \texttt{\textbackslash ifnum} here because it only accepts integer values.} Since this conditional tests dimensions only, the value passed by the user is multiplied by |\p@| (value |1pt|), so it can be compared with |\z@| (value |0pt|).
 %    \begin{macrocode}
 
 \def\mglscale#1{
-  \def\MGL@scale{#1}%
-  \ifcase\MGL@scale\or\or\or\or\or\or\or\or\else%
+  \ifdim#1\p@>\z@%
+    \def\MGL@scale{#1}%
+  \else%
     \PackageWarning{mgltex}{%
-      Scaling value of \MGL@scale\space not allowed; using default (1)%
+      Scaling value of #1\space not allowed; using default (1)%
     }%
     \def\MGL@scale{1}%
   \fi%
@@ -1124,6 +1165,7 @@
 % \end{macro}\end{macro}
 %
 % \begin{macro}{\mglquality}\begin{macro}{\MGL@quality}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{\texttt{9} is accepted as quality value now}
 % |\mglquality| sets the value of the |\MGL@quality| macro, which is used later to specify the default quality for graphics. It only accepts integer values from $0$ to $8$ (the only ones defined by |MathGL|), otherwise it issues a warning and restarts to $2$ (the default for |MathGL|). In order to be able to check the validity of the value passed by the user, we first set the |\MGL@quality| macro to that value and test it with the |\ifcase| conditional; if the value is valid, we print an info message to the |.log| file about the characteristics of the chosen quality, but if it is invalid, we issue a warning and overwrite |\MGL@scale| to $2$.
 %    \begin{macrocode}
 
@@ -1168,6 +1210,10 @@
     \PackageInfo{mgltex}{%
       Quality 8: Draw dots instead of primitives (extremely fast)%
     }%
+  \or%
+    \PackageInfo{mgltex}{%
+      Quality 9: No drawing (for testing purposes)%
+    }%
   \else%
     \PackageWarning{mgltex}{%
       Quality #1 not available; using default (2)%
@@ -1184,7 +1230,7 @@
 
 \def\mglvariant#1{%
   \def\MGL@variant{#1}%
-  \ifnum\MGL@quality<0%
+  \ifnum\MGL@variant<0%
     \PackageWarning{mgltex}{%
       Variant #1 not allowed; using default (0)%
     }%
@@ -1236,6 +1282,7 @@
 \DeclareOption{6q}{\def\MGL@quality{6}}
 \DeclareOption{7q}{\def\MGL@quality{7}}
 \DeclareOption{8q}{\def\MGL@quality{8}}
+\DeclareOption{9q}{\def\MGL@quality{9}}
 
 \DeclareOption{0v}{\def\MGL@variant{0}}
 \DeclareOption{1v}{\def\MGL@variant{1}}
@@ -1445,6 +1492,9 @@
 \define@key{MGL@gr@keys}{keepaspectratio}[true]{%
   \g@addto@macro\MGL@graph@keys{keepaspectratio=#1,}%
 }
+\define@key{MGL@gr@keys}{scale}{%
+  \g@addto@macro\MGL@graph@keys{scale=#1,}%
+}
 \define@key{MGL@gr@keys}{clip}[true]{%
   \g@addto@macro\MGL@graph@keys{clip=#1,}%
 }
@@ -1465,10 +1515,10 @@
 }
 %    \end{macrocode}
 % \end{macro}
-% The following four \meta{key}=\meta{value} pairs call the adequate \textsf{\mglTeX} command. Note that the |scale| option from the \textsf{graphicx} package is replaced by the |scale| option from the MGL language.
+% The following four \meta{key}=\meta{value} pairs call the adequate \textsf{\mglTeX} command.
 %    \begin{macrocode}
 \define@key{MGL@gr@keys}{gray}[0]{\mglgray{#1}}
-\define@key{MGL@gr@keys}{scale}{\mglscale{#1}}
+\define@key{MGL@gr@keys}{mglscale}{\mglscale{#1}}
 \define@key{MGL@gr@keys}{quality}{\mglquality{#1}}
 \define@key{MGL@gr@keys}{variant}{\mglvariant{#1}}
 %    \end{macrocode}
@@ -1500,11 +1550,13 @@
 % \end{macro}
 %
 % \begin{macro}{\MGL@codes}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Bugfix: category code for tabulators is changed too}
 % This macro changes the category codes of all special characters (like |\|, |$|, etc.) to $12$ (other), so they don't have any special meaning and can be processed as normal text. The exception is the new line character (|^^M|), which is kept active for compatibility with the \textsf{verbatim} package.
 %    \begin{macrocode}
 
 \def\MGL@codes{%
   \let\do\@makeother\dospecials%
+  \catcode`\^^I=12%
   \catcode`\^^M\active%
 }
 %    \end{macrocode}
@@ -1758,6 +1810,7 @@
 % \noindent For the following, we agree that if a macro is required by an environment, and it hasn't been already defined, it will be defined between the commands that start and end such environment; also the command's name will have the environment's name as prefix.
 %
 % \begin{environment}{mgl}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New environment options: \texttt{gray}, \texttt{mglscale}, \texttt{quality}, \texttt{variant}}
 % This environment has to transcript its contents to the document's main script, and create a backup of the code simultaneously; the backup is used to detect changes in following compilations.
 % \begin{macro}{\mgl}
 % The command that starts the |mgl| environment. It is called by the |\begin{mgl}| command.
@@ -1823,11 +1876,11 @@
     \MGL@write\MGL@out@stream{\the\verbatim@line}%
   }%
 %    \end{macrocode}
-% Before writing the MGL code of the environment, we set the default gray/color mode, scale, quality and variant.
+% Before writing the MGL code of the environment, we set the default gray/color mode, mglscale, quality and variant.
 %    \begin{macrocode}
   \MGL@write\MGL@main@stream{%
     gray \MGL@gray^^J%
-    scale \MGL@scale^^J%
+    setsizescl \MGL@scale^^J%
     quality \MGL@quality^^J%
     variant \MGL@variant%
   }%
@@ -1941,6 +1994,7 @@
 % \end{environment}
 %
 % \begin{environment}{mglcode}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New environment options: \texttt{gray}, \texttt{mglscale}, \texttt{quality}, \texttt{variant}}
 % This environment also checks for changes on the code, but, since it writes to its own script, there is no need to create a backup file (the check is performed using the script itself).
 % \begin{macro}{\mglcode}
 % It starts the |mglcode| environment. Its anatomy is similar to that of the |\mgl| command.
@@ -2087,7 +2141,7 @@
 % \begin{environment}{mglsetup}
 % This environment is meant to contain code that is executed just before the instruction of a |\mglplot| command, producing always the same ouput. Instead of writing a new chunk of code for that purpose, |mglsetup| is defined as a special case of the |mglfunc| environment, with the exception that the MGL function obtained this way doesn't accept any argument ---thus producing always the same output.
 % \begin{macro}{\mglsetup}
-% It is defined as an alias for |\mglfunc|, but only the name of the MGL function is passed to it, forcing the assumption that the number of arguments for the function is zero.
+% It is defined as an alias for |\mglfunc|, but only the name of the MGL function is passed to it, forcing the assumption that its number of arguments is zero.
 %    \begin{macrocode}
 
 \def\mglsetup#1{\mglfunc{#1}}%
@@ -2102,12 +2156,14 @@
 % \end{environment}
 %
 % \begin{macro}{\mglplot}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Added \texttt{\textbackslash bgroup} and \texttt{\textbackslash egroup} in order to keep changes private}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New command options: \texttt{gray}, \texttt{mglscale}, \texttt{quality}, \texttt{variant}}
 % Although the function of this command is quite simple and straightforward, it requires many lines of code and some tricks in order to reach the desired functionality.
 %    \begin{macrocode}
 
 \newcommand\mglplot[2][]{%
 %    \end{macrocode}
-% Since this is a command, we need to explicitly create a local group so that all changes keep local to the command.\footnote{Environments keep changes local by default.}
+% Since this is a command, we need to explicitly create a local group so that all changes keep private to the command.\footnote{In contrast, environments keep changes private by default.}
 %    \begin{macrocode}
   \bgroup%
 %    \end{macrocode}
@@ -2175,7 +2231,7 @@
 %    \begin{macrocode}
   \MGL@write\MGL@main@stream{%
     gray \MGL@gray^^J%
-    scale \MGL@scale^^J%
+    setsizescl \MGL@scale^^J%
     quality \MGL@quality^^J%
     variant \MGL@variant%
   }%
@@ -2339,7 +2395,7 @@
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\endmglblock*}
-% It's defined as an alias for |\endmglblock|.
+% It is defined as an alias for |\endmglblock|.
 %    \begin{macrocode}
 \expandafter\let\csname endmglblock*\endcsname\endmglblock
 %    \end{macrocode}
@@ -2480,6 +2536,7 @@
 % \noindent Since external scripts exist independently of the \LaTeX{} document, there is no need of environments to process them, just commands. Remember these commands work on the suposition that the scripts don't change.
 %
 % \begin{macro}{\mglgraphics}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{New command options: \texttt{gray}, \texttt{mglscale}, \texttt{quality}, \texttt{variant}}
 % This command compiles the external script and includes it in the document. Although that process is simple, the code to execute it is relatively large due to the possibility of the user specifying an optional path, so many parameters have to be checked.
 %    \begin{macrocode}
 
@@ -2811,6 +2868,7 @@
 %
 % \subsection{Local settings commands}
 % \begin{macro}{\mglswitch}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Now accepts arguments \texttt{0} (equivalent to \texttt{off}) and \texttt{1} (equivalent to \texttt{on}), besides the usual  \texttt{off} and \texttt{on}}
 % \noindent This command turns |on| and |off| the package according to its argument; it is just a call to the commands |\MGL@switch@on| or |\MGL@switch@off|.
 %    \begin{macrocode}
 \def\mglswitch#1{%
@@ -2821,6 +2879,7 @@
 % \end{macro}
 %
 % \begin{macro}{\mglcomments}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Now accepts arguments \texttt{0} (equivalent to \texttt{off}) and \texttt{1} (equivalent to \texttt{on}), besides the usual  \texttt{off} and \texttt{on}}
 % Depending on the option passed by the user, it calls |\@MGL@comments@on| or |\@MGL@comments@off|.
 %    \begin{macrocode}
 \def\mglcomments#1{%
@@ -2850,6 +2909,8 @@
 % \end{macro}
 %
 % \begin{macro}{\mglname}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Now writes the MGL code line \texttt{setsize~600~400} to the main script}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{The MGL code line \texttt{setsize~600~400} is now written to the main script}
 % \noindent The purpose of this command is to force the closure of the current main script, compile the corresponding figures, and open a new main script. At first, it is defined to only change the value of |\MGL@main@script@name| because the main script is not opened until the call of |\begin{document}|; but at that point, it is redefined to perform the described actions.
 %    \begin{macrocode}
 \def\mglname#1{\edef\MGL@main@script@name{#1}}
@@ -2887,6 +2948,10 @@
     \MGL@openout\MGL@main@stream{%
       \MGL@dir\MGL@scripts@dir\MGL@main@script@name.mgl%
     }%
+%    \end{macrocode}
+% We set the default size for the graphics that the main script will generate; without this line the |setsizescl| commands written automatically by \textsf{\mglTeX} wouldn't work.
+%    \begin{macrocode}
+    \MGL@write\MGL@main@script@name{setsize 600 400}
 %    \end{macrocode}
 % The space hack is ended.
 %    \begin{macrocode}
@@ -2930,6 +2995,8 @@
 % \end{macro}
 %
 % \begin{macro}{\mglsettings}
+%  \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Now calls the \texttt{\textbackslash mglswitch} and \texttt{\textbackslash mglcomments} commands for the \texttt{switch} and \texttt{comments} options, respectively}
+% \changes{\textbf{v4.2 ------------}}{/2016/04/27}{Added options \texttt{gray} and \texttt{variant}}
 % First, we define a \meta{key}=\meta{value} family, |MGL@sett@keys|, for this command.
 %    \begin{macrocode}
 \define@key{MGL@sett@keys}{dir}{\def\MGL@dir{#1}}
@@ -2937,10 +3004,12 @@
 \define@key{MGL@sett@keys}{graphicsdir}{\def\MGL@graphics@dir{#1}}
 \define@key{MGL@sett@keys}{backupsdir}{\def\MGL@backups@dir{#1}}
 \define@key{MGL@sett@keys}{paths}{\g@addto@macro\MGL@paths{,#1}}
-\define@key{MGL@sett@keys}{switch}{\csname MGL@switch@#1\endcsname}
-\define@key{MGL@sett@keys}{comments}{\csname MGL@comments@#1\endcsname}
+\define@key{MGL@sett@keys}{switch}{\mglswitch{#1}}
+\define@key{MGL@sett@keys}{comments}{\mglcomments{#1}}
+\define@key{MGL@sett@keys}{gray}{\mglgray{#1}}
+\define@key{MGL@sett@keys}{mglscale}{\mglscale{#1}}
 \define@key{MGL@sett@keys}{quality}{\mglquality{#1}}
-\define@key{MGL@sett@keys}{scale}{\mglscale{#1}}
+\define@key{MGL@sett@keys}{variant}{\mglvariant{#1}}
 \define@key{MGL@sett@keys}{imgext}{\def\MGL@imgext{.#1}}
 %    \end{macrocode}
 % The command receives and executes the \meta{key}=\meta{value} pairs for |MGL@sett@keys|. This is an only-preamble command.
@@ -2969,17 +3038,20 @@
 % \subsection{Final adjustments}
 % To finish the code of \textsf{\mglTeX}, we set the behavior of the package at the call of the |\begin{document}| and |\end{document}| commands.
 %
-% We tell \LaTeX{} to check the name of the document's main script for overwriting. We do this by calling |\MGL@set@script@name| inside a local group, because it defines |\MGL@script@name|, which we need undefined in certain parts of the code. Then the script is opened. We use |\immediate\openout| instead of |\MGL@openout| for this purpose, since, otherwise, we run the risk of the main script not being created when needed, if the user turns off \textsf{\mglTeX} before the |\begin{document}| command, and turns it on immediately after.
+% We tell \LaTeX{} to check the name of the document's main script for overwriting. We do this by calling |\MGL@set@script@name| inside a local group, because it defines |\MGL@script@name|, which we need undefined in certain parts of the code. Then the script is opened. We use |\immediate\openout| instead of |\MGL@openout| for this purpose, since, otherwise, we run the risk of the main script not being created when needed, if the user turns off \textsf{\mglTeX} before the |\begin{document}| command, and turns it on immediately after. Finally, we set the default size for the graphics the main script will generate; without this line the |setsizescl| commands written automatically by \textsf{\mglTeX} wouldn't work.
 %    \begin{macrocode}
 
 \AtBeginDocument{%
   \bgroup\MGL@set@script@name{\MGL@main@script@name}\egroup%
   \immediate\openout\MGL@main@stream=%
   \MGL@dir\MGL@scripts@dir\MGL@main@script@name.mgl%
+  \MGL@write\MGL@main@stream{setsize 600 400}%
 }
 %    \end{macrocode}
+%
 % We also set the actions for the call of |\end{document}|
 %    \begin{macrocode}
+
 \AtEndDocument{%
 %    \end{macrocode}
 % |\MGL@write@funcs| will simply write the MGL functions throughout the \LaTeX{} document.

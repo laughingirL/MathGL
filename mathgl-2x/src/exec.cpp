@@ -2460,6 +2460,17 @@ int MGL_NO_EXPORT mgls_norm(mglGraph *, long , mglArg *a, const char *k, const c
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_limit(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(k[0]=='d' && a[0].d->temp)	return 5;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dn"))		d->Limit(a[1].v);
+	else if(c && !strcmp(k,"dn"))	c->Limit(a[1].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_hist(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -3616,6 +3627,7 @@ mglCommand mgls_base_cmd[] = {
 	{"legend","Draw legend","legend [pos 'fmt']|x y ['fmt']", mgls_legend ,15},
 	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks ,15},
 	{"light","Setup light","light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light ,2},
+	{"limit","Limit data to be inside [-v,v]","limit Dat v", mgls_limit ,16},
 	{"line","Draw line","line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line ,13},
 	{"list","Creates new variable from list of numbers or data","list Var v1 ...|Var D1 ...", 0, 4},
 	{"load","Load commands from external DLL","load 'fname'", 0, 6},

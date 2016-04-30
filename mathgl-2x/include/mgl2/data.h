@@ -362,6 +362,9 @@ using mglDataA::Momentum;
 	/// Normalize the data to range [v1,v2] slice by slice
 	inline void NormSl(mreal v1=0,mreal v2=1,char dir='z',bool keep_en=true,bool sym=false)
 	{	mgl_data_norm_slice(this,v1,v2,dir,keep_en,sym);	}
+	/// Limit the data to be inside [-v,v], keeping the original sign
+	inline void Limit(mreal v)
+	{	mgl_data_limit(this, v);	}
 
 	/// Apply Hankel transform
 	inline void Hankel(const char *dir)	{	mgl_data_hankel(this,dir);	}
