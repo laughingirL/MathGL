@@ -491,8 +491,9 @@ inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA
 /// Get array as solution of tridiagonal matrix solution a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
 /** String \a how may contain:
  * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
- * 'h' for using hexagonal matrix at x-y plain,
- * 'c' for using periodical boundary conditions. */
+ * 'h' for using hexagonal matrix at x-y plain (need nx=ny),
+ * 'c' for using periodical boundary conditions,
+ * 'd' for diffraction/diffuse calculation. */
 inline mglDataC mglTridMatC(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataC &D, const char *how)
 {	return mglDataC(true, mgl_datac_tridmat(&A, &B, &C, &D, how));	}
 //-----------------------------------------------------------------------------

@@ -1187,6 +1187,28 @@ void MGL_NO_EXPORT mgl_progonka_pr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, l
 	mreal u0 = bb[0]/(1.-aa[0]);
 	for(long i=0;i<n;i++)	uu[i]=bb[i]+aa[i]*u0;
 }
+void MGL_NO_EXPORT mgl_progonka_hr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, long n, long i0, long di, bool difr)
+{
+	mreal *aa=dat, *bb=dat+n, *uu=dat+2*n;
+	mreal b0=B->vthr(i0), c0=C->vthr(i0), d0=D->vthr(i0);
+	uu[0] = d0/b0*(difr?(2.-b0):1.);	di = n-1;	// suppose the square grid!
+	for(long j=1;j<n;j++)
+	{
+		b0=B->vthr(i0+j);	c0=C->vthr(i0+j);	d0=D->vthr(i0+j);
+		if(difr)	d0 = (2.-b0)*d0-c0*D->vthr(i0+di);
+		aa[0] = -c0/b0;	bb[0] = d0/b0;
+		for(long i=1;i<j;i++)
+		{
+			register long ii=i0+di*i;
+			mreal a=A->vthr(ii),b=B->vthr(ii),c=C->vthr(ii);
+			mreal d=difr?-a*D->vthr(ii-di)+(2.-b)*D->vthr(ii)-c*D->vthr(ii+di):D->vthr(ii);
+			aa[i] = -c/(b+a*aa[i-1]);
+			bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
+		}
+		uu[j+di*(j-1)] = bb[j-1];
+		for(long i=j-2;i>=0;i--)	uu[j+di*i] = bb[i]+aa[i]*uu[j+di*i+di];
+	}
+}
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_data_tridmat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
 {
@@ -1238,6 +1260,17 @@ HMDT MGL_EXPORT mgl_data_tridmat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how
 			else	mgl_progonka_sr(A,B,C,D,T.a,nz,i0,np,difr);
 			i0 = i+nx*j;
 			for(long k=0;k<nz;k++)	r->a[k*np+i0] = uu[k];
+		}
+	}
+	else if(mglchr(how,'h') && ny==nx && na==nn)
+#pragma omp parallel
+	{
+		mglData T(np,3);
+#pragma omp for
+		for(long k=0;k<nz;k++)
+		{
+			mgl_progonka_hr(A,B,C,D,T.a,nx,k*np,nx-1,difr);
+			memcpy(r->a+k*np, T.a+2*np, np*sizeof(mreal));
 		}
 	}
 	else	{	delete r;	r=0;	}
@@ -1292,6 +1325,28 @@ void MGL_NO_EXPORT mgl_progonka_pc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, lo
 	dual u0 = bb[0]/(1.-aa[0]);
 	for(long i=0;i<n;i++)	uu[i]=bb[i]+aa[i]*u0;
 }
+void MGL_NO_EXPORT mgl_progonka_hc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, long n, long i0, long di, bool difr)
+{
+	dual *aa=dat, *bb=dat+n, *uu=dat+2*n;
+	dual b0=B->vcthr(i0), c0=C->vcthr(i0), d0=D->vcthr(i0);
+	uu[0] = d0/b0*(difr?(2.-b0):1.);	di = n-1;	// suppose the square grid!
+	for(long j=1;j<n;j++)
+	{
+		b0=B->vcthr(i0+j);	c0=C->vcthr(i0+j);	d0=D->vcthr(i0+j);
+		if(difr)	d0 = (2.-b0)*d0-c0*D->vcthr(i0+di);
+		aa[0] = -c0/b0;	bb[0] = d0/b0;
+		for(long i=1;i<j;i++)
+		{
+			register long ii=i0+di*i;
+			dual a=A->vcthr(ii),b=B->vcthr(ii),c=C->vcthr(ii);
+			dual d=difr?-a*D->vcthr(ii-di)+(2.-b)*D->vcthr(ii)-c*D->vcthr(ii+di):D->vcthr(ii);
+			aa[i] = -c/(b+a*aa[i-1]);
+			bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
+		}
+		uu[j+di*(j-1)] = bb[j-1];
+		for(long i=j-2;i>=0;i--)	uu[j+di*i] = bb[i]+aa[i]*uu[j+di*i+di];
+	}
+}
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_tridmat(HCDT A, HCDT B, HCDT C, HCDT D, const char *how)
 {
@@ -1343,6 +1398,17 @@ HADT MGL_EXPORT mgl_datac_tridmat(HCDT A, HCDT B, HCDT C, HCDT D, const char *ho
 			else	mgl_progonka_sc(A,B,C,D,T.a,nz,i0,np,difr);
 			i0 = i+nx*j;
 			for(long k=0;k<nz;k++)	r->a[k*np+i0] = uu[k];
+		}
+	}
+	else if(mglchr(how,'h') && ny==nx && na==nn)
+#pragma omp parallel
+	{
+		mglDataC T(np,3);
+#pragma omp for
+		for(long k=0;k<nz;k++)
+		{
+			mgl_progonka_hc(A,B,C,D,T.a,nx,k*np,nx-1,difr);
+			memcpy(r->a+k*np, T.a+2*np, np*sizeof(dual));
 		}
 	}
 	else	{	delete r;	r=0;	}

@@ -133,9 +133,9 @@ using mglDataA::Momentum;
 	{	if(d.size()>0)	{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 		else	Create(1);	}
 	inline void Set(const std::vector<float> &d)
-	{	if(d.size()>0)	Set(&(a[0]),d.size());	else	Create(1);	}
+	{	if(d.size()>0)	Set(&(d[0]),d.size());	else	Create(1);	}
 	inline void Set(const std::vector<double> &d)
-	{	if(d.size()>0)	Set(&(a[0]),d.size());	else	Create(1);	}
+	{	if(d.size()>0)	Set(&(d[0]),d.size());	else	Create(1);	}
 	/// Allocate memory and set data from variable argument list of double values
 	inline void SetList(long n, ...)
 	{
@@ -519,8 +519,9 @@ inline mglData mglODE(const char *df, const char *var, const mglDataA &ini, mrea
 /// Get array as solution of tridiagonal matrix solution a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
 /** String \a how may contain:
  * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
- * 'h' for using hexagonal matrix at x-y plain,
- * 'c' for using periodical boundary conditions. */
+ * 'h' for using hexagonal matrix at x-y plain (need nx=ny),
+ * 'c' for using periodical boundary conditions,
+ * 'd' for diffraction/diffuse calculation. */
 inline mglData mglTridMat(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataA &D, const char *how)
 {	return mglData(true, mgl_data_tridmat(&A, &B, &C, &D, how));	}
 //-----------------------------------------------------------------------------
