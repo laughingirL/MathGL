@@ -1,4 +1,4 @@
-2.3.4.1 Released 14 March
+2.3.5 Released 14 March
 
 * Greatly update mgltex (by Diego Sejas Viscarra)
 	- New package options:
@@ -16,13 +16,22 @@
 	- The bugfix for MiKtex has been fully implemented.
 	- Some minor bugfixes and speedups.
 
-* Add 'tridmat' for tridiagonal matrix algorithm.
-* Add 'diffract' for single step diffraction calculation.
+* Add MGL command 'variant' to select proper variant of arguments (like "var1?var2?var3?...") in MGL commands.
+* Remove limitation of maximal number (was 1000) of arguments for MGL commands. This is actual for 'list' command.
+* Add mglWnd::Widget() for accessing widget which is used for drawing.
+* Add Gray() for producing gray-scaled image.
+* Add MGL command 'setsizescl' for scaling all further 'setsize'.
+* Add Shear() for shearing plot.
+* Add ShearPlot() for placing plots side-by-side with some shearing.
+* Add mglData::Limit() for limit maximal absolute value of data.
+* Add mglTridMat() for tridiagonal matrix algorithm.
+* Add MGL command 'diffract' for single step diffraction calculation.
 * Add 'ifsfile' for reading IFS fractal parameters from *.ifs file.
 * Add style '*' for 2d versions of Pipe() and Flow() to draw threads from points inside axis range.
 * Add "norm()" to the list of known functions
 * Compatibility changes for MS VisualStudio, MacOS, Win64.
 * Bugfix for legend export into EPS and SVG.
+* Bugfix for importing data from std::vector.
 * Improve Surf3*() drawing.
 * Force NAN if divided by 0 in formulas.
 * Option "-S" of mglconv now perform scaling in any cases

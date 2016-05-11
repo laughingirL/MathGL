@@ -64,13 +64,12 @@ D. Docs about JS interface
 3. Docs + sample about '*' in flow() and pipe().
 4. Docs about 'tridmat' + sample
 5. Docs about 'diffract'
-6. Docs about 'variant' + about "var1?var2?var3?..."
 7. Docs about *.ifs format
 8. Docs about 'gray'
 9. Docs about 'setsizescl'
-10. Docs about Widget(), mgl_qt_widget(), mgl_fltk_widget()
 11. Docs about 'shear'
 12. Docs about 'shearplot'
+13. Docs about 'limit'
 
 ============= UDAV =============
 

@@ -177,6 +177,12 @@ public:
 Возвращает положение щелчка мыши.
 @end deftypefn
 
+@deftypefn {Method on @code{mglWnd}} @code{void *} Widget ()
+@deftypefnx {C function} @code{void *} mgl_fltk_widget (@code{HMGL} gr)
+@deftypefnx {C function} @code{void *} mgl_qt_widget (@code{HMGL} gr)
+Возвращает указатель на виджет (@ref{Fl_MathGL class} or @ref{QMathGL class}), используемый для рисования.
+@end deftypefn
+
 @c ------------------------------------------------------------------
 @external{}
 @node mglDraw class, Fl_MathGL class, mglWnd class, Widget classes

@@ -61,6 +61,13 @@ MathGL имеет встроенный скриптовый язык MGL для 
 
 Команды могут иметь несколько наборов аргументов (например, @code{plot ydat} и @code{plot xdat ydat}). Все аргументы команды для выбранного набора должны быть указаны, однако часть из них могут иметь значения по умолчанию. Такие аргументы в описании команд будут помещены в квадратные скобки [], например @code{plot ydat ['stl'='' zval=nan]}. При этом запись @code{[arg1 arg2 arg3 ...]} подразумевает @code{[arg1 [arg2 [arg3 ...]]]}, т.е. опускать можно только аргументы с конца, если вы согласны с их значениями по умолчанию. Например, @code{plot ydat '' 1} или @code{plot ydat ''} правильно, а @code{plot ydat 1} не правильно (аргумент @code{'stl'} пропущен).
 
+Можно предоставить несколько вариантов аргументов комманд при использовании символа @samp{?} для их разделения. Конкретный вариант аргумента, используемый при выполнении команды, задается значением команды @ref{variant}. При этом будет использован последний вариант, если задано слишком большое значение. По умолчанию используется первый вариант (т.е. как при @code{variant 0}). Например в следующем коде будет сначала нарисован график синим цветом (первый аргумент @samp{b}), а затем красным пунктиром -- после @code{variant 1} будет использован второй аргумент @samp{r|}:
+@verbatim
+fplot 'x' 'b'?'r'
+variant 1
+fplot 'x^3' 'b'?'r|'
+@end verbatim
+
 
 
 @c TODO Translate it!
@@ -75,80 +82,80 @@ MathGL имеет встроенный скриптовый язык MGL для 
 
 @cindex chdir
 @anchor{chdir}
-@deftypefn {MGL command} {} chdir 'path'
+@deftypefn {Команда MGL} {} chdir 'path'
 Переходит в папку @var{path}.
 @end deftypefn
 
 @cindex ask
 @anchor{ask}
-@deftypefn {MGL command} {} ask $N 'question'
+@deftypefn {Команда MGL} {} ask $N 'question'
 Задает @var{N}-ый аргумент скрипта равным ответу пользователя на вопрос @var{question}. Обычно команда показывает диалог с вопросом и полем ввода текста ответа. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 
 @cindex define
 @anchor{define}
-@deftypefn {MGL command} {} define $N smth
+@deftypefn {Команда MGL} {} define $N smth
 Задает @var{N}-ый аргумент скрипта равным @var{smth}. Отмечу, что @var{smth} используется как есть (с символами @samp{'} если присутствуют). Выполняется только подстановка других макроопределений $0...$9, $a...$z. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
-@deftypefn {MGL command} {} define name smth
+@deftypefn {Команда MGL} {} define name smth
 Определяет константу (скаляр) с именем @code{name} и числовым значением @code{smth}. Позднее она может быть использована как обычное число.
 @end deftypefn
 @cindex defchr
 @anchor{defchr}
-@deftypefn {MGL command} {} defchr $N smth
+@deftypefn {Команда MGL} {} defchr $N smth
 Задает @var{N}-ый аргумент скрипта равным символу с UTF кодом @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 @cindex defnum
 @anchor{defnum}
-@deftypefn {MGL command} {} defnum $N smth
+@deftypefn {Команда MGL} {} defnum $N smth
 Задает @var{N}-ый аргумент скрипта равным числовому значению @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 
 @comment  @cindex defpal
 @comment  @anchor{defpal}
-@comment  @deftypefn {MGL command} {} defpal $N smth
+@comment  @deftypefn {Команда MGL} {} defpal $N smth
 @comment  Задает @var{N}-ый аргумент скрипта равным символу палитры с индексом, найденным из @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @comment  @end deftypefn
 
 @cindex call
 @anchor{call}
-@deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
+@deftypefn {Команда MGL} {} call 'fname' [ARG1 ARG2 ... ARG9]
 Переходит к выполнению (вызывает) подпрограммы @var{fname} (или внешнего скрипта, если функция не была найдена). Опциональные аргументы передаются в подпрограмму. См. также @ref{func}.
 @end deftypefn
 
 @cindex func
 @anchor{func}
-@deftypefn {MGL command} {} func 'fname' [narg=0]
+@deftypefn {Команда MGL} {} func 'fname' [narg=0]
 Определяет подпрограмму с именем @var{fname} и задает число требуемых аргументов. Аргументы будут помещены в параметры скрипта $1, $2, ... $9. Отмечу, что выполнение основной программы будет остановлено при встрече @code{func} -- действует аналогично комманде @ref{stop}. См. также @ref{return}.
 
 @end deftypefn
 @cindex return
 @anchor{return}
-@deftypefn {MGL command} {} return
+@deftypefn {Команда MGL} {} return
 Возвращается из подпрограммы. См. также @ref{func}.
 @end deftypefn
 
 @cindex load
 @anchor{load}
-@deftypefn {MGL command} {} load 'filename'
+@deftypefn {Команда MGL} {} load 'filename'
 Загружает дополнительные команды MGL из внешней динамической библиотеки @var{filename}. Данная библиотека должна содержать массив с именем @code{mgl_cmd_extra} типа  @code{mglCommand}, который содержит описание новых комманд.
 @end deftypefn
 
 
 @cindex if
 @anchor{if}
-@deftypefn {MGL command} {} if dat 'cond'
+@deftypefn {Команда MGL} {} if dat 'cond'
 Начинает блок команд, выполняемый если каждый элемент @var{dat} удовлетворяет условию @var{cond}.
 @end deftypefn
-@deftypefn {MGL command} {} if @code{val}
+@deftypefn {Команда MGL} {} if @code{val}
 Начинает блок команд, выполняемый если @code{val} не ноль.
 @end deftypefn
 @cindex elseif
 @anchor{elseif}
-@deftypefn {MGL command} {} elseif dat 'cond'
+@deftypefn {Команда MGL} {} elseif dat 'cond'
 Начинает блок команд, выполняемый если предыдущий @code{if} или @code{elseif} не был выполнен и каждый элемент @var{dat} удовлетворяет условию @var{cond}.
 @end deftypefn
-@deftypefn {MGL command} {} elseif @code{val}
+@deftypefn {Команда MGL} {} elseif @code{val}
 Начинает блок команд, выполняемый если предыдущий @code{if} или @code{elseif} не был выполнен и @code{val} не ноль.
 @end deftypefn
 @cindex else
@@ -164,7 +171,7 @@ MathGL имеет встроенный скриптовый язык MGL для 
 
 @cindex for
 @anchor{for}
-@deftypefn {MGL command} {} for $N @code{v1 v2 [dv=1]}
+@deftypefn {Команда MGL} {} for $N @code{v1 v2 [dv=1]}
 Начинает блок команд, выполняемый в цикле с $@var{N}-ым аргументом изменяющимся от @var{v1} до @var{v2} с шагом @var{dv}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 @deftypefn {Команда MGL} {} for $N dat
@@ -178,18 +185,27 @@ MathGL имеет встроенный скриптовый язык MGL для 
 
 @cindex once
 @anchor{once}
-@deftypefn {MGL command} {} once @code{val}
+@deftypefn {Команда MGL} {} once @code{val}
 Определяет код (между @code{once on} и @code{once off}) который будет выполнен только один раз. Полезно для работы с большими данными в программах типа UDAV.
 @end deftypefn
 @cindex stop
 @anchor{stop}
-@deftypefn {MGL command} {} stop
+@deftypefn {Команда MGL} {} stop
 Останавливает выполнение скрипта.
 @end deftypefn
 
+
+@cindex variant
+@anchor{variant}
+@deftypefn {Команда MGL} {} variant @code{val}
+Задает вариант аргумента(ов), разделенных символом @samp{?}, для всех последующих комманд.
+@end deftypefn
+
+
+
 @cindex rkstep
 @anchor{rkstep}
-@deftypefn {MGL command} {} rkstep eq1;... var1;... [@code{dt=1}]
+@deftypefn {Команда MGL} {} rkstep eq1;... var1;... [@code{dt=1}]
 Выполняет один шаг решения системы обыкновенных дифференциальных уравнений @{var1' = eq1, ... @} с временным шагом @var{dt}. Здесь переменные @samp{var1}, ... -- переменные, определенные в MGL скрипте ранее. При решении используется метод Рунге-Кутта 4-го порядка.
 @end deftypefn
 
@@ -443,6 +459,11 @@ As an additional feature, when an image is not found or cannot be included, inst
 Посылает сигнал завершения выполнения для следующей команды.
 @end deftypefn
 
+@deftypefn {Метод класса @code{mglParse}} @code{void} SetVariant (@code{int} var=@code{0})
+@deftypefnx {Функция С} @code{void} mgl_parser_variant (@code{HMPR} p, @code{int} var=@code{0})
+Задает вариант аргумента(ов), разделенных символом @samp{?}, для всех последующих комманд.
+@end deftypefn
+
 
 @deftypefn {Метод класса @code{mglParse}} @code{long} GetCmdNum ()
 @deftypefnx {Функция С} @code{long} mgl_parser_cmd_num (@code{HMPR} p)
@@ -469,10 +490,10 @@ As an additional feature, when an image is not found or cannot be included, inst
 Возвращает описание команды MGL с именем @var{name}.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{void} RK_Step (@code{const char *}eqs, @code{const char *}vars, @code{mreal} dt=@code{1})
-@deftypefnx {Method on @code{mglParse}} @code{void} RK_Step (@code{const wchar_t *}eqs, @code{const wchar_t *}vars, @code{mreal} dt=@code{1})
-@deftypefnx {C function} @code{void} mgl_rk_step (@code{HMPR} p, @code{const char *}eqs, @code{const char *}vars, @code{mreal} dt)
-@deftypefnx {C function} @code{void} mgl_rk_step_w (@code{HMPR} p, @code{const wchar_t *}eqs, @code{const wchar_t *}vars, @code{mreal} dt)
+@deftypefn {Метод класса @code{mglParse}} @code{void} RK_Step (@code{const char *}eqs, @code{const char *}vars, @code{mreal} dt=@code{1})
+@deftypefnx {Метод класса @code{mglParse}} @code{void} RK_Step (@code{const wchar_t *}eqs, @code{const wchar_t *}vars, @code{mreal} dt=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_rk_step (@code{HMPR} p, @code{const char *}eqs, @code{const char *}vars, @code{mreal} dt)
+@deftypefnx {Функция С} @code{void} mgl_rk_step_w (@code{HMPR} p, @code{const wchar_t *}eqs, @code{const wchar_t *}vars, @code{mreal} dt)
 Make one step for ordinary differential equation(s) @{var1' = eq1, ... @} with time-step @var{dt}. Here strings @var{eqs} and @var{vars} contain the equations and variable names separated by symbol @samp{;}. The variable(s) @samp{var1}, ... are the ones, defined in MGL script previously. The Runge-Kutta 4-th order method is used.
 @end deftypefn
 

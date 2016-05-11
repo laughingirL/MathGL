@@ -176,6 +176,12 @@ showing the last mouse click position in the widget.
 Gets last position of mouse click.
 @end deftypefn
 
+@deftypefn {Method on @code{mglWnd}} @code{void *} Widget ()
+@deftypefnx {C function} @code{void *} mgl_fltk_widget (@code{HMGL} gr)
+@deftypefnx {C function} @code{void *} mgl_qt_widget (@code{HMGL} gr)
+Return pointer to widget (@ref{Fl_MathGL class} or @ref{QMathGL class}) used for plotting.
+@end deftypefn
+
 
 @c ------------------------------------------------------------------
 @external{}

@@ -24,7 +24,7 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 @section MGL definition
 @nav{}
 
-MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is important, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
+MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Words are separated from each other by space or tabulation symbol. The upper or lower case of words is important, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
 
 If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) or definitions (substrings @samp{$a}, @samp{$b} ... @samp{$z}) then before execution the values of parameter/definition will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
 
@@ -59,6 +59,13 @@ Special names @code{nan=#QNAN, inf=INFINITY, rnd=random value, pi=3.1415926..., 
 Before the first using all variables must be defined with the help of commands, like, @ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} and so on (see sections @ref{Data constructor}, @ref{Data filling} and @ref{Make another data}).
 
 Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{text ydat ['stl'='']} or @code{text x y 'txt' ['fnt'='' size=-1]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{text x y 'txt' '' 1} or @code{text x y 'txt' ''} is correct, but @code{text x y 'txt' 1} is incorrect (argument @code{'fnt'} is missed).
+
+You can provide several variants of arguments for a command by using @samp{?} symbol for separating them. The actual argument being used is set by @ref{variant}. At this, the last argument is used if the value of @ref{variant} is large than the number of provided variants. By default the first argument is used (i.e. as for @code{variant 0}). For example, the first plot will be drawn by blue (default is the first argument @samp{b}), but the plot after @code{variant 1} will be drawn by red dash (the second is @samp{r|}):
+@verbatim
+fplot 'x' 'b'?'r'
+variant 1
+fplot 'x^3' 'b'?'r|'
+@end verbatim
 
 
 @c ------------------------------------------------------------------
@@ -179,6 +186,12 @@ The code between @code{once on} and @code{once off} will be executed only once. 
 @anchor{stop}
 @deftypefn {MGL command} {} stop
 Terminate execution.
+@end deftypefn
+
+@cindex variant
+@anchor{variant}
+@deftypefn {MGL command} {} variant @code{val}
+Set variant of argument(s) separated by @samp{?} symbol to be used in further commands.
 @end deftypefn
 
 
@@ -432,6 +445,11 @@ Allow to parse @ref{load} command or not.
 @deftypefn {Method on @code{mglParse}} @code{void} Stop ()
 @deftypefnx {C function} @code{void} mgl_parser_stop (@code{HMPR} p)
 Sends stop signal which terminate execution at next command.
+@end deftypefn
+
+@deftypefn {Method on @code{mglParse}} @code{void} SetVariant (@code{int} var=@code{0})
+@deftypefnx {C function} @code{void} mgl_parser_variant (@code{HMPR} p, @code{int} var=@code{0})
+Sets variant of argument(s) separated by @samp{?} symbol to be used in further commands.
 @end deftypefn
 
 

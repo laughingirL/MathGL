@@ -272,16 +272,17 @@ mglNum *mglParser::AddNum(const wchar_t *name)
 //-----------------------------------------------------------------------------
 int MGL_LOCAL_PURE mglFindArg(const std::wstring &str)
 {
-	register long l=0,k=0,i;
-	for(i=0;i<long(str.length());i++)
+	register long l=0,k=0;
+	const size_t s=str.length();
+	for(size_t i=0;i<s;i++)
 	{
 		if(str[i]=='\'') l++;
 		if(str[i]=='{') k++;
 		if(str[i]=='}') k--;
 		if(l%2==0 && k==0)
 		{
-			if(str[i]=='#' || str[i]==';')	return -i;
-			if(str[i]<=' ')	return i;
+			if(str[i]=='#' || str[i]==';')	return -long(i);
+			if(str[i]<=' ')	return long(i);
 		}
 	}
 	return 0;
@@ -612,8 +613,9 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 	// parse arguments (parameters $1, ..., $9)
 	PutArg(str,false);	str=mgl_trim_ws(str);
 
-	std::wstring opt, *arg;	arg = new std::wstring[1024];
-	for(k=0;k<1024;k++)	// parse string to substrings (by spaces)
+	std::wstring opt;
+	std::vector<std::wstring> arg;
+	while(!str.empty())	// parse string to substrings (by spaces)
 	{
 		n = mglFindArg(str);
 		if(n<1)	// this is option
@@ -622,31 +624,32 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 			if(n<0)	str = str.substr(0,-n);
 			break;
 		}
-		arg[k] = str.substr(0,n);
+		arg.push_back(str.substr(0,n));
 		str = mgl_trim_ws(str.substr(n+1));
 	}
 	// try to find last argument
-	if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}
-	if(k<1) n =0;
+	if(str[0]!=0 && str[0]!='#' && str[0]!=';')	arg.push_back(str);
+	k = arg.size();
+	if(k<1) n = 0;
 	else
 	{
 		// fill arguments by its values
 		mglArg *a = new mglArg[k];
-		FillArg(gr, k, arg, a);
+		FillArg(gr, k, &(arg[0]), a);
 		// execute first special (program-flow-control) commands
 		if(!skip() && !arg[0].compare(L"stop"))
-		{	Stop = true;	delete []a;	delete []arg;	return 0;	}
+		{	Stop = true;	delete []a;	return 0;	}
 		if(!arg[0].compare(L"func"))
-		{	Stop = true;	delete []a;	delete []arg;	return 0;	}
+		{	Stop = true;	delete []a;	return 0;	}
 		n = FlowExec(gr, arg[0].c_str(),k-1,a);
-		if(n)		{	delete []a;	delete []arg;	return n-1;	}
-		if(skip())	{	delete []a;	delete []arg;	return 0;	}
+		if(n)		{	delete []a;	return n-1;	}
+		if(skip())	{	delete []a;	return 0;	}
 		if(!arg[0].compare(L"load"))
 		{
 			int n = a[0].type==1?0:1;
 			a[0].s.assign(a[0].w.begin(),a[0].w.end());
 			if(!n)	mgl_parser_load(this,a[0].s.c_str());
-			delete []a;	delete []arg;	return n;
+			delete []a;	return n;
 		}
 		if(!arg[0].compare(L"define"))
 		{
@@ -661,7 +664,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				{	HMDT dd = mglFormulaCalc(arg[2],this, DataList);
 					v->c = v->d = dd->a[0];	delete dd;	}
 			}
-			delete []a;	delete []arg;	return k==3?0:1;
+			delete []a;	return k==3?0:1;
 		}
 		if(!arg[0].compare(L"rkstep"))
 		{
@@ -673,13 +676,13 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				if(a2[0]=='\'')	a2 = a2.substr(1,a2.length()-2);
 				mgl_rk_step_w(this, a1.c_str(), a2.c_str(), (k>3 && a[2].type==2)?a[2].v:1);
 			}
-			delete []a;	delete []arg;	return res;
+			delete []a;	return res;
 		}
 		if(!arg[0].compare(L"variant"))
 		{
 			int res=1;
 			if(k==2 && a[0].type==2)	{	SetVariant(a[0].v);	res=0;	}
-			delete []a;	delete []arg;	return res;
+			delete []a;	return res;
 		}
 		if(!arg[0].compare(L"call"))
 		{
@@ -719,10 +722,11 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 					else	n=1;
 				}
 			}
-			delete []a;	delete []arg;	return n;
+			delete []a;	return n;
 		}
 		if(!arg[0].compare(L"for"))
 		{
+			if(k<2)	{	delete []a;	return 1;	}
 			n = 1;
 			char ch = arg[1][0];
 			int r = ch-'0';
@@ -755,19 +759,19 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 					AddParam(r, buf);	fval[r].ny = 1;
 				}
 			}
-			delete []a;	delete []arg;	return n;
+			delete []a;	return n;
 		}
 		// alocate new arrays and execute the command itself
-		n = PreExec(gr, k, arg, a);
+		n = PreExec(gr, k, &(arg[0]), a);
 		if(n>0)	n--;
 		else if(!arg[0].compare(L"setsize") && !AllowSetSize)	n = 2;
-		else	n = Exec(gr, arg[0].c_str(),k-1,a, arg[1].c_str(), opt.c_str());
+		else	n = Exec(gr, arg[0].c_str(),k-1,a, k>1?arg[1]:L"", opt.c_str());
 		delete []a;
 	}
 	// delete temporary data arrays
 	for(size_t i=0;i<DataList.size();i++)	if(DataList[i] && DataList[i]->temp)
 	{	mglDataA *u=DataList[i];	DataList[i]=0;	delete u;	}
-	delete []arg;	return n;
+	return n;
 }
 //-----------------------------------------------------------------------------
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
