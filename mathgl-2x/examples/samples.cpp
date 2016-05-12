@@ -1979,9 +1979,11 @@ void smgl_cones(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"4");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_aspect="subplot 2 2 0:box:text -1 1.1 'Just box' ':L'\ninplot 0.2 0.5 0.7 1 off:box:text 0 1.2 'InPlot example'\n"
-"subplot 2 2 1:title 'Rotate only':rotate 50 60:box\nsubplot 2 2 2:title 'Rotate and Aspect':rotate 50 60:aspect 1 1 2:box\n"
-"subplot 2 2 3:title 'Aspect in other direction':rotate 50 60:aspect 1 2 2:box";
+const char *mmgl_aspect="subplot 2 2 0:box:text -1 1.1 'Just box' ':L'\n"
+"inplot 0.2 0.5 0.7 1 off:box:text 0 1.2 'InPlot example'\n"
+"subplot 2 2 1:title 'Rotate only':rotate 50 60:box\n"
+"subplot 2 2 2:title 'Rotate and Aspect':rotate 50 60:aspect 1 1 2:box\n"
+"subplot 2 2 3:title 'Shear':box 'c':shear 0.2 0.1:box";
 void smgl_aspect(mglGraph *gr)	// transformation
 {
 	gr->SubPlot(2,2,0);	gr->Box();
@@ -1992,18 +1994,20 @@ void smgl_aspect(mglGraph *gr)	// transformation
 	gr->Rotate(50,60);	gr->Box();
 	gr->SubPlot(2,2,2);	gr->Title("Rotate and Aspect");
 	gr->Rotate(50,60);	gr->Aspect(1,1,2);	gr->Box();
-	gr->SubPlot(2,2,3);	gr->Title("Aspect in other direction");
-	gr->Rotate(50,60);	gr->Aspect(1,2,2);	gr->Box();
+	gr->SubPlot(2,2,3);	gr->Title("Shear");
+	gr->Box("c");		gr->Shear(0.2,0.1);	gr->Box();
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_inplot="subplot 3 2 0:title 'StickPlot'\nstickplot 3 0 20 30:box 'r':text 0 0 '0' 'r'\n"
-"stickplot 3 1 20 30:box 'g':text 0 0 '1' 'g'\nstickplot 3 2 20 30:box 'b':text 0 0 '2' 'b'\n"
+const char *mmgl_inplot="subplot 3 2 0:title 'StickPlot'\nstickplot 3 0 20 30:box 'r':text 0 0 0 '0' 'r'\n"
+"stickplot 3 1 20 30:box 'g':text 0 0 0 '1' 'g'\nstickplot 3 2 20 30:box 'b':text 0 9 0 '2' 'b'\n"
 "subplot 3 2 3 '':title 'ColumnPlot'\ncolumnplot 3 0:box 'r':text 0 0 '0' 'r'\n"
 "columnplot 3 1:box 'g':text 0 0 '1' 'g'\ncolumnplot 3 2:box 'b':text 0 0 '2' 'b'\n"
 "subplot 3 2 4 '':title 'GridPlot'\ngridplot 2 2 0:box 'r':text 0 0 '0' 'r'\n"
 "gridplot 2 2 1:box 'g':text 0 0 '1' 'g'\ngridplot 2 2 2:box 'b':text 0 0 '2' 'b'\n"
 "gridplot 2 2 3:box 'm':text 0 0 '3' 'm'\nsubplot 3 2 5 '':title 'InPlot':box\n"
-"inplot 0.4 1 0.6 1 on:box 'r'\nmultiplot 3 2 1 2 1 '':title 'MultiPlot':box";
+"inplot 0.4 1 0.6 1 on:box 'r'\nmultiplot 3 2 1 2 1 '':title 'MultiPlot and ShearPlot':box\n"
+"shearplot 3 0 0.2 0.1:box 'r':text 0 0 '0' 'r'\nshearplot 3 1 0.2 0.1:box 'g':text 0 0 '1' 'g'\n"
+"shearplot 3 2 0.2 0.1:box 'b':text 0 0 '2' 'b'";
 void smgl_inplot(mglGraph *gr)
 {
 	gr->SubPlot(3,2,0);	gr->Title("StickPlot");
@@ -2021,7 +2025,10 @@ void smgl_inplot(mglGraph *gr)
 	gr->GridPlot(2, 2, 3);	gr->Box("m");	gr->Puts(mglPoint(0),"3","m");
 	gr->SubPlot(3,2,5,"");	gr->Title("InPlot");	gr->Box();
 	gr->InPlot(0.4, 1, 0.6, 1, true);	gr->Box("r");
-	gr->MultiPlot(3,2,1, 2, 1,"");	gr->Title("MultiPlot");	gr->Box();
+	gr->MultiPlot(3,2,1, 2, 1,"");	gr->Title("MultiPlot and ShearPlot");	gr->Box();
+	gr->ShearPlot(3, 0, 0.2, 0.1);	gr->Box("r");	gr->Puts(mglPoint(0),"0","r");
+	gr->ShearPlot(3, 1, 0.2, 0.1);	gr->Box("g");	gr->Puts(mglPoint(0),"1","g");
+	gr->ShearPlot(3, 2, 0.2, 0.1);	gr->Box("b");	gr->Puts(mglPoint(0),"2","b");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_combined="call 'prepare2v'\ncall 'prepare3d'\nnew v 10:fill v -0.5 1:copy d sqrt(a^2+b^2)\n"

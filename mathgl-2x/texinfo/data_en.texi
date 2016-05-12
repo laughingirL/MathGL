@@ -1148,13 +1148,13 @@ Calculates one step of diffraction by finite-difference method with parameter @v
 @item
  @samp{1} for constant boundary conditions;
 @item
- @samp{0} for linear boundary conditions;
+ @samp{2} for linear boundary conditions;
 @item
- @samp{0} for parabolic boundary conditions;
+ @samp{3} for parabolic boundary conditions;
 @item
- @samp{0} for exponential boundary conditions;
+ @samp{4} for exponential boundary conditions;
 @item
- @samp{0} for gaussian boundary conditions.
+ @samp{5} for gaussian boundary conditions.
 @end itemize
 @end deftypefn
 
@@ -1581,7 +1581,18 @@ Short time Fourier transformation for real and imaginary parts. Output  is ampli
 @deftypefnx {C function} @code{HMDT} mgl_data_tridmat (@code{HCDT} A, @code{HCDT} B, @code{HCDT} C, @code{HCDT} D, @code{const char*}how)
 @deftypefnx {C function} @code{HADT} mgl_datac_tridmat (@code{HCDT} A, @code{HCDT} B, @code{HCDT} C, @code{HCDT} D, @code{const char*}how)
 @end ifclear
-Get array as solution of tridiagonal system of equations @var{A}[i]*x[i-1]+@var{B}[i]*x[i]+@var{C}[i]*x[i+1]=@var{D}[i]. String @var{how} may contain: @samp{xyz} for solving along x-,y-,z-directions correspondingly; @samp{h} for solving along hexagonal direction at x-y plain (require square matrix); @samp{c} for using periodical boundary conditions; @samp{d} for for diffraction/diffuse calculation (i.e. for using -@var{A}[i]*@var{D}[i-1]+(2-@var{B}[i])*@var{D}[i]-@var{C}[i]*@var{D}[i+1] at right part instead of @var{D}[i]). Data dimensions of arrays @var{A}, @var{B}, @var{C} should be equal. Also their dimensions need to be equal to all or to minor dimension(s) of array @var{D}. @sref{PDE solving hints}
+Get array as solution of tridiagonal system of equations @var{A}[i]*x[i-1]+@var{B}[i]*x[i]+@var{C}[i]*x[i+1]=@var{D}[i]. String @var{how} may contain:
+@itemize @bullet
+@item
+@samp{xyz} for solving along x-,y-,z-directions correspondingly;
+@item
+@samp{h} for solving along hexagonal direction at x-y plain (require square matrix);
+@item
+@samp{c} for using periodical boundary conditions;
+@item
+@samp{d} for for diffraction/diffuse calculation (i.e. for using -@var{A}[i]*@var{D}[i-1]+(2-@var{B}[i])*@var{D}[i]-@var{C}[i]*@var{D}[i+1] at right part instead of @var{D}[i]).
+@end itemize
+Data dimensions of arrays @var{A}, @var{B}, @var{C} should be equal. Also their dimensions need to be equal to all or to minor dimension(s) of array @var{D}. @sref{PDE solving hints}
 @end deftypefn
 
 

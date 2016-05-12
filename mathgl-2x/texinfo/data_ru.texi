@@ -1134,13 +1134,13 @@ These functions change the data in some direction like differentiations, integra
 @item
  @samp{1} для постоянных граничных условий;
 @item
- @samp{0} для линейных граничных условий;
+ @samp{2} для линейных граничных условий;
 @item
- @samp{0} для параболлических граничных условий;
+ @samp{3} для параболлических граничных условий;
 @item
- @samp{0} для экспоненциальных граничных условий;
+ @samp{4} для экспоненциальных граничных условий;
 @item
- @samp{0} для гауссовых граничных условий.
+ @samp{5} для гауссовых граничных условий.
 @end itemize
 @end deftypefn
 
@@ -1567,7 +1567,18 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Функция С} @code{HMDT} mgl_data_tridmat (@code{HCDT} A, @code{HCDT} B, @code{HCDT} C, @code{HCDT} D, @code{const char*}how)
 @deftypefnx {Функция С} @code{HADT} mgl_datac_tridmat (@code{HCDT} A, @code{HCDT} B, @code{HCDT} C, @code{HCDT} D, @code{const char*}how)
 @end ifclear
-Возвращает решение трехдиагональной системы уравнений @var{A}[i]*x[i-1]+@var{B}[i]*x[i]+@var{C}[i]*x[i+1]=@var{D}[i]. Строка @var{how} может содержать: @samp{xyz} для решения вдоль x-,y-,z-направлений; @samp{h} для решения вдоль диагонали на плоскости x-y (требует квадратную матрицу); @samp{c} для использования периодических граничных условий; @samp{d} для расчета диффракции/диффузии (т.е. для использования -@var{A}[i]*@var{D}[i-1]+(2-@var{B}[i])*@var{D}[i]-@var{C}[i]*@var{D}[i+1] в правой частиц вместо @var{D}[i]). Размеры массивов @var{A}, @var{B}, @var{C} должны быть одинаковы. Также их размерности должны совпадать со всеми или с "младшими" размерностями массива @var{D}. @sref{PDE solving hints}
+Возвращает решение трехдиагональной системы уравнений @var{A}[i]*x[i-1]+@var{B}[i]*x[i]+@var{C}[i]*x[i+1]=@var{D}[i]. Строка @var{how} может содержать:
+@itemize @bullet
+@item
+@samp{xyz} для решения вдоль x-,y-,z-направлений;
+@item
+@samp{h} для решения вдоль диагонали на плоскости x-y (требует квадратную матрицу);
+@item
+@samp{c} для использования периодических граничных условий;
+@item
+@samp{d} для расчета диффракции/диффузии (т.е. для использования -@var{A}[i]*@var{D}[i-1]+(2-@var{B}[i])*@var{D}[i]-@var{C}[i]*@var{D}[i+1] в правой частиц вместо @var{D}[i]).
+@end itemize
+Размеры массивов @var{A}, @var{B}, @var{C} должны быть одинаковы. Также их размерности должны совпадать со всеми или с "младшими" размерностями массива @var{D}. @sref{PDE solving hints}
 @end deftypefn
 
 @anchor{pde}

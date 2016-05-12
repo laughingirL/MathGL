@@ -126,7 +126,7 @@ Let me demonstrate possibilities of plot positioning and rotation. MathGL has a 
 @verbatim
 subplot 2 2 0
 box:text -1 1.1 'Just box' ':L'
-inplot 0.2 0.5 0.7 off
+inplot 0.2 0.5 0.7 1 off
 box:text 0 1.2 'InPlot example'
 
 subplot 2 2 1:title 'Rotate only'
@@ -135,8 +135,8 @@ rotate 50 60:box
 subplot 2 2 2:title 'Rotate and Aspect'
 rotate 50 60:aspect 1 1 2:box
 
-subplot 2 2 3:title 'Aspect in other direction'
-rotate 50 60:aspect 1 2 2:box
+subplot 2 2 3:title 'Shear'
+box 'c':shear 0.2 0.1:box
 @end verbatim
 Here I used function @code{Puts} for printing the text in arbitrary position of picture (see @ref{Text printing}). Text coordinates and size are connected with axes. However, text coordinates may be everywhere, including the outside the bounding box. I'll show its features later in @ref{Text features}.
 
@@ -147,9 +147,9 @@ Note that several commands can be placed in a string if they are separated by @s
 More complicated sample show how to use most of positioning functions:
 @verbatim
 subplot 3 2 0:title 'StickPlot'
-stickplot 3 0 20 30:box 'r':text 0 0 '0' 'r'
-stickplot 3 1 20 30:box 'g':text 0 0 '1' 'g'
-stickplot 3 2 20 30:box 'b':text 0 0 '2' 'b'
+stickplot 3 0 20 30:box 'r':text 0 0 0 '0' 'r'
+stickplot 3 1 20 30:box 'g':text 0 0 0 '1' 'g'
+stickplot 3 2 20 30:box 'b':text 0 0 0 '2' 'b'
 
 subplot 3 2 3 '':title 'ColumnPlot'
 columnplot 3 0:box 'r':text 0 0 '0' 'r'
@@ -165,7 +165,10 @@ gridplot 2 2 3:box 'm':text 0 0 '3' 'm'
 subplot 3 2 5 '':title 'InPlot':box
 inplot 0.4 1 0.6 1 on:box 'r'
 
-multiplot 3 2 1 2 1 '':title 'MultiPlot':box
+multiplot 3 2 1 2 1 '':title 'MultiPlot and ShearPlot':box
+shearplot 3 0 0.2 0.1:box 'r':text 0 0 '0' 'r'
+shearplot 3 1 0.2 0.1:box 'g':text 0 0 '1' 'g'
+shearplot 3 2 0.2 0.1:box 'b':text 0 0 '2' 'b'
 @end verbatim
 
 @pfig{inplot, Example for most of positioning functions.}

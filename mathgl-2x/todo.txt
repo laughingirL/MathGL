@@ -60,7 +60,7 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 1. Update Qt and UDAV figures
-2. Sample about 'shear' and 'shearplot'
+2. Update news
 3. Sample about PDE -- add 'tridmat' + 'diffract'
 
 ============= UDAV =============

@@ -707,8 +707,8 @@ int sample(mglGraph *gr)
   gr->Rotate(50,60);  gr->Box();
   gr->SubPlot(2,2,2); gr->Title("Rotate and Aspect");
   gr->Rotate(50,60);  gr->Aspect(1,1,2);  gr->Box();
-  gr->SubPlot(2,2,3); gr->Title("Aspect in other direction");
-  gr->Rotate(50,60);  gr->Aspect(1,2,2);  gr->Box();
+  gr->SubPlot(2,2,3); gr->Title("Shear");
+  gr->Box("c"); gr->Shear(0.2,0.1); gr->Box();
   return 0;
 }
 @end verbatim
@@ -735,7 +735,10 @@ int sample(mglGraph *gr)
   gr->GridPlot(2, 2, 3);  gr->Box("m"); gr->Puts(mglPoint(0),"3","m");
   gr->SubPlot(3,2,5,"");  gr->Title("InPlot");  gr->Box();
   gr->InPlot(0.4, 1, 0.6, 1, true); gr->Box("r");
-  gr->MultiPlot(3,2,1, 2, 1,"");  gr->Title("MultiPlot"); gr->Box();
+  gr->MultiPlot(3,2,1, 2, 1,"");  gr->Title("MultiPlot and ShearPlot"); gr->Box();
+  gr->ShearPlot(3, 0, 0.2, 0.1);  gr->Box("r"); gr->Puts(mglPoint(0),"0","r");
+  gr->ShearPlot(3, 1, 0.2, 0.1);  gr->Box("g"); gr->Puts(mglPoint(0),"1","g");
+  gr->ShearPlot(3, 2, 0.2, 0.1);  gr->Box("b"); gr->Puts(mglPoint(0),"2","b");
   return 0;
 }
 @end verbatim

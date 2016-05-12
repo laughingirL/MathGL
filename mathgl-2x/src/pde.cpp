@@ -615,34 +615,35 @@ void MGL_NO_EXPORT mgl_init_ra(long n, int n7, const mreal *r, mgl_ap *ra)	// pr
 	ra[0].x2 = ra[0].y1*ra[0].z0 - ra[0].y0*ra[0].z1;	// vector g_2
 	ra[0].y2 = ra[0].z1*ra[0].x0 - ra[0].z0*ra[0].x1;
 	ra[0].z2 = ra[0].x1*ra[0].y0 - ra[0].x0*ra[0].y1;
-#pragma omp parallel for
 	for(long i=1;i<n;i++)	// NOTE: no parallel due to dependence on prev point!
 	{
-		ra[i].dt = r[6+n7*i] - r[6+n7*(i-1)];
-		ra[i].x0 = r[n7*i]   - r[n7*(i-1)];		// NOTE: very rough formulas
-		ra[i].y0 = r[n7*i+1] - r[n7*(i-1)+1];	// for corresponding with dt one
-		ra[i].z0 = r[n7*i+2] - r[n7*(i-1)+2];	// for corresponding with dt one
-		tt = sqrt(ra[i].x0*ra[i].x0 + ra[i].y0*ra[i].y0 + ra[i].z0*ra[i].z0);
-		ra[i].x0 /= tt;	ra[i].y0 /= tt;	ra[i].z0 /= tt;
-		ra[i].ch = tt/ra[i].dt;
-		tt = ra[i].x0*ra[i-1].x1 + ra[i].y0*ra[i-1].y1 + ra[i].z0*ra[i-1].z1;
-		ra[i].x1 = ra[i-1].x1 - tt*ra[i].x0;	// vector g_1
-		ra[i].y1 = ra[i-1].y1 - tt*ra[i].y0;
-		ra[i].z1 = ra[i-1].z1 - tt*ra[i].z0;
-		ra[i].t1 = tt/(ra[i].dt*ra[i].ch);
-		tt = sqrt(ra[i].x1*ra[i].x1 + ra[i].y1*ra[i].y1 + ra[i].z1*ra[i].z1);
-		ra[i].x1 /= tt;	ra[i].y1 /= tt;	ra[i].z1 /= tt;	// norm for reducing numeric error
-		ra[i].x2 = ra[i].y1*ra[i].z0 - ra[i].y0*ra[i].z1;	// vector g_2
-		ra[i].y2 = ra[i].z1*ra[i].x0 - ra[i].z0*ra[i].x1;
-		ra[i].z2 = ra[i].x1*ra[i].y0 - ra[i].x0*ra[i].y1;
-		tt = ra[i].x0*ra[i-1].x2 + ra[i].y0*ra[i-1].y2 + ra[i].z0*ra[i-1].z2;
-		ra[i].t2 = tt/(ra[i].dt*ra[i].ch);
-		// other parameters
-		ra[i].pt = r[n7*i+3]*ra[i].x0 + r[n7*i+4]*ra[i].y0 + r[n7*i+5]*ra[i].z0;
-		ra[i].q1 = r[n7*i+3]*ra[i].x1 + r[n7*i+4]*ra[i].y1 + r[n7*i+5]*ra[i].z1;
-		ra[i].q2 = r[n7*i+3]*ra[i].x2 + r[n7*i+4]*ra[i].y2 + r[n7*i+5]*ra[i].z2;
-		ra[i].d1 = (ra[i].q1-ra[i-1].q1)/(ra[i].dt*ra[i].ch);
-		ra[i].d2 = (ra[i].q2-ra[i-1].q2)/(ra[i].dt*ra[i].ch);
+		mgl_ap *ri=ra+i, *rp=ra+i-1;
+		const mreal *rr = r+n7*i;
+		ri->dt = rr[6] - rr[6-n7];
+		ri->x0 = rr[0] - rr[-n7];	// NOTE: very rough formulas
+		ri->y0 = rr[1] - rr[1-n7];	// for corresponding with dt one
+		ri->z0 = rr[2] - rr[2-n7];	// for corresponding with dt one
+		double ch = sqrt(ri->x0*ri->x0 + ri->y0*ri->y0 + ri->z0*ri->z0);
+		ri->x0 /= ch;	ri->y0 /= ch;	ri->z0 /= ch;
+		ri->ch = ch/ri->dt;
+		ri->pt = rr[3]*ri->x0 + rr[4]*ri->y0 + rr[5]*ri->z0;
+		ri->q1 = rr[3]*ri->x1 + rr[4]*ri->y1 + rr[5]*ri->z1;
+		ri->q2 = rr[3]*ri->x2 + rr[4]*ri->y2 + rr[5]*ri->z2;
+		// NOTE previous point is used here!
+		tt = ri->x0*rp->x1 + ri->y0*rp->y1 + ri->z0*rp->z1;
+		ri->x1 = rp->x1 - tt*ri->x0;	// vector g_1
+		ri->y1 = rp->y1 - tt*ri->y0;
+		ri->z1 = rp->z1 - tt*ri->z0;
+		ri->t1 = tt/ch;
+		tt = sqrt(ri->x1*ri->x1 + ri->y1*ri->y1 + ri->z1*ri->z1);
+		ri->x1 /= tt;	ri->y1 /= tt;	ri->z1 /= tt;	// norm for reducing numeric error
+		ri->x2 = ri->y1*ri->z0 - ri->y0*ri->z1;	// vector g_2
+		ri->y2 = ri->z1*ri->x0 - ri->z0*ri->x1;
+		ri->z2 = ri->x1*ri->y0 - ri->x0*ri->y1;
+		tt = ri->x0*rp->x2 + ri->y0*rp->y2 + ri->z0*rp->z2;
+		ri->t2 = tt/ch;
+		ri->d1 = (ri->q1-rp->q1)/ch;
+		ri->d2 = (ri->q2-rp->q2)/ch;
 	}
 	memcpy(ra,ra+1,sizeof(mgl_ap));	// setup zero point
 	ra[0].pt = r[3]*ra[0].x0 + r[4]*ra[0].y0 + r[5]*ra[0].z0;
