@@ -133,7 +133,7 @@ void MGL_EXPORT mgl_data_create_(uintptr_t *dat, int *nx,int *ny,int *nz);
 void MGL_EXPORT mgl_data_transpose(HMDT dat, const char *dim);
 void MGL_EXPORT mgl_data_transpose_(uintptr_t *dat, const char *dim,int);
 /// Normalize the data to range [v1,v2]
-void MGL_EXPORT mgl_data_norm(HMDT dat, mreal v1,mreal v2,long sym,long dim);
+void MGL_EXPORT mgl_data_norm(HMDT dat, mreal v1,mreal v2,int sym,long dim);
 void MGL_EXPORT mgl_data_norm_(uintptr_t *dat, mreal *v1,mreal *v2,int *sym,int *dim);
 /// Normalize the data to range [v1,v2] slice by slice
 void MGL_EXPORT mgl_data_norm_slice(HMDT dat, mreal v1,mreal v2,char dir,long keep_en,long sym);
@@ -211,7 +211,7 @@ uintptr_t mgl_data_ifs_file_(const char *fname, const char *name, long *n, long 
 /// Get array as solution of tridiagonal matrix solution a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
 /** String \a how may contain:
  * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
- * 'h' for using hexagonal matrix at x-y plain (need nx=ny),
+ * 'h' for solving along hexagonal direction at x-y plain (need nx=ny),
  * 'c' for using periodical boundary conditions,
  * 'd' for diffraction/diffuse calculation.
  * NOTE: It work for flat data model only (i.e. for a[i,j]==a[i+nx*j]) */

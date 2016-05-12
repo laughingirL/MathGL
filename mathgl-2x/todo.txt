@@ -60,16 +60,8 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 1. Update Qt and UDAV figures
-2. Replace some @code by @ref
-3. Docs + sample about '*' in flow() and pipe().
-4. Docs about 'tridmat' + sample
-5. Docs about 'diffract'
-7. Docs about *.ifs format
-8. Docs about 'gray'
-9. Docs about 'setsizescl'
-11. Docs about 'shear'
-12. Docs about 'shearplot'
-13. Docs about 'limit'
+2. Sample about 'shear' and 'shearplot'
+3. Sample about PDE -- add 'tridmat' + 'diffract'
 
 ============= UDAV =============
 

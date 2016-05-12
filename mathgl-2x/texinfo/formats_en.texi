@@ -6,6 +6,7 @@ This appendix contain description of file formats used by MathGL.
 * Font files::
 * MGLD format::
 * JSON format::
+* IFS format::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -75,7 +76,7 @@ Here nT is the number of triangles; nL is the number of line vertexes; xA, yA, x
 
 @c ------------------------------------------------------------------
 @external{}
-@node JSON format, , MGLD format, File formats
+@node JSON format, IFS format, MGLD format, File formats
 @section JSON format
 @nav{}
 
@@ -97,7 +98,7 @@ array of coordinates of points (vertexes), each element is array in form [x, y, 
 @item nprim
 number of primitives;
 @item prim
-array of primitives, each element is array in form [type, n1, n2, n3, n4, id, s, w, p, z, color]. 
+array of primitives, each element is array in form [type, n1, n2, n3, n4, id, s, w, p, z, color].
 
 Here @var{type} is kind of primitive (0 - mark, 1 - line, 2 - triangle, 3 - quadrangle, 4 - glyph), @var{n1}...@var{n4} is index of point for vertexes and @var{n2} can be index of glyph coordinate, @var{s} and @var{w} are size and width if applicable, @var{z} is average z-coordinate, @var{id} is primitive identification number, @var{p} is scaling factor for glyphs.
 
@@ -112,4 +113,29 @@ number of glyph descriptions
 array of glyph descriptions, each element is array in form @code{[nL, [xP0, yP0, xP1, yP1 ...]]}. Here @code{nL} is the number of line vertexes; and @code{xP, yP, xQ, yQ} are coordinates of lines. Line coordinate xP=0x3fff, yP=0x3fff denote line breaking.
 
 @end table
+
+@c ------------------------------------------------------------------
+@external{}
+@node IFS format, , JSON format, File formats
+@section IFS format
+@nav{}
+
+MathGL can read IFS fractal parameters (see @ref{ifsfile}) from a IFS file. Let remind IFS file format. File may contain several records. Each record contain the name of fractal (@samp{binary} in the example below) and the body of fractal, which is enclosed in curly braces @{@}. Symbol @samp{;} start the comment. If the name of fractal contain @samp{(3D)} or @samp{(3d)} then the 3d IFS fractal is specified. The sample below contain two fractals: @samp{binary} -- usual 2d fractal, and @samp{3dfern (3D)} -- 3d fractal.
+
+@verbatim
+ binary
+ { ; comment allowed here
+  ; and here
+  .5  .0 .0 .5 -2.563477 -0.000003 .333333   ; also comment allowed here
+  .5  .0 .0 .5  2.436544 -0.000003 .333333
+  .0 -.5 .5 .0  4.873085  7.563492 .333333
+  }
+
+ 3dfern (3D) {
+   .00  .00 0 .0 .18 .0 0  0.0 0.00 0 0.0 0 .01
+   .85  .00 0 .0 .85 .1 0 -0.1 0.85 0 1.6 0 .85
+   .20 -.20 0 .2 .20 .0 0  0.0 0.30 0 0.8 0 .07
+  -.20  .20 0 .2 .20 .0 0  0.0 0.30 0 0.8 0 .07
+  }
+@end verbatim
 @external{}

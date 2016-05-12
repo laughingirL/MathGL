@@ -488,6 +488,15 @@ Sets RGB values for color with given @var{id}. This is global setting which infl
 @end ifclear
 
 
+@anchor{gray}
+@deftypefn {MGL command} {} gray @code{val}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Gray (@code{bool} enable)
+@deftypefnx {C function} @code{void} mgl_set_gray (@code{HMGL} gr, @code{int} enable)
+@end ifclear
+Sets the gray-scale mode on/off.
+@end deftypefn
+
 @c ==================================================================
 @external{}
 @node Masks, Error handling, Palette and colors, Graphics setup
@@ -984,7 +993,7 @@ The line style of axis (@var{stl}), ticks (@var{tck}) and subticks (@var{sub}). 
 @cindex Push
 @cindex Pop
 
-These functions control how and where further plotting will be placed. There is a certain calling order of these functions for the better plot appearance. First one should be @ref{subplot}, @ref{multiplot} or @ref{inplot} for specifying the place. Second one can be @ref{title} for adding title for the subplot. After it a @ref{rotate} and @ref{aspect}. And finally any other plotting functions may be called. Alternatively you can use @ref{columnplot}, @ref{gridplot}, @ref{stickplot} or relative @ref{inplot} for positioning plots in the column (or grid, or stick) one by another without gap between plot axis (bounding boxes). @sref{Subplots}
+These functions control how and where further plotting will be placed. There is a certain calling order of these functions for the better plot appearance. First one should be @ref{subplot}, @ref{multiplot} or @ref{inplot} for specifying the place. Second one can be @ref{title} for adding title for the subplot. After it a @ref{rotate}, @ref{shear} and @ref{aspect}. And finally any other plotting functions may be called. Alternatively you can use @ref{columnplot}, @ref{gridplot}, @ref{stickplot}, @ref{shearplot} or relative @ref{inplot} for positioning plots in the column (or grid, or stick) one by another without gap between plot axis (bounding boxes). @sref{Subplots}
 
 @anchor{subplot}
 @deftypefn {MGL command} {} subplot @code{nx ny m ['stl'='<>_^' dx=0 dy=0]}
@@ -1067,6 +1076,16 @@ Puts further plotting in @var{ind}-th cell of @var{nx}*@var{ny} grid. The positi
 Puts further plotting in @var{ind}-th cell of stick with @var{num} cells. At this, stick is rotated on angles @var{tet}, @var{phi}. The position is relative to previous @ref{subplot} (or @ref{inplot} with @var{rel}=@code{false}).
 @end deftypefn
 
+@anchor{shearplot}
+@deftypefn {MGL command} {} shearplot @code{num ind sx sy [xd yd]}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ShearPlot (@code{int} num, @code{int} ind, @code{mreal} sx, @code{mreal} sy, @code{mreal} xd=@code{1}, @code{mreal} yd=@code{0})
+@deftypefnx {C function} @code{void} mgl_shearplot (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{mreal} sx, @code{mreal} sy, @code{mreal} xd, @code{mreal} yd)
+@end ifclear
+Puts further plotting in @var{ind}-th cell of stick with @var{num} cells. At this, cell is sheared on values @var{sx}, @var{sy}. Stick direction is specified be @var{xd} and @var{yd}. The position is relative to previous @ref{subplot} (or @ref{inplot} with @var{rel}=@code{false}).
+@end deftypefn
+
+
 @anchor{title}
 @deftypefn {MGL command} {} title 'title' ['stl'='' @code{size=-2}]
 @ifclear UDAV
@@ -1100,6 +1119,15 @@ Rotates a further plotting relative to each axis @{x, z, y@} consecutively on an
 @deftypefnx {C function} @code{void} mgl_rotate_vector (@code{HMGL} gr, @code{mreal Tet}, @code{mreal x}, @code{mreal y}, @code{mreal z})
 @end ifclear
 Rotates a further plotting around vector @{@var{x}, @var{y}, @var{z}@} on angle @var{Tet}.
+@end deftypefn
+
+@anchor{shear}
+@deftypefn {MGL command} {} shear @code{sx sy}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Shear (@code{mreal} sx, @code{mreal} sy)
+@deftypefnx {C function} @code{void} mgl_shear (@code{HMGL} gr, @code{mreal} sx, @code{mreal} sy)
+@end ifclear
+Shears a further plotting on values @var{sx}, @var{sy}.
 @end deftypefn
 
 @anchor{aspect}
@@ -1178,12 +1206,14 @@ Functions in this group save or give access to produced picture. So, usually the
 Sets size of picture in pixels. This function @strong{should be} called before any other plotting because it completely remove picture contents if @var{clear}=@code{true}. Function just clear pixels and scale all primitives if @var{clear}=@code{false}.
 @end deftypefn
 
+@anchor{setsizescl}
+@deftypefn {MGL command} {} setsizescl @code{factor}
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} SetSizeScl (@code{double} factor)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetSizeScl (@code{double} factor)
 @deftypefnx {C function} @code{void} mgl_set_size_scl (@code{HMGL} gr, @code{double} factor)
+@end ifclear
 Set factor for width and height in all further calls of @ref{setsize}.
 @end deftypefn
-@end ifclear
 
 @anchor{quality}
 @deftypefn {MGL command} {} quality [@code{val}=2]
@@ -3180,6 +3210,8 @@ The function draws flow threads for the plane vector field @{@var{ax}, @var{ay}@
 color scheme -- up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
 @item
 @samp{#} for starting threads from edges only;
+@item
+@samp{*} for starting threads from a 2D array of points inside the data;
 @item
 @samp{v} for drawing arrows on the threads;
 @item

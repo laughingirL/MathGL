@@ -91,7 +91,7 @@ void MGL_EXPORT mgl_datac_set_values_(uintptr_t *d, const char *val, int *nx, in
 /// Get array as solution of tridiagonal matrix solution a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
 /** String \a how may contain:
  * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
- * 'h' for using hexagonal matrix at x-y plain (need nx=ny),
+ * 'h' for solving along hexagonal direction at x-y plain (need nx=ny),
  * 'c' for using periodical boundary conditions,
  * 'd' for diffraction/diffuse calculation.
  * NOTE: It work for flat data model only (i.e. for a[i,j]==a[i+nx*j]) */

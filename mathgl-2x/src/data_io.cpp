@@ -768,7 +768,7 @@ void MGL_EXPORT mgl_data_fill(HMDT d, mreal x1,mreal x2,char dir)
 void MGL_EXPORT mgl_data_fill_(uintptr_t *d, mreal *x1,mreal *x2,const char *dir,int)
 {	mgl_data_fill(_DT_,*x1,*x2,*dir);	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_data_norm(HMDT d, mreal v1,mreal v2,long sym,long dim)
+void MGL_EXPORT mgl_data_norm(HMDT d, mreal v1,mreal v2,int sym,long dim)
 {
 	long s,nn=d->nx*d->ny*d->nz;
 	mreal a1=INFINITY,a2=-INFINITY,v,*a=d->a;

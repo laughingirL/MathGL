@@ -70,6 +70,8 @@ one of marks (see @ref{Line styles});
 
 one of mask for face filling (see @ref{Color scheme});
 
+set to start flow threads from 2d array inside data (see @ref{flow});
+
 operation in @ref{Textual formulas}.
 
 @item +

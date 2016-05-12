@@ -516,10 +516,10 @@ inline mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, m
 inline mglData mglODE(const char *df, const char *var, const mglDataA &ini, mreal dt=0.1, mreal tmax=10)
 {	return mglData(true, mgl_ode_solve_str(df,var, &ini, dt, tmax));	}
 //-----------------------------------------------------------------------------
-/// Get array as solution of tridiagonal matrix solution a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
+/// Get array as solution of tridiagonal system of equations a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
 /** String \a how may contain:
  * 'x', 'y', 'z' for solving along x-,y-,z-directions, or
- * 'h' for using hexagonal matrix at x-y plain (need nx=ny),
+ * 'h' for solving along hexagonal direction at x-y plain (need nx=ny),
  * 'c' for using periodical boundary conditions,
  * 'd' for diffraction/diffuse calculation. */
 inline mglData mglTridMat(const mglDataA &A, const mglDataA &B, const mglDataA &C, const mglDataA &D, const char *how)

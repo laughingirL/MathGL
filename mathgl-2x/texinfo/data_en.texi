@@ -1132,10 +1132,38 @@ By default quadratic averaging over 5 points is used.
 Find envelop for data values along direction @var{dir}.
 @end deftypefn
 
+@anchor{diffract}
+@deftypefn {MGL command} {} diffract dat 'how' @code{q}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglDataC}} @code{void} Diffraction (@code{const char *}how, @code{mreal} q)
+@deftypefnx {C function} @code{void} mgl_datac_diffr (@code{HADT} dat, @code{const char *}how, @code{mreal} q)
+@end ifclear
+Calculates one step of diffraction by finite-difference method with parameter @var{q}=@math{\delta t/\delta x^2} using method with 3-d order of accuracy. Parameter @var{how} may contain:
+@itemize @bullet
+ @item @samp{xyz} for calculations along x-,y-,z-directions correspondingly;
+@item
+ @samp{r} for using axial symmetric Laplace operator for x-direction;
+@item
+ @samp{0} for zero boundary conditions;
+@item
+ @samp{1} for constant boundary conditions;
+@item
+ @samp{0} for linear boundary conditions;
+@item
+ @samp{0} for parabolic boundary conditions;
+@item
+ @samp{0} for exponential boundary conditions;
+@item
+ @samp{0} for gaussian boundary conditions.
+@end itemize
+@end deftypefn
+
+
 @anchor{norm}
 @deftypefn {MGL command} {} norm dat @code{v1 v2 [sym=off dim=0]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglData}} @code{void} Norm (@code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{bool} sym=@code{false}, @code{int} dim=@code{0})
+@deftypefnx {Method on @code{mglData}} @code{void} Norm (@code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{bool} sym=@code{false}, @code{long} dim=@code{0})
+@deftypefnx {C function} @code{void} mgl_data_norm (@code{HMDT} dat, @code{mreal} v1, @code{mreal} v2, @code{int} sym, @code{long} dim)
 @end ifclear
 Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. Modification will be applied only for slices >=@var{dim}.
 @end deftypefn
@@ -1153,6 +1181,17 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @ifnottex
 @math{\sqrt@{\sum a_ij(k)/\sum a_ij(0)@}}.
 @end ifnottex
+@end deftypefn
+
+@anchor{limit}
+@deftypefn {MGL command} {} limit dat @code{val}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} Limit (@code{mreal} val)
+@deftypefnx {Method on @code{mglDataC}} @code{void} Limit (@code{mreal} val)
+@deftypefnx {C function} @code{void} mgl_data_limit (@code{HMDT} dat, @code{mreal} val)
+@deftypefnx {C function} @code{void} mgl_datac_limit (@code{HADT} dat, @code{mreal} val)
+@end ifclear
+Limits the data values to be inside the range [-@var{val},@var{val}], keeping the original sign of the value (phase for complex numbers). This is equivalent to operation @code{a[i] *= abs(a[i])<val?1.:val/abs(a[i]);}.
 @end deftypefn
 
 @c ------------------------------------------------------------------
@@ -1529,10 +1568,22 @@ Does Fourier transform of complex data @var{re}+i*@var{im} in directions @var{di
 @deftypefn {MGL command} {} stfad @sc{res} real imag @code{dn} ['dir'='x']
 @ifclear UDAV
 @deftypefnx {Global function} @code{mglData} mglSTFA (@code{const mglDataA &}real, @code{const mglDataA &}imag, @code{int} dn, @code{char} dir=@code{'x'})
-@deftypefnx {C function} @code{HMDT} mgl_data_stfa (@code{HCDT} real, @code{HCDT} imag, @code{int} dn,@code{char} dir)
+@deftypefnx {C function} @code{HMDT} mgl_data_stfa (@code{HCDT} real, @code{HCDT} imag, @code{int} dn, @code{char} dir)
 @end ifclear
 Short time Fourier transformation for real and imaginary parts. Output  is amplitude of partial Fourier of length @var{dn}. For example if @var{dir}=@samp{x}, result will have size @{int(nx/dn), dn, ny@} and it will contain @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
 @end deftypefn
+
+@anchor{tridmat}
+@deftypefn {MGL command} {} tridmat @sc{res adat bdat cdat ddat} 'how'
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglTridMat (@code{const mglDataA &}A, @code{const mglDataA &}B, @code{const mglDataA &}C, @code{const mglDataA &}D, @code{const char *}how)
+@deftypefnx {Global function} @code{mglDataC} mglTridMatC (@code{const mglDataA &}A, @code{const mglDataA &}B, @code{const mglDataA &}C, @code{const mglDataA &}D, @code{const char *}how)
+@deftypefnx {C function} @code{HMDT} mgl_data_tridmat (@code{HCDT} A, @code{HCDT} B, @code{HCDT} C, @code{HCDT} D, @code{const char*}how)
+@deftypefnx {C function} @code{HADT} mgl_datac_tridmat (@code{HCDT} A, @code{HCDT} B, @code{HCDT} C, @code{HCDT} D, @code{const char*}how)
+@end ifclear
+Get array as solution of tridiagonal system of equations @var{A}[i]*x[i-1]+@var{B}[i]*x[i]+@var{C}[i]*x[i+1]=@var{D}[i]. String @var{how} may contain: @samp{xyz} for solving along x-,y-,z-directions correspondingly; @samp{h} for solving along hexagonal direction at x-y plain (require square matrix); @samp{c} for using periodical boundary conditions; @samp{d} for for diffraction/diffuse calculation (i.e. for using -@var{A}[i]*@var{D}[i-1]+(2-@var{B}[i])*@var{D}[i]-@var{C}[i]*@var{D}[i+1] at right part instead of @var{D}[i]). Data dimensions of arrays @var{A}, @var{B}, @var{C} should be equal. Also their dimensions need to be equal to all or to minor dimension(s) of array @var{D}. @sref{PDE solving hints}
+@end deftypefn
+
 
 @anchor{pde}
 @deftypefn {MGL command} {} pde @sc{res} 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
@@ -1668,6 +1719,33 @@ z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[10,i];
 Value @code{dat[12,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 13. @sref{IFS sample}
 @end deftypefn
 
+@anchor{ifsfile}
+@deftypefn {MGL command} {} ifsfile @sc{res} 'fname' 'name' @code{num} [@code{skip=20}]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglIFSfile (@code{const char *}fname, @code{const char *}name, @code{long} num, @code{long} skip=@code{20})
+@deftypefnx {C function} @code{HMDT} mgl_data_ifs_file (@code{const char *}fname, @code{const char *}name, @code{long} num, @code{long} skip)
+@end ifclear
+Reads parameters of IFS fractal named @var{name} from file @var{fname} and computes @var{num} points for this fractal. At this first @var{skip} iterations will be omitted. See also @ref{ifs2d}, @ref{ifs3d}.
+
+IFS file may contain several records. Each record contain the name of fractal (@samp{binary} in the example below) and the body of fractal, which is enclosed in curly braces @{@}. Symbol @samp{;} start the comment. If the name of fractal contain @samp{(3D)} or @samp{(3d)} then the 3d IFS fractal is specified. The sample below contain two fractals: @samp{binary} -- usual 2d fractal, and @samp{3dfern (3D)} -- 3d fractal.
+
+@verbatim
+ binary
+ { ; comment allowed here
+  ; and here
+  .5  .0 .0 .5 -2.563477 -0.000003 .333333   ; also comment allowed here
+  .5  .0 .0 .5  2.436544 -0.000003 .333333
+  .0 -.5 .5 .0  4.873085  7.563492 .333333
+  }
+
+ 3dfern (3D) {
+   .00  .00 0 .0 .18 .0 0  0.0 0.00 0 0.0 0 .01
+   .85  .00 0 .0 .85 .1 0 -0.1 0.85 0 1.6 0 .85
+   .20 -.20 0 .2 .20 .0 0  0.0 0.30 0 0.8 0 .07
+  -.20  .20 0 .2 .20 .0 0  0.0 0.30 0 0.8 0 .07
+  }
+@end verbatim
+@end deftypefn
 
 
 @c ------------------------------------------------------------------
