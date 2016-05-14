@@ -52,7 +52,7 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 
 @strong{Latest news}
 @itemize
-@item @emph{13 February 2016.}
+@item @emph{16 May 2016.}
 New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, some speeding up and bugfixes, which denoted @ref{News, here}.
 @item @emph{7 August 2014.}
 New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are many major improvements for both MathGL core and for UDAV, which denoted @ref{News, here}.
@@ -74,6 +74,73 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @nav{}
 
 @itemize
+
+@item @strong{16 May 2016.}
+New version (v.2.3.5) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, some speeding up and bugfixes:
+@itemize @bullet
+@item Update @ref{LaTeX package} (thanks to Diego Sejas Viscarra)
+
+@itemize @bullet
+@item
+New package options: @samp{gray} for activating gray-scale mode for graphics; @samp{color} for activating color mode for figures; @samp{0v}, @samp{1v}, @samp{2v} for selecting the variant of arguments in MGL scripts.
+@item
+New commands: @samp{\mglgray} -- the same effect as the @samp{gray} and @samp{color} package options, but with local effect; @samp{\mglvariant} -- can be used to select the variant of arguments, but with local effect.
+@item
+The @samp{mglcommon} environment has been renamed as @samp{mglsetupscript}. However, @samp{mglcommon} is still available for backwards compatibility, but its use is deprecated.
+@item
+The option @samp{scale} for environments and commands is no longer the same as the @samp{scale} command from the @code{graphicx} package.
+@item
+New environment and command options: @samp{gray}, @samp{scale}, @samp{quality}, @samp{variant}.
+@item
+The command @samp{\mglswitch}, @samp{\mglcomments} and @samp{\mglgray} now accept @samp{0} and @samp{1} as argument, as equivalents of the @samp{off} and @samp{on} options.
+@item
+The documentation has been reordered and is more congruent.
+@item
+The bugfix for MiKtex has been fully implemented.
+@item
+Some minor bugfixes and speedups.
+@end itemize
+
+@item
+Add MGL command @ref{variant} to select proper variant of arguments (like @samp{var1?var2?var3?...}) in MGL commands.
+@item
+Remove limitation of maximal number (was 1000) of arguments for MGL commands. This is actual for 'list' command.
+@item
+Add mglWnd::Widget() for accessing widget which is used for drawing.
+@item
+Add @ref{gray} for producing gray-scaled image.
+@item
+Add MGL command @ref{setsizescl} for scaling all further @ref{setsize}.
+@item
+Add @ref{shear} for shearing plot.
+@item
+Add @ref{shearplot} for placing plots side-by-side with some shearing.
+@item
+Add @ref{limit} for limit maximal absolute value of data.
+@item
+Add @ref{tridmat} for tridiagonal matrix algorithm.
+@item
+Add MGL command @ref{diffract} for single step diffraction calculation.
+@item
+Add @ref{ifsfile} for reading IFS fractal parameters from *.ifs file.
+@item
+Add style @samp{*} for 2d versions of @ref{flow} to draw threads from points inside axis range.
+@item
+Add @samp{norm()} to the list of known functions
+@item
+Compatibility changes for MS VisualStudio, MacOS, Win64.
+@item
+Bugfix for legend export into EPS and SVG.
+@item
+Bugfix for importing data from std::vector.
+@item
+Improve Surf3*() drawing.
+@item
+Force NAN if divided by 0 in formulas.
+@item
+Option "-S" of mglconv now perform scaling in any cases
+@end itemize
+
 
 @item @strong{13 February 2016.}
 New version (v.2.3.4) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, some speeding up and bugfixes:
