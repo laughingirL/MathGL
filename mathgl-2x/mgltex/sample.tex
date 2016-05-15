@@ -1,472 +1,276 @@
 \documentclass{article}
 
-\usepackage[jpg,comments]{mgltex}
+\usepackage[png,comments]{mgltex}
+\usepackage{hyperref}
 
-\title{\mglTeX{} package example}
-\author{Diego Sejas Viscarra, Alexey Balakin}
+\title{\mglTeX*{} usage sample}
+\author{Diego Sejas Viscarra \and Alexey Balakin}
 \date{\today}
 
-\mgldir{MGL/}
-\mglscriptsdir{scripts/}
-\mglgraphicsdir{graphics/}
-\mglbackupsdir{backups/}
+\mglsettings{
+	dir=MGL/,
+	scriptsdir=scripts/,
+	graphicsdir=graphics/,
+	backupsdir=backups/
+}
 
-\begin{mglcommon}
-  define gravity 9.81
-\end{mglcommon}
-
-%\begin{mglsignature}
-%  This scripts was generated on date |today.
-%\end{mglsignature}
-
+\begin{mglsetupscript}
+	define gravity 9.81 # [m/s^2]
+\end{mglsetupscript}
 
 \begin{document}
-  
-\maketitle
+	
+	\maketitle
+	
+	\begin{abstract}
+		\noindent \mglTeX{} is a \LaTeX{} package that allows the creation of graphics directly from MGL scripts of the MathGL library (by Alexey Balakin) inside documents. The MGL code is extracted, executed (if shell escape is activated), and the resulting graphics are automatically included.
+		
+		This document is intended as a sample of the capabilities of \mglTeX{}, as well as a brief introduction to the package, for those who want to start right away to use it, without diving into the a little bit more technical documentation.
+	\end{abstract}
+	
+	\section{Basics on environments}
+	\begin{description}
+		\item[mgl] The easiest way to embed MGL code is the \verb|mgl| environment. It extracts its contents to a main script associated to the document.\footnote{Generally, the main script has the same name as the document being compiled. In order to rename it or create a new one, the \texttt{\textbackslash mglname} command can be used.} If shell escape is activated, \LaTeX{} will take care of calling \verb|mglconv| (the MathGL compiler) with the appropriate settings, and the resulting image will be automatically included.
+		
+		For example, you could write:
+		\begin{verbatim}
+			\begin{figure}[!ht]
+			  \centering
+			  \begin{mgl}[width=0.85\textwidth,height=6cm]
+			    call 'prepare1d'
+			    subplot 2 1 0 '<_' : title 'Standard data plot'
+			    box : axis : grid 'xy' ';k'
+			    plot y ’rGb’
+			    
+			    subplot 2 1 1 '<_' : title 'Region plot'
+				  ranges -1 1 -1 1 : origin 0 0
+				  new y1 200 'x^3-x' : new y2 200 'x'
+				  axis : grid 'xy' 'W'
+				  region y1 y2 'ry'
+				  plot y1 '2k' : plot y2 '2k'
+				  text -0.75 -0.35 '\i{A}_1' 'k' : text 0.75 0.25 '\i{A}_2' 'k'
+			  \end{mgl}
+			  \caption{A simple plot create by \mglTeX's \texttt{mgl} environment}
+			\end{figure}
+		\end{verbatim}
+		This will produce the following image:
+		\begin{figure}[!ht]
+			\centering
+			\begin{mgl}[width=0.85\textwidth,height=5.5cm]
+				call 'prepare1d'
+				subplot 2 1 0 '<_' : title 'Standard data plot'
+				box : axis : grid 'xy' ';k'
+				plot y '2'
+				
+				subplot 2 1 1 '<_' : title 'Region plot'
+				ranges -1 1 -1 1 : origin 0 0
+				new y1 200 'x^3-x' : new y2 200 'x'
+				axis 'AKDTVISO' : grid 'xy' ';W'
+				region y1 y2 'ry'
+				plot y1 '2k' : plot y2 '2k'
+				text -0.75 -0.35 '\i{A}_1' 'k' -2 : text 0.75 0.25 '\i{A}_2' 'k' -2
+			\end{mgl}
+			\caption{A simple plot create by \mglTeX's \texttt{mgl} environment}
+		\end{figure}
+		
+		Two important aspects of \mglTeX{} can be noted from this example: First, the \verb|mgl| environment accepts the same optional argument as the \verb|\includegraphics| command from the \verb|graphicx| package. Actually, it also accepts other optional arguments, called \verb|gray| (to activate/deactivate gray-scale mode), \verb|mglscale| (to set the factor for scaling the image file), \verb|quality| (to set the quality of the image), \verb|variant| (to chose the variant of the arguments of MGL commands in the script), \verb|imgext| (to specify the extension of the resulting graphic file), and \verb|label| (to specify a name to save the image). Most of these options are available to every \mglTeX{} environment or command to create graphics.
+		
+		The second aspect to be noted about the example is that this script calls a MGL function, \verb|prepare1d|, which hasn't been defined yet. \mglTeX{} provides the \verb|mglfunc| environment for this purpose (see below).
+		
+		\item[mglfunc] This environment can be used in any part of the \LaTeX{} document; \mglTeX{} takes care of placing the corresponding code at the end of the main script, as has to be done in the MGL language.
+		
+		For example, the function \verb|prepare1d| that is called in the script above is defined like this
+		\begin{verbatim}
+		  \begin{mglfunc}{prepare1d}
+		    new y 50 3
+		    modify y '0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)'
+		    modify y 'sin(2*pi*x)' 1
+		    modify y 'cos(2*pi*x)' 2
+		  \end{mglfunc}
+		\end{verbatim}
+		\begin{mglfunc}{prepare1d}
+			new y 50 3
+			modify y '0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)'
+			modify y 'sin(2*pi*x)' 1
+			modify y 'cos(2*pi*x)' 2
+		\end{mglfunc}
+		As you can see, only the body of the function has to be written. The number of arguments of the function can be passed to \verb|mglfunc| as optional argument, like in the code \verb|\begin{mglfunc}[3]{func_with_three_args}|.
+		
+		\item[mgladdon] This environment just adds its contents to the main script, without producing any image. It is useful to load dynamic libraries, define constants, etc.
+		
+		\item[mglcode] The \verb|mglcode| environment is similar to \verb|mgl|, but it creates its own script, whose name is passed as mandatory argument. The same optional arguments are accepted, except \verb|label| (for obvious reasons).
+		\begin{verbatim}
+			\begin{figure}[!ht]
+			  \begin{mglcode}[scale=0.5]{vectorial_flow}
+			    new a 20 30 'sin(pi*x)*sin(pi*y)+cos(2*pi*x*y)'
+			    new b 20 30 'cos(pi*x)*cos(pi*y)+cos(2*pi*x*y)'
+			    
+			    subplot 1 1 0 '' : title 'Flow of vector field' : box
+			    flow a b 'v'; value 20
+			  \end{mglcode}
+			\end{figure}
+		\end{verbatim}
+		\begin{figure}[!ht]
+			\centering
+			\begin{mglcode}[scale=0.5]{vectorial_flow}
+				new a 20 30 'sin(pi*x)*sin(pi*y)+cos(2*pi*x*y)'
+				new b 20 30 'cos(pi*x)*cos(pi*y)+cos(2*pi*x*y)'
+				
+				subplot 1 1 0 '' : title 'Flow of a vector field' : box
+				flow a b '2v'; value 10
+			\end{mglcode}
+		\end{figure}
+		
+		\item[mglscript] This environment just creates a script, whose name is specified as mandatory argument. It is useful, for example, to create MGL scripts which can later be post-processed by another package, like \verb|listings| or \verb|pygments|.
+		
+		For example, the following won't produce any image, just a script:
+		\begin{verbatim}
+			\begin{mglscript}{Gaston_surface}
+			  subplot 1 1 0 '' : title 'Gaston\'s surface'
+			  ranges -13 13 -40 40
+			  new a 200 200 '-x+(2*0.84*cosh(0.4*x)*sinh(0.4*x))/' \
+			    '(0.4*((sqrt(0.84)*cosh(0.4*x))^2+(0.4*sin(sqrt(0.84)*y))))+' \
+			    '0.5*sin(pi/2*x)'
+			  new b 200 200 '(2*sqrt(0.84)*cosh(0.45*x)*(-(sqrt(0.84)*sin(y)*' \
+			    'cos(sqrt(0.84)*y))+cos(y)*sin(sqrt(0.84)*y)))/' \
+			    '(0.4*((sqrt(0.84)*cosh(0.4*x))^2+2*(0.4*sin(sqrt(0.84)*x))^2))'
+			  new c 200 200 '(2*sqrt(0.84)*cosh(0.45*x)*(-(sqrt(0.84)*cos(y)*' \
+			    'cos(sqrt(0.84)*y))-sin(y)*sin(sqrt(0.84)*y)))/' \
+			    '(0.4*((sqrt(0.84)*cosh(0.4*x))^2+2*(0.4*sin(sqrt(0.84)*x))^2))'
+			  rotate 60 60
+			  light on
+			  xrange c : yrange b : zrange a : crange c
+			  surf c b a '#'; meshnum 100
+			\end{mglscript}
+		\end{verbatim}
+		\begin{mglscript}{Gaston_surface}
+			subplot 1 1 0 ''
+			ranges -13 13 -40 40
+			new a 200 200 '-x+(2*0.84*cosh(0.4*x)*sinh(0.4*x))/(0.4*((sqrt(0.84)*cosh(0.4*x))^2+(0.4*sin(sqrt(0.84)*y))))+0.5*sin(pi/2*x)'
+			new b 200 200 '(2*sqrt(0.84)*cosh(0.45*x)*(-(sqrt(0.84)*sin(y)*cos(sqrt(0.84)*y))+cos(y)*sin(sqrt(0.84)*y)))/(0.4*((sqrt(0.84)*cosh(0.4*x))^2+2*(0.4*sin(sqrt(0.84)*x))^2))'
+			new c 200 200 '(2*sqrt(0.84)*cosh(0.45*x)*(-(sqrt(0.84)*cos(y)*cos(sqrt(0.84)*y))-sin(y)*sin(sqrt(0.84)*y)))/(0.4*((sqrt(0.84)*cosh(0.4*x))^2+2*(0.4*sin(sqrt(0.84)*x))^2))'
+			rotate 60 60
+			light on
+			xrange c : yrange b : zrange a : crange c
+			surf c b a '#'; meshnum 100
+			title 'Gaston surface'
+		\end{mglscript}
+		
+		\item[mglblock] It writes its contents verbatim to a file, specified as mandatory argument, and to the \LaTeX{} document.
+		
+		For example:
+		\begin{verbatim}
+			\begin{mglblock}{fractal}
+				list A [0,0,0,.16,0,0,.01] [.85,.04,-.04,.85,0,1.6,.85] [.2,-.26,.23,.22,0,1.6,.07] [-.15,.28,.26,.24,0,.44,.07]
+				ifs2d f A 100000
+				subplot 2 1 0 '<_' : title 'A fractal fern'
+				ranges f(0) f(1) : axis
+				plot f(0) f(1) 'G#o '; size 0.05
+				
+				subplot 2 1 1 '<_' : title 'Bifurcation plot'
+				ranges 0 4 0 1 : axis
+				bifurcation 0.005 'x*y*(1-y)' 'R'
+			\end{mglblock}
+		\end{verbatim}
+\begin{mglblock}{fractal}
+list A [0,0,0,.16,0,0,.01] [.85,.04,-.04,.85,0,1.6,.85] [.2,-.26,.23,.22,0,1.6,.07] [-.15,.28,.26,.24,0,.44,.07]
+ifs2d f A 100000
+subplot 2 1 0 '<_' : title 'A fractal fern'
+ranges f(0) f(1) : axis
+plot f(0) f(1) 'G#o '; size 0.05
 
-\noindent The \LaTeX{} package \textsf{\mglTeX} (was made by Diego Sejas Viscarra) allows one to make figures directly from MGL scripts located in \LaTeX{} file. 
-
-For using this package you need to specify \texttt{--shell-escape} option for \emph{latex/pdflatex} or manually run \emph{mglconv} tool on produced MGL scripts for generation of images. Don't forget to run \emph{latex/pdflatex} a second time to insert the generated images into the output document.
-
-The package may have following options: \texttt{draft}, \texttt{final} --- the same as in the \emph{graphicx} package; \texttt{on}, \texttt{off} --- to activate/deactivate the creation of scripts and graphics; \texttt{comments}, \texttt{nocomments} --- to make visible/invisible commentaries contained inside \texttt{mglcomment} environments; \texttt{jpg}, \texttt{jpeg}, \texttt{png} --- to export graphics as JPEG/PNG images; \texttt{eps}, \texttt{epsz} --- to export to uncompressed/compressed EPS format as primitives; \texttt{bps}, \texttt{bpsz} --- to export to uncompressed/compressed EPS format as bitmap (doesn't work with \emph{pdflatex}); \texttt{pdf} --- to export to 3D PDF; \texttt{tex} --- to export to \LaTeX{}/\emph{tikz} document.
-
-The package defines the following environments:
-\begin{description}
-\item[mgl]
-	It writes its contents to a general script which has the same name as the LaTeX document, but its extension is \emph{.mgl}. The code in this environment is compiled and the image produced is included. It takes exactly the same optional arguments as the \texttt{\textbackslash{}includegraphics} command, plus an additional argument \emph{imgext}, which specifies the extension to save the image.
-\item[mgladdon]
-	It adds its contents to the general script, without producing any image. It useful to set some global properties (like size of the images) at beginning of the document.
-\item[mglcode]
-	Is exactly the same as \texttt{mgl}, but it writes its contents verbatim to its own file, whose name is specified as a mandatory argument.
-\item[mglscript]
-	Is exactly the same as \texttt{mglcode}, but it doesn't produce any image, nor accepts optional arguments. It is useful, for example, to create a MGL script, which can later be post processed by another package like "listings".
-\item[mglblock]
-	It writes its contents verbatim to a file, specified as a mandatory argument, and to the LaTeX document, and numerates each line of code.
-
-% This last three environments will test if the user is overwriting some file, and will issue a warning in that case.
-\item[mglverbatim]
-	Exactly the same as \texttt{mglblock}, but it doesn't write to a file. This environment doesn't have arguments.
-\item[mglfunc]
-	Is used to define MGL functions. It takes one mandatory argument, which is the name of the function, plus one additional argument, which specifies the number of arguments of the function. The environment needs to contain only the body of the function, since the first and last lines are appended automatically, and the resulting code is written at the end of the general script, which is also written automatically. The warning is produced if 2 or more function with the same name is defined.
-\item[mglsignature]
-Used to defined a commentary that will be added to every script. It is useful to include signature text or license text. Observe this is a verbatim-like environment, so no \LaTeX{} command will be executed inside it, but will be copied as is.
-
-As an alternative to this method of declaring signatures, the user can manually redefine the signature macro \texttt{\textbackslash{}mgltexsignature}, according to the following rules:
-  \begin{itemize}
-    \item The positions of the comment signs for the MGL language have to be manually specified in the signature using the \texttt{\textbackslash{}mglcomm} macro.
-    \item The new-line character is declared as ``\verb|^^J|''.
-    \item A percent sign (\texttt{\%}) has to be added at the end of every physical line of \texttt{\textbackslash{}mgltexsignature}, otherwise an inelegant space at the beginning of every line will appear.
-  \item Any \LaTeX{} command can be used in this case.
-\end{itemize}
-  For example, the default signature:
-  \begin{mglcomment}
-  \begin{quote}\small
-    \mglcomm\\
-    \mglcomm\ This script was generated from $<$document$>$.mgl on date $<$today$>$\\
-    \mglcomm
-  \end{quote}
-  \end{mglcomment}
-  can be achieved with
-  \begin{verbatim}
-    \def\mgltexsignature{%
-      \mglcomm^^J%
-      \mglcomm\ This script was generated from \jobname.mgl on date \today^^J%
-      \mglcomm%
-    }
-  \end{verbatim}
-\item[mglcomment]
-  Used to contain multiline commentaries. This commentaries will be visible/invisible in the output document, depending on the use of the package options \texttt{comments} and \texttt{nocomments} (see above), or the \texttt{\mglcomments{on}} and \texttt{\mglcomments{off}} commands (see bellow).
-  
-  When, visible, the comment will appear like this:
-  \begin{center}
-    \makeatletter
-    \verbatim@font
-    \makeatother
-    <------------------ MGL comment ------------------>\\
-    $<$Commentary$>$\\
-    <------------------ MGL comment ------------------>\\
-  \end{center}
-\item[mglsetup]
-	If many scripts with the same code are to be written, the repetitive code can be written inside this environment only once, then this code will be used automatically every time the \texttt{\textbackslash{}mglplot} command is used (see below). It takes one optional argument, which is a name to be associated to the corresponding contents of the environment; this name can be passed to the \texttt{\textbackslash{}mglplot} command to use the corresponding block of code automatically (see below).
-\end{description}
-
-The package also defines the following commands:
-\begin{description}
-\item[\textbackslash{}mglplot]
-	It takes one mandatory argument, which is MGL instructions separated by the symbol ':' this argument can be more than one line long. It takes the same optional arguments as the \texttt{mgl} environment, plus an additional argument \emph{settings}, which indicates the name associated to a block of code inside a \texttt{mglsetup} environment. The code inside the mandatory argument will be appended to the block of code specified, and the resulting code will be written to the general script.
-\item[\textbackslash{}mglgraphics]
-	This command takes the same optional arguments as the \texttt{mgl} environment, and one mandatory argument, which is the name of a MGL script. This command will compile the corresponding script and include the resulting image. It is useful when you have a script outside the LaTeX document, and you want to include the image, but you don't want to type the script again.
-\item[\textbackslash{}mglinclude]
-	This is like \texttt{\textbackslash{}mglgraphics} but, instead of creating/including the corresponding image, it writes the contents of the MGL script to the LaTeX document, and numerates the lines.
-\item[\textbackslash{}mgldir]
-	This command can be used in the preamble of the document to specify a directory where LaTeX will save the MGL scripts and generate the corresponding images. This directory is also where \texttt{\textbackslash{}mglgraphics} and \texttt{\textbackslash{}mglinclude} will look for scripts.
-\item[\textbackslash{}mglquality]
-  Can be used to adjust the quality of the MGL graphics produced. The following table shows the available qualities:
-  \begin{center}
-    \begin{tabular}{cl}
-      \hline
-      Quality & Description\\
-      \hline
-      \hline
-      $0$ & No face drawing (fastest)\\
-      \hline
-      $1$ & No color interpolation (fast)\\
-      \hline
-      $2$ & High quality (normal)\\
-      \hline
-      $3$ & High quality with 3d primitives (not implemented yet)\\
-      \hline
-      $4$ & No face drawing, direct bitmap drawing (low memory usage)\\
-      \hline
-      $5$ & No color interpolation, direct bitmap drawing (low memory usage)\\
-      \hline
-      $6$ & High quality, direct bitmap drawing (low memory usage)\\
-      \hline
-      $7$ & High quality with 3d primitives, direct bitmap drawing (not implemented yet)\\
-      \hline
-      $8$ & Draw dots instead of primitives (extremely fast)\\
-      \hline
-    \end{tabular}
-  \end{center}
-\item[\textbackslash{}mglswitch\{on\}, \textbackslash{}mglswitch\{off\}]
-  To activate/deactivate the creation of MGL scripts and images. Notice these commands have local behavior in the sense that their effect is from the point they are called on.
-\item[\textbackslash{}mglcomment\{on\}, \textbackslash{}mglnocomment\{off\}]
-  To make visible/invisible the contents of the \texttt{mglcomment} environments. These commands have local effect too.
-\item[\textbackslash{}mglTeX]
-	It just pretty prints the name of the package ``\mglTeX''.
-\end{description}
-
-
-An example of usage of \texttt{mgl} and \texttt{mglfunc} environments would be:
-\begin{verbatim}
-\begin{mglfunc}{prepare2d}
-  new a 50 40 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
-  new b 50 40 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
-\end{mglfunc}
-
-\begin{figure}[!ht]
-  \centering
-  \begin{mgl}[width=0.85\textwidth,height=7.5cm]
-    fog 0.5
-    call 'prepare2d'
-    subplot 2 2 0:title 'Surf plot (default)':rotate 50 60:light on:box:surf a
-
-    subplot 2 2 1:title '"\#" style; meshnum 10':rotate 50 60:box
-    surf a '#'; meshnum 10
-
-    subplot 2 2 2 : title 'Mesh plot' : rotate 50 60 : box
-    mesh a
-
-    new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'
-    new y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'
-    new z 50 40 '0.8*cos(pi*(y+1)/2)'
-    subplot 2 2 3 : title 'parametric form' : rotate 50 60 : box
-    surf x y z 'BbwrR'
-  \end{mgl}
-\end{figure}
-\end{verbatim}
-Note, that \texttt{mglfunc} environment(s) can be located at any position (at the beginning, at the end, or somewhere else) of LaTeX document.
-\begin{mglfunc}{prepare2d}
-  new a 50 40 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
-  new b 50 40 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
-\end{mglfunc}
-
-\begin{figure}[!ht]
-  \centering
-  \begin{mgl}[width=0.85\textwidth,height=7.5cm]
-    fog 0.5
-    call 'prepare2d'
-    subplot 2 2 0 : title 'Surf plot (default)' : rotate 50 60 : light on : box : surf a
-
-    subplot 2 2 1 : title '"\#" style; meshnum 10' : rotate 50 60 : box
-    surf a '#'; meshnum 10
-
-    subplot 2 2 2 : title 'Mesh plot' : rotate 50 60 : box
-    mesh a
-
-    new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'
-    new y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'
-    new z 50 40 '0.8*cos(pi*(y+1)/2)'
-    subplot 2 2 3 : title 'parametric form' : rotate 50 60 : box
-    surf x y z 'BbwrR'
-  \end{mgl}
-\end{figure}
-
-Following example show the usage of \texttt{mglscript} environment
-\begin{verbatim}
-\begin{mglscript}{Vectorial}
-call 'prepare2v'
-subplot 3 2 0 '' : title 'lolo' : box
-vect a b
-subplot 3 2 1 '' : title '"." style; "=" style' : box
-vect a b '.='
-subplot 3 2 2 '' : title '"f" style' : box
-vect a b 'f'
-subplot 3 2 3 '' : title '">" style' : box
-vect a b '>'
-subplot 3 2 4 '' : title '"<" style' : box
-vect a b '<'
-call 'prepare3v'
-subplot 3 2 5 : title '3d variant' : rotate 50 60 : box
-vect ex ey ez
-
-stop
-    
-func 'prepare2v'
-  new a 20 30 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
-  new b 20 30 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
-return
-    
-func 'prepare3v'
-  define $1 pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5)
-  define $2 pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5)
-  new ex 10 10 10 '0.2*x/$1-0.2*x/$2'
-  new ey 10 10 10 '0.2*y/$1-0.2*y/$2'
-  new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'
-return
-\end{mglscript}
-\end{verbatim}
-
-\begin{mglscript}{Vectorial}
-call 'prepare2v'
-subplot 3 2 0 '' : title 'lolo' : box
-vect a b
-subplot 3 2 1 '' : title '"." style; "=" style' : box
-vect a b '.='
-subplot 3 2 2 '' : title '"f" style' : box
-vect a b 'f'
-subplot 3 2 3 '' : title '">" style' : box
-vect a b '>'
-subplot 3 2 4 '' : title '"<" style' : box
-vect a b '<'
-call 'prepare3v'
-subplot 3 2 5 : title '3d variant' : rotate 50 60 : box
-vect ex ey ez
-
-stop
-    
-func 'prepare2v'
-  new a 20 30 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
-  new b 20 30 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
-return
-    
-func 'prepare3v'
-  define $1 pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5)
-  define $2 pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5)
-  new ex 10 10 10 '0.2*x/$1-0.2*x/$2'
-  new ey 10 10 10 '0.2*y/$1-0.2*y/$2'
-  new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'
-return
-\end{mglscript}
-
-You should use \texttt{\textbackslash{}mglgraphics} command to display its contents
-\begin{verbatim}
-\begin{figure}[!ht]
-  \centering
-  \mglgraphics[width=40em,height=20em]{Vectorial}
-  \caption{A beautiful example}
-\end{figure}
-\end{verbatim}
-
-\begin{figure}[!ht]
-  \centering
-  \mglgraphics[width=40em,height=20em]{Vectorial}
-  \caption{A beautiful example}
-\end{figure}
-
-Alternatively, you can display the contents of the script in parallel to saving to a file, if you are using \texttt{mglblock} environment
-\begin{verbatim}
-\begin{mglblock}{Axis_projection}
-  ranges 0 1 0 1 0 1
-  new x 50 '0.25*(1+cos(2*pi*x))'
-  new y 50 '0.25*(1+sin(2*pi*x))'
-  new z 50 'x'
-  new a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'
-  new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx
-  light on
-  
-  title 'Projection sample':ternary 4:rotate 50 60
-  box:axis:grid
-  plot x y z 'r2':surf a '#'
-  xlabel 'X':ylabel 'Y':zlabel 'Z'
+subplot 2 1 1 '<_' : title 'Bifurcation plot'
+ranges 0 4 0 1 : axis
+bifurcation 0.005 'x*y*(1-y)' 'R'
 \end{mglblock}
-\begin{figure}[!ht]
-  \centering
-  \mglgraphics[scale=0.5]{Axis_projection}
-  \caption{The image from Axis\_projection.mgl script}
-\end{figure}
-\end{verbatim}
-
-\begin{mglblock}{Axis_projection}
-  ranges 0 1 0 1 0 1
-  new x 50 '0.25*(1+cos(2*pi*x))'
-  new y 50 '0.25*(1+sin(2*pi*x))'
-  new z 50 'x'
-  new a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'
-  new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx
-  light on
-  
-  title 'Projection sample':ternary 4:rotate 50 60
-  box:axis:grid
-  plot x y z 'r2':surf a '#'
-  xlabel 'X':ylabel 'Y':zlabel 'Z'
-\end{mglblock}
-\begin{figure}[!ht]
-  \centering
-  \mglgraphics[scale=0.5]{Axis_projection}
-  \caption{The image from Axis\_projection.mgl script}
-\end{figure}
-
-Finally, you can just show MGL script itself
-\begin{verbatim}
-\begin{mglverbatim}
-  ranges 0 1 0 1 0 1
-  new x 50 '0.25*(1+cos(2*pi*x))'
-  new y 50 '0.25*(1+sin(2*pi*x))'
-  new z 50 'x'
-  new a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'
-  new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx
-  light on
-  
-  title 'Projection sample':ternary 4:rotate 50 60
-  box:axis:grid
-  plot x y z 'r2':surf a '#'
-  xlabel 'X':ylabel 'Y':zlabel 'Z'
-\end{mglverbatim}
-\end{verbatim}
-
-\begin{mglverbatim}
-  ranges 0 1 0 1 0 1
-  new x 50 '0.25*(1+cos(2*pi*x))'
-  new y 50 '0.25*(1+sin(2*pi*x))'
-  new z 50 'x'
-  new a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'
-  new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx
-  light on
-  
-  title 'Projection sample':ternary 4:rotate 50 60
-  box:axis:grid
-  plot x y z 'r2':surf a '#'
-  xlabel 'X':ylabel 'Y':zlabel 'Z'
-\end{mglverbatim}
-
-
-An example of usage of \texttt{\textbackslash{}mglplot} command would be:
-\begin{verbatim}
-\begin{mglsetup}
-  box '@{W9}' : axis
-\end{mglsetup}
-\begin{mglsetup}[2d]
-  box : axis
-  grid 'xy' ';k'
-\end{mglsetup}
-\begin{mglsetup}[3d]
-  rotate 50 60
-  box : axis : grid 'xyz' ';k'
-\end{mglsetup}
-\begin{figure}[!ht]
-  \centering
-  \mglplot[scale=0.5]{new a 200 'sin(pi*x)':plot a '2B'}
-\end{figure}
-\begin{figure}[!ht]
-  \centering
-  \mglplot[scale=0.5,settings=2d]{
-    fplot 'sin(pi*x)' '2B' :
-    fplot 'cos(pi*x^2)' '2R'
-  }
-\end{figure}
-\begin{figure}[!ht]
-  \centering
-  \mglplot[width=0.5 \textwidth, settings=3d]
-  {fsurf 'sin(pi*x)+cos(pi*y)'}
-\end{figure}
-\end{verbatim}
-
-\begin{mglsetup}{generic}
-  box '@{W9}' : axis
-\end{mglsetup}
-\begin{mglsetup}{2d}
-  box : axis
-  grid 'xy' ';k'
-\end{mglsetup}
-\begin{mglsetup}{3d}
-  rotate 50 60
-  box : axis : grid 'xyz' ';k'
-\end{mglsetup}
-\begin{figure}[!ht]
-  \centering
-  \mglplot[scale=0.5,setup=generic]{new a 200 'x' : fplot 'sin(pi*x)' '2R' : plot a '2B'}
-\end{figure}
-\begin{figure}[!ht]
-  \centering
-  \mglplot[scale=0.5,setup=2d]{%
-    fplot 'sin(pi*x)' '2B' :%
-    fplot 'cos(pi*x^2)' '2R'%
-  }
-\end{figure}
-\begin{figure}[!ht]
-  \centering
-  \mglplot[width=0.5\textwidth, setup=3d]{fsurf 'sin(pi*x)+cos(pi*y)'}
-\end{figure}
-
-As an additional feature, when an image is not found or cannot be included, instead of issuing an error, \texttt{mgltex} prints a box with the word \emph{'MGL image not found'} in the LaTeX document.
-\begin{figure}[!ht]
-  \centering
-  \mglgraphics{xyz}
-\end{figure}
-
-Let's display the content of the MGL file using \texttt{\textbackslash{}mglinclude} command:
-\mglinclude{Vectorial}
-
-The following commentary will be visible, since \mglTeX{} has been called with the \texttt{comments} option.
-\begin{verbatim}
-  \begin{mglcomment}
-    This is a visible commentary
-    that can have multiple lines
-  \end{mglcomment}
-\end{verbatim}
-The result is:
+		As you can see, although this is a verbatim-like environment, very long lines of code are split to fit the paragraph. Each line of code is numbered, this can be disabled with the \verb|lineno| option, like \verb|\begin{mglblock}[lineno=false]{fractal}|.
+		
+		\item[mglverbatim] This is like \verb|mglblock| environment, but it doesn't produce any script, just typesets the code to the \LaTeX{} document. It accepts the \verb|lineno| option, plus the \verb|label| option, in case you want to associate a name to the code.
+		
+		\item[mglcomment] This environment is used to embed comments in the document. You can control whether the contents of this environment are displayed or not, using the \verb|comments| and \verb|nocomments| package options, or the \verb|\mglcomments{on}| and \verb|mglcomments{off}| commands.
+		
+		An example of this would be:
+		\begin{verbatim}
+			\begin{mglcomments}
+				This comment will be shown because we used the "comments" package option for mglTeX
+			\end{mglcomments}
+		\end{verbatim}
 \begin{mglcomment}
-  This is a visible commentary
-  that can have multiple lines
+This comment will be shown because we used the "comments" package option for mglTeX
 \end{mglcomment}
-
-The following commentary won't be visible, since it is wrapped by \texttt{\textbackslash{}mglnocomments\{off\}} and \texttt{\textbackslash{}mglcomments\{on\}}.
-\begin{verbatim}
-  \mglcomments{off}
-  \begin{mglcomment}
-    This is an invisible commentary
-    that can have multiple lines
-  \end{mglcomment}
-  \mglcomments{on}
-\end{verbatim}
-\mglcomments{off}
-\begin{mglcomment}
-  This is an invisible commentary
-  that can have multiple lines
-\end{mglcomment}
-\mglcomments{on}
-
-The last example is the use of the \texttt{\textbackslash{}mglswitch\{on\}} and \texttt{\textbackslash{}mglswitch\{off\}} commands. For example, the following image won't be generated:
-\begin{verbatim}
-  \mglswitch{off}
-  \begin{figure}[!ht]
-    \centering
-    \begin{mgl}
-      box : axis
-      fplot 'sin(pi*x)' '2B'
-    \end{mgl}
-  \end{figure}
-  \mglswitch{on}
-\end{verbatim}
-The result is:
-\mglswitch{off}
-\begin{figure}[!ht]
-  \centering
-  \begin{mgl}
-    box : axis
-    fplot 'sin(pi*x)' '2B'
-  \end{mgl}
-\end{figure}
-\mglswitch{on}
+		Once again, long lines are broke down to fit the paragraph.
+	\end{description}
+	
+	\section{Basics on commands}
+	\begin{description}
+		\item[\textbackslash mglgraphics] This command takes the name of an external MGL script, compiles it, and includes the resulting image. It accespt the same optional arguments as the \verb|mgl| environment, except for \verb|label|, plus a \verb|path| option, which can be used to specify the location of the script. This is useful when you have a script outside of the \LaTeX{} document (sent by a colleague for example), but you don't want to transcript it to your document.
+		
+		For example, in order to display the image of the script we created with \verb|mglscript| environment, we write:
+		\begin{verbatim}
+			\begin{figure}[!ht]
+			  \centering
+			  \mglgraphics[height=9cm,width=9cm]{Gaston_surface}
+			  \caption{Gaston's surface}
+			\end{figure}
+		\end{verbatim}
+		\begin{figure}[!ht]
+			\centering
+			\mglgraphics[height=9cm,width=9cm]{Gaston_surface}
+			\caption{Gaston's surface: Three-dimensional parametric surface}
+		\end{figure}
+		
+		We could also could compile the script we created with the \verb|mglblock| environment:
+		\begin{verbatim}
+			\begin{figure}[!ht]
+			  \centering
+			  \mglgraphics[height=7cm,width=10cm]{fractal}
+			  \caption{Examples of fractal behavior}
+			\end{figure}
+		\end{verbatim}
+		\begin{figure}[!ht]
+			\centering
+			\mglgraphics[height=7cm,width=10cm]{fractal}
+			\caption{Examples of fractal behavior}
+		\end{figure}
+		
+		\item[\textbackslash mglinclude] This is equivalent to the \verb|mglblock| environment, but works for external scripts.
+		
+		\item[\textbackslash mglplot] This command allows the fast creation of plots. It takes one mandatory argument, which is a block of MGL code to produce the plot. Accepts the same optional arguments as the \verb|mgl| environment, plus an additional one, \verb|setup|, that can be used to specify a block of code to append, defined inside a \verb|mglsetup| environment (see the example below).
+		
+		The \verb|mglsetup| environment can be used if many plots will have the same settings (background color, etc.). Instead of writing the same code over and over again, it can be introduced in that environment, and used with the \verb|\mglplot| command.
+		
+		An example of use of the \verb|mglsetup| environment and the \verb|\mglplot| command would be:
+		\begin{verbatim}
+			\begin{mglsetup}{3d}
+			  clf 'W'
+			  rotate 50 60
+			  light on
+			  box : axis : grid 'xyz' ';k'
+			\end{mglsetup}
+			\begin{figure}[!ht]
+			  \centering
+			  \mglplot[setup=3d,scale=0.5]{fsurf 'cos(4*pi*hypot(x,y))*exp(-abs(x+y))'}
+			\end{figure}
+			\begin{figure}[!ht]
+			  \centering
+			  \mglplot[setup=3d,scale=0.5]{fsurf 'sin(pi*(x+y))'}
+			\end{figure}
+		\end{verbatim}
+		\begin{mglsetup}{3d}
+			clf 'W'
+			rotate 50 60
+			light on : light 0 0 1 0 'w' 0.25
+			box : axis : grid 'xyz' ';k'
+		\end{mglsetup}
+		\begin{figure}[!ht]
+			\centering
+			\mglplot[setup=3d,scale=0.5]{fsurf 'cos(4*pi*hypot(x,y))*exp(-abs(x+y))'}
+		\end{figure}
+		\begin{figure}[!ht]
+			\centering
+			\mglplot[setup=3d,scale=0.5]{fsurf 'sin(pi*(x+y))'}
+		\end{figure}
+	\end{description}
+	
+	There are more environments and commands defined by \mglTeX{}. The ones presented here are the most basic. More on this topic can be found in the documentation.
 \end{document}

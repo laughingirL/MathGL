@@ -81,24 +81,72 @@ New version (v.2.3.5) of @uref{http://sourceforge.net/projects/mathgl, MathGL} i
 @item Update @ref{LaTeX package} (thanks to Diego Sejas Viscarra)
 
 @itemize @bullet
-@item
-New package options: @samp{gray} for activating gray-scale mode for graphics; @samp{color} for activating color mode for figures; @samp{0v}, @samp{1v}, @samp{2v} for selecting the variant of arguments in MGL scripts.
-@item
-New commands: @samp{\mglgray} -- the same effect as the @samp{gray} and @samp{color} package options, but with local effect; @samp{\mglvariant} -- can be used to select the variant of arguments, but with local effect.
-@item
-The @samp{mglcommon} environment has been renamed as @samp{mglsetupscript}. However, @samp{mglcommon} is still available for backwards compatibility, but its use is deprecated.
-@item
-The option @samp{scale} for environments and commands is no longer the same as the @samp{scale} command from the @code{graphicx} package.
-@item
-New environment and command options: @samp{gray}, @samp{scale}, @samp{quality}, @samp{variant}.
-@item
-The command @samp{\mglswitch}, @samp{\mglcomments} and @samp{\mglgray} now accept @samp{0} and @samp{1} as argument, as equivalents of the @samp{off} and @samp{on} options.
-@item
-The documentation has been reordered and is more congruent.
-@item
-The bugfix for MiKtex has been fully implemented.
-@item
-Some minor bugfixes and speedups.
+@item 
+@code{\MGL@@codes}: Bugfix: category code for tabulators is changed too
+@item 
+@code{\MGL@@quality}: 9 is accepted as quality value now
+@item 
+@code{\MGL@@scale}: Now accepts any positive value
+@item 
+@code{\MGL@@test@@switch}: New command to verify and validate switching arguments
+@item 
+@code{\mglTeX}: Add a small negative space in the logo, between the "mgl" and "TEX" 
+@item 
+@code{\mglTeX}: Declared now as robust command
+@item 
+@code{\mglcomments}: Now accepts arguments 0 (equivalent to @code{off}) and 1 (equivalent to @code{on}), besides the usual @code{off} and @code{on}
+@item 
+@code{\mglgraphics}: New command options: @code{gray, mglscale, quality, variant}
+@item 
+@code{\mglname}: Now writes the MGL code line @samp{setsize 600 400} to the main script
+@item 
+@code{\mglplot}: Added @code{\bgroup} and @code{\egroup} in order to keep changes private
+@item 
+New command options: @code{gray, mglscale, quality, variant}
+@item 
+@code{\mglsettings}: Added options @code{gray} and @code{variant}
+@item 
+Now calls the @code{\mglswitch} and @code{\mglcomments} commands for the switch and comments options, respectively
+@item 
+@code{\mglswitch}: Now accepts arguments 0 (equivalent to @code{off}) and 1 (equivalent to @code{on}), besides the usual @code{off} and @code{on}
+@item 
+mglTeX now depends on the ifpdf package
+@item 
+Change definition of @code{\mglcommentname} from MGL comment to mglTEX comment
+@item 
+Introduce the concept of global, local and private settings in the documentation
+@item 
+New commands: @code{\mglgray} (to activate/deactivate) gray-scale mode locally, and @code{\mglvariant} (to set variant of arguments in MGL scripts locally)
+@item 
+New package option @code{9q} for setting quality to 9 (for testing purposes of the author)
+@item 
+New package options @code{0v, 1v, 2v} to select variant of arguments in MGL scripts
+@item 
+New package options @code{gray, color} to activate/deactivate gray-scale mode for graphics
+@item 
+Remove the @code{\MGL@@setkeys} command, since it isn’t needed as first thought
+@item 
+Rename @code{\MGL@@document@@scripts} to @code{\MGL@@doc@@scripts}
+@item 
+Rename @code{\MGL@@script@@name} to @code{\MGL@@script}
+@item 
+Rename command @code{\MGL@@graph@@ext} to @code{\MGL@@imgext}
+@item 
+Rename command @code{\mglcommonscriptname} to @code{\mglsetupscriptname}
+@item 
+Rename environment @code{mglcommon} to @code{mglsetupscript} (@code{mglcommon} is still available, but deprecated)
+@item 
+Rename family @code{MGL@@keys} as @code{MGL@@gr@@keys} for consistency
+@item 
+Reorganize and update documentation
+@item 
+Some minor bugfixes
+@item 
+The MGL code line @samp{setsize 600 400} is now automatically written to the main script in order for the scaling options and commands to work
+@item 
+@code{mgl}: New environment options: gray, mglscale, quality, variant
+@item 
+@code{\mglcode}: New environment options: gray, mglscale, quality, variant
 @end itemize
 
 @item

@@ -1,21 +1,39 @@
 2.3.5 Released 14 March
 
 * Greatly update mgltex (by Diego Sejas Viscarra)
-	- New package options:
-		o gray: To activate gray-scale mode for graphics.
-		o color: To activate color mode for figures.
-		o 0v, 1v, 2v: To indicate the variant of arguments in MGL scripts.
-	- New commands:
-		o \mglgray: The same effect as the "gray" and "color" package options, but with local effect.
-		o \mglvariant: Can be used to indicate the variant of arguments, but with local effect.
-	- The "mglcommon" environment has been renamed as "mglsetupscript". "mglcommon" is still available for backwards compatibility, but its use is deprecated.
-	- The option "scale" for environments and commands is no longer the same as the "scale" command from the "graphicx" package.
-	- New environment and command options: gray, scale, quality, variant.
-	- The command "\mglswitch", "\mglcomments" and "\mglgray" now accept "0" and "1" as argument, as equivalents of the "off" and "on" options. ("off" and "on" are still available.)
-	- The documentation has been reordered and is more congruent. (Maybe I'll make future changes, but small ones.)
-	- The bugfix for MiKtex has been fully implemented.
-	- Some minor bugfixes and speedups.
-
+	o \MGL@codes: Bugfix: category code for tabulators is changed too
+	o \MGL@quality: 9 is accepted as quality value now
+	o \MGL@scale: Now accepts any positive value
+	o \MGL@test@switch: New command to verify and validate switching arguments
+	o \mglTeX: Add a small negative space in the logo, between the "mgl" and "TEX" 
+	o \mglTeX: Declared now as robust command
+	o \mglcomments: Now accepts arguments 0 (equivalent to off) and 1 (equivalent to on), besides the usual off and on
+	o \mglgraphics: New command options: gray, mglscale, quality, variant
+	o \mglname: Now writes the MGL code line setsize 600 400 to the main script
+	o \mglplot: Added \bgroup and \egroup in order to keep changes private
+	o New command options: gray, mglscale, quality, variant
+	o \mglsettings: Added options gray and variant
+	o Now calls the \mglswitch and \mglcomments commands for the switch and comments options, respectively
+	o \mglswitch: Now accepts arguments 0 (equivalent to off) and 1 (equivalent to on), besides the usual off and on
+	o mglTeX now depends on the ifpdf package
+	o Change definition of \mglcommentname from MGL comment to mglTEX comment
+	o Introduce the concept of global, local and private settings in the documentation
+	o New commands: \mglgray (to activate/deactivate) gray-scale mode locally, and \mglvariant (to set variant of arguments in MGL scripts locally)
+	o New package option 9q for setting quality to 9 (for testing purposes of the author)
+	o New package options 0v, 1v, 2v to select variant of arguments in MGL scripts
+	o New package options gray, color to activate/deactivate gray-scale mode for graphics
+	o Remove the \MGL@setkeys command, since it isn’t needed as first thought
+	o Rename \MGL@document@scripts to \MGL@doc@scripts
+	o Rename \MGL@script@name to \MGL@script
+	o Rename command \MGL@graph@ext to \MGL@imgext
+	o Rename command \mglcommonscriptname to mglsetupscriptname
+	o Rename environment mglcommon to mglsetupscript (mglcommon is still available, but deprecated)
+	o Rename family MGL@keys as MGL@gr@keys for consistency
+	o Reorganize and update documentation
+	o Some minor bugfixes
+	o The MGL code line "setsize 600 400" is now automatically written to the main script in order for the scaling options and commands to work
+	o mgl: New environment options: gray, mglscale, quality, variant
+	o mglcode: New environment options: gray, mglscale, quality, variant
 * Add MGL command 'variant' to select proper variant of arguments (like "var1?var2?var3?...") in MGL commands.
 * Remove limitation of maximal number (was 1000) of arguments for MGL commands. This is actual for 'list' command.
 * Add mglWnd::Widget() for accessing widget which is used for drawing.
