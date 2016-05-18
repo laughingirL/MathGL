@@ -307,7 +307,7 @@ struct MGL_EXPORT mglActivePos
 	int n;		///< position of active point in command (object id)
 };
 //-----------------------------------------------------------------------------
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && (_MSC_VER<1900)
 template class MGL_EXPORT mglStack<mglPnt>;
 template class MGL_EXPORT mglStack<mglPrim>;
 template class MGL_EXPORT std::vector<mglGroup>;

@@ -159,7 +159,9 @@ if(UNIX AND enable-rvalue)
 #	SET(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 endif(UNIX AND enable-rvalue)
 
-# MSVC does not require any special flags
+if(MSVC AND MSVC_VERSION GREATER 1899)
+	SET(CMAKE_CXX_FLAGS "/EHsc ${CMAKE_CXX_FLAGS}")
+endif(MSVC AND MSVC_VERSION GREATER 1899)
 
 if(enable-qt4 OR enable-qt5)
 	set(QT_ENABLED ON)

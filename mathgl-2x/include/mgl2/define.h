@@ -20,8 +20,10 @@
 #ifndef _MGL_DEFINE_H_
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
+// Disable warnings for MSVC: 4190 - C-linkage of std::complex,
+// 4996 - deprecated abi functions
 #if defined(_MSC_VER)
-#pragma warning(disable: 4996)
+#pragma warning(disable: 4996 4190)
 #endif
 
 #include "mgl2/config.h"
@@ -290,7 +292,7 @@ const mdual mgl_I=_Complex_I;
 #ifdef __cplusplus
 #include <string>
 #include <vector>
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && (_MSC_VER<1900)
 template class MGL_EXPORT std::allocator<char>;
 template class MGL_EXPORT std::allocator<wchar_t>;
 template struct MGL_EXPORT std::char_traits<char>;
@@ -304,7 +306,7 @@ template class MGL_EXPORT std::vector<mreal>;
 extern float mgl_cos[360];	///< contain cosine with step 1 degree
 //-----------------------------------------------------------------------------
 #include <complex>
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && (_MSC_VER<1900)
 template class MGL_EXPORT std::complex<float>;
 template class MGL_EXPORT std::complex<double>;
 #endif

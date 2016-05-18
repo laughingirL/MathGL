@@ -101,7 +101,7 @@ struct MGL_EXPORT mglDrawDat
 	std::vector<mglGlyph> Glf;	///< Glyphs data
 	std::vector<mglTexture> Txt;	///< Pointer to textures
 };
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && (_MSC_VER<1900)
 template class MGL_EXPORT std::vector<mglDrawDat>;
 #endif
 //-----------------------------------------------------------------------------
