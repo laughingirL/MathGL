@@ -695,10 +695,10 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 					first.p = pfound;
 					first.next = ambig_list;
 					ambig_list = &first;
-					fwprintf(stderr, L"%s: option '%s' is ambiguous; possibilities:", argv[0], argv[d->optind]);
+					fwprintf(stderr, L"%ls: option '%ls' is ambiguous; possibilities:", argv[0], argv[d->optind]);
 					do
 					{
-						fwprintf (stderr, L" '--%s'", ambig_list->p->name);
+						fwprintf (stderr, L" '--%ls'", ambig_list->p->name);
 						ambig_list = ambig_list->next;
 					}
 					while (ambig_list != NULL);
@@ -723,11 +723,11 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 						{
 							if (argv[d->optind - 1][1] == L'-')
 							{
-								fwprintf(stderr, L"%s: option '--%s' doesn't allow an argument\n",argv[0], pfound->name);
+								fwprintf(stderr, L"%ls: option '--%ls' doesn't allow an argument\n",argv[0], pfound->name);
 							}
 							else
 							{
-								fwprintf(stderr, L"%s: option '%c%s' doesn't allow an argument\n",argv[0], argv[d->optind - 1][0],pfound->name);
+								fwprintf(stderr, L"%ls: option '%c%ls' doesn't allow an argument\n",argv[0], argv[d->optind - 1][0],pfound->name);
 							}
 						}
 						d->__nextchar += wcslen(d->__nextchar);
@@ -743,7 +743,7 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 					{
 						if (print_errors)
 						{
-							fwprintf(stderr,L"%s: option '--%s' requires an argument\n",argv[0], pfound->name);
+							fwprintf(stderr,L"%ls: option '--%ls' requires an argument\n",argv[0], pfound->name);
 						}
 						d->__nextchar += wcslen(d->__nextchar);
 						d->optopt = pfound->val;
@@ -766,11 +766,11 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 				{
 					if (argv[d->optind][1] == L'-')
 					{
-						fwprintf(stderr, L"%s: unrecognized option '--%s'\n",argv[0], d->__nextchar);
+						fwprintf(stderr, L"%ls: unrecognized option '--%ls'\n",argv[0], d->__nextchar);
 					}
 					else
 					{
-						fwprintf(stderr, L"%s: unrecognized option '%c%s'\n",argv[0], argv[d->optind][0], d->__nextchar);
+						fwprintf(stderr, L"%ls: unrecognized option '%c%ls'\n",argv[0], argv[d->optind][0], d->__nextchar);
 					}
 				}
 				d->__nextchar = (wchar_t *)L"";
@@ -788,7 +788,7 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 		{
 			if (print_errors)
 			{
-				fwprintf(stderr, L"%s: invalid option -- '%c'\n", argv[0], c);
+				fwprintf(stderr, L"%ls: invalid option -- '%c'\n", argv[0], c);
 			}
 			d->optopt = c;
 			return L'?';
@@ -813,7 +813,7 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 			{
 				if (print_errors)
 				{
-					fwprintf(stderr,L"%s: option requires an argument -- '%c'\n",argv[0], c);
+					fwprintf(stderr,L"%ls: option requires an argument -- '%c'\n",argv[0], c);
 				}
 				d->optopt = c;
 				if (optstring[0] == L':')
@@ -847,7 +847,7 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 				{
 					if (print_errors)
 					{
-						fwprintf(stderr, L"%s: option '-W %s' is ambiguous\n",argv[0], d->optarg);
+						fwprintf(stderr, L"%ls: option '-W %ls' is ambiguous\n",argv[0], d->optarg);
 					}
 					d->__nextchar += wcslen(d->__nextchar);
 					d->optind++;
@@ -864,7 +864,7 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 						{
 							if (print_errors)
 							{
-								fwprintf(stderr, L"%s: option '-W %s' doesn't allow an argument\n",argv[0], pfound->name);
+								fwprintf(stderr, L"%ls: option '-W %ls' doesn't allow an argument\n",argv[0], pfound->name);
 							}
 							d->__nextchar += wcslen(d->__nextchar);
 							return L'?';
@@ -878,7 +878,7 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 						{
 							if (print_errors)
 							{
-								fwprintf(stderr, L"%s: option '-W %s' requires an argument\n",argv[0], pfound->name);
+								fwprintf(stderr, L"%ls: option '-W %ls' requires an argument\n",argv[0], pfound->name);
 							}
 							d->__nextchar += wcslen(d->__nextchar);
 							return optstring[0] == L':' ? L':' : L'?';
@@ -924,7 +924,7 @@ no_longs:
 				{
 					if (print_errors)
 					{
-						fwprintf(stderr,L"%s: option requires an argument -- '%c'\n",argv[0], c);
+						fwprintf(stderr,L"%ls: option requires an argument -- '%c'\n",argv[0], c);
 					}
 					d->optopt = c;
 					if (optstring[0] == L':')
