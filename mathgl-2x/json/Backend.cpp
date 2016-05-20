@@ -11,13 +11,18 @@ QString Backend::show(const QString& text) const
 {
 	qDebug() << __FUNCTION__;
 	const char *tmp = tmpnam(0);
+	wchar_t *wtext;
 	mglGraph gr;
 	gr.SetFaceNum(200);
 	mglParse pr;
 	pr.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
 	setlocale(LC_NUMERIC, "C");
-	pr.Execute(&gr,text.toStdWString().c_str());
+	wtext = new wchar_t[text.size()+1];
+	text.toWCharArray(wtext);
+	wtext[text.size()] = 0;
+	pr.Execute(&gr,wtext);
+	delete[] wtext;
 	gr.WriteJSON(tmp);
 	setlocale(LC_NUMERIC, "");
 
@@ -32,13 +37,18 @@ QString Backend::show(const QString& text) const
 //-----------------------------------------------------------------------------
 QString Backend::coor(const QString& xy, const QString& text) const
 {
+	wchar_t *wtext;
 	qDebug() << __FUNCTION__;
 	mglGraph gr;
 	mglParse pr;
 	pr.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
 	setlocale(LC_NUMERIC, "C");
-	pr.Execute(&gr,text.toStdWString().c_str());
+	wtext = new wchar_t[text.size()+1];
+	text.toWCharArray(wtext);
+	wtext[text.size()] = 0;
+	pr.Execute(&gr,wtext);
+	delete[] wtext;
 	gr.Finish();
 
 	int x = (int)xy.section(" ",0,0).toDouble();
@@ -54,6 +64,7 @@ QString Backend::geometry(const QString& mgl) const
 {
 	qDebug() << __FUNCTION__;
 	const char *tmp = tmpnam(0);
+	wchar_t *wmgl;
 	mglGraph gr;
 #if 0
 	gr.SetFaceNum(200);
@@ -62,7 +73,11 @@ QString Backend::geometry(const QString& mgl) const
 	pr.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
 	setlocale(LC_NUMERIC, "C");
-	pr.Execute(&gr,mgl.toStdWString().c_str());
+	wmgl = new wchar_t[mgl.size()+1];
+	mgl.toWCharArray(wmgl);
+	wmgl[mgl.size()] = 0;
+	pr.Execute(&gr,wmgl);
+	delete[] wmgl;
 	gr.WriteJSON(tmp);
 	setlocale(LC_NUMERIC, "");
 
