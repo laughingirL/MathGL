@@ -248,7 +248,7 @@ void NewCmdDialog::nameChanged(int s)
 	// clear old
 	kind->clear();	kinds.clear();	for(k=0;k<NUM_CH;k++)	argn[k].clear();
 	// try to find the keyword
-	const char *cmd = n.toStdString().c_str();
+	const char *cmd = n.toLatin1().constData();
 	if(!parser.CmdType(cmd))	return;
 	info->setText(parser.CmdDesc(cmd));
 

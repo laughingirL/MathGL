@@ -211,7 +211,7 @@ void DatPanel::putValue(int r, int c)
 	if(s=="nan")	f=NAN;
 	else if(s=="inf")	f=INFINITY;
 	else if(s=="-inf")	f=-INFINITY;
-	else	g = mgl_str2dual(s.toStdString().c_str());	//f = s.toDouble();
+	else	g = mgl_str2dual(s.toLocal8Bit().constData());	//f = s.toDouble();
 	f = real(g);
 	mglDataC *cc = dynamic_cast<mglDataC*>(var);
 	if(cc)
@@ -251,15 +251,15 @@ void DatPanel::save()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, MGL_DEF_SCH, &ok);
-		if(ok)	var->Export(fn.toStdString().c_str(), s.toStdString().c_str());
+		if(ok)	var->Export(fn.toLocal8Bit().constData(), s.toLocal8Bit().constData());
 	}
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Save to HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
-		if(ok)	var->SaveHDF(fn.toStdString().c_str(), s.toStdString().c_str());
+		if(ok)	var->SaveHDF(fn.toLocal8Bit().constData(), s.toLocal8Bit().constData());
 	}
-	else 	var->Save(fn.toStdString().c_str());
+	else 	var->Save(fn.toLocal8Bit().constData());
 }
 //-----------------------------------------------------------------------------
 void DatPanel::load()
@@ -273,15 +273,15 @@ void DatPanel::load()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Import PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, MGL_DEF_SCH, &ok);
-		if(ok)	d->Import(fn.toStdString().c_str(), s.toStdString().c_str());
+		if(ok)	d->Import(fn.toLocal8Bit().constData(), s.toLocal8Bit().constData());
 	}
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Read from HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
-		if(ok)	d->ReadHDF(fn.toStdString().c_str(), s.toStdString().c_str());
+		if(ok)	d->ReadHDF(fn.toLocal8Bit().constData(), s.toLocal8Bit().constData());
 	}
-	else 	d->Read(fn.toStdString().c_str());
+	else 	d->Read(fn.toLocal8Bit().constData());
 	refresh();
 }
 //-----------------------------------------------------------------------------
@@ -465,7 +465,7 @@ void DatPanel::hist()
 	bool res = d->exec();
 	if(res && !v1->text().isEmpty() && !v2->text().isEmpty() && !id->text().isEmpty())
 	{
-		mglData *vv = dynamic_cast<mglData*>(parser.AddVar(id->text().toStdString().c_str()));
+		mglData *vv = dynamic_cast<mglData*>(parser.AddVar(id->text().toLocal8Bit().constData()));
 		if(vv)	vv->Set(mgl_data_hist(var, nm->value(), v1->text().toDouble(), v2->text().toDouble(),0));
 		updateDataItems();
 	}
@@ -594,7 +594,7 @@ void DatPanel::newdat()
 	if(!mgl.isEmpty())
 	{
 		mglGraph gr;
-		parser.Execute(&gr,mgl.toStdString().c_str());
+		parser.Execute(&gr,mgl.toLocal8Bit().constData());
 		if(k>=6)	opers += mgl+"\n";
 		updateDataItems();
 	}
@@ -665,7 +665,7 @@ void DatPanel::oper()
 	if(!mgl.isEmpty())
 	{
 		mglGraph gr;
-		parser.Execute(&gr,mgl.toStdString().c_str());
+		parser.Execute(&gr,mgl.toLocal8Bit().constData());
 		opers += mgl+"\n";
 		updateDataItems();
 	}

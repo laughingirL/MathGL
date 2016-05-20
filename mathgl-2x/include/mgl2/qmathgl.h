@@ -232,7 +232,16 @@ public:
 	mglDrawScript(HMPR p):mglDraw()	{	par=p;	line=-1;	}
 	virtual ~mglDrawScript() {}
 	int Draw(mglGraph *gr)
-	{	gr->Highlight(line+1);	mgl_parse_textw(gr->Self(),par,text.toStdWString().c_str());	return 0;	}
+	{
+		wchar_t *wtext;
+		wtext = new wchar_t[text.size()+1];
+		text.toWCharArray(wtext);
+		wtext[text.size()] = 0;
+		gr->Highlight(line + 1);
+		mgl_parse_textw(gr->Self(), par, wtext);
+		delete[] wtext;
+		return 0;
+	}
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglCanvasWnd to QPixmap

@@ -83,7 +83,7 @@ void MemPanel::newTable()
 	QString name = QInputDialog::getText(this, tr("UDAV - New variable"),
 				tr("Enter name for new variable"), QLineEdit::Normal, "", &ok);
 	if(!ok || name.isEmpty())	return;
-	mglDataA *v = parser.AddVar(name.toStdString().c_str());
+	mglDataA *v = parser.AddVar(name.toLocal8Bit().constData());
 	QWidget *t;
 	if(v->o)	t = (QWidget *)v->o;
 	else		t = newDataWnd(infoDlg,wnd,v);
@@ -96,7 +96,7 @@ void MemPanel::editData(int n)
 	if(tab->rowCount()<1)	return;
 	if(n<0)	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toLocal8Bit().constData());
 	if(!v)	return;
 	QWidget *t;
 	if(v->o)	t = (QWidget *)v->o;
@@ -109,9 +109,9 @@ void MemPanel::delData()
 	if(tab->rowCount()<1)	return;
 	int	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toLocal8Bit().constData());
 	if(!v && v->o)	((QWidget *)v->o)->close();
-	parser.DeleteVar(tab->item(n,0)->text().toStdString().c_str());
+	parser.DeleteVar(tab->item(n,0)->text().toLocal8Bit().constData());
 	refresh();
 }
 //-----------------------------------------------------------------------------
@@ -128,7 +128,7 @@ void MemPanel::infoData()
 	if(tab->rowCount()<1)	return;
 	int	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toLocal8Bit().constData());
 	if(!v)	return;
 	infoDlg->setVar(v);
 	QString s = QString::fromStdWString(v->s);

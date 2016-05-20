@@ -305,7 +305,7 @@ bool TextEdit::isErrLine(int line) const
 void TextEdit::setErrMessage(const QString &mess)
 {
 	err.clear();
-	const char *s = mess.toStdString().c_str();
+	const char *s = mess.toLatin1().constData();
 	s = strstr(s,"in line ");
 	while(s)
 	{

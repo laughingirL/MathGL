@@ -231,6 +231,7 @@ void SubplotDialog::updatePic()
 {
 	static mglGraph gr;	gr.SetSize(pic->width(),pic->height());
 	mglParse par;
+	wchar_t *wcmd;
 
 	setlocale(LC_NUMERIC, "C");
 	QString stl="'";	// style for subplot
@@ -255,7 +256,11 @@ void SubplotDialog::updatePic()
 		{	cmd += ":title '"+title->text()+"'";	if(!fmt.isEmpty())	cmd += fmt;	}
 		if(Tet || Phi)	cmd += ":rotate "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
-		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
+		wcmd = new wchar_t[cmd.size()+1];
+		cmd.toWCharArray(wcmd);
+		wcmd[cmd.size()] = 0;
+		par.Execute(&gr, wcmd);	gr.Box();
+		delete[] wcmd;
 		res->setText(cmd);
 	}
 	else if(cm->isChecked())	// multiplot
@@ -267,7 +272,11 @@ void SubplotDialog::updatePic()
 		{	cmd += ":title '"+title->text()+"'";	if(!fmt.isEmpty())	cmd += fmt;	}
 		if(Tet || Phi)	cmd += ":rotate "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
-		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
+		wcmd = new wchar_t[cmd.size() + 1];
+		cmd.toWCharArray(wcmd);
+		wcmd[cmd.size()] = 0;
+		par.Execute(&gr, wcmd);	gr.Box();
+		delete[] wcmd;
 		res->setText(cmd);
 	}
 	else if(cg->isChecked())	// gridplot
@@ -277,7 +286,11 @@ void SubplotDialog::updatePic()
 		for(int i=0;i<n*m;i++)	if(i!=k)	{	gr.GridPlot(n,m,i,d);	gr.Box("h");	}
 		cmd = "gridplot "+QString::number(n)+" "+QString::number(m)+" "+QString::number(k)+" "+QString::number(d);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
-		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
+		wcmd = new wchar_t[cmd.size() + 1];
+		cmd.toWCharArray(wcmd);
+		wcmd[cmd.size()] = 0;
+		par.Execute(&gr, wcmd);	gr.Box();
+		delete[] wcmd;
 		res->setText(cmd);
 	}
 	else if(cs->isChecked())	// stickplot
@@ -286,7 +299,11 @@ void SubplotDialog::updatePic()
 		for(int i=0;i<n;i++)	if(i!=k)	{	gr.StickPlot(n,i,Tet,Phi);	gr.Box("h");	}
 		cmd = "stickplot "+QString::number(n)+" "+QString::number(k)+" "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
-		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
+		wcmd = new wchar_t[cmd.size() + 1];
+		cmd.toWCharArray(wcmd);
+		wcmd[cmd.size()] = 0;
+		par.Execute(&gr, wcmd);	gr.Box();
+		delete[] wcmd;
 		res->setText(cmd);
 	}
 	else if(cc->isChecked())	// columnplot	// TODO add angles
@@ -297,7 +314,11 @@ void SubplotDialog::updatePic()
 		cmd = "columnplot "+QString::number(n)+" "+QString::number(k)+" "+QString::number(d);
 		if(Tet || Phi)	cmd += ":rotate "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
-		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
+		wcmd = new wchar_t[cmd.size() + 1];
+		cmd.toWCharArray(wcmd);
+		wcmd[cmd.size()] = 0;
+		par.Execute(&gr, wcmd);	gr.Box();
+		delete[] wcmd;
 		res->setText(cmd);
 	}
 	else if(ci->isChecked())	// inplot
@@ -308,7 +329,11 @@ void SubplotDialog::updatePic()
 		{	cmd += ":title '"+title->text()+"'";	if(!fmt.isEmpty())	cmd += fmt;	}
 		if(Tet || Phi)	cmd += ":rotate "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
-		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
+		wcmd = new wchar_t[cmd.size() + 1];
+		cmd.toWCharArray(wcmd);
+		wcmd[cmd.size()] = 0;
+		par.Execute(&gr, wcmd);	gr.Box();
+		delete[] wcmd;
 		res->setText(cmd);
 	}
 	setlocale(LC_NUMERIC, "");
