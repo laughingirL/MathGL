@@ -248,10 +248,11 @@ void NewCmdDialog::nameChanged(int s)
 	// clear old
 	kind->clear();	kinds.clear();	for(k=0;k<NUM_CH;k++)	argn[k].clear();
 	// try to find the keyword
-	if(!parser.CmdType(n.toStdString().c_str()))	return;
-	info->setText(QString::fromLocal8Bit(parser.CmdDesc(n.toStdString().c_str())));
+	const char *cmd = n.toStdString().c_str();
+	if(!parser.CmdType(cmd))	return;
+	info->setText(parser.CmdDesc(cmd));
 
-	par = QString::fromLocal8Bit(parser.CmdFormat(n.toStdString().c_str()));
+	par = parser.CmdFormat(cmd);
 	int i0 = par.indexOf(' ');	// first space if present
 	if(i0<0)	{	kind->addItem(par);	return;	}	// no arguments
 	// parse kind of arguments

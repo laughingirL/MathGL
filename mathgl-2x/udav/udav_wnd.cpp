@@ -426,7 +426,7 @@ void MainWindow::editPosChanged()
 
 	const char *desc = parser.CmdDesc(text.toStdString().c_str());
 	const char *form = parser.CmdFormat(text.toStdString().c_str());
-	if(form)	setStatus(QString::fromLocal8Bit(desc)+": "+QString::fromLocal8Bit(form));
+	if(form)	setStatus(QString(desc)+": "+QString(form));
 	else	setStatus(tr("Not recognized"));
 }
 //-----------------------------------------------------------------------------

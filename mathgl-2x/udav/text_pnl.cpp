@@ -63,7 +63,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	if(!files_dlg)	files_dlg= new FilesDialog;
 
 	register int i,n=parser.GetCmdNum();
-	for(i=0;i<n;i++) 	words<<QString::fromLocal8Bit(parser.GetCmdName(i));
+	for(i=0;i<n;i++) 	words<<QString::fromLatin1(parser.GetCmdName(i));
 	vars = words;
 
 	connect(setupDlg, SIGNAL(putText(const QString &)), this, SLOT(animPutText(const QString &)));
