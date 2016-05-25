@@ -330,12 +330,12 @@ HADT MGL_EXPORT mgl_datac_sum(HCDT dat, const char *dir)
 	if(strchr(dir,'z') && nz>1)
 	{
 		mglStartThreadC(mgl_sumc_z,0,nx*ny,b,c,0,p);
-		memcpy(c,b,nx*ny*sizeof(mreal));	p[2] = 1;
+		memcpy(c,b,nx*ny*sizeof(dual));	p[2] = 1;
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
 		mglStartThreadC(mgl_sumc_y,0,nx*p[2],b,c,0,p);
-		memcpy(c,b,nx*p[2]*sizeof(mreal));	p[1] = p[2];	p[2] = 1;
+		memcpy(c,b,nx*p[2]*sizeof(dual));	p[1] = p[2];	p[2] = 1;
 	}
 	if(strchr(dir,'x') && nx>1)
 	{
