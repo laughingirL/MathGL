@@ -161,7 +161,7 @@ void TextPanel::refreshData()
 	for(i=0;i<n;i++)
 	{
 		const mglDataA *v=parser.GetVar(i);
-		if(v && v->s.length()>2)	vars<<QString::fromStdWString(v->s);
+		if(v && v->s.length()>2)	vars<<QString::fromWCharArray(v->s.c_str());
 	}
 	setCompleter(mglCompleter);
 }

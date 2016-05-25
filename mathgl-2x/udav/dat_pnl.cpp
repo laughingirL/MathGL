@@ -145,7 +145,7 @@ void DatPanel::setVar(mglDataA *v)
 	nx = ny = nz = kz = 0;
 	if(v)
 	{
-		QString s = QString::fromStdWString(v->s);
+		QString s = QString::fromWCharArray(v->s.c_str());
 		v->o = this;	v->func = deleteDat;
 		refresh();
 		setWindowTitle(s + tr(" - UDAV variable"));
@@ -256,7 +256,7 @@ void DatPanel::save()
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
-		QString s = QInputDialog::getText(this, tr("UDAV - Save to HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
+		QString s = QInputDialog::getText(this, tr("UDAV - Save to HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromWCharArray(var->s.c_str()), &ok);
 		if(ok)	var->SaveHDF(fn.toLocal8Bit().constData(), s.toLocal8Bit().constData());
 	}
 	else 	var->Save(fn.toLocal8Bit().constData());
@@ -278,7 +278,7 @@ void DatPanel::load()
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
-		QString s = QInputDialog::getText(this, tr("UDAV - Read from HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
+		QString s = QInputDialog::getText(this, tr("UDAV - Read from HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromWCharArray(var->s.c_str()), &ok);
 		if(ok)	d->ReadHDF(fn.toLocal8Bit().constData(), s.toLocal8Bit().constData());
 	}
 	else 	d->Read(fn.toLocal8Bit().constData());
@@ -558,7 +558,7 @@ void DatPanel::newdat()
 	bool res = d->exec();
 	QString 	val = f1->text(), mgl;
 	int k = c->currentIndex();
-	QString self = QString::fromStdWString(var->s);
+	QString self = QString::fromWCharArray(var->s.c_str());
 	if(res)
 	{
 		if(k<0)
@@ -635,7 +635,7 @@ void DatPanel::oper()
 	bool res = d->exec();
 	QString 	val = f1->text(), mgl;
 	int k = c->currentIndex();
-	QString self = QString::fromStdWString(var->s);
+	QString self = QString::fromWCharArray(var->s.c_str());
 	if(res)
 	{
 		if(k<0)
@@ -836,5 +836,5 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 }
 //-----------------------------------------------------------------------------
-QString DatPanel::dataName()	{	return QString::fromStdWString(var->s);	}
+QString DatPanel::dataName()	{	return QString::fromWCharArray(var->s.c_str());	}
 //-----------------------------------------------------------------------------
