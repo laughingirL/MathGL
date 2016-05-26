@@ -341,9 +341,10 @@ HADT MGL_EXPORT mgl_datac_sum(HCDT dat, const char *dir)
 	{
 		mglStartThreadC(mgl_sumc_x,0,p[1]*p[2],b,c,0,p);
 		p[0] = p[1];	p[1] = p[2];	p[2] = 1;
+		memcpy(c,b,p[0]*p[1]*sizeof(dual));
 	}
 	mglDataC *r=new mglDataC(p[0],p[1],p[2]);
-	memcpy(r->a,b,p[0]*p[1]*p[2]*sizeof(dual));
+	memcpy(r->a,c,p[0]*p[1]*p[2]*sizeof(dual));
 	delete []b;	delete []c;	return r;
 }
 uintptr_t MGL_EXPORT mgl_datac_sum_(uintptr_t *d, const char *dir,int l)
