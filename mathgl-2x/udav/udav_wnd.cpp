@@ -424,7 +424,8 @@ void MainWindow::editPosChanged()
 	for(i=0;i<n;i++)	if(dlm.contains(text[i]))	break;
 	text.truncate(i);
 
-	const char *ctext = text.toLatin1().constData();
+	QByteArray qxtext = text.toLatin1();
+	const char *ctext = qxtext.constData();
 	const char *desc = parser.CmdDesc(ctext);
 	const char *form = parser.CmdFormat(ctext);
 	if(form)	setStatus(QString(desc)+": "+QString(form));
