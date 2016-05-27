@@ -340,6 +340,7 @@ if(enable-pthr-widget OR enable-pthread)
 	set(MGL_DEP_LIBS ${CMAKE_THREAD_LIBS_INIT} ${MGL_DEP_LIBS})
 else(enable-pthr-widget OR enable-pthread)
 	set(MGL_HAVE_PTHR_WIDGET 0)
+	set(MGL_HAVE_PTHREAD 0)
 endif(enable-pthr-widget OR enable-pthread)
 
 if(enable-gsl)
