@@ -52,8 +52,12 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 
 @strong{Latest news}
 @itemize
+
+@item @strong{30 May 2016.}
+New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes and bugfixes. @strong{NOTE}: there is incompatible change -- the library libmgl-qt is removed. You need to use libmgl-qt4 or libmgl-qt5 explicitly to reduce the possible error of wrong Qt libs linking.
+
 @item @emph{16 May 2016.}
-New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, some speeding up and bugfixes, which denoted @ref{News, here}.
+New version (v.2.3.5) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, some speeding up and bugfixes, which denoted @ref{News, here}.
 @item @emph{7 August 2014.}
 New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are many major improvements for both MathGL core and for UDAV, which denoted @ref{News, here}.
 @end itemize
@@ -75,77 +79,80 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 
 @itemize
 
+@item @strong{30 May 2016.}
+New version (v.2.3.5.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes and bugfixes. @strong{INCOMPATIBLE}: the library libmgl-qt is removed. You need to use libmgl-qt4 or libmgl-qt5 explicitly to reduce the possible error of wrong Qt libs linking.
+
 @item @strong{16 May 2016.}
 New version (v.2.3.5) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, some speeding up and bugfixes:
 @itemize @bullet
 @item Update @ref{LaTeX package} (thanks to Diego Sejas Viscarra)
 
 @itemize @bullet
-@item 
+@item
 @code{\MGL@@codes}: Bugfix: category code for tabulators is changed too
-@item 
+@item
 @code{\MGL@@quality}: 9 is accepted as quality value now
-@item 
+@item
 @code{\MGL@@scale}: Now accepts any positive value
-@item 
+@item
 @code{\MGL@@test@@switch}: New command to verify and validate switching arguments
-@item 
-@code{\mglTeX}: Add a small negative space in the logo, between the "mgl" and "TEX" 
-@item 
+@item
+@code{\mglTeX}: Add a small negative space in the logo, between the "mgl" and "TEX"
+@item
 @code{\mglTeX}: Declared now as robust command
-@item 
+@item
 @code{\mglcomments}: Now accepts arguments 0 (equivalent to @code{off}) and 1 (equivalent to @code{on}), besides the usual @code{off} and @code{on}
-@item 
+@item
 @code{\mglgraphics}: New command options: @code{gray, mglscale, quality, variant}
-@item 
+@item
 @code{\mglname}: Now writes the MGL code line @samp{setsize 600 400} to the main script
-@item 
+@item
 @code{\mglplot}: Added @code{\bgroup} and @code{\egroup} in order to keep changes private
-@item 
+@item
 New command options: @code{gray, mglscale, quality, variant}
-@item 
+@item
 @code{\mglsettings}: Added options @code{gray} and @code{variant}
-@item 
+@item
 Now calls the @code{\mglswitch} and @code{\mglcomments} commands for the switch and comments options, respectively
-@item 
+@item
 @code{\mglswitch}: Now accepts arguments 0 (equivalent to @code{off}) and 1 (equivalent to @code{on}), besides the usual @code{off} and @code{on}
-@item 
+@item
 mglTeX now depends on the ifpdf package
-@item 
+@item
 Change definition of @code{\mglcommentname} from MGL comment to mglTEX comment
-@item 
+@item
 Introduce the concept of global, local and private settings in the documentation
-@item 
+@item
 New commands: @code{\mglgray} (to activate/deactivate) gray-scale mode locally, and @code{\mglvariant} (to set variant of arguments in MGL scripts locally)
-@item 
+@item
 New package option @code{9q} for setting quality to 9 (for testing purposes of the author)
-@item 
+@item
 New package options @code{0v, 1v, 2v} to select variant of arguments in MGL scripts
-@item 
+@item
 New package options @code{gray, color} to activate/deactivate gray-scale mode for graphics
-@item 
+@item
 Remove the @code{\MGL@@setkeys} command, since it isn’t needed as first thought
-@item 
+@item
 Rename @code{\MGL@@document@@scripts} to @code{\MGL@@doc@@scripts}
-@item 
+@item
 Rename @code{\MGL@@script@@name} to @code{\MGL@@script}
-@item 
+@item
 Rename command @code{\MGL@@graph@@ext} to @code{\MGL@@imgext}
-@item 
+@item
 Rename command @code{\mglcommonscriptname} to @code{\mglsetupscriptname}
-@item 
+@item
 Rename environment @code{mglcommon} to @code{mglsetupscript} (@code{mglcommon} is still available, but deprecated)
-@item 
+@item
 Rename family @code{MGL@@keys} as @code{MGL@@gr@@keys} for consistency
-@item 
+@item
 Reorganize and update documentation
-@item 
+@item
 Some minor bugfixes
-@item 
+@item
 The MGL code line @samp{setsize 600 400} is now automatically written to the main script in order for the scaling options and commands to work
-@item 
+@item
 @code{mgl}: New environment options: gray, mglscale, quality, variant
-@item 
+@item
 @code{\mglcode}: New environment options: gray, mglscale, quality, variant
 @end itemize
 

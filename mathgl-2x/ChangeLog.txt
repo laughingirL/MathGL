@@ -1,11 +1,17 @@
-2.3.5 Released 14 March
+2.3.5.1 Released 30 May
+
+* INCOMPATIBLE: library libmgl-qt is removed. You need to use libmgl-qt4 or libmgl-qt5 explicitly now.
+* Compatibility changes for latest MS VisualStudio.
+* Bugfixes.
+
+2.3.5 Released 16 May
 
 * Greatly update mgltex (by Diego Sejas Viscarra)
 	o \MGL@codes: Bugfix: category code for tabulators is changed too
 	o \MGL@quality: 9 is accepted as quality value now
 	o \MGL@scale: Now accepts any positive value
 	o \MGL@test@switch: New command to verify and validate switching arguments
-	o \mglTeX: Add a small negative space in the logo, between the "mgl" and "TEX" 
+	o \mglTeX: Add a small negative space in the logo, between the "mgl" and "TEX"
 	o \mglTeX: Declared now as robust command
 	o \mglcomments: Now accepts arguments 0 (equivalent to off) and 1 (equivalent to on), besides the usual off and on
 	o \mglgraphics: New command options: gray, mglscale, quality, variant

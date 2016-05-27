@@ -60,7 +60,8 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 1. Update Qt and UDAV figures
-3. Sample about PDE -- add 'tridmat' + 'diffract'
+2. Sample about PDE -- add 'tridmat' + 'diffract'
+3. Replace mgl-qt!!!
 
 ============= UDAV =============
 
