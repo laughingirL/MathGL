@@ -16,7 +16,7 @@ if(enable-qt5)
 	target_compile_definitions(MglForJsTestBench PUBLIC MGL_USE_QT5)
 	target_link_libraries(MglForJsTestBench mgl-qt5 ${MGL_QT5_LIBS})
 else(enable-qt5)
-	target_link_libraries(MglForJsTestBench mgl-qt ${MGL_QT4_LIBS})
+	target_link_libraries(MglForJsTestBench mgl-qt4 ${MGL_QT4_LIBS})
 endif(enable-qt5)
 
 endif(enable-json-sample)
