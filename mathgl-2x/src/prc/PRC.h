@@ -18,6 +18,8 @@ typedef unsigned long uint32_t;
 #include <inttypes.h>
 #endif // _MSC_VER
 
+#include<mgl2/define.h>
+
 //const uint32_t PRCVersion=7094;   // For Adobe Reader 8 or later
 const uint32_t PRCVersion=8137; // For Adobe Reader 9 or later
 

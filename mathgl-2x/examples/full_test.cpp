@@ -395,7 +395,6 @@ int main(int argc,char **argv)
 	time_t st,en;	time(&st);
 	mglGraph *gr = NULL;
 	mglSample *s=samp;
-#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 	while(( ch = getopt_long_only(argc, argv, "", longopts, NULL)) != -1)
 		switch(ch)
 		{
@@ -414,7 +413,6 @@ int main(int argc,char **argv)
 			case '?':
 			default:	usage();	return 0;
 		}
-#endif
 
 	if(dotest==1)	printf("Global (before):%s\n",mglGlobalMess.c_str());
 	gr = new mglGraph;

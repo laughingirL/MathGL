@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include<mgl2/define.h>
+
 
 const char *files[] =
 {
