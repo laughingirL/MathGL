@@ -155,12 +155,7 @@ CMAKE_DEPENDENT_OPTION(enable-qt4asqt "Set Qt4 as default libmgl-qt" OFF "enable
 CMAKE_DEPENDENT_OPTION(enable-qt5 "Enable Qt5 widget" OFF "NOT enable-all-widgets" ON)
 CMAKE_DEPENDENT_OPTION(enable-qt5asqt "Set Qt5 as default libmgl-qt" OFF "enable-qt5" OFF)
 
-if(UNIX AND enable-rvalue)
-	SET(CMAKE_CXX_FLAGS "-std=gnu++11 ${CMAKE_CXX_FLAGS}")
-#	SET(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-endif(UNIX AND enable-rvalue)
-
-# msvc fwprintf print char* for the specifier of "%s" format 
+# msvc fwprintf print char* for the specifier of "%s" format
 if(MSVC AND MSVC_VERSION GREATER 1899)
 	SET(CMAKE_CXX_FLAGS "/EHsc -D_CRT_STDIO_ISO_WIDE_SPECIFIERS ${CMAKE_CXX_FLAGS}")
 	SET(CMAKE_C_FLAGS "-D_CRT_STDIO_ISO_WIDE_SPECIFIERS ${CMAKE_C_FLAGS}")
@@ -236,7 +231,7 @@ include(CheckTypeSize)
 check_type_size("long" SIZEOF_LONG)
 
 include(CheckCXXSourceCompiles)
-unset(MGL_HAVE_C99_COMPLEX)
+#unset(MGL_HAVE_C99_COMPLEX)
 CHECK_CXX_SOURCE_COMPILES(
 "#include <complex>
 #include <complex.h>
@@ -249,7 +244,7 @@ if(NOT MGL_HAVE_C99_COMPLEX)
 	set(MGL_HAVE_C99_COMPLEX 0)
 endif(NOT MGL_HAVE_C99_COMPLEX)
 
-unset(MGL_HAVE_NAN_INF)
+#unset(MGL_HAVE_NAN_INF)
 CHECK_CXX_SOURCE_COMPILES(
 "#include <math.h>
 int main(){double a=NAN, b=INFINITY;return 0;}" MGL_HAVE_NAN_INF)
@@ -257,7 +252,7 @@ if(NOT MGL_HAVE_NAN_INF)
 	set(MGL_HAVE_NAN_INF 0)
 endif(NOT MGL_HAVE_NAN_INF)
 
-unset(MGL_HAVE_ATTRIBUTE)
+#unset(MGL_HAVE_ATTRIBUTE)
 CHECK_CXX_SOURCE_COMPILES(
 "int __attribute__((pure)) test1() {return 0;}
 int __attribute__((const)) test2(int x) {return x*x;}
@@ -266,7 +261,7 @@ if(NOT MGL_HAVE_ATTRIBUTE)
 	set(MGL_HAVE_ATTRIBUTE 0)
 endif(NOT MGL_HAVE_ATTRIBUTE)
 
-unset(MGL_HAVE_TYPEOF)
+unset(MGL_HAVE_TYPEOF CACHE)
 CHECK_CXX_SOURCE_COMPILES(
 "#define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
 int main(){bool a=mgl_isnum(1);return 0;}" MGL_HAVE_TYPEOF)
@@ -274,13 +269,21 @@ if(NOT MGL_HAVE_TYPEOF)
 	set(MGL_HAVE_TYPEOF 0)
 endif(NOT MGL_HAVE_TYPEOF)
 
-unset(MGL_HAVE_RVAL)
-CHECK_CXX_SOURCE_COMPILES(
-"struct test { test() {} test(test&& a){} };
-int main() { test t;	return 0; }" MGL_HAVE_RVAL)
-if(NOT MGL_HAVE_RVAL)
+if(NOT MSVC AND enable-rvalue)
+	SET(CMAKE_CXX_FLAGS "-std=gnu++11 ${CMAKE_CXX_FLAGS}")
+	unset(MGL_HAVE_RVAL CACHE)
+	CHECK_CXX_SOURCE_COMPILES(
+	"struct test { test() {} test(test&& a){} };
+	int main() { test t;	return 0; }" MGL_HAVE_RVAL)
+	if(NOT MGL_HAVE_RVAL)
+		message(SEND_ERROR "Couldn't enable rvalue.")
+#		set(MGL_HAVE_RVAL 0)
+	endif(NOT MGL_HAVE_RVAL)
+else(NOT MSVC AND enable-rvalue)
 	set(MGL_HAVE_RVAL 0)
-endif(NOT MGL_HAVE_RVAL)
+endif(NOT MSVC AND enable-rvalue)
+
+
 
 CHECK_CXX_SOURCE_COMPILES(
 "#include <getopt.h>

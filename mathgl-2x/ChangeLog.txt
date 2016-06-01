@@ -1,10 +1,10 @@
-2.3.5.1 Released 30 May
+2.3.5.1 Released 2 June 2016
 
 * INCOMPATIBLE: library libmgl-qt is removed. You need to use libmgl-qt4 or libmgl-qt5 explicitly now.
 * Compatibility changes for latest MS VisualStudio.
 * Bugfixes.
 
-2.3.5 Released 16 May
+2.3.5 Released 16 May 2016
 
 * Greatly update mgltex (by Diego Sejas Viscarra)
 	o \MGL@codes: Bugfix: category code for tabulators is changed too
