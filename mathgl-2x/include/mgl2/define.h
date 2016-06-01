@@ -304,18 +304,15 @@ const mdual mgl_I=_Complex_I;
 #ifdef __cplusplus
 #include <string>
 #include <vector>
-#if defined(_MSC_VER)
-//&& (_MSC_VER<1900)
-//template class MGL_EXPORT std::allocator<char>;
-//template class MGL_EXPORT std::allocator<wchar_t>;
-//template struct MGL_EXPORT std::char_traits<char>;
-//template struct MGL_EXPORT std::char_traits<wchar_t>;
-//template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
-//template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
-//template class MGL_EXPORT std::vector<long, std::allocator<long>>;
-//template class MGL_EXPORT std::vector<double, std::allocator<double>>;
-//template class MGL_EXPORT std::vector<mreal, std::allocator<mreal>>;
-//template class MGL_EXPORT std::vector<mreal>;
+#if defined(_MSC_VER) && (_MSC_VER<1900)
+template class MGL_EXPORT std::allocator<char>;
+template class MGL_EXPORT std::allocator<wchar_t>;
+template struct MGL_EXPORT std::char_traits<char>;
+template struct MGL_EXPORT std::char_traits<wchar_t>;
+template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
+template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
+template class MGL_EXPORT std::vector<long>;
+template class MGL_EXPORT std::vector<mreal>;
 #endif
 //-----------------------------------------------------------------------------
 extern float mgl_cos[360];	///< contain cosine with step 1 degree
