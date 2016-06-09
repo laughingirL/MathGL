@@ -62,6 +62,7 @@ D. Docs about JS interface
 1. Update Qt and UDAV figures
 2. Sample about PDE -- add 'tridmat' + 'diffract'
 3. Replace mgl-qt!!!
+4. Step_xy() now can have x.nx>y.nx -- same as Bars()
 
 ============= UDAV =============
 
