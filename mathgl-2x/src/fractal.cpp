@@ -415,11 +415,11 @@ MGL_NO_EXPORT flame_func ffunc[mglFlameLAST-1] = {
 	mgl_perspective_var30,	mgl_noise_var31,	mgl_juliaN_var32,	mgl_juliaScope_var33,	mgl_blur_var34,
 	mgl_gaussian_var35,	mgl_radialBlur_var36,	mgl_pie_var37,		mgl_ngon_var38,		mgl_curl_var39,
 	mgl_rectangles_var40,	mgl_arch_var41,		mgl_tangent_var42,	mgl_square_var43,	mgl_rays_var43,
-	mgl_blade_var44,		mgl_secant_var45,	mgl_twintrian_var47,	mgl_cross_var48	};
+	mgl_blade_var44,		mgl_secant_var45,	mgl_twintrian_var47,mgl_cross_var48	};
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_flame_2d_point(HCDT A, HCDT F, mreal& x, mreal& y, mreal amax)
+long MGL_NO_EXPORT mgl_flame_2d_point(HCDT A, HCDT F, mreal& x, mreal& y, mreal amax)
 {
-	long i, n=A->GetNy(), m=F->GetNy();
+	long i, n=A->GetNy(), m=F->GetNy(), last_func=0;
 	mreal r = amax*mgl_rnd(), sum_prob = 0, x1, y1;
 	for(i=0;i<n;i++)
 	{
@@ -433,10 +433,12 @@ void MGL_NO_EXPORT mgl_flame_2d_point(HCDT A, HCDT F, mreal& x, mreal& y, mreal 
 	{
 		int v=int(F->v(0,j,i)+0.5);
 		mreal par[5] = {F->v(1,j,i),F->v(2,j,i),F->v(3,j,i),F->v(4,j,i),F->v(5,j,i)};
-		if(v>0 && v<mglFlameLAST)	ffunc[j](x1,y1,x,y,par);
+		if(v>0 && v<mglFlameLAST)
+		{	ffunc[j](x1,y1,x,y,par);	last_func=j;	}
 		else	break;
 	}
 	else	{	x1=x;	y1=y;	}	// no function is specified
+	return last_func;
 }
 HMDT MGL_EXPORT mgl_data_flame_2d(HCDT A, HCDT F, long n, long skip)
 {
@@ -446,13 +448,13 @@ HMDT MGL_EXPORT mgl_data_flame_2d(HCDT A, HCDT F, long n, long skip)
 	for(long i=0; i<A->GetNy(); i++)	amax += A->v(6,i);
 	if(amax<=0)	return 0;
 	
-	mglData *f = new mglData(2,n);
+	mglData *f = new mglData(3,n);
 	mreal x = 0, y = 0;
 	for(long i=0; i<skip; i++)	mgl_flame_2d_point(A, F, x, y,amax);
 	for(long i=0; i<n; i++)
 	{
-		mgl_flame_2d_point(A, F, x, y, amax);	// TODO color information ?!!
-		f->a[2*i] = x;	f->a[2*i+1] = y;
+		f->a[3*i+2] = mgl_flame_2d_point(A, F, x, y, amax);	// TODO color information ?!!
+		f->a[3*i] = x;	f->a[3*i+1] = y;
 	}
 	return f;
 }

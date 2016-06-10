@@ -3441,6 +3441,27 @@ int MGL_NO_EXPORT mgls_version(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int mgls_flame2d(mglGraph *, long, mglArg *a, const char *k, const char *)
+{
+	mglData *fx = dynamic_cast<mglData*>(a[0].d);
+	mglData *fy = dynamic_cast<mglData*>(a[1].d);
+	if(!fx)	return 1;
+	int res = 0;
+	if (!strcmp(k, "dddn"))	fx->Set(mglFlame2d(*(a[1].d), *(a[2].d), mgl_int(a[3].v)));
+	else if (!strcmp(k, "ddddn") && fy)
+	{
+		mglData f(mglFlame2d(*(a[2].d), *(a[3].d), mgl_int(a[4].v)));
+		fx->Set(f.SubData(0));	fy->Set(f.SubData(1));
+	}
+	else if (!strcmp(k, "dddnn"))	fx->Set(mglFlame2d(*(a[1].d), *(a[2].d), mgl_int(a[3].v), mgl_int(a[4].v)));
+	else if (!strcmp(k, "ddddnn") && fy)
+	{
+		mglData f(mglFlame2d(*(a[2].d), *(a[3].d), mgl_int(a[4].v), mgl_int(a[5].v)));
+		fx->Set(f.SubData(0));	fy->Set(f.SubData(1));
+	}
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int mgls_ifs2d(mglGraph *, long, mglArg *a, const char *k, const char *)
 {
 	mglData *fx = dynamic_cast<mglData*>(a[0].d);
