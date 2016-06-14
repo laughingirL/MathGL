@@ -405,7 +405,7 @@ void MGL_NO_EXPORT mgl_cross_var48(mreal &xNew, mreal &yNew, mreal x, mreal y, c
 }
 //-----------------------------------------------------------------------------
 typedef void (*flame_func)(mreal &xNew, mreal &yNew, mreal x, mreal y, const mreal *par);
-MGL_NO_EXPORT flame_func ffunc[mglFlameLAST-1] = {
+MGL_NO_EXPORT flame_func ffunc[mglFlameLAST] = {
 	mgl_linear_var0,	mgl_sinusoidal_var1,	mgl_spherical_var2,	mgl_swirl_var3,		mgl_horseshoe_var4,
 	mgl_polar_var5,		mgl_handkerchief_var6,	mgl_heart_var7,		mgl_disc_var8,		mgl_spiral_var9,
 	mgl_hyperbolic_var10,	mgl_diamond_var11,	mgl_ex_var12,		mgl_julia_var13,	mgl_bent_var14,
@@ -419,25 +419,25 @@ MGL_NO_EXPORT flame_func ffunc[mglFlameLAST-1] = {
 //-----------------------------------------------------------------------------
 long MGL_NO_EXPORT mgl_flame_2d_point(HCDT A, HCDT F, mreal& x, mreal& y, mreal amax)
 {
-	long i, n=A->GetNy(), m=F->GetNy(), last_func=0;
+	long i, n=A->GetNy(), m=F->GetNy(), last_func=0, l=F->GetNx();
+	l = l>6?6:l;
 	mreal r = amax*mgl_rnd(), sum_prob = 0, x1, y1;
 	for(i=0;i<n;i++)
 	{
 		sum_prob += A->v(6,i);
 		if(r<sum_prob)	break;
 	}
-	x1= A->v(0,i)*x + A->v(1,i)*y + A->v(4,i);
-	y = A->v(2,i)*x + A->v(3,i)*y + A->v(5,i);	x = x1;
-	x1 = y1 = 0;
-	if(F->v(0,0,i)>0 && F->v(0,0,i)<mglFlameLAST)	for(long j=0;j<m;j++)
+	x1 = A->v(0,i)*x + A->v(1,i)*y + A->v(4,i);
+	y1 = A->v(2,i)*x + A->v(3,i)*y + A->v(5,i);
+	x = y = 0;
+	for(long j=0;j<m;j++)
 	{
 		int v=int(F->v(0,j,i)+0.5);
-		mreal par[5] = {F->v(1,j,i),F->v(2,j,i),F->v(3,j,i),F->v(4,j,i),F->v(5,j,i)};
-		if(v>0 && v<mglFlameLAST)
-		{	ffunc[j](x1,y1,x,y,par);	last_func=j;	}
-		else	break;
+		mreal par[5] = {F->v(1,j,i),0,0,0,0};
+		for(int k=2;k<l;k++)	par[k-1]=F->v(k,j,i);
+		if(v<0 || v>=mglFlameLAST)	{	v=0;	par[0]=1;	}
+		ffunc[v](x,y,x1,y1,par);	last_func=v;
 	}
-	else	{	x1=x;	y1=y;	}	// no function is specified
 	return last_func;
 }
 HMDT MGL_EXPORT mgl_data_flame_2d(HCDT A, HCDT F, long n, long skip)

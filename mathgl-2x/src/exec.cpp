@@ -3613,6 +3613,7 @@ mglCommand mgls_base_cmd[] = {
 	{"fillsample","Fill x-,k-samples for transforms","fillsample Var 'how'", mgls_fillsample ,3},
 	{"fit","Fit data to formula","fit Res A 'eq' 'var' [Ini]|Res X A 'eq' 'var' [Ini]|Res X Y A 'eq' 'var' [Ini]|Res X Y Z A 'eq' 'var' [Ini]", mgls_fit ,4},
 	{"fits","Fit data to formula","fits Res A S 'eq' 'var' [Ini]|Res X A S 'eq' 'var' [Ini]|Res X Y A S 'eq' 'var' [Ini]|Res X Y Z A S 'eq' 'var' [Ini]", mgls_fits ,4},
+	{"flame2d", "Computes the flame fractal", "flame2d F A B n [skip]|Fx Fy A B n [skip]", mgls_flame2d, 4},
 	{"flow","Draw flow threads for vector field","flow Udat Vdat ['fmt' num]|Xdat Ydat Udat Vdat ['fmt' num]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
 	x0 y0 Udat Vdat ['fmt']|x0 y0 Xdat Ydat Udat Vdat ['fmt']|x0 y0 z0 Udat Vdat Wdat ['fmt']|x0 y0 z0 Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_flow ,11},
 	{"fog","Switch on/off fog","fog val [pos]", mgls_fog ,2},
