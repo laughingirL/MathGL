@@ -53,7 +53,7 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 @strong{Latest news}
 @itemize
 
-@item @strong{30 May 2016.}
+@item @strong{20 June 2016.}
 New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes and bugfixes. @strong{NOTE}: there is incompatible change -- the library libmgl-qt is removed. You need to use libmgl-qt4 or libmgl-qt5 explicitly to reduce the possible error of wrong Qt libs linking.
 
 @item @emph{16 May 2016.}
@@ -79,7 +79,7 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 
 @itemize
 
-@item @strong{30 May 2016.}
+@item @strong{20 June 2016.}
 New version (v.2.3.5.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes and bugfixes. @strong{INCOMPATIBLE}: the library libmgl-qt is removed. You need to use libmgl-qt4 or libmgl-qt5 explicitly to reduce the possible error of wrong Qt libs linking.
 
 @item @strong{16 May 2016.}

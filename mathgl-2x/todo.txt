@@ -63,6 +63,7 @@ D. Docs about JS interface
 2. Sample about PDE -- add 'tridmat' + 'diffract'
 3. Replace mgl-qt!!!
 4. Step_xy() now can have x.nx>y.nx -- same as Bars()
+5. Docs about 'flame2d'
 
 ============= UDAV =============
 
