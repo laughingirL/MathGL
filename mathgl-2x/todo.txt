@@ -64,6 +64,7 @@ D. Docs about JS interface
 3. Replace mgl-qt!!!
 4. Step_xy() now can have x.nx>y.nx -- same as Bars()
 5. Docs about 'flame2d'
+6. Docs about mglDataS, mglDataW
 
 ============= UDAV =============
 

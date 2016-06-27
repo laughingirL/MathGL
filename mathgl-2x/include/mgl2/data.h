@@ -805,7 +805,7 @@ public:
 	}
 	/// Copy data from other mglDataV variable
 	inline const mglDataF &operator=(const mglDataF &d)
-	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	setD();
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	setD();	mgl_delete_expr(ex);
 		str=d.str;	ex = mgl_create_expr(str.c_str());	dfunc=d.dfunc;	par=d.par;	return d;	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long j=0,long k=0) const
