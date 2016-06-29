@@ -93,16 +93,22 @@ void MGL_EXPORT mgl_boxs_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintp
 void MGL_EXPORT mgl_boxs(HMGL graph, HCDT z, const char *sch, const char *opt);
 void MGL_EXPORT mgl_boxs_(uintptr_t *graph, uintptr_t *z, const char *sch, const char *opt,int,int);
 
+/// Draw vertical tiles with manual colors c for 2d data specified parametrically
+void MGL_EXPORT mgl_tile_xyc(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, const char *opt);
+void MGL_EXPORT mgl_tile_xyc_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int,int);
 /// Draw vertical tiles for 2d data specified parametrically
 void MGL_EXPORT mgl_tile_xy(HMGL graph, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt);
-void MGL_EXPORT mgl_tile_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int,int);
+void MGL_EXPORT mgl_tile_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int,int);
 /// Draw vertical tiles for 2d data
 void MGL_EXPORT mgl_tile(HMGL graph, HCDT z, const char *sch, const char *opt);
 void MGL_EXPORT mgl_tile_(uintptr_t *graph, uintptr_t *z, const char *sch, const char *opt,int,int);
 
+/// Draw vertical tiles with variable size r and manual colors c for 2d data specified parametrically
+void MGL_EXPORT mgl_tiles_xyc(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT r, HCDT c, const char *sch, const char *opt);
+void MGL_EXPORT mgl_tiles_xyc_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, uintptr_t *c, const char *sch, const char *opt,int,int);
 /// Draw vertical tiles with variable size r for 2d data specified parametrically
 void MGL_EXPORT mgl_tiles_xy(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT r, const char *sch, const char *opt);
-void MGL_EXPORT mgl_tiles_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int,int);
+void MGL_EXPORT mgl_tiles_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *sch, const char *opt,int,int);
 /// Draw vertical tiles with variable size r for 2d data
 void MGL_EXPORT mgl_tiles(HMGL graph, HCDT z, HCDT r, const char *sch, const char *opt);
 void MGL_EXPORT mgl_tiles_(uintptr_t *graph, uintptr_t *z, uintptr_t *r, const char *sch, const char *opt,int,int);

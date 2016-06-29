@@ -65,6 +65,7 @@ D. Docs about JS interface
 4. Step_xy() now can have x.nx>y.nx -- same as Bars()
 5. Docs about 'flame2d'
 6. Docs about mglDataS, mglDataW
+7. Docs about tile_xyc and tiles_xyc -- manual coloring + face rotation by "x", ":y"
 
 ============= UDAV =============
 

@@ -1845,6 +1845,8 @@ int MGL_NO_EXPORT mgls_tile(mglGraph *gr, long , mglArg *a, const char *k, const
 	else if(!strcmp(k,"ds"))	gr->Tile(*(a[0].d),a[1].s.c_str(),opt);
 	else if(!strcmp(k,"ddd"))	gr->Tile(*(a[0].d), *(a[1].d), *(a[2].d), "",opt);
 	else if(!strcmp(k,"ddds"))	gr->Tile(*(a[0].d), *(a[1].d), *(a[2].d), a[3].s.c_str(),opt);
+	else if(!strcmp(k,"dddd"))	gr->Tile(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), "",opt);
+	else if(!strcmp(k,"dddds"))	gr->Tile(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s.c_str(),opt);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1855,6 +1857,8 @@ int MGL_NO_EXPORT mgls_tiles(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else if(!strcmp(k,"dds"))	gr->TileS(*(a[0].d),*(a[1].d),a[2].s.c_str(),opt);
 	else if(!strcmp(k,"dddd"))	gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),"",opt);
 	else if(!strcmp(k,"dddds"))	gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s.c_str(),opt);
+	else if(!strcmp(k,"ddddd"))	gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),"",opt);
+	else if(!strcmp(k,"ddddds"))	gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),a[5].s.c_str(),opt);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3757,8 +3761,8 @@ mglCommand mgls_base_cmd[] = {
 	{"ticklen","Set tick length","ticklen val [stt]", mgls_ticklen ,14},
 	{"tickshift","Set additional tick and axis labels shift","tickshift dx [dy dz dc]", mgls_tickshift ,14},
 	{"ticktime","Set ticks in time format","ticktime 'dir' [dv 'tmpl']", mgls_ticktime ,14},
-	{"tile","Draw horizontal tiles","tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tile ,8},
-	{"tiles","Draw horizontal tiles with variable size","tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_tiles ,10},
+	{"tile","Draw horizontal tiles","tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_tile ,8},
+	{"tiles","Draw horizontal tiles with variable size","tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat Cdat ['fmt']", mgls_tiles ,10},
 	{"title","Add title for current subplot/inplot","title 'txt' ['fmt' size]", mgls_title ,5},
 	{"tlabel","Draw label for t-axis","tlabel 'txt' [pos]", mgls_tlabel ,12},
 	{"torus","Draw surface of curve rotation","torus Rdat ['fmt']|Zdat Rdat ['fmt']", mgls_torus ,7},

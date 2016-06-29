@@ -1272,6 +1272,9 @@ public:
 	inline void Grid(const mglDataA &z, const char *stl="", const char *opt="")
 	{	mgl_grid(gr, &z, stl, opt);	}
 
+	/// Draw vertical tiles with manual colors c for 2d data specified parametrically
+	inline void Tile(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_tile_xyc(gr, &x, &y, &z, &c, stl, opt);	}
 	/// Draw vertical tiles for 2d data specified parametrically
 	inline void Tile(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
 	{	mgl_tile_xy(gr, &x, &y, &z, stl, opt);	}
@@ -1517,6 +1520,9 @@ public:
 	inline void Beam(double val, const mglDataA &tr, const mglDataA &g1, const mglDataA &g2, const mglDataA &a, double r, const char *stl=NULL, int flag=0)
 	{	mgl_beam_val(gr,val,&tr,&g1,&g2,&a,r,stl,flag);	}
 
+	/// Draw vertical tiles with variable size r and manual colors c for 2d data specified parametrically
+	inline void TileS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_tiles_xyc(gr, &x, &y, &z, &r, &c, stl, opt);	}
 	/// Draw vertical tiles with variable size r for 2d data specified parametrically
 	inline void TileS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *stl="", const char *opt="")
 	{	mgl_tiles_xy(gr, &x, &y, &z, &r, stl, opt);	}
@@ -2215,7 +2221,7 @@ public:
 	/// Set variant of argument(s) separated by '?' to be used in further commands
 	inline void SetVariant(int var=0)
 	{	mgl_parser_variant(pr, var);	}
-	
+
 	/// Return result of formula evaluation
 	inline mglData Calc(const char *formula)
 	{	return mglData(true,mgl_parser_calc(pr,formula)); 	}
