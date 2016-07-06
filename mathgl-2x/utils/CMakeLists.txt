@@ -9,13 +9,15 @@ endif(MSVC)
 target_link_libraries(mglconv mgl${link_type} ${getopt_lib-static})
 install(
 	TARGETS mglconv
-	RUNTIME DESTINATION bin
+	EXPORT MathGLTargets
+	RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
 )
 
 add_executable(mgl.cgi mglcgi.cpp)
 target_link_libraries(mgl.cgi mgl${link_type})
 install(
 	TARGETS mgl.cgi
+	EXPORT MathGLTargets
 # should be /usr/lib/cgi-bin/
 	RUNTIME DESTINATION ${MGL_CGI_PATH}
 )
@@ -32,6 +34,7 @@ if(QT_ENABLED)
 
 	install(
 		TARGETS mglview
-		RUNTIME DESTINATION bin
+		EXPORT MathGLTargets
+		RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
 	)
 endif(QT_ENABLED)

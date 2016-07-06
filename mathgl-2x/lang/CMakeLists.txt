@@ -71,7 +71,7 @@ if(enable-lua)
 	SWIG_LINK_LIBRARIES(mgl-lua mgl ${LUA_LIBRARIES})
 	set_target_properties(mgl-lua PROPERTIES PREFIX "" BUILD_WITH_INSTALL_RPATH ON)
 
-	install (TARGETS mgl-lua LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR})
+	install (TARGETS mgl-lua LIBRARY DESTINATION ${MathGL_INSTALL_LIB_DIR})
 endif(enable-lua)
 
 if(enable-octave)

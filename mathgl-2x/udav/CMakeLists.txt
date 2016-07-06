@@ -38,8 +38,9 @@ if(MGL_HAVE_PTHREAD)
 endif(MGL_HAVE_PTHREAD)
 
 install(
+	EXPORT MathGLTargets
 	TARGETS udav
-	RUNTIME DESTINATION bin
+	RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
 )
 install(FILES udav.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps/)
 install(FILES udav_ru.qm DESTINATION ${CMAKE_INSTALL_PREFIX}/share/udav/)

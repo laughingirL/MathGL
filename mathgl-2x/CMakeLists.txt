@@ -14,8 +14,27 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(MathGL_VERSION_MAJOR 2)
-set(MathGL_VERSION_MINOR 3.5)
+set(MathGL_VERSION_MINOR 3)
+set(MathGL_PATCH_VERSION 5)
+set(MathGL_VERSION ${MathGL_VERSION_MAJOR}.${MathGL_VERSION_MINOR}.${MathGL_PATCH_VERSION})
 set(MathGL_SOVERSION 7.4.3)
+
+set(MathGL_INSTALL_LIB_DIR "lib" CACHE PATH "Installation directory for libraries")
+set(MathGL_INSTALL_BIN_DIR "bin" CACHE PATH "Installation directory for executables")
+set(MathGL_INSTALL_INCLUDE_DIR "include" CACHE PATH "Installation directory for headers")
+if(WIN32 AND NOT CYGWIN)
+  set(DEF_INSTALL_CMAKE_DIR CMake)
+else()
+  set(DEF_INSTALL_CMAKE_DIR lib/CMake/MathGL)
+endif()
+set(MathGL_INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+# Make relative paths absolute (needed later on)
+foreach(p LIB BIN INCLUDE CMAKE)
+  set(var MathGL_INSTALL_${p}_DIR)
+  if(NOT IS_ABSOLUTE "${${var}}")
+    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+  endif()
+endforeach()
 
 function(mgl_add_lib mgl_tmp_lib)
        if(${mgl_tmp_lib} MATCHES mgl)
@@ -57,9 +76,10 @@ function(mgl_add_lib mgl_tmp_lib)
 
        install(
                TARGETS ${mgllib} ${mgllib}-static
-               RUNTIME DESTINATION bin
-               ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
-               LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
+               EXPORT MathGLTargets
+               RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
+               ARCHIVE DESTINATION ${MathGL_INSTALL_LIB_DIR}
+               LIBRARY DESTINATION ${MathGL_INSTALL_LIB_DIR}
        )
 endfunction(mgl_add_lib mgl_tmp_lib)
 
@@ -106,7 +126,6 @@ MACRO(MGL_DEPENDENT_OPTION option doc default depends1 force1 depends2 force2)
 ENDMACRO(MGL_DEPENDENT_OPTION)
 include(CMakeDependentOption)
 
-set(MGL_LIB_INSTALL_DIR "lib" CACHE STRING "Set library install directory")
 string(TIMESTAMP MGL_NIGHT "%d.%m.%y")
 
 option(enable-double "Enable double precision in MathGL library" ON)
@@ -655,8 +674,21 @@ if(enable-mgltex)
 	add_subdirectory( mgltex )
 endif(enable-mgltex)
 
-if(WIN32)
-	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${CMAKE_INSTALL_PREFIX} RENAME mathgl2-config.cmake)
-else(WIN32)
-	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${MGL_LIB_INSTALL_DIR}/cmake/mathgl2/ RENAME mathgl2-config.cmake)
-endif(WIN32)
+#if(WIN32)
+#	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${CMAKE_INSTALL_PREFIX} RENAME mathgl2-config.cmake)
+#else(WIN32)
+#	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${MGL_LIB_INSTALL_DIR}/cmake/mathgl2/ RENAME mathgl2-config.cmake)
+#endif(WIN32)
+
+#export(TARGETS MathGLTargets FILE "${PROJECT_BINARY_DIR}/MathGLTargets.cmake")
+export(PACKAGE FooBar)
+
+configure_file(MathGLConfig.cmake.in "${MathGL_BINARY_DIR}/MathGLConfig.cmake" @ONLY)
+configure_file(MathGLConfigVersion.cmake.in "${MathGL_BINARY_DIR}/MathGLConfigVersion.cmake" @ONLY)
+
+install(FILES
+  "${MathGL_BINARY_DIR}/MathGLConfig.cmake"
+  "${MathGL_BINARY_DIR}/MathGLConfigVersion.cmake"
+  DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
+
+install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
