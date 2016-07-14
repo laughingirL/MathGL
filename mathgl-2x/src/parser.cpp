@@ -114,7 +114,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 		a[i].s = buf;	delete []buf;
 	}
 	const mglCommand *rts=FindCommand(com);
-	if(!rts || rts->type==6)	return 2;
+	if(!rts || !rts->exec)	return 2;
 /*	if(rts->type == 4)
 	{
 		if(n<1 || CheckForName(var))	return 2;
@@ -408,9 +408,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 {
 	long n=0;
-	if(!arg[0].compare(L"delete") && k==2)	// parse command "delete"
-	{	DeleteVar(arg[1].c_str());	n=1;	}
-	else if(!arg[0].compare(L"list"))	// parse command "list"
+	if(!arg[0].compare(L"list"))	// parse command "list"
 	{
 		if(k<3 || CheckForName(arg[1]))	return 2;
 		long nx=0, ny=1,j=0,i,t=0;
@@ -573,23 +571,11 @@ int mglParser::ParseDef(std::wstring &str)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-/*void MGL_NO_EXPORT print_data(const char *s, std::vector<mglDataA*> h)
-{
-	printf("%s\ts=%lu:\n",s,h.size());
-	for(size_t i=0;i<h.size();i++)
-	{
-		printf("%lu - %p",i,h[i]);
-		if(h[i])	printf(",t%d,'%ls'",h[i]->temp, h[i]->s.c_str());
-		printf("\n");
-	}
-	fflush(stdout);
-}*/
-//-----------------------------------------------------------------------------
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
 int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 {
 	if(Stop || gr->NeedStop())	return 0;
-	curGr = gr->Self();
+	curGr = gr->Self();	gr->pr = this;
 	str=mgl_trim_ws(str);
 	long n,k=0,m=0,mm=0,res;
 	// try parse ':' -- several commands in line
@@ -644,13 +630,6 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 		n = FlowExec(gr, arg[0].c_str(),k-1,a);
 		if(n)		{	delete []a;	return n-1;	}
 		if(skip())	{	delete []a;	return 0;	}
-		if(!arg[0].compare(L"load"))
-		{
-			int n = a[0].type==1?0:1;
-			a[0].s.assign(a[0].w.begin(),a[0].w.end());
-			if(!n)	mgl_parser_load(this,a[0].s.c_str());
-			delete []a;	return n;
-		}
 		if(!arg[0].compare(L"define"))
 		{
 			if(k==3)
@@ -665,24 +644,6 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 					v->c = v->d = dd->a[0];	delete dd;	}
 			}
 			delete []a;	return k==3?0:1;
-		}
-		if(!arg[0].compare(L"rkstep"))
-		{
-			int res=1;
-			if(k>2 && a[0].type==1 && a[1].type==1)
-			{
-				std::wstring a1 = arg[1], a2=arg[2];	res = 0;
-				if(a1[0]=='\'')	a1 = a1.substr(1,a1.length()-2);
-				if(a2[0]=='\'')	a2 = a2.substr(1,a2.length()-2);
-				mgl_rk_step_w(this, a1.c_str(), a2.c_str(), (k>3 && a[2].type==2)?a[2].v:1);
-			}
-			delete []a;	return res;
-		}
-		if(!arg[0].compare(L"variant"))
-		{
-			int res=1;
-			if(k==2 && a[0].type==2)	{	SetVariant(a[0].v);	res=0;	}
-			delete []a;	return res;
 		}
 		if(!arg[0].compare(L"call"))
 		{

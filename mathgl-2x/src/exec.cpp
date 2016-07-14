@@ -451,6 +451,8 @@ int MGL_NO_EXPORT mgls_copy(mglGraph *gr, long , mglArg *a, const char *k, const
 		else	res = 1;
 	}
 	else if(!strcmp(k,"dn"))	*d = a[1].v;
+	else if(!strcmp(k,"ds") && gr->pr)
+		d->Set(mgl_parser_find_var(gr->pr, a[1].s.c_str()));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2580,6 +2582,30 @@ int MGL_NO_EXPORT mgls_var(mglGraph *, long , mglArg *a, const char *k, const ch
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_variant(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"n") && gr->pr)	mgl_parser_variant(gr->pr, a[0].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_load(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"s") && gr->pr)	mgl_parser_load(gr->pr, a[0].s.c_str());
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_rkstep(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"ss") && gr->pr)
+		mgl_rk_step_w(gr->pr, a[0].w.c_str(), a[1].w.c_str(), 1);
+	else if(!strcmp(k,"ssd") && gr->pr)
+		mgl_rk_step_w(gr->pr, a[0].w.c_str(), a[1].w.c_str(), a[2].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_chdir(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -3357,13 +3383,15 @@ int MGL_NO_EXPORT mgls_insert(mglGraph *, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_delete(mglGraph *, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_delete(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(k[0]=='d' && a[0].d->temp)	return 5;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
 	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
-	if(d && !strcmp(k,"ds"))	d->Delete(a[1].s.c_str()[0]);
+	if((!strcmp(k,"d") || !strcmp(k,"s")) && gr->pr)
+		mgl_parser_del_var(gr->pr, a[0].s.c_str());
+	else if(d && !strcmp(k,"ds"))	d->Delete(a[1].s.c_str()[0]);
 	else if(d && !strcmp(k,"dsn"))	d->Delete(a[1].s.c_str()[0], mgl_int(a[2].v));
 	else if(d && !strcmp(k,"dsnn"))	d->Delete(a[1].s.c_str()[0], mgl_int(a[2].v), mgl_int(a[3].v));
 	else if(c && !strcmp(k,"ds"))	c->Delete(a[1].s.c_str()[0]);
@@ -3580,7 +3608,7 @@ mglCommand mgls_base_cmd[] = {
 	{"define","Define constant or parameter","define $N sth | Var val", 0, 6},
 	{"defnum","Define parameter as numerical value","defnum $N val", 0, 6},
 //	{"defpal","Define parameter as palette color","defpal $N val", 0, 6},
-	{"delete","Delete slice of data","delete Dat 'dir' [pos=0 num=1]", mgls_delete ,3},
+	{"delete","Delete data or slice of data","delete Dat|'Dat'|Dat 'dir' [pos=0 num=1]", mgls_delete ,3},
 	{"dens","Draw density plot","dens Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' zpos]", mgls_dens ,8},
 	{"dens3","Draw density plot at slices of 3D data","dens3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_dens3 ,9},
 	{"densx","Draw density plot at x-slice (or x-plane)","densx Dat ['fmt' pos]", mgls_densx ,0},
@@ -3656,7 +3684,7 @@ mglCommand mgls_base_cmd[] = {
 	{"limit","Limit data to be inside [-v,v]","limit Dat v", mgls_limit ,16},
 	{"line","Draw line","line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line ,13},
 	{"list","Creates new variable from list of numbers or data","list Var v1 ...|Var D1 ...", 0, 4},
-	{"load","Load commands from external DLL","load 'fname'", 0, 6},
+	{"load","Load commands from external DLL","load 'fname'", mgls_load, 6},
 	{"loadfont","Load fontfaces","loadfont ['face']", mgls_loadfont ,15},
 	{"logo","Draw bitmap (logo) along axis range","logo 'fname' [smooth]", mgls_logo ,13},
 	{"map","Draw mapping plot","map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map ,10},
@@ -3714,7 +3742,7 @@ mglCommand mgls_base_cmd[] = {
 	{"resize","Resize data","resize Res Dat mx [my mz]", mgls_resize ,4},
 	{"return","Return from function","return", 0, 6},
 	{"rhomb","Draw rhombus","rhomb x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_rhomb ,13},
-	{"rkstep","Apply Runge-Kutta","rkstep 'Diff1;Diff2;...' 'Var1;Var2;...' [dt]", 0, 6},
+	{"rkstep","Apply Runge-Kutta","rkstep 'Diff1;Diff2;...' 'Var1;Var2;...' [dt]", mgls_rkstep, 6},
 	{"roll","Roll data along direction","roll Dat 'dir' num", mgls_roll ,16},
 	{"roots", "Find roots using data as initial values", "roots Res 'func' Ini ['var']|Res 'func' ini ['var']", mgls_roots ,4},
 	{"rotate","Rotate plot","rotate tetz tetx [tety] | tet x y z", mgls_rotate ,5},
@@ -3780,7 +3808,7 @@ mglCommand mgls_base_cmd[] = {
 	{"tube","Draw curve by tube","tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube ,7},
 	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks ,14},
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var ,4},
-	{"variant","Select variant of plot style(s)","variant var", 0, 6},
+	{"variant","Select variant of plot style(s)","variant var", mgls_variant, 6},
 	{"vect","Draw vector field","vect Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']|Udat Vdat Wdat ['fmt']|Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_vect ,11},
 	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3 ,11},
 	{"version","Print MathGL version or check if it is valid","version |'ver'", mgls_version, 2},

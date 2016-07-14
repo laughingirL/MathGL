@@ -34,8 +34,9 @@ class MGL_EXPORT mglGraph
 protected:
 	HMGL gr;
 public:
+	HMPR pr;	///< Pointer to associated MGL parser
 	mglGraph(int kind=0, int width=600, int height=400)
-	{
+	{	pr = NULL;
 		if(kind==-1)	gr=NULL;
 #if MGL_HAVE_OPENGL
 		else if(kind==1)	gr=mgl_create_graph_gl();
@@ -47,7 +48,7 @@ public:
 		else	gr=mgl_create_graph(width, height);
 	}
 	mglGraph(HMGL graph)
-	{	gr = graph;		mgl_use_graph(gr,1);	}
+	{	pr = NULL;	gr = graph;		mgl_use_graph(gr,1);	}
 	virtual ~mglGraph()
 	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
 	/// Get pointer to internal HMGL object
