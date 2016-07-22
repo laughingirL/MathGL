@@ -414,7 +414,7 @@ void MGL_EXPORT mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const c
 #pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 	{
-		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
+		if(gr->NeedStop())	continue;
 		mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -683,7 +683,7 @@ void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 #pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx()-1;i++)	for(long j=0;j<z->GetNz();j++)
 	{
-		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
+		if(gr->NeedStop())	continue;
 		mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -784,7 +784,7 @@ void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 #pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx()-1;i++)	for(long j=0;j<z->GetNz();j++)
 	{
-		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
+		if(gr->NeedStop())	continue;
 		mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -893,7 +893,7 @@ void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 #pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 	{
-		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
+		if(gr->NeedStop())	continue;
 		mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)	z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
 		mglDataV zz(n, m);	zz.Fill(z0,z0);
@@ -1462,7 +1462,7 @@ void MGL_EXPORT mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 #pragma omp parallel for collapse(2)
 	for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 	{
-		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
+		if(gr->NeedStop())	continue;
 		register mreal v0 = v->v(i);
 		mgl_axial_gen(gr,v0,z,x,y,gr->GetC(s,v0),dir,j,wire);
 	}
