@@ -338,6 +338,7 @@ MGL_NO_EXPORT char *mgl_read_gz(gzFile fp)
 	{
 		if(m<size)	{	buf[size*n+m]=0;	break;	}
 		n++;		buf=(char*)realloc(buf,size*(n+1));
+		memset(buf+size*n,0,size);
 	}
 	return buf;
 }
