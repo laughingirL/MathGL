@@ -136,7 +136,7 @@ void MGL_NO_EXPORT mgl_operator_lin(long n, dual *h, dual *a, dual *f, dual *g, 
 	{
 		long jp = (j+1)%n;
 		dual h1=tanh(isqrt(h[n*j])), h2=tanh(isqrt(h[n-1+n*j]));
-		dual g1=tanh(h1+isqrt(h[n*jp]))/2., g2=tanh(h2+isqrt(h[n-1+n*jp]))/2.;
+		dual g1=tanh(h1+isqrt(h[n*jp]))/mreal(2), g2=tanh(h2+isqrt(h[n-1+n*jp]))/mreal(2);
 		mreal k1=M_PI*2*j/n, k2 = M_PI*(2*j+1)/n;
 		for(long i=0;i<i1;i++)
 		{
@@ -147,7 +147,7 @@ void MGL_NO_EXPORT mgl_operator_lin(long n, dual *h, dual *a, dual *f, dual *g, 
 		for(long i=i1;i<i2;i++)
 		{
 			dual hh = tanh(isqrt(h[i-i1+n*j]));
-			dual gg = tanh(hh+isqrt(h[i-i1+n*jp]))/2.;
+			dual gg = tanh(hh+isqrt(h[i-i1+n*jp]))/mreal(2);
 			dual e1=exp(dual(0,i*k1)), e2=exp(dual(0,i*k2));
 			f[2*j] += a[i]*hh*e1;	f[2*j+1] += a[i]*gg*e2;
 			g[2*j] += a[i]*e1;		g[2*j+1] += a[i]*e2;
@@ -169,7 +169,7 @@ void MGL_NO_EXPORT mgl_operator_lin(long n, dual *h, dual *a, dual *f, dual *g, 
 		for(long j=0;j<n;j++)
 		{
 			dual h1 = tanh(isqrt(h[ii+n*j]));
-			dual g1 = tanh(h1+isqrt(h[ii+n*((j+1)%n)]))/2.;
+			dual g1 = tanh(h1+isqrt(h[ii+n*((j+1)%n)]))/mreal(2);
 			dual e1=exp(dual(0,-j*kk)), e2=exp(dual(0,-kk*(j+0.5)));
 			o[i] += f[2*j]*e1 + f[2*j+1]*e2;
 			o[i] += g[2*j]*h1*e1 + g[2*j+1]*g1*e2;
@@ -223,7 +223,7 @@ HADT MGL_EXPORT mgl_pde_adv_c(HMGL gr, const char *func, HCDT ini_re, HCDT ini_i
 		mgl_operator_lin(nx,ham->a,s,f,g,s);
 #pragma omp parallel for
 		for(long i=0;i<2*nx;i++)
-			a[i] = (a[i]-s[i]/mreal(8*nx*nx))*exp(-dmp[i]*dt)/mreal(2*nx);
+			a[i] = (a[i]-s[i]/mreal(8*nx*nx))*mreal(exp(-dmp[i]*dt)/2/nx);
 		if(have_y)	delete ham;
 	}
 	delete []a;	delete []f;	delete []dmp;
@@ -1310,13 +1310,13 @@ void MGL_NO_EXPORT mgl_progonka_sc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, lo
 {
 	dual *aa=dat, *bb=dat+n, *uu=dat+2*n;
 	dual b0=B->vcthr(i0), c0=C->vcthr(i0), d0=D->vcthr(id);
-	if(difr)	d0 = (2.-b0)*d0-c0*D->vcthr(id+di);
+	if(difr)	d0 = (mreal(2)-b0)*d0-c0*D->vcthr(id+di);
 	aa[0] = -c0/b0;	bb[0] = d0/b0;
 	for(long i=1;i<n;i++)
 	{
 		register long ii=i0+di*i, dd=id+di*i, tt = id+di*((i+1)%n);
 		dual a=A->vcthr(ii), b=B->vcthr(ii), c=C->vcthr(ii);
-		dual d=difr?-a*D->vcthr(dd-di)+(2.-b)*D->vcthr(dd)-c*D->vcthr(tt):D->vcthr(dd);
+		dual d=difr?-a*D->vcthr(dd-di)+(mreal(2)-b)*D->vcthr(dd)-c*D->vcthr(tt):D->vcthr(dd);
 		aa[i] = -c/(b+a*aa[i-1]);
 		bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
 	}
@@ -1327,47 +1327,47 @@ void MGL_NO_EXPORT mgl_progonka_pc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, lo
 {
 	dual *aa=dat, *bb=dat+n, *gg=dat+2*n, *uu=dat+3*n;
 	dual a0=A->vcthr(i0), b0=B->vcthr(i0), c0=C->vcthr(i0), d0=D->vcthr(id);
-	if(difr)	d0 = -a0*D->vcthr(id+di*(n-1))+(2.-b0)*d0-c0*D->vcthr(id+di);
+	if(difr)	d0 = -a0*D->vcthr(id+di*(n-1))+(mreal(2)-b0)*d0-c0*D->vcthr(id+di);
 	aa[0] =-c0/b0;	bb[0] = d0/b0;	gg[0] =-a0/b0;
 	for(long i=1;i<n;i++)
 	{
 		register long ii=i0+di*i, il=id+di*((i+1)%n), dd=id+di*i;
 		dual a=A->vcthr(ii), b=B->vcthr(ii), c=C->vcthr(ii);
-		dual d=difr?-a*D->vcthr(dd-di)+(2.-b)*D->vcthr(dd)-c*D->vcthr(il):D->vcthr(dd);
+		dual d=difr?-a*D->vcthr(dd-di)+(mreal(2)-b)*D->vcthr(dd)-c*D->vcthr(il):D->vcthr(dd);
 		aa[i] = -c/(b+a*aa[i-1]);
 		bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
 		gg[i] = -a*gg[i-1]/(b+a*aa[i-1]);
 	}
-	dual P=bb[n-1]/(1.-gg[n-1]), Q=aa[n-1]/(1.-gg[n-1]);
+	dual P=bb[n-1]/(mreal(1)-gg[n-1]), Q=aa[n-1]/(mreal(1)-gg[n-1]);
 	aa[n-1] = Q;	bb[n-1] = P;
 	for(long i=n-2;i>=0;i--)
 	{
 		bb[i] += aa[i]*bb[i+1]+gg[i]*P;
 		aa[i] = aa[i]*aa[i+1]+gg[i]*Q;
 	}
-	dual u0 = bb[0]/(1.-aa[0]);
+	dual u0 = bb[0]/(mreal(1)-aa[0]);
 	for(long i=0;i<n;i++)	uu[i]=bb[i]+aa[i]*u0;
 }
 void MGL_NO_EXPORT mgl_progonka_hc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, long n, long id, long i0, bool difr)
 {
 	dual *aa=dat, *bb=dat+n, *uu=dat+n*n;
 	dual b0=B->vcthr(i0), c0=C->vcthr(i0), d0=D->vcthr(id);
-	uu[0] = d0/b0*(difr?(2.-b0):1.);
+	uu[0] = d0/b0*(difr?(mreal(2)-b0):mreal(1));
 	b0=B->vcthr(i0+n*n-1);	d0=D->vcthr(id+n*n-1);
-	uu[n*n-1] = d0/b0*(difr?(2.-b0):1.);
+	uu[n*n-1] = d0/b0*(difr?(mreal(2)-b0):mreal(1));
 	long di = n-1, i1 = i0+n*(n-1), d1 = id+n*(n-1);
 	// suppose the square grid!
 	for(long j=1;j<n;j++)
 	{
 		// first bottom-left triangle
 		b0=B->vcthr(i0+j);	c0=C->vcthr(i0+j);	d0=D->vcthr(id+j);
-		if(difr)	d0 = (2.-b0)*d0-c0*D->vcthr(id+j+di);
+		if(difr)	d0 = (mreal(2)-b0)*d0-c0*D->vcthr(id+j+di);
 		aa[0] = -c0/b0;	bb[0] = d0/b0;
 		for(long i=1;i<=j;i++)
 		{
 			register long ii=i0+j+di*i, dd=id+j+di*i;
 			dual a=A->vcthr(ii),b=B->vcthr(ii),c=C->vcthr(ii);
-			dual d=difr?-a*D->vcthr(dd-di)+(2.-b)*D->vcthr(dd)-c*D->vcthr(dd+di):D->vcthr(dd);
+			dual d=difr?-a*D->vcthr(dd-di)+(mreal(2)-b)*D->vcthr(dd)-c*D->vcthr(dd+di):D->vcthr(dd);
 			aa[i] = -c/(b+a*aa[i-1]);
 			bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
 		}
@@ -1377,13 +1377,13 @@ void MGL_NO_EXPORT mgl_progonka_hc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, lo
 		// next top-right triangle
 		long j1=n-1-j;
 		b0=B->vcthr(i1+j1);	c0=C->vcthr(i1+j1);	d0=D->vcthr(d1+j1);
-		if(difr)	d0 = (2.-b0)*d0-c0*D->vcthr(d1+j1-di);
+		if(difr)	d0 = (mreal(2)-b0)*d0-c0*D->vcthr(d1+j1-di);
 		aa[0] = -c0/b0;	bb[0] = d0/b0;
 		for(long i=1;i<=j;i++)
 		{
 			register long ii=i1+j1-di*i, dd=d1+j1-di*i;
 			dual a=A->vcthr(ii),b=B->vcthr(ii),c=C->vcthr(ii);
-			dual d=difr?-a*D->vcthr(dd+di)+(2.-b)*D->vcthr(dd)-c*D->vcthr(dd-di):D->vcthr(dd);
+			dual d=difr?-a*D->vcthr(dd+di)+(mreal(2)-b)*D->vcthr(dd)-c*D->vcthr(dd-di):D->vcthr(dd);
 			aa[i] = -c/(b+a*aa[i-1]);
 			bb[i] = (d-a*bb[i-1])/(b+a*aa[i-1]);
 		}
