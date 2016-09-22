@@ -1,3 +1,7 @@
+2.3.6 Released ??? 
+
+* Add mglODEc() -- ODE solver for complex variables
+
 2.3.5.1 Released 20 June
 
 * INCOMPATIBLE: library libmgl-qt is removed. You need to use libmgl-qt4 or libmgl-qt5 explicitly now.

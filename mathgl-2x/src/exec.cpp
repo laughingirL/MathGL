@@ -3066,11 +3066,21 @@ int MGL_NO_EXPORT mgls_ode(mglGraph *, long , mglArg *a, const char *k, const ch
 	int res=0;
 	if(k[0]=='d' && a[0].d->temp)	return 5;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dssd"))
-		*d = mglODE(a[1].s.c_str(), a[2].s.c_str(), *(a[3].d));
-	else if(!strcmp(k,"dssdnn"))
-		*d = mglODE(a[1].s.c_str(), a[2].s.c_str(), *(a[3].d), a[4].v, a[5].v);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d)
+	{
+		if(!strcmp(k,"dssd"))
+			*d = mglODE(a[1].s.c_str(), a[2].s.c_str(), *(a[3].d));
+		else if(!strcmp(k,"dssdnn"))
+			*d = mglODE(a[1].s.c_str(), a[2].s.c_str(), *(a[3].d), a[4].v, a[5].v);
+	}
+	else if(c)
+	{
+		if(!strcmp(k,"dssd"))
+			*c = mglODEc(a[1].s.c_str(), a[2].s.c_str(), *(a[3].d));
+		else if(!strcmp(k,"dssdnn"))
+			*c = mglODEc(a[1].s.c_str(), a[2].s.c_str(), *(a[3].d), a[4].v, a[5].v);
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
