@@ -128,7 +128,6 @@ HADT MGL_NO_EXPORT mgl_apde_calc_ham(HMDT hs, bool old, const char *func, std::v
 {
 	HADT ham = mglFormulaCalcC(func, list);	mgl_datac_mul_num(ham,dd);
 	const long nx = ham->nx;
-ham->Imag().Save("orig.dat");
 	if(old)
 	{
 		mreal hh = ham->Imag().Minimal();
@@ -163,8 +162,6 @@ ham->Imag().Save("orig.dat");
 			ham->a[i0] = dual(real(ham->a[i0]),hh);	// additive terms
 		}
 	}
-ham->Imag().Save(old?"exp0.dat":"exp1.dat");
-hs->Save(old?"sqrt0.dat":"sqrt1.dat");
 	return ham;
 }
 //-----------------------------------------------------------------------------
