@@ -67,7 +67,14 @@ D. Docs about JS interface
 5. Docs about 'flame2d'
 6. Docs about mglDataS, mglDataW
 7. Docs about tile_xyc and tiles_xyc -- manual coloring + face rotation by "x", ":y"
+8. Hint about 'rasterize'
+	fsurf 'x^2+y^2' '#';value 10
+	rasterize:clf # все что выше будет только в растре
+	axis:box
+	write '1.eps'
 14. "copy var 'name'" -- to copy variable with "invalid" name
+
+
 
 ============= UDAV =============
 
@@ -87,6 +94,7 @@ D. Docs about JS interface
 6. Color position in color scheme dialog
 7. QML ???
 8, Changable panels???
+9. Save data from the summary panel
 
 
 ============= UNSURE ===========

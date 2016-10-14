@@ -631,7 +631,7 @@ void MGL_EXPORT mgl_data_grid_xy(HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, mreal 
 	mglData *nums = mgl_triangulation_2d(xdat,ydat);
 	if(nums->nx<3)	{	delete nums;	return;	}
 	long nn = nums->ny, par[3]={d->nx,d->ny,d->nz};
-	mreal xx[4]={x1,(d->nx-1.)/(x2-x1), y1,(d->ny-1.)/(y2-y1)};
+	mreal xx[4]={x1,(d->nx-1)/(x2-x1), y1,(d->ny-1)/(y2-y1)};
 
 	mreal *xc=new mreal[n], *yc=new mreal[n];
 	if(x && y)
