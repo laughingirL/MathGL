@@ -433,7 +433,7 @@ int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 		mglDataC *vc = dynamic_cast<mglDataC*>(vv);
 		if(v)
 		{
-			if(t==1)	nx = j>nx ? j:nx;
+			if(t==1)	nx = j>nx ? j:nx;	// TODO check this
 			if(t==1)	// list of numeric values
 			{
 				v->Create(nx,ny);
@@ -454,7 +454,7 @@ int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 		}
 		if(vc)
 		{
-			if(t==1)	nx = j>nx ? j:nx;
+			if(t==1)	nx = j>nx ? j:nx;	// TODO check this
 			if(t==1)	// list of numeric values
 			{
 				vc->Create(nx,ny);

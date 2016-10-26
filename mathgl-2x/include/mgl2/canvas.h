@@ -31,6 +31,11 @@ struct MGL_EXPORT mglAxis
 #if MGL_HAVE_RVAL
 	mglAxis(mglAxis &&aa) : dv(aa.dv),ds(aa.ds),d(aa.d),ns(aa.ns),	t(aa.t),fact(aa.fact),stl(aa.stl),	dir(aa.dir),a(aa.a),b(aa.b),org(aa.org), v0(aa.v0),v1(aa.v1),v2(aa.v2),o(aa.o),	f(aa.f),txt(aa.txt),	ch(aa.ch),	pos(aa.pos),sh(aa.sh),inv(aa.inv)	{}
 #endif
+
+	const mglAxis &operator=(const mglAxis &aa)
+	{	dv=aa.dv; ds=aa.ds; d=aa.d; ns=aa.ns; t=aa.t; fact=aa.fact; stl=aa.stl;
+		dir=aa.dir; a=aa.a; b=aa.b; org=aa.org; v0=aa.v0; v1=aa.v1; v2=aa.v2; o=aa.o;
+		f=aa.f; txt=aa.txt; 	ch=aa.ch; pos=aa.pos; sh=aa.sh; inv=aa.inv;	return aa;	}
 	inline void AddLabel(const wchar_t *lbl, mreal v)
 	{	if(mgl_isfin(v))	txt.push_back(mglText(lbl,"",v));	}
 	inline void AddLabel(const std::wstring &lbl, mreal v)

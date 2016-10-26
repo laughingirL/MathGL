@@ -95,35 +95,37 @@ HMDT MGL_EXPORT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 	}
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	long vx=long(xx->v(0)), vy=long(yy->v(0)), vz=long(zz->v(0));
+	mglData *r;
 	if(n*m*l>1)	// this is 2d or 3d data
 	{
 		mglDataV tx(n,m,l),ty(n,m,l),tz(n,m,l);
 		if(!ix)	{	xx = &tx;	if(vx>=0)	tx.Fill(vx);	else tx.All();	}
 		if(!iy)	{	yy = &ty;	if(vy>=0)	ty.Fill(vy);	else ty.All();	}
 		if(!iz)	{	zz = &tz;	if(vz>=0)	tz.Fill(vz);	else tz.All();	}
-		mglData *r=new mglData(n,m,l);
+		r=new mglData(n,m,l);
 #pragma omp parallel for
 		for(long i0=0;i0<n*m*l;i0++)
 		{
 			register long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
 			r->a[i0] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
 		}
-		return r;
 	}
-	// this is 1d data -> try as normal SubData()
-	mglDataV tx(nx),ty(ny),tz(nz);	tx.All();	ty.All();	tz.All();
-	if(xx->GetNx()>1 || vx>=0)	n=xx->GetNx();	else	{	n=nx;	xx = &tx;	}
-	if(yy->GetNx()>1 || vy>=0)	m=yy->GetNx();	else	{	m=ny;	yy = &ty;	}
-	if(zz->GetNx()>1 || vz>=0)	l=zz->GetNx();	else	{	l=nz;	zz = &tz;	}
-	mglData *r=new mglData(n,m,l);
-#pragma omp parallel for collapse(3)
-	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+	else	// this is 1d data -> try as normal SubData()
 	{
-		register long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
-		r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
+		mglDataV tx(nx),ty(ny),tz(nz);	tx.All();	ty.All();	tz.All();
+		if(xx->GetNx()>1 || vx>=0)	n=xx->GetNx();	else	{	n=nx;	xx = &tx;	}
+		if(yy->GetNx()>1 || vy>=0)	m=yy->GetNx();	else	{	m=ny;	yy = &ty;	}
+		if(zz->GetNx()>1 || vz>=0)	l=zz->GetNx();	else	{	l=nz;	zz = &tz;	}
+		r=new mglData(n,m,l);
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		{
+			register long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
+			r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
+		}
+		if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
+		if(n==1)	{	r->nx=r->ny;	r->ny=r->nz;	r->nz=1;	r->NewId();}
 	}
-	if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
-	if(n==1)	{	r->nx=r->ny;	r->ny=r->nz;	r->nz=1;	r->NewId();}
 	return r;
 }
 //-----------------------------------------------------------------------------

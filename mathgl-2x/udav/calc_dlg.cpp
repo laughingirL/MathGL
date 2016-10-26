@@ -251,7 +251,7 @@ void CalcDialog::fillFuncName()
 //-----------------------------------------------------------------------------
 void CalcDialog::typeUpdate(int s)
 {
-	if(s<0 && s>9)	return;
+	if(s<0 || s>9)	return;
 	func->clear();	func->addItems(funcName[s]);	func->setCurrentIndex(0);
 }
 //-----------------------------------------------------------------------------

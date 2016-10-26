@@ -1038,7 +1038,7 @@ mreal MGL_EXPORT mgl_data_linear_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,
 			{
 				a2=a0 = d->v(kx);	a1 = d->v(kx+1);	b0 = b1 = a0*(1-x) + x*a1;
 			}
-			else	b0 = b1 = dd->a[0];
+			else	b0 = b1 = d->v(0);
 		}
 		if(dx)	*dx = a1-a0;
 		if(dy)	*dy = a2-a0;

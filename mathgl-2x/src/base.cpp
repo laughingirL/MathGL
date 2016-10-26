@@ -150,7 +150,7 @@ mglBase::mglBase()
 
 	strcpy(last_style,"__1 {dFFFF}k\0");
 	MinS.Set(-1,-1,-1);	MaxS.Set(1,1,1);
-	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;	size_opt=NAN;
+	fnt = new mglFont;	fnt->gr = this;	PrevState=size_opt=NAN;
 }
 //-----------------------------------------------------------------------------
 mglBase::~mglBase()

@@ -243,7 +243,7 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 #pragma omp critical(max_vec)
 		{cm = cm<cm1 ? cm1:cm;	xm = xm<xm1 ? xm1:xm;}
 	}
-	ca /= (n*m*l)/(tx*ty*tz);
+	ca /= mreal(n*m*l)/mreal(tx*ty*tz);
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 	for(long k=0;k<l;k+=tz)
@@ -447,7 +447,7 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 #pragma omp critical(max_vec)
 		{cm = cm<cm1 ? cm1:cm;	xm = xm<xm1 ? xm1:xm;}
 	}
-	ca /= (n*m)/(tx*ty);
+	ca /= mreal(n*m)/mreal(tx*ty);
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 	for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)

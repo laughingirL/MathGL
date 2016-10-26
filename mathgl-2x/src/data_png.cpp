@@ -45,7 +45,7 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 		if(col.Valid())
 		{	cc[3*np]=255*col.r;	cc[3*np+1]=255*col.g;	cc[3*np+2]=255*col.b;	np++;	}
 	}
-	if(np<2)	{	delete []cc;	return 0;	}
+	if(np<2)	{	num=0;	delete []cc;	return 0;	}
 	for(size_t i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3,false);
 	c = new unsigned char[3*nc+3];
 	size_t pos=0;

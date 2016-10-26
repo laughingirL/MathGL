@@ -201,7 +201,7 @@ MGL_NO_EXPORT double mgl_adj_val(double v,mreal *ds=0)
 	double n = floor(log10(v)), s;
 	v = floor(v*pow(10.,-n));	n = pow(10.,n);
 
-	if(v==1)	{	v = n/5;	s=n/10;	}
+	if(v<1.5)	{	v = n/5;	s=n/10;	}
 	else if(v<4){	v = n/2;	s=n/10;	}
 	else if(v<7){	v = n;		s=n/5;	}
 	else		{	v = 2*n;	s=n/2;	}
@@ -237,7 +237,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 		t = abs(t1.tm_yday-t2.tm_yday)>1 ? "%x" : "%X";
 		if(abs(t1.tm_year-t2.tm_year)>3)	t = "%Y";
 	}
-	if(d==0)	// try to select opimal step
+	if(d==0)	// try to select optimal step
 	{
 		// TODO add subticks for drawing
 		if(abs(t1.tm_year-t2.tm_year)>1)
@@ -627,7 +627,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		ScalePoint(M, r, p, false);
 		mglPnt &pp = Pnt[kk[i]];
 		mreal ux=pp.u*cos(tet) + pp.v*sin(tet), uy=pp.v*cos(tet) - pp.u*sin(tet);
-		bool algn = tet!=0;
+		bool algn = tet!=0;		// TODO add proper align for arbitrary tet!
 		if(!get(MGL_ENABLE_RTEXT) || !get(MGL_TICKS_ROTATE))	{	ux=1;	uy=0;	algn=true;	}
 		if(ux<0 || (ux==0 && uy<0))	{	ux=-ux;	uy=-uy;	pp.w=-pp.w;	}
 		pp.u = ux;	pp.v = uy;

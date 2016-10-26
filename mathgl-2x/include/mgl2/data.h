@@ -169,9 +169,9 @@ using mglDataA::Momentum;
 	/// Delete data rows/columns/slices
 	inline void Delete(char dir, long at=0, long num=1)
 	{	mgl_data_delete(this,dir,at,num);	}
-	/// Remove rows with duplicate values in column id
-	inline void Clean(long id)
-	{	mgl_data_clean(this,id);	}
+	/// Remove rows with duplicate values in column clmn
+	inline void Clean(long clmn)
+	{	mgl_data_clean(this,clmn);	}
 	/// Join with another data array
 	inline void Join(const mglDataA &d)
 	{	mgl_data_join(this,&d);	}
@@ -308,8 +308,8 @@ using mglDataA::Momentum;
 	inline mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,&kdat,norm));	}
 	/// Find roots for set of nonlinear equations defined by textual formula
-	inline mglData Roots(const char *func, char var='x') const
-	{	return mglData(true,mgl_data_roots(func, this, var));	}
+	inline mglData Roots(const char *eq, char var='x') const
+	{	return mglData(true,mgl_data_roots(eq, this, var));	}
 	/// Find correlation with another data arrays
 	inline mglData Correl(const mglDataA &dat, const char *dir) const
 	{	return mglData(true,mgl_data_correl(this,&dat,dir));	}
@@ -851,6 +851,7 @@ class MGL_EXPORT mglDataT : public mglDataA
 {
 	const mglDataA &dat;
 	long ind;
+	const mglDataT &operator=(const mglDataT &d)	{	return d;	}
 public:
 	mglDataT(const mglDataT &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
 	mglDataT(const mglDataA &d, long col=0) : dat(d), ind(col)	{}
@@ -898,6 +899,7 @@ class MGL_EXPORT mglDataR : public mglDataA
 {
 	const mglDataA &dat;
 	long ind;
+	const mglDataR &operator=(const mglDataR &d)	{	return d;	}
 public:
 	mglDataR(const mglDataR &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
 	mglDataR(const mglDataA &d, long row=0) : dat(d), ind(row)	{}

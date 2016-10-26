@@ -1089,7 +1089,7 @@ void MGL_EXPORT mgl_datac_diffr(HADT d, const char *how, mreal q)
 	long p[4]={0,0,0,0};
 	dual qq=q;
 	for(long i=0;i<ll;i++)	if(how[i]>='0' && how[i]<='9')	p[3] = how[i]-'0';
-	bool axial = mglchr(how,'r')||mglchr(how,'r');
+	bool axial = mglchr(how,'r')||mglchr(how,'a');
 	if(mglchr(how,'z') && nz>1)
 	{
 		p[0]=nz;	p[1]=nx*ny;	p[2]=0;

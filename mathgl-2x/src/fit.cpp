@@ -336,11 +336,12 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 	fd.eq = eq;	fd.var = var;	fd.m = strlen(var);
 	mglData in(fd.m), *fit=new mglData(nn, yy->GetNy(), yy->GetNz());
 	mreal res=-1;
+	mglDataR xc(x);
 	for(long i=0;i<yy->GetNy()*yy->GetNz();i++)
 	{
 		if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
 		else in.Fill(0.,0);
-		mglDataR xc(x);	xc.SetInd(i%x.ny, L"x");
+		xc.SetInd(i%x.ny, L"x");
 		fd.a = y.a+i*m;		fd.x = &xc;	//x.a+(i%x.ny)*m;
 		fd.s = s.a+i*m;
 		res = mgl_fit_base(fd,in.a);

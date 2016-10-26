@@ -649,8 +649,8 @@ public:
 	inline void Polygon(mglPoint p1, mglPoint p2, int n, const char *stl="r")
 	{	mgl_polygon(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, n,stl);	}
 	/// Draws the arc around axis pr with center at p0 and starting from p1, by color stl and angle a (in degrees)
-	inline void Arc(mglPoint p0, mglPoint pr, mglPoint p1, double a, const char *stl="r")
-	{	mgl_arc_ext(gr, p0.x,p0.y,p0.z, pr.x,pr.y,pr.z, p1.x,p1.y,p1.z, a,stl);	}
+	inline void Arc(mglPoint p0, mglPoint pa, mglPoint p1, double a, const char *stl="r")
+	{	mgl_arc_ext(gr, p0.x,p0.y,p0.z, pa.x,pa.y,pa.z, p1.x,p1.y,p1.z, a,stl);	}
 	/// Draws the arc around axis 'z' with center at p0 and starting from p1, by color stl and angle a (in degrees)
 	inline void Arc(mglPoint p0, mglPoint p1, double a, const char *stl="r")
 	{	mgl_arc_ext(gr, p0.x,p0.y,p0.z, 0,0,1, p1.x,p1.y,p0.z, a,stl);	}
@@ -2151,6 +2151,8 @@ public:
 class MGL_EXPORT mglParse
 {
 	HMPR pr;
+	mglParse &operator=(mglParse &p)
+	{	pr = p.pr;	mgl_use_parser(pr,1);	return p;	}
 public:
 	mglParse(HMPR p)		{	pr = p;		mgl_use_parser(pr,1);	}
 	mglParse(mglParse &p)	{	pr = p.pr;	mgl_use_parser(pr,1);	}

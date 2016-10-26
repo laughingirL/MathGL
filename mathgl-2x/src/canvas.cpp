@@ -708,13 +708,13 @@ void mglCanvas::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;
 }
 //-----------------------------------------------------------------------------
-void mglMatrix::RotateN(mreal Tet,mreal x,mreal y,mreal z)
+void mglMatrix::RotateN(mreal Tet,mreal vx,mreal vy,mreal vz)
 {
-	mreal R[9],T[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(x*x+y*y+z*z);
-	x/=n;	y/=n;	z/=n;
-	T[0] = x*x*r+c;		T[1] = x*y*r-z*s;	T[2] = x*z*r+y*s;
-	T[3] = x*y*r+z*s;	T[4] = y*y*r+c;		T[5] = y*z*r-x*s;
-	T[6] = x*z*r-y*s;	T[7] = y*z*r+x*s;	T[8] = z*z*r+c;
+	mreal R[9],T[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(vx*vx+vy*vy+vz*vz);
+	vx/=n;	vy/=n;	vz/=n;
+	T[0] = vx*vx*r+c;		T[1] = vx*vy*r-vz*s;	T[2] = vx*vz*r+vy*s;
+	T[3] = vx*vy*r+vz*s;	T[4] = vy*vy*r+c;		T[5] = vy*vz*r-vx*s;
+	T[6] = vx*vz*r-vy*s;	T[7] = vy*vz*r+vx*s;	T[8] = vz*vz*r+c;
 	memcpy(R,b,9*sizeof(mreal));
 	b[0] = T[0]*R[0] + T[3]*R[1] + T[6]*R[2];
 	b[1] = T[1]*R[0] + T[4]*R[1] + T[7]*R[2];
@@ -759,11 +759,11 @@ void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 		if(mgl_islog(Min.x,Max.x) && fx)	dx = log10(Max.x/Min.x);
 		if(mgl_islog(Min.y,Max.y) && fy)	dy = log10(Max.y/Min.y);
 		if(mgl_islog(Min.z,Max.z) && fz)	dz = log10(Max.z/Min.z);
-		mreal fy=exp(M_LN10*floor(0.5+log10(fabs(dy/dx))));
-		mreal fz=exp(M_LN10*floor(0.5+log10(fabs(dz/dx))));
-		if(Ay>0)	fy*=Ay;
-		if(Az>0)	fz*=Az;
-		Ax = inH*dx;	Ay = inW*dy*fy;	Az = sqrt(inW*inH)*dz*fz;
+		mreal gy=exp(M_LN10*floor(0.5+log10(fabs(dy/dx))));
+		mreal gz=exp(M_LN10*floor(0.5+log10(fabs(dz/dx))));
+		if(Ay>0)	gy*=Ay;
+		if(Az>0)	gz*=Az;
+		Ax = inH*dx;	Ay = inW*dy*gy;	Az = sqrt(inW*inH)*dz*gz;
 	}
 	mreal a = fabs(Ax) > fabs(Ay) ? fabs(Ax) : fabs(Ay);
 	a = a > fabs(Az) ? a : fabs(Az);
@@ -836,7 +836,7 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 //-----------------------------------------------------------------------------
 std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 {
-	char se[64], sf[64], ff[8]="%.3f", ee[8]="%.3e";
+	char se[68], sf[68], ff[8]="%.3f", ee[8]="%.3e";
 	int dig=3;
 	for(const char *s="0123456789";*s;s++)	if(mglchr(fmt,*s))	dig = *s-'0';
 	if(mglchr(fmt,'E'))	ee[3] = 'E';
@@ -872,9 +872,9 @@ std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 	}
 	le=strlen(se);
 	// don't allow '+' at the end
-	if(se[le-1]=='+')	se[--le]=0;
+	if(le>0 && se[le-1]=='+')	se[--le]=0;
 	// remove single 'e'
-	if(se[le-1]=='e' || se[le-1]=='E')	se[--le]=0;
+	if(le>0 && (se[le-1]=='e' || se[le-1]=='E'))	se[--le]=0;
 	for(i=1+st+dig;i>st && se[i]=='0';i--);	// remove final '0'
 	if(se[i]=='.')	i--;
 	memmove(se+i+1,se+2+st+dig,le-dig);	le=strlen(se);

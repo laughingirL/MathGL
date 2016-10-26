@@ -61,6 +61,9 @@ struct mglNum
 	dual c;
 	std::wstring s;	///< Number name
 	mglNum(mreal val=0):d(val),c(val)	{}
+	mglNum(const mglNum &n):d(n.d),c(n.c),s(n.s) {}
+	const mglNum &operator=(const mglNum &n)
+	{	d=n.d;	c=n.c;	s=n.s;	return n;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for function name and position.
@@ -72,6 +75,8 @@ struct mglFunc
 	mglFunc(long p, const wchar_t *f);
 	mglFunc(const mglFunc &f):pos(f.pos),narg(f.narg),func(f.func)	{}
 	mglFunc():pos(-1),narg(-1)	{}
+	const mglFunc &operator=(const mglFunc &f)
+	{	pos=f.pos;	narg=f.narg;	func=f.func;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for stack of functions and its arguments.

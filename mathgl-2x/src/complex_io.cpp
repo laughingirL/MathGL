@@ -76,7 +76,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 			if(j>=nb)	break;
 			while(b[j]=='#')		// skip comment
 			{
-				if(i>0 || b[j+1]!='#')	// this is columns id
+				if(i>0 || b[j+1]!='#')	// this is not columns id
 					while(j<nb && !isn(b[j]))	j++;
 				else	// NOTE I suppose that only single line contain column ids
 				{
@@ -84,7 +84,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 					{
 						if(b[j]>='a' && b[j]<='z')	d->id.push_back(b[j]);
 						j++;
-					}
+					}	i++;
 				}
 				while(j<nb && b[j]<=' ')	j++;
 			}
@@ -292,7 +292,7 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 	if(!fp)
 	{
 		if(!d->a)	mgl_datac_create(d, 1,1,1);
-		return	false;
+		return	0;
 	}
 	char *buf = mgl_read_gz(fp);
 	nb = strlen(buf);	gzclose(fp);
@@ -337,7 +337,7 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 	}
 	else	for(i=0;i<nb-1;i++)	if(buf[i]=='\f')	l++;
 	mglFromStr(d,buf,k,m,l);
-	free(buf);	return true;
+	free(buf);	return 1;
 }
 int MGL_EXPORT mgl_datac_read_(uintptr_t *d, const char *fname,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
@@ -366,13 +366,13 @@ void MGL_EXPORT mgl_datac_link_(uintptr_t *d, dual *A, int *nx,int *ny,int *nz)
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_datac_read_dim(HADT d, const char *fname,long mx,long my,long mz)
 {
-	if(mx<=0 || my<=0 || mz<=0)	return false;
+	if(mx<=0 || my<=0 || mz<=0)	return 0;
 	gzFile fp = gzopen(fname,"r");
-	if(!fp)	return false;
+	if(!fp)	return 0;
 	char *buf = mgl_read_gz(fp);
 	gzclose(fp);
 	mglFromStr(d,buf,mx,my,mz);
-	free(buf);	return true;
+	free(buf);	return 1;
 }
 int MGL_EXPORT mgl_datac_read_dim_(uintptr_t *d, const char *fname,int *mx,int *my,int *mz,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -380,20 +380,16 @@ int MGL_EXPORT mgl_datac_read_dim_(uintptr_t *d, const char *fname,int *mx,int *
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_datac_read_mat(HADT d, const char *fname, long dim)
 {
-	if(dim<=0 || dim>3)	return false;
+	if(dim<=0 || dim>3)	return 0;
 	gzFile fp = gzopen(fname,"r");
-	if(!fp)	return false;
+	if(!fp)	return 0;
 	long nx=1, ny=1, nz=1;
 	char *buf = mgl_read_gz(fp);
 	long nb = strlen(buf);	gzclose(fp);
 
 	long j=0;
-	while(j<nb)
-	{
-		if(buf[j]=='#')	while(!isn(buf[j]))	j++;	// skip comment
-		while(j<nb && buf[j]<=' ')	j++;
-		break;
-	}
+	if(buf[j]=='#')	while(!isn(buf[j]))	j++;	// skip comment
+	while(j<nb && buf[j]<=' ')	j++;
 	if(dim==1)
 	{
 		sscanf(buf+j,"%ld",&nx);
@@ -430,7 +426,7 @@ int MGL_EXPORT mgl_datac_read_mat(HADT d, const char *fname, long dim)
 		while(j<nb && buf[j]!='\n')	j++;	j++;
 	}
 	mglFromStr(d,buf+j,nx,ny,nz);
-	free(buf);	return true;
+	free(buf);	return 1;
 }
 int MGL_EXPORT mgl_datac_read_mat_(uintptr_t *d, const char *fname,int *dim,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
@@ -702,7 +698,7 @@ int MGL_EXPORT mgl_datac_read_range(HADT dat, const char *templ, double from, do
 	//read first file
 	do{	snprintf(fname,n,templ,t);	fname[n-1]=0;	t+= step;	} while(!mgl_datac_read(&d,fname) && t<=to);
 
-	if(t>to)	{	delete []fname;	return false;	}
+	if(t>to)	{	delete []fname;	return 0;	}
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
 	b = (dual *)malloc(kx*ky*kz*sizeof(dual));
 	memcpy(b,d.a,kx*ky*kz*sizeof(dual));
@@ -713,11 +709,11 @@ int MGL_EXPORT mgl_datac_read_range(HADT dat, const char *templ, double from, do
 		snprintf(fname,n,templ,t);	fname[n-1]=0;
 		if(mgl_datac_read(&d,fname))
 			if(!mgl_add_file(kx,ky,kz,b,&d,as_slice))
-			{	delete []fname;	free(b);	return false;	}
+			{	delete []fname;	free(b);	return 0;	}
 	}
 	dat->Set(b,kx,ky,kz);
 	delete []fname;	free(b);
-	return true;
+	return 1;
 }
 int MGL_EXPORT mgl_datac_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
@@ -737,7 +733,7 @@ int MGL_EXPORT mgl_datac_read_all(HADT dat, const char *templ, int as_slice)
 	for(i=0;i<res.gl_pathc;i++)
 		if(mgl_datac_read(&d,res.gl_pathv[i]))	break;
 
-	if(i>=res.gl_pathc)	{	globfree (&res);	return false;	}
+	if(i>=res.gl_pathc)	{	globfree (&res);	return 0;	}
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
 	b = (dual *)malloc(kx*ky*kz*sizeof(dual));
 	memcpy(b,d.a,kx*ky*kz*sizeof(dual));
@@ -746,14 +742,14 @@ int MGL_EXPORT mgl_datac_read_all(HADT dat, const char *templ, int as_slice)
 	{
 		if(mgl_datac_read(&d,res.gl_pathv[i]))
 			if(!mgl_add_file(kx,ky,kz,b,&d,as_slice))
-			{	globfree (&res);	free(b);	return false;	}
+			{	globfree (&res);	free(b);	return 0;	}
 	}
 	dat->Set(b,kx,ky,kz);
 
 	globfree (&res);	free(b);
-	return true;
+	return 1;
 #else
-	return false;
+	return 0;
 #endif
 }
 int MGL_EXPORT mgl_datac_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l)
@@ -888,11 +884,11 @@ int MGL_EXPORT mgl_datac_read_hdf(HADT d,const char *fname,const char *data)
 	hid_t hf,hd,hs;
 	hsize_t dims[4];
 	long rank, res = H5Fis_hdf5(fname);
-	if(res<=0)	{	return false;	}
+	if(res<=0)	return 0;
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
-	if(hf<0)	return false;
+	if(hf<0)	return 0;
 	hd = H5Dopen(hf,data);
-	if(hd<0)	return false;
+	if(hd<0)	return 0;
 	hs = H5Dget_space(hd);
 	rank = H5Sget_simple_extent_ndims(hs);
 	if(rank>0 && rank<=4)
@@ -926,14 +922,14 @@ int MGL_EXPORT mgl_datac_read_hdf(HADT d,const char *fname,const char *data)
 			delete []a;
 		}
 	}
-	H5Sclose(hs);	H5Dclose(hd);	H5Fclose(hf);	return true;
+	H5Sclose(hs);	H5Dclose(hd);	H5Fclose(hf);	return 1;
 }
 //-----------------------------------------------------------------------------
 #else
 void MGL_EXPORT mgl_datac_save_hdf(HCDT ,const char *,const char *,int )
 {	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	}
 int MGL_EXPORT mgl_datac_read_hdf(HADT ,const char *,const char *)
-{	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	return false;}
+{	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	return 0;}
 #endif
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_datac_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n)

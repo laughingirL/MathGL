@@ -110,7 +110,7 @@ void MemPanel::delData()
 	int	n = tab->currentRow();
 	if(n<0)	n = 0;
 	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toLocal8Bit().constData());
-	if(!v && v->o)	((QWidget *)v->o)->close();
+	if(v && v->o)	((QWidget *)v->o)->close();
 	parser.DeleteVar(tab->item(n,0)->text().toLocal8Bit().constData());
 	refresh();
 }

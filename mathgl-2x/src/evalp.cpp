@@ -456,9 +456,9 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		{
 			if(ch=='a' && p[2]=='x')	v = d->Maximal();
 			else if(ch=='i' && p[2]=='n')	v = d->Minimal();
-			else if(ch=='x')	{	v = d->Maximal(x,y,z);	v = x/ns[0];	}
-			else if(ch=='y')	{	v = d->Maximal(x,y,z);	v = y/ns[1];	}
-			else if(ch=='z')	{	v = d->Maximal(x,y,z);	v = z/ns[2];	}
+			else if(ch=='x')	{	d->Maximal(x,y,z);	v = x/ns[0];	}
+			else if(ch=='y')	{	d->Maximal(x,y,z);	v = y/ns[1];	}
+			else if(ch=='z')	{	d->Maximal(x,y,z);	v = z/ns[2];	}
 		}
 		else if(c0=='s')
 		{
@@ -882,9 +882,9 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			mreal x,y,z;
 			if(ch=='a' && p[2]=='x')	v = d->Maximal();
 			else if(ch=='i' && p[2]=='n')	v = d->Minimal();
-			else if(ch=='x')	{	v = d->Maximal(x,y,z);	v = x/ns[0];	}
-			else if(ch=='y')	{	v = d->Maximal(x,y,z);	v = y/ns[1];	}
-			else if(ch=='z')	{	v = d->Maximal(x,y,z);	v = z/ns[2];	}
+			else if(ch=='x')	{	d->Maximal(x,y,z);	v = x/ns[0];	}
+			else if(ch=='y')	{	d->Maximal(x,y,z);	v = y/ns[1];	}
+			else if(ch=='z')	{	d->Maximal(x,y,z);	v = z/ns[2];	}
 		}
 		else if(c0=='s')
 		{

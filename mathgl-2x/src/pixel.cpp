@@ -1320,7 +1320,7 @@ void mglCanvas::pnt_pix(long i, long j, const mglPnt &p, const mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 {
-	const int oi = d->ObjId;
+	const int oi = d?d->ObjId:-1;
 	unsigned char cs[4];	col2int(q,cs,oi);
 	const unsigned char ca = cs[3];// = size>0 ? 255 : 255*q.t;
 	const mreal ss=(strchr("xsSoO",type)?1:1.1)*fabs(size), dpw=(oi==HighId?2:3)*pen_delta;
@@ -1338,7 +1338,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 		if(x1>x2 || y1>y2)	return;
 		const float V=(pw-1)*(pw-1)/4,S=(1-pw)/2;
-		
+
 		for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 		{
 			register float dx=i-q.x, dy=j-q.y, v=dx*dx+dy*dy;
@@ -1702,7 +1702,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_pix(long i, long j, const mglPnt &q, char type, mreal size, mglDrawReg *d)
 {
-	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
+	unsigned char cs[4];	col2int(q,cs,d?d->ObjId:-1);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p0=q,p1=q,p2=q,p3=q;
 	mreal ss=fabs(size);
 

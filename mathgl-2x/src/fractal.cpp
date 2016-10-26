@@ -43,7 +43,7 @@ HMDT MGL_EXPORT mgl_data_ifs_2d(HCDT A, long n, long skip)
 	mreal amax=0;
 	for(long i=0; i<A->GetNy(); i++)	amax += A->v(6,i);
 	if(amax<=0)	return 0;
-	
+
 	mglData *f = new mglData(2,n);
 	mreal x = 0, y = 0;
 	for(long i=0; i<skip; i++)	mgl_ifs_2d_point(A, x, y,amax);
@@ -77,7 +77,7 @@ HMDT MGL_EXPORT mgl_data_ifs_3d(HCDT A, long n, long skip)
 	mreal amax = 0;
 	for(int i=0; i<A->GetNy(); i++)	amax += A->v(12,i);
 	if(amax <= 0) return 0;
-	
+
 	mglData *f = new mglData(3,n);
 	mreal x = 0, y = 0, z = 0;
 	for(long i=0; i<skip; i++)	mgl_ifs_3d_point(A, x, y, z, amax);
@@ -105,7 +105,7 @@ HMDT MGL_EXPORT mgl_data_ifs_file(const char *fname, const char *name, long n, l
 	e = strstr(s,"(3D)");	if(e && e<p)	ext3d = true;
 	e = strstr(s,"(3d)");	if(e && e<p)	ext3d = true;
 	e = strchr(p,'}');
-	
+
 	std::vector<mreal> nums;
 	for(size_t i=0;p[i] && p+i<e;i++)
 	{
@@ -148,13 +148,13 @@ void MGL_NO_EXPORT mgl_spherical_var2(mreal &xNew, mreal &yNew, mreal x, mreal y
 {	mreal c1 = par[0]/(x*x+y*y);	xNew += c1*x;	yNew += c1*y;	}
 void MGL_NO_EXPORT mgl_swirl_var3(mreal &xNew, mreal &yNew, mreal x, mreal y, const mreal *par)
 {
-	mreal r2=x*x+y*y, c1=sin(r2), c2=cos(r2);	
+	mreal r2=x*x+y*y, c1=sin(r2), c2=cos(r2);
 	xNew += par[0]*(x*c1 - y*c2);
 	yNew += par[0]*(x*c2 + y*c1);
 }
 void MGL_NO_EXPORT mgl_horseshoe_var4(mreal &xNew, mreal &yNew, mreal x, mreal y, const mreal *par)
 {
-	mreal c1 = par[0]/hypot(x,y);	
+	mreal c1 = par[0]/hypot(x,y);
 	xNew += c1*(x*x-y*y);
 	yNew += 2*c1*x*y;
 }
@@ -213,7 +213,7 @@ void MGL_NO_EXPORT mgl_bent_var14(mreal &xNew, mreal &yNew, mreal x, mreal y, co
 	{	xNew += par[0]*x;	yNew += par[0]*y;	}
 	else if(x<0 && y>=0)
 	{	xNew += par[0]*2*x;	yNew += par[0]*y;	}
-	else if(x>=0 && x<0)
+	else if(x>=0 && y<0)
 	{	xNew += par[0]*x;	yNew += par[0]*y/2;	}
 	else
 	{	xNew += par[0]*2*x;	yNew += par[0]*y/2;	}
@@ -358,7 +358,7 @@ void MGL_NO_EXPORT mgl_curl_var39(mreal &xNew, mreal &yNew, mreal x, mreal y, co
 	mreal c1=1 + par[1]*x + par[2]*(x*x - y*y);
 	mreal c2 = par[1]*y + 2*par[2]*x*y;
 	mreal c3 = par[0]/(c1*c1 + c2*c2);
-	xNew += c3*(c1*x + c2*y);	yNew += c3*(c1*y - c2*y);
+	xNew += c3*(c1*x + c2*y);	yNew += c3*(c1*x - c2*y);
 }
 void MGL_NO_EXPORT mgl_rectangles_var40(mreal &xNew, mreal &yNew, mreal x, mreal y, const mreal *par)
 {
@@ -793,25 +793,25 @@ void MGL_NO_EXPORT mgl_flux_var97(mreal &xNew, mreal &yNew, mreal x, mreal y, co
 //-----------------------------------------------------------------------------
 typedef void (*flame_func)(mreal &xNew, mreal &yNew, mreal x, mreal y, const mreal *par);
 MGL_NO_EXPORT flame_func ffunc[mglFlame2dLAST] = {
-	mgl_linear_var0,	mgl_sinusoidal_var1,	mgl_spherical_var2,	mgl_swirl_var3,		mgl_horseshoe_var4,	
-	mgl_polar_var5,		mgl_handkerchief_var6,	mgl_heart_var7,		mgl_disc_var8,		mgl_spiral_var9,	
-	mgl_hyperbolic_var10,	mgl_diamond_var11,	mgl_ex_var12,		mgl_julia_var13,	mgl_bent_var14,	
-	mgl_waves_var15,		mgl_fisheye_var16,	mgl_popcorn_var17,	mgl_exponential_var18,	mgl_power_var19,	
-	mgl_cosine_var20,		mgl_rings_var21,	mgl_fan_var22,		mgl_blob_var23,		mgl_pdj_var24,	
-	mgl_fan2_var25,			mgl_rings2_var26,	mgl_eyefish_var27,	mgl_bubble_var28,	mgl_cylinder_var29,	
-	mgl_perspective_var30,	mgl_noise_var31,	mgl_juliaN_var32,	mgl_juliaScope_var33,	mgl_blur_var34,	
-	mgl_gaussian_var35,	mgl_radialBlur_var36,	mgl_pie_var37,		mgl_ngon_var38,		mgl_curl_var39,	
-	mgl_rectangles_var40,	mgl_arch_var41,		mgl_tangent_var42,	mgl_square_var43,	mgl_blade_var44,	
-	mgl_secant_var45,		mgl_rays_var46,		mgl_twintrian_var47,mgl_cross_var48,	mgl_disc2_var49,	
-	mgl_supershape_var50,	mgl_flower_var51,	mgl_conic_var52,	mgl_parabola_var53,	mgl_bent2_var54,	
-	mgl_bipolar_var55,		mgl_boarders_var56,	mgl_butterfly_var57,mgl_cell_var58,		mgl_cpow_var59,	
-	mgl_curve_var60,		mgl_edisc_var61,	mgl_elliptic_var62,	mgl_escher_var63,	mgl_foci_var64,	
-	mgl_lazySusan_var65,	mgl_loonie_var66,	mgl_preBlur_var67,	mgl_modulus_var68,	mgl_oscope_var69,	
-	mgl_polar2_var70,		mgl_popcorn2_var71,	mgl_scry_var72,		mgl_separation_var73,	mgl_split_var74,	
-	mgl_splits_var75,		mgl_stripes_var76,	mgl_wedge_var77,	mgl_wedgeJulia_var78,	mgl_wedgeSph_var79,	
-	mgl_whorl_var80,		mgl_waves2_var81,	mgl_exp_var82,		mgl_log_var83,		mgl_sin_var84,	
-	mgl_cos_var85,			mgl_tan_var86,		mgl_sec_var87,		mgl_csc_var88,		mgl_cot_var89,	
-	mgl_sinh_var90,			mgl_cosh_var91,		mgl_tanh_var92,		mgl_sech_var93,		mgl_csch_var94,	
+	mgl_linear_var0,	mgl_sinusoidal_var1,	mgl_spherical_var2,	mgl_swirl_var3,		mgl_horseshoe_var4,
+	mgl_polar_var5,		mgl_handkerchief_var6,	mgl_heart_var7,		mgl_disc_var8,		mgl_spiral_var9,
+	mgl_hyperbolic_var10,	mgl_diamond_var11,	mgl_ex_var12,		mgl_julia_var13,	mgl_bent_var14,
+	mgl_waves_var15,		mgl_fisheye_var16,	mgl_popcorn_var17,	mgl_exponential_var18,	mgl_power_var19,
+	mgl_cosine_var20,		mgl_rings_var21,	mgl_fan_var22,		mgl_blob_var23,		mgl_pdj_var24,
+	mgl_fan2_var25,			mgl_rings2_var26,	mgl_eyefish_var27,	mgl_bubble_var28,	mgl_cylinder_var29,
+	mgl_perspective_var30,	mgl_noise_var31,	mgl_juliaN_var32,	mgl_juliaScope_var33,	mgl_blur_var34,
+	mgl_gaussian_var35,	mgl_radialBlur_var36,	mgl_pie_var37,		mgl_ngon_var38,		mgl_curl_var39,
+	mgl_rectangles_var40,	mgl_arch_var41,		mgl_tangent_var42,	mgl_square_var43,	mgl_blade_var44,
+	mgl_secant_var45,		mgl_rays_var46,		mgl_twintrian_var47,mgl_cross_var48,	mgl_disc2_var49,
+	mgl_supershape_var50,	mgl_flower_var51,	mgl_conic_var52,	mgl_parabola_var53,	mgl_bent2_var54,
+	mgl_bipolar_var55,		mgl_boarders_var56,	mgl_butterfly_var57,mgl_cell_var58,		mgl_cpow_var59,
+	mgl_curve_var60,		mgl_edisc_var61,	mgl_elliptic_var62,	mgl_escher_var63,	mgl_foci_var64,
+	mgl_lazySusan_var65,	mgl_loonie_var66,	mgl_preBlur_var67,	mgl_modulus_var68,	mgl_oscope_var69,
+	mgl_polar2_var70,		mgl_popcorn2_var71,	mgl_scry_var72,		mgl_separation_var73,	mgl_split_var74,
+	mgl_splits_var75,		mgl_stripes_var76,	mgl_wedge_var77,	mgl_wedgeJulia_var78,	mgl_wedgeSph_var79,
+	mgl_whorl_var80,		mgl_waves2_var81,	mgl_exp_var82,		mgl_log_var83,		mgl_sin_var84,
+	mgl_cos_var85,			mgl_tan_var86,		mgl_sec_var87,		mgl_csc_var88,		mgl_cot_var89,
+	mgl_sinh_var90,			mgl_cosh_var91,		mgl_tanh_var92,		mgl_sech_var93,		mgl_csch_var94,
 	mgl_coth_var95,			mgl_auger_var96,	mgl_flux_var97};
 //-----------------------------------------------------------------------------
 long MGL_NO_EXPORT mgl_flame_2d_point(HCDT A, HCDT F, mreal& x, mreal& y, mreal amax)
@@ -844,7 +844,7 @@ HMDT MGL_EXPORT mgl_data_flame_2d(HCDT A, HCDT F, long n, long skip)
 	mreal amax=0;
 	for(long i=0; i<A->GetNy(); i++)	amax += A->v(6,i);
 	if(amax<=0)	return 0;
-	
+
 	mglData *f = new mglData(3,n);
 	mreal x = 0, y = 0;
 	for(long i=0; i<skip; i++)	mgl_flame_2d_point(A, F, x, y,amax);

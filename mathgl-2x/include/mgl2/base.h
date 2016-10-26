@@ -60,7 +60,7 @@ public:
 	{	np=16;	pb=Pbuf;	dat = (T**)malloc(np*sizeof(T*));
 		dat[0] = new T[(size_t)1<<pb];	n=0;	m=1;	mutex = 0;	}
 	~mglStack()	{	clear();	delete [](dat[0]);	free(dat);	}
-	inline void set_mutex(void *m)	{	mutex = m;	}
+	inline void set_mutex(void *mtx)	{	mutex = mtx;	}
 	void reserve(size_t num)
 	{
 		num+=n;
@@ -148,6 +148,8 @@ struct MGL_EXPORT mglLight
 {
 	mglLight():n(false),a(0),b(0)	{}
 	mglLight(const mglLight &aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
+	const mglLight &operator=(const mglLight &aa)
+	{	memcpy(this,&aa,sizeof(mglLight));	return aa;	}
 
 	bool n;			///< Availability of light sources
 	mglPoint d;		///< Direction of light sources

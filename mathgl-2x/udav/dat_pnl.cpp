@@ -211,8 +211,8 @@ void DatPanel::putValue(int r, int c)
 	if(s=="nan")	f=NAN;
 	else if(s=="inf")	f=INFINITY;
 	else if(s=="-inf")	f=-INFINITY;
-	else	g = mgl_str2dual(s.toLocal8Bit().constData());	//f = s.toDouble();
-	f = real(g);
+	else
+	{	g = mgl_str2dual(s.toLocal8Bit().constData());	f = real(g);	}
 	mglDataC *cc = dynamic_cast<mglDataC*>(var);
 	if(cc)
 	{

@@ -1080,7 +1080,7 @@ MGL_NO_EXPORT void *mgl_jacob2(void *par)
 		register long im = i>0 ? -1:0, jm = j>0 ? -nx:0;
 		r[i0] = (x[i0+ip]-x[i0+im])*(y[i0+jp]-y[i0+jm]) -
 				(y[i0+ip]-y[i0+im])*(x[i0+jp]-x[i0+jm]);
-		r[i0] *= mreal((nx-1)*(ny-1)) / ((ip-im)*(jp-jm));
+		r[i0] *= mreal((nx-1)*(ny-1)) / mreal((ip-im)*(jp-jm));
 	}
 	return 0;
 }
@@ -1105,7 +1105,7 @@ HMDT MGL_EXPORT mgl_jacobian_2d(HCDT x, HCDT y)
 			register long jm = j>0 ? j-1:j, jp = j<ny-1 ? j+1:j;
 			r->a[i+nx*j] = (x->v(ip,j)-x->v(im,j))*(y->v(i,jp)-y->v(i,jm)) -
 						(y->v(ip,j)-y->v(im,j))*(x->v(i,jp)-x->v(i,jm));
-			r->a[i+nx*j] *= mreal((nx-1)*(ny-1)) / ((ip-im)*(jp-jm));
+			r->a[i+nx*j] *= mreal((nx-1)*(ny-1)) / mreal((ip-im)*(jp-jm));
 		}
 	}
 	return r;
@@ -1131,7 +1131,7 @@ MGL_NO_EXPORT void *mgl_jacob3(void *par)
 				(x[i0+jp]-x[i0+jm])*(y[i0+kp]-y[i0+km])*(z[i0+ip]-z[i0+im]) +
 				(x[i0+kp]-x[i0+km])*(y[i0+ip]-y[i0+im])*(z[i0+jp]-z[i0+jm]) -
 				(x[i0+kp]-x[i0+km])*(y[i0+jp]-y[i0+jm])*(z[i0+ip]-z[i0+im]);
-		r[i0] *= mreal((nx-1)*(ny-1)*(nz-1)) / ((ip-im)*(jp-jm)*(kp-km));
+		r[i0] *= mreal((nx-1)*(ny-1)*(nz-1)) / mreal((ip-im)*(jp-jm)*(kp-km));
 	}
 	return 0;
 }
@@ -1164,7 +1164,7 @@ HMDT MGL_EXPORT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z)
 					(x->v(i,jp,k)-x->v(i,jm,k))*(y->v(i,j,kp)-y->v(i,j,km))*(z->v(ip,j,k)-z->v(im,j,k)) +
 					(x->v(i,j,kp)-x->v(i,j,km))*(y->v(ip,j,k)-y->v(im,j,k))*(z->v(i,jp,k)-z->v(i,jm,k)) -
 					(x->v(i,j,kp)-x->v(i,j,km))*(y->v(i,jp,k)-y->v(i,jm,k))*(z->v(ip,j,k)-z->v(im,j,k));
-			r->a[i0] *= mreal((nx-1)*(ny-1)*(nz-1)) / ((ip-im)*(jp-jm)*(kp-km));
+			r->a[i0] *= mreal((nx-1)*(ny-1)*(nz-1)) / mreal((ip-im)*(jp-jm)*(kp-km));
 		}
 
 	}

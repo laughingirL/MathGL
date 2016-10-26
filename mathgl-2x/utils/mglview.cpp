@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 		else	{	printf("No file for MGL script\n");	return 0;	}
 	}
 
-	mgl_ask_func = mgl_ask_gets;
+	//mgl_ask_func = mgl_ask_gets;
 	mgl_ask_func = mgl_ask_qt;
 	mglQT gr(mgld?NULL:show, *iname?iname:"mglview");
 	if(gray)	gr.Gray(gray);

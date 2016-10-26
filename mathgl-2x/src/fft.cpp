@@ -244,7 +244,7 @@ void MGL_EXPORT mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 {
 	if(!dir || *dir==0)	return;
 	long nx = re->nx, ny = re->ny, nz = re->nz;
-	if(nx*ny*nz != im->nx*im->ny*im->nz || !dir || dir[0]==0)	return;
+	if(nx*ny*nz != im->nx*im->ny*im->nz || dir[0]==0)	return;
 	bool clear=false;
 	void *wt=0;
 	long par[4]={nx,ny,nz,strchr(dir,'i')!=0};
@@ -772,7 +772,7 @@ HMDT MGL_EXPORT mgl_transform(HCDT re, HCDT im, const char *tr)
 {
 	if(!tr || *tr==0)	return 0;
 	long nx = re->GetNx(), ny = re->GetNy(), nz = re->GetNz();
-	if(nx*ny*nz != im->GetNN() || !tr || tr[0]==0)	return 0;
+	if(nx*ny*nz != im->GetNN() || tr[0]==0)	return 0;
 	mglData rr(re),ii(im);
 	if(strchr(tr,'i') && strchr(tr,'f'))	// general case
 	{
@@ -1290,7 +1290,7 @@ HMDT MGL_EXPORT mgl_data_correl(HCDT d1, HCDT d2, const char *dir)
 }
 uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t *d1, uintptr_t *d2, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	uintptr_t res = uintptr_t(mgl_datac_correl(_DA_(d1),_DA_(d2),s));
+	uintptr_t res = uintptr_t(mgl_data_correl(_DA_(d1),_DA_(d2),s));
 	delete []s;		return res;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_wavelet(HMDT dat, const char *how, int k)
