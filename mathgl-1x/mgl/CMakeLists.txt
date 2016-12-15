@@ -58,7 +58,7 @@ if(use_gif)
 endif(use_gif)
 
 if(use_hdf5 OR use_hdf5_18)
-	target_link_libraries(mgl ${HDF5_LIB})
+	target_link_libraries(mgl ${HDF5_LIBRARIES} ${HDF5_C_SHARED_LIBRARY})
 	add_definitions(-DHAVE_HDF5)
 	if(NOT use_hdf5_18)
 		add_definitions(-DH5_USE_16_API)

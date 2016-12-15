@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #ifndef NO_PNG
 #include <png.h>
+#include <zlib.h>
 #endif
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_c.h"

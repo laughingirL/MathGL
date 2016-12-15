@@ -111,7 +111,14 @@ mreal mgl_fit_base(mglFitData *fd, mreal *ini)
 		status = gsl_multifit_test_delta (s->dx, s->x, 1e-4, 1e-4 );
 	}
 	while ( status == GSL_CONTINUE && iter < 500 );
-	gsl_multifit_covar (s->J, 0.0, covar );
+#ifdef MGL_HAVE_GSL2
+	gsl_matrix *J = gsl_matrix_alloc(s->fdf->n, s->fdf->p);
+	gsl_multifit_fdfsolver_jac(s, J);
+	gsl_multifit_covar (J, 0.0, covar);
+	gsl_matrix_free (J);
+#else
+	gsl_multifit_covar(s->J, 0.0, covar);
+#endif
 	mreal res = gsl_blas_dnrm2(s->f);
 	for(i=0;i<m;i++)	ini[i] = gsl_vector_get(s->x, i);
 	// free memory

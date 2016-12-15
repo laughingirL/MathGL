@@ -266,9 +266,18 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 void mglGraph::StartGIF(const char *fname, int ms)
 {
 #ifdef HAVE_GIF
+#if GIFLIB_MAJOR>5 || (GIFLIB_MAJOR==5 && GIFLIB_MINOR>0)
+	if(gif)	EGifCloseFile(gif,0);
+#else
 	if(gif)	EGifCloseFile(gif);
+#endif
+#if GIFLIB_MAJOR>=5
+	gif = EGifOpenFileName(fname, 0, 0);
+	EGifSetGifVersion(gif,true);
+#else
 	EGifSetGifVersion("89a");
 	gif = EGifOpenFileName(fname, 0);
+#endif
 	// get picture sizes
 	// NOTE: you shouldn't call SetSize() after StartGIF() !!!
 	long width, height;
@@ -287,22 +296,42 @@ void mglGraph::StartGIF(const char *fname, int ms)
 		col[m].Blue =51*k;
 	}
 	// write header
+#if GIFLIB_MAJOR>=5
+	ColorMapObject *gmap = GifMakeMapObject(256, col);
+	EGifPutScreenDesc(gif, width, height, 256,0,gmap);
+	GifFreeMapObject(gmap);
+#else
 	ColorMapObject *gmap = MakeMapObject(256, col);
 	EGifPutScreenDesc(gif, width, height, 256,0,gmap);
 	FreeMapObject(gmap);
+#endif
 	// put animation parameters
 	ms /= 10;
-	unsigned char ext1[11] = {0x4E, 0x45, 0x54, 0x53, 0x43, 0x41, 0x50, 0x45, 0x32, 0x2E, 0x30}, ext3[3] = {0x01, 0xff, 0xff}, ext2[9] = {0x08, ms%256, ms/256, 0xff};
+	unsigned char ext1[11] = {0x4E, 0x45, 0x54, 0x53, 0x43, 0x41, 0x50, 0x45, 0x32, 0x2E, 0x30};
+	unsigned char ext2[9] = {0x08, (unsigned char)(ms%256), (unsigned char)(ms/256), 0xff};
+	unsigned char ext3[3] = {0x01, 0xff, 0xff};
+#if GIFLIB_MAJOR>=5
+	EGifPutExtensionLeader(gif,0xff);
+	EGifPutExtensionBlock(gif,11,ext1);
+	EGifPutExtensionBlock(gif,3,ext3);
+	EGifPutExtensionTrailer(gif);
+	EGifPutExtension(gif,0xf9,4,ext2);
+#else
 	EGifPutExtensionFirst(gif,0xff,11,ext1);
 	EGifPutExtensionLast(gif,0xff,3,ext3);
 	EGifPutExtension(gif,0xf9,4,ext2);
+#endif
 #endif
 }
 //-----------------------------------------------------------------------------
 void mglGraph::CloseGIF()
 {
 #ifdef HAVE_GIF
+#if GIFLIB_MAJOR>5 || (GIFLIB_MAJOR==5 && GIFLIB_MINOR>0)
+	if(gif)	EGifCloseFile(gif,0);
+#else
 	if(gif)	EGifCloseFile(gif);
+#endif
 #endif
 	gif = 0;
 }
@@ -348,7 +377,11 @@ void mglGraph::WriteGIF(const char *fname,const char *)
 	if(!l)	return;
 	n = width*height;
 
+#if GIFLIB_MAJOR>=5
+	GifFileType *fg = EGifOpenFileName(fname, 0, 0);
+#else
 	GifFileType *fg = EGifOpenFileName(fname, 0);
+#endif
 	// define colormap
 	GifColorType col[256];
 	memset(col,0,256*sizeof(GifColorType));
@@ -362,9 +395,15 @@ void mglGraph::WriteGIF(const char *fname,const char *)
 		col[m].Blue =51*k;
 	}
 	// write header
+#if GIFLIB_MAJOR>=5
+	ColorMapObject *gmap = GifMakeMapObject(256, col);
+	EGifPutScreenDesc(fg, width, height, 256,0,gmap);
+	GifFreeMapObject(gmap);
+#else
 	ColorMapObject *gmap = MakeMapObject(256, col);
 	EGifPutScreenDesc(fg, width, height, 256,0,gmap);
 	FreeMapObject(gmap);
+#endif
 	// write frame
 	EGifPutImageDesc(fg, 0, 0, width, height, 0, 0);
 	GifPixelType *line = new GifPixelType[n];
@@ -377,7 +416,11 @@ void mglGraph::WriteGIF(const char *fname,const char *)
 		line[m] = i+6*(j+6*k);
 	}
 	EGifPutLine(fg, line, n);
+#if GIFLIB_MAJOR>5 || (GIFLIB_MAJOR==5 && GIFLIB_MINOR>0)
+	EGifCloseFile(fg,0);
+#else
 	EGifCloseFile(fg);
+#endif
 	delete []line;	free(l);
 	if(f)	free(f);
 #endif
