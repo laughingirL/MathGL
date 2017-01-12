@@ -372,7 +372,12 @@ using mglDataA::Momentum;
 	inline void SinFFT(const char *dir)	{	mgl_data_sinfft(this,dir);	}
 	/// Apply Cos-Fourier transform
 	inline void CosFFT(const char *dir)	{	mgl_data_cosfft(this,dir);	}
-	/// Fill data by 'x'/'k' samples for Hankel ('h') or Fourier ('f') transform
+	/// Fill data by coordinates/momenta samples for Hankel ('h') or Fourier ('f') transform
+	/** Parameter \a how may contain:
+	 * ‘x‘,‘y‘,‘z‘ for direction (only one will be used),
+	 * ‘k‘ for momenta samples,
+	 * ‘h‘ for Hankel samples,
+	 * ‘f‘ for Cartesian/Fourier samples (default). */
 	inline void FillSample(const char *how)
 	{	mgl_data_fill_sample(this,how);	}
 	/// Apply wavelet transform

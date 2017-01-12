@@ -181,7 +181,7 @@ private:
 	mglData *fval;		///< Values for for-cycle. Note that nx - number of elements, ny - next element, nz - address (or string number) of first cycle command
 	int for_stack[40];	///< The order of for-variables
 	int for_addr;		///< Flag for saving address in variable (for_addr-1)
-	bool for_br;		///< Break is switched on (skip all comands until 'next')
+	bool for_br;		///< Break is switched on (skip all commands until 'next')
 	unsigned Variant;	///< Select variant of argument(s) separated by '?'
 
 	/// Parse command

@@ -125,6 +125,13 @@ void MGL_EXPORT mgl_data_import_(uintptr_t *dat, const char *fname, const char *
 /// Scan textual file for template and fill data array
 int MGL_EXPORT mgl_data_scan_file(HMDT dat,const char *fname, const char *templ);
 int MGL_EXPORT mgl_data_scan_file_(uintptr_t *dat,const char *fname, const char *templ,int,int);
+/// Read data array from Tektronix WFM file
+/** Parse Tektronix TDS5000/B, TDS6000/B/C, TDS/CSA7000/B, MSO70000/C, DSA70000/B/C DPO70000/B/C DPO7000/ MSO/DPO5000. */
+int MGL_EXPORT mgl_data_read_wfm(HMDT d,const char *fname, long num, long step, long start);
+int MGL_EXPORT mgl_data_read_wfm_(uintptr_t *d, const char *fname, long *num, long *step, long *start,int l);
+/// Read data array from Matlab MAT file (parse versions 4 and 5)
+int MGL_EXPORT mgl_data_read_matlab(HMDT d,const char *fname,const char *data);
+int MGL_EXPORT mgl_data_read_matlab_(uintptr_t *d, const char *fname, const char *data,int l,int n);
 
 /// Create or recreate the array with specified size and fill it by zero
 void MGL_EXPORT mgl_data_create(HMDT dat, long nx,long ny,long nz);
@@ -209,25 +216,25 @@ HMDT MGL_EXPORT mgl_data_ifs_file(const char *fname, const char *name, long n, l
 uintptr_t mgl_data_ifs_file_(const char *fname, const char *name, long *n, long *skip,int l,int m);
 /// Codes for flame fractal functions
 enum {
-	mglFlame2d_linear=0,	mglFlame2d_sinusoidal,	mglFlame2d_spherical,	mglFlame2d_swirl,		mglFlame2d_horseshoe,	
-	mglFlame2d_polar,		mglFlame2d_handkerchief,mglFlame2d_heart,		mglFlame2d_disc,		mglFlame2d_spiral,	
-	mglFlame2d_hyperbolic,	mglFlame2d_diamond,		mglFlame2d_ex,			mglFlame2d_julia,		mglFlame2d_bent,	
-	mglFlame2d_waves,		mglFlame2d_fisheye,		mglFlame2d_popcorn,		mglFlame2d_exponential,	mglFlame2d_power,	
-	mglFlame2d_cosine,		mglFlame2d_rings,		mglFlame2d_fan,			mglFlame2d_blob,		mglFlame2d_pdj,	
-	mglFlame2d_fan2,		mglFlame2d_rings2,		mglFlame2d_eyefish,		mglFlame2d_bubble,		mglFlame2d_cylinder,	
-	mglFlame2d_perspective,	mglFlame2d_noise,		mglFlame2d_juliaN,		mglFlame2d_juliaScope,	mglFlame2d_blur,	
-	mglFlame2d_gaussian,	mglFlame2d_radialBlur,	mglFlame2d_pie,			mglFlame2d_ngon,		mglFlame2d_curl,	
-	mglFlame2d_rectangles,	mglFlame2d_arch,		mglFlame2d_tangent,		mglFlame2d_square,		mglFlame2d_blade,	
-	mglFlame2d_secant,		mglFlame2d_rays,		mglFlame2d_twintrian,	mglFlame2d_cross,		mglFlame2d_disc2,	
-	mglFlame2d_supershape,	mglFlame2d_flower,		mglFlame2d_conic,		mglFlame2d_parabola,	mglFlame2d_bent2,	
-	mglFlame2d_bipolar,		mglFlame2d_boarders,	mglFlame2d_butterfly,	mglFlame2d_cell,		mglFlame2d_cpow,	
-	mglFlame2d_curve,		mglFlame2d_edisc,		mglFlame2d_elliptic,	mglFlame2d_escher,		mglFlame2d_foci,	
-	mglFlame2d_lazySusan,	mglFlame2d_loonie,		mglFlame2d_preBlur,		mglFlame2d_modulus,		mglFlame2d_oscope,	
-	mglFlame2d_polar2,		mglFlame2d_popcorn2,	mglFlame2d_scry,		mglFlame2d_separation,	mglFlame2d_split,	
-	mglFlame2d_splits,		mglFlame2d_stripes,		mglFlame2d_wedge,		mglFlame2d_wedgeJulia,	mglFlame2d_wedgeSph,	
-	mglFlame2d_whorl,		mglFlame2d_waves2,		mglFlame2d_exp,			mglFlame2d_log,			mglFlame2d_sin,	
-	mglFlame2d_cos,			mglFlame2d_tan,			mglFlame2d_sec,			mglFlame2d_csc,			mglFlame2d_cot,	
-	mglFlame2d_sinh,		mglFlame2d_cosh,		mglFlame2d_tanh,		mglFlame2d_sech,		mglFlame2d_csch,	
+	mglFlame2d_linear=0,	mglFlame2d_sinusoidal,	mglFlame2d_spherical,	mglFlame2d_swirl,		mglFlame2d_horseshoe,
+	mglFlame2d_polar,		mglFlame2d_handkerchief,mglFlame2d_heart,		mglFlame2d_disc,		mglFlame2d_spiral,
+	mglFlame2d_hyperbolic,	mglFlame2d_diamond,		mglFlame2d_ex,			mglFlame2d_julia,		mglFlame2d_bent,
+	mglFlame2d_waves,		mglFlame2d_fisheye,		mglFlame2d_popcorn,		mglFlame2d_exponential,	mglFlame2d_power,
+	mglFlame2d_cosine,		mglFlame2d_rings,		mglFlame2d_fan,			mglFlame2d_blob,		mglFlame2d_pdj,
+	mglFlame2d_fan2,		mglFlame2d_rings2,		mglFlame2d_eyefish,		mglFlame2d_bubble,		mglFlame2d_cylinder,
+	mglFlame2d_perspective,	mglFlame2d_noise,		mglFlame2d_juliaN,		mglFlame2d_juliaScope,	mglFlame2d_blur,
+	mglFlame2d_gaussian,	mglFlame2d_radialBlur,	mglFlame2d_pie,			mglFlame2d_ngon,		mglFlame2d_curl,
+	mglFlame2d_rectangles,	mglFlame2d_arch,		mglFlame2d_tangent,		mglFlame2d_square,		mglFlame2d_blade,
+	mglFlame2d_secant,		mglFlame2d_rays,		mglFlame2d_twintrian,	mglFlame2d_cross,		mglFlame2d_disc2,
+	mglFlame2d_supershape,	mglFlame2d_flower,		mglFlame2d_conic,		mglFlame2d_parabola,	mglFlame2d_bent2,
+	mglFlame2d_bipolar,		mglFlame2d_boarders,	mglFlame2d_butterfly,	mglFlame2d_cell,		mglFlame2d_cpow,
+	mglFlame2d_curve,		mglFlame2d_edisc,		mglFlame2d_elliptic,	mglFlame2d_escher,		mglFlame2d_foci,
+	mglFlame2d_lazySusan,	mglFlame2d_loonie,		mglFlame2d_preBlur,		mglFlame2d_modulus,		mglFlame2d_oscope,
+	mglFlame2d_polar2,		mglFlame2d_popcorn2,	mglFlame2d_scry,		mglFlame2d_separation,	mglFlame2d_split,
+	mglFlame2d_splits,		mglFlame2d_stripes,		mglFlame2d_wedge,		mglFlame2d_wedgeJulia,	mglFlame2d_wedgeSph,
+	mglFlame2d_whorl,		mglFlame2d_waves2,		mglFlame2d_exp,			mglFlame2d_log,			mglFlame2d_sin,
+	mglFlame2d_cos,			mglFlame2d_tan,			mglFlame2d_sec,			mglFlame2d_csc,			mglFlame2d_cot,
+	mglFlame2d_sinh,		mglFlame2d_cosh,		mglFlame2d_tanh,		mglFlame2d_sech,		mglFlame2d_csch,
 	mglFlame2d_coth,		mglFlame2d_auger,		mglFlame2d_flux,		mglFlame2dLAST
 };
 /// Get array which is n-th pairs {x[i],y[i]} for Flame fractal generated by A with functions F
@@ -334,7 +341,12 @@ void MGL_EXPORT mgl_data_sinfft_(uintptr_t *dat, const char *dir,int);
 /// Apply Cos-Fourier transform
 void MGL_EXPORT mgl_data_cosfft(HMDT dat, const char *dir);
 void MGL_EXPORT mgl_data_cosfft_(uintptr_t *dat, const char *dir,int);
-/// Fill data by 'x'/'k' samples for Hankel ('h') or Fourier ('f') transform
+/// Fill data by coordinates/momenta samples for Hankel ('h') or Fourier ('f') transform
+/** Parameter \a how may contain:
+ * ‘x‘,‘y‘,‘z‘ for direction (only one will be used),
+ * ‘k‘ for momenta samples,
+ * ‘h‘ for Hankel samples,
+ * ‘f‘ for Cartesian/Fourier samples (default). */
 void MGL_EXPORT mgl_data_fill_sample(HMDT dat, const char *how);
 void MGL_EXPORT mgl_data_fill_sample_(uintptr_t *dat, const char *how,int);
 /// Find correlation between 2 data arrays

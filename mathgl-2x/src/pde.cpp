@@ -491,7 +491,7 @@ struct mglOdeTxt	{	long n;	HMEX *eq;	const char *var;	};
 void MGL_NO_EXPORT mgl_txt_func(const mreal *x, mreal *dx, void *par)
 {
 	mglOdeTxt *p=(mglOdeTxt *)par;
-	mreal vars['z'-'a'+1];
+	mreal vars[MGL_VS];
 	for(long i=0;i<p->n;i++)
 	{	char ch = p->var[i];	if(ch>='a' && ch<='z')	vars[ch-'a']=x[i];	}
 #pragma omp parallel for
@@ -526,7 +526,7 @@ struct mglOdeTxtC	{	long n;	HAEX *eq;	const char *var;	};
 void MGL_NO_EXPORT mgl_txt_funcC(const mreal *x, mreal *dx, void *par)
 {
 	mglOdeTxtC *p=(mglOdeTxtC *)par;
-	dual vars['z'-'a'+1];
+	dual vars[MGL_VS];
 	for(long i=0;i<p->n;i++)
 	{	char ch = p->var[i];	if(ch>='a' && ch<='z')	vars[ch-'a']=dual(x[2*i],x[2*i+1]);	}
 #pragma omp parallel for
