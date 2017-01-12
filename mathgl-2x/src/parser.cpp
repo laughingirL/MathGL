@@ -822,7 +822,11 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 		else n = 1;
 		if(n==0)	if_stack[if_pos-1] = cond;
 	}
-	else if(!ifskip() && !Skip && !com.compare(L"break"))	for_br = true;
+	else if(!ifskip() && !Skip && !com.compare(L"break"))
+	{
+		if(if_pos==if_for[0])	if_pos = if_pos>0 ? if_pos-1 : 0;
+		n = for_stack[0] ? 0:1;	for_br = true;
+	}
 	else if(!skip() && !com.compare(L"return"))
 	{
 		if(fn_stack.size()<1)	return 2;
