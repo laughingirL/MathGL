@@ -48,6 +48,9 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 12. Parallel drawing in QMathGL.
 13. "readhdf 'fname.hdf'" -- to read ALL data
 
+15. Nonlinear fitting by splines?!?
+16. Extract curves by "life"???
+
 17. Speed up QMathGL + option to whole redraw instead of view
 
 ZZ. Update *.i for new functions {before release!!!}

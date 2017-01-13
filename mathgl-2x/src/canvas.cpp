@@ -836,7 +836,7 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 //-----------------------------------------------------------------------------
 std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 {
-	char se[68], sf[68], ff[8]="%.3f", ee[8]="%.3e";
+	char se[70], sf[70], ff[8]="%.3f", ee[8]="%.3e";
 	int dig=3;
 	for(const char *s="0123456789";*s;s++)	if(mglchr(fmt,*s))	dig = *s-'0';
 	if(mglchr(fmt,'E'))	ee[3] = 'E';

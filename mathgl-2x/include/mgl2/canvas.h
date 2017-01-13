@@ -36,10 +36,8 @@ struct MGL_EXPORT mglAxis
 	{	dv=aa.dv; ds=aa.ds; d=aa.d; ns=aa.ns; t=aa.t; fact=aa.fact; stl=aa.stl;
 		dir=aa.dir; a=aa.a; b=aa.b; org=aa.org; v0=aa.v0; v1=aa.v1; v2=aa.v2; o=aa.o;
 		f=aa.f; txt=aa.txt; 	ch=aa.ch; pos=aa.pos; sh=aa.sh; inv=aa.inv;	return aa;	}
-	inline void AddLabel(const wchar_t *lbl, mreal v)
-	{	if(mgl_isfin(v))	txt.push_back(mglText(lbl,"",v));	}
 	inline void AddLabel(const std::wstring &lbl, mreal v)
-	{	if(mgl_isfin(v))	txt.push_back(mglText(lbl,v));	}
+	{	if(mgl_isfin(v))	txt.push_back(mglText(L' '+lbl+L' ',v));	}
 	inline void Clear()
 	{	dv=ds=d=v0=v1=v2=sh=0;	o=NAN;	ns=f=0;	pos = 't';	inv=false;
 		fact.clear();	stl.clear();	t.clear();	txt.clear();	}

@@ -64,6 +64,10 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->SubPlot(2,2,0);	gr->Axis();	
+	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Axis();
+	gr->SetRotatedText(false);	gr->SubPlot(2,2,2);	gr->Axis();	
+	gr->SubPlot(2,2,3);	gr->Rotate(40,60);	gr->Axis();	return;
 	mglData a;	a.SetList(5,0.,1.,0.,1.,-1.,2.);
 	gr->Plot(a);
 	return;
