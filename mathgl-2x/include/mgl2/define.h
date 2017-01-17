@@ -192,7 +192,7 @@ typedef float mreal;
 #define mgl_sign(a)		({typeof (a) _a = (a); _a<0 ? -1:1;})
 #define mgl_int(a)		({typeof (a) _a = (a); long(_a+(_a>=0 ? 0.5:-0.5));})
 #else
-#define mgl_isrange(a,b)	(fabs((a)-(b))>MGL_EPSILON && (a)-(a)==mreal(0.) && (b)-(b)==mreal(0.))
+#define mgl_isrange(a,b)	(fabs((a)-(b))>MGL_MIN_VAL && (a)-(a)==mreal(0.) && (b)-(b)==mreal(0.))
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
 #define mgl_isnan(a)	((a)!=(a))

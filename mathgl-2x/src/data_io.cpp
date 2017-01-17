@@ -1269,8 +1269,9 @@ void MGL_EXPORT mgl_data_limit_(uintptr_t *d, mreal *v)
 {	mgl_data_limit(_DT_, *v);	}
 //-----------------------------------------------------------------------------
 /// Read binary data and swap big-endian to little-endian if swap=true
-size_t MGL_EXPORT mgl_fread(FILE *fp, void *ptr, size_t size, size_t num, int swap)
+size_t MGL_EXPORT mgl_fread(FILE *fp, void *vals, size_t size, size_t num, int swap)
 {
+	char *ptr = (char*)vals;
 	size_t r = fread(ptr,size,num,fp);
 	if(r && swap)
 	{

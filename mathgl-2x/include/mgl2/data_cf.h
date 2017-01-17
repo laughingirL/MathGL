@@ -244,6 +244,11 @@ enum {
 HMDT MGL_EXPORT mgl_data_flame_2d(HCDT A, HCDT F, long n, long skip);
 uintptr_t MGL_EXPORT mgl_data_flame_2d_(uintptr_t *A, uintptr_t *F, long *n, long *skip);
 
+/// Get curves, separated by NAN, for maximal values of array d as function of x coordinate.
+/** Noises below lvl amplitude are ignored.
+  * Parameter dy \in [0,ny] set the "attraction" distance of points to curve. */
+HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj);
+uintptr_t MGL_EXPORT mgl_data_detect_(uintptr_t *d, mreal *lvl, mreal *dj);
 
 /// Get array as solution of tridiagonal matrix solution a[i]*x[i-1]+b[i]*x[i]+c[i]*x[i+1]=d[i]
 /** String \a how may contain:

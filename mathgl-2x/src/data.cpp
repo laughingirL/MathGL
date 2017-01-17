@@ -2160,3 +2160,76 @@ mreal MGL_EXPORT mgl_gspline(HCDT c, mreal dx, mreal *d1, mreal *d2)
 mreal MGL_EXPORT mgl_gspline_(uintptr_t *c, mreal *dx, mreal *d1, mreal *d2)
 {	return mgl_gspline(_DA_(c),*dx,d1,d2);	}
 //-----------------------------------------------------------------------------
+struct pnt	{	mreal x,y;	pnt(mreal X, mreal Y):x(X),y(Y){}	};
+HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj)
+{
+	long nx=d->GetNx(), ny=d->GetNy();
+	std::vector<mreal> max_pos[d->GetNx()];
+	for(long i=0;i<nx;i++)	// first collect maximums for each i
+	{
+		for(long j=1;j<ny-1;j++)
+		{
+			mreal v = d->v(i,j), v1 = d->v(i,j-1), v2 = d->v(i,j+1);
+			if(v>lvl && v1<v && v>=v2)	// NOTE only edge is required
+				//			if(v>lvl && ((v1<=v && v>v2) || (v1<v && v>=v2))	// NOTE only edge is required
+			{
+				bool c1=false, c2=false;
+				for(long j1=j-1;j1>=0;j1--)
+				{
+					mreal vv = d->v(i,j1);
+					if(vv>v)	break;
+					if(vv<v/2)	{	c1=true;	break;	}
+				}
+				for(long j2=j+1;j2<ny;j2++)
+				{
+					mreal vv = d->v(i,j2);
+					if(vv>v)	break;
+					if(vv<v/2)	{	c2=true;	break;	}
+				}
+				if(c1 && c2)	max_pos[i].push_back(j + (v2-v1)/(2*v-v2-v1)/2);
+			}
+		}
+	}
+	std::vector<pnt> curv;
+	for(long ii=0;ii<nx-1;ii++)	// now join points into curves
+	{
+		while(max_pos[ii].size())	// try to start curve
+		{
+			mreal est = max_pos[ii].back();
+			max_pos[ii].pop_back();
+			curv.push_back(pnt(ii,est));
+			for(long i=ii+1;i<nx;i++)	// join points to selected curve
+			{
+				size_t kk;
+				pnt p(NAN,dj);
+				for(size_t k=0;k<max_pos[i].size();k++)
+				{
+					register mreal de = max_pos[i][k]-est;
+					if(fabs(de)<fabs(p.y))	{	p.x=i;	p.y=de;	kk=k;	}
+				}
+				if(mgl_isnum(p.x))	// we found it!
+				{
+					mreal last = curv.back().y;
+					p.y += est;	curv.push_back(p);
+					max_pos[i].erase(max_pos[i].begin()+kk);
+					est = mgl_isnum(last) ? 2*p.y-last:p.y;
+				}
+				else	// break curve
+				{	// TODO join curves along x gap
+					curv.push_back(pnt(NAN,NAN));
+					break;
+				}
+			}
+		}
+	}
+	size_t nn = curv.size();
+	HMDT res = new mglData(2,nn);
+	for(size_t k=0;k<nn;k++)
+	{	res->a[2*k] = curv[k].x;	res->a[2*k+1] = curv[k].y;	}
+	return res;
+}
+uintptr_t MGL_EXPORT mgl_data_detect_(uintptr_t *d, mreal *lvl, mreal *dj)
+{	return uintptr_t(mgl_data_detect(_DT_,*lvl,*dj));	}
+//-----------------------------------------------------------------------------
+
+

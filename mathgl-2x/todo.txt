@@ -75,6 +75,7 @@ D. Docs about JS interface
 	rasterize:clf # все что выше будет только в растре
 	axis:box
 	write '1.eps'
+9. Docs about 'detect'
 14. "copy var 'name'" -- to copy variable with "invalid" name
 
 
