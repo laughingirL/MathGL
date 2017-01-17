@@ -2161,6 +2161,18 @@ mreal MGL_EXPORT mgl_gspline_(uintptr_t *c, mreal *dx, mreal *d1, mreal *d2)
 {	return mgl_gspline(_DA_(c),*dx,d1,d2);	}
 //-----------------------------------------------------------------------------
 struct pnt	{	mreal x,y;	pnt(mreal X, mreal Y):x(X),y(Y){}	};
+mreal MGL_NO_EXPORT mgl_find_pnt(std::vector<mreal> &mpos, mreal est, mreal dj)
+{
+	mreal mv = dj, val=NAN;
+	size_t n = mpos.size(), kk=0;
+	for(size_t k=0;k<n;k++)
+	{
+		register mreal de = mpos[k]-est;
+		if(fabs(de)<fabs(mv))	{	mv=de;	val=de+est;	kk=k;	}
+	}
+	if(mgl_isnum(val))	mpos.erase(mpos.begin()+kk);
+	return val;
+}
 HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj)
 {
 	long nx=d->GetNx(), ny=d->GetNy();
@@ -2171,7 +2183,7 @@ HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj)
 		{
 			mreal v = d->v(i,j), v1 = d->v(i,j-1), v2 = d->v(i,j+1);
 			if(v>lvl && v1<v && v>=v2)	// NOTE only edge is required
-				//			if(v>lvl && ((v1<=v && v>v2) || (v1<v && v>=v2))	// NOTE only edge is required
+//			if(v>lvl && ((v1<=v && v>v2) || (v1<v && v>=v2)))	// NOTE only edge is required
 			{
 				bool c1=false, c2=false;
 				for(long j1=j-1;j1>=0;j1--)
@@ -2195,31 +2207,25 @@ HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj)
 	{
 		while(max_pos[ii].size())	// try to start curve
 		{
-			mreal est = max_pos[ii].back();
+			register mreal vv = max_pos[ii].back();
 			max_pos[ii].pop_back();
-			curv.push_back(pnt(ii,est));
+			pnt p1(ii,vv), p2(ii-1,vv);
+			curv.push_back(p1);
 			for(long i=ii+1;i<nx;i++)	// join points to selected curve
 			{
-				size_t kk;
-				pnt p(NAN,dj);
-				for(size_t k=0;k<max_pos[i].size();k++)
+				bool none=true;
+				for(size_t k=0;k<dj && i+k<nx;k++)	// try next points
 				{
-					register mreal de = max_pos[i][k]-est;
-					if(fabs(de)<fabs(p.y))	{	p.x=i;	p.y=de;	kk=k;	}
+					register mreal est = p1.y + (k+1)*(p1.y-p2.y)/(p1.x-p2.x);
+					register mreal val = mgl_find_pnt(max_pos[i+k],est,dj);
+					if(mgl_isnum(val))
+					{	p2=p1;	p1=pnt(i+k,val);	curv.push_back(p1);
+						none=false;	i+=k;	break;	}
 				}
-				if(mgl_isnum(p.x))	// we found it!
-				{
-					mreal last = curv.back().y;
-					p.y += est;	curv.push_back(p);
-					max_pos[i].erase(max_pos[i].begin()+kk);
-					est = mgl_isnum(last) ? 2*p.y-last:p.y;
-				}
-				else	// break curve
-				{	// TODO join curves along x gap
-					curv.push_back(pnt(NAN,NAN));
-					break;
-				}
+				if(none)	// break curve
+				{	curv.push_back(pnt(NAN,NAN));	break;	}
 			}
+			if(mgl_isnum(curv.back().x))	curv.push_back(pnt(NAN,NAN));
 		}
 	}
 	size_t nn = curv.size();
