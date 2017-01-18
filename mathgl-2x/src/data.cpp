@@ -2173,17 +2173,18 @@ mreal MGL_NO_EXPORT mgl_find_pnt(std::vector<mreal> &mpos, mreal est, mreal dj)
 	if(mgl_isnum(val))	mpos.erase(mpos.begin()+kk);
 	return val;
 }
-HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj)
+HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj, mreal di, mreal min_len)
 {
 	long nx=d->GetNx(), ny=d->GetNy();
 	std::vector<mreal> max_pos[d->GetNx()];
+	if(di<=0)	di=dj;
 	for(long i=0;i<nx;i++)	// first collect maximums for each i
 	{
 		for(long j=1;j<ny-1;j++)
 		{
 			mreal v = d->v(i,j), v1 = d->v(i,j-1), v2 = d->v(i,j+1);
-			if(v>lvl && v1<v && v>=v2)	// NOTE only edge is required
-//			if(v>lvl && ((v1<=v && v>v2) || (v1<v && v>=v2)))	// NOTE only edge is required
+			if(v>lvl && v1<v && v>=v2)	// NOTE only one edge is required
+//			if(v>lvl && ((v1<=v && v>v2) || (v1<v && v>=v2)))	// NOTE only edges are required
 			{
 				bool c1=false, c2=false;
 				for(long j1=j-1;j1>=0;j1--)
@@ -2210,22 +2211,32 @@ HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj)
 			register mreal vv = max_pos[ii].back();
 			max_pos[ii].pop_back();
 			pnt p1(ii,vv), p2(ii-1,vv);
+			size_t ini = curv.size();
 			curv.push_back(p1);
 			for(long i=ii+1;i<nx;i++)	// join points to selected curve
 			{
 				bool none=true;
-				for(size_t k=0;k<dj && i+k<nx;k++)	// try next points
+				for(size_t k=0;k<di && i+k<nx;k++)	// try next points
 				{
-					register mreal est = p1.y + (k+1)*(p1.y-p2.y)/(p1.x-p2.x);
-					register mreal val = mgl_find_pnt(max_pos[i+k],est,dj);
-					if(mgl_isnum(val))
+					register mreal val = mgl_find_pnt(max_pos[i+k],p1.y,dj);
+					if(mgl_isnum(val))	// first try closest point (for noise data)
 					{	p2=p1;	p1=pnt(i+k,val);	curv.push_back(p1);
 						none=false;	i+=k;	break;	}
+					else	// next try linear approximation
+					{
+						register mreal est = p1.y + (k+1)*(p1.y-p2.y)/(p1.x-p2.x);
+						val = mgl_find_pnt(max_pos[i+k],est,dj);
+						if(mgl_isnum(val))
+						{	p2=p1;	p1=pnt(i+k,val);	curv.push_back(p1);
+							none=false;	i+=k;	break;	}
+					}
 				}
 				if(none)	// break curve
 				{	curv.push_back(pnt(NAN,NAN));	break;	}
 			}
 			if(mgl_isnum(curv.back().x))	curv.push_back(pnt(NAN,NAN));
+			if(curv[curv.size()-2].x-curv[ini].x<min_len)
+				curv.erase(curv.begin()+ini,curv.end());
 		}
 	}
 	size_t nn = curv.size();
@@ -2234,8 +2245,8 @@ HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj)
 	{	res->a[2*k] = curv[k].x;	res->a[2*k+1] = curv[k].y;	}
 	return res;
 }
-uintptr_t MGL_EXPORT mgl_data_detect_(uintptr_t *d, mreal *lvl, mreal *dj)
-{	return uintptr_t(mgl_data_detect(_DT_,*lvl,*dj));	}
+uintptr_t MGL_EXPORT mgl_data_detect_(uintptr_t *d, mreal *lvl, mreal *dj, mreal *di, mreal *min_len)
+{	return uintptr_t(mgl_data_detect(_DT_,*lvl,*dj, *di, *min_len));	}
 //-----------------------------------------------------------------------------
 
 

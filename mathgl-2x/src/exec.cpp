@@ -3488,6 +3488,8 @@ int mgls_detect(mglGraph *, long, mglArg *a, const char *k, const char *)
 	mglData *r = dynamic_cast<mglData*>(a[0].d);
 	int res = 0;
 	if(r && !strcmp(k, "ddnn"))	r->Set(mglDetect(*(a[1].d), a[2].v, a[3].v));
+	else if(r && !strcmp(k, "ddnnn"))	r->Set(mglDetect(*(a[1].d), a[2].v, a[3].v, a[4].v));
+	else if(r && !strcmp(k, "ddnnnn"))	r->Set(mglDetect(*(a[1].d), a[2].v, a[3].v, a[4].v, a[5].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3632,7 +3634,7 @@ mglCommand mgls_base_cmd[] = {
 	{"densx","Draw density plot at x-slice (or x-plane)","densx Dat ['fmt' pos]", mgls_densx ,0},
 	{"densy","Draw density plot at y-slice (or y-plane)","densy Dat ['fmt' pos]", mgls_densy ,0},
 	{"densz","Draw density plot at z-slice (or z-plane)","densz Dat ['fmt' pos]", mgls_densz ,0},
-	{"detect", "Detect curves for maximums of data array", "detect Res Dat lvl dj", mgls_detect, 4},
+	{"detect", "Detect curves for maximums of data array", "detect Res Dat lvl dj [di min_len]", mgls_detect, 4},
 	{"dew","Draw dew plot","dew Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_dew ,11},
 	{"diff","Numerically differentiate data","diff Var 'dir'", mgls_diff ,16},
 	{"diff2","Numerically double differentiate data","diff2 Var 'dir'", mgls_diff2 ,16},
