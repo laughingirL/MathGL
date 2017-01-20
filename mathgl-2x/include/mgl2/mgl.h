@@ -285,15 +285,15 @@ public:
 	 *  '#' for using whole region. */
 	inline void SubPlot(int nx,int ny,int m,const char *style="<>_^", double dx=0, double dy=0)
 	{	mgl_subplot_d(gr, nx, ny, m, style, dx, dy);	}
-	/// Put further plotting in rectangle of dx*dy cells starting from m-th cell of nx*ny grid of the image.
+	/// Put further plotting in rectangle of dx*dy cells starting from m-th cell of nx*ny grid of the image and shift it by distance {sx,sy}.
 	/** String \a style may contain:
 	 *  '<' for reserving space at left
 	 *  '>' for reserving space at right
 	 *  '^' for reserving space at top
 	 *  '_' for reserving space at bottom
 	 *  '#' for using whole region. */
-	inline void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style="<>_^")
-	{	mgl_multiplot(gr, nx, ny, m, dx, dy, style);	}
+	inline void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style="<>_^", double sx=0, double sy=0)
+	{	mgl_multiplot_d(gr, nx, ny, m, dx, dy, style, sx, sy);	}
 	/// Put further plotting in a region [x1,x2]*[y1,y2] of the image or subplot (x1,x2,y1,y2 in range [0, 1]).
 	inline void InPlot(double x1,double x2,double y1,double y2, bool rel=true)
 	{	if(rel)	mgl_relplot(gr, x1, x2, y1, y2);

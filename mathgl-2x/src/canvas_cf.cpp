@@ -123,20 +123,24 @@ void MGL_EXPORT mgl_subplot_d(HMGL gr, int nx,int ny,int m,const char *style,dou
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g)	g->InPlot(x1,x2,y1,y2,style);
 }
-//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot(HMGL gr, int nx,int ny,int m,const char *style)
 {	mgl_subplot_d(gr,nx,ny,m,style,0,0);	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style)
+void MGL_EXPORT mgl_multiplot_d(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style,double sx,double sy)
 {
 	double x1,x2,y1,y2;
 	int mx = m%nx, my = m/nx;
+	if(gr->get(MGL_AUTO_FACTOR))	{	sx /= 1.55;	sy /= 1.55;	}
+	else	{	sx /= 2;	sy /= 2;	}
 	dx = (dx<1 || dx+mx>nx) ? 1 : dx;
 	dy = (dy<1 || dy+my>ny) ? 1 : dy;
-	x1 = double(mx)/nx;		x2 = double(mx+dx)/nx;
-	y2 = 1-double(my)/ny;	y1 = 1-double(my+dy)/ny;
+	x1 = double(mx+sx)/nx;		x2 = double(mx+dx+sx)/nx;
+	y2 = 1-double(my+sy)/ny;	y1 = 1-double(my+dy+sy)/ny;
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->InPlot(x1,x2,y1,y2,style);
 }
+void MGL_EXPORT mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style)
+{	mgl_multiplot_d(gr,nx,ny,m,dx,dy,style,0,0);	}
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_inplot(HMGL gr, double x1,double x2,double y1,double y2)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->InPlot(x1,x2,y1,y2,false);	}
@@ -232,6 +236,9 @@ void MGL_EXPORT mgl_subplot_(uintptr_t *gr, int *nx,int *ny,int *m,const char *s
 void MGL_EXPORT mgl_multiplot_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy,const char *st,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
 	mgl_multiplot(_GR_,*nx,*ny,*m,*dx,*dy,s);	delete []s;	}
+void MGL_EXPORT mgl_multiplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy,const char *st, mreal *sx, mreal *sy,int l)
+{	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
+	mgl_multiplot_d(_GR_,*nx,*ny,*m,*dx,*dy,s, *sx, *sy);	delete []s;	}
 void MGL_EXPORT mgl_inplot_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,false);	}
 void MGL_EXPORT mgl_relplot_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2)

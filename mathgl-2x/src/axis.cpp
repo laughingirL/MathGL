@@ -614,10 +614,10 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		mreal t2 = r2*1.21>1 ? asin((l*sqrt(r2-1/1.21)+h/1.1)/r2):M_PI/2;
 		tet = t1<t2 ? t1:t2;
 	}
-	mreal sn = sin(tet);
+	mreal sn = sin(tet), cs=cos(tet);
 	if(sn)
 	{
-		mreal l1=h/fabs(sn), l2=fabs(l*cos(tet)+h*sn);
+		mreal l1=h/fabs(sn), l2=fabs(l*cs+h*sn);
 		l = l2>l1?l1:l2;
 	}
 	char *align=new char[n], *up=new char[n];
@@ -626,7 +626,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		mglPoint p(a),r(o+d*aa.txt[i].val);
 		ScalePoint(M, r, p, false);
 		mglPnt &pp = Pnt[kk[i]];
-		mreal ux=pp.u*cos(tet) + pp.v*sin(tet), uy=pp.v*cos(tet) - pp.u*sin(tet);
+		mreal ux=pp.u*cs + pp.v*sn, uy=pp.v*cs - pp.u*sn;
 		bool Nrot = !get(MGL_ENABLE_RTEXT) || !get(MGL_TICKS_ROTATE);
 		bool Vcnt = ux==0 && uy!=0 && Nrot;
 		bool algn = tet!=0;		// TODO add proper align for arbitrary tet!

@@ -467,6 +467,15 @@ void MGL_EXPORT mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m, mreal *dx,
  *  '#' for using whole region. */
 void MGL_EXPORT mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style);
 void MGL_EXPORT mgl_multiplot_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy, const char *s,int);
+/// Put further plotting in rectangle of dx*dy cells starting from m-th cell of nx*ny grid of the image and shift it by distance {sx,sy}..
+/** String \a style may contain:
+ *  '<' for reserving space at left
+ *  '>' for reserving space at right
+ *  '^' for reserving space at top
+ *  '_' for reserving space at bottom
+ *  '#' for using whole region. */
+void MGL_EXPORT mgl_multiplot_d(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style,double sx,double sy);
+void MGL_EXPORT mgl_multiplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy, const char *s, mreal *sx, mreal *sy,int);
 /// Put further plotting in a region [x1,x2]*[y1,y2] of the image (x1,x2,y1,y2 in range [0, 1]).
 void MGL_EXPORT mgl_inplot(HMGL gr, double x1,double x2,double y1,double y2);
 void MGL_EXPORT mgl_inplot_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2);

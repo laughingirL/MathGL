@@ -8,30 +8,27 @@
 4. 3D text (with depth), and text along 3D curve (for Quality=3) ???
 5. Improve fplot, fsurf ???
 6. Get true coordinates in CalcXYZ for curved equations too.
-9. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
-10. Test mglDataC::Diffraction() + write sample + add rational function???
-12. Extra markers for '&' and '&#' signs ?!?
-13. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
-14. Export background image to svg ???
-15. Frames by mouse in UDAV ???
+
+7. Test mglDataC::Diffraction() + write sample + add rational function???
+6. Extra markers for '&' and '&#' signs ?!?
+8. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
+
+9. Export background image to svg ???
+
+10. Frames by mouse in UDAV ???
 	A. мысли о frame??? для группы графиков -- не "удалять" их, а запихивать в отдельный кадр -- вопрос что с анимацией???
 	B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
-17. Extend QO + extra docs
-18. Import OBJ ???
-19. Simplified triangle filling for Quality=1 ?!?
-20. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
-21. Occasional seg.fault in mgl_qt_example at exit
-22. \overline{\overline{a}} ???
+
+11. Simplified triangle filling for Quality=1 ?!?
+12. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
+13. \overline{\overline{a}} ???
 
 
 ============= NEW FEATURES =============
 
-1. New tests:
-	c. Tests for mglDataC arrays (as separate flag)
-	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
-	u. Test FlowP + 3d
+1. Speed up QMathGL + option to whole redraw instead of view
+2. Parallel drawing in QMathGL.
 
-2. Add manual shift of unrotated axis/tick labels.
 3. Centered curved text (see text2)
 
 4. Alternative algorithm for filled glyphs + user-defined glyphs.
@@ -44,14 +41,12 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
 9. More accurate face cutting if one partially out of axis ranges
 
-11. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
-12. Parallel drawing in QMathGL.
+10. Add "section Dat 'dir' id1 [id2]|section Dat 'dir' Ids" to select section of data between NANs
+11. Add 'erode Dat lvl [step=1]' and 'dilate Dat lvl [step=1]' as binary masks
+
+12. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 13. "readhdf 'fname.hdf'" -- to read ALL data
-
-15. Nonlinear fitting by splines?!?
-16. Extract curves by "life"???
-
-17. Speed up QMathGL + option to whole redraw instead of view
+14. Strange tick labels ???
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -75,9 +70,10 @@ D. Docs about JS interface
 	rasterize:clf # все что выше будет только в растре
 	axis:box
 	write '1.eps'
-9. Docs about 'detect'
-14. "copy var 'name'" -- to copy variable with "invalid" name
-
+9. Docs and sample about 'detect'
+10. Docs about 'apde'
+11. "copy var 'name'" -- to copy variable with "invalid" name
+12. Update 'multiplot' by adding sx,sy
 
 
 ============= UDAV =============
@@ -96,10 +92,9 @@ D. Docs about JS interface
 4. List of constants into the list of data?!
 5. Add color cycle ???
 6. Color position in color scheme dialog
-7. QML ???
-8, Changable panels???
 9. Save data from the summary panel
-
+10. Select subdata section (between NAN in curve) by mouse + adding it to script ?!!
+11. Zoom in a region by middle mouse (if not in rotation mode)
 
 ============= UNSURE ===========
 

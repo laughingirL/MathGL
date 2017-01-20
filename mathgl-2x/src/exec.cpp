@@ -1777,6 +1777,8 @@ int MGL_NO_EXPORT mgls_multiplot(mglGraph *gr, long , mglArg *a, const char *k, 
 		gr->MultiPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v), mgl_int(a[4].v));
 	else if(!strcmp(k,"nnnnns"))
 		gr->MultiPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v), mgl_int(a[4].v), a[5].s.c_str());
+	else if(!strcmp(k,"nnnnnsnn"))
+		gr->MultiPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v), mgl_int(a[4].v), a[5].s.c_str(), a[6].v,a[7].v);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3719,7 +3721,7 @@ mglCommand mgls_base_cmd[] = {
 	{"mirror","Mirror data at some direction","mirror Dat 'dir'", mgls_mirror ,16},
 	{"modify","Modify data values by formula","modify Dat 'eq' [num] | Dat 'eq' Vdat [Wdat]", mgls_modify ,3},
 	{"momentum","Get momentum along direction","momentum Res Dat 'how' ['dir']", mgls_momentum ,4},
-	{"multiplot","Set position of plot","multiplot m n pos dx dy 'style'", mgls_multiplot ,5},
+	{"multiplot","Set position of plot","multiplot m n pos dx dy 'style' [sx sy]", mgls_multiplot ,5},
 	{"multo","Multiply by data or number","multo Var Dat|Var num", mgls_multo ,3},
 	{"new","Create new data","new Dat nx ny nz ['eq']|new Dat nx ny ['eq']|new Dat nx ['eq']", mgls_new ,4},
 	{"next","Start next for-cycle iteration","next", 0, 6},
@@ -3777,7 +3779,7 @@ mglCommand mgls_base_cmd[] = {
 	{"shear","Shear plot","shear valx valy", mgls_shear ,5},
 	{"shearplot","Set position of plot inside cell of sheared stick", "shearplot num ind sx sy [xd yd]", mgls_shearplot ,5},
 	{"sinfft","Sin-Fourier transform at some direction","sinfft Dat 'dir'", mgls_sinfft ,16},
-	{"smooth","Smooth data","smooth Dat [kind 'dir']", mgls_smooth ,16},
+	{"smooth","Smooth data","smooth Dat ['how']", mgls_smooth ,16},
 	{"solve","Find root Dat_{i,j,k}=val (inverse evaluate)","solve Res Dat val 'dir' [Idat norm]", mgls_solve ,4},
 	{"sort","Sort data by values in column","sort Dat idx [idy]", mgls_sort ,3},
 	{"sphere","Draw sphere","sphere x0 y0 r ['fmt']|x0 y0 z0 r ['fmt']", mgls_sphere ,13},
