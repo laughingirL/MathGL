@@ -597,6 +597,17 @@ public:
 	inline void Bifurcation(double dx, const char *func, const char *stl="", const char *opt="")
 	{	mgl_bifurcation_str(gr,dx,func,stl,opt);	}
 
+	/// Draws Iris plots for determining cross-dependences of data arrays
+	/** NOTE: using the same ranges and empty ids will not draw axis. This will add data to existing Iris plot. */
+	inline void Iris(mglDataA &dats, const char *ids, const char *stl="", const char *opt="")
+	{	mgl_iris_1(gr,&dats,ids,stl,opt);	}
+	inline void Iris(mglDataA &dats, const wchar_t *ids, const char *stl="", const char *opt="")
+	{	mgl_irisw_1(gr,&dats,ids,stl,opt);	}
+	inline void Iris(mglDataA &dats, mglDataA &ranges, const char *ids, const char *stl="", const char *opt="")
+	{	mgl_iris(gr,&dats,&ranges,ids,stl,opt);	}
+	inline void Iris(mglDataA &dats, mglDataA &ranges, const wchar_t *ids, const char *stl="", const char *opt="")
+	{	mgl_irisw(gr,&dats,&ranges,ids,stl,opt);	}
+
 	/// Draws the face between points with color stl (include interpolation up to 4 colors).
 	inline void Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl="r")
 	{	mgl_face(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z, p4.x, p4.y, p4.z, stl);	}

@@ -1140,6 +1140,16 @@ int MGL_NO_EXPORT mgls_bifurcation(mglGraph *gr, long , mglArg *a, const char *k
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_iris(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"ds"))	gr->Iris(*(a[0].d),a[1].w.c_str(),"",opt);
+	else if(!strcmp(k,"dss"))	gr->Iris(*(a[0].d),a[1].w.c_str(),a[2].s.c_str(),opt);
+	else if(!strcmp(k,"dds"))	gr->Iris(*(a[0].d),*(a[1].d),a[2].w.c_str(),"",opt);
+	else if(!strcmp(k,"ddss"))	gr->Iris(*(a[0].d),*(a[1].d),a[2].w.c_str(),a[3].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
@@ -3697,6 +3707,7 @@ mglCommand mgls_base_cmd[] = {
 	{"inplot","Set position of plot in picture","x1 x2 y1 y2 [rel]", mgls_inplot ,5},
 	{"insert","Insert slice of data","insert Dat 'dir' [pos=0 num=1]", mgls_insert ,3},
 	{"integrate","Integrate data","integrate Dat 'dir'", mgls_integrate ,16},
+	{"iris","Draw Iris plots","iris Dats 'ids' ['fmt']|Dats Ranges 'ids' ['fmt']", mgls_iris,13},
 	{"jacobian","Get Jacobian","jacobian Res Xdat Ydat [Zdat]", mgls_jacobian ,4},
 	{"join","Join data arrays","join Dat Add", mgls_join ,3},
 	{"label","Draw label at arbitrary position","label Ydat 'txt' ['fmt'='']|Xdat Ydat 'txt' ['fmt'='']|Xdat Ydat Zdat 'txt' ['fmt'='']", mgls_label ,7},

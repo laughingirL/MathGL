@@ -39,12 +39,10 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 6. Add string manipulation -- {'str',val}=>str[val]; {'str',v1,v2}=>str.substr(v1,v2) [v1,v2 can be -1]; {'ch'+val'}=>char(ch+val)
 7. Improve z-order for rapidly oscillating surfaces
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
-9. More accurate face cutting if one partially out of axis ranges
 
 10. Add "section Dat 'dir' id1 [id2]|section Dat 'dir' Ids" to select section of data between NANs
 11. Add 'erode Dat lvl [step=1]' and 'dilate Dat lvl [step=1]' as binary masks
 
-12. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 13. "readhdf 'fname.hdf'" -- to read ALL data
 14. Strange tick labels ???
 
@@ -74,6 +72,7 @@ D. Docs about JS interface
 10. Docs about 'apde'
 11. "copy var 'name'" -- to copy variable with "invalid" name
 12. Update 'multiplot' by adding sx,sy
+13. Docs and sample about 'iris'
 
 
 ============= UDAV =============

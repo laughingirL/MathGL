@@ -237,6 +237,15 @@ void MGL_EXPORT mgl_bifurcation_str(HMGL gr, double dx, const char *f, const cha
 void MGL_EXPORT mgl_bifurcation_dat_(uintptr_t *gr, double *dx, uintptr_t *f, const char *stl, const char *opt, int,int);
 void MGL_EXPORT mgl_bifurcation_str_(uintptr_t *gr, double *dx, const char *f, const char *stl, const char *opt, int,int,int);
 
+/// Draws Iris plots for determining cross-dependences of data arrays
+/** NOTE: using the same ranges and empty ids will not draw axis. This will add data to existing Iris plot. */
+void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, const char *stl, const char *opt);
+void MGL_EXPORT mgl_irisw_1(HMGL gr, HCDT dats, const wchar_t *ids, const char *stl, const char *opt);
+void MGL_EXPORT mgl_iris(HMGL gr, HCDT dats, HCDT ranges, const char *ids, const char *stl, const char *opt);
+void MGL_EXPORT mgl_iris_1(HMGL gr, HCDT dats, const char *ids, const char *stl, const char *opt);
+void MGL_EXPORT mgl_iris_(uintptr_t *gr, uintptr_t *dats, uintptr_t *ranges, const char *ids, const char *stl, const char *opt,int l,int m,int n);
+void MGL_EXPORT mgl_iris_1_(uintptr_t *gr, uintptr_t *dats, const char *ids, const char *stl, const char *opt,int,int,int);
+
 #ifdef __cplusplus
 }
 #endif

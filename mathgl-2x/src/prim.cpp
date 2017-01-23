@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "mgl2/canvas.h"
 #include "mgl2/prim.h"
+#include "mgl2/plot.h"
 #include "mgl2/data.h"
 std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt);
 //-----------------------------------------------------------------------------
@@ -1105,4 +1106,107 @@ void MGL_EXPORT mgl_bifurcation_str_(uintptr_t *gr, double *dx, const char *func
 	char *o=new char[n+1];	memcpy(o,opt,n);	o[n]=0;
 	char *f=new char[m+1];	memcpy(f,func,m);	f[m]=0;
 	mgl_bifurcation_str(_GR_,*dx,f,s,o);	delete []f;	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+//
+// Iris series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, const char *stl, const char *opt)
+{
+	long m=dats->GetNx(), nx=dats->GetNy(), ny=dats->GetNz();
+	if(m<2 || nx<2)	{	gr->SetWarn(mglWarnLow,"Iris");	return;	}
+	if(m!=ranges->GetNy())	{	gr->SetWarn(mglWarnDim,"Iris");	return;	}
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(!g)	return;
+	mreal res=gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Iris",cgid++);
+	std::wstring strs[m];
+	bool label = ids && ids[0];	// disable axis drawing
+	if(label)
+	{
+		const wchar_t *s, *p=ids;
+		if(wcschr(ids,'\n'))	for(long i=0;i<m;i++)
+		{
+			s = wcschr(p,'\n');
+			if(s)	{	strs[i] = std::wstring(p,s-p);	p = s+1;	}
+			else	{	strs[i] = p;	break;	}
+		}
+		else	for(long i=0;i<m;i++)
+		{
+			s = wcsstr(p,L"\\n");
+			if(s)	{	strs[i] = std::wstring(p,s-p);	p = s+2;	}
+			else	{	strs[i] = p;	break;	}
+		}
+	}
+	HMDT dat[m];
+	mreal dx = 1./m;
+	for(long i=0;i<m;i++)	dat[i]=mgl_data_subdata(dats,i,-1,-1);
+	for(long i=0;i<m;i++)	for(long j=0;j<m;j++)
+	{
+		g->InPlot(dx*i,dx*(i+1),dx*(m-j-1),dx*(m-j),true);	
+		if(label)	g->Box();
+		gr->SetRanges(ranges->v(0,i),ranges->v(1,i),ranges->v(0,j),ranges->v(1,j));
+		gr->ResetPal();
+		if(i==j)	mgl_putsw(gr,dx*(i+0.5),dx*(m-j-0.5),0,strs[i].c_str(),"aV");
+		else	mgl_plot_xy(gr,dat[i],dat[j],stl,NULL);
+	}
+	if(label)
+	{
+		for(long i=0;i<m;i+=2)
+		{
+			gr->SetRanges(ranges->v(0,i),ranges->v(1,i),ranges->v(0,m-i-1),ranges->v(1,m-i-1));
+			g->InPlot(dx*i,dx*(i+1),0,dx,true);	g->Axis("x");
+			g->InPlot(0,dx,dx*i,dx*(i+1),true);	g->Axis("y");
+		}
+		for(long i=1;i<m;i+=2)
+		{
+			gr->SetRanges(ranges->v(0,i),ranges->v(1,i),ranges->v(0,m-i-1),ranges->v(1,m-i-1));
+			g->InPlot(dx*i,dx*(i+1),1-dx,1,true);	g->Axis("x^");
+			g->InPlot(1-dx,1,dx*i,dx*(i+1),true);	g->Axis("y^");
+		}
+	}
+	for(long i=0;i<m;i++)	delete dat[i];
+	g->InPlot(0,1,0,1,true);	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_irisw_1(HMGL gr, HCDT dats, const wchar_t *ids, const char *stl, const char *opt)
+{
+	long n=dats->GetNy()*dats->GetNz(), m=dats->GetNx();
+	mglData ranges(2,m);
+	for(long i=0;i<m;i++)
+	{
+		mreal &v1=ranges.a[2*i], &v2=ranges.a[1+2*i];
+		v1=INFINITY;	v2=-INFINITY;
+		for(long j=0;j<n;j++)
+		{
+			mreal v = dats->vthr(i+m*j);
+			if(v<v1)	v1=v;
+			if(v>v2)	v2=v;
+		}
+		if(!mgl_isnum(v1))	{	v1=-1;	v2=1;	}
+		if(v1==v2)	{	v1-=1;	v2+=1;	}
+	}
+	mgl_irisw(gr,dats,&ranges,ids,stl,opt);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_iris(HMGL gr, HCDT dats, HCDT ranges, const char *ids, const char *stl, const char *opt)
+{
+	MGL_TO_WCS(ids,mgl_irisw(gr, dats, ranges, wcs, stl, opt));
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_iris_1(HMGL gr, HCDT dats, const char *ids, const char *stl, const char *opt)
+{
+	MGL_TO_WCS(ids,mgl_irisw_1(gr, dats, wcs, stl, opt));
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_iris_(uintptr_t *gr, uintptr_t *dats, uintptr_t *ranges, const char *ids, const char *stl, const char *opt,int l,int m,int n)
+{	char *i=new char[l+1];	memcpy(i,ids,l);	i[l]=0;
+	char *s=new char[m+1];	memcpy(s,stl,m);	s[m]=0;
+	char *o=new char[n+1];	memcpy(o,opt,n);	o[n]=0;
+	mgl_iris(_GR_,_DA_(dats),_DA_(ranges),i,s,o);	delete []i;	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_iris_1_(uintptr_t *gr, uintptr_t *dats, const char *ids, const char *stl, const char *opt,int l,int m,int n)
+{	char *i=new char[l+1];	memcpy(i,ids,l);	i[l]=0;
+	char *s=new char[m+1];	memcpy(s,stl,m);	s[m]=0;
+	char *o=new char[n+1];	memcpy(o,opt,n);	o[n]=0;
+	mgl_iris_1(_GR_,_DA_(dats),i,s,o);	delete []i;	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
