@@ -922,7 +922,7 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	m = z->GetNy() > m ? z->GetNy() : m;
 	bool sh = mglchr(pen,'!');
 
-	bool wire = mglchr(pen,'#');
+	bool wire = mglchr(pen,'#'), fixed = mglchr(pen,'F');
 	bool above = mglchr(pen,'a'), fall = mglchr(pen,'f');
 	if(above)	fall = false;
 	mreal c1,c2;
@@ -931,6 +931,18 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	memset(dd,0,n*sizeof(mreal));
+	
+	mreal dc=INFINITY;
+	if(fixed)	for(long j=0;j<m;j++)
+	{
+		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
+		for(long i=0;i<n-1;i++)
+		{
+			mreal cx = hypot(x->v(i+1,mx)-x->v(i,mx), y->v(i+1,my)-y->v(i,my));
+			if(cx<dc)	dc=cx;
+		}
+	}
+	if(dc==0)	fixed=false;	// NOTE: disable fixed width if it is zero
 
 	gr->SetPenPal(pen,&pal);
 	gr->Reserve(4*n*m);
@@ -944,10 +956,12 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		for(long i=0;i<n;i++)
 		{
 			if(sh)	c2=c1=gr->NextColor(pal,i);
-			mreal vv = x->v(i,mx), d = i<nx-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx), zz;
-			mreal x1 = vv + d/2*(dv-gr->BarWidth), x2 = x1 + gr->BarWidth*d;
-			vv = y->v(i,my);	d = i<ny-1 ? y->v(i+1,my)-vv : vv-y->v(i-1,my);
-			mreal y1 = vv + d/2*(dv-gr->BarWidth), y2 = y1 + gr->BarWidth*d;
+			mreal vv = x->v(i,mx), dx = i<nx-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx), dy, zz;
+			vv = y->v(i,my);	dy = i<ny-1 ? y->v(i+1,my)-vv : vv-y->v(i-1,my);
+			if(fixed)
+			{	mreal ff = dc/hypot(dx,dy);	dx *= ff;	dy *= ff;	}
+			mreal x1 = vv + dx/2*(dv-gr->BarWidth), x2 = x1 + gr->BarWidth*dx;
+			mreal y1 = vv + dy/2*(dv-gr->BarWidth), y2 = y1 + gr->BarWidth*dy;
 			vv = zz = z->v(i,mz);
 			if(!above)
 			{
@@ -985,7 +999,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
 	bool sh = mglchr(pen,'!');
 
-	bool wire = mglchr(pen,'#');
+	bool wire = mglchr(pen,'#'), fixed = mglchr(pen,'F');
 	bool above = mglchr(pen,'a'), fall = mglchr(pen,'f');
 	if(above)	fall = false;
 	mreal c1,c2;
@@ -996,6 +1010,18 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	mreal zm = gr->AdjustZMin();
 	memset(dd,0,n*sizeof(mreal));
 
+	mreal dx=INFINITY;
+	if(fixed)
+	{
+		long nn=x->GetNy();
+		for(long i=0;i<n-1;i++)	for(long j=0;j<nn;j++)
+		{
+			mreal cx = fabs(x->v(i+1,j)-x->v(i,j));
+			if(cx<dx)	dx=cx;
+		}
+	}
+	if(dx==0)	fixed=false;	// NOTE: disable fixed width if it is zero
+	
 	gr->SetPenPal(pen,&pal);
 	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
@@ -1009,6 +1035,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 		{
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			mreal vv = x->v(i,mx), d = i<nx-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx), yy;
+			if(fixed)	d = dx;
 			mreal x1 = vv + d/2*(dv-gr->BarWidth), x2 = x1 + gr->BarWidth*d;
 			vv = yy = y->v(i,my);
 			if(!above)
@@ -1069,7 +1096,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	m = y->GetNy() > v->GetNy() ? y->GetNy() : v->GetNy();
 	bool sh = mglchr(pen,'!');
 
-	bool wire = mglchr(pen,'#');
+	bool wire = mglchr(pen,'#'), fixed = mglchr(pen,'F');
 	bool above = mglchr(pen,'a'), fall = mglchr(pen,'f');
 	if(above)	fall = false;
 	mreal *dd=new mreal[n], x0,xp,dv=ny>n?1:0;
@@ -1079,6 +1106,18 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	mreal zm = gr->AdjustZMin();
 	memset(dd,0,n*sizeof(mreal));
 
+	mreal dy=INFINITY;
+	if(fixed)
+	{
+		long nn=y->GetNy();
+		for(long i=0;i<n-1;i++)	for(long j=0;j<nn;j++)
+		{
+			mreal cx = fabs(y->v(i+1,j)-y->v(i,j));
+			if(cx<dy)	dy=cx;
+		}
+	}
+	if(dy==0)	fixed=false;	// NOTE: disable fixed width if it is zero
+	
 	gr->SetPenPal(pen,&pal);
 	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
@@ -1092,6 +1131,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 		{
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			mreal vv = y->v(i,my), d = i<ny-1 ? y->v(i+1,my)-vv : vv-y->v(i-1,my), xx;
+			if(fixed)	d = dy;
 			mreal y1 = vv + d/2*(dv-gr->BarWidth), y2 = y1 + gr->BarWidth*d;
 			vv = xx = v->v(i,mx);
 			if(!above)

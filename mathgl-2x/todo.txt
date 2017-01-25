@@ -73,6 +73,7 @@ D. Docs about JS interface
 11. "copy var 'name'" -- to copy variable with "invalid" name
 12. Update 'multiplot' by adding sx,sy
 13. Docs and sample about 'iris'
+14. Docs about new style "F" for bars,barh
 
 
 ============= UDAV =============

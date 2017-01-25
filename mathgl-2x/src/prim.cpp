@@ -1146,7 +1146,7 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 		if(label)	g->Box();
 		gr->SetRanges(ranges->v(0,i),ranges->v(1,i),ranges->v(0,j),ranges->v(1,j));
 		gr->ResetPal();
-		if(i==j)	mgl_putsw(gr,dx*(i+0.5),dx*(m-j-0.5),0,strs[i].c_str(),"aV");
+		if(i==j)	mgl_putsw(gr,dx*(i+0.5),dx*(m-j-0.5),0,strs[i].c_str(),"aV",-1);
 		else	mgl_plot_xy(gr,dat[i],dat[j],stl,NULL);
 	}
 	if(label)
