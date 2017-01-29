@@ -36,11 +36,11 @@ int DefineGlyph(const mglData &x, const mglData &y);
 void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl);
 
 5. Check lighting in OpenGL mode
-6. Add string manipulation -- {'str',val}=>str[val]; {'str',v1,v2}=>str.substr(v1,v2) [v1,v2 can be -1]; {'ch'+val'}=>char(ch+val)
-7. Improve z-order for rapidly oscillating surfaces
+
+7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
 
-10. Add "section Dat 'dir' id1 [id2]|section Dat 'dir' Ids" to select section of data between NANs
+10. Add "section Dat 'dir' id1 [val=nan]|section Dat 'dir' Ids [val=nan]" to select section of data between NANs
 11. Add 'erode Dat lvl [step=1]' and 'dilate Dat lvl [step=1]' as binary masks
 
 13. "readhdf 'fname.hdf'" -- to read ALL data
@@ -74,7 +74,11 @@ D. Docs about JS interface
 12. Update 'multiplot' by adding sx,sy
 13. Docs and sample about 'iris'
 14. Docs about new style "F" for bars,barh
-
+15. Docs about 'clip'
+16. Docs about string manipulation:
+* 'str'[n] -- get string of only n-th symbol
+* 'str'+v -- add value v to the last character of the string.
+* 'str',val || 'str',!val -- append numeric value to the string (as before)
 
 ============= UDAV =============
 

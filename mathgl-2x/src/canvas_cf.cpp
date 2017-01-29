@@ -308,6 +308,8 @@ void MGL_EXPORT mgl_set_def_param(HMGL gr)
 void MGL_EXPORT mgl_combine_gr(HMGL gr, HMGL in)
 {	const mglCanvas *gg = dynamic_cast<const mglCanvas *>(in);
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g && gg)	g->Combine(gg);	}
+void MGL_EXPORT mgl_set_clip(HMGL gr, int x1, int y1, int x2, int y2)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetClip(x1,y1,x2,y2);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_tick_len(HMGL gr, double len, double stt)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTickLen(len,stt);	}
@@ -390,6 +392,8 @@ void MGL_EXPORT mgl_scale_size_(uintptr_t *gr, int *width, int *height)
 void MGL_EXPORT mgl_set_def_param_(uintptr_t *gr)	{	_GR_->DefaultPlotParam();	}
 void MGL_EXPORT mgl_combine_gr_(uintptr_t *gr, uintptr_t *in)
 {	_GR_->Combine((mglCanvas *)in);	}
+void MGL_EXPORT mgl_set_clip_(uintptr_t *gr, int *x1, int *y1, int *x2, int *y2)
+{	_GR_->SetClip(*x1,*y1,*x2,*y2);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_ticks_fact_(uintptr_t *gr, char *dir, double *d, int *ns, double *org, const char *fact,int,int l)
 {	char *s=new char[l+1];	memcpy(s,fact,l);	s[l]=0;

@@ -319,7 +319,78 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 		else if(str[0]=='\'')	// this is string (simplest case)
 		{
 			a[n-1].type = 1;
-			std::wstring &w=str,f;
+			long na=1, ns=0, ll=str.length(), ii=1, op=0;
+			std::vector<std::wstring> s;
+			std::vector<int> id;	// 0 - string, 1 - cval, 2 - rval, 3 - plus, 4 - index
+			for(long i=1;i<ll;i++)
+			{
+				if(str[i]=='\'')
+				{
+					if(na%2==1)
+					{	id.push_back(0);	s.push_back(str.substr(ii,i-ii));	}
+					else if(op && i>ii)
+					{	id.push_back(op);	s.push_back(str.substr(ii,i-ii));	}
+					na++;	ii=i+1;	op=0;
+				}
+				else if(na%2==0 && ns==0)
+				{
+					if(str[i]=='+' && str[i-1]=='\'')
+					{	op=3;	ii=i+1;	}
+					else if(str[i]==',' && str[i+1]=='!')
+					{
+						if(op && i>ii)
+						{	id.push_back(op);	s.push_back(str.substr(ii,i-ii));	}
+						op=1;	ii=i+2;
+					}
+					else if(str[i]==',')
+					{
+						if(op && i>ii)
+						{	id.push_back(op);	s.push_back(str.substr(ii,i-ii));	}
+						op=2;	ii=i+1;
+					}
+					else if(str[i]=='[' && str[i-1]=='\'')
+					{	ii=i+1;	ns++;	}
+				}
+				else if(na%2==0 && str[i]==']' && ns==1)
+				{
+					id.push_back(4);	s.push_back(str.substr(ii,i-ii));
+					op=0;	ii=i+1;	ns--;
+				}
+			}
+			if(op && ll>ii)
+			{	id.push_back(op);	s.push_back(str.substr(ii,ll-ii));	}
+			wchar_t buf[32];
+			for(size_t i=0;i<id.size();i++)
+			{
+				if(id[i]==0)	a[n-1].w += s[i];
+				else if(id[i]==1)
+				{
+					HADT d = mglFormulaCalcC(s[i], this, DataList);
+					mreal di = imag(d->a[0]), dr = real(d->a[0]);
+					if(di>0)	mglprintf(buf,32,L"%g+%gi",dr,di);
+					else if(di<0)	mglprintf(buf,32,L"%g-%gi",dr,-di);	// TODO use \u2212 ???
+					else	mglprintf(buf,32,L"%g",dr);
+					a[n-1].w += buf;	delete d;
+				}
+				else if(id[i]==2)
+				{
+					HMDT d = mglFormulaCalc(s[i], this, DataList);
+					mglprintf(buf,32,L"%g",d->a[0]);	a[n-1].w += buf;	delete d;
+				}
+				else if(id[i]==3)
+				{
+					HMDT d = mglFormulaCalc(s[i], this, DataList);
+					a[n-1].w[a[n-1].w.size()-1] += d->a[0];	delete d;
+				}
+				else if(id[i]==4)
+				{
+					HMDT d = mglFormulaCalc(s[i], this, DataList);
+					long v = long(d->a[0]+0.5);	delete d;
+					if(v>=0 && v<a[n-1].w.size())	a[n-1].w = a[n-1].w[v];
+					else	a[n-1].w = L"";
+				}
+			}
+/*			std::wstring &w=str,f;
 			wchar_t buf[32];
 			long i,i1,ll=w.length();
 			for(i=1;i<ll;i++)
@@ -350,7 +421,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 					}
 				}
 				else	a[n-1].w += w[i];
-			}
+			}*/
 		}
 		else if(str[0]=='{')
 		{	// this is temp data

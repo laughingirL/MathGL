@@ -189,6 +189,9 @@ using mglBase::Light;
 	int GetHeight() const	{	return Height;	}
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
+	/// Set boundary box for export graphics into 2D file formats
+	void SetClip(int x1=0, int y1=0, int x2=-1, int y2=-1)
+	{	ClipX1=x1;	ClipY1=y1;	ClipX2=x2;	ClipY2=y2;	}
 
 	/// Rasterize current plot and set it as background image
 	void Rasterize();

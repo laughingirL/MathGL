@@ -64,6 +64,12 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglParse par;
+	par.Execute(gr,"text 0 -0.2 'abcde'\ntext 0 0 'abcde'[2]\n"
+	"text 0 0.2 'abcde'+2\ntext 0 0.4 'abcde',2\ntext 0 0.6 'abcde',2,'k'"
+	"text 0 0.8 'abcde',2,'k'+1\ntext 0 1 'abcde',2,'k'[5]\ntext 0 1 'abcde''k'[5]");
+	return;
+	
 	gr->SubPlot(2,2,0);	gr->Axis();	
 	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Axis();
 	gr->SetRotatedText(false);	gr->SubPlot(2,2,2);	gr->Axis();	
@@ -71,7 +77,6 @@ void test(mglGraph *gr)
 	mglData a;	a.SetList(5,0.,1.,0.,1.,-1.,2.);
 	gr->Plot(a);
 	return;
-	mglParse par;
 	par.Execute(gr,"call 'test' -1\n func 'test' 1\nline $1 0 1 1 'b'\nreturn\n");
 //	par.Execute(gr,"load '/home/balakin/mathgl-code/mathgl-2x/build/examples/libmgl_module.so':baxis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");

@@ -677,11 +677,11 @@ void mglCanvas::Finish()
 #elif MGL_HAVE_OMP
 	omp_set_lock((omp_lock_t*)lockClf);
 #endif
+	size_t n=Width*Height;
 	if(Quality==MGL_DRAW_DOTS)
 	{
 		mglStartThread(&mglCanvas::pxl_dotsdr,this,Pnt.size());
-		mglStartThread(&mglCanvas::pxl_memcpy,this,Width*Height);
-		mglStartThread(&mglCanvas::pxl_backgr,this,Width*Height);
+		mglStartThread(&mglCanvas::pxl_memcpy,this,n);
 	}
 	else
 	{
@@ -695,15 +695,32 @@ void mglCanvas::Finish()
 				clr(MGL_FINISHED);
 				mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
 			}
-			size_t n=Width*Height;
 			BDef[3] = (Flag&3)!=2 ? 0:255;
 			if(Quality&MGL_DRAW_NORM)	mglStartThread(&mglCanvas::pxl_combine,this,n);
 			else 			mglStartThread(&mglCanvas::pxl_memcpy,this,n);
 			BDef[3] = 255;
-			mglStartThread(&mglCanvas::pxl_backgr,this,n);
-			set(MGL_FINISHED);
 		}
 	}
+	int x2 = ClipX2<0?Width:ClipX2, y2 = ClipY2<0?Height:ClipY2;
+	if(ClipX1>=0 && ClipX1<x2 && ClipY1>=0 && ClipY1<y2)
+	{
+		unsigned char ff[8]={255,255,255,255, 0,0,0,255}, *g1 = G4+ClipX1*4-4;
+		int ww = 8*Width;
+		if(ClipX1>0)	for(long i=0;i<Height/2-1;i++)
+			memcpy(g1+ww*i,ff,8);
+		g1 = G4+x2*4;
+		if(x2<Width)	for(long i=0;i<Height/2-1;i++)
+			memcpy(g1+ww*i,ff,8);
+		g1 = G4+(ClipY1-1)*4*Width;
+		if(ClipY1>0)	for(long i=0;i<Width/2-1;i++)
+			memcpy(g1+8*i,ff,8);
+		g1 = G4+y2*4*Width;
+		if(y2<Height)	for(long i=0;i<Width/2-1;i++)
+			memcpy(g1+8*i,ff,8);
+	}
+	mglStartThread(&mglCanvas::pxl_backgr,this,n);
+	if(Quality!=MGL_DRAW_DOTS)	set(MGL_FINISHED);
+
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexClf);
 	pthread_mutex_unlock(&mutexPnt);
@@ -945,12 +962,18 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 {
 	unsigned char **p;
 	Finish();
-	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
-	long d = (alpha ? 4:3)*Width;
+	long c = alpha?4:3, d = c*Width, dj=0;
 	unsigned char *gg = (alpha?G4:G);
-	for(long i=0;i<Height;i++)	p[i] = gg + d*i;
-	w = Width;	h = Height;		f = 0;
-	return p;
+	int x2 = ClipX2<0?Width:ClipX2, y2 = ClipY2<0?Height:ClipY2;
+	if(ClipX1>=0 && ClipX1<x2 && ClipY1>=0 && ClipY1<y2)
+	{
+		gg += c*ClipX1 + d*ClipY1;
+		w = x2-ClipX1;	h = y2-ClipY1;
+	}
+	else	{	w = Width;	h = Height;	}
+	p = (unsigned char **)malloc(h * sizeof(unsigned char *));
+	for(long j=0;j<h;j++)	p[j] = gg + d*j;
+	f = 0;	return p;
 }
 //-----------------------------------------------------------------------------
 bool inline visible(long i, long j, const unsigned char m[8], mreal pw, int a)	// Check if pixel visible

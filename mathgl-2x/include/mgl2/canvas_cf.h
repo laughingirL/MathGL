@@ -52,6 +52,11 @@ void MGL_EXPORT mgl_finish_(uintptr_t *gr);
 /// Force preparing the image and save result into background one.
 void MGL_EXPORT mgl_rasterize(HMGL gr);
 void MGL_EXPORT mgl_rasterize_(uintptr_t *gr);
+/// Set boundary box for export graphics into 2D file formats.
+/** If x2<0 (y2<0) then full width (height) will be used.
+ *  If x1<0 or y1<0 or x1>=x2|Width or y1>=y2|Height then clipping will be disabled. */
+void MGL_EXPORT mgl_set_clip(HMGL gr, int x1, int y1, int x2, int y2);
+void MGL_EXPORT mgl_set_clip_(uintptr_t *gr, int *x1, int *y1, int *x2, int *y2);
 
 /// Set the size of semi-transparent area around lines, marks, glyphs, ... Default is 1.
 void MGL_EXPORT mgl_pen_delta(HMGL gr, double d);

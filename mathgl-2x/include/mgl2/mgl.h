@@ -370,11 +370,16 @@ public:
 	/// Set drawing region for Quality&4
 	inline void SetDrawReg(long nx=1, long ny=1, long m=0)	{	mgl_set_draw_reg(gr,nx,ny,m);	}
 	/// Start group of objects
-	inline void StartGroup(const char *name)		{	mgl_start_group(gr, name);	}
+	inline void StartGroup(const char *name)	{	mgl_start_group(gr, name);	}
 	/// End group of objects
 	inline void EndGroup()	{	mgl_end_group(gr);	}
 	/// Highlight objects with given id
 	inline void Highlight(int id)	{	mgl_highlight(gr, id);	}
+	/// Set boundary box for export graphics into 2D file formats.
+	/** If x2<0 (y2<0) then full width (height) will be used.
+	 *  If x1<0 or y1<0 or x1>=x2|Width or y1>=y2|Height then clipping will be disabled. */
+	inline void SetClip(int x1=0, int y1=0, int x2=-1, int y2=-1)
+	{	mgl_set_clip(gr,x1,y1,x2,y2);	}
 
 	/// Show current image
 	inline void ShowImage(const char *viewer, bool keep=0)

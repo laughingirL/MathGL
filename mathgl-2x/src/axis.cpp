@@ -584,7 +584,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 	if(aa.ch=='c')	a = aa.a;
 
 	long n = aa.txt.size();
-	mreal *w=new mreal[n];
+	mreal *w=new mreal[n], wsp = 2*TextWidth(" ",FontDef,-1);
 	long *kk=new long[n];
 	for(long i=0;i<n;i++)	// fill base label properties
 	{
@@ -599,7 +599,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 			continue;
 		if(kk[i]<0 || kk[i+1]<0)	continue;
 		mreal v = (GetPntP(kk[i+1])-GetPntP(kk[i])).norm();	// distance between ticks
-		mreal vv = (w[i]+w[i+1])/2;	// length of labels
+		mreal vv = (w[i]+w[i+1])/2-wsp;	// length of labels
 		if(v>0 && l < vv/v)	l = vv/v;
 		if(c>v)	c = v;
 	}

@@ -223,7 +223,7 @@ int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
-	SetDrawReg(1,1,0);		Perspective(0);	SetPenDelta(1);
+	SetDrawReg(1,1,0);		Perspective(0);	SetPenDelta(1);	SetClip();
 	memcpy(mgl_mask_val, mgl_mask_def, 16*sizeof(uint64_t));	// should be > 16*8
 	ax.Clear();	ay.Clear();	az.Clear();	ac.Clear();
 	mgl_clear_fft();		DefMaskAn=0;	ResetMask();
