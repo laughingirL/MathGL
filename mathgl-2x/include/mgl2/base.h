@@ -337,7 +337,7 @@ public:
 	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
 	mglStack<mglActivePos> Act;	///< Position of active points
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
-	int ClipX1, ClipY1, ClipX2, ClipY2;	///< Clip region for exporting 2d graphics
+	int BBoxX1, BBoxY1, BBoxX2, BBoxY2;	///< BBox region for exporting 2d graphics
 	
 	mreal CDef;			///< Default (current) color in texture
 	mreal AlphaDef;		///< Default value of alpha channel (transparency)

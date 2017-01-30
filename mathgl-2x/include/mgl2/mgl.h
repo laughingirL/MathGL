@@ -377,9 +377,9 @@ public:
 	inline void Highlight(int id)	{	mgl_highlight(gr, id);	}
 	/// Set boundary box for export graphics into 2D file formats.
 	/** If x2<0 (y2<0) then full width (height) will be used.
-	 *  If x1<0 or y1<0 or x1>=x2|Width or y1>=y2|Height then clipping will be disabled. */
-	inline void SetClip(int x1=0, int y1=0, int x2=-1, int y2=-1)
-	{	mgl_set_clip(gr,x1,y1,x2,y2);	}
+	 *  If x1<0 or y1<0 or x1>=x2|Width or y1>=y2|Height then cropping will be disabled. */
+	inline void SetBBox(int x1=0, int y1=0, int x2=-1, int y2=-1)
+	{	mgl_set_bbox(gr,x1,y1,x2,y2);	}
 
 	/// Show current image
 	inline void ShowImage(const char *viewer, bool keep=0)

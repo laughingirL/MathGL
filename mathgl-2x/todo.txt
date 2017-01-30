@@ -9,7 +9,6 @@
 5. Improve fplot, fsurf ???
 6. Get true coordinates in CalcXYZ for curved equations too.
 
-7. Test mglDataC::Diffraction() + write sample + add rational function???
 6. Extra markers for '&' and '&#' signs ?!?
 8. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 
@@ -74,7 +73,7 @@ D. Docs about JS interface
 12. Update 'multiplot' by adding sx,sy
 13. Docs and sample about 'iris'
 14. Docs about new style "F" for bars,barh
-15. Docs about 'clip'
+15. Docs about 'bbox'
 16. Docs about string manipulation:
 * 'str'[n] -- get string of only n-th symbol
 * 'str'+v -- add value v to the last character of the string.

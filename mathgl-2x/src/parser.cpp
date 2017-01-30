@@ -390,38 +390,6 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 					else	a[n-1].w = L"";
 				}
 			}
-/*			std::wstring &w=str,f;
-			wchar_t buf[32];
-			long i,i1,ll=w.length();
-			for(i=1;i<ll;i++)
-			{
-				if(w[i]=='\'')
-				{
-					if(i==ll-1)	continue;
-					i++;	i1 = i;
-					if(w[i1]==',')	i1++;
-					if(w[i1]==0)	continue;
-					for(;i<ll && w[i]!='\'';i++);
-					if(i>i1)
-					{
-						if(w[i1]=='!')
-						{
-							HADT d = mglFormulaCalcC(w.substr(i1+1,i-i1-(w[i]=='\''?1:0)), this, DataList);
-							mreal di = imag(d->a[0]), dr = real(d->a[0]);
-							if(di>0)	mglprintf(buf,32,L"%g+%gi",dr,di);
-							else if(di<0)	mglprintf(buf,32,L"%g-%gi",dr,-di);	// TODO use \u2212 ???
-							else	mglprintf(buf,32,L"%g",dr);
-							a[n-1].w += buf;	delete d;
-						}
-						else
-						{
-							HMDT d = mglFormulaCalc(w.substr(i1,i-i1-(w[i]=='\''?1:0)), this, DataList);
-							mglprintf(buf,32,L"%g",d->a[0]);	a[n-1].w += buf;	delete d;
-						}
-					}
-				}
-				else	a[n-1].w += w[i];
-			}*/
 		}
 		else if(str[0]=='{')
 		{	// this is temp data

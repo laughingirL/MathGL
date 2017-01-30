@@ -175,7 +175,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	int w = _Gr_->GetWidth(), h = _Gr_->GetHeight();
 
-	int x1=gr->ClipX1, x2=gr->ClipX2<0?w:gr->ClipX2, y1=gr->ClipY1, y2=gr->ClipY2<0?h:gr->ClipY2;
+	int x1=gr->BBoxX1, x2=gr->BBoxX2<0?w:gr->BBoxX2, y1=gr->BBoxY1, y2=gr->BBoxY2<0?h:gr->BBoxY2;
 	if(x1<0 || x1>=x2 || y1<0 || y1>=y2)	{	x1=y1=0;	x2=w;	y2=h;	}
 
 	if(gz)
@@ -399,7 +399,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	if(strcmp(fname,"-"))	fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 
-	int x1=gr->ClipX1, x2=gr->ClipX2<0?ww:gr->ClipX2, y1=gr->ClipY1, y2=gr->ClipY2<0?hh:gr->ClipY2;
+	int x1=gr->BBoxX1, x2=gr->BBoxX2<0?ww:gr->BBoxX2, y1=gr->BBoxY1, y2=gr->BBoxY2<0?hh:gr->BBoxY2;
 	if(x1<0 || x1>=x2 || y1<0 || y1>=y2)	{	x1=y1=0;	x2=ww;	y2=hh;	}
 	ww = x2-x1;	hh = y2-y1;
 
@@ -407,7 +407,6 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
 	mgl_printf(fp, gz, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
 	mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", ww, hh);
-	// NOTE: no clipping right now !!!
 
 	mgl_printf(fp, gz, "<!--Created by MathGL library-->\n");
 	mgl_printf(fp, gz, "<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));

@@ -1672,13 +1672,13 @@ int MGL_NO_EXPORT mgls_setsize(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_clip(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_bbox(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"nn") && a[1].v>=0 && a[0].v>=0)
-		gr->SetClip(mgl_int(a[0].v), mgl_int(a[1].v));
+		gr->SetBBox(mgl_int(a[0].v), mgl_int(a[1].v));
 	else if(!strcmp(k,"nnnn"))
-		gr->SetClip(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v));
+		gr->SetBBox(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3599,6 +3599,7 @@ mglCommand mgls_base_cmd[] = {
 	{"barh","Draw horizontal bars for 1D data", "barh Ydat ['fmt' above]|Xdat Ydat ['fmt' above]", mgls_barh ,7},
 	{"bars","Draw bars for 1D data","bars Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars ,7},
 	{"barwidth","Set default bars width","barwidth val", mgls_barwidth ,2},
+	{"bbox","Set bounding box for 2d export","bbox x1 y1 [x2 y2]", mgls_bbox ,2},
 	{"beam","Draw quasi-optical beam","beam Tr G1 G2 Adat r ['sch' flag num] ", mgls_beam ,9},
 	{"belt","Draw belts","belt Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_belt ,8},
 	{"bifurcation","Draw Bifurcation diagram","bifurcation dx Func ['fmt']|dx 'func' ['fmt']", mgls_bifurcation,13},
@@ -3614,7 +3615,6 @@ mglCommand mgls_base_cmd[] = {
 	{"clean","Remove duplicate rows","clean Dat id", mgls_clean ,3},
 	{"clearlegend","Clear legend entries","clearlegend", mgls_clearlegend ,15},
 	{"clf","Clear picture","clf|'col'|r g b", mgls_clf ,12},
-	{"clip","Set bounding box for 2d export","clip x1 y1 [x2 y2]", mgls_clip ,2},
 	{"cloud","Draw cloud","cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud ,9},
 	{"colorbar","Draw colorbar","colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y [w h]|Vdat 'sch' pos x y [w h]", mgls_colorbar ,12},
 	{"column","Get data column filled by formula on column ids","column Res Dat 'eq'", mgls_column ,4},

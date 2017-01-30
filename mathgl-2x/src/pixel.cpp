@@ -701,18 +701,18 @@ void mglCanvas::Finish()
 			BDef[3] = 255;
 		}
 	}
-	int x2 = ClipX2<0?Width:ClipX2, y2 = ClipY2<0?Height:ClipY2;
-	if(ClipX1>=0 && ClipX1<x2 && ClipY1>=0 && ClipY1<y2)
+	int x2 = BBoxX2<0?Width:BBoxX2, y2 = BBoxY2<0?Height:BBoxY2;
+	if(BBoxX1>=0 && BBoxX1<x2 && BBoxY1>=0 && BBoxY1<y2)
 	{
-		unsigned char ff[8]={255,255,255,255, 0,0,0,255}, *g1 = G4+ClipX1*4-4;
+		unsigned char ff[8]={255,255,255,255, 0,0,0,255}, *g1 = G4+BBoxX1*4-4;
 		int ww = 8*Width;
-		if(ClipX1>0)	for(long i=0;i<Height/2-1;i++)
+		if(BBoxX1>0)	for(long i=0;i<Height/2-1;i++)
 			memcpy(g1+ww*i,ff,8);
 		g1 = G4+x2*4;
 		if(x2<Width)	for(long i=0;i<Height/2-1;i++)
 			memcpy(g1+ww*i,ff,8);
-		g1 = G4+(ClipY1-1)*4*Width;
-		if(ClipY1>0)	for(long i=0;i<Width/2-1;i++)
+		g1 = G4+(BBoxY1-1)*4*Width;
+		if(BBoxY1>0)	for(long i=0;i<Width/2-1;i++)
 			memcpy(g1+8*i,ff,8);
 		g1 = G4+y2*4*Width;
 		if(y2<Height)	for(long i=0;i<Width/2-1;i++)
@@ -964,11 +964,11 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 	Finish();
 	long c = alpha?4:3, d = c*Width, dj=0;
 	unsigned char *gg = (alpha?G4:G);
-	int x2 = ClipX2<0?Width:ClipX2, y2 = ClipY2<0?Height:ClipY2;
-	if(ClipX1>=0 && ClipX1<x2 && ClipY1>=0 && ClipY1<y2)
+	int x2 = BBoxX2<0?Width:BBoxX2, y2 = BBoxY2<0?Height:BBoxY2;
+	if(BBoxX1>=0 && BBoxX1<x2 && BBoxY1>=0 && BBoxY1<y2)
 	{
-		gg += c*ClipX1 + d*ClipY1;
-		w = x2-ClipX1;	h = y2-ClipY1;
+		gg += c*BBoxX1 + d*BBoxY1;
+		w = x2-BBoxX1;	h = y2-BBoxY1;
 	}
 	else	{	w = Width;	h = Height;	}
 	p = (unsigned char **)malloc(h * sizeof(unsigned char *));
