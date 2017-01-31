@@ -1851,6 +1851,47 @@ int MGL_NO_EXPORT mgls_subdata(mglGraph *, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_section(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(k[0]=='d' && a[0].d->temp)	return 5;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d)
+	{
+		if(!strcmp(k,"dddsn"))
+			*d = mglData(true,mgl_data_section(a[1].d, a[2].d, a[3].s[0], a[4].v));
+		else if(!strcmp(k,"ddds"))
+			*d = mglData(true,mgl_data_section(a[1].d, a[2].d, a[3].s[0], NAN));
+		else if(!strcmp(k,"ddd"))
+			*d = mglData(true,mgl_data_section(a[1].d, a[2].d, 'y', NAN));
+		else if(!strcmp(k,"ddnsn"))
+			*d = mglData(true,mgl_data_section_val(a[1].d, mgl_int(a[2].v), a[3].s[0], a[4].v));
+		else if(!strcmp(k,"ddns"))
+			*d = mglData(true,mgl_data_section_val(a[1].d, mgl_int(a[2].v), a[3].s[0], NAN));
+		else if(!strcmp(k,"ddn"))
+			*d = mglData(true,mgl_data_section_val(a[1].d, mgl_int(a[2].v), 'y', NAN));
+		else res = 1;
+	}
+	else if(c)
+	{
+		if(!strcmp(k,"dddsn"))
+			*d = mglDataC(true,mgl_datac_section(a[1].d, a[2].d, a[3].s[0], a[4].v));
+		else if(!strcmp(k,"ddds"))
+			*d = mglDataC(true,mgl_datac_section(a[1].d, a[2].d, a[3].s[0], NAN));
+		else if(!strcmp(k,"ddd"))
+			*d = mglDataC(true,mgl_datac_section(a[1].d, a[2].d, 'y', NAN));
+		else if(!strcmp(k,"ddnsn"))
+			*d = mglDataC(true,mgl_datac_section_val(a[1].d, mgl_int(a[2].v), a[3].s[0], a[4].v));
+		else if(!strcmp(k,"ddns"))
+			*d = mglDataC(true,mgl_datac_section_val(a[1].d, mgl_int(a[2].v), a[3].s[0], NAN));
+		else if(!strcmp(k,"ddn"))
+			*d = mglDataC(true,mgl_datac_section_val(a[1].d, mgl_int(a[2].v), 'y', NAN));
+		else res = 1;
+	}
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_trace(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -3795,6 +3836,7 @@ mglCommand mgls_base_cmd[] = {
 	{"save","Save data to file","save Dat 'file'|'str' 'file'|'str' 'file' 'how'", mgls_save ,3},
 	{"savehdf","Save data to HDF5 file","savehdf Dat 'file' 'id' [rewrite]", mgls_savehdf ,3},
 	{"scanfile","Get formated data from file","scanfile Dat 'fname 'templ'", mgls_scanfile ,4},
+	{"section","Extract sub-array","section Res Dat id ['dir' val]|Res Dat Ids ['dir' val]", mgls_section ,4},
 	{"setsize","Set picture size","setsize width height", mgls_setsize ,2},
 	{"setsizescl","Set scaling factor for further setsize","setsizescl val", mgls_setsizescl ,2},
 	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew ,16},

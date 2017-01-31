@@ -276,6 +276,13 @@ using mglDataA::Momentum;
 	{	return mglData(true,mgl_data_subdata_ext(this,&xx,&yy,0));	}
 	inline mglData SubData(const mglDataA &xx) const
 	{	return mglData(true,mgl_data_subdata_ext(this,&xx,0,0));	}
+	/// Get data from sections ids, separated by value val along specified direction.
+	/** If section id is negative then reverse order is used (i.e. -1 give last section). */
+	inline mglData Section(const mglDataA &ids, char dir='y', mreal val=NAN) const
+	{	return mglData(true,mgl_data_section(this,&ids,dir,val));	}
+	inline mglData Section(long id, char dir='y', mreal val=NAN) const
+	{	return mglData(true,mgl_data_section_val(this,id,dir,val));	}
+	
 	/// Get trace of the data array
 	inline mglData Trace() const
 	{	return mglData(true,mgl_data_trace(this));	}

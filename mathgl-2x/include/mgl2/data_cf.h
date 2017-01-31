@@ -157,6 +157,15 @@ uintptr_t MGL_EXPORT mgl_data_subdata_ext_(uintptr_t *dat, uintptr_t *xx,uintptr
 /// Get column (or slice) of the data filled by formulas of named columns
 HMDT MGL_EXPORT mgl_data_column(HCDT dat, const char *eq);
 uintptr_t MGL_EXPORT mgl_data_column_(uintptr_t *dat, const char *eq,int l);
+/// Get data from sections ids, separated by value val along specified direction.
+/** If section id is negative then reverse order is used (i.e. -1 give last section). */
+HMDT MGL_EXPORT mgl_data_section(HCDT dat, HCDT ids, char dir, mreal val);
+uintptr_t MGL_EXPORT mgl_data_section_(uintptr_t *d, uintptr_t *ids, const char *dir, mreal *val,int);
+/// Get data from section id, separated by value val along specified direction.
+/** If section id is negative then reverse order is used (i.e. -1 give last section). */
+HMDT MGL_EXPORT mgl_data_section_val(HCDT dat, long id, char dir, mreal val);
+uintptr_t MGL_EXPORT mgl_data_section_val_(uintptr_t *d, int *id, const char *dir, mreal *val,int);
+
 /// Set names for columns (slices)
 void MGL_EXPORT mgl_data_set_id(HMDT d, const char *id);
 void MGL_EXPORT mgl_data_set_id_(uintptr_t *dat, const char *id,int l);

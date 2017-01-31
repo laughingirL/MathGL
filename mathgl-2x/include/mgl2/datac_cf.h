@@ -173,6 +173,14 @@ uintptr_t MGL_EXPORT mgl_datac_sum_(uintptr_t *dat, const char *dir,int);
 /// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
 HADT MGL_EXPORT mgl_datac_combine(HCDT dat1, HCDT dat2);
 uintptr_t MGL_EXPORT mgl_datac_combine_(uintptr_t *dat1, uintptr_t *dat2);
+/// Get data from sections ids, separated by value val along specified direction.
+/** If section id is negative then reverse order is used (i.e. -1 give last section). */
+HADT MGL_EXPORT mgl_datac_section(HCDT dat, HCDT ids, char dir, mreal val);
+uintptr_t MGL_EXPORT mgl_datac_section_(uintptr_t *d, uintptr_t *ids, const char *dir, mreal *val,int);
+/// Get data from section id, separated by value val along specified direction.
+/** If section id is negative then reverse order is used (i.e. -1 give last section). */
+HADT MGL_EXPORT mgl_datac_section_val(HCDT dat, long id, char dir, mreal val);
+uintptr_t MGL_EXPORT mgl_datac_section_val_(uintptr_t *d, int *id, const char *dir, mreal *val,int);
 
 /// Set names for columns (slices)
 void MGL_EXPORT mgl_datac_set_id(HADT d, const char *id);

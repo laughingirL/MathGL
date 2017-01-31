@@ -626,3 +626,82 @@ void MGL_EXPORT mgl_datac_div_num_(uintptr_t *d, dual *b)		{	mgl_datac_div_num(_
 void MGL_EXPORT mgl_datac_add_num_(uintptr_t *d, dual *b)		{	mgl_datac_add_num(_DC_, *b);	}
 void MGL_EXPORT mgl_datac_sub_num_(uintptr_t *d, dual *b)		{	mgl_datac_sub_num(_DC_, *b);	}
 //-----------------------------------------------------------------------------
+HADT MGL_EXPORT mgl_datac_section(HCDT dat, HCDT ids, char dir, mreal val)
+{
+	long di = 1, n = dat->GetNx(), m;
+	if(dir=='y')	{	di = dat->GetNx();	n = dat->GetNy();	}
+	if(dir=='z')	{	di = dat->GetNx()*dat->GetNy();	n = dat->GetNz();	}
+	m = dat->GetNN()/n;
+	// first collect position of key values
+	std::vector<long> pos;	pos.push_back(0);
+	if(mgl_isnan(val))	for(long i=1;i<n;i++)
+	{
+		if(mgl_isnan(dat->vthr(i*di)))	pos.push_back(i);
+	}
+	else	for(long i=0;i<n;i++)
+	{
+		if(dat->vthr(i*di)==val)	pos.push_back(i);
+	}
+	pos.push_back(n);	// add last point (size of data)
+	// now collect required position from section and its lengths
+	std::vector<long> ls, ps;
+	long np = pos.size()-1, nl=0;
+	if(np<1)	return NULL;	// nothing to do
+	for(long i=0;i<ids->GetNN();i++)
+	{
+		long j = mgl_int(ids->vthr(i)+0.5);	j = j<0?np+j:j;
+		if(j>=0 && j<np)
+		{	long l = pos[j+1]-pos[j];	nl += l;
+			ls.push_back(l);	ps.push_back(pos[j]);	}
+	}
+	if(nl==0)	return NULL;
+	mglDataC *r=0;
+	size_t ns = ps.size();
+	if(dir=='y')
+	{
+		long nx=dat->GetNx(), nz=dat->GetNz(), sh=0;
+		r = new mglDataC(nx,nl,nz);
+		for(size_t s=0;s<ns;s++)
+		{
+			long pp = ps[s];
+#pragma omp parallel for collapse(3)
+			for(long k=0;k<nz;k++)	for(long j=0;j<ls[s];j++)	for(long i=0;i<nx;i++)
+				r->a[i+nx*(sh+j+nl*k)] = dat->vc(i,pp+j,k);
+			sh += ls[s];
+		}
+	}
+	else if(dir=='x')
+	{
+		long ny=dat->GetNy(), nz=dat->GetNz(), sh=0;
+		r = new mglDataC(nl,ny,nz);
+		for(size_t s=0;s<ns;s++)
+		{
+			long pp = ps[s];
+#pragma omp parallel for collapse(3)
+			for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<ls[s];i++)
+				r->a[sh+i+nl*(j+ny*k)] = dat->vc(pp+i,j,k);
+			sh += ls[s];
+		}
+	}
+	else if(dir=='z')
+	{
+		long nx=dat->GetNx(), ny=dat->GetNy(), sh=0;
+		r = new mglDataC(nx,ny,nl);
+		for(size_t s=0;s<ns;s++)
+		{
+			long pp = ps[s];
+#pragma omp parallel for collapse(3)
+			for(long k=0;k<ls[s];k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
+				r->a[i+nx*(j+ny*(sh+k))] = dat->vc(i,j,pp+k);
+			sh += ls[s];
+		}
+	}
+	return r;
+}
+HADT MGL_EXPORT mgl_datac_section_val(HCDT dat, long id, char dir, mreal val)
+{	mglData v;	v.a[0]=id;	return mgl_datac_section(dat,&v,dir,val);	}
+uintptr_t MGL_EXPORT mgl_datac_section_(uintptr_t *d, uintptr_t *ids, const char *dir, mreal *val,int)
+{	return uintptr_t(mgl_datac_section(_DT_,_DA_(ids),dir[0],*val));	}
+uintptr_t MGL_EXPORT mgl_datac_section_val_(uintptr_t *d, int *id, const char *dir, mreal *val,int)
+{	return uintptr_t(mgl_datac_section_val(_DT_,*id,dir[0],*val));	}
+//-----------------------------------------------------------------------------

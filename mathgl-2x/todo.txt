@@ -9,6 +9,7 @@
 5. Get true coordinates in CalcXYZ for curved equations too.
 
 6. Extra markers for '&' and '&#' signs ?!?
+
 8. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 
 9. Export background image to svg ???
@@ -20,6 +21,7 @@
 11. Simplified triangle filling for Quality=1 ?!?
 12. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
 13. \overline{\overline{a}} ???
+14. Strange tick labels with extra rotation near axis ???
 
 
 ============= NEW FEATURES =============
@@ -38,11 +40,9 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
 
-10. Add "section Dat 'dir' id1 [val=nan]|section Dat 'dir' Ids [val=nan]" to select section of data between NANs
 11. Add 'erode Dat lvl [step=1]' and 'dilate Dat lvl [step=1]' as binary masks
 
 13. "readhdf 'fname.hdf'" -- to read ALL data
-14. Strange tick labels ???
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -77,6 +77,7 @@ D. Docs about JS interface
 * 'str'[n] -- get string of only n-th symbol
 * 'str'+v -- add value v to the last character of the string.
 * 'str',val || 'str',!val -- append numeric value to the string (as before)
+17. Docs and sample about 'section'. Sample of several 'join'-ed curves.
 
 ============= UDAV =============
 
