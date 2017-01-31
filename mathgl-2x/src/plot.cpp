@@ -32,106 +32,102 @@ void MGL_EXPORT mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char 
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	long nm = gr->FaceNum?gr->FaceNum*n:10000, nd = gr->FaceNum?gr->FaceNum*10:1000;
+	
+	mglDataS x, y;
+	x.dat.reserve(nm);	y.dat.reserve(nm);
 
-	mreal *x = (mreal *)malloc(n*sizeof(mreal));
-	mreal *y = (mreal *)malloc(n*sizeof(mreal));
 	mglFormula *eq = new mglFormula(eqY);
-	mreal xs, ys, yr, ym=fabs(gr->Max.y - gr->Min.y)/nd;
 	// initial data filling
+	x.clear();	y.clear();
 	if(gr->Min.x>0 && gr->Max.x>100*gr->Min.x)
 	{
 		mreal d = log(2*gr->Max.x/gr->Min.x)/(n-1);
 		for(long i=0;i<n;i++)
-		{	x[i]=2*gr->Max.x*exp(d*i)/(2*gr->Max.x/gr->Min.x+exp(d*i));	y[i]=eq->Calc(x[i]);	}
+		{	mreal xx = 2*gr->Max.x*exp(d*i)/(2*gr->Max.x/gr->Min.x+exp(d*i));
+			x.dat.push_back(xx);	y.dat.push_back(eq->Calc(xx));	}
 	}
 	else if(gr->Max.x<0 && gr->Min.x<100*gr->Max.x)
 	{
 		mreal d = log(2*gr->Min.x/gr->Max.x)/(n-1);
 		for(long i=0;i<n;i++)
-		{	x[i]=2*gr->Min.x*exp(d*i)/(2*gr->Min.x/gr->Max.x+exp(d*i));	y[i]=eq->Calc(x[i]);	}
+		{	mreal xx = 2*gr->Min.x*exp(d*i)/(2*gr->Min.x/gr->Max.x+exp(d*i));
+			x.dat.push_back(xx);	y.dat.push_back(eq->Calc(xx));	}
 	}
 	else
 	{
 		mreal d = (gr->Max.x - gr->Min.x)/(n-1.);
 		for(long i=0;i<n;i++)
-		{	x[i]=gr->Min.x + i*d;	y[i]=eq->Calc(x[i]);	}
+		{	mreal xx = gr->Min.x + i*d;
+			x.dat.push_back(xx);	y.dat.push_back(eq->Calc(xx));	}
 	}
 
-	for(long i=0;i<n-1 && n<nm;)
+	bool check=true;
+	mreal ym=fabs(gr->Max.y - gr->Min.y)/nd;
+	while(check && x.dat.size()<nm)
 	{
-		if((i&0xfff)==0 && gr->NeedStop())
-		{	free(x);	free(y);	delete eq;	return;	}
-		xs=(x[i]+x[i+1])/2;
-		ys=(y[i]+y[i+1])/2;	yr=eq->Calc(xs);
-		if(fabs(yr-ys)>ym)	// bad approximation here
+		if(gr->NeedStop())	{	delete eq;	return;	}
+		check = false;
+		for(long i=1;i<x.size();i++)
 		{
-			x = (mreal *)realloc(x,(n+1)*sizeof(mreal));
-			y = (mreal *)realloc(y,(n+1)*sizeof(mreal));
-			memmove(x+i+2,x+i+1,(n-i-1)*sizeof(mreal));
-			memmove(y+i+2,y+i+1,(n-i-1)*sizeof(mreal));
-			x[i+1] = xs;	y[i+1] = yr;	n++;
+			mreal xs=(x[i]+x[i-1])/2;
+			mreal ys=(y[i]+y[i-1])/2, yr=eq->Calc(xs);
+			if(fabs(yr-ys)>ym)	// bad approximation here
+			{
+				x.dat.insert(x.dat.begin()+i,xs);
+				y.dat.insert(y.dat.begin()+i,yr);
+				check = true;	i++;
+			}
 		}
-		else i++;
 	}
-
-	delete eq;
-	mglData yy(y,n),xx(x,n);
-	free(x);	free(y);
-	mgl_plot_xy(gr,&xx,&yy,pen,0);
+	mgl_plot_xy(gr,&x,&y,pen,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, const char *pen, const char *opt)
 {
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
-
-	mreal *x = (mreal *)malloc(n*sizeof(mreal));
-	mreal *y = (mreal *)malloc(n*sizeof(mreal));
-	mreal *z = (mreal *)malloc(n*sizeof(mreal));
-	mreal *t = (mreal *)malloc(n*sizeof(mreal));
+	long nm = gr->FaceNum?gr->FaceNum*n:10000, nd = gr->FaceNum?gr->FaceNum*10:1000;
+	
+	mglDataS x, y, z, t;
+	x.dat.reserve(nm);	y.dat.reserve(nm);
+	z.dat.reserve(nm);	t.dat.reserve(nm);
 	mglFormula *ex, *ey, *ez;
 	ex = new mglFormula(eqX ? eqX : "0");
 	ey = new mglFormula(eqY ? eqY : "0");
 	ez = new mglFormula(eqZ ? eqZ : "0");
-	mreal ts, xs, ys, zs, xr, yr, zr, xm=fabs(gr->Max.x - gr->Min.x)/1000, ym=fabs(gr->Max.y - gr->Min.y)/1000, zm=fabs(gr->Max.z - gr->Min.z)/1000;
+	t.clear();	x.clear();	y.clear();	z.clear();
 	for(long i=0;i<n;i++)	// initial data filling
 	{
-		t[i] = i/(n-1.);
-		x[i] = ex->Calc(0,0,t[i]);
-		y[i] = ey->Calc(0,0,t[i]);
-		z[i] = ez->Calc(0,0,t[i]);
+		mreal tt = i/(n-1.);	t.push_back(tt);
+		x.push_back(ex->Calc(0,0,t[i]));
+		y.push_back(ey->Calc(0,0,t[i]));
+		z.push_back(ez->Calc(0,0,t[i]));
 	}
 
-	for(long i=0;i<n-1 && n<10000;)
+	bool check=true;
+	mreal xm=fabs(gr->Max.x-gr->Min.x)/nd, ym=fabs(gr->Max.y-gr->Min.y)/nd, zm=fabs(gr->Max.z-gr->Min.z)/nd;
+	while(check && x.dat.size()<nm)
 	{
-		if((i&0xfff)==0 && gr->NeedStop())
+		if(gr->NeedStop())	{	delete ex;	delete ey;	delete ez;	return;	}
+		check = false;
+		for(long i=1;i<t.size();i++)
 		{
-			free(x);	free(y);	free(z);	free(t);
-			delete ex;	delete ey;	delete ez;	return;
+			mreal ts=(t[i]+t[i-1])/2;
+			mreal xs=(x[i]+x[i-1])/2, xr=ex->Calc(0,0,ts);
+			mreal ys=(y[i]+y[i-1])/2, yr=ey->Calc(0,0,ts);
+			mreal zs=(z[i]+z[i-1])/2, zr=ez->Calc(0,0,ts);
+			if(fabs(xr-xs)>xm || fabs(yr-ys)>ym || fabs(zr-zs)>zm)	// bad approximation here
+			{
+				t.dat.insert(t.dat.begin()+i,ts);
+				x.dat.insert(x.dat.begin()+i,xr);
+				y.dat.insert(y.dat.begin()+i,yr);
+				z.dat.insert(z.dat.begin()+i,zr);
+				check = true;	i++;
+			}
 		}
-		ts=(t[i]+t[i+1])/2;
-		xs=(x[i]+x[i+1])/2;	xr=ex->Calc(0,0,ts);
-		ys=(y[i]+y[i+1])/2;	yr=ey->Calc(0,0,ts);
-		zs=(z[i]+z[i+1])/2;	zr=ez->Calc(0,0,ts);
-		if(fabs(xr-xs)>xm || fabs(yr-ys)>ym || fabs(zr-zs)>zm)	// bad approximation here
-		{
-			z = (mreal *)realloc(z,(n+1)*sizeof(mreal));
-			t = (mreal *)realloc(t,(n+1)*sizeof(mreal));
-			x = (mreal *)realloc(x,(n+1)*sizeof(mreal));
-			y = (mreal *)realloc(y,(n+1)*sizeof(mreal));
-			memmove(x+i+2,x+i+1,(n-i-1)*sizeof(mreal));
-			memmove(y+i+2,y+i+1,(n-i-1)*sizeof(mreal));
-			memmove(z+i+2,z+i+1,(n-i-1)*sizeof(mreal));
-			memmove(t+i+2,t+i+1,(n-i-1)*sizeof(mreal));
-			t[i+1]=ts;	x[i+1]=xr;	y[i+1]=yr;	z[i+1]=zr;	n++;
-		}
-		else i++;
 	}
 	delete ex;	delete ey;	delete ez;
-
-	mglData xx(x,n),yy(y,n),zz(z,n);
-	free(x);	free(y);	free(z);	free(t);
-	mgl_plot_xyz(gr,&xx,&yy,&zz,pen,0);
+	mgl_plot_xyz(gr,&x,&y,&z,pen,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_fplot_(uintptr_t *gr, const char *fy, const char *stl, const char *opt, int ly, int ls, int lo)

@@ -614,7 +614,7 @@ public:
 #endif
 };
 //-----------------------------------------------------------------------------
-/// Class which present variable as data array
+/// Class which present equidistantly distributed data
 class MGL_EXPORT mglDataV : public mglDataA
 {
 	long nx;	///< number of points in 1st dimensions ('x' dimension)
@@ -741,7 +741,7 @@ public:
 	mreal dvz(long ,long =0,long =0) const	{	return dk;	}
 };
 //-----------------------------------------------------------------------------
-/// Class which present variable as data array
+/// Class which present function as data array
 class MGL_EXPORT mglDataF : public mglDataA
 {
 	long nx;	///< number of points in 1st dimensions ('x' dimension)
@@ -862,7 +862,7 @@ public:
 	}
 };
 //-----------------------------------------------------------------------------
-/// Class which present variable as data array
+/// Class which present column of another data as data array
 class MGL_EXPORT mglDataT : public mglDataA
 {
 	const mglDataA &dat;
@@ -911,6 +911,7 @@ public:
 	{	return 0;	}
 };
 //-----------------------------------------------------------------------------
+/// Class which present row of another data as data array
 class MGL_EXPORT mglDataR : public mglDataA
 {
 	const mglDataA &dat;
@@ -959,7 +960,7 @@ public:
 	{	return 0;	}
 };
 //-----------------------------------------------------------------------------
-/// Class for replacement of std::vector
+/// Class which present std::vector as data array
 class MGL_EXPORT mglDataS : public mglDataA
 {
 public:
@@ -991,8 +992,8 @@ public:
 	long GetNz() const	{	return 1;	}
 	mreal dvx(long i,long =0,long =0) const
 	{	return i>0? (i<long(dat.size()-1)? (dat[i+1]-dat[i-1])/2:dat[i]-dat[i-1]) : dat[i+1]-dat[i];	}
-	mreal dvy(long ,long =0,long =0) const	{	return 1;	}
-	mreal dvz(long ,long =0,long =0) const	{	return 1;	}
+	mreal dvy(long ,long =0,long =0) const	{	return 0;	}
+	mreal dvz(long ,long =0,long =0) const	{	return 0;	}
 };
 //-----------------------------------------------------------------------------
 #endif

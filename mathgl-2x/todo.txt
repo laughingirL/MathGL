@@ -6,8 +6,7 @@
 2. Export to COLLADA !!!
 3. Export to X3D !!!
 4. 3D text (with depth), and text along 3D curve (for Quality=3) ???
-5. Improve fplot, fsurf ???
-6. Get true coordinates in CalcXYZ for curved equations too.
+5. Get true coordinates in CalcXYZ for curved equations too.
 
 6. Extra markers for '&' and '&#' signs ?!?
 8. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
@@ -95,6 +94,7 @@ D. Docs about JS interface
 4. List of constants into the list of data?!
 5. Add color cycle ???
 6. Color position in color scheme dialog
+7. Select 'bbox' by mouse
 9. Save data from the summary panel
 10. Select subdata section (between NAN in curve) by mouse + adding it to script ?!!
 11. Zoom in a region by middle mouse (if not in rotation mode)
