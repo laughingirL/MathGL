@@ -68,7 +68,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 	{
 		char *b = lines[k];
 		long nb = strlen(b);
-		register long i=0, j=0;
+		long i=0, j=0;
 
 		while(j<nb)
 		{
@@ -89,7 +89,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 				while(j<nb && b[j]<=' ')	j++;
 			}
 			char *s=b+j;
-			register long sk=0;
+			long sk=0;
 			while(j<nb && b[j]>' ' && ((b[j]!=',' && b[j]!=' ') || sk!=0) && b[j]!=';')
 			{
 				if(strchr("[{(",b[j]))	sk++;
@@ -128,7 +128,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 			numbs[k].push_back(dual(re,im));
 		}
 	}
-	register long i=0, n=NX*NY*NZ;
+	long i=0, n=NX*NY*NZ;
 	for(long k=0;k<nl && i<n;k++)
 	{
 		std::vector<dual> &vals = numbs[k];
@@ -149,8 +149,7 @@ void MGL_EXPORT mgl_datac_set(HADT d, HCDT a)
 		memcpy(d->a, dd->a, d->nx*d->ny*d->nz*sizeof(dual));
 	else	// very inefficient!!!
 	{
-		register long i,j,k;
-		for(k=0;k<d->nz;k++)	for(j=0;j<d->ny;j++)	for(i=0;i<d->nx;i++)
+		for(long k=0;k<d->nz;k++)	for(long j=0;j<d->ny;j++)	for(long i=0;i<d->nx;i++)
 			d->a[i+d->nx*(j+d->ny*k)] = a->v(i,j,k);
 	}
 }
@@ -159,7 +158,7 @@ void MGL_EXPORT mgl_datac_set_(uintptr_t *d, uintptr_t *a)	{	mgl_datac_set(_DC_,
 void MGL_EXPORT mgl_datac_set_values(HADT d, const char *v,long NX,long NY,long NZ)
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
-	register long n=strlen(v)+1;
+	long n=strlen(v)+1;
 	char *buf = new char[n];
 	memcpy(buf,v,n);
 	mglFromStr(d,buf,NX,NY,NZ);
@@ -183,8 +182,7 @@ void MGL_EXPORT mgl_datac_set_matrix(HADT d, gsl_matrix *m)
 #if MGL_HAVE_GSL
 	if(!m || m->size1<1 || m->size2<1)	return;
 	mgl_datac_create(d, m->size1,m->size2,1);
-	register long i,j;
-	for(j=0;j<d->ny;j++)	for(i=0;i<d->nx;i++)
+	for(long j=0;j<d->ny;j++)	for(long i=0;i<d->nx;i++)
 		d->a[i+j*d->nx] = m->data[i * m->tda + j];
 #endif
 }
@@ -298,13 +296,12 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 	nb = strlen(buf);	gzclose(fp);
 
 	bool first=false;	// space is not allowed delimiter for file with complex numbers
-	register char ch;
 	for(i=nb-1;i>=0;i--)	if(buf[i]>' ')	break;
 	buf[i+1]=0;	nb = i+1;		// remove tailing spaces
 	for(i=0;i<nb-1 && !isn(buf[i]);i++)	// determine nx
 	{
 		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}
-		ch = buf[i];
+		char ch = buf[i];
 		if(ch>' ' && !first)	first=true;
 		if(strchr("[{(",ch))	sk++;
 		if(strchr("]})",ch))	sk--;
@@ -313,7 +310,7 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny
 	{
-		ch = buf[i];
+		char ch = buf[i];
 		if(ch=='#')	while(!isn(buf[i]) && i<nb)	i++;
 		if(isn(ch))
 		{
@@ -325,7 +322,7 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 	}
 	if(first)	for(i=0;i<nb-1;i++)		// determine nz
 	{
-		ch = buf[i];
+		char ch = buf[i];
 		if(ch=='#')	while(!isn(buf[i]) && i<nb)	i++;
 //		if(ch=='#')	com = true;	// comment
 		if(isn(ch))
@@ -401,17 +398,17 @@ int MGL_EXPORT mgl_datac_read_mat(HADT d, const char *fname, long dim)
 		sscanf(buf+j,"%ld%ld",&nx,&ny);
 		while(j<nb && buf[j]!='\n')	j++;	j++;
 		char *b=buf+j;
-		register long i,l;
-		for(i=l=0;b[i];i++)
+		long l=0;
+		for(long i=0;b[i];i++)
 		{
 			while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 			if(b[i]=='\n')	l++;
 		}
 		if(l==nx*ny || l==nx*ny+1)	// try to read 3d data (i.e. columns of matrix nx*ny)
 		{
-			nz=ny;	ny=nx;	nx=1;
+			nz=ny;	ny=nx;	nx=1;	l=0;
 			bool first = false;
-			for(i=l=0;b[i] && !isn(b[i]);i++)	// determine nx
+			for(long i=0;b[i] && !isn(b[i]);i++)	// determine nx
 			{
 				while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 				char ch = b[i];
@@ -603,7 +600,7 @@ MGL_NO_EXPORT void *mgl_cmodify(void *par)
 #endif
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
+		long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
 		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v[i0]:dual(0,0), w?w[i0]:dual(0,0));
 	}
 	return 0;
@@ -845,7 +842,7 @@ void MGL_EXPORT mgl_datac_set_ap(HADT d, HCDT a, HCDT p)
 #pragma omp parallel for
 	for(long i=0;i<nx*ny*nz;i++)
 	{
-		register mreal aa=a->vthr(i), pp=p->vthr(i);
+		mreal aa=a->vthr(i), pp=p->vthr(i);
 		d->a[i] = dual(aa*cos(pp), aa*sin(pp));
 	}
 }

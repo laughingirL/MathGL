@@ -220,7 +220,7 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	if((s=strstr(stl,"{&"))!=0)	c1 = c2 = atof(s+2);
 	else
 	{
-		register long ss=gr->AddTexture(stl);
+		long ss=gr->AddTexture(stl);
 		c1=gr->GetC(ss,p1.z);
 		c2=gr->GetC(ss,p2.z);
 	}
@@ -242,8 +242,8 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 
 	for(long i=0;i<2*n+1;i++)
 	{
-		register int f = n!=4?(2*i+1)*90/n:45*i;
-		register mreal co = mgl_cos[f%360], si = mgl_cos[(f+270)%360];
+		int f = n!=4?(2*i+1)*90/n:45*i;
+		mreal co = mgl_cos[f%360], si = mgl_cos[(f+270)%360];
 		p = p1+(r1*co)*a+(r1*si)*b;
 		if(refr)	q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
 		kk[i] = gr->AddPnt(p,c1,q,-1,3);
@@ -472,7 +472,7 @@ void MGL_EXPORT mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2,
 	gr->AddActive(gr->AddPnt(p2,c,q,-1,11),1);
 	for(long i=0;i<n;i++)
 	{
-		register int t=i*360/(n-1);
+		int t=i*360/(n-1);
 		p = s+v*mgl_cos[t%360]+u*mgl_cos[(270+t)%360];
 		long n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,11);
 		if(i==n/4)	gr->AddActive(n1,2);
@@ -552,9 +552,9 @@ void MGL_EXPORT mgl_drop(HMGL gr, mglPoint p, mglPoint q, double r, double c, do
 	{
 		if(i>0 && i<m)
 		{
-			register int u=i*180/m, v=180*j/m+202;
-			register float co=mgl_cos[u%360], si=mgl_cos[(u+270)%360];
-			register float cv=mgl_cos[v%360], sv=mgl_cos[(v+270)%360];
+			int u=i*180/m, v=180*j/m+202;
+			float co=mgl_cos[u%360], si=mgl_cos[(u+270)%360];
+			float cv=mgl_cos[v%360], sv=mgl_cos[(v+270)%360];
 			rr = r*a*si*(1.+sh*co)/(1+sh);
 			dr = r*a/(1+sh)*(co*(1.+sh*co) - sh*si*si);
 			x = rr*cv;	y = rr*sv;
@@ -601,7 +601,7 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 
 	for(long k=0;k<ax->GetNz();k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		register mreal ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
+		mreal ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
 		xm = xm>ym ? xm : ym;
 	}
 	xm = 1./MGL_FEPSILON/(xm==0 ? 1:xm);
@@ -612,9 +612,9 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 		for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 		{
 			if(gr->NeedStop())	{	gr->EndGroup();	return;	}
-			register mreal xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x, dd;
-			register mreal dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
-			register mreal dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
+			mreal xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x, dd;
+			mreal dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
+			mreal dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
 			dx *= tx;	dy *= ty;
 
 			mglPoint q(ax->v(i,j,k),ay->v(i,j,k));	dd = q.norm();
@@ -667,7 +667,7 @@ void MGL_EXPORT mgl_putsw_dir(HMGL gr, double x, double y, double z, double dx, 
 	{
 		g->Push();	g->Identity(a);
 		gr->set(MGL_DISABLE_SCALE);
-		register mreal s=a?1:g->GetPlotFactor();
+		mreal s=a?1:g->GetPlotFactor();
 		x = (2*x-1)*s;	y = (2*y-1)*s;
 		dx= (2*dx-1)*s;	dy= (2*dy-1)*s;
 	}
@@ -718,7 +718,7 @@ void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, cons
 		for(long i=0;i<n;i++)
 		{
 			p.Set(x->v(i,mx), y->v(i,my), z->v(i,mz));
-			register long k = gr->AddPnt(p,-1,q);
+			long k = gr->AddPnt(p,-1,q);
 			gr->text_plot(k, text, fnt, -0.5*fabs(r->v(i,mr)));
 		}
 	}
@@ -734,7 +734,7 @@ void MGL_EXPORT mgl_textmarkw_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const wchar_t
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textmarkw_yr(HMGL gr, HCDT y, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	gr->SaveState(opt);
 	mglData x(n);	x.Fill(gr->Min.x,gr->Max.x);
 	mglData z(n);	z.Fill(gr->Min.z,gr->Min.z);
@@ -743,7 +743,7 @@ void MGL_EXPORT mgl_textmarkw_yr(HMGL gr, HCDT y, HCDT r, const wchar_t *text, c
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textmarkw(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	gr->SaveState(opt);
 	mglData r(n);	r.Fill(1,1);
 	mglData x(n);	x.Fill(gr->Min.x,gr->Max.x);
@@ -816,7 +816,7 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 		for(long i=0;i<n;i++)
 		{
 			mreal xx=x->v(i,mx), yy=y->v(i,my), zz=z->v(i,mz);
-			register long kk = gr->AddPnt(mglPoint(xx,yy,zz),-1,q),k,l;
+			long kk = gr->AddPnt(mglPoint(xx,yy,zz),-1,q),k,l;
 			std::wstring buf;
 			for(k=l=0;text[k];k++)
 			{
@@ -845,7 +845,7 @@ void MGL_EXPORT mgl_labelw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, cons
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_labelw_y(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
 	mglData x(n);	x.Fill(gr->Min.x,gr->Max.x);

@@ -520,14 +520,12 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 			if(id>=0)	// this is our primitive
 			{
 				// try "attract" mouse
-				register size_t i;
-				register int tt;
-				for(i=0;i<=10;i++)
+				for(size_t i=0;i<=10;i++)
 				{
-					tt = i*(w/10);	if(abs(xe-tt)<2*d)	xe = tt;
+					int tt = i*(w/10);	if(abs(xe-tt)<2*d)	xe = tt;
 					tt = i*(h/10);	if(abs(ye-tt)<2*d)	ye = tt;
 				}
-				for(i=0;i<gr->Act.size();i++)
+				for(size_t i=0;i<gr->Act.size();i++)
 				{
 					const mglActivePos &q = gr->Act[i];
 					if(abs(xe-q.x)<2*d && abs(ye-q.y)<2*d)	{	xe=q.x;	ye=q.y;	}
@@ -867,10 +865,10 @@ void QMathGL::exportMGLD(QString fname)
 void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf, QImage *out)
 {
 	const uchar *bb = mgl_get_rgb(gr);
-	register long i,w=mgl_get_width(gr), h=mgl_get_height(gr);
+	long w=mgl_get_width(gr), h=mgl_get_height(gr);
 	if(*buf)	delete [](*buf);
 	*buf = new uchar[4*w*h];
-	for(i=0;i<w*h;i++)
+	for(long i=0;i<w*h;i++)
 	{
 		(*buf)[4*i]   = bb[3*i+2];
 		(*buf)[4*i+1] = bb[3*i+1];

@@ -37,12 +37,12 @@ mglFont mglDefFont;
 //-----------------------------------------------------------------------------
 long MGL_EXPORT_PURE mgl_internal_code(unsigned s, const std::vector<mglGlyphDescr> &glyphs)
 {
-	register long i1=0,i2=glyphs.size()-1;
-	register wchar_t j = wchar_t(s & MGL_FONT_MASK);
+	long i1=0,i2=glyphs.size()-1;
+	wchar_t j = wchar_t(s & MGL_FONT_MASK);
 	// let suppose that id[i]<id[i+1]
 	while(i1<i2)
 	{
-		register long i = (i1+i2)/2;
+		long i = (i1+i2)/2;
 		if(j<glyphs[i].id)		i2 = i;
 		else if(j>glyphs[i].id)	i1=i+1;
 		else return i;
@@ -234,25 +234,19 @@ int MGL_LOCAL_PURE mgl_tex_symb_cmp(const void *a, const void *b)
 // parse LaTeX commands (mostly symbols and acents, and some font-style commands)
 unsigned mglFont::Parse(const wchar_t *s) const
 {
-	register long k;
 	unsigned res = unsigned(-2);		// Default is no symbol
 	if(!s || !s[0])	return res;
-//	for(k=0;mgl_tex_symb[k].kod;k++);	// determine the number of symbols
 	mglTeXsymb tst, *rts;
 	tst.tex = s;
 	rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, mgl_tex_num, sizeof(mglTeXsymb), mgl_tex_symb_cmp);
 	if(rts)	return rts->kod;
 
-//	for(k=0;mgl_tex_symb[k].kod;k++)	// special symbols
-//		if(!wcscmp(s,mgl_tex_symb[k].tex))
-//			return mgl_tex_symb[k].kod;
-	for(k=0;mgl_act_symb[k].kod;k++)	// acents
+	for(long k=0;mgl_act_symb[k].kod;k++)	// acents
 		if(!wcscmp(s,mgl_act_symb[k].tex))
 			return mgl_act_symb[k].kod | MGL_FONT_ZEROW;
 	// arbitrary UTF symbol
 	if(s[0]=='u' && s[1]=='t' && s[2]=='f')
-//	{	wscanf(s+3,"%lx",&k);	return wchar_t(k);	}
-	{	k = wcstoul(s+3,NULL,16);	return wchar_t(k);	}
+	{	long k = wcstoul(s+3,NULL,16);	return wchar_t(k);	}
 	// font/style changes for next symbol
 	if(!wcscmp(s,L"big"))			res = unsigned(-5);
 	else if(!wcscmp(s,L"frac"))		res = unsigned(-6);
@@ -285,9 +279,9 @@ unsigned mglFont::Parse(const wchar_t *s) const
 //-----------------------------------------------------------------------------
 void mglFont::Convert(const wchar_t *str, unsigned *res) const
 {
-	register size_t r,i,j,k,i0;
+	size_t j=0;
 	wchar_t s[128]=L"";		// TeX command and current char
-	for(i=j=0;str[i];i++)
+	for(size_t i=0;str[i];i++)
 	{
 		wchar_t ch = str[i];
 		if(ch=='\\')	// It can be TeX command
@@ -296,10 +290,10 @@ void mglFont::Convert(const wchar_t *str, unsigned *res) const
 				res[j++] = str[++i];
 			else		// Yes, it is TeX command
 			{
-				i0=i+1;
+				size_t i0=i+1, k;
 				for(k=0;isalnum(str[++i]) && k<127;k++)	s[k] = str[i];
 				s[k] = 0;
-				r = Parse(s);
+				size_t r = Parse(s);
 				if(r==unsigned(-2))			// command not found, so use next symbol itself
 				{	res[j++] = str[i0];	i = i0;	}
 				else if(r)
@@ -328,12 +322,11 @@ void mglFont::Convert(const wchar_t *str, unsigned *res) const
 float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st) const
 {
 	static unsigned s1[2]={0,0}, s2[2]={0,0};
-	register long k;
 	i++;
 	if(str[i]==unsigned(-3))
 	{
 		i++;	*b1 = str+i;
-		for(k=1;k>0 && str[i];i++)
+		for(long k=1;k>0 && str[i];i++)
 		{
 			if(str[i]==unsigned(-4))	k--;
 			if(str[i]==unsigned(-3))	k++;
@@ -344,7 +337,7 @@ float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float
 	if(str[i]==unsigned(-3))
 	{
 		i++;	*b2 = str+i;
-		for(k=1;k>0 && str[i];i++)
+		for(long k=1;k>0 && str[i];i++)
 		{
 			if(str[i]==unsigned(-4))	k--;
 			if(str[i]==unsigned(-3))	k++;

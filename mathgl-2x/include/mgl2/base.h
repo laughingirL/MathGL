@@ -80,12 +80,12 @@ public:
 		dat[0] = new T[(size_t)1<<pb];	n=0;	m=1;
 		if(mutex)	mgl_mutex_unlock(mutex);
 	}
-	T &operator[](size_t i)	{	register size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
-	const T &operator[](size_t i)	const	{	register size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
+	T &operator[](size_t i)	{	size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
+	const T &operator[](size_t i)	const	{	size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
 	void push_back(const T &t)
 	{
 		if(n>=(m<<pb))	reserve(1);
-		register size_t d=n>>pb;
+		size_t d=n>>pb;
 		dat[d][n-(d<<pb)] = t;	n++;
 	}
 	size_t size()	const	{	return n;	}
@@ -338,7 +338,7 @@ public:
 	mglStack<mglActivePos> Act;	///< Position of active points
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 	int BBoxX1, BBoxY1, BBoxX2, BBoxY2;	///< BBox region for exporting 2d graphics
-	
+
 	mreal CDef;			///< Default (current) color in texture
 	mreal AlphaDef;		///< Default value of alpha channel (transparency)
 	mreal BarWidth;		///< Relative width of rectangles in Bars().

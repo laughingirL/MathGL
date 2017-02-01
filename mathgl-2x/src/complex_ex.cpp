@@ -122,14 +122,14 @@ HADT MGL_EXPORT mgl_datac_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 #pragma omp parallel for
 			for(long i0=0;i0<n*m*l;i0++)
 			{
-				register long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
+				long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
 				r->a[i0] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?dd->a[x+nx*(y+ny*z)]:NAN;
 			}
 		else
 #pragma omp parallel for
 			for(long i0=0;i0<n*m*l;i0++)
 			{
-				register long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
+				long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
 				r->a[i0] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
 			}
 	}
@@ -144,14 +144,14 @@ HADT MGL_EXPORT mgl_datac_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 #pragma omp parallel for collapse(3)
 			for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			{
-				register long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
+				long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
 				r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?dd->a[x+nx*(y+ny*z)]:NAN;
 			}
 		else
 #pragma omp parallel for collapse(3)
 			for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			{
-				register long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
+				long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
 				r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
 			}
 		if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
@@ -203,7 +203,7 @@ MGL_NO_EXPORT void *mgl_cresize(void *par)
 #endif
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		register mreal i=(i0%nx), j=((i0/nx)%ny), k=(i0/(nx*ny));
+		mreal i=(i0%nx), j=((i0/nx)%ny), k=(i0/(nx*ny));
 		b[i0] = mglSpline3Cs(a,n1,n2,n3, c[0]+i*c[1], c[2]+j*c[3], c[4]+k*c[5]);
 	}
 	return 0;
@@ -212,7 +212,7 @@ HADT MGL_EXPORT mgl_datac_resize_box(HCDT dat, long mx,long my,long mz, mreal x1
 {	// NOTE: only for mglDataC
 	const mglDataC *d=dynamic_cast<const mglDataC *>(dat);
 	if(!d)	return 0;
-	register long nx = d->nx-1, ny = d->ny-1, nz = d->nz-1;
+	long nx = d->nx-1, ny = d->ny-1, nz = d->nz-1;
 	mx = mx<1 ? nx+1:mx;	my = my<1 ? ny+1:my;	mz = mz<1 ? nz+1:mz;
 	mglDataC *r=new mglDataC(mx,my,mz);
 
@@ -292,7 +292,7 @@ MGL_NO_EXPORT void *mgl_sumc_y(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = (i%nx)+nx*ny*(i/nx);	b[i]=0;
+		long k = (i%nx)+nx*ny*(i/nx);	b[i]=0;
 		for(long j=0;j<ny;j++)	b[i] += a[k+nx*j];
 		b[i] /= ny;
 	}
@@ -309,7 +309,7 @@ MGL_NO_EXPORT void *mgl_sumc_x(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = i*nx;	b[i]=0;
+		long k = i*nx;	b[i]=0;
 		for(long j=0;j<nx;j++)	b[i] += a[j+k];
 		b[i] /= nx;
 	}

@@ -74,7 +74,7 @@ void MGL_EXPORT mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 		if(gr->NeedStop())	break;
 		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
-			register long i0 = i+n*(j+m*k);
+			long i0 = i+n*(j+m*k);
 			if(i<n-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n],pos[i0+n+1]);
 			if(i<n-1 && k<l-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n*m],pos[i0+n*m+1]);
 			if(k<l-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+n],pos[i0+n*m],pos[i0+n+n*m]);
@@ -124,10 +124,9 @@ mreal MGL_NO_EXPORT mgl_get_norm(mreal x, mreal d1, mreal d2, mreal d3)
 }
 mglPoint MGL_NO_EXPORT mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m,long l)
 {
-	register long i,j,k;
-	register mreal x=p.x, y=p.y, z=p.z;
+	mreal x=p.x, y=p.y, z=p.z;
 	mreal nx=0, ny=0, nz=0;
-	i=long(x);	j=long(y);	k=long(z);
+	long i=long(x), j=long(y), k=long(z);
 	i = i<n-1 ? i:n-2;	j = j<m-1 ? j:m-2;	k = k<l-1 ? k:l-2;
 	x-=i;	y-=j;	z-=k;
 
@@ -139,7 +138,7 @@ mglPoint MGL_NO_EXPORT mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m
 //-----------------------------------------------------------------------------
 mreal MGL_NO_EXPORT mgl_normal_1d(HCDT a, mreal x, long n)
 {
-	register long i=long(x);
+	long i=long(x);
 	i = i<n-1 ? i:n-2;	x-=i;
 	return mgl_get_norm(x, a->dvx(i), a->dvx(i+1), i>0?a->dvx(i-1):NAN);
 }
@@ -177,7 +176,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 #pragma omp parallel for private(id,us,pd,pp) collapse(2)
 	for(long j=0;j<m-1;j++)	for(long i=0;i<n-1;i++)
 	{
-		register long i0 = i+n*j,ii,jj,k;
+		long i0 = i+n*j,ii,jj,k;
 		// find ID of points of Surf3 intersection with cell i0
 		memset(id,-1,12*sizeof(long));	long ni = 0;
 		if(kx1[i0]>=0)		id[ni++] = kx1[i0];
@@ -199,7 +198,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 		// remove points which is too close to first one
 		for(jj=1;jj<ni;)
 		{
-			register mreal d = mgl_norm(pp[jj] - pp[0]);
+			mreal d = mgl_norm(pp[jj] - pp[0]);
 			if(d>1e-5)	jj++;
 			else
 			{	ni--;	for(ii=jj;ii<ni;ii++)	id[ii]=id[ii+1];	}
@@ -211,7 +210,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 		mreal d0=2;
 		for(jj=1,ii=2;ii<ni;ii++)
 		{
-			register mreal d = mgl_cos_pp(pp,0,ii,1);
+			mreal d = mgl_cos_pp(pp,0,ii,1);
 			if(d<d0)	{	d0=d;	jj=ii;	}
 		}
 		// copy first 2 points as base
@@ -225,7 +224,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 			for(i0=-1,ii=1,d0=-2;ii<ni;ii++)
 			{
 				if(us[ii])	continue;
-				register mreal d = mgl_cos_pp(pp,0,ii,jj);
+				mreal d = mgl_cos_pp(pp,0,ii,jj);
 				if(d>d0)	{	d0=d;	i0=ii;	}
 			}
 			if(i0<0)	break;	// no more triangles. NOTE: should be never here
@@ -273,7 +272,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		size_t kk1 = kk.size();
 		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
-			register long i1 = i+n*j;
+			long i1 = i+n*j;
 			mreal a0 = a->v(i,j,k);
 			if(mgl_isnan(a0))	continue;
 			if(i<n-1)
@@ -633,7 +632,7 @@ void MGL_EXPORT mgl_beam_val(HMGL gr, double val, HCDT tr, HCDT g1, HCDT g2, HCD
 			mreal asum=0, amax=0;
 			for(long j=0;j<m*l;j++)
 			{
-				register mreal aa = a->vthr(j+m*l*i);
+				mreal aa = a->vthr(j+m*l*i);
 				asum += aa*aa;	amax = amax>aa ? amax : aa;
 			}
 			amax = amax?sqrt(asum/asum0)/amax:0;
@@ -641,21 +640,21 @@ void MGL_EXPORT mgl_beam_val(HMGL gr, double val, HCDT tr, HCDT g1, HCDT g2, HCD
 		}
 		if(flag & 1)	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
 		{
-			register long i0 = j+m*(k+l*i);
+			long i0 = j+m*(k+l*i);
 			x.a[i0] = 2*j/(m-1.)-1;
 			y.a[i0] = 2*k/(l-1.)-1;
 			z.a[i0] = gr->Max.z*i/(n-1.);
 		}
 		else	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
 		{
-			register long i0 = j+m*(k+l*i);
+			long i0 = j+m*(k+l*i);
 			x.a[i0] = tr->v(0,i) + g1->v(0,i)*(2*j/(m-1.)-1)*r + g2->v(0,i)*(2*k/(l-1.)-1)*r;
 			y.a[i0] = tr->v(1,i) + g1->v(1,i)*(2*j/(m-1.)-1)*r + g2->v(1,i)*(2*k/(l-1.)-1)*r;
 			z.a[i0] = tr->v(2,i) + g1->v(2,i)*(2*j/(m-1.)-1)*r + g2->v(2,i)*(2*k/(l-1.)-1)*r;
 		}
 		if(flag & 2)	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
 		{
-			register long i0 = j+m*(k+l*i);
+			long i0 = j+m*(k+l*i);
 			x.a[i0] = hypot(x.a[i0],y.a[i0]);
 		}
 	}

@@ -282,7 +282,7 @@ using mglDataA::Momentum;
 	{	return mglData(true,mgl_data_section(this,&ids,dir,val));	}
 	inline mglData Section(long id, char dir='y', mreal val=NAN) const
 	{	return mglData(true,mgl_data_section_val(this,id,dir,val));	}
-	
+
 	/// Get trace of the data array
 	inline mglData Trace() const
 	{	return mglData(true,mgl_data_trace(this));	}
@@ -459,13 +459,13 @@ using mglDataA::Momentum;
 	mreal vthr(long i) const {	return a[i];	}
 	// add for speeding up !!!
 	mreal dvx(long i,long j=0,long k=0) const
-	{   register long i0=i+nx*(j+ny*k);
+	{   long i0=i+nx*(j+ny*k);
 		return i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2:a[i0]-a[i0-1]) : a[i0+1]-a[i0];	}
 	mreal dvy(long i,long j=0,long k=0) const
-	{   register long i0=i+nx*(j+ny*k);
+	{   long i0=i+nx*(j+ny*k);
 		return j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];}
 	mreal dvz(long i,long j=0,long k=0) const
-	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
+	{   long i0=i+nx*(j+ny*k), n=nx*ny;
 		return k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2:a[i0]-a[i0-n]) : a[i0+n]-a[i0];	}
 };
 //-----------------------------------------------------------------------------
@@ -679,7 +679,7 @@ public:
 	mreal value(mreal x,mreal y=0,mreal z=0) const	{	return a0+di*x+dj*y+dk*z;	}
 	mreal v(long i,long j=0,long k=0) const		{	return a0+di*i+dj*j+dk*k;	}
 	mreal vthr(long ii) const
-	{	register long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);	return a0+di*i+dj*j+dk*k;	}
+	{	long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);	return a0+di*i+dj*j+dk*k;	}
 	// add for speeding up !!!
 	mreal dvx(long ,long =0,long =0) const	{	return di;	}
 	mreal dvy(long ,long =0,long =0) const	{	return dj;	}
@@ -740,7 +740,7 @@ public:
 	mreal v(long i,long j=0,long k=0) const
 	{	return di*(i<nx/2?i:i-nx)+dj*(j<ny/2?j:j-ny)+dk*(k<nz/2?k:k-nz);	}
 	mreal vthr(long ii) const
-	{	register long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);
+	{	long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);
 		return di*(i<nx/2?i:i-nx)+dj*(j<ny/2?j:j-ny)+dk*(k<nz/2?k:k-nz);	}
 	// add for speeding up !!!
 	mreal dvx(long ,long =0,long =0) const	{	return di;	}

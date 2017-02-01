@@ -288,11 +288,10 @@ void DatPanel::load()
 void DatPanel::copy()
 {
 	QTableWidgetSelectionRange ts = tab->selectedRanges().first();
-	register long i,j;
 	QString res, s;
-	for(j=ts.topRow();j<=ts.bottomRow();j++)
+	for(long j=ts.topRow();j<=ts.bottomRow();j++)
 	{
-		for(i=ts.leftColumn();i<=ts.rightColumn();i++)
+		for(long i=ts.leftColumn();i<=ts.rightColumn();i++)
 		{
 			res = res + tab->item(j,i)->text();
 			if(i<ts.rightColumn())	res = res + "\t";
@@ -333,10 +332,9 @@ void DatPanel::list()	// TODO: in which script insert ???
 	if(nz > 1)
 		QMessageBox::information(this, tr("UDAV - To list conversion"), tr("Only current slice will be inserted"), QMessageBox::Ok, 0, 0);
 	QString res = "list\t", s;
-	register long i,j;
-	for(j=0;j<ny;j++)
+	for(long j=0;j<ny;j++)
 	{
-		for(i=0;i<nx;i++)
+	for(long i=0;i<nx;i++)
 		{
 			s.sprintf("%g\t",d->a[i+nx*(j+kz*ny)]);
 			res += s;

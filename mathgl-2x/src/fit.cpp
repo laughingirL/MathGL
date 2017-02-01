@@ -169,11 +169,11 @@ int MGL_NO_EXPORT mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f
 mreal MGL_NO_EXPORT mgl_fit_base(mglFitData &fd, mreal *ini)
 {
 #if MGL_HAVE_GSL
-	register long i,m=fd.m,n=fd.n,iter=0;
+	long m=fd.m,n=fd.n,iter=0;
 	if(n<1 || ini==0)	return -1;
 	// setup data
 	double *x_init = new double[fd.m];
-	for(i=0;i<m;i++)	x_init[i] = ini[i];
+	for(long i=0;i<m;i++)	x_init[i] = ini[i];
 	// setup fitting
 	gsl_vector_view vx = gsl_vector_view_array(x_init, m);
 	const gsl_multifit_fdfsolver_type *T = gsl_multifit_fdfsolver_lmsder;
@@ -206,7 +206,7 @@ mreal MGL_NO_EXPORT mgl_fit_base(mglFitData &fd, mreal *ini)
 	gsl_matrix_free(covar);
 
 	mreal res = gsl_blas_dnrm2(s->f);
-	for(i=0;i<m;i++)	ini[i] = gsl_vector_get(s->x, i);
+	for(long i=0;i<m;i++)	ini[i] = gsl_vector_get(s->x, i);
 	// free memory
 	gsl_multifit_fdfsolver_free(s);
 	delete []x_init;
@@ -373,7 +373,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 #pragma omp parallel for collapse(2)
 	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)
 	{
-		register long i0 = i+m*j;
+		long i0 = i+m*j;
 		x.a[i0] = GetX(xx,i,j,0).x;
 		y.a[i0] = GetY(yy,i,j,0).x;
 		if(mgl_isnan(x.a[i0]) || mgl_isnan(y.a[i0]))
@@ -419,7 +419,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 #pragma omp parallel for collapse(3)
 	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	for(long k=0;k<l;k++)
 	{
-		register long i0 = i+m*(j+n*k);
+		long i0 = i+m*(j+n*k);
 		x.a[i0] = GetX(xx,i,j,k).x;
 		y.a[i0] = GetY(yy,i,j,k).x;
 		z.a[i0] = GetZ(zz,i,j,k).x;
@@ -454,7 +454,7 @@ HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	mreal vx = n/(gr->Max.x-gr->Min.x);
 	for(long i=0;i<nn;i++)
 	{
-		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		long j1 = long((x->vthr(i)-gr->Min.x)*vx);
 		if(j1>=0 && j1<n)	res->a[j1] += a->vthr(i);
 	}
 	gr->LoadState();	return res;
@@ -472,8 +472,8 @@ HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	mreal vy = n/(gr->Max.y-gr->Min.y);
 	for(long i=0;i<nn;i++)
 	{
-		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
-		register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
+		long j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		long j2 = long((y->vthr(i)-gr->Min.y)*vy);
 		if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += a->vthr(i);
 	}
 	gr->LoadState();	return res;
@@ -490,9 +490,9 @@ HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char
 	mreal vx = n/(gr->Max.x-gr->Min.x), vy = n/(gr->Max.y-gr->Min.y), vz = n/(gr->Max.z-gr->Min.z);
 	for(long i=0;i<nn;i++)
 	{
-		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
-		register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
-		register long j3 = long((z->vthr(i)-gr->Min.z)*vz);
+		long j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		long j2 = long((y->vthr(i)-gr->Min.y)*vy);
+		long j3 = long((z->vthr(i)-gr->Min.z)*vz);
 		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
 			res->a[j1+n*(j2+n*j3)] += a->vthr(i);
 	}

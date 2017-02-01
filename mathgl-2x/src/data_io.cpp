@@ -74,7 +74,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 	{
 		char *b = lines[k];
 		long nb = strlen(b);
-		register long i=0, j=0;
+		long i=0, j=0;
 		while(j<nb)
 		{
 			while(j<nb && b[j]<=' ')	j++;
@@ -100,7 +100,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 			numbs[k].push_back(strstr(s,"NAN")?NAN:atof(s));
 		}
 	}
-	register long i=0, n=NX*NY*NZ;
+	long i=0, n=NX*NY*NZ;
 	for(long k=0;k<nl && i<n;k++)
 	{
 		std::vector<mreal> &vals = numbs[k];
@@ -131,7 +131,7 @@ void MGL_EXPORT mgl_data_set_(uintptr_t *d, uintptr_t *a)	{	mgl_data_set(_DT_,_D
 void MGL_EXPORT mgl_data_set_values(HMDT d, const char *v,long NX,long NY,long NZ)
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
-	register long n=strlen(v)+1;
+	long n=strlen(v)+1;
 	char *buf = new char[n];
 	memcpy(buf,v,n);
 	mglFromStr(d,buf,NX,NY,NZ);
@@ -356,20 +356,19 @@ int MGL_EXPORT mgl_data_read(HMDT d, const char *fname)
 	long nb = strlen(buf);	gzclose(fp);
 
 	bool first=false;
-	register char ch;
 	for(i=nb-1;i>=0;i--)	if(buf[i]>' ')	break;
 	buf[i+1]=0;	nb = i+1;		// remove tailing spaces
 	for(i=0;i<nb-1 && !isn(buf[i]);i++)	// determine nx
 	{
 		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}
-		ch = buf[i];
+		char ch = buf[i];
 		if(ch>' ' && !first)	first=true;
 		if(first && (ch==' ' || ch=='\t' || ch==',' || ch==';') && buf[i+1]>' ') k++;
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny
 	{
-		ch = buf[i];
+		char ch = buf[i];
 		if(ch=='#')	while(!isn(buf[i]) && i<nb)	i++;
 		if(isn(ch))
 		{
@@ -381,12 +380,10 @@ int MGL_EXPORT mgl_data_read(HMDT d, const char *fname)
 	}
 	if(first)	for(i=0;i<nb-1;i++)		// determine nz
 	{
-		ch = buf[i];
+		char ch = buf[i];
 		if(ch=='#')	while(!isn(buf[i]) && i<nb)	i++;
-//		if(ch=='#')	com = true;	// comment
 		if(isn(ch))
 		{
-//			if(com)	{	com=false;	continue;	}
 			while(buf[i+1]==' ' || buf[i+1]=='\t') i++;
 			if(isn(buf[i+1]))	l++;
 		}
@@ -516,17 +513,17 @@ int MGL_EXPORT mgl_data_read_mat(HMDT d, const char *fname, long dim)
 		sscanf(buf+j,"%ld%ld",&nx,&ny);
 		while(j<nb && buf[j]!='\n')	j++;	j++;
 		char *b=buf+j;
-		register long i,l;
-		for(i=l=0;b[i];i++)
+		long l=0;
+		for(long i=0;b[i];i++)
 		{
 			while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 			if(b[i]=='\n')	l++;
 		}
 		if(l==nx*ny || l==nx*ny+1)	// try to read 3d data (i.e. columns of matrix nx*ny)
 		{
-			nz=ny;	ny=nx;	nx=1;
+			nz=ny;	ny=nx;	nx=1;	l=0;
 			bool first = false;
-			for(i=l=0;b[i] && !isn(b[i]);i++)	// determine nx
+			for(long i=0;b[i] && !isn(b[i]);i++)	// determine nx
 			{
 				while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 				char ch = b[i];
@@ -558,10 +555,10 @@ mreal MGL_EXPORT mgl_data_max(HCDT d)
 	long nn=d->GetNN();
 #pragma omp parallel
 	{
-		register mreal m=-INFINITY, v;
+		mreal m=-INFINITY;
 #pragma omp for nowait
 		for(long i=0;i<nn;i++)
-		{	v = d->vthr(i);	m = m<v ? v:m;	}
+		{	mreal v = d->vthr(i);	m = m<v ? v:m;	}
 #pragma omp critical(max_dat)
 		{	m1 = m1>m ? m1:m;	}
 	}
@@ -575,10 +572,10 @@ mreal MGL_EXPORT mgl_data_min(HCDT d)
 	long nn=d->GetNN();
 #pragma omp parallel
 	{
-		register mreal m=INFINITY, v;
+		mreal m=INFINITY;
 #pragma omp for nowait
 		for(long i=0;i<nn;i++)
-		{	v = d->vthr(i);	m = m>v ? v:m;	}
+		{	mreal v = d->vthr(i);	m = m>v ? v:m;	}
 #pragma omp critical(min_dat)
 		{	m1 = m1<m ? m1:m;	}
 	}
@@ -592,10 +589,10 @@ mreal MGL_EXPORT mgl_data_neg_max(HCDT d)
 	long nn=d->GetNN();
 #pragma omp parallel
 	{
-		register mreal m=0, v;
+		mreal m=0;
 #pragma omp for nowait
 		for(long i=0;i<nn;i++)
-		{	v = d->vthr(i);	m = m<v && v<0 ? v:m;	}
+		{	mreal v = d->vthr(i);	m = m<v && v<0 ? v:m;	}
 #pragma omp critical(nmax_dat)
 		{	m1 = m1>m ? m1:m;	}
 	}
@@ -609,10 +606,10 @@ mreal MGL_EXPORT mgl_data_pos_min(HCDT d)
 	long nn=d->GetNN();
 #pragma omp parallel
 	{
-		register mreal m=INFINITY, v;
+		mreal m=INFINITY;
 #pragma omp for nowait
 		for(long i=0;i<nn;i++)
-		{	v = d->vthr(i);	m = m>v && v>0 ? v:m;	}
+		{	mreal v = d->vthr(i);	m = m>v && v>0 ? v:m;	}
 #pragma omp critical(pmin_dat)
 		{	m1 = m1<m ? m1:m;	}
 	}
@@ -626,12 +623,12 @@ mreal MGL_EXPORT mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
 #pragma omp parallel
 	{
-		register mreal m=-INFINITY, v;
+		mreal m=-INFINITY;
 		long im=-1,jm=-1,km=-1;
 #pragma omp for nowait
 		for(long ii=0;ii<nn;ii++)
 		{
-			v = d->vthr(ii);
+			mreal v = d->vthr(ii);
 			if(m < v)
 			{	m=v;	im=ii%nx;	jm=(ii/nx)%ny;	km=ii/(nx*ny);   }
 		}
@@ -650,12 +647,12 @@ mreal MGL_EXPORT mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
 #pragma omp parallel
 	{
-		register mreal m=INFINITY, v;
+		mreal m=INFINITY;
 		long im=-1,jm=-1,km=-1;
 #pragma omp for nowait
 		for(long ii=0;ii<nn;ii++)
 		{
-			v = d->vthr(ii);
+			mreal v = d->vthr(ii);
 			if(m > v)
 			{	m=v;	im=ii%nx;	jm=(ii/nx)%ny;	km=ii/(nx*ny);   }
 		}
@@ -929,7 +926,7 @@ MGL_NO_EXPORT void *mgl_modify(void *par)
 #endif
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
+		long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
 		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v[i0]:0, w?w[i0]:0);
 	}
 	return 0;

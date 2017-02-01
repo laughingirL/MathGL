@@ -31,7 +31,7 @@ QMGLSyntax::QMGLSyntax(QTextEdit *textEdit) : QSyntaxHighlighter(textEdit)	{}
 //-----------------------------------------------------------------------------
 void QMGLSyntax::highlightBlock(const QString &text)
 {
-	register int i, j, m = text.length(),s=0;
+	int i, j, m = text.length(),s=0;
 	bool arg = false, nl = true;
 	QString num("+-.0123456789:");
 	i=0;

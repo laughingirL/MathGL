@@ -33,7 +33,7 @@ void MGL_EXPORT mgl_mpi_recv(HMGL gr, int id)
 #pragma omp parallel for
 	for(long k=0;k<n;k++)
 	{	// i0=x+Width*(Height-1-y)
-		register long i = k%w, j = h-1-(k/w);
+		long i = k%w, j = h-1-(k/w);
 		if(g->GetQuality()&MGL_DRAW_NORM)
 		{
 			g->pnt_plot(i,j,zz[3*k+2],cc+12*k+8,oi[k]);

@@ -36,12 +36,11 @@ void MGL_EXPORT mglStartThreadT(void *(*func)(void *), long n, void *a, double *
 	{
 		pthread_t *tmp=new pthread_t[mglNumThr];
 		mglThreadT *par=new mglThreadT[mglNumThr];
-		register long i;
-		for(i=0;i<mglNumThr;i++)	// put parameters into the structure
+		for(long i=0;i<mglNumThr;i++)	// put parameters into the structure
 		{	par[i].n=n;	par[i].a=a;	par[i].v=v;	par[i].w=w;	par[i].b=b;
 			par[i].p=p;	par[i].re=re;	par[i].im=im;	par[i].id=i;	}
-		for(i=0;i<mglNumThr;i++)	pthread_create(tmp+i, 0, func, par+i);
-		for(i=0;i<mglNumThr;i++)	pthread_join(tmp[i], 0);
+		for(long i=0;i<mglNumThr;i++)	pthread_create(tmp+i, 0, func, par+i);
+		for(long i=0;i<mglNumThr;i++)	pthread_join(tmp[i], 0);
 		delete []tmp;	delete []par;
 	}
 	else
@@ -130,18 +129,18 @@ void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int
 	memset(d,0,2*n*sizeof(double));
 	if(inv)	for(long i=0;i<n;i++)	for(long j=0;j<n;j++)
 	{
-		register long ii = 2*(i+n*j), jj = 2*j*s;
+		long ii = 2*(i+n*j), jj = 2*j*s;
 		d[2*i] 	+= x[jj]*c[ii]+x[jj+1]*c[ii+1];
 		d[2*i+1]+= x[jj+1]*c[ii]-x[jj]*c[ii+1];
 	}
 	else	for(long i=0;i<n;i++)	for(long j=0;j<n;j++)
 	{
-		register long ii = 2*(i+n*j), jj = 2*j*s;
+		long ii = 2*(i+n*j), jj = 2*j*s;
 		d[2*i] 	+= x[jj]*c[ii]-x[jj+1]*c[ii+1];
 		d[2*i+1]+= x[jj+1]*c[ii]+x[jj]*c[ii+1];
 	}
 	for(long j=0;j<n;j++)
-	{	register long jj = 2*j*s;	x[jj] = d[2*j]*f;	x[jj+1] = d[2*j+1]*f;	}
+	{	long jj = 2*j*s;	x[jj] = d[2*j]*f;	x[jj+1] = d[2*j+1]*f;	}
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -402,7 +401,7 @@ MGL_NO_EXPORT void* mgl_stfa1(void *par)
 #pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
-			register long i = ii%mx, j = ii/mx, i0;
+			long i = ii%mx, j = ii/mx, i0;
 			for(long k=0;k<2*dn;k++)
 			{
 				i0 = k-dd+j*dn;		ff = 1;
@@ -440,7 +439,7 @@ MGL_NO_EXPORT void* mgl_stfa2(void *par)
 #pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
-			register long i = ii%my, j = ii/my, i0;
+			long i = ii%my, j = ii/my, i0;
 			for(long k=0;k<2*dn;k++)
 			{
 				i0 = k-dd+i*dn;		ff = 1;
@@ -504,7 +503,7 @@ MGL_NO_EXPORT void* mgl_sinx(void *par)
 #pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
-			register long k = i*nx;	memset(b,0,2*nx*sizeof(double));
+			long k = i*nx;	memset(b,0,2*nx*sizeof(double));
 			for(long j=1;j<nx;j++)	b[2*j]=sin(M_PI*j/nx)*(a[j+k]+a[nx-j+k])+(a[j+k]-a[nx-j+k])*0.5;
 			mgl_fft(b,1,nx,t->v,w,false);
 			a[k]=0;	a[k+1]=b[0]*f/2;	// fill sinfft
@@ -533,7 +532,7 @@ MGL_NO_EXPORT void* mgl_siny(void *par)
 #pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
-			register long i = ii%nx, k = ii/nx;	memset(b,0,2*ny*sizeof(double));
+			long i = ii%nx, k = ii/nx;	memset(b,0,2*ny*sizeof(double));
 			for(long j=1;j<ny;j++)	b[2*j]=sin(M_PI*j/ny)*(a[i+nx*(ny*k+j)]+a[i+nx*(ny*k+ny-j)])+(a[i+nx*(ny*k+j)]-a[i+nx*(ny*k+ny-j)])*0.5;
 			mgl_fft(b,1,ny,t->v,w,false);
 			a[i+nx*ny*k]=0;	a[i+nx*(ny*k+1)]=b[0]*f/2;	// fill sinfft
@@ -624,7 +623,7 @@ MGL_NO_EXPORT void* mgl_cosx(void *par)
 #pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
-			register long k = i*nx;	memset(b,0,2*nx*sizeof(double));
+			long k = i*nx;	memset(b,0,2*nx*sizeof(double));
 			for(long j=0;j<nn;j++)	b[2*j]=(a[j+k]+a[nn-j+k])*0.5-sin(M_PI*j/nn)*(a[j+k]-a[nn-j+k]);
 			mgl_fft(b,1,nn,t->v,w,false);
 			double f1=0.5*(a[k]-a[nn+k]), s=-1;
@@ -661,7 +660,7 @@ MGL_NO_EXPORT void* mgl_cosy(void *par)
 #pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
-			register long i = ii%nx, k = ii/nx;	memset(b,0,2*ny*sizeof(double));
+			long i = ii%nx, k = ii/nx;	memset(b,0,2*ny*sizeof(double));
 			for(long j=0;j<nn;j++)	b[2*j]=(a[i+nx*(ny*k+j)]+a[i+nx*(ny*k+nn-j)])*0.5-sin(M_PI*j/nn)*(a[i+nx*(ny*k+j)]-a[i+nx*(ny*k+nn-j)]);
 			mgl_fft(b,1,nn,t->v,w,false);
 			double f1=0.5*(a[i+nx*ny*k]-a[i+nx*(ny*k+nn)]), s=-1;
@@ -762,7 +761,7 @@ HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
 #pragma omp parallel for
 	for(long i=0;i<nx*ny*nz;i++)
 	{
-		register mreal a=am->vthr(i), p=ph->vthr(i);
+		mreal a=am->vthr(i), p=ph->vthr(i);
 		re.a[i] = a*cos(p);	im.a[i] = a*sin(p);
 	}
 	return mgl_transform(&re, &im, tr);
@@ -878,7 +877,7 @@ MGL_NO_EXPORT void* mgl_chnky(void *par)
 #pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
-			register long i = ii%nx, k = ii/nx;
+			long i = ii%nx, k = ii/nx;
 			for(long j=0;j<ny;j++)	b[j] = real(a[i+nx*(j+ny*k)]);
 			gsl_dht_apply(dht,b,b+ny);
 			for(long j=0;j<ny;j++)	b[j] = imag(a[i+nx*(j+ny*k)]);
@@ -996,7 +995,7 @@ MGL_NO_EXPORT void* mgl_hnky(void *par)
 #pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
-			register long i = ii%nx, k = ii/nx;
+			long i = ii%nx, k = ii/nx;
 			for(long j=0;j<ny;j++)	b[j] = a[i+nx*(j+ny*k)];
 			gsl_dht_apply(dht,b,b+ny);
 			for(long j=0;j<ny;j++)a[i+nx*(j+ny*k)] = b[j+ny]*mm;
@@ -1131,8 +1130,8 @@ MGL_NO_EXPORT void* mgl_corx(void *par)
 			mgl_fft(a+2*nx*i, 1, nx, t->v, w, false);
 			for(long j=0;j<nx;j++)
 			{
-				register long ii = 2*j+2*nx*i;
-				register double re = t->b[ii], im = t->b[ii+1];
+				long ii = 2*j+2*nx*i;
+				double re = t->b[ii], im = t->b[ii+1];
 				t->b[ii]   = re*a[ii] + im*a[ii+1];
 				t->b[ii+1] = im*a[ii] - re*a[ii+1];
 			}
@@ -1155,13 +1154,13 @@ MGL_NO_EXPORT void* mgl_cory(void *par)
 #pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
-			register long k = 2*(i%nx)+2*nx*ny*(i/nx);
+			long k = 2*(i%nx)+2*nx*ny*(i/nx);
 			mgl_fft(t->b+k, nx, ny, t->v, w, false);
 			mgl_fft(a+k, nx, ny, t->v, w, false);
 			for(long j=0;j<ny;j++)
 			{
-				register long ii = 2*nx*j+k;
-				register double re = t->b[ii], im = t->b[ii+1];
+				long ii = 2*nx*j+k;
+				double re = t->b[ii], im = t->b[ii+1];
 				t->b[ii]   = re*a[ii] + im*a[ii+1];
 				t->b[ii+1] = im*a[ii] - re*a[ii+1];
 			}
@@ -1188,8 +1187,8 @@ MGL_NO_EXPORT void* mgl_corz(void *par)
 			mgl_fft(a+2*i, nx*ny, nz, t->v, w, false);
 			for(long j=0;j<nz;j++)
 			{
-				register long ii = 2*nx*ny*j+2*i;
-				register double re = t->b[ii], im = t->b[ii+1];
+				long ii = 2*nx*ny*j+2*i;
+				double re = t->b[ii], im = t->b[ii+1];
 				t->b[ii]   = re*a[ii] + im*a[ii+1];
 				t->b[ii+1] = im*a[ii] - re*a[ii+1];
 			}

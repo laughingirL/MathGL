@@ -130,11 +130,9 @@ int MGL_NO_EXPORT mgl_bmp_save(const char *fname, int w, int h, unsigned char **
 	fwrite(z,4,1,fp);	fwrite(z,4,1,fp);
 	fwrite(z,4,1,fp);	fwrite(z,4,1,fp);
 	// image
-	const unsigned char *q;
-	register int i,j;
-	for(i=h-1;i>=0;i--)	for(j=0;j<w;j++)
+	for(long i=h-1;i>=0;i--)	for(long j=0;j<w;j++)
 	{
-		q = p[i]+3*j;
+		const unsigned char *q = p[i]+3*j;
 		fwrite(q+2,1,1,fp);
 		fwrite(q+1,1,1,fp);
 		fwrite(q+0,1,1,fp);
@@ -154,11 +152,9 @@ int MGL_NO_EXPORT mgl_tga_save(const char *fname, int w, int h, unsigned char **
 	fwrite(&w,2,1,fp);	fwrite(&h,2,1,fp);
 	fwrite(head+12,2,1,fp);
 	// image
-	register int i,j;
-	const unsigned char *q;
-	for(i=h-1;i>=0;i--)	for(j=0;j<w;j++)
+	for(long i=h-1;i>=0;i--)	for(long j=0;j<w;j++)
 	{
-		q = p[i]+4*j;
+		const unsigned char *q = p[i]+4*j;
 		fwrite(q+2,1,1,fp);
 		fwrite(q+1,1,1,fp);
 		fwrite(q+0,1,1,fp);
@@ -252,7 +248,7 @@ int MGL_NO_EXPORT mgl_bps_save(const char *fname, int w, int h, unsigned char **
 	for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
 	{
 		if((i+w*j)%40==0 && i+j>0)	mgl_printf(fp, gz, "\n");
-		register long jj=h-1-j;
+		long jj=h-1-j;
 		mgl_printf(fp, gz, "%02x%02x%02x",p[jj][3*i],p[jj][3*i+1],p[jj][3*i+2]);
 	}
 	mgl_printf(fp, gz, "\n\nshowpage\n%%%%EOF\n");
@@ -342,10 +338,9 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 	// define colormap
 	GifColorType col[256];
 	memset(col,0,256*sizeof(GifColorType));
-	register int i,j,k,m;
-	for(i=0;i<6;i++)	for(j=0;j<6;j++)	for(k=0;k<6;k++)
+	for(int i=0;i<6;i++)	for(int j=0;j<6;j++)	for(int k=0;k<6;k++)
 	{
-		m = i+6*(j+6*k);		// part 1
+		long m = i+6*(j+6*k);		// part 1
 		col[m].Red = 51*i;
 		col[m].Green=51*j;
 		col[m].Blue =51*k;

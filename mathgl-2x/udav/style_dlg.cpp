@@ -71,13 +71,13 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	nline->setTickPosition(QSlider::TicksBothSides);
 	nline->setTickInterval(1);	nline->setPageStep(2);
 	nline->setOrientation(Qt::Horizontal);
-	
+
 	l = new QLabel(tr("Marks"), p);	g->addWidget(l, 3, 0, Qt::AlignRight);
 	mark = new QComboBox(p);	g->addWidget(mark, 3, 1);	fillMarkers(mark);
 	l = new QLabel(tr("Line width"), p);	g->addWidget(l, 4, 0, Qt::AlignRight);
 	width = new QSpinBox(p);	g->addWidget(width, 4, 1);
 	width->setRange(1,9);	width->setValue(1);
-	
+
 	v->addStretch(1);
 	l = new QLabel(tr("Manual dashing"), p);	v->addWidget(l);
 	h = new QHBoxLayout;	v->addLayout(h);	h->setSpacing(1);
@@ -130,9 +130,9 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	ctext->addItem(tr("none"));	ctext->addItem(tr("under"));	ctext->addItem(tr("above"));
 	mask = new QComboBox(p);	g->addWidget(mask, 2, 1);	fillMasks(mask);
 	angle = new QComboBox(p);	g->addWidget(angle, 3, 1);
-	angle->addItem(tr("none"));	
+	angle->addItem(tr("none"));
 	angle->addItem(QString::fromWCharArray(L"+45\xb0"));
-	angle->addItem(QString::fromWCharArray(L"-45\xb0"));	
+	angle->addItem(QString::fromWCharArray(L"-45\xb0"));
 	angle->addItem(QString::fromWCharArray(L"90\xb0"));	// \xb0 <-> °
 	msize = new QSlider(p);		g->addWidget(msize, 4, 1);
 	msize->setRange(1, 9);		msize->setValue(1);
@@ -488,8 +488,8 @@ void StyleDialog::updatePic()
 			i = msize->value();
 			if(i>1)	result += char('0'+i);
 		}
-		
-		
+
+
 		i = axial->currentIndex();
 		if(i>0)	result = result+':'+char('x'+i-1);
 		gr.Surf(a,result.toLocal8Bit().constData());
@@ -530,7 +530,7 @@ void StyleDialog::updatePic()
 //-----------------------------------------------------------------------------
 void convertFromGraph(QPixmap &pic, mglGraph *gr, uchar **buf)
 {
-	register long w=gr->GetWidth(), h=gr->GetHeight();
+	long w=gr->GetWidth(), h=gr->GetHeight();
 	if(*buf)	delete [](*buf);
 	*buf = new uchar[4*w*h];
 	gr->GetBGRN(*buf,4*w*h);

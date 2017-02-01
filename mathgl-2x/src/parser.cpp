@@ -54,14 +54,14 @@ void mglParser::ScanFunc(const wchar_t *line)
 	num++;
 	while(*line<=' ' && *line!=0)	line++;
 	if(wcsncmp(line,L"func",4) || line[4]>' ')	return;
-	register long i;
+	long i;
 	for(i=4;line[i]<=' ' || line[i]=='\'';i++);
 	func.push_back(mglFunc(num-1, line+i));
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT wchar_t *mgl_str_copy(const char *s)
 {
-	register size_t i,l=strlen(s);
+	size_t i,l=strlen(s);
 	wchar_t *str = new wchar_t[l+1];
 	for(i=0;i<l;i++)	str[i] = s[i];
 	str[i] = 0;	return str;
@@ -272,7 +272,7 @@ mglNum *mglParser::AddNum(const wchar_t *name)
 //-----------------------------------------------------------------------------
 int MGL_LOCAL_PURE mglFindArg(const std::wstring &str)
 {
-	register long l=0,k=0;
+	long l=0,k=0;
 	const size_t s=str.length();
 	for(size_t i=0;i<s;i++)
 	{
@@ -294,8 +294,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring string, mglParser *arg, const st
 // convert substrings to arguments
 void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 {
-	register long n;
-	for(n=1;n<k;n++)
+	for(long n=1;n<k;n++)
 	{
 		mglDataA *v;	mglNum *f;
 		a[n-1].type = -1;
@@ -710,12 +709,11 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 					FILE *fp = fopen(a[0].s.c_str(),"rt");
 					if(fp)
 					{
-						register int i;
 						mglParser *prs = new mglParser(AllowSetSize);
 						prs->DataList.swap(DataList);	prs->NumList.swap(NumList);	prs->Cmd=Cmd;
-						for(i=10;i<30;i++)	prs->AddParam(i,par[i].c_str());
+						for(int i=10;i<30;i++)	prs->AddParam(i,par[i].c_str());
 						prs->Execute(gr,fp);
-						for(i=10;i<30;i++)	AddParam(i,prs->par[i].c_str());
+						for(int i=10;i<30;i++)	AddParam(i,prs->par[i].c_str());
 						DataList.swap(prs->DataList);	NumList.swap(prs->NumList);
 						prs->Cmd=0;	delete prs;	fclose(fp);
 					}
@@ -1103,7 +1101,7 @@ MGL_EXPORT const char *mgl_parser_cmd_frmt(HMPR pr, const char *name)
 MGL_EXPORT const char *mgl_parser_cmd_name(HMPR pr, long id)
 {	return (id<mgl_parser_cmd_num(pr) && id>=0) ? pr->Cmd[id].name:"";	}
 long MGL_EXPORT mgl_parser_cmd_num(HMPR pr)
-{	register long i=0;	while(pr->Cmd[i].name[0])	i++; 	return i;	}
+{	long i=0;	while(pr->Cmd[i].name[0])	i++; 	return i;	}
 //---------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_parser_calc(HMPR pr, const char *formula)
 {	HMDT d=0;	MGL_TO_WCS(formula,d = mgl_parser_calcw(pr,wcs));	return d;	}

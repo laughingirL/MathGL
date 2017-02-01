@@ -104,8 +104,8 @@ void MGL_EXPORT mgl_strtrim(char *str)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_strlwr(char *str)
 {
-	register size_t k,l=strlen(str);
-	for(k=0;k<l;k++)
+	size_t l=strlen(str);
+	for(size_t k=0;k<l;k++)
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
 }
 //-----------------------------------------------------------------------------
@@ -336,7 +336,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 		q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 		q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	}
-	register long ci=long(c);
+	long ci=long(c);
 	if(ci<0 || ci>=(long)Txt.size())	ci=0;	// NOTE never should be here!!!
 	const mglTexture &txt=Txt[ci];
 	txt.GetC(c,a,q);	// RGBA color
@@ -402,12 +402,10 @@ bool mglBase::RecalcCRange()
 	else
 	{
 		FMin.c = INFINITY;	FMax.c = -INFINITY;
-		register int i;
-		mreal a;
 		int n=30;
-		for(i=0;i<=n;i++)
+		for(int i=0;i<=n;i++)
 		{
-			a = fa->Calc(0,0,0,Min.c+i*(Max.c-Min.c)/n);
+			mreal a = fa->Calc(0,0,0,Min.c+i*(Max.c-Min.c)/n);
 			if(mgl_isbad(a))	wrong=true;
 			if(a<FMin.c)	FMin.c=a;
 			if(a>FMax.c)	FMax.c=a;
@@ -426,30 +424,28 @@ void mglBase::RecalcBorder()
 	{
 		FMin.Set( INFINITY, INFINITY, INFINITY);
 		FMax.Set(-INFINITY,-INFINITY,-INFINITY);
-		register int i,j;
 		int n=30;
-		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// x range
+		for(int i=0;i<=n;i++)	for(int j=0;j<=n;j++)	// x range
 		{
 			if(SetFBord(Min.x, Min.y+i*(Max.y-Min.y)/n, Min.z+j*(Max.z-Min.z)/n))	wrong=true;
 			if(SetFBord(Max.x, Min.y+i*(Max.y-Min.y)/n, Min.z+j*(Max.z-Min.z)/n))	wrong=true;
 		}
-		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// y range
+		for(int i=0;i<=n;i++)	for(int j=0;j<=n;j++)	// y range
 		{
 			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y, Min.z+j*(Max.z-Min.z)/n))	wrong=true;
 			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Max.y, Min.z+j*(Max.z-Min.z)/n))	wrong=true;
 		}
-		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// x range
+		for(int i=0;i<=n;i++)	for(int j=0;j<=n;j++)	// x range
 		{
 			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Min.z))	wrong=true;
 			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Max.z))	wrong=true;
 		}
-		mreal d;
 		if(!fx)	{	FMin.x = Min.x;	FMax.x = Max.x;	}
-		else	{	d=0.01*(FMax.x-FMin.x);	FMin.x-=d;	FMax.x+=d;	}
+		else	{	mreal d=0.01*(FMax.x-FMin.x);	FMin.x-=d;	FMax.x+=d;	}
 		if(!fy)	{	FMin.y = Min.y;	FMax.y = Max.y;	}
-		else	{	d=0.01*(FMax.y-FMin.y);	FMin.y-=d;	FMax.y+=d;	}
+		else	{	mreal d=0.01*(FMax.y-FMin.y);	FMin.y-=d;	FMax.y+=d;	}
 		if(!fz)	{	FMin.z = Min.z;	FMax.z = Max.z;	}
-		else	{	d=0.01*(FMax.z-FMin.z);	FMin.z-=d;	FMax.z+=d;	}
+		else	{	mreal d=0.01*(FMax.z-FMin.z);	FMin.z-=d;	FMax.z+=d;	}
 	}
 	if(RecalcCRange())	wrong=true;
 	if(wrong)	SetWarn(mglWarnTern, "Curved coordinates");
@@ -537,17 +533,17 @@ bool mglBase::ScalePoint(const mglMatrix *, mglPoint &p, mglPoint &n, bool use_n
 	}
 
 	x1=x;	y1=y;	z1=z;
-	register mreal xx=1,xy=0,xz=0,yx=0,yy=1,yz=0,zx=0,zy=0,zz=1;
+	mreal xx=1,xy=0,xz=0,yx=0,yy=1,yz=0,zx=0,zy=0,zz=1;
 	if(fx)	{	x1 = fx->Calc(x,y,z);	xx = fx->CalcD('x',x,y,z);	xy = fx->CalcD('y',x,y,z);	xz = fx->CalcD('z',x,y,z);	}
 	if(fy)	{	y1 = fy->Calc(x,y,z);	yx = fy->CalcD('x',x,y,z);	yy = fy->CalcD('y',x,y,z);	yz = fy->CalcD('z',x,y,z);	}
 	if(fz)	{	z1 = fz->Calc(x,y,z);	zx = fz->CalcD('x',x,y,z);	zy = fz->CalcD('y',x,y,z);	zz = fz->CalcD('z',x,y,z);	}
 	if(mgl_isnan(x1) || mgl_isnan(y1) || mgl_isnan(z1))	{	x=NAN;	return false;	}
 
-	register mreal d;
+	mreal d;
 	d = 1/(FMax.x - FMin.x);	x = (2*x1 - FMin.x - FMax.x)*d;	xx /= d;	xy /= d;	xz /= d;
 	d = 1/(FMax.y - FMin.y);	y = (2*y1 - FMin.y - FMax.y)*d;	yx /= d;	yy /= d;	yz /= d;
 	d = 1/(FMax.z - FMin.z);	z = (2*z1 - FMin.z - FMax.z)*d;	zx /= d;	zy /= d;	zz /= d;
-	register mreal nx=n.x, ny=n.y, nz=n.z;
+	mreal nx=n.x, ny=n.y, nz=n.z;
 	n.x = nx*xx+ny*xy+nz*xz;
 	n.y = nx*yx+ny*yy+nz*yz;
 	n.z = nx*zx+ny*zy+nz*zz;
@@ -913,9 +909,9 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	if(!s || !s[0])	return;
 	strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;
 
-	register long i,j=0,m=0,l=strlen(s);
+	long l=strlen(s);
 	bool map = smooth==2 || mglchr(s,'%'), sm = smooth>=0 && !strchr(s,'|');	// Use mapping, smoothed colors
-	for(i=n=0;i<l;i++)		// find number of colors
+	for(long i=0, j=n=0;i<l;i++)		// find number of colors
 	{
 		if(smooth>=0 && s[i]==':' && j<1)	break;
 		if(s[i]=='{' && strchr(MGL_COLORS"x",s[i+1]) && j<1)	n++;
@@ -934,8 +930,9 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	bool man=sm;
 	mglColor *c = new mglColor[2*n];		// Colors itself
 	mreal *val = new mreal[n];
-	for(i=j=n=0;i<l;i++)	// fill colors
+	for(long i=0, j=n=0;i<l;i++)	// fill colors
 	{
+		long m=0;
 		if(smooth>=0 && s[i]==':' && j<1)	break;
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
@@ -988,10 +985,10 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	val[0]=0;	val[n-1]=1;	// boundary have to be [0,1]
 	for(long i=0;i<n;i++) if(val[i]>0 && val[i]<1) 	def.push_back(i);
 	def.push_back(n-1);
-	long i1=0,i2;
-	for(size_t j=0;j<def.size();j++)	for(i=i1+1;i<def[j];i++)
+	long i1=0;
+	for(size_t j=0;j<def.size();j++)	for(long i=i1+1;i<def[j];i++)
 	{
-		i1 = j>0?def[j-1]:0;	i2 = def[j];
+		i1 = j>0?def[j-1]:0;	long i2 = def[j];
 		v1 = val[i1];	v2 = val[i2];
 		v2 = i2-i1>1?(v2-v1)/(i2-i1):0;
 		val[i]=v1+v2*(i-i1);
@@ -1000,12 +997,12 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	mreal v=sm?(n-1)/255.:n/256.;
 	if(!sm)	for(long i=0;i<256;i++)
 	{
-		register long j = 2*long(v*i);	//u-=j;
+		long j = 2*long(v*i);	//u-=j;
 		col[2*i] = c[j];	col[2*i+1] = c[j+1];
 	}
-	else	for(i=i1=0;i<256;i++)
+	else	for(long i=i1=0;i<256;i++)
 	{
-		register mreal u = v*i;	j = long(u);	//u-=j;
+		mreal u = v*i;	long j = long(u);	//u-=j;
 		if(j<n-1)	// advanced scheme using val
 		{
 			for(;i1<n-1 && i>=255*val[i1];i1++);
@@ -1023,7 +1020,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 mglColor mglTexture::GetC(mreal u,mreal v) const
 {
 	u -= long(u);
-	register long i=long(255*u);	u = u*255-i;
+	long i=long(255*u);	u = u*255-i;
 	const mglColor *s=col+2*i;
 	return (s[0]*(1-u)+s[2]*u)*(1-v) + (s[1]*(1-u)+s[3]*u)*v;
 }
@@ -1031,7 +1028,7 @@ mglColor mglTexture::GetC(mreal u,mreal v) const
 void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const
 {
 	u -= long(u);
-	register long i=long(255*u);	u = u*255-i;
+	long i=long(255*u);	u = u*255-i;
 	const mglColor &s0=col[2*i], &s1=col[2*i+1], &s2=col[2*i+2], &s3=col[2*i+3];
 	p.r = (s0.r*(1-u)+s2.r*u)*(1-v) + (s1.r*(1-u)+s3.r*u)*v;
 	p.g = (s0.g*(1-u)+s2.g*u)*(1-v) + (s1.g*(1-u)+s3.g*u)*v;
@@ -1110,7 +1107,7 @@ MGL_EXPORT const char *mglchr(const char *str, char ch)
 	size_t l=strlen(str),k=0;
 	for(size_t i=0;i<l;i++)
 	{
-		register char c = str[i];
+		char c = str[i];
 		if(c=='{')	k++;
 		if(c=='}')	k--;
 		if(c==ch && k==0)	return str+i;
@@ -1374,7 +1371,7 @@ void mglBase::AddLegend(const char *str,const char *style)
 bool MGL_EXPORT mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less)
 {
 //	if(!gr || !x || !y || !z)	return true;		// if data is absent then should be segfault!!!
-	register long n=z->GetNx(),m=z->GetNy();
+	long n=z->GetNx(),m=z->GetNy();
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
 	if(a && z->GetNN()!=a->GetNN())
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}
@@ -1398,7 +1395,7 @@ bool MGL_EXPORT mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const ch
 bool MGL_EXPORT mgl_check_dim0(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
 {
 //	if(!gr || !x || !y)	return true;		// if data is absent then should be segfault!!!
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(less)
 	{
 		if(x->GetNx()<n)		{	gr->SetWarn(mglWarnDim,name);	return true;	}
@@ -1417,7 +1414,7 @@ bool MGL_EXPORT mgl_check_dim0(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const ch
 bool MGL_EXPORT mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
 {
 //	if(!gr || !x || !y)	return true;		// if data is absent then should be segfault!!!
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
 	if(less)
 	{
@@ -1437,7 +1434,7 @@ bool MGL_EXPORT mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const ch
 bool MGL_EXPORT mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *name)
 {
 // 	if(!gr || !x || !y || !z || !a)	return true;		// if data is absent then should be segfault!!!
-	register long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
+	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(n<2 || m<2 || l<2)
 	{	gr->SetWarn(mglWarnLow,name);	return true;	}
 	if(!both && (x->GetNx()!=n || y->GetNx()!=m || z->GetNx()!=l))
@@ -1459,20 +1456,20 @@ bool MGL_EXPORT mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 //-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_isnboth(HCDT x, HCDT y, HCDT z, HCDT a)
 {
-	register long n=a->GetNN();
+	long n=a->GetNN();
 	return x->GetNN()!=n || y->GetNN()!=n || z->GetNN()!=n;
 }
 //-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a)
 {
-	register long n=a->GetNN();
+	long n=a->GetNN();
 	return x->GetNN()==n && y->GetNN()==n && z->GetNN()==n;
 }
 //-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name)
 {
 // 	if(!gr || !x || !y || !z || !ax || !ay || !az)	return true;		// if data is absent then should be segfault!!!
-	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(), nn=n*m*l;
+	long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(), nn=n*m*l;
 	if(nn!=ay->GetNN() || nn!=az->GetNN())
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}

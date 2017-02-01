@@ -62,7 +62,7 @@ void mglCanvasGL::Finish()
 		for(size_t i=0;i<Prm.size();i++)
 		{
 			p=GetPrm(i);	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
-			register long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
+			long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
 			switch(p.type)
 			{
 /*			case 0:	mark_draw(Pnt[n1],n4,p.s,0);	break;
@@ -228,7 +228,7 @@ void mglCanvasGL::gl_clf(mglColor Back)
 // 	glTranslated(-0.5,-0.5,-0.5);
 	glScaled(2,2,2);
 	glTranslated(-0.5,-0.5,-0.5);
-	
+
 // 	float dif[4]={DifBr,DifBr,DifBr,1}, spc[4]={1,1,1,1};
 // 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);
 // 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spc);
@@ -444,7 +444,7 @@ void mglCanvasGL::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *
 		case 'O':
 /*			for(long j=long(-ss);j<=long(ss);j++)	for(long i=long(-ss);i<=long(ss);i++)
 			{
-				register long x=long(q.x)+i, y=long(q.y)+j;
+				long x=long(q.x)+i, y=long(q.y)+j;
 				if(i*i+j*j>=ss*ss || !d || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
 				pnt_plot(x,y,q.z+1,cs,d->ObjId);
 			}*/

@@ -32,7 +32,7 @@ void MGL_EXPORT mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char 
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	long nm = gr->FaceNum?gr->FaceNum*n:10000, nd = gr->FaceNum?gr->FaceNum*10:1000;
-	
+
 	mglDataS x, y;
 	x.dat.reserve(nm);	y.dat.reserve(nm);
 
@@ -87,7 +87,7 @@ void MGL_EXPORT mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const c
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	long nm = gr->FaceNum?gr->FaceNum*n:10000, nd = gr->FaceNum?gr->FaceNum*10:1000;
-	
+
 	mglDataS x, y, z, t;
 	x.dat.reserve(nm);	y.dat.reserve(nm);
 	z.dat.reserve(nm);	t.dat.reserve(nm);
@@ -163,7 +163,7 @@ void MGL_EXPORT mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
 	{
 		for(long i=0;i<n;i++)
 		{
-			register mreal v = a->v(i,j);
+			mreal v = a->v(i,j);
 			x.a[i+(n+1)*j] = (r+v)*co[i];
 			y.a[i+(n+1)*j] = (r+v)*co[i+n];
 		}
@@ -364,7 +364,7 @@ void MGL_EXPORT mgl_plot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_plot(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
 	gr->SaveState(opt);
 	mglDataV x(n), z(n);
@@ -409,9 +409,8 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mc = j<c->GetNy() ? j:0;
-		register long i;
 		bool t1 = false, t2 = false;
-		for(i=0;i<n;i++)
+		for(long i=0;i<n;i++)
 		{
 			if(i>0)	{	n2=n1;	p2=p1;	t2=t1;	}
 			p1.Set(x->v(i,mx), y->v(i,my), z->v(i,mz), c->v(i,mc));
@@ -456,7 +455,7 @@ void MGL_EXPORT mgl_tens_xy(HMGL gr, HCDT x, HCDT y, HCDT c, const char *pen, co
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tens(HMGL gr, HCDT y, HCDT c, const char *pen, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tens");	return;	}
 	gr->SaveState(opt);
 	mglDataV x(n), z(n);
@@ -927,7 +926,7 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	memset(dd,0,n*sizeof(mreal));
-	
+
 	mreal dc=INFINITY;
 	if(fixed)	for(long j=0;j<m;j++)
 	{
@@ -1017,7 +1016,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 		}
 	}
 	if(dx==0)	fixed=false;	// NOTE: disable fixed width if it is zero
-	
+
 	gr->SetPenPal(pen,&pal);
 	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
@@ -1113,7 +1112,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 		}
 	}
 	if(dy==0)	fixed=false;	// NOTE: disable fixed width if it is zero
-	
+
 	gr->SetPenPal(pen,&pal);
 	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
@@ -1202,7 +1201,7 @@ void MGL_EXPORT mgl_ohlc_x(HMGL gr, HCDT x, HCDT open, HCDT high, HCDT low, HCDT
 			x1 = vv + dd/2*(dv-gr->BarWidth);	x2 = x1 + gr->BarWidth*dd;
 			x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	vv = (x2+x1)/2;
 			if(sh)	c1=c2=gr->NextColor(pal,i);
-			register long n1,n2;
+			long n1,n2;
 
 			dd = close->v(i,j);
 			mreal c = (i==0 || dd>=close->v(i-1,j)) ? c1:c2;
@@ -1265,8 +1264,8 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 	mreal *d = new mreal[m];
 	for(long i=0;i<n;i++)	// find quartiles by itself
 	{
-		register long mm,k,j;
-		for(mm=j=0;j<m;j++)
+		long mm=0,k;
+		for(long j=0;j<m;j++)
 		{
 			mreal vv = y->v(i,j);
 			if(mgl_isnum(vv))	{	d[mm]=vv;	mm++;	}
@@ -1289,7 +1288,7 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 		x1 = vv + dd/2*(dv-gr->BarWidth);
 		x2 = x1 + gr->BarWidth*dd;
 		mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-		register long n1,n2;
+		long n1,n2;
 
 		n1=gr->AddPnt(mglPoint(x1,b[i],zVal),c);	// horizontal lines
 		n2=gr->AddPnt(mglPoint(x2,b[i],zVal),c);
@@ -1570,7 +1569,7 @@ void MGL_EXPORT mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Chart",cgid++);
 	bool wire = mglchr(cols,'#');	// draw edges
-	register long n=a->GetNx(),i,j=0,len=cols?long(strlen(cols)):0;
+	long n=a->GetNx(),i,j=0,len=cols?long(strlen(cols)):0;
 	if(cols)	for(i=0;i<len;i++)
 		if(strchr(MGL_COLORS,cols[i]) || cols[i]==' ')	j++;
 	if(j==0)	{	cols = MGL_DEF_PAL;	len=long(strlen(cols));	}
@@ -1657,7 +1656,7 @@ void MGL_EXPORT mgl_mark_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, co
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_mark_y(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	gr->SaveState(opt);
 	mglDataV x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
@@ -1718,8 +1717,8 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
 			for(long k=0;k<num;k++)
 			{
-				register int kk = k*360/(num-1);
-				register float  co = mgl_cos[(kk)%360], si = mgl_cos[(270+kk)%360];
+				int kk = k*360/(num-1);
+				float  co = mgl_cos[(kk)%360], si = mgl_cos[(270+kk)%360];
 				p = q + t*(rr*co) + u*(rr*si);
 				d = (t*si - u*co)^(l + t*(dr*co) + u*(dr*si));
 				nn[k+num]=nn[k];	nn[k] = gr->AddPnt(p,c,wire?mglPoint(NAN,NAN):d,-1,3);
@@ -1741,7 +1740,7 @@ void MGL_EXPORT mgl_tube_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, c
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tube_r(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
 	gr->SaveState(opt);
 	mglDataV x(n), z(n);
@@ -1751,7 +1750,7 @@ void MGL_EXPORT mgl_tube_r(HMGL gr, HCDT y, HCDT r, const char *pen, const char 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tube(HMGL gr, HCDT y, double rr, const char *pen, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
 	gr->SaveState(opt);
 	mglDataV x(n), r(n), z(n);
@@ -1762,7 +1761,7 @@ void MGL_EXPORT mgl_tube(HMGL gr, HCDT y, double rr, const char *pen, const char
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tube_xy(HMGL gr, HCDT x, HCDT y, double rr, const char *pen, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
 	gr->SaveState(opt);
 	mglDataV r(n), z(n);
@@ -1847,8 +1846,7 @@ void MGL_EXPORT mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 			if(zo)	{	n3 = gr->AddPnt(p2,c2,q1,-1,3);	n4 = gr->AddPnt(p2+rr*q2,c2,q1,-1,3);	}
 		}
 		else		{	n1=n2=n3=n4=-1;	}
-		register long i;
-		for(i=1;i<n;i++)
+		for(long i=1;i<n;i++)
 		{
 			p1 = p2;	p2.Set(x->v(i,mx), y->v(i,my), z->v(i,mz));
 			l = p2-p1;		l /= mgl_norm(l);
@@ -1886,7 +1884,7 @@ void MGL_EXPORT mgl_tape_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tape(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
 	gr->SaveState(opt);
 	mglDataV x(n), z(n);
@@ -1955,7 +1953,7 @@ void MGL_EXPORT mgl_pmap_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, co
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_pmap(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 {
-	register long n=y->GetNx();
+	long n=y->GetNx();
 	gr->SaveState(opt);
 	mglDataV x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());

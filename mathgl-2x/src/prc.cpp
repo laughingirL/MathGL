@@ -46,14 +46,12 @@
 //-----------------------------------------------------------------------------
 void mglTexture::GetRGBAPRC(unsigned char *f) const
 {
-	register size_t i,j,i0;
-	mglColor c1,c2,c;
-	for(i=0;i<256;i++)
+	for(size_t i=0;i<256;i++)
 	{
-		c1 = col[2*i];	c2 = col[2*i+1];
-		for(j=0;j<256;j++)
+		mglColor c1 = col[2*i], c2 = col[2*i+1], c;
+		for(size_t j=0;j<256;j++)
 		{
-			i0 = 4*(j+256*(255-i));
+			size_t i0 = 4*(j+256*(255-i));
 			c = c1 + (c2-c1)*(j/255.);
 			f[i0]   = int(255*c.r);
 			f[i0+1] = int(255*c.g);
@@ -318,7 +316,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 
 		png_destroy_write_struct(&png_ptr, &info_ptr);
 		delete []pbuf;	delete []buf;
-    
+
 		PRCtexture* t = new PRCtexture();
 		t->mapping = PRC_TEXTURE_MAPPING_DIFFUSE;
 		t->components = PRC_TEXTURE_MAPPING_COMPONENTS_RGBA;
@@ -751,12 +749,12 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 					case 4:
 					if (gr->GetPnt(q.n1).a > mgl_min_a) {
 						const mglPnt p = gr->GetPnt(q.n1) - p0;
-						
+
 						const mreal f = q.p/2, dx=p.u/2, dy=p.v/2;
 						const mreal c=q.s*cos(q.w*M_PI/180), s=-q.s*sin(q.w*M_PI/180);
 						const double b[4] = {c,-s, s,c};
 						long ik,il=0;
-						
+
 						const mglGlyph &g = gr->GetGlf(q.n4);
 						const mreal dd = 0.004;
 						if(q.n3&8)
@@ -768,7 +766,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 								const uint32_t p_3 = group.addPoint(p.x+b[0]*dx+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z);
 								const uint32_t p_2 = group.addPoint(p.x+b[0]*(dx+f)+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
 								const uint32_t p_1 = group.addPoint(p.x+b[0]*(dx+f)+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z);
-								
+
 								group.addTriangle(ti, p_1, p_3, p_2);
 								group.addTriangle(ti, p_4, p_2, p_3);
 							}
@@ -779,7 +777,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 								const double p_3[3] = {p.x+b[0]*dx+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z};
 								const double p_2[3] = {p.x+b[0]*(dx+f)+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z};
 								const double p_1[3] = {p.x+b[0]*(dx+f)+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z};
-								
+
 								file.addSegment(p_1, p_2, c, w);
 								file.addSegment(p_3, p_4, c, w);
 								file.addSegment(p_1, p_3, c, w);
@@ -800,7 +798,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 									const uint32_t p_2 = group.addPoint(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
 									x = dx+f*g.trig[6*ik+4];	y = dy+f*g.trig[6*ik+5];
 									const uint32_t p_1 = group.addPoint(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
-									
+
 									group.addTriangle(ti, p_1, p_3, p_2);
 								}
 							}
@@ -829,11 +827,11 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 										const double p_1[3] = {p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z};
 										file.addSegment(p_1, p_2, c, w);
 									}
-									
+
 								}
 							}
 						}
-						
+
 					}
 						break;
 

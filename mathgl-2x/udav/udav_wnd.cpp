@@ -418,9 +418,8 @@ void MainWindow::showHelp()
 int mgl_cmd_cmp(const void *a, const void *b);
 void MainWindow::editPosChanged()
 {
-	register int i, n;
 	QString text = edit->selection(), dlm(" #;:\t");
-	n = text.length();
+	int n = text.length(), i;
 	for(i=0;i<n;i++)	if(dlm.contains(text[i]))	break;
 	text.truncate(i);
 

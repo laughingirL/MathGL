@@ -106,7 +106,7 @@ HMDT MGL_EXPORT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 #pragma omp parallel for
 		for(long i0=0;i0<n*m*l;i0++)
 		{
-			register long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
+			long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
 			r->a[i0] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
 		}
 	}
@@ -120,7 +120,7 @@ HMDT MGL_EXPORT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
-			register long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
+			long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
 			r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
 		}
 		if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
@@ -166,14 +166,14 @@ MGL_NO_EXPORT void *mgl_resize(void *par)
 #endif
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
+		long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
 		b[i0] = dat->value(c[0]+i*c[1], c[2]+j*c[3], c[4]+k*c[5]);
 	}
 	return 0;
 }
 HMDT MGL_EXPORT mgl_data_resize_box(HCDT dat, long mx,long my,long mz, mreal x1,mreal x2, mreal y1,mreal y2, mreal z1,mreal z2)
 {
-	register long nx = dat->GetNx(), ny = dat->GetNy(), nz = dat->GetNz();
+	long nx = dat->GetNx(), ny = dat->GetNy(), nz = dat->GetNz();
 	mx = mx<1 ? nx:mx;	my = my<1 ? ny:my;	mz = mz<1 ? nz:mz;
 	mglData *r=new mglData(mx,my,mz);
 
@@ -237,7 +237,7 @@ MGL_NO_EXPORT void *mgl_sum_y(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = (i%nx)+nx*ny*(i/nx);	b[i]=0;
+		long k = (i%nx)+nx*ny*(i/nx);	b[i]=0;
 		for(long j=0;j<ny;j++)	b[i] += a[k+nx*j];
 		b[i] /= ny;
 	}
@@ -254,7 +254,7 @@ MGL_NO_EXPORT void *mgl_sum_x(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = i*nx;	b[i]=0;
+		long k = i*nx;	b[i]=0;
 		for(long j=0;j<nx;j++)	b[i] += a[j+k];
 		b[i] /= nx;
 	}
@@ -325,7 +325,7 @@ MGL_NO_EXPORT void *mgl_max_y(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = (i%nx)+nx*ny*(i/nx);	b[i]=a[k];
+		long k = (i%nx)+nx*ny*(i/nx);	b[i]=a[k];
 		for(long j=1;j<ny;j++)	if(b[i]<a[k+nx*j])	b[i]=a[k+nx*j];
 	}
 	return 0;
@@ -341,7 +341,7 @@ MGL_NO_EXPORT void *mgl_max_x(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = i*nx;	b[i]=a[k];
+		long k = i*nx;	b[i]=a[k];
 		for(long j=1;j<nx;j++)	if(b[i]<a[j+k])	b[i]=a[j+k];
 	}
 	return 0;
@@ -411,7 +411,7 @@ MGL_NO_EXPORT void *mgl_min_y(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = (i%nx)+nx*ny*(i/nx);	b[i]=a[k];
+		long k = (i%nx)+nx*ny*(i/nx);	b[i]=a[k];
 		for(long j=1;j<ny;j++)	if(b[i]>a[k+nx*j])	b[i]=a[k+nx*j];
 	}
 	return 0;
@@ -427,7 +427,7 @@ MGL_NO_EXPORT void *mgl_min_x(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = i*nx;	b[i]=a[k];
+		long k = i*nx;	b[i]=a[k];
 		for(long j=1;j<nx;j++)	if(b[i]>a[j+k])	b[i]=a[j+k];
 	}
 	return 0;
@@ -488,10 +488,10 @@ HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
 #pragma omp parallel for
 		for(long i=0;i<nx;i++)
 		{
-			register mreal i1=0,i0=0;
+			mreal i1=0,i0=0;
 			for(long j=0;j<ny*nz;j++)
 			{
-				register mreal u=dat->vthr(i+nx*j);
+				mreal u=dat->vthr(i+nx*j);
 				i0 += u;	i1 += u*res->a[i+nx*j];
 			}
 			b->a[i] = i0>0 ? i1/i0 : 0;
@@ -503,10 +503,10 @@ HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
 #pragma omp parallel for
 		for(long i=0;i<ny;i++)
 		{
-			register mreal i1=0,i0=0;
+			mreal i1=0,i0=0;
 			for(long k=0;k<nz;k++)	for(long j=0;j<nx;j++)
 			{
-				register mreal u=dat->v(j,i,k);
+				mreal u=dat->v(j,i,k);
 				i0 += u;	i1 += u*res->a[j+nx*(i+ny*k)];
 			}
 			b->a[i] = i0>0 ? i1/i0 : 0;
@@ -519,10 +519,10 @@ HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
 #pragma omp parallel for
 		for(long i=0;i<nz;i++)
 		{
-			register mreal i1=0,i0=0;
+			mreal i1=0,i0=0;
 			for(long j=0;j<nn;j++)
 			{
-				register mreal u=dat->vthr(j+nn*i);
+				mreal u=dat->vthr(j+nn*i);
 				i0 += u;	i1 += u*res->a[j+nn*i];
 			}
 			b->a[i] = i0>0 ? i1/i0 : 0;
@@ -686,7 +686,7 @@ MGL_NO_EXPORT void *mgl_hist_1(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register long k = long(n*(a->vthr(i)-v[0])/(v[1]-v[0]));
+		long k = long(n*(a->vthr(i)-v[0])/(v[1]-v[0]));
 		if(k>=0 && k<n)
 #if !MGL_HAVE_PTHREAD
 #pragma omp critical(hist)
@@ -710,11 +710,11 @@ MGL_NO_EXPORT void *mgl_hist_2(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		register mreal x = d*(i%(nx*ns)), y = d*((i/(nx*ns))%(ny*ns)), z = d*(i/(nx*ny*ns*ns));
-		register mreal f = sp ? a->value(x,y,z) : a->linear(x,y,z), w=1;
+		mreal x = d*(i%(nx*ns)), y = d*((i/(nx*ns))%(ny*ns)), z = d*(i/(nx*ny*ns*ns));
+		mreal f = sp ? a->value(x,y,z) : a->linear(x,y,z), w=1;
 		if(c)	w = sp ? c->value(x,y,z) : c->linear(x,y,z);
 		if(mgl_isnan(f) || mgl_isnan(w))	continue;
-		register long k = long(n*(f-v[0])/(v[1]-v[0]));
+		long k = long(n*(f-v[0])/(v[1]-v[0]));
 		if(k>=0 && k<n)
 #if !MGL_HAVE_PTHREAD
 #pragma omp critical(hist)
@@ -844,23 +844,23 @@ MGL_NO_EXPORT void *mgl_pulse_z(void *par)
 	{
 		long j0=0;	mreal m=a[i];
 		for(long j=1;j<nz;j++)	// get maximum
-		{	register long i0=i+nn*j;
+		{	long i0=i+nn*j;
 			if(m<a[i0])	{	m=a[i0];	j0=j;	}
 		}
 		if(j0>0 && j0<nz-1)
 		{
-			register long i0=i+nn*j0;
+			long i0=i+nn*j0;
 			mreal A = (a[i0-nn]-2*a[i0]+a[i0+nn])/2;
 			mreal B = (a[i0+nn]-a[i0-nn])/2;
 			mreal C = a[i0] - B*B/(4*A);
 			b[i]=C;	b[i+nn]=j0-B/(2*A);	b[i+2*nn]=sqrt(fabs(C/A));	C /= 2;
 			mreal j1=NAN,j2=NAN;
 			for(long j=j0;j<nz-1;j++)
-			{	register long i0 = i+nn*j;
+			{	long i0 = i+nn*j;
 				if((a[i0]-C)*(a[i0+nn]-C)<0)	j2 = j + (a[i0]-C)/(a[i0]-a[i0+nn]);
 			}
 			for(long j=j0;j>0;j--)
-			{	register long i0=i+nn*j;
+			{	long i0=i+nn*j;
 				if((a[i0]-C)*(a[i0-nn]-C)<0)	j1 = j - (a[i0]-C)/(a[i0]-a[i0-nn]);
 			}
 			b[i+3*nn]=j2-j1;	b[i+4*nn]=0;
@@ -885,23 +885,23 @@ MGL_NO_EXPORT void *mgl_pulse_y(void *par)
 		long k = (i%nx)+nx*ny*(i/nx), j0=0;	mreal m=a[k];
 		long ki = (i%nx)+5*nx*(i/nx);
 		for(long j=1;j<ny;j++)	// get maximum
-		{	register long i0=k+nx*j;
+		{	long i0=k+nx*j;
 			if(m<a[i0])	{	m=a[i0];	j0=j;	}
 		}
 		if(j0>0 && j0<ny-1)
 		{
-			register long i0=k+nx*j0;
+			long i0=k+nx*j0;
 			mreal A = (a[i0-nx]-2*a[i0]+a[i0+nx])/2;
 			mreal B = (a[i0+nx]-a[i0-nx])/2;
 			mreal C = a[i0] - B*B/(4*A);
 			b[ki]=C;	b[ki+nx]=j0-B/(2*A);	b[ki+2*nx]=sqrt(fabs(C/A));	C /= 2;
 			mreal j1=NAN,j2=NAN;
 			for(long j=j0;j<ny-1;j++)
-			{	register long i0 = k+nx*j;
+			{	long i0 = k+nx*j;
 				if((a[i0]-C)*(a[i0+nx]-C)<0)	j2 = j + (a[i0]-C)/(a[i0]-a[i0+nx]);
 			}
 			for(long j=j0;j>0;j--)
-			{	register long i0=k+nx*j;
+			{	long i0=k+nx*j;
 				if((a[i0]-C)*(a[i0-nx]-C)<0)	j1 = j - (a[i0]-C)/(a[i0]-a[i0-nx]);
 			}
 			b[ki+3*nx]=j2-j1;	b[ki+4*nx]=0;
@@ -925,23 +925,23 @@ MGL_NO_EXPORT void *mgl_pulse_x(void *par)
 	{
 		long k = i*nx, j0=0;	mreal m=a[k];
 		for(long j=1;j<nx;j++)	// get maximum
-		{	register long i0=j+k;
+		{	long i0=j+k;
 			if(m<a[i0])	{	m=a[i0];	j0=j;	}
 		}
 		if(j0>0 && j0<nx-1)
 		{
-			register long i0=j0+k;
+			long i0=j0+k;
 			mreal A = (a[i0-1]-2*a[i0]+a[i0+1])/2;
 			mreal B = (a[i0+1]-a[i0-1])/2;
 			mreal C = a[i0] - B*B/(4*A);
 			b[5*i]=C;	b[5*i+1]=j0-B/(2*A);	b[5*i+2]=sqrt(fabs(C/A));	C /= 2;
 			mreal j1=NAN,j2=NAN;
 			for(long j=j0;j<nx-1;j++)
-			{	register long i0 = j+k;
+			{	long i0 = j+k;
 				if((a[i0]-C)*(a[i0+1]-C)<0)	j2 = j + (a[i0]-C)/(a[i0]-a[i0+1]);
 			}
 			for(long j=j0;j>0;j--)
-			{	register long i0=j+k;
+			{	long i0=j+k;
 				if((a[i0]-C)*(a[i0-1]-C)<0)	j1 = j - (a[i0]-C)/(a[i0]-a[i0-1]);
 			}
 			b[5*i+3]=j2-j1;	b[5*i+4]=0;

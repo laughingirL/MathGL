@@ -126,18 +126,17 @@ std::vector<long> MGL_NO_EXPORT put_line(HMGL gr, long i, mreal wp, uint32_t cp,
 //"np %d %d mt ", "%d %d ll ", "cp dr\n", "} def")
 void MGL_NO_EXPORT put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
 {
-	register long i,j,n;
-	wchar_t *g;
-	int *s;
-	for(n=i=0;i<gr->GetPrmNum();i++)	if(gr->GetPrm(i).type==4)	n++;
+	long n=0;
+	for(long i=0;i<gr->GetPrmNum();i++)	if(gr->GetPrm(i).type==4)	n++;
 	if(n==0)	return;		// no glyphs
-	g = new wchar_t[n];	s = new int[n];
-	for(n=i=0;i<gr->GetPrmNum();i++)
+	wchar_t *g = new wchar_t[n];
+	int *s = new int[n];	n=0;
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim q = gr->GetPrm(i);
 		if(q.type!=4 || (q.n3&8))	continue;	// not a glyph
 		bool is=false;
-		for(j=0;j<n;j++)	if(g[j]==q.n4 && s[j]==(q.n3&7))	is = true;
+		for(long j=0;j<n;j++)	if(g[j]==q.n4 && s[j]==(q.n3&7))	is = true;
 		if(is)	continue;		// glyph is described
 		// have to describe
 		g[n]=q.n4;	s[n]=q.n3&7;	n++;	// add to list of described
@@ -210,9 +209,8 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	m_s=false,m_a=false,m_o=false,m_T=false,
 	m_V=false,m_S=false,m_D=false,m_Y=false,m_l=false,
 	m_L=false,m_r=false,m_R=false,m_X=false,m_P=false;
-	register long i;
 	// add mark definition if present
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim q = gr->GetPrm(i);
 		if(q.type>0)	continue;		if(q.n4=='+')	m_p = true;
@@ -279,7 +277,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	mglRGBA cp;
 	int st=0;
 	char str[256]="";
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q = gr->GetPrm(i);
 		if(q.type<0)	continue;	// q.n1>=0 always
@@ -344,7 +342,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 			for(size_t j=0;j<ids.size();j++)
 			{
 				const mglPnt &p = gr->GetPnt(ids[j]);
-				register float x0 = p.x, y0 = p.y;
+				float x0 = p.x, y0 = p.y;
 				mgl_printf(fp, gz, j==0?"np %g %g mt ":"%g %g ll ",x0,y0);
 			}
 			const char *sd = mgl_get_dash(q.n3,q.w,' ');
@@ -372,7 +370,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 			mgl_printf(fp, gz, " grestore\n");
 		}
 	}
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		mglPrim &q = gr->GetPrm(i);
 		if(q.type==-1)	q.type = 1;
@@ -443,12 +441,11 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n");
 	// write primitives
 	mreal wp=-1;
-	register long i;
 	int st=0;
 	mglRGBA cp;
 
 	hh += (y2+y1)/2;
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q = gr->GetPrm(i);
 		if(q.type<0)	continue;	// q.n1>=0 always
@@ -570,7 +567,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 		}
 	}
 
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{	mglPrim &q=gr->GetPrm(i);	if(q.type==-1)	q.type = 1;	}
 	mgl_printf(fp, gz, "</g></svg>");
 	if(strcmp(fname,"-"))	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
@@ -682,7 +679,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		{
 			//const char *dash[]={"", "8 8","4 4","1 3","7 4 1 4","3 2 1 2"};
 			const char *w[]={"semithick","thick","very thick","ultra thick"};
-			register int iw=int(q.w-0.5);	if(iw>3)	iw=3;
+			int iw=int(q.w-0.5);	if(iw>3)	iw=3;
 			if(iw<0)	fwprintf(fp,L"\\draw[%s] ",cname);
 			else		fwprintf(fp,L"\\draw[%s,%s] ",cname,w[iw]);
 			// TODO: add line dashing
@@ -691,7 +688,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			for(size_t j=0;j<ids.size();j++)
 			{
 				const mglPnt &p = gr->GetPnt(ids[j]);
-				register float x0 = p.x, y0 = p.y;
+				float x0 = p.x, y0 = p.y;
 				fwprintf(fp, j==0?L"(%.4g,%.4g)":L" -- (%.4g,%.4g)",0.01*x0,y0*0.01);
 			}
 			fwprintf(fp, L";\n");

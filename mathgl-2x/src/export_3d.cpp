@@ -36,7 +36,7 @@ void mglTexture::GetRGBA(unsigned char *f) const
 		mglColor c1 = col[2*i], c2 = col[2*i+1];
 		for(long j=0;j<256;j++)
 		{
-			register long i0 = 4*(j+256*i);
+			long i0 = 4*(j+256*i);
 			mglColor c = c1 + (c2-c1)*(j/255.);
 			f[i0]   = int(255*c.r);
 			f[i0+1] = int(255*c.g);
@@ -287,13 +287,13 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	long m1=0,m2=0;
 	for(size_t i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
-	{	register long m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
+	{	long m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
 	long *ng = new long[m2-m1+1];
 	for(size_t i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
 	for(long i=0;i<gr->GetPrmNum();i++)	// collect data for groups
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
-		register long m = gr->GetPrm(i,false).id-m1;
+		long m = gr->GetPrm(i,false).id-m1;
 		if(m>=0 && m<m2-m1+1)	gr->Grp[ng[m]].p.push_back(i);
 	}
 	delete []ng;
@@ -575,7 +575,7 @@ std::string mglCanvas::GetJSON()
 			n3 = p.n3;	n4 = p.n4;
 		}
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
-		register long ps=p.s==p.s?long(100*factor*p.s):0, pw=p.w==p.w?long(100*p.w):0, pp=p.p==p.p?mgl_int(1e5*p.p):0;
+		long ps=p.s==p.s?long(100*factor*p.s):0, pw=p.w==p.w?long(100*p.w):0, pp=p.p==p.p?mgl_int(1e5*p.p):0;
 		if(cp.r[3]==255 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
 			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%ld,%ld,%ld,0,\"#%02x%02x%02x\"],\n",
 				p.type, n1, n2, n3, n4, p.id, ps,pw,pp, int(cp.r[0]),int(cp.r[1]),int(cp.r[2]));
@@ -594,7 +594,7 @@ std::string mglCanvas::GetJSON()
 	{
 		const mglPoint &p=xy[i];
 		const mglPnt &q=Pnt[int(0.5+p.z)];
-		register long px=long(100*p.x), py=long(100*p.y);
+		long px=long(100*p.x), py=long(100*p.y);
 		if(q.u==q.u && q.v==q.v && q.w==q.w)
 			res = res + mgl_sprintf("[%ld,%ld,%ld,%ld,%ld]%c\n", px, py, long(100*q.u), long(100*q.v), long(100*q.w), i+1<l?',':' ');
 		else
@@ -781,7 +781,7 @@ void MGL_EXPORT mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int
 /*void MGL_EXPORT mgl_xgl_prim(const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
 	char type = q.n4;	mreal ss=size*0.35;
-	register long i=q.n1,j;
+	long i=q.n1;
 	switch(q.type)
 	{
 	case 0:
@@ -950,8 +950,7 @@ void mglCanvas::WriteXGL(const char *fname,const char *descr)
 	fprintf(fp,"<WORLD>\n<NAME>%s</NAME>\n", (descr && *descr)?descr:fname);
 	fprintf(fp,"<BACKGROUND><BACKCOLOR>%g, %g, %g</BACKCOLOR></BACKGROUND>\n", BDef[0]/255., BDef[1]/255., BDef[2]/255.);
 	fprintf(fp,"<LIGHTING>\n<AMBIENT>%g, %g, %g</AMBIENT>\n",AmbBr, AmbBr, AmbBr);
-	register size_t i,j;
-	if(get(MGL_ENABLE_LIGHT))	for(i=0;i<10;i++)
+	if(get(MGL_ENABLE_LIGHT))	for(size_t i=0;i<10;i++)
 		if(light[i].n && mgl_isnan(light[i].r.x))
 		{
 			fprintf(fp, "<DIRECTIONALLIGHT>\n<DIRECTION>%g, %g, %g</DIRECTION>\n", light[i].d.x, light[i].d.y, light[i].d.z);
@@ -962,11 +961,11 @@ void mglCanvas::WriteXGL(const char *fname,const char *descr)
 	// TODO: add textures
 
 	long m1=0,m2=0,m;
-	for(i=0;i<Grp.size();i++)	// prepare array of indirect indexing
+	for(size_t i=0;i<Grp.size();i++)	// prepare array of indirect indexing
 	{	m = Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
 	long *ng = new long[m2-m1+1];
-	for(i=0;i<Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
-	for(i=0;i<GetPrmNum();i++)	// collect data for groups
+	for(size_t i=0;i<Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
+	for(size_t i=0;i<GetPrmNum();i++)	// collect data for groups
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
 		m = GetPrm(i,false).id-m1;
@@ -977,25 +976,25 @@ void mglCanvas::WriteXGL(const char *fname,const char *descr)
 	std::vector<long> p;
 	mglPrim q;
 	char *pg=new char[GetPntNum()];
-	for(i=0;i<Grp.size();i++)	// first write objects
+	for(size_t i=0;i<Grp.size();i++)	// first write objects
 	{
 		p = Grp[i].p;	memset(pg,0,GetPntNum());
 		fprintf(fp,"<OBJECT>\n<NAME>%s</NAME>\n<MESH>\n",Grp[i].Lbl.c_str());
-		for(j=0;j<p.size();j++)		// collect Pnt for this object
+		for(size_t j=0;j<p.size();j++)		// collect Pnt for this object
 		{
 			const mglPrim q=GetPrm(p[j],false);	pg[q.n1]=1;
 			if(q.type==3)	{	pg[q.n2]=1;	pg[q.n3]=1;	pg[q.n4]=1;	}
 			else if(q.type==1)	pg[q.n2]=1;
 			else if(q.type==2)	{	pg[q.n2]=1;	pg[q.n3]=1;	}
 		}
-		for(j=0;j<GetPntNum();j++)	if(pg[j])	// write Pnt for this object
+		for(size_t j=0;j<GetPntNum();j++)	if(pg[j])	// write Pnt for this object
 		{
 			const mglPnt s=Pnt[j];
 			fprintf(fp,"<P ID=\"%u\">%g, %g, %g</P>\n",j, s.x, s.y, s.z);
 			fprintf(fp,"<N ID=\"%u\">%g, %g, %g</N>\n",j, s.x, s.y, s.z);
 		}
 		// TODO: add line styles
-		for(j=0;j<p.size();j++)	// now write primitives itself
+		for(size_t j=0;j<p.size();j++)	// now write primitives itself
 		{
 			const mglPrim q=GetPrm(p[j],false);
 			mgl_xgl_prim(q, GetPnt(q.n1), fp, q.s*FontFactor());

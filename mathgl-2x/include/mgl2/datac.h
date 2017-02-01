@@ -296,7 +296,7 @@ using mglDataA::Momentum;
 	{	return mglDataC(true,mgl_datac_section(this,&ids,dir,val));	}
 	inline mglDataC Section(long id, char dir='y', mreal val=NAN) const
 	{	return mglDataC(true,mgl_datac_section_val(this,id,dir,val));	}
-	
+
 	/// Get trace of the data array
 	inline mglDataC Trace() const
 	{	return mglDataC(true,mgl_datac_trace(this));	}
@@ -471,13 +471,13 @@ using mglDataA::Momentum;
 	mreal vthr(long i) const {	return abs(a[i]);	}
 	// add for speeding up !!!
 	mreal dvx(long i,long j=0,long k=0) const
-	{   register long i0=i+nx*(j+ny*k);
+	{   long i0=i+nx*(j+ny*k);
 		return i>0? abs(i<nx-1? (a[i0+1]-a[i0-1])/mreal(2):a[i0]-a[i0-1]) : abs(a[i0+1]-a[i0]);	}
 	mreal dvy(long i,long j=0,long k=0) const
-	{   register long i0=i+nx*(j+ny*k);
+	{   long i0=i+nx*(j+ny*k);
 		return j>0? abs(j<ny-1? (a[i0+nx]-a[i0-nx])/mreal(2):a[i0]-a[i0-nx]) : abs(a[i0+nx]-a[i0]);}
 	mreal dvz(long i,long j=0,long k=0) const
-	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
+	{   long i0=i+nx*(j+ny*k), n=nx*ny;
 		return k>0? abs(k<nz-1? (a[i0+n]-a[i0-n])/mreal(2):a[i0]-a[i0-n]) : abs(a[i0+n]-a[i0]);	}
 };
 //-----------------------------------------------------------------------------

@@ -110,8 +110,8 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t *lbl, bool add)
 	else	aa.txt.clear();
 	if(!v || !lbl || !lbl[0])	{	aa.f = 0;	return;	}
 	aa.f = 2;	aa.ns=0;	aa.ds=0;
-	register long i,j,l=0,n=v->GetNx();
-	for(i=j=l=0;i<n && lbl[j];j++)
+	long i=0,l=0,n=v->GetNx();
+	for(long j=0;i<n && lbl[j];j++)
 	{
 		if(lbl[j]=='\n')
 		{
@@ -132,8 +132,8 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const char *lbl, bool add)
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTicksVal(char dir, const wchar_t *lbl, bool add)
 {
-	register long i,j,len=mgl_wcslen(lbl);
-	for(i=0,j=1;j<len;j++)
+	long i=0,len=mgl_wcslen(lbl);
+	for(long j=1;j<len;j++)
 		if(lbl[j]=='\n' || (lbl[j]=='n' && lbl[j-1]=='\\'))	i++;
 	if(i>63)	i=63;
 	mglData val(i+1);	val.Fill(Min.x,Max.x);
@@ -142,8 +142,8 @@ void mglCanvas::SetTicksVal(char dir, const wchar_t *lbl, bool add)
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTicksVal(char dir, const char *lbl, bool add)
 {
-	register long i,j,len=strlen(lbl);
-	for(i=0,j=1;j<len;j++)
+	long i=0,len=strlen(lbl);
+	for(long j=1;j<len;j++)
 		if(lbl[j]=='\n' || (lbl[j]=='n' && lbl[j-1]=='\\'))	i++;
 	if(i>63)	i=63;
 	mglData val(i+1);	val.Fill(Min.x,Max.x);
@@ -160,8 +160,8 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t **lbl, bool add)
 	else	aa.txt.clear();
 	if(!v || !lbl)	{	aa.f = 0;	return;	}
 	aa.f = 2;	aa.ns=0;	aa.ds=0;
-	register long i,n=v->GetNx();
-	for(i=0;i<n;i++)	aa.AddLabel(lbl[i],v->v(i));
+	long n=v->GetNx();
+	for(long i=0;i<n;i++)	aa.AddLabel(lbl[i],v->v(i));
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTicksVal(char dir, HCDT v, const char **lbl, bool add)
@@ -934,14 +934,14 @@ void mglCanvas::Box(const char *col, bool ticks)
 			mreal dx = (Max.x-Min.x)/30, dy = (Max.y-Min.y)/30, dz = (Max.z-Min.z)/30;
 			for(long i=0;i<31;i++)	for(long j=0;j<31;j++)
 			{
-				register long i0=3*(i+31*j);
+				long i0=3*(i+31*j);
 				pos[i0]   = AddPnt(mglPoint(oo[im].x,Min.y+dy*i,Min.z+dz*j));
 				pos[i0+1] = AddPnt(mglPoint(Min.x+dx*i,oo[im].y,Min.z+dz*j));
 				pos[i0+2] = AddPnt(mglPoint(Min.x+dx*i,Min.y+dy*j,oo[im].z));
 			}
 			for(long i=0;i<30;i++)	for(long j=0;j<30;j++)
 			{
-				register long i0=3*(i+31*j);
+				long i0=3*(i+31*j);
 				quad_plot(pos[i0],pos[i0+3],pos[i0+93],pos[i0+96]);
 				quad_plot(pos[i0+1],pos[i0+4],pos[i0+94],pos[i0+97]);
 				quad_plot(pos[i0+2],pos[i0+5],pos[i0+95],pos[i0+98]);
@@ -1075,7 +1075,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 		if(ac.t.empty())
 			for(long i=0;i<n;i++)
 			{
-				register mreal d = vv->v(i);
+				mreal d = vv->v(i);
 				ac.AddLabel(mgl_ftoa(d,ac.stl.c_str()),d);
 			}
 		else
@@ -1083,7 +1083,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			wchar_t buf[64];
 			for(long i=0;i<n;i++)
 			{
-				register mreal d = vv->v(i);
+				mreal d = vv->v(i);
 				mglprintf(buf,64,ac.t.c_str(),d);
 				ac.AddLabel(buf,d);
 			}

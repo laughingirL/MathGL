@@ -47,11 +47,11 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		gr->Reserve(m*3);
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)
 		{
-			register long k1 = long(nums->v(0,i)+0.5);
+			long k1 = long(nums->v(0,i)+0.5);
 			p1.Set(x->v(k1), y->v(k1), z->v(k1));
-			register long k2 = long(nums->v(1,i)+0.5);
+			long k2 = long(nums->v(1,i)+0.5);
 			p2.Set(x->v(k2), y->v(k2), z->v(k2));
-			register long k3 = long(nums->v(2,i)+0.5);
+			long k3 = long(nums->v(2,i)+0.5);
 			p3.Set(x->v(k3), y->v(k3), z->v(k3));
 			q = wire ? mglPoint(NAN,NAN) : (p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
@@ -67,9 +67,9 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		mglPoint *pp = new mglPoint[n];
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)	// add averaged normales
 		{
-			register long k1 = long(nums->v(0,i)+0.5);
-			register long k2 = long(nums->v(1,i)+0.5);
-			register long k3 = long(nums->v(2,i)+0.5);
+			long k1 = long(nums->v(0,i)+0.5);
+			long k2 = long(nums->v(1,i)+0.5);
+			long k3 = long(nums->v(2,i)+0.5);
 			if(!wire)
 			{
 				mglPoint q(mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
@@ -85,9 +85,9 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)), gr->GetC(ss,a->v(i)), pp[i]);
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)	// draw triangles
 		{
-			register long k1 = long(nums->v(0,i)+0.5);
-			register long k2 = long(nums->v(1,i)+0.5);
-			register long k3 = long(nums->v(2,i)+0.5);
+			long k1 = long(nums->v(0,i)+0.5);
+			long k2 = long(nums->v(1,i)+0.5);
+			long k3 = long(nums->v(2,i)+0.5);
 			if(wire)
 			{
 				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);
@@ -149,13 +149,13 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		gr->Reserve(m*4);
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
 		{
-			register long k1 = long(nums->v(0,i)+0.5);
+			long k1 = long(nums->v(0,i)+0.5);
 			p1.Set(x->v(k1), y->v(k1), z->v(k1));
-			register long k2 = long(nums->v(1,i)+0.5);
+			long k2 = long(nums->v(1,i)+0.5);
 			p2.Set(x->v(k2), y->v(k2), z->v(k2));
-			register long k3 = long(nums->v(2,i)+0.5);
+			long k3 = long(nums->v(2,i)+0.5);
 			p3.Set(x->v(k3), y->v(k3), z->v(k3));
-			register long k4 = long(nums->v(3,i)+0.5);
+			long k4 = long(nums->v(3,i)+0.5);
 			p4.Set(x->v(k4), y->v(k4), z->v(k4));
 			mglPoint q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
@@ -172,13 +172,13 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		mglPoint *pp = new mglPoint[n];
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
 		{	// add averaged normales
-			register long k1 = long(nums->v(0,i)+0.5);
+			long k1 = long(nums->v(0,i)+0.5);
 			p1.Set(x->v(k1), y->v(k1), z->v(k1));
-			register long k2 = long(nums->v(1,i)+0.5);
+			long k2 = long(nums->v(1,i)+0.5);
 			p2.Set(x->v(k2), y->v(k2), z->v(k2));
-			register long k3 = long(nums->v(2,i)+0.5);
+			long k3 = long(nums->v(2,i)+0.5);
 			p3.Set(x->v(k3), y->v(k3), z->v(k3));
-			register long k4 = long(nums->v(3,i)+0.5);
+			long k4 = long(nums->v(3,i)+0.5);
 			p4.Set(x->v(k4), y->v(k4), z->v(k4));
 
 			if(wire)	pp[k1]=pp[k2]=pp[k3]=pp[k4]=mglPoint(NAN,NAN);
@@ -195,10 +195,10 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
 		{	// draw quads
-			register long k1 = long(nums->v(0,i)+0.5);
-			register long k2 = long(nums->v(1,i)+0.5);
-			register long k3 = long(nums->v(2,i)+0.5);
-			register long k4 = long(nums->v(3,i)+0.5);
+			long k1 = long(nums->v(0,i)+0.5);
+			long k2 = long(nums->v(1,i)+0.5);
+			long k3 = long(nums->v(2,i)+0.5);
+			long k4 = long(nums->v(3,i)+0.5);
 			if(wire)
 			{
 				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);
@@ -252,8 +252,8 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_tri_lines(mreal val, HCDT nums, HCDT a
 	{
 		long k1 = long(nums->v(0,i)+0.5), k2 = long(nums->v(1,i)+0.5), k3 = long(nums->v(2,i)+0.5);
 		if(k1<0 || k1>=n || k2<0 || k2>=n || k3<0 || k3>=n)	continue;
-		register mreal v1 = a->v(k1), v2 = a->v(k2), v3 = a->v(k3);
-		register mreal d1 = mgl_d(val,v1,v2), d2 = mgl_d(val,v1,v3), d3 = mgl_d(val,v2,v3);
+		mreal v1 = a->v(k1), v2 = a->v(k2), v3 = a->v(k3);
+		mreal d1 = mgl_d(val,v1,v2), d2 = mgl_d(val,v1,v3), d3 = mgl_d(val,v2,v3);
 		mglSegment line;
 		if(d1>=0 && d1<=1 && d2>=0 && d2<=1)
 		{
@@ -503,7 +503,7 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	double x1=mglInf, x2=-mglInf, y1=mglInf, y2=-mglInf;
 	for(long i=0;i<n;i++)
 	{
-		register mreal xx=x->vthr(i), yy = y->vthr(i);
+		mreal xx=x->vthr(i), yy = y->vthr(i);
 		if(xx<x1)	x1=xx;	if(xx>x2)	x2=xx;
 		if(yy<y1)	y1=yy;	if(yy>y2)	y2=yy;
 	}
@@ -589,7 +589,7 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 #endif
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)	if(d[3*i0]>=0 && d[3*i0+1]>=0 && d[3*i0+2]>=0)
 	{
-		register long k1 = long(d[3*i0]+0.5), k2 = long(d[3*i0+1]+0.5), k3 = long(d[3*i0+2]+0.5);
+		long k1 = long(d[3*i0]+0.5), k2 = long(d[3*i0+1]+0.5), k3 = long(d[3*i0+2]+0.5);
 		mreal dxu,dxv,dyu,dyv;
 		mreal z1=zdat->vthr(k1), z2=zdat->vthr(k2), z3=zdat->vthr(k3);
 		mglPoint d1(x[k2]-x[k1],y[k2]-y[k1],z2-z1), d2(x[k3]-x[k1],y[k3]-y[k1],z3-z1), p;
@@ -608,12 +608,11 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 		y1 = y1>0 ? y1:0; y2 = y2<ny ? y2:ny-1;
 		if((x1>x2) | (y1>y2)) continue;
 
-		register mreal u,v,xx,yy, x0 = x[k1], y0 = y[k1];
-		register long i,j;
-		for(i=x1;i<=x2;i++) for(j=y1;j<=y2;j++)
+		mreal x0 = x[k1], y0 = y[k1];
+		for(long i=x1;i<=x2;i++) for(long j=y1;j<=y2;j++)
 		{
-			xx = (i-x0); yy = (j-y0);
-			u = dxu*xx+dyu*yy; v = dxv*xx+dyv*yy;
+			mreal xx = (i-x0), yy = (j-y0);
+			mreal u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 			if((u<0) | (v<0) | (u+v>1)) continue;
 			b[i+nx*j] = z1 + d1.z*u + d2.z*v;
 		}
@@ -697,11 +696,10 @@ long MGL_NO_EXPORT mgl_insert_trig(long i1,long i2,long i3,long **n)
 		memset(*n+3*(Max-1024),0,3*1024*sizeof(long));
 	}
 	long *nn;
-	register long i,k1;
-	if(i1>i3)	{	k1=i1;	i1=i3;	i3=k1;	}	// simple sorting
-	if(i1>i2)	{	k1=i1;	i1=i2;	i2=k1;	}
-	if(i2>i3)	{	k1=i2;	i2=i3;	i3=k1;	}
-	for(i=0;i<Cur;i++)	// check if it is unique
+	if(i1>i3)	{	long k1=i1;	i1=i3;	i3=k1;	}	// simple sorting
+	if(i1>i2)	{	long k1=i1;	i1=i2;	i2=k1;	}
+	if(i2>i3)	{	long k1=i2;	i2=i3;	i3=k1;	}
+	for(long i=0;i<Cur;i++)	// check if it is unique
 	{
 		nn = *n + 3*i;
 		if(nn[0]==i1 && nn[1]==i2 && nn[2]==i3)	return Cur;
@@ -726,39 +724,40 @@ long MGL_NO_EXPORT mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 //-----------------------------------------------------------------------------
 long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 {	// TODO: update to normal algorithm
-	register long i,j;
-	register mreal r,rm,rs;
+	mreal rs=0;
 	if(ff<=0)	ff=2;
-	for(rs=0,i=0;i<n;i++)
+	for(long i=0;i<n;i++)
 	{
-		for(rm = FLT_MAX,j=0;j<n;j++)
+		mreal rm = FLT_MAX;
+		for(long j=0;j<n;j++)
 		{
 			if(i==j)	continue;
-			r = mgl_anorm(pp[i]-pp[j]);
+			mreal r = mgl_anorm(pp[i]-pp[j]);
 			if(rm>r)	rm = r;
 		}
 		rs += sqrt(rm);
 	}
 	rs *= ff/n;	rs = rs*rs;		// "average" distance
 	const int nnum=100;
-	long *ind, *set, ii;	// indexes of "close" points, flag that it was added and its number
+	long *ind, *set;	// indexes of "close" points, flag that it was added and its number
 	mglPoint *qq;	// normalized point coordinates
 	ind = new long[nnum];	set = new long[nnum];	qq = new mglPoint[nnum];
 	long k1,k2,k3,m=0;
-	for(i=0;i<n;i++)	// now the triangles will be found
+	for(long i=0;i<n;i++)	// now the triangles will be found
 	{
 		memset(set,0,nnum*sizeof(long));
-		for(ii=0,j=0;j<n;j++)	// find close vertexes
+		long ii=0;
+		for(long j=0;j<n;j++)	// find close vertexes
 		{
-			r = mgl_anorm(pp[i]-pp[j]);
+			mreal r = mgl_anorm(pp[i]-pp[j]);
 			if(r<=rs && j!=i)	{	ind[ii] = j;	ii++;	if(ii==99)	break;}
 		}
 		if(ii<3)	continue;	// nothing to do
-		for(j=0;j<ii;j++)
+		for(long j=0;j<ii;j++)
 		{
 			k1 = j;	k2 = ind[j];	k3 = i;
-			qq[k1] = pp[k2] - pp[k3];	r = qq[k1].norm();
-			qq[k1] /= r;
+			qq[k1] = pp[k2] - pp[k3];
+			qq[k1] /= qq[k1].norm();
 		}
 		k1 = 0;
 		while((k2=mgl_get_next(k1,ii,ind,set,qq))>0)

@@ -55,7 +55,7 @@ enum ENUM_ORDERING { REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER };
 //
 //
 //		Ansi structures and functions follow
-// 
+//
 //
 
 static struct _getopt_data_a
@@ -84,8 +84,7 @@ static void exchange_a(char **argv, struct _getopt_data_a *d)
 		if (top - middle > middle - bottom)
 		{
 			int len = middle - bottom;
-			register int i;
-			for (i = 0; i < len; i++)
+			for (int i = 0; i < len; i++)
 			{
 				tem = argv[bottom + i];
 				argv[bottom + i] = argv[top - (middle - bottom) + i];
@@ -96,8 +95,7 @@ static void exchange_a(char **argv, struct _getopt_data_a *d)
 		else
 		{
 			int len = top - middle;
-			register int i;
-			for (i = 0; i < len; i++)
+			for (int i = 0; i < len; i++)
 			{
 				tem = argv[bottom + i];
 				argv[bottom + i] = argv[middle + i];
@@ -515,7 +513,7 @@ int _getopt_long_only_r_a (int argc, char *const *argv, const char *options, con
 //
 //
 //	Unicode Structures and Functions
-// 
+//
 //
 
 static struct _getopt_data_w
@@ -544,8 +542,7 @@ static void exchange_w(wchar_t **argv, struct _getopt_data_w *d)
 		if (top - middle > middle - bottom)
 		{
 			int len = middle - bottom;
-			register int i;
-			for (i = 0; i < len; i++)
+			for (int i = 0; i < len; i++)
 			{
 				tem = argv[bottom + i];
 				argv[bottom + i] = argv[top - (middle - bottom) + i];
@@ -556,8 +553,7 @@ static void exchange_w(wchar_t **argv, struct _getopt_data_w *d)
 		else
 		{
 			int len = top - middle;
-			register int i;
-			for (i = 0; i < len; i++)
+			for (int i = 0; i < len; i++)
 			{
 				tem = argv[bottom + i];
 				argv[bottom + i] = argv[middle + i];
@@ -690,7 +686,7 @@ int _getopt_internal_r_w (int argc, wchar_t *const *argv, const wchar_t *optstri
 			if (ambig_list != NULL && !exact)
 			{
 				if (print_errors)
-				{						
+				{
 					struct option_list first;
 					first.p = pfound;
 					first.next = ambig_list;

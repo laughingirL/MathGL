@@ -69,7 +69,7 @@ EQ_LAST		// id of last entry
 //-----------------------------------------------------------------------------
 int mglFormulaC::Error=0;
 bool MGL_LOCAL_PURE mglCheck(char *str,int n);
-int MGL_LOCAL_PURE mglFindInText(char *str,const char *lst);
+int MGL_LOCAL_PURE mglFindInText(const char *str, const char *lst);
 //-----------------------------------------------------------------------------
 mglFormulaC::~mglFormulaC()
 {

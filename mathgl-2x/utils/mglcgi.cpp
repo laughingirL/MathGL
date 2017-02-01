@@ -38,10 +38,10 @@ void mgl_get_value(const char *buf, const char *name, char *val)
 	if(pos && (pos==buf || pos[-1]=='&'))
 	{
 		pos+=4;	// shift for "mgl="
-		register size_t i,j,l=strlen(pos);
-		for(i=j=0;i<l;i++,j++)
+		size_t l=strlen(pos);
+		for(size_t i=0, j=0;i<l;i++,j++)
 		{
-			register char ch=pos[i];
+			char ch=pos[i];
 			if(ch=='&')	break;
 			else if(ch=='+')	val[j]=' ';
 			else if(ch=='%' && i+2<l)

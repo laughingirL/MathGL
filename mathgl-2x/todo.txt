@@ -37,6 +37,8 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 
 5. Check lighting in OpenGL mode
 
+6. Check gray half-tone around glyphs (see text sample)
+
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
 

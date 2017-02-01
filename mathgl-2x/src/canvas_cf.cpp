@@ -149,15 +149,15 @@ void MGL_EXPORT mgl_relplot(HMGL gr, double x1,double x2,double y1,double y2)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_columnplot(HMGL gr, int num, int i, double dd)
 {
-	register double w = 1./num;
+	double w = 1./num;
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g)	g->InPlot(0,1,1-w*(i+1-dd/2),1-(i+dd/2)*w,true);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_gridplot(HMGL gr, int nx, int ny, int i, double dd)
 {
-	register int ix=i%nx, iy=i/nx;
-	register double wx = 1./nx, wy = 1./ny;
+	int ix=i%nx, iy=i/nx;
+	double wx = 1./nx, wy = 1./ny;
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g)	g->InPlot((ix+dd/2)*wx,wx*(ix+1-dd/2),1-wy*(iy+1-dd/2),1-(iy+dd/2)*wy,true);
 }

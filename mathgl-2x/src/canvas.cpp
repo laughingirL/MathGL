@@ -278,7 +278,7 @@ mreal mglCanvas::FindOptOrg(char dir, int ind) const
 		pp[2].x=nn[j].x;	pp[2].y=1-nn[j].y;	pp[2].z=nn[j].z;	PostScale(&B,pp[2]);	pp[2]-=pp[0];
 		pp[3].x=nn[j].x;	pp[3].y=nn[j].y;	pp[3].z=1-nn[j].z;	PostScale(&B,pp[3]);	pp[3]-=pp[0];
 		// find cosine of axis projection
-		register mreal tx=fabs(pp[1].x/pp[1].y), ty=fabs(pp[2].x/pp[2].y), tz=fabs(pp[3].x/pp[3].y);
+		mreal tx=fabs(pp[1].x/pp[1].y), ty=fabs(pp[2].x/pp[2].y), tz=fabs(pp[3].x/pp[3].y);
 		px=py=pz=nn[j];
 		if(tz==0 && (ty==0 || tx==0))	// (x- & z-) or (y- & z-) axis are vertical
 		{	if(pp[1].x>pp[2].x)	pz.y=1-pz.y;	else	pz.x=1-pz.x;	}
@@ -380,7 +380,7 @@ void mglCanvas::line_plot(long p1, long p2)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		MGL_LINE_PLOT	}
 	else	{	MGL_LINE_PLOT	}
-	register mreal d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
+	mreal d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
@@ -506,7 +506,7 @@ pthread_mutex_lock(&mutexPtx);
 		q.u = q.v = NAN;	q.a=q.t=q.ta=1;
 		memset(Bt.b,0,9*sizeof(mreal));
 		Bt.b[0] = Bt.b[4] = Bt.b[8] = fscl;
-		register mreal opf = Bt.pf;
+		mreal opf = Bt.pf;
 		Bt.RotateN(ftet,0,0,1);	Bt.pf = Bt.norot?1.55:opf;
 		if(strchr(font,'@'))	// draw box around text
 		{
@@ -583,7 +583,7 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 	bool u = !(strchr(st,'u') || strchr(st,'U') || strchr(st,'_') || strchr(st,'g'));
 	bool a = !(strchr(st,'a') || strchr(st,'A') || strchr(st,'^') || strchr(st,'g') || strchr(st,'t'));
 	// let use simplified scheme -- i.e. no differences between axis, colorbar and/or title
-	register mreal xs=(x1+x2)/2, ys=(y1+y2)/2, f1 = 1.3, f2 = 1.1;
+	mreal xs=(x1+x2)/2, ys=(y1+y2)/2, f1 = 1.3, f2 = 1.1;
 	if(strchr(st,'#'))	f1=f2=1.55;
 	if(r && l)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f1;	}
 	else if(r)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f2;	}
@@ -930,15 +930,14 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	// find sizes
 	mreal h=TextHeight(font,size);
 	mreal dx = 0.03*iw, dy = 0.03*ih, w=0, t, sp=TextWidth(" ",font,size);
-	register long i,j;
-	for(i=0;i<n;i++)		// find text length
+	for(long i=0;i<n;i++)		// find text length
 	{
 		t = TextWidth(leg[i].text.c_str(),font,size)+sp;
 		if(leg[i].stl.empty())	t -= ll;
 		w = w>t ? w:t;
 	}
 	w += ll+0.01*iw;	// add space for lines
-	j = long((ih*0.95)/h);	if(j<1)	j=1;
+	long j = long((ih*0.95)/h);	if(j<1)	j=1;
 	long ncol = 1+(n-1)/j, nrow = (n+ncol-1)/ncol;
 	if(strchr(font,'-'))	// horizontal legend
 	{
@@ -986,9 +985,9 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 		line_plot(k1,k2);	line_plot(k2,k4);
 		line_plot(k4,k3);	line_plot(k3,k1);
 	}
-	for(i=0;i<n;i++)	// draw lines and legend
+	for(long i=0;i<n;i++)	// draw lines and legend
 	{
-		register long iy=nrow-(i%nrow)-1,ix=i/nrow;
+		long iy=nrow-(i%nrow)-1,ix=i/nrow;
 		char m=SetPenPal(leg[i].stl.c_str());
 		long k1=AddPnt(&M,mglPoint(x+ix*w+0.1*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);
 		long k2=AddPnt(&M,mglPoint(x+ix*w+0.9*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);	pPos=0;
@@ -1138,7 +1137,7 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	grp_counter++;
 	if(grp_counter>1)	return;	// do nothing in "subgroups"
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
-	register size_t len = Grp.size();
+	size_t len = Grp.size();
 	if(ObjId>=0 && len>0 && ObjId!=Grp[len-1].Id)
 #pragma omp critical(grp)
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);}

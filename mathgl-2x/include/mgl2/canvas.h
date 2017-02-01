@@ -212,7 +212,7 @@ using mglBase::Light;
 	inline void SetObjId(long id)	{	ObjId = id;	}
 	/// Get object id
 	inline int GetObjId(long xs,long ys) const
-	{	register long i=xs+Width*ys;	return (i>=0 && i<Width*Height)?OI[i]:-1;	}
+	{	long i=xs+Width*ys;	return (i>=0 && i<Width*Height)?OI[i]:-1;	}
 	/// Get subplot id
 	int GetSplId(long xs,long ys) const MGL_FUNC_PURE;
 	/// Check if there is active point or primitive (n=-1)

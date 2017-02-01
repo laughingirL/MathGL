@@ -455,7 +455,7 @@ void mgls_prepare2d(mglData *a, mglData *b, mglData *v)
 	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
 		double x = i/(n-1.), y = j/(m-1.);
-		register long i0 = i+n*j;
+		long i0 = i+n*j;
 		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 	}
@@ -468,7 +468,7 @@ void mgls_prepare3d(mglData *a, mglData *b)
 	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
 		double x=2*i/(n-1.)-1, y=2*j/(m-1.)-1, z=2*k/(l-1.)-1;
-		register long i0 = i+n*(j+m*k);
+		long i0 = i+n*(j+m*k);
 		if(a)	a->a[i0] = -2*(x*x + y*y + z*z*z*z - z*z - 0.1);
 		if(b)	b->a[i0] = 1-2*tanh((x+y)*(x+y));
 	}
@@ -481,7 +481,7 @@ void mgls_prepare2v(mglData *a, mglData *b)
 	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
 		double x=i/(n-1.), y=j/(m-1.);
-		register long i0 = i+n*j;
+		long i0 = i+n*j;
 		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 	}
@@ -496,7 +496,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 	for(long k=0;k<n;k++)	for(long j=0;j<n;j++)	for(long i=0;i<n;i++)
 	{
 		double x=2*i/(n-1.)-1, y=2*j/(n-1.)-1, z=2*k/(n-1.)-1;
-		register long i0 = i+n*(j+k*n);
+		long i0 = i+n*(j+k*n);
 /* 		r1 = 1./(x*x+y*y+z*z+0.01);	r2=exp(-0.01/r1/r1)*r1;
  		ex->a[i0]=z*y*r2*r2;
  		ey->a[i0]=x*y*r2*r2+1;

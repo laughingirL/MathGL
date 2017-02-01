@@ -176,7 +176,7 @@ void MGL_EXPORT mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
-		register mreal v0 = v->v(i);
+		mreal v0 = v->v(i);
 		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(ss,v0),text,0);
 	}
 	gr->EndGroup();
@@ -202,7 +202,7 @@ void MGL_EXPORT mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
-		register mreal v0 = v->v(i);
+		mreal v0 = v->v(i);
 		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(ss,v0),text,0);
 	}
 	gr->EndGroup();
@@ -228,7 +228,7 @@ void MGL_EXPORT mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
-		register mreal v0 = v->v(i);
+		mreal v0 = v->v(i);
 		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(ss,v0),text,0);
 	}
 	gr->EndGroup();
@@ -311,7 +311,7 @@ void MGL_EXPORT mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
-		register mreal v0 = v->v(i);
+		mreal v0 = v->v(i);
 		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(ss,v0),0);
 	}
 	gr->EndGroup();
@@ -332,7 +332,7 @@ void MGL_EXPORT mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
-		register mreal v0 = v->v(i);
+		mreal v0 = v->v(i);
 		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(ss,v0),0);
 	}
 	gr->EndGroup();
@@ -353,7 +353,7 @@ void MGL_EXPORT mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
-		register mreal v0 = v->v(i);
+		mreal v0 = v->v(i);
 		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(ss,v0),0);
 	}
 	gr->EndGroup();

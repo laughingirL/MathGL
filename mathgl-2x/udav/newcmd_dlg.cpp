@@ -120,12 +120,12 @@ void NewCmdDialog::parseCmd(const QString &txt)
 		{
 			typeChanged(i);
 			name->setCurrentIndex(cmds[i].indexOf(cmd));
-			register int j,j0,k,k0;
-			bool ok;
-			for(j0=k0=-1,j=0;j<NUM_CH;j++)		// determine set of arguments
+			int j0=-1,k0=-1,k;
+			for(int j=0;j<NUM_CH;j++)		// determine set of arguments
 			{
 				if(argn[j].isEmpty())	break;
-				for(ok=true,k=0;k<argn[j].count();k++)
+				bool ok=true;
+				for(k=0;k<argn[j].count();k++)
 				{
 					a = argn[j].at(k);		opt = (a[0]=='_'  || a[0]=='+');
 					chr = (a[0]=='\'' || (opt && a[1]=='\''));
@@ -140,7 +140,7 @@ void NewCmdDialog::parseCmd(const QString &txt)
 			if(j0>=0)	// best choice
 			{
 				kind->setCurrentIndex(j0);
-				for(k=0;k<argn[j0].count();k++)
+				for(int k=0;k<argn[j0].count();k++)
 					args->item(k,1)->setText(str.section(sep,k+1,k+1).trimmed());
 			}
 			replace = true;	return;		// selection is done

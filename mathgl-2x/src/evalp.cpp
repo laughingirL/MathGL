@@ -259,7 +259,7 @@ HADT mglApplyOperDivC(std::wstring a1, std::wstring a2, mglParser *arg, const st
 //-----------------------------------------------------------------------------
 bool mglCheck(std::wstring str)
 {
-	register long s = 0,i,n=str.length();
+	long s = 0,i,n=str.length();
 	for(i=0;i<n;i++)
 	{
 		if(str[i]=='(')	s++;
@@ -269,10 +269,10 @@ bool mglCheck(std::wstring str)
 	return (s==0) ? true : false;
 }
 //-----------------------------------------------------------------------------
-int mglFindInText(std::wstring str,const char *lst)
+long mglFindInText(const std::wstring &str,const char *lst)
 {
-	register long l=0,r=0,i;//,j,len=strlen(lst);
-	for(i=str.length()-1;i>=0;i--)
+	long l=0,r=0;
+	for(long i=str.length()-1;i>=0;i--)
 	{
 		if(str[i]=='(') l++;
 		if(str[i]==')') r++;
@@ -305,7 +305,7 @@ double MGL_LOCAL_CONST mgl_fmax(double a,double b);
 // It seems that standard wcstombs() have a bug. So, I replace by my own.
 void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
 {
-	register int j;
+	int j;
 	for(j=0;j<size-1 && src[j]!=0;j++)
 		dst[j] = src[j]<0x7f ? src[j] : ' ';
 	dst[j] = 0;
@@ -320,7 +320,7 @@ MGL_LOCAL_PURE const mglDataA *FindVar(const std::vector<mglDataA*> &head, const
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_wcslwr(wchar_t *str)
 {
-	register size_t l=mgl_wcslen(str);
+	size_t l=mgl_wcslen(str);
 	for(size_t k=0;k<l;k++)
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
 }

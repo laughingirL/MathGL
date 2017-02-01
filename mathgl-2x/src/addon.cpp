@@ -205,7 +205,7 @@ void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tm
 void MGL_EXPORT mgl_difr_axial_old(dual *a,int n,int step,dual q,int Border,dual *b,dual *d,int kk, double di)
 {
 	int ii = di<0 ? -int(floor(di)) : 0;
-	register mreal ff= di==floor(di) ? 4. : 2.;
+	mreal ff= di==floor(di) ? 4. : 2.;
 	const dual adt = dual(0.,1.)*q;
 	if(step==1)	memcpy(b,a,n*sizeof(dual));
 	else	for(long i=0;i<n;i++)	b[i] = a[i*step];
@@ -214,9 +214,9 @@ void MGL_EXPORT mgl_difr_axial_old(dual *a,int n,int step,dual q,int Border,dual
 		d[ii] = a[ii] + adt*(b[ii+1]-b[ii])*(ff/k);
 		for(long i=ii+1;i<n-1;i++)
 		{
-			register mreal dd = i+di;
+			mreal dd = i+di;
 			dd = 1./(sqrt(dd*dd+1.)+dd);	// corrections for "axiality"
-			register mreal gg = 1+dd*dd;
+			mreal gg = 1+dd*dd;
 			d[i] = a[i*step] + adt*( b[i-1]*((gg-dd)/k) - b[i]*(2*gg/k) + b[i+1]*((gg+dd)/k) );
 		}
 		memcpy(b,d,n*sizeof(dual));

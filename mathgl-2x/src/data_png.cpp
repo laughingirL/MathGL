@@ -207,7 +207,7 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	{
 		v1 = INFINITY;	v2=-INFINITY;
 		for(long i=0;i<nx*ny*nz;i++)
-		{	register mreal vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
+		{	mreal vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
 	}
 	if(v1==v2)	return;
 	long num=0;
@@ -221,7 +221,7 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	#pragma omp parallel for collapse(2)
 	for(long i=0;i<ny;i++)	for(long j=0;j<nx;j++)
 	{
-		register long k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
+		long k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
 		if(k<0)	k=0;	if(k>=num) k=num-1;
 		memcpy(d+3*(j+i*nx),c+3*k,3);
 	}

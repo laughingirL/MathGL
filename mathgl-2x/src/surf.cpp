@@ -29,19 +29,19 @@ void MGL_NO_EXPORT mgl_mesh_plot(mglBase *gr, long *pos, long n, long m, int how
 	// NOTE: number of lines in each direction can be reduced too
 	if(how&1)	for(long j=0;j<m;j+=dy)
 	{
-		register long s,i;
-		for(s=i=0;i<n-1;i++)	if(pos[n*j+i]>=0 && pos[n*j+i+1]>=0)	s++;
+		long s=0;
+		for(long i=0;i<n-1;i++)	if(pos[n*j+i]>=0 && pos[n*j+i+1]>=0)	s++;
 		d = gr->FaceNum>0 ? gr->FaceNum+1 : n;	s = s>d?s/d:1;
-		for(i=0;i<n-s;i+=s)
+		for(long i=0;i<n-s;i+=s)
 			gr->line_plot(pos[n*j+i],pos[n*j+i+s]);
 
 	}
 	if(how&2)	for(long i=0;i<n;i+=dx)
 	{
-		register long s,j;
-		for(s=j=0;j<m-1;j++)	if(pos[n*j+i]>=0 && pos[n*j+i+n]>=0)	s++;
+		long s=0;
+		for(long j=0;j<m-1;j++)	if(pos[n*j+i]>=0 && pos[n*j+i+n]>=0)	s++;
 		d = gr->FaceNum>0 ? gr->FaceNum+1 : n;	s = s>d?s/d:1;
-		for(j=0;j<m-s;j+=s)
+		for(long j=0;j<m-s;j+=s)
 			gr->line_plot(pos[n*j+i],pos[n*j+i+s*n]);
 	}
 }
@@ -138,7 +138,7 @@ void MGL_EXPORT mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 		if(gr->NeedStop())	break;
 		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
-			register mreal zz = z->v(i,j,k);
+			mreal zz = z->v(i,j,k);
 			pos[i+n*j] = gr->AddPnt(mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zz),gr->GetC(ss,zz));
 		}
 		mgl_mesh_plot(gr,pos,n,m,3);
@@ -186,7 +186,7 @@ void MGL_EXPORT mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 		if(gr->NeedStop())	break;
 		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
-			register mreal zz = z->v(i,j,k);
+			mreal zz = z->v(i,j,k);
 			pos[i+n*j] = gr->AddPnt(mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zz),gr->GetC(ss,zz));
 		}
 		mgl_mesh_plot(gr,pos,n,m, (mglchr(sch,'x')) ? 2:1);
@@ -452,7 +452,7 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 				p1.Set(xx.x, yy.x, z->v(i,j,k));
 				s.Set(xx.z, yy.z, z->dvy(i,j,k));
 				q.Set(xx.y, yy.y, 0);	s = q^s;
-				register mreal c = gr->GetC(ss,p1.z);
+				mreal c = gr->GetC(ss,p1.z);
 				p2.Set(GetX(x,i+dx,j,k).x,GetY(y,i+dx,j,k).x,p1.z);
 				pos[2*j] = gr->AddPnt(p1,c,s);
 				pos[2*j+1]=gr->AddPnt(p2,c,s);
@@ -467,7 +467,7 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 				p1.Set(xx.x, yy.x, z->v(i,j,k));
 				q.Set(xx.y, yy.y, z->dvx(i,j,k));
 				s.Set(xx.z, yy.z, 0);	s = q^s;
-				register mreal c = gr->GetC(ss,p1.z);
+				mreal c = gr->GetC(ss,p1.z);
 				p2.Set(GetX(x,i,j+dy,k).x,GetY(y,i,j+dy,k).x,p1.z);
 				pos[2*i] = gr->AddPnt(p1,c,s);
 				pos[2*i+1]=gr->AddPnt(p2,c,s);
@@ -559,7 +559,7 @@ void MGL_EXPORT mgl_stfa_(uintptr_t *gr, uintptr_t *re, uintptr_t *im, int *dn, 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	register long i,j,k,n=z->GetNx(),m=z->GetNy();
+	long n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"Boxs",true))	return;
 
 	gr->SaveState(opt);
@@ -575,10 +575,10 @@ void MGL_EXPORT mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	mglPoint p1,p2,p3,p4,q,s,t(wire||full?NAN:0,0,1),xx,yy;
 	mreal zz,z1,z2,x1,y1,x2,y2,x3,y3,c,z0=gr->GetOrgZ('x');
 	long k1,k2,k3,k4,k5,k6,k7,k8;
-	for(k=0;k<z->GetNz();k++)
+	for(long k=0;k<z->GetNz();k++)
 	{
 		if(gr->NeedStop())	break;
-		for(i=0;i<n;i+=dx)	for(j=0;j<m;j+=dy)
+		for(long i=0;i<n;i+=dx)	for(long j=0;j<m;j+=dy)
 		{
 			zz = z->v(i,j,k);		c  = gr->GetC(ss,zz);
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
@@ -685,50 +685,50 @@ void MGL_EXPORT mgl_tile_xyc(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 		if(gr->NeedStop())	break;
 		if(alongX)	for(long j=0;j<m;j+=dx)	for(long i=0;i<n;i+=dy)
 		{
-			register mreal zz = z->v(i,j,k), cc = gr->GetC(ss,c->v(i,j,k));
-			register mreal xx = GetX(x,i,j,k).x, yy = GetY(y,i,j,k).x;
-			register long k1 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			mreal zz = z->v(i,j,k), cc = gr->GetC(ss,c->v(i,j,k));
+			mreal xx = GetX(x,i,j,k).x, yy = GetY(y,i,j,k).x;
+			long k1 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			zz = i<lx-dx ? z->v(i+dx,j,k):NAN;
 			yy = i<lx-dx ? GetY(y,i+dx,j,k).x:NAN;
-			register long k2 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k2 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			zz = j<ly-dy ? z->v(i,j+dy,k):NAN;
 			yy = j<ly-dy ? GetY(y,i,j+dy,k).x:NAN;
-			register long k3 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k3 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			zz = i<lx-dx && j<ly-dy ? z->v(i+dx,j+dy,k):NAN;
 			yy = i<lx-dx && j<ly-dy ? GetY(y,i+dx,j+dy,k).x:NAN;
-			register long k4 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k4 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 		else if(alongY)	for(long j=0;j<m;j+=dx)	for(long i=0;i<n;i+=dy)
 		{
-			register mreal zz = z->v(i,j,k), cc = gr->GetC(ss,c->v(i,j,k));
-			register mreal xx = GetX(x,i,j,k).x, yy = GetY(y,i,j,k).x;
-			register long k1 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			mreal zz = z->v(i,j,k), cc = gr->GetC(ss,c->v(i,j,k));
+			mreal xx = GetX(x,i,j,k).x, yy = GetY(y,i,j,k).x;
+			long k1 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			xx = i<lx-dx ? GetX(x,i+dx,j,k).x:NAN;
 			zz = i<lx-dx ? z->v(i+dx,j,k):NAN;
-			register long k2 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k2 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			xx = j<ly-dy ? GetX(x,i,j+dy,k).x:NAN;
 			zz = j<ly-dy ? z->v(i,j+dy,k):NAN;
-			register long k3 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k3 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			xx = i<lx-dx && j<ly-dy ? GetX(x,i+dx,j+dy,k).x:NAN;
 			zz = i<lx-dx && j<ly-dy ? z->v(i+dx,j+dy,k):NAN;
-			register long k4 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k4 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 		else	for(long j=0;j<m;j+=dx)	for(long i=0;i<n;i+=dy)
 		{
-			register mreal zz = z->v(i,j,k), cc = gr->GetC(ss,c->v(i,j,k));
-			register mreal xx = GetX(x,i,j,k).x, yy = GetY(y,i,j,k).x;
-			register long k1 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			mreal zz = z->v(i,j,k), cc = gr->GetC(ss,c->v(i,j,k));
+			mreal xx = GetX(x,i,j,k).x, yy = GetY(y,i,j,k).x;
+			long k1 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			xx = i<lx-dx ? GetX(x,i+dx,j,k).x:NAN;
 			yy = i<lx-dx ? GetY(y,i+dx,j,k).x:NAN;
-			register long k2 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k2 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			xx = j<ly-dy ? GetX(x,i,j+dy,k).x:NAN;
 			yy = j<ly-dy ? GetY(y,i,j+dy,k).x:NAN;
-			register long k3 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k3 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			xx = i<lx-dx && j<ly-dy ? GetX(x,i+dx,j+dy,k).x:NAN;
 			yy = i<lx-dx && j<ly-dy ? GetY(y,i+dx,j+dy,k).x:NAN;
-			register long k4 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
+			long k4 = gr->AddPnt(mglPoint(xx,yy,zz),cc,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -789,8 +789,8 @@ void MGL_EXPORT mgl_tiles_xyc(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, HCDT c, c
 		if(gr->NeedStop())	break;
 		if(alongX)	for(long j=0;j<m;j+=dx)	for(long i=0;i<n;i+=dy)
 		{
-			register mreal xx = GetX(x,i,j,k).x, cc = gr->GetC(sc,c->v(i,j,k));
-			register mreal ss = (1-gr->GetA(s->v(i,j,k)))/2, sm = 1-ss;
+			mreal xx = GetX(x,i,j,k).x, cc = gr->GetC(sc,c->v(i,j,k));
+			mreal ss = (1-gr->GetA(s->v(i,j,k)))/2, sm = 1-ss;
 			x1 = z->v(i,j,k);	y1 = GetY(y,i,j,k).x;
 			x2 = x3 = x4 = y2 = y3 = y4 = NAN;
 			if(i<lx-dx)	{	x2 = z->v(i+dx,j,k)-x1;	y2 = GetY(y,i+dx,j,k).x-y1;	}
@@ -798,16 +798,16 @@ void MGL_EXPORT mgl_tiles_xyc(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, HCDT c, c
 			if(i<lx-dx && j<ly-dy)
 			{	x3 = z->v(i+dx,j+dy,k)-x2-x4-x1;	y3 = GetY(y,i+dx,j+dy,k).x-y2-y4-y1;	}
 
-			register long k1 = gr->AddPnt(mglPoint(xx, y1+y2*ss+y4*ss+y3*ss*ss, x1+x2*ss+x4*ss+x3*ss*ss),cc,t);
-			register long k2 = gr->AddPnt(mglPoint(xx, y1+y2*sm+y4*ss+y3*ss*sm, x1+x2*sm+x4*ss+x3*ss*sm),cc,t);
-			register long k3 = gr->AddPnt(mglPoint(xx, y1+y2*ss+y4*sm+y3*ss*sm, x1+x2*ss+x4*sm+x3*ss*sm),cc,t);
-			register long k4 = gr->AddPnt(mglPoint(xx, y1+y2*sm+y4*sm+y3*sm*sm, x1+x2*sm+x4*sm+x3*sm*sm),cc,t);
+			long k1 = gr->AddPnt(mglPoint(xx, y1+y2*ss+y4*ss+y3*ss*ss, x1+x2*ss+x4*ss+x3*ss*ss),cc,t);
+			long k2 = gr->AddPnt(mglPoint(xx, y1+y2*sm+y4*ss+y3*ss*sm, x1+x2*sm+x4*ss+x3*ss*sm),cc,t);
+			long k3 = gr->AddPnt(mglPoint(xx, y1+y2*ss+y4*sm+y3*ss*sm, x1+x2*ss+x4*sm+x3*ss*sm),cc,t);
+			long k4 = gr->AddPnt(mglPoint(xx, y1+y2*sm+y4*sm+y3*sm*sm, x1+x2*sm+x4*sm+x3*sm*sm),cc,t);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 		else if(alongY)	for(long j=0;j<m;j+=dx)	for(long i=0;i<n;i+=dy)
 		{
-			register mreal yy = GetY(y,i,j,k).x, cc = gr->GetC(sc,c->v(i,j,k));
-			register mreal ss = (1-gr->GetA(s->v(i,j,k)))/2, sm = 1-ss;
+			mreal yy = GetY(y,i,j,k).x, cc = gr->GetC(sc,c->v(i,j,k));
+			mreal ss = (1-gr->GetA(s->v(i,j,k)))/2, sm = 1-ss;
 			x1 = GetX(x,i,j,k).x;	y1 = z->v(i,j,k);
 			x2 = x3 = x4 = y2 = y3 = y4 = NAN;
 			if(i<lx-dx)	{	x2 = GetX(x,i+dx,j,k).x-x1;	y2 = z->v(i+dx,j,k)-y1;	}
@@ -815,16 +815,16 @@ void MGL_EXPORT mgl_tiles_xyc(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, HCDT c, c
 			if(i<lx-dx && j<ly-dy)
 			{	x3 = GetX(x,i+dx,j+dy,k).x-x2-x4-x1;	y3 = z->v(i+dx,j+dy,k)-y2-y4-y1;	}
 
-			register long k1 = gr->AddPnt(mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, yy, y1+y2*ss+y4*ss+y3*ss*ss),cc,t);
-			register long k2 = gr->AddPnt(mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, yy, y1+y2*sm+y4*ss+y3*ss*sm),cc,t);
-			register long k3 = gr->AddPnt(mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, yy, y1+y2*ss+y4*sm+y3*ss*sm),cc,t);
-			register long k4 = gr->AddPnt(mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, yy, y1+y2*sm+y4*sm+y3*sm*sm),cc,t);
+			long k1 = gr->AddPnt(mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, yy, y1+y2*ss+y4*ss+y3*ss*ss),cc,t);
+			long k2 = gr->AddPnt(mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, yy, y1+y2*sm+y4*ss+y3*ss*sm),cc,t);
+			long k3 = gr->AddPnt(mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, yy, y1+y2*ss+y4*sm+y3*ss*sm),cc,t);
+			long k4 = gr->AddPnt(mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, yy, y1+y2*sm+y4*sm+y3*sm*sm),cc,t);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 		else	for(long j=0;j<m;j+=dx)	for(long i=0;i<n;i+=dy)
 		{
-			register mreal zz = z->v(i,j,k), cc = gr->GetC(sc,c->v(i,j,k));
-			register mreal ss = (1-gr->GetA(s->v(i,j,k)))/2, sm = 1-ss;
+			mreal zz = z->v(i,j,k), cc = gr->GetC(sc,c->v(i,j,k));
+			mreal ss = (1-gr->GetA(s->v(i,j,k)))/2, sm = 1-ss;
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
 			x2 = x3 = x4 = y2 = y3 = y4 = NAN;
 			if(i<lx-dx)	{	x2 = GetX(x,i+dx,j,k).x-x1;	y2 = GetY(y,i+dx,j,k).x-y1;	}
@@ -832,10 +832,10 @@ void MGL_EXPORT mgl_tiles_xyc(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, HCDT c, c
 			if(i<lx-dx && j<ly-dy)
 			{	x3 = GetX(x,i+dx,j+dy,k).x-x2-x4-x1;	y3 = GetY(y,i+dx,j+dy,k).x-y2-y4-y1;	}
 
-			register long k1 = gr->AddPnt(mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, y1+y2*ss+y4*ss+y3*ss*ss, zz),cc,t);
-			register long k2 = gr->AddPnt(mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, y1+y2*sm+y4*ss+y3*ss*sm, zz),cc,t);
-			register long k3 = gr->AddPnt(mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, y1+y2*ss+y4*sm+y3*ss*sm, zz),cc,t);
-			register long k4 = gr->AddPnt(mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, y1+y2*sm+y4*sm+y3*sm*sm, zz),cc,t);
+			long k1 = gr->AddPnt(mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, y1+y2*ss+y4*ss+y3*ss*ss, zz),cc,t);
+			long k2 = gr->AddPnt(mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, y1+y2*sm+y4*ss+y3*ss*sm, zz),cc,t);
+			long k3 = gr->AddPnt(mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, y1+y2*ss+y4*sm+y3*ss*sm, zz),cc,t);
+			long k4 = gr->AddPnt(mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, y1+y2*sm+y4*sm+y3*sm*sm, zz),cc,t);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -892,14 +892,14 @@ void MGL_EXPORT mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 #pragma omp parallel for collapse(2)
 	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		register long s1 = i>0 ? 1:0, s2 = i<n-1 ? 1:0;
-		register mreal xdx = (ax->v(i+s2,j)-ax->v(i-s1,j))/(GetX(x,i+s2,j).x-GetX(x,i-s1,j).x);
-		register mreal ydx = (ay->v(i+s2,j)-ay->v(i-s1,j))/(GetX(x,i+s2,j).x-GetX(x,i-s1,j).x);
+		long s1 = i>0 ? 1:0, s2 = i<n-1 ? 1:0;
+		mreal xdx = (ax->v(i+s2,j)-ax->v(i-s1,j))/(GetX(x,i+s2,j).x-GetX(x,i-s1,j).x);
+		mreal ydx = (ay->v(i+s2,j)-ay->v(i-s1,j))/(GetX(x,i+s2,j).x-GetX(x,i-s1,j).x);
 		s1 = j>0 ? s:0;		s2 = j<m-1 ? s:0;
-		register mreal xdy = (ax->v(i,j+s2)-ax->v(i,j-s1))/(GetY(y,i,j+s2).x-GetY(y,i,j-s1).x);
-		register mreal ydy = (ay->v(i,j+s2)-ay->v(i,j-s1))/(GetY(y,i,j+s2).x-GetY(y,i,j-s1).x);
+		mreal xdy = (ax->v(i,j+s2)-ax->v(i,j-s1))/(GetY(y,i,j+s2).x-GetY(y,i,j-s1).x);
+		mreal ydy = (ay->v(i,j+s2)-ay->v(i,j-s1))/(GetY(y,i,j+s2).x-GetY(y,i,j-s1).x);
 		xdx = xdx*ydy - xdy*ydx;	// Jacobian
-		register mreal xx,yy;
+		mreal xx,yy;
 
 		if(nboth)
 		{

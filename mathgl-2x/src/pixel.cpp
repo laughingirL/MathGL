@@ -139,7 +139,7 @@ void mglCanvas::PutDrawReg(mglDrawReg *d, const mglCanvas *gr)
 		const int dd = d->x2 - d->x1;
 		for(long j=d->y1;j<d->y2;j++)
 		{
-			register long i = d->x1+Width*(Height-1-j);
+			long i = d->x1+Width*(Height-1-j);
 			memcpy(OI+i,gr->OI+i,dd*sizeof(int));
 			memcpy(Z+3*i,gr->Z+3*i,3*dd*sizeof(float));
 			memcpy(C+12*i,gr->C+12*i,12*dd);
@@ -149,7 +149,7 @@ void mglCanvas::PutDrawReg(mglDrawReg *d, const mglCanvas *gr)
 //-----------------------------------------------------------------------------
 void mglCanvas::PostScale(const mglMatrix *M, mglPoint &p) const
 {
-	register mreal f = 1./(2*M->pf),x=p.x,y=p.y,z=p.z;
+	mreal f = 1./(2*M->pf),x=p.x,y=p.y,z=p.z;
 	const mreal *b=M->b;
 	p.x = M->x + f*(x*b[0] + y*b[1] + z*b[2]);
 	p.y = M->y + f*(x*b[3] + y*b[4] + z*b[5]);
@@ -161,7 +161,7 @@ bool mglCanvas::ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool us
 	bool res = get(MGL_DISABLE_SCALE) || mglBase::ScalePoint(M,p,n,use_nan);
 	PostScale(M,p);
 
-	register mreal nx=n.x, ny=n.y, nz=n.z;
+	mreal nx=n.x, ny=n.y, nz=n.z;
 	const mreal *b=M->b;
 	n.x = nx*b[0] + ny*b[1] + nz*b[2];	// simpler for rotation only
 	n.y = nx*b[3] + ny*b[4] + nz*b[5];
@@ -241,7 +241,7 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 
 	if(mgl_isnum(ps.z))	// try to take into account perspective if z-value is provided
 	{
-		register float dd = get_persp(Bp.pf,ps.z,Depth);
+		float dd = get_persp(Bp.pf,ps.z,Depth);
 		ps.x = Width/2 + (ps.x-Width/2)/dd;
 		ps.y = Height/2+ (ps.y-Height/2)/dd;
 	}
@@ -404,11 +404,11 @@ void mglCanvas::pxl_transform(long id, long n, const void *)
 		mglPnt &p=Pnt[i];
 		if(p.sub>=0)
 		{
-			register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.;
+			float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.;
 			p.x = b[0]*x + b[1]*y + b[2]*z + dx;
 			p.y = b[3]*x + b[4]*y + b[5]*z + dy;
 			p.z = b[6]*x + b[7]*y + b[8]*z + dz;
-			register float d = get_persp(Bp.pf,p.z,Depth);
+			float d = get_persp(Bp.pf,p.z,Depth);
 			p.x = Width/2. + d*p.x;	p.y = Height/2. + d*p.y;
 		}
 	}
@@ -488,7 +488,7 @@ int mglBase::PrmCmp(long i, long j) const
 	const mglPrim &a = Prm[i];
 	const mglPrim &b = Prm[j];
 	if(a.z!=b.z) 	return int(100*(a.z - b.z));
-	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
+	int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(t1!=t2)		return t2 - t1;
 	if(a.w!=b.w) 	return int(100*(b.w - a.w));
 	return a.n3 - b.n3;
@@ -508,7 +508,7 @@ void mglCanvas::PreparePrim(int fast)
 #pragma omp critical
 		{
 			ClearPrmInd();	mgl_qsort_gr = this;
-			register size_t n = Prm.size();
+			size_t n = Prm.size();
 			PrmInd = new long[n];
 			for(size_t i=0;i<n;i++)	PrmInd[i]=i;
 			qsort(PrmInd,n,sizeof(long),mgl_prm_cmp);
@@ -542,7 +542,7 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 				d.ObjId = p.id;	d.PenWidth=p.w;
 				d.angle = p.angl;
 				if(p.type==2 || p.type==3) d.PDef = p.m;
-				register long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
+				long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
 				switch(p.type)
 				{
 				case 3:	fast_draw(Pnt[n1],Pnt[n4],&d);	fast_draw(Pnt[n2],Pnt[n3],&d);	break;
@@ -569,7 +569,7 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 				d.ObjId = p.id;	d.PenWidth=p.w;
 				d.angle = p.angl;
 				if(p.type==2 || p.type==3) d.PDef = p.m;
-				register long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
+				long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
 				switch(p.type)
 				{
 				case 3:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n4],true,&d);
@@ -596,7 +596,7 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 				d.ObjId = p.id;	d.PenWidth=p.w;
 				d.angle = p.angl;
 				if(p.type==2 || p.type==3) d.PDef = p.m;
-				register long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
+				long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
 				switch(p.type)
 				{
 				case 3:	quad_draw(Pnt[n1],Pnt[n2],Pnt[n3],Pnt[n4],&d);	break;
@@ -617,7 +617,7 @@ void mglCanvas::pxl_primpx(long id, long n, const void *)	// NOTE this variant i
 #endif
 	for(long ii=0;ii<n;ii+=mglNumThr)
 	{
-		register long i=ii%Width, j=ii/Width;
+		long i=ii%Width, j=ii/Width;
 		for(size_t k=0;k<Prm.size();k++)
 		{
 			if(Stop)	break;
@@ -650,17 +650,17 @@ void mglCanvas::pxl_dotsdr(long id, long n, const void *)
 		unsigned char r[4]={0,0,0,255};
 		const mglPnt &p=Pnt[i];
 		if(p.sub<0)	continue;
-		register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.,xx,yy,zz;
+		float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.,xx,yy,zz;
 		xx = b[0]*x + b[1]*y + b[2]*z + dx;
 		yy = b[3]*x + b[4]*y + b[5]*z + dy;
 		zz = b[6]*x + b[7]*y + b[8]*z + dz;
-		register float d = get_persp(Bp.pf,zz,Depth);
+		float d = get_persp(Bp.pf,zz,Depth);
 		xx = Width/2. + d*xx;	yy = Height/2. + d*yy;
 
 		r[0] = (unsigned char)(255*p.r);
 		r[1] = (unsigned char)(255*p.g);
 		r[2] = (unsigned char)(255*p.b);
-		register long i0=long(xx)+Width*(Height-1-long(yy));
+		long i0=long(xx)+Width*(Height-1-long(yy));
 		if(i0>=0 && i0<Width*Height && zz>Z[3*i0])
 		{	Z[3*i0]=z;	memcpy(C+12*i0,r,4);	OI[i0]=-1;	}
 	}
@@ -733,7 +733,7 @@ void mglCanvas::Finish()
 void mglCanvas::ClfZB(bool force)
 {
 	if(!force && (Quality&MGL_DRAW_LMEM))	return;
-	register long n=Width*Height;
+	long n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
 #pragma omp parallel for
 	for(long i=0;i<3*n;i++)	Z[i] = -1e20f;
@@ -788,7 +788,7 @@ void mglCanvas::pxl_other(long id, long n, const void *p)
 #endif
 		for(long k=id;k<n;k+=mglNumThr)
 		{
-			register long i = k%Width, j = Height-1-(k/Width);
+			long i = k%Width, j = Height-1-(k/Width);
 			pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
 			pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4,gr->OI[k]);
 			pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
@@ -799,7 +799,7 @@ void mglCanvas::pxl_other(long id, long n, const void *p)
 #endif
 		for(long k=id;k<n;k+=mglNumThr)
 		{
-			register long i = k%Width, j = Height-1-(k/Width);
+			long i = k%Width, j = Height-1-(k/Width);
 			pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
 		}
 }
@@ -860,7 +860,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id) 
 {
 //	if(!r)	return r;	// NOTE r must be provided!
 	if(p.a<=0)	{	memset(r,0,4);	return r;	}
-	register float b0=0,b1=0,b2=0, ar,ag,ab,dif;
+	float b0=0,b1=0,b2=0, ar,ag,ab,dif;
 	const size_t nl = p.sub>=0?p.sub:1-p.sub;
 	const bool glob = !get(MGL_LOCAL_LIGHT);
 	ar = ag = ab = glob?AmbBr:Sub[nl].AmbBr;
@@ -931,10 +931,10 @@ void mglCanvas::combine(unsigned char *c1, const unsigned char *c2) const
 {
 	if(c2[3])
 	{
-		const register unsigned a1=c1[3], a2=c2[3];
+		const unsigned a1=c1[3], a2=c2[3];
 		if((Flag&3)==0)
 		{
-			register unsigned b1=255-a2;
+			unsigned b1=255-a2;
 			c1[0] = (c1[0]*b1 + c2[0]*a2)/256;
 			c1[1] = (c1[1]*b1 + c2[1]*a2)/256;
 			c1[2] = (c1[2]*b1 + c2[2]*a2)/256;
@@ -949,7 +949,7 @@ void mglCanvas::combine(unsigned char *c1, const unsigned char *c2) const
 		}
 		else if((Flag&3)==2)
 		{
-			register unsigned b1,b2,b3;
+			unsigned b1,b2,b3;
 			b1 = (c1[0]*a1 + c2[0]*a2)/255;	c1[0] = b1<255 ? b1 : 255;
 			b2 = (c1[1]*a1 + c2[1]*a2)/255;	c1[1] = b2<255 ? b2 : 255;
 			b3 = (c1[2]*a1 + c2[2]*a2)/255;	c1[2] = b3<255 ? b3 : 255;
@@ -978,10 +978,10 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 //-----------------------------------------------------------------------------
 bool inline visible(long i, long j, const unsigned char m[8], mreal pw, int a)	// Check if pixel visible
 {
-	register float c = mgl_cos[(a+360)%360], s = mgl_cos[(a+450)%360];
-//	register int ii = int(0.5+(i*c+j*s)/pw)%8, jj = int(0.5+(j*c-i*s)/pw)%8;
+	float c = mgl_cos[(a+360)%360], s = mgl_cos[(a+450)%360];
+//	int ii = int(0.5+(i*c+j*s)/pw)%8, jj = int(0.5+(j*c-i*s)/pw)%8;
 //	if(ii<0)	ii+=8;	if(jj<0)	jj+=8;
-	register int ii = int(0.5+(i*c+j*s)/pw)&7, jj = int(0.5+(j*c-i*s)/pw)&7;
+	int ii = int(0.5+(i*c+j*s)/pw)&7, jj = int(0.5+(j*c-i*s)/pw)&7;
 	return m[jj] & (1L<<ii);
 }
 //-----------------------------------------------------------------------------
@@ -1028,15 +1028,15 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	{
 		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
 		{
-			register float xx = (i-x0), yy = (j-y0), s;
+			float xx = (i-x0), yy = (j-y0), s;
 			s = dsx*xx + dsy*yy + (dd+d3.y*xx-d3.x*yy)*(dd+d3.y*xx-d3.x*yy);
 			if(s>=0)
 			{
 				s = sqrt(s);
-				register float qu = d3.x*yy - d3.y*xx + dd + s;
-				register float qv = d3.y*xx - d3.x*yy + dd + s;
-				register float u = 2.f*(d2.y*xx - d2.x*yy)/qu;
-				register float v = 2.f*(d1.x*yy - d1.y*xx)/qv;
+				float qu = d3.x*yy - d3.y*xx + dd + s;
+				float qv = d3.y*xx - d3.x*yy + dd + s;
+				float u = 2.f*(d2.y*xx - d2.x*yy)/qu;
+				float v = 2.f*(d1.x*yy - d1.y*xx)/qv;
 				if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	// first root bad
 				{
 					qu = d3.x*yy - d3.y*xx + dd - s;
@@ -1058,15 +1058,15 @@ void mglCanvas::quad_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, con
 {
 	if(!visible(i,j,d->m, d->PenWidth,d->angle))	return;
 	mglPnt d1(p2-p1), d2(p3-p1), d3(p4+p1-p2-p3);
-	register float dd = d1.x*d2.y-d1.y*d2.x;
-	register float dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
-	register float dsy = 4*(d2.y*d3.x - d2.x*d3.y)*d1.x;
-	register float xx = (i-p1.x), yy = (j-p1.y), s;
+	float dd = d1.x*d2.y-d1.y*d2.x;
+	float dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
+	float dsy = 4*(d2.y*d3.x - d2.x*d3.y)*d1.x;
+	float xx = (i-p1.x), yy = (j-p1.y), s;
 	s = dsx*xx + dsy*yy + (dd+d3.y*xx-d3.x*yy)*(dd+d3.y*xx-d3.x*yy);
 	if(s<0)	return;	// no solution
 	s = sqrt(s);
-	register float qu = d3.x*yy - d3.y*xx + dd + s, u=-1;
-	register float qv = d3.y*xx - d3.x*yy + dd + s, v=-1;
+	float qu = d3.x*yy - d3.y*xx + dd + s, u=-1;
+	float qv = d3.y*xx - d3.x*yy + dd + s, v=-1;
 	if(qu && qv)
 	{
 		u = 2.f*(d2.y*xx - d2.x*yy)/qu;
@@ -1132,8 +1132,8 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	{
 		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
 		{
-			register float xx = (i-x0), yy = (j-y0);
-			register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
+			float xx = (i-x0), yy = (j-y0);
+			float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 			if(u<0 || v<0 || u+v>1)	continue;
 			mglPnt p(p1+d1*u+d2*v);
 			if(mgl_isnan(p.u) && mgl_isnum(p.v) && anorm)
@@ -1149,8 +1149,8 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 		{
 			if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
 			{
-				register float xx = (i-x0), yy = (j-y0);
-				register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
+				float xx = (i-x0), yy = (j-y0);
+				float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 				if(u<0 || v<0 || u+v>1)	continue;
 				pnt_plot(i,j,zz,r,oi);
 			}
@@ -1162,11 +1162,11 @@ void mglCanvas::trig_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, con
 {
 	if(!visible(i,j,d->m, d->PenWidth,d->angle))	return;
 	mglPnt d1(p2-p1), d2(p3-p1);
-	register float dd = d2.x*d1.y - d1.x*d2.y;
+	float dd = d2.x*d1.y - d1.x*d2.y;
 	if(fabs(dd)<1e-5)	return;		// points lies on the same line
-	register float dyv =-d1.x/dd, dxv = d1.y/dd, dyu = d2.x/dd, dxu =-d2.y/dd;
-	register float xx = (i-p1.x), yy = (j-p1.y);
-	register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
+	float dyv =-d1.x/dd, dxv = d1.y/dd, dyu = d2.x/dd, dxu =-d2.y/dd;
+	float xx = (i-p1.x), yy = (j-p1.y);
+	float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 	if(u<0 || v<0 || u+v>1)	return;
 	mglPnt p(p1+d1*u+d2*v);
 	if(mgl_isnan(p.u) && mgl_isnum(p.v) && anorm)
@@ -1213,8 +1213,8 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 		if(y1>y2)	continue;
 		for(long j=y1;j<=y2;j++)
 		{
-			register float xx = (i-p1.x), yy = (j-p1.y);
-			register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
+			float xx = (i-p1.x), yy = (j-p1.y);
+			float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
 			if(u<0)			v += u*u;
 			else if(u>dd)	v += (u-dd)*(u-dd);
 //			if(v>pw*pw)		continue;
@@ -1233,8 +1233,8 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 
 		for(long i=x1;i<=x2;i++)
 		{
-			register float xx = (i-p1.x), yy = (j-p1.y);
-			register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
+			float xx = (i-p1.x), yy = (j-p1.y);
+			float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
 			if(u<0)			v += u*u;
 			else if(u>dd)	v += (u-dd)*(u-dd);
 //			if(v>pw*pw)		continue;
@@ -1248,7 +1248,7 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_fast(long x,long y,mreal z,const unsigned char ci[4], int obj_id)
 {
-	register long i0=x+Width*(Height-1-y);
+	long i0=x+Width*(Height-1-y);
 	if(ci[3]!=0 && z>Z[3*i0])	// point upper the background
 	{	Z[3*i0]=z;	memcpy(C+12*i0,ci,4);	OI[i0]=obj_id;	}
 }
@@ -1272,13 +1272,13 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 
 	if(hor)	for(long i=x1;i<=x2;i++)
 	{
-		register long c = long(p1.y+d.y*(i-p1.x)/d.x);
+		long c = long(p1.y+d.y*(i-p1.x)/d.x);
 		if(c>=y1 && c<=y2)
 			pnt_fast(i, c, p1.z+d.z*(i-p1.x)/d.x+dz, r,oi);
 	}
 	else	for(long i=y1;i<=y2;i++)
 	{
-		register long c = long(p1.x+d.x*(i-p1.y)/d.y);
+		long c = long(p1.x+d.x*(i-p1.y)/d.y);
 		if(c>=x1 && c<=x2)
 			pnt_fast(c, i, p1.z+d.z*(i-p1.y)/d.y+dz, r,oi);
 	}
@@ -1286,21 +1286,21 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 //-----------------------------------------------------------------------------
 void mglCanvas::line_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)
 {
-	register float xx = (i-p1.x), yy = (j-p1.y);
+	float xx = (i-p1.x), yy = (j-p1.y);
 	mglPnt d(p2-p1);
-	register float dd = hypot(d.x, d.y);
-	register float dxv = d.y/dd, dyv =-d.x/dd, dxu = d.x/dd, dyu = d.y/dd;
-	register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
+	float dd = hypot(d.x, d.y);
+	float dxv = d.y/dd, dyv =-d.x/dd, dxu = d.x/dd, dyu = d.y/dd;
+	float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
 	if(u<0)			v += u*u;
 	else if(u>dd)	v += (u-dd)*(u-dd);
-	register float pw=dr->PenWidth, dpw=3*pen_delta;
+	float pw=dr->PenWidth, dpw=3*pen_delta;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2*pen_delta;	}
 	if(v>pw*pw || !(dr->PDef & ( (uint64_t)1<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	return;
 	mglPnt p(p1+d*(u/dd));
 	unsigned char r[4];
 	col2int(p,r,dr->ObjId);
 	r[3] = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
-	register float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
+	float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 	pnt_plot(i,j,p.z+dz,r,dr->ObjId);
 }
 //-----------------------------------------------------------------------------
@@ -1317,13 +1317,13 @@ void mglCanvas::pnt_draw(const mglPnt &p, const mglDrawReg *dr)
 	const long j1=mgl_max(-s,dr->y1-p.y),j2=mgl_min(s,dr->y2-p.y);
 	if(!(Quality&3))	for(long j=j1;j<=j2;j++)	for(long i=i1;i<=i2;i++)	// fast draw
 	{
-		register float v = i*i+j*j;
+		float v = i*i+j*j;
 		if(v>1+(pw-1)*(pw-1)/4)	continue;
 		pnt_plot(p.x+i,p.y+j,p.z,cs,oi);
 	}
 	else	for(long j=j1;j<=j2;j++)	for(long i=i1;i<=i2;i++)
 	{
-		register float v = i*i+j*j;
+		float v = i*i+j*j;
 		cs[3] = v<(pw-1)*(pw-1)/4 ? cc : mgl_sline(cc,dpw*(sqrt(v)+(1-pw)/2));
 		pnt_plot(p.x+i,p.y+j,p.z,cs,oi);
 	}
@@ -1331,11 +1331,11 @@ void mglCanvas::pnt_draw(const mglPnt &p, const mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_pix(long i, long j, const mglPnt &p, const mglDrawReg *dr)
 {
-	register float pw=3*dr->PenWidth,dpw=3*pen_delta;
+	float pw=3*dr->PenWidth,dpw=3*pen_delta;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2*pen_delta;	}
 	unsigned char cs[4];
 	col2int(p,cs,dr->ObjId);
-	register float xx = (i-p.x), yy = (j-p.y), v = xx*xx+yy*yy;
+	float xx = (i-p.x), yy = (j-p.y), v = xx*xx+yy*yy;
 	if(cs[3]==0 || v>(10/dpw+pw)*(10/dpw+pw))	return;
 	if(v<(pw-1)*(pw-1)/4)	cs[3] = mgl_sline(cs[3],dpw*(sqrt(v)+(1-pw)/2));
 	pnt_plot(i,j,p.z,cs,dr->ObjId);
@@ -1354,7 +1354,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		if(d)	PW = 3*(ss?ss:sqrt(font_factor/400));
 		if(oi==HighId)	PW *= 2;
 		const mreal pw = PW;
-		register mreal dd = pw+10/dpw;
+		mreal dd = pw+10/dpw;
 		long x1 = long(q.x-dd), y1 = long(q.y-dd);	// bounding box
 		long x2 = long(q.x+dd), y2 = long(q.y+dd);
 		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
@@ -1364,8 +1364,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 
 		for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 		{
-			register float dx=i-q.x, dy=j-q.y, v=dx*dx+dy*dy;
-			register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
+			float dx=i-q.x, dy=j-q.y, v=dx*dx+dy*dy;
+			int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 			cs[3] = ca*sum/255;
 			pnt_plot(i,j,q.z+1,cs,oi);
 		}
@@ -1381,7 +1381,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		if(oi==HighId)	PW *= 2;
 		const mreal pw = PW;
 
-		register mreal dd = ss+pw+10/dpw;
+		mreal dd = ss+pw+10/dpw;
 		long x1 = long(q.x-dd), y1 = long(q.y-dd);	// bounding box
 		long x2 = long(q.x+dd), y2 = long(q.y+dd);
 		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
@@ -1394,8 +1394,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'P':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
@@ -1415,8 +1415,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case '+':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dy)-ss;	v = dx*dx+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = dy*dy+(u<0?0:u*u);
@@ -1428,8 +1428,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'X':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
@@ -1451,8 +1451,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'x':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dx+dy)-2*ss;	v = dx-dy;	v = v*v+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx-dy)-2*ss;	v = dx+dy;	v = v*v+(u<0?0:u*u);
@@ -1464,10 +1464,10 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'S':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
+				float dx=i-q.x, dy=j-q.y, v,u;
 				u = fabs(dy)-ss;	if(u<0)	u=0;
 				v = fabs(dx)-ss;	if(v<0)	v=0;	v = u*u+v*v;
-				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
+				int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1475,8 +1475,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 's':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
@@ -1492,10 +1492,10 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'D':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
+				float dx=i-q.x, dy=j-q.y, v,u;
 				u = fabs(dx-dy)-ss;	if(u<0)	u=0;
 				v = fabs(dx+dy)-ss;	if(v<0)	v=0;	v = u*u+v*v;
-				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
+				int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1503,8 +1503,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'd':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dx+dy)-ss;	v = (dx-dy-ss)*(dx-dy-ss)+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx+dy)-ss;	v = (dx-dy+ss)*(dx-dy+ss)+(u<0?0:u*u);
@@ -1520,8 +1520,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'Y':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dy+ss/2)-ss/2;	v = dx*dx+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.87*dx+0.5*dy-ss/2)-ss/2;	v = (0.5*dx-0.87*dy)*(0.5*dx-0.87*dy)+(u<0?0:u*u);
@@ -1535,8 +1535,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case '*':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dy)-ss;	v = dx*dx+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.87*dx+0.5*dy)-ss;	v = (0.5*dx-0.87*dy)*(0.5*dx-0.87*dy)+(u<0?0:u*u);
@@ -1550,12 +1550,12 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'T':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
+				float dx=i-q.x, dy=j-q.y, v,u;
 				u=dy/1.5+ss/3;	v=(dx+ss-u)/2;
 				if(u>0 && v>0 && u+v<ss)	cs[3]=ca;
 				else
 				{
-					register int sum=0;
+					int sum=0;
 					u = fabs(dx)-ss;	v = dy+ss/2;	v = v*v+(u<0?0:u*u);
 					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
@@ -1570,8 +1570,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case '^':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dx)-ss;	v = dy+ss/2;	v = v*v+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
@@ -1585,12 +1585,12 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'V':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
+				float dx=i-q.x, dy=j-q.y, v,u;
 				u=-dy/1.5+ss/3;	v=(dx+ss-u)/2;
 				if(u>0 && v>0 && u+v<ss)	cs[3]=ca;
 				else
 				{
-					register int sum=0;
+					int sum=0;
 					u = fabs(dx)-ss;	v = dy-ss/2;	v = v*v+(u<0?0:u*u);
 					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
@@ -1605,8 +1605,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'v':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dx)-ss;	v = dy-ss/2;	v = v*v+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
@@ -1620,12 +1620,12 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'L':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
+				float dx=i-q.x, dy=j-q.y, v,u;
 				u=-dx/1.5+ss/3;	v=(dy+ss-u)/2;
 				if(u>0 && v>0 && u+v<ss)	cs[3]=ca;
 				else
 				{
-					register int sum=0;
+					int sum=0;
 					u = fabs(dy)-ss;	v = dx-ss/2;	v = v*v+(u<0?0:u*u);
 					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
@@ -1640,8 +1640,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case '<':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dy)-ss;	v = dx-ss/2;	v = v*v+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
@@ -1655,12 +1655,12 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'R':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
+				float dx=i-q.x, dy=j-q.y, v,u;
 				u=dx/1.5+ss/3;	v=(dy+ss-u)/2;
 				if(u>0 && v>0 && u+v<ss)	cs[3]=ca;
 				else
 				{
-					register int sum=0;
+					int sum=0;
 					u = fabs(dy)-ss;	v = dx+ss/2;	v = v*v+(u<0?0:u*u);
 					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
@@ -1675,8 +1675,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case '>':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v,u;
-				register int sum=0;
+				float dx=i-q.x, dy=j-q.y, v,u;
+				int sum=0;
 				u = fabs(dy)-ss;	v = dx+ss/2;	v = v*v+(u<0?0:u*u);
 				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
@@ -1690,9 +1690,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'O':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v;
+				float dx=i-q.x, dy=j-q.y, v;
 				v = hypot(dx,dy)-ss;	v=v<0?0:v*v;
-				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
+				int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1700,9 +1700,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'o':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v;
+				float dx=i-q.x, dy=j-q.y, v;
 				v = hypot(dx,dy)-ss;	v=v*v;
-				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
+				int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1710,9 +1710,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		case 'C':
 			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register float dx=i-q.x, dy=j-q.y, v;
+				float dx=i-q.x, dy=j-q.y, v;
 				v = hypot(dx,dy)-ss;	v=v*v;
-				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
+				int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				v = dx*dx+dy*dy;
 				sum += v<(2*pw-1)*(2*pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-2*pw)/2));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
@@ -1842,30 +1842,30 @@ void mglCanvas::mark_pix(long i, long j, const mglPnt &q, char type, mreal size,
 			line_pix(i,j,p2,p0,d);	break;
 		case 'O':
 			{
-				register float xx = (i-q.x), yy = (j-q.y);
-				register float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
+				float xx = (i-q.x), yy = (j-q.y);
+				float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 				if(xx*xx+yy*yy<ss*ss)	pnt_plot(i,j,q.z+dz,cs,d->ObjId);
 			}
 		case 'o':
 			{
-				register float pw=d->PenWidth;
-				register float xx = (i-q.x), yy = (j-q.y), v = hypot(xx,yy);
+				float pw=d->PenWidth;
+				float xx = (i-q.x), yy = (j-q.y), v = hypot(xx,yy);
 				v = (v-ss)*(v-ss);
 //				if(v>pw*pw)	return;
 				if(v>(pw-1)*(pw-1)/4)	cs[3] = mgl_sline(cs[3],2*(sqrt(v)+(1-pw)/2));
-				register float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
+				float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 				pnt_plot(i,j,q.z+dz,cs,d->ObjId);
 			}
 			break;
 		case 'C':
 			pnt_pix(i,j,q,d);
 			{
-				register float pw=d->PenWidth;
-				register float xx = (i-q.x), yy = (j-q.y), v = hypot(xx,yy);
+				float pw=d->PenWidth;
+				float xx = (i-q.x), yy = (j-q.y), v = hypot(xx,yy);
 				v = (v-ss)*(v-ss);
 //				if(v>pw*pw)	return;
 				if(v>(pw-1)*(pw-1)/4)	cs[3] = mgl_sline(cs[3],2*(sqrt(v)+(1-pw)/2));
-				register float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
+				float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 				pnt_plot(i,j,q.z+dz,cs,d->ObjId);
 			}
 			break;
@@ -1885,8 +1885,8 @@ float mglCanvas::GetGlyphPhi(const mglPnt &q, float phi)
 		y = Bp.b[3]*q.u + Bp.b[4]*q.v + Bp.b[5]*q.w;
 		z = Bp.b[6]*q.u + Bp.b[7]*q.v + Bp.b[8]*q.w;
 
-		register float dv= get_persp(Bp.pf,q.z,Depth);
-		register float c = get_pfact(Bp.pf,Depth);
+		float dv= get_persp(Bp.pf,q.z,Depth);
+		float c = get_pfact(Bp.pf,Depth);
 		x += (q.x-Width/2)*z*c*dv;
 		y += (q.y-Height/2)*z*c*dv;
 	}
@@ -1938,7 +1938,7 @@ void mglCanvas::glyph_fill(const mglMatrix *M, const mglPnt &pp, mreal f, const 
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=NAN;
 	for(long ik=0;ik<g.nt;ik++)
 	{
-		register long ii = 6*ik;	mglPoint p;
+		long ii = 6*ik;	mglPoint p;
 		p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
 		PostScale(M,p);	q0.x = p.x;	q0.y = p.y;	q0.z = p.z;
 		ii+=2;	p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
@@ -1957,7 +1957,7 @@ void mglCanvas::glyph_wire(const mglMatrix *M, const mglPnt &pp, mreal f, const 
 	mglPoint p1,p2;
 	for(long ik=0;ik<g.nl;ik++)
 	{
-		register long ii = 2*ik;
+		long ii = 2*ik;
 		if(g.line[ii]==0x3fff && g.line[ii+1]==0x3fff)	// line breakthrough
 		{	il = ik+1;	continue;	}
 		else if(ik==g.nl-1 || (g.line[ii+2]==0x3fff && g.line[ii+3]==0x3fff))
@@ -2037,7 +2037,7 @@ void mglCanvas::glyph_fpix(long i, long j, const mglMatrix *M, const mglPnt &pp,
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=NAN;
 	for(long ik=0;ik<g.nt;ik++)
 	{
-		register long ii = 6*ik;	mglPoint p;
+		long ii = 6*ik;	mglPoint p;
 		p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
 		PostScale(M,p);	q0.x = p.x;	q0.y = p.y;	q0.z = p.z;
 		ii+=2;	p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
@@ -2056,7 +2056,7 @@ void mglCanvas::glyph_wpix(long i, long j, const mglMatrix *M, const mglPnt &pp,
 	mglPoint p1,p2;
 	for(long ik=0;ik<g.nl;ik++)
 	{
-		register long ii = 2*ik;
+		long ii = 2*ik;
 		if(g.line[ii]==0x3fff && g.line[ii+1]==0x3fff)	// line breakthrough
 		{	il = ik+1;	continue;	}
 		else if(ik==g.nl-1 || (g.line[ii+2]==0x3fff && g.line[ii+3]==0x3fff))
@@ -2219,10 +2219,9 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st, float ll)
 		case 'O':	// let draw icosahedron
 		{
 			const int n = 12, m = n/2;	Reserve(n*m);
-			register long i,j;
 			long *nn=new long[2*n], n1=setPp(q,p0+kl), n2=setPp(q,p0-kl);
 			mreal u,v,rr;
-			for(i=0;i<m;i++)	for(j=0;j<n;j++)
+			for(long i=0;i<m;i++)	for(long j=0;j<n;j++)
 			{
 				if(i>0 && i<m-1)
 				{
