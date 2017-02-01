@@ -76,7 +76,7 @@ struct mglFunc
 	mglFunc(const mglFunc &f):pos(f.pos),narg(f.narg),func(f.func)	{}
 	mglFunc():pos(-1),narg(-1)	{}
 	const mglFunc &operator=(const mglFunc &f)
-	{	pos=f.pos;	narg=f.narg;	func=f.func;	}
+	{	pos=f.pos;	narg=f.narg;	func=f.func;	return f;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for stack of functions and its arguments.

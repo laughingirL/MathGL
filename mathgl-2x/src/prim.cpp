@@ -1119,7 +1119,7 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(!g)	return;
 	mreal res=gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Iris",cgid++);
-	std::wstring strs[m];
+	std::wstring *strs = new std::wstring[m];
 	bool label = ids && ids[0];	// disable axis drawing
 	if(label)
 	{
@@ -1142,7 +1142,7 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 	for(long i=0;i<m;i++)	dat[i]=mgl_data_subdata(dats,i,-1,-1);
 	for(long i=0;i<m;i++)	for(long j=0;j<m;j++)
 	{
-		g->InPlot(dx*i,dx*(i+1),dx*(m-j-1),dx*(m-j),true);	
+		g->InPlot(dx*i,dx*(i+1),dx*(m-j-1),dx*(m-j),true);
 		if(label)	g->Box();
 		gr->SetRanges(ranges->v(0,i),ranges->v(1,i),ranges->v(0,j),ranges->v(1,j));
 		gr->ResetPal();
@@ -1164,6 +1164,7 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 			g->InPlot(1-dx,1,dx*i,dx*(i+1),true);	g->Axis("y^");
 		}
 	}
+	delete []strs;
 	for(long i=0;i<m;i++)	delete dat[i];
 	g->InPlot(0,1,0,1,true);	gr->EndGroup();
 }

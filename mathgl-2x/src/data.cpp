@@ -2176,7 +2176,7 @@ mreal MGL_NO_EXPORT mgl_find_pnt(std::vector<mreal> &mpos, mreal est, mreal dj)
 HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj, mreal di, mreal min_len)
 {
 	long nx=d->GetNx(), ny=d->GetNy();
-	std::vector<mreal> max_pos[d->GetNx()];
+	std::vector<mreal> *max_pos = new std::vector<mreal>[nx];
 	if(di<=0)	di=dj;
 	for(long i=0;i<nx;i++)	// first collect maximums for each i
 	{
@@ -2243,7 +2243,7 @@ HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj, mreal di, mreal min
 	HMDT res = new mglData(2,nn);
 	for(size_t k=0;k<nn;k++)
 	{	res->a[2*k] = curv[k].x;	res->a[2*k+1] = curv[k].y;	}
-	return res;
+	delete []max_pos;	return res;
 }
 uintptr_t MGL_EXPORT mgl_data_detect_(uintptr_t *d, mreal *lvl, mreal *dj, mreal *di, mreal *min_len)
 {	return uintptr_t(mgl_data_detect(_DT_,*lvl,*dj, *di, *min_len));	}
