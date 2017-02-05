@@ -239,7 +239,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 	}
 	if(d==0)	// try to select optimal step
 	{
-		// TODO add subticks for drawing
+		// TODO add subticks for drawing date/time ticks
 		if(abs(t1.tm_year-t2.tm_year)>1)
 			d = 365.25*24*3600*mgl_adj_val(abs(t1.tm_year-t2.tm_year));	// number of second in year NOTE: improve it
 		// NOTE here should be months ... but it is too unregular ... so omit it now

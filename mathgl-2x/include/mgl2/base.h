@@ -617,8 +617,8 @@ protected:
 	mreal pPos;			///< Current position in pen mask
 	mreal PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
 //	long numT;			///< Number of textures
-	mreal AmbBr;		///< Default ambient light brightness	// TODO move to mglBlock
-	mreal DifBr;		///< Default diffusive light brightness	// TODO move to mglBlock
+	mreal AmbBr;		///< Default ambient light brightness
+	mreal DifBr;		///< Default diffusive light brightness
 
 	mreal persp;		///< Original value for perspective
 	mglMatrix Bp;		///< Transformation matrix for View() and Zoom()

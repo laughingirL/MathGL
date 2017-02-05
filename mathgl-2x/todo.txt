@@ -3,6 +3,7 @@
 ============= FAR FUTURE ================
 
 1. Export to COLLADA or X3D !!!
+2. Use mglDataV in 'var' ?!?
 
 3. Contour lines for bilinear interpolation (strong saddle-like faces)
 4. 3D text (with depth), and text along 3D curve (for Quality=3) ???
@@ -33,7 +34,10 @@ int DefineGlyph(const mglData &x, const mglData &y);
 void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl);
 5. Simplified triangle filling for Quality=1 ?!?
 
+6. Parse arguments of options
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
+8. Add subticks for drawing date/time ticks
+9. Add mgl_datac_diff_par ???
 
 11. Add 'erode Dat lvl [step=1]' and 'dilate Dat lvl [step=1]' as binary masks
 

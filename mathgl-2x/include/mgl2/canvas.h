@@ -373,7 +373,7 @@ protected:
 	int Depth;			///< Depth of the image
 	mreal inW, inH;		///< Width and height of last InPlot
 	mreal inX, inY;		///< Coordinates of last InPlot
-	mglLight light[10];	///< Light sources	// TODO move to mglBlock
+	mglLight light[10];	///< Light sources
 	mreal FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	mreal FogDz;		///< Relative shift of fog
 
