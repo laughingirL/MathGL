@@ -818,6 +818,9 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4], int ob
 		unsigned char *cc = C+12*i0, c[4];
 		memcpy(c,ci,4);
 		float *zz = Z+3*i0, zf = FogDist*(z/Depth-0.5-FogDz);
+		// try to remove double transparency near vertexes
+		if(fabs(z-zz[0])<1 && OI[i0]==obj_id && abs(cc[0]-ci[0])+abs(cc[1]-ci[1])+abs(cc[2]-ci[2])<5)
+		{	if(cc[3]<ci[3])	memcpy(cc,c,4);	return;	}
 		if(zf<0)	// add fog
 		{
 			int d = int(255.f-255.f*exp(5.f*zf));
@@ -1906,7 +1909,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
 	if(mgl_isnan(phi))	return;
 
-	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=0.6;	}
+	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=(P.n3&4)?1:0.6;	}
 	mglPnt p=Pnt[P.n1];
 	// NOTE check this later for mglInPlot
 	mreal fact = get_persp(Bp.pf,p.z,Depth);

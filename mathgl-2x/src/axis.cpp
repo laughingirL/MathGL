@@ -47,7 +47,7 @@ void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 	size_t n=mgl_wcslen(str), k, i;
 	for(k=0;k<n;k++)	if(str[k]>' ')	break;
 	for(i=n;i>k;i--)	if(str[i-1]>' ')	break;
-	memmove(str, str+k, (i-k)*sizeof(wchar_t));
+	for(size_t j=0;j<i-k;j++)	str[j]=str[j+k];
 	str[i-k]=0;
 }
 //-----------------------------------------------------------------------------

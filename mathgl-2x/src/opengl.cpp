@@ -135,8 +135,8 @@ void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, mreal br,mreal a
 	glLightfv(GL_LIGHT0+n, GL_POSITION, pos);
 	if(!inf)
 	{
-		glLightfv(GL_LIGHT0+n, GL_SPOT_DIRECTION, dir);
-		glLightf(GL_LIGHT0+n, GL_SPOT_CUTOFF, ap);
+//		glLightfv(GL_LIGHT0+n, GL_SPOT_DIRECTION, dir);
+//		glLightf(GL_LIGHT0+n, GL_SPOT_CUTOFF, ap);
 	}
 	glEnable(GL_LIGHT0+n);
 }
@@ -216,7 +216,6 @@ void mglCanvasGL::gl_clf(mglColor Back)
 	if(Back==NC)	Back = WC;
 //	glDepthFunc(GL_LESS);
 	glDepthFunc(GL_GREATER);
-//	back[0]=Back.r;	back[1]=Back.g;	back[2]=Back.b;
 	glClearColor(Back.r,Back.g,Back.b,1.);
 	glClearDepth(-10.);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -224,14 +223,14 @@ void mglCanvasGL::gl_clf(mglColor Back)
 
 	glMatrixMode(GL_MODELVIEW);//GL_MODELVIEW GL_VIEWPORT GL_PROJECTION
 	glLoadIdentity();
-// 	glScaled(1.5,1.5,1.5);
-// 	glTranslated(-0.5,-0.5,-0.5);
 	glScaled(2,2,2);
 	glTranslated(-0.5,-0.5,-0.5);
 
-// 	float dif[4]={DifBr,DifBr,DifBr,1}, spc[4]={1,1,1,1};
-// 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);
-// 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spc);
+//	float dif[4]={DifBr,DifBr,DifBr,1};
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);
+	float spc[4]={1,1,1,1};
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spc);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, DifBr);
 }
 //-----------------------------------------------------------------------------
 /*void mglCanvasGL::EndFrame()

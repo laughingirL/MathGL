@@ -42,7 +42,8 @@ void MainWindow::initializeGL()
 void MainWindow::paintGL()
 {
 	gr->Clf();
-	gr->Rotate(40,5);
+	gr->SubPlot(1,1,0);
+	gr->Rotate(40,60);
 	gr->Light(true);
 	gr->AddLight(0,mglPoint(0,0,10),mglPoint(0,0,-1));
 	gr->Axis();

@@ -2,13 +2,12 @@
 
 ============= FAR FUTURE ================
 
-1. GTK window/widgets ???
-2. Export to COLLADA !!!
-3. Export to X3D !!!
+1. Export to COLLADA or X3D !!!
+
+3. Contour lines for bilinear interpolation (strong saddle-like faces)
 4. 3D text (with depth), and text along 3D curve (for Quality=3) ???
 5. Get true coordinates in CalcXYZ for curved equations too.
-
-6. Extra markers for '&' and '&#' signs ?!?
+6. Extra markers for '&' and '&#' signs ?!? or user-defined signs
 
 8. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 
@@ -18,10 +17,8 @@
 	A. мысли о frame??? для группы графиков -- не "удалять" их, а запихивать в отдельный кадр -- вопрос что с анимацией???
 	B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
 
-11. Simplified triangle filling for Quality=1 ?!?
-12. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
-13. \overline{\overline{a}} ???
-14. Strange tick labels with extra rotation near axis ???
+11. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
+12. \overline{\overline{a}} ???
 
 
 ============= NEW FEATURES =============
@@ -34,17 +31,15 @@
 4. Alternative algorithm for filled glyphs + user-defined glyphs.
 int DefineGlyph(const mglData &x, const mglData &y);
 void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl);
-
-5. Check lighting in OpenGL mode
-
-6. Check gray half-tone around glyphs (see text sample)
+5. Simplified triangle filling for Quality=1 ?!?
 
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
-8. Contour lines for bilinear interpolation (strong saddle-like faces)
 
 11. Add 'erode Dat lvl [step=1]' and 'dilate Dat lvl [step=1]' as binary masks
 
 13. "readhdf 'fname.hdf'" -- to read ALL data
+14. Read MAT files ?!!
+15. Read WFM files ?!!
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -76,10 +71,11 @@ D. Docs about JS interface
 14. Docs about new style "F" for bars,barh
 15. Docs about 'bbox'
 16. Docs about string manipulation:
-* 'str'[n] -- get string of only n-th symbol
-* 'str'+v -- add value v to the last character of the string.
-* 'str',val || 'str',!val -- append numeric value to the string (as before)
+	* 'str'[n] -- get string of only n-th symbol
+	* 'str'+v -- add value v to the last character of the string.
+	* 'str',val || 'str',!val -- append numeric value to the string (as before)
 17. Docs and sample about 'section'. Sample of several 'join'-ed curves.
+18. Docs about \dfrac -- full-sized \frac, but without nesting
 
 ============= UDAV =============
 
@@ -104,9 +100,8 @@ D. Docs about JS interface
 
 ============= UNSURE ===========
 
-1. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
+1. GTK window/widgets ???
 2. "Cut off" curves if text is printed inside it (for contour labels) ?!?
-3. String variables in MGL + readstr command.
 4. Read DICOM files
 5. Check RunThr() in python/octave
 6. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").

@@ -258,6 +258,7 @@ unsigned mglFont::Parse(const wchar_t *s) const
 	else if(!wcscmp(s,L"sub"))		res = unsigned(-12);
 	else if(!wcscmp(s,L"sup"))		res = unsigned(-13);
 	else if(!wcscmp(s,L"textsc"))	res = unsigned(-14);	// new
+	else if(!wcscmp(s,L"dfrac"))	res = unsigned(-15);
 	else if(!wcscmp(s,L"b"))		res = MGL_FONT_BOLD;
 	else if(!wcscmp(s,L"i"))		res = MGL_FONT_ITAL;
 	else if(!wcscmp(s,L"bi"))		res = MGL_FONT_BOLD|MGL_FONT_ITAL;
@@ -468,7 +469,19 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
 			Puts(b1, x+(ww-w1)/2, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b2, x+(ww-w2)/2, yy-60*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			if(gr && !(style&0x10))	// add under-/over- line now
+			{
+				draw_ouline(st,x,y,f,fact[a],ww,ccol);
+				gr->Glyph(x,y+150*f/fact[a], ww*fact[a], (st&MGL_FONT_WIRE)?12:8, 0, ccol);
+			}
+			MGL_CLEAR_STYLE
+		}
+		else if(s==unsigned(-15))	// dfrac
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff, st);
+			Puts(b1, x+(ww-w1)/2, yy+315*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b2, x+(ww-w2)/2, yy-315*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 			{
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);

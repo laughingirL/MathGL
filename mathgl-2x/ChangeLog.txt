@@ -1,8 +1,31 @@
-2.3.6 Released ??? 
+2.3.6 Released ??? March 2017
 
-* Add mglODEc() -- ODE solver for complex variables
+* Add string manipulation in MGL language:
+	o 'str'[n] -- get string of only n-th symbol
+	o 'str'+v -- add value v to the last character of the string.
+	o 'str',val || 'str',!val -- append numeric value to the string (as before)
+* Add 'iris' plot to show cross-dependencies of several data arrays.
+* Add 'flame2d' to draw flame fractals.
+* Add 'bbox' to set bounding box for 2D output.
+* Add 'section' to get part of data between specified values.
+* Add 'detect' to found curves along data maximums.
+* Add 'apde' to solve PDE equation in inhomogeneous nonlinear media with spatial dispersion.
+* Add style 'F' for 'bars' and 'barh' to set fixed bar widths.
+* Add possibility of manual shift in 'multiplot'.
+* Function 'step' handle data with x.nx>y.nx similarly to 'bars'.
+* Extend 'tile' and 'tiles' by adding manual coloring and face orientation.
+* Add variant of MGL command 'copy' to copy data with "incorrect" names.
+* Improve tick labels drawing.
+* Improve 'fplot' to handle several singularities.
+* Add LaTeX command \dfrac{}{}. This is full-sized version of \frac{}{}. Unfortunately, there is no support of nesting (i.e. \dfrac{\dfrac{}{}}{} not working). Contrary, \frac{}{} allow nesting.
+* Add mglODEc() -- ODE solver for complex variables.
+* Update CMake find_package to find MathGL.
+* Increase line width for wired text.
+* INCOMPATIBLE: Replace libmgl-qt by libmgl-qt4 and libmgl-qt5 for resolving conflicts of simultaneously installed both Qt4 and Qt5.
+* Minor bugfixes.
 
-2.3.5.1 Released 20 June
+
+2.3.5.1 Released 20 June 2016
 
 * INCOMPATIBLE: library libmgl-qt is removed. You need to use libmgl-qt4 or libmgl-qt5 explicitly now.
 * Compatibility changes for latest MS VisualStudio.
