@@ -36,7 +36,6 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 
 6. Parse arguments of options
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
-8. Add subticks for drawing date/time ticks
 9. Add mgl_datac_diff_par ???
 
 11. Add 'erode Dat lvl [step=1]' and 'dilate Dat lvl [step=1]' as binary masks
@@ -81,6 +80,7 @@ D. Docs about JS interface
 17. Docs and sample about 'section'. Sample of several 'join'-ed curves.
 18. Docs about \dfrac -- full-sized \frac, but without nesting
 19. Docs about .m[xyz][lf] and mgl_data_max_first()
+20. Docs about time values in MGL: "hh-mm-ss_DD.MM.YYYY" or "hh-mm-ss" or "DD.MM.YYYY".
 
 ============= UDAV =============
 

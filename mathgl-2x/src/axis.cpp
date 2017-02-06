@@ -237,26 +237,32 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 		t = abs(t1.tm_yday-t2.tm_yday)>1 ? "%x" : "%X";
 		if(abs(t1.tm_year-t2.tm_year)>3)	t = "%Y";
 	}
+	mreal ds=0;
 	if(d==0)	// try to select optimal step
 	{
-		// TODO add subticks for drawing date/time ticks
-		if(abs(t1.tm_year-t2.tm_year)>1)
-			d = 365.25*24*3600*mgl_adj_val(abs(t1.tm_year-t2.tm_year));	// number of second in year NOTE: improve it
+		if(abs(t1.tm_year-t2.tm_year)>1)	// number of second in year NOTE: improve it
+		{	d = 365.25*24*3600*mgl_adj_val(abs(t1.tm_year-t2.tm_year),&ds);
+			ds *= 365.25*24*3600;	}
 		// NOTE here should be months ... but it is too unregular ... so omit it now
 // 		else if(t1.tm_mon!=t2.tm_mon)	d = 30*24*3600;	// number of second in month
+		else if(abs(t1.tm_yday-t2.tm_yday)>=14)	// number of second in week 
+		{	d = mgl_adj_val(abs(t1.tm_yday-t2.tm_yday)/7,&ds);
+			if(ds<1)	ds=1./7;	if(d<1)	d=1;	d *= 7*24*3600;	ds *= 7*24*3600;	}
 		else if(abs(t1.tm_yday-t2.tm_yday)>1)	// localtime("%x") cannot print time < 1 day
-		{	d = 24*3600.*mgl_adj_val(abs(t1.tm_yday-t2.tm_yday));	d = d>24*3600?d:24*3600;	}
+		{	d = 24*3600.*mgl_adj_val(abs(t1.tm_yday-t2.tm_yday),&ds);
+			ds *= 24*3600;	if(d<24*3600)	{	d=24*3600;	ds=d/2;}	}
 		else if(abs(t1.tm_hour-t2.tm_hour)>1)
-			d = 3600.*mgl_adj_val(abs(t1.tm_hour-t2.tm_hour));
+		{	d = 3600.*mgl_adj_val(abs(t1.tm_hour-t2.tm_hour),&ds);	ds *=3600;	}
 		else if(abs(t1.tm_min-t2.tm_min)>1)
-			d = 60*mgl_adj_val(abs(t1.tm_min-t2.tm_min));
+		{	d = 60*mgl_adj_val(abs(t1.tm_min-t2.tm_min),&ds);	ds *=60;	}
 		else if(abs(t1.tm_sec-t2.tm_sec)>1)	// localtime("%X") cannot print time < 1 sec
-		{	d = mgl_adj_val(abs(t1.tm_sec-t2.tm_sec));	d = d>1?d:1;	}
+		{	d = mgl_adj_val(abs(t1.tm_sec-t2.tm_sec),&ds);
+			if(d<1)	{	d=1;	ds=0.5;}	}
 		else	// adjust msec. NOTE: this is not supported by localtime() !!!
-			d = mgl_adj_val(fabs(aa.v2-aa.v1));
+			d = mgl_adj_val(fabs(aa.v2-aa.v1),&ds);
 	}
 
-	aa.ds = 0;	aa.dv = d;	aa.f = 1;	aa.txt.clear();
+	aa.ds = ds;	aa.dv = d;	aa.f = 1;	aa.txt.clear();
 	MGL_TO_WCS(t,aa.t=wcs);
 
 	if(strchr("xyztuvw",aa.ch))

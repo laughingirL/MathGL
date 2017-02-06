@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include <time.h>
 #include <ctype.h>
+#include <wchar.h>
 #include "mgl2/base.h"
 #include "mgl2/parser.h"
 #if MGL_HAVE_GSL
@@ -325,6 +326,28 @@ void MGL_EXPORT mgl_wcslwr(wchar_t *str)
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
 }
 //-----------------------------------------------------------------------------
+mreal mgl_gettime(const std::wstring &s)
+{
+	mreal t=NAN;
+	tm a;	memset(&a,0,sizeof(tm));
+	if(swscanf(s.c_str(),L"%u-%u-%u_%u.%u.%d", &a.tm_hour,&a.tm_min,&a.tm_sec, &a.tm_mday,&a.tm_mon,&a.tm_year)==6)
+	{	a.tm_year-=1900;	a.tm_mon -= 1;
+		if(a.tm_hour<24 && a.tm_min<60 && a.tm_sec<60 && a.tm_mday>0 && a.tm_mday<32 && a.tm_mon<12)
+			t = mktime(&a);
+	}
+	else if(swscanf(s.c_str(),L"%d.%d.%d", &a.tm_mday,&a.tm_mon,&a.tm_year)==3)
+	{	a.tm_year-=1900;	a.tm_mon -= 1;
+		if(a.tm_mday>0 && a.tm_mday<32 && a.tm_mon<12)
+			t = mktime(&a);
+	}
+	else if(swscanf(s.c_str(),L"%d-%d-%d", &a.tm_hour,&a.tm_min,&a.tm_sec)==3)
+	{	a.tm_mday=1;	a.tm_mon=0;	a.tm_year=70;
+		if(a.tm_hour<24 && a.tm_min<60 && a.tm_sec<60)
+			t = mktime(&a);
+	}
+	return t;
+}
+//-----------------------------------------------------------------------------
 /// Parse string and substitute the script argument
 // All numbers are presented as mglData(1). Do boundary checking.
 // NOTE: In any case where number is required the mglData::a[0] is used.
@@ -336,6 +359,10 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 #endif
 	if(str.empty())	return new mglData;	// nothing to parse
 	str = mgl_trim_ws(str);
+	mreal tval = mgl_gettime(str);
+	if(mgl_isnum(tval))
+	{	mglData *r=new mglData;	r->a[0] = tval;	return r;	}
+
 	long n,len=str.length();
 	if(str[0]=='(' && mglCheck(str.substr(1,len-2)))	// remove braces
 	{	str = str.substr(1,len-2);	len-=2;	}
@@ -773,6 +800,10 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 #endif
 	if(str.empty())	return new mglDataC;	// nothing to parse
 	str = mgl_trim_ws(str);
+	mreal tval = mgl_gettime(str);
+	if(mgl_isnum(tval))
+	{	mglDataC *r=new mglDataC;	r->a[0] = tval;	return r;	}
+	
 	long n,len=str.length();
 	if(str[0]=='(' && mglCheck(str.substr(1,len-2)))	// remove braces
 	{	str = str.substr(1,len-2);	len-=2;	}

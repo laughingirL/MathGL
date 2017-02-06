@@ -1,9 +1,10 @@
 2.3.6 Released ??? March 2017
 
 * Add string manipulation in MGL language:
-	o 'str'[n] -- get string of only n-th symbol
-	o 'str'+v -- add value v to the last character of the string.
-	o 'str',val || 'str',!val -- append numeric value to the string (as before)
+	o 'str'[n] -- get string of only n-th symbol;
+	o 'str'+v -- add value v to the last character of the string;
+	o 'str',val || 'str',!val -- append numeric value to the string (as before).
+* Add time value to MGL language in format: "hh-mm-ss_DD.MM.YYYY" or "hh-mm-ss" or "DD.MM.YYYY".
 * Add 'iris' plot to show cross-dependencies of several data arrays.
 * Add 'flame2d' to draw flame fractals.
 * Add 'bbox' to set bounding box for 2D output.
@@ -17,6 +18,7 @@
 * Extend 'tile' and 'tiles' by adding manual coloring and face orientation.
 * Add variant of MGL command 'copy' to copy data with "incorrect" names.
 * Improve tick labels drawing.
+* Improve time-ticks (add weeks) and add subticks to its.
 * Improve 'fplot' to handle several singularities.
 * Add LaTeX command \dfrac{}{}. This is full-sized version of \frac{}{}. Unfortunately, there is no support of nesting (i.e. \dfrac{\dfrac{}{}}{} not working). Contrary, \frac{}{} allow nesting.
 * Add mglODEc() -- ODE solver for complex variables.
