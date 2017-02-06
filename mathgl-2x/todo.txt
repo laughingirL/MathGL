@@ -80,6 +80,7 @@ D. Docs about JS interface
 	* 'str',val || 'str',!val -- append numeric value to the string (as before)
 17. Docs and sample about 'section'. Sample of several 'join'-ed curves.
 18. Docs about \dfrac -- full-sized \frac, but without nesting
+19. Docs about .m[xyz][lf] and mgl_data_max_first()
 
 ============= UDAV =============
 

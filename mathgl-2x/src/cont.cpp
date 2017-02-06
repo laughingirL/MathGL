@@ -47,6 +47,9 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	mreal h=gr->TextHeight(font,size)/2;
 	wchar_t L[2]=L"a";
 
+	if(align==2)	// TODO divide curve by 2
+	{}
+
 	std::vector<mglPoint> qa, qb;	// curves above and below original
 	if(ff[f]<0)	for(long i=nn[f];i>=0 && i!=f;i=nn[i])	// find first real point
 		if(ff[i]>=0)	{	f=i;	break;	}

@@ -10,6 +10,7 @@
 * Add 'section' to get part of data between specified values.
 * Add 'detect' to found curves along data maximums.
 * Add 'apde' to solve PDE equation in inhomogeneous nonlinear media with spatial dispersion.
+* Add function mgl_data_max_first() and data suffix .m[xyz][fl] to find first/last maximum along direction.
 * Add style 'F' for 'bars' and 'barh' to set fixed bar widths.
 * Add possibility of manual shift in 'multiplot'.
 * Function 'step' handle data with x.nx>y.nx similarly to 'bars'.

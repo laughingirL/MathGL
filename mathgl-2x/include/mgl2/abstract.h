@@ -126,6 +126,9 @@ mreal MGL_EXPORT mgl_data_min_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z
 /// Get "energy and find 4 momenta of data: median, width, skewness, kurtosis
 mreal MGL_EXPORT mgl_data_momentum_val(HCDT d, char dir, mreal *m, mreal *w, mreal *s, mreal *k);
 mreal MGL_EXPORT mgl_data_momentum_val_(uintptr_t *dat, char *dir, mreal *m, mreal *w, mreal *s, mreal *k,int);
+/// Get first (last if from<0) maximum along direction dir, and save its orthogonal coordinates in p1, p2
+long MGL_EXPORT mgl_data_max_first(HCDT d, char dir, long from, long *p1, long *p2);
+long MGL_EXPORT mgl_data_max_first_(uintptr_t *d, const char *dir, long *from, long *p1, long *p2,int);
 
 /// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 mreal MGL_EXPORT mgl_data_linear(HCDT dat, mreal x,mreal y,mreal z);
@@ -224,6 +227,11 @@ public:
 	/// Get minimal value of the data and its approximated position
 	inline mreal Minimal(mreal &x,mreal &y,mreal &z) const
 	{	return mgl_data_min_real(this,&x,&y,&z);	}
+	/// Get first (last if from<0) maximum along direction dir, and save its orthogonal coordinates in p1, p2
+	inline long Maximal(char dir, long from, long &p1, long &p2) const
+	{	return mgl_data_max_first(this,dir,from,&p1,&p2);	}
+	inline long Maximal(char dir, long from) const
+	{	return mgl_data_max_first(this,dir,from,0,0);	}
 	/// Get "energy" and find first (median) and second (width) momenta of data
 	inline mreal Momentum(char dir,mreal &m,mreal &w) const
 	{	return mgl_data_momentum_val(this,dir,&m,&w,0,0);	}

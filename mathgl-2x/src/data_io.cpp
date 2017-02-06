@@ -665,6 +665,44 @@ mreal MGL_EXPORT mgl_data_min_int_(uintptr_t *d, int *i, int *j, int *k)
 {	long ii,jj,kk;	mreal res=mgl_data_min_int(_DT_,&ii,&jj,&kk);
 	*i=ii;	*j=jj;	*k=kk;	return res;	}
 //-----------------------------------------------------------------------------
+long MGL_EXPORT mgl_data_max_first(HCDT d, char dir, long from, long *p1, long *p2)
+{
+	long n=d->GetNx(), n1=d->GetNy(), n2=d->GetNz(), d1=n, d2=n*n1, dd=1;
+	if(dir=='y')	{	n=n1;	n1=dd=d1;	d1=1;	}
+	if(dir=='z')	{	n=n2;	n2=n1;	n1=d1;	d1=1;	dd=d2;	d2=n2;	}
+	bool find=false;
+	if(from>=0)
+	{
+		for(long i=from+1;i<n-1;i++)
+		{
+#pragma omp parallel for collapse(2)
+			for(long i1=0;i1<n1;i1++)	for(long i2=0;i2<n2;i2++)
+			{
+				long ii=i*dd+i1*d1+i2*d2;
+				if(d->vthr(ii)>=d->vthr(ii+dd) && d->vthr(ii)>=d->vthr(ii-dd))
+				{	find=true;	if(p1)	*p1=i1;	if(p2)	*p2=i2;	}
+			}
+			if(find)	return i;
+		}
+	}
+	else
+	{
+		for(long i=n+from-1;i>0;i--)
+		{
+			for(long i1=0;i1<n1;i1++)	for(long i2=0;i2<n2;i2++)
+			{
+				long ii=i*dd+i1*d1+i2*d2;
+				if(d->vthr(ii)>=d->vthr(ii+dd) && d->vthr(ii)>=d->vthr(ii-dd))
+				{	find=true;	if(p1)	*p1=i1;	if(p2)	*p2=i2;	}
+			}
+			if(find)	return i;
+		}
+	}
+	return -1;
+}
+long MGL_EXPORT mgl_data_max_first_(uintptr_t *d, const char *dir, long *from, long *p1, long *p2,int)
+{	return mgl_data_max_first(_DT_,*dir,*from,p1,p2);	}
+//-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_max_real(HCDT d, mreal *x, mreal *y, mreal *z)
 {
 	long im=-1,jm=-1,km=-1;
