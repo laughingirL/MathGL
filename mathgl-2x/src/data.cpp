@@ -2245,5 +2245,141 @@ HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj, mreal di, mreal min
 uintptr_t MGL_EXPORT mgl_data_detect_(uintptr_t *d, mreal *lvl, mreal *dj, mreal *di, mreal *min_len)
 {	return uintptr_t(mgl_data_detect(_DT_,*lvl,*dj, *di, *min_len));	}
 //-----------------------------------------------------------------------------
-
-
+void MGL_EXPORT mgl_data_dilate(HMDT d, mreal val, long step)
+{
+	long nx = d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
+	if(step<1 || nx<2) return;
+	long *dist = new long[nx*ny*nz], nn = nx*ny;
+	bool done=false;
+	if(nz>1 && ny>1)
+	{
+		done = true;
+		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
+		{
+			long i0 = i+nx*(j+ny*k);
+			if(d->vthr(i0)>=val)	dist[i0]=0;
+			else
+			{
+				dist[i0] = nx+ny;
+				if(i>0 && dist[i0-1]+1<dist[i0])	dist[i0]=dist[i0-1]+1;
+				if(j>0 && dist[i0-nx]+1<dist[i0])	dist[i0]=dist[i0-nx]+1;
+				if(k>0 && dist[i0-nn]+1<dist[i0])	dist[i0]=dist[i0-nn]+1;
+			}
+		}
+		for(long k=nz-1;k>=0;k--)	for(long j=ny-1;j>=0;j--)	for(long i=nx-1;i>=0;i--)
+		{
+			long i0 = i+nx*(j+ny*k);
+			if(i<nx-1 && dist[i0+1]+1<dist[i0])		dist[i0]=dist[i0+1]+1;
+			if(j<ny-1 && dist[i0+nx]+1<dist[i0])	dist[i0]=dist[i0+nx]+1;
+			if(k<nz-1 && dist[i0+nn]+1<dist[i0])	dist[i0]=dist[i0+nn]+1;
+		}
+	}
+	else if(ny>1)
+	{
+		done = true;
+		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
+		{
+			long i0 = i+nx*j;
+			if(d->vthr(i0)>=val)	dist[i0]=0;
+			else
+			{
+				dist[i0] = nx+ny;
+				if(i>0 && dist[i0-1]+1<dist[i0])	dist[i0]=dist[i0-1]+1;
+				if(j>0 && dist[i0-nx]+1<dist[i0])	dist[i0]=dist[i0-nx]+1;
+			}
+		}
+		for(long j=ny-1;j>=0;j--)	for(long i=nx-1;i>=0;i--)
+		{
+			long i0 = i+nx*j;
+			if(i<nx-1 && dist[i0+1]+1<dist[i0])		dist[i0]=dist[i0+1]+1;
+			if(j<ny-1 && dist[i0+nx]+1<dist[i0])	dist[i0]=dist[i0+nx]+1;
+		}
+	}
+	else
+	{
+		done = true;
+		for(long i=0;i<nx;i++)
+			if(d->v(i)>=val)	dist[i]=0;
+			else
+			{
+				dist[i] = nx;
+				if(i>0 && dist[i-1]+1<dist[i])	dist[i]=dist[i-1]+1;
+			}
+		for(long i=nx-2;i>=0;i--)
+			if(dist[i+1]+1<dist[i])	dist[i]=dist[i+1]+1;
+	}
+	if(done)	for(long i=0;i<nx*ny*nz;i++)	d->a[i] = dist[i]<=step?1:0;
+	delete []dist;
+}
+void MGL_EXPORT mgl_data_dilate_(uintptr_t *d, mreal *val, int *step)
+{	mgl_data_dilate(_DT_,*val,*step);	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_erode(HMDT d, mreal val, long step)
+{
+	long nx = d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
+	if(step<1 || nx<2) return;
+	long *dist = new long[nx*ny*nz], nn = nx*ny;
+	bool done=false;
+	if(nz>1 && ny>1)
+	{
+		done = true;
+		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
+		{
+			long i0 = i+nx*(j+ny*k);
+			if(d->vthr(i0)<val)	dist[i0]=0;
+			else
+			{
+				dist[i0] = nx+ny;
+				if(i>0 && dist[i0-1]+1<dist[i0])	dist[i0]=dist[i0-1]+1;
+				if(j>0 && dist[i0-nx]+1<dist[i0])	dist[i0]=dist[i0-nx]+1;
+				if(k>0 && dist[i0-nn]+1<dist[i0])	dist[i0]=dist[i0-nn]+1;
+			}
+		}
+		for(long k=nz-1;k>=0;k--)	for(long j=ny-1;j>=0;j--)	for(long i=nx-1;i>=0;i--)
+		{
+			long i0 = i+nx*(j+ny*k);
+			if(i<nx-1 && dist[i0+1]+1<dist[i0])		dist[i0]=dist[i0+1]+1;
+			if(j<ny-1 && dist[i0+nx]+1<dist[i0])	dist[i0]=dist[i0+nx]+1;
+			if(k<nz-1 && dist[i0+nn]+1<dist[i0])	dist[i0]=dist[i0+nn]+1;
+		}
+	}
+	else if(ny>1)
+	{
+		done = true;
+		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
+		{
+			long i0 = i+nx*j;
+			if(d->vthr(i0)<val)	dist[i0]=0;
+			else
+			{
+				dist[i0] = nx+ny;
+				if(i>0 && dist[i0-1]+1<dist[i0])	dist[i0]=dist[i0-1]+1;
+				if(j>0 && dist[i0-nx]+1<dist[i0])	dist[i0]=dist[i0-nx]+1;
+			}
+		}
+		for(long j=ny-1;j>=0;j--)	for(long i=nx-1;i>=0;i--)
+		{
+			long i0 = i+nx*j;
+			if(i<nx-1 && dist[i0+1]+1<dist[i0])		dist[i0]=dist[i0+1]+1;
+			if(j<ny-1 && dist[i0+nx]+1<dist[i0])	dist[i0]=dist[i0+nx]+1;
+		}
+	}
+	else
+	{
+		done = true;
+		for(long i=0;i<nx;i++)
+			if(d->v(i)<val)	dist[i]=0;
+			else
+			{
+				dist[i] = nx;
+				if(i>0 && dist[i-1]+1<dist[i])	dist[i]=dist[i-1]+1;
+			}
+		for(long i=nx-2;i>=0;i--)
+			if(dist[i+1]+1<dist[i])	dist[i]=dist[i+1]+1;
+	}
+	if(done)	for(long i=0;i<nx*ny*nz;i++)	d->a[i] = dist[i]>step?1:0;
+	delete []dist;
+}
+void MGL_EXPORT mgl_data_erode_(uintptr_t *d, mreal *val, int *step)
+{	mgl_data_erode(_DT_,*val,*step);	}
+//-----------------------------------------------------------------------------

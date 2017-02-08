@@ -345,6 +345,12 @@ void MGL_EXPORT mgl_data_mirror_(uintptr_t *dat, const char *dir,int);
 /// Sort rows (or slices) by values of specified column
 void MGL_EXPORT mgl_data_sort(HMDT dat, long idx, long idy);
 void MGL_EXPORT mgl_data_sort_(uintptr_t *dat, int *idx, int *idy);
+/// Return dilated array of 0 or 1 for data values larger val
+void MGL_EXPORT mgl_data_dilate(HMDT dat, mreal val, long step);
+void MGL_EXPORT mgl_data_dilate_(uintptr_t *dat, mreal *val, int *step);
+/// Return eroded array of 0 or 1 for data values larger val
+void MGL_EXPORT mgl_data_erode(HMDT dat, mreal val, long step);
+void MGL_EXPORT mgl_data_erode_(uintptr_t *dat, mreal *val, int *step);
 
 /// Apply Hankel transform
 void MGL_EXPORT mgl_data_hankel(HMDT dat, const char *dir);

@@ -58,6 +58,28 @@ int MGL_NO_EXPORT mgls_sort(mglGraph *, long , mglArg *a, const char *k, const c
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_dilate(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(k[0]=='d' && a[0].d->temp)	return 5;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	if(d && !strcmp(k,"d"))	d->Dilate();
+	else if(d && !strcmp(k,"dn"))	d->Dilate(a[1].v);
+	else if(d && !strcmp(k,"dnn"))	d->Dilate(a[1].v, a[2].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_erode(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(k[0]=='d' && a[0].d->temp)	return 5;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	if(d && !strcmp(k,"d"))	d->Erode();
+	else if(d && !strcmp(k,"dn"))	d->Erode(a[1].v);
+	else if(d && !strcmp(k,"dnn"))	d->Erode(a[1].v, a[2].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_alpha(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -3704,6 +3726,7 @@ mglCommand mgls_base_cmd[] = {
 	{"diff2","Numerically double differentiate data","diff2 Var 'dir'", mgls_diff2 ,16},
 	{"diffract","Step for pulse diffraction","diffract Res 'how' q", mgls_diffract ,16},
 	{"diffuse","Set diffusive light brightness","diffuse val", mgls_diffuse ,2},
+	{"dilate","Dilate data larger val","dilate Dat [val step]", mgls_dilate ,3},
 	{"divto","Divide by data or number","divto Var Dat|Var num", mgls_divto ,3},
 	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']|Xdat Ydat Zdat Adat ['fmt']|Xdat Ydat Zdat Cdat Adat ['fmt']", mgls_dots ,9},
 	{"drawreg","Set draw region for quality&4","drawreg|nx ny m", mgls_drawreg ,2},
@@ -3714,6 +3737,7 @@ mglCommand mgls_base_cmd[] = {
 	{"elseif","Conditional operator","elseif val|Dat ['cond']", 0, 6},
 	{"endif","Finish if/else block","endif", 0, 6},
 	{"envelop","Find envelop for the data","envelop Dat ['dir']", mgls_envelop ,16},
+	{"erode","Erode data larger val","erode Dat [val step]", mgls_erode ,3},
 	{"errbox","Draw error box","errbox x y ex ey ['fmt']|x y z ex ey ez ['fmt']", mgls_errbox ,13},
 	{"error","Draw error boxes","error Ydat Yerr ['fmt']|Xdat Ydat Yerr ['fmt']|Xdat Ydat Xerr Yerr ['fmt']", mgls_error ,7},
 	{"evaluate","Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat","evaluate Res Dat Idat [norm]|Res Dat Idat Jdat [norm]|Res Dat Idat Jdat Kdat [norm]", mgls_evaluate ,4},

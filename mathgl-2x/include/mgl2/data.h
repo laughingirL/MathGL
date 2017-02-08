@@ -352,6 +352,13 @@ using mglDataA::Momentum;
 	inline void Mirror(const char *dir)		{	mgl_data_mirror(this,dir);	}
 	/// Sort rows (or slices) by values of specified column
 	inline void Sort(long idx, long idy=-1)	{	mgl_data_sort(this,idx,idy);	}
+	/// Return dilated array of 0 or 1 for data values larger val 
+	inline void Dilate(mreal val=1, long step=1)
+	{	mgl_data_dilate(this, val, step);	}
+	/// Return eroded array of 0 or 1 for data values larger val 
+	inline void Erode(mreal val=1, long step=1)
+	{	mgl_data_erode(this, val, step);	}
+	
 
 	/// Set as the data envelop
 	inline void Envelop(char dir='x')

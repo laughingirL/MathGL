@@ -1910,7 +1910,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	if(mgl_isnan(phi))	return;
 
 	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=(P.n3&4)?1:0.6;	}
-	mglPnt p=Pnt[P.n1];
+	mglPnt p=Pnt[P.n1];	p.a=1;
 	// NOTE check this later for mglInPlot
 	mreal fact = get_persp(Bp.pf,p.z,Depth);
 	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2)*fact, f = P.p*pf;

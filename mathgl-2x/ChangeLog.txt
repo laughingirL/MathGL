@@ -10,6 +10,8 @@
 * Add 'bbox' to set bounding box for 2D output.
 * Add 'section' to get part of data between specified values.
 * Add 'detect' to found curves along data maximums.
+* Add 'dilate' to extend the region of 1-th value.
+* Add 'erode' to narrow the region of 1-th value.
 * Add 'apde' to solve PDE equation in inhomogeneous nonlinear media with spatial dispersion.
 * Add function mgl_data_max_first() and data suffix .m[xyz][fl] to find first/last maximum along direction.
 * Add style 'F' for 'bars' and 'barh' to set fixed bar widths.
