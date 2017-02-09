@@ -603,7 +603,8 @@ public:
 	{	mgl_bifurcation_str(gr,dx,func,stl,opt);	}
 
 	/// Draws Iris plots for determining cross-dependences of data arrays
-	/** NOTE: using the same ranges and empty ids will not draw axis. This will add data to existing Iris plot. */
+	/** NOTE: using the same ranges and empty ids will not draw axis. This will add data to existing Iris plot.
+	 * 	Option value set the size of data labels ids, separated by ';'.*/
 	inline void Iris(mglDataA &dats, const char *ids, const char *stl="", const char *opt="")
 	{	mgl_iris_1(gr,&dats,ids,stl,opt);	}
 	inline void Iris(mglDataA &dats, const wchar_t *ids, const char *stl="", const char *opt="")

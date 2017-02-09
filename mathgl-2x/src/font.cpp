@@ -126,19 +126,19 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 			if(wcs[i]=='\n')	// parse '\n' symbol
 			{
 				wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,c1,c2);	// find width
-				Puts(buf,-w*(align&3)/2.f,-h - 500.*num/fact[0],1.f,font,c1,c2);	// draw it really
+				Puts(buf,-w*(align&3)/2.f,-h - 660.*num/fact[0],1.f,font,c1,c2);	// draw it really
 				buf=wcs+i+1;	num++;	if(w>ww)	ww=w;
 			}
-			if(wcs[i]=='\\' && wcs[i+1]=='n' && (wcs[i+2]>' ' || wcschr(L"{}[]()!@#$%^&*/-?.,_=+\\\"", wcs[i+2])))	// parse '\n' symbol
-			{
-				wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,c1,c2);	// find width
-				Puts(buf,-w*(align&3)/2.f,-h - 500.*num/fact[0],1.f,font,c1,c2);	// draw it really
-				buf=wcs+i+2;	num++;	if(w>ww)	ww=w;
-			}
+// 			if(wcs[i]=='\\' && wcs[i+1]=='n' && (wcs[i+2]>' ' || wcschr(L"{}[]()!@#$%^&*/-?.,_=+\\\"", wcs[i+2])))	// parse '\n' symbol
+// 			{
+// 				wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,c1,c2);	// find width
+// 				Puts(buf,-w*(align&3)/2.f,-h - 720.*num/fact[0],1.f,font,c1,c2);	// draw it really
+// 				buf=wcs+i+2;	num++;	if(w>ww)	ww=w;
+// 			}
 		}
 		// draw string itself
 		w = Puts(buf,0,0,1.f,0x10|font,c1,c2);	// find width
-		Puts(buf,-w*(align&3)/2.f,-h - 500.*num/fact[0],1.f,font,c1,c2);	// draw it really
+		Puts(buf,-w*(align&3)/2.f,-h - 660.*num/fact[0],1.f,font,c1,c2);	// draw it really
 		if(w>ww)	ww=w;
 		delete []wcs;
 	}
@@ -399,7 +399,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff, st);
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-600*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b2, x+(ww-w2)/2, yy-660*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
 			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-9))	// underset
@@ -481,7 +481,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff, st);
 			Puts(b1, x+(ww-w1)/2, yy+315*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-315*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b2, x+(ww-w2)/2, yy-405*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 			{
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);

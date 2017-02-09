@@ -63,22 +63,23 @@ D. Docs about JS interface
 	rasterize:clf # все что выше будет только в растре
 	axis:box
 	write '1.eps'
-9. Docs and sample about 'detect'
+9. Docs about 'detect'
 10. Docs about 'apde'
 11. "copy var 'name'" -- to copy variable with "invalid" name
 12. Update 'multiplot' by adding sx,sy
-13. Docs and sample about 'iris'
+13. Docs about 'iris'
 14. Docs about new style "F" for bars,barh
 15. Docs about 'bbox'
 16. Docs about string manipulation:
 	* 'str'[n] -- get string of only n-th symbol
 	* 'str'+v -- add value v to the last character of the string.
 	* 'str',val || 'str',!val -- append numeric value to the string (as before)
-17. Docs and sample about 'section'. Sample of several 'join'-ed curves.
+17. Docs about 'section'.
 18. Docs about \dfrac -- full-sized \frac, but without nesting
 19. Docs about .m[xyz][lf] and mgl_data_max_first()
 20. Docs about time values in MGL: "hh-mm-ss_DD.MM.YYYY" or "hh-mm-ss" or "DD.MM.YYYY".
-21. Docs and sample about 'erode' and 'dilate'
+21. Docs about 'erode' and 'dilate'.
+22. Denote ';' as separator in 'iris' and 'ode'
 
 ============= UDAV =============
 

@@ -1117,25 +1117,27 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 	if(m<2 || nx<2)	{	gr->SetWarn(mglWarnLow,"Iris");	return;	}
 	if(m!=ranges->GetNy())	{	gr->SetWarn(mglWarnDim,"Iris");	return;	}
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(!g)	return;
-	mreal res=gr->SaveState(opt);
+	mreal ofsize = gr->GetFontSize();
+	mreal res=gr->SaveState(opt), fsize = gr->GetFontSize();
+	if(mgl_isnan(res))	res=-1;
 	static int cgid=1;	gr->StartGroup("Iris",cgid++);
 	std::wstring *strs = new std::wstring[m];
 	bool label = ids && ids[0];	// disable axis drawing
 	if(label)
 	{
 		const wchar_t *s, *p=ids;
-		if(wcschr(ids,'\n'))	for(long i=0;i<m;i++)
+		if(wcschr(ids,';'))	for(long i=0;i<m;i++)
 		{
-			s = wcschr(p,'\n');
+			s = wcschr(p,';');
 			if(s)	{	strs[i] = std::wstring(p,s-p);	p = s+1;	}
 			else	{	strs[i] = p;	break;	}
 		}
-		else	for(long i=0;i<m;i++)
-		{
-			s = wcsstr(p,L"\\n");
-			if(s)	{	strs[i] = std::wstring(p,s-p);	p = s+2;	}
-			else	{	strs[i] = p;	break;	}
-		}
+// 		else	for(long i=0;i<m;i++)
+// 		{
+// 			s = wcsstr(p,L"\\t ");
+// 			if(s)	{	strs[i] = std::wstring(p,s-p);	p = s+3;	}
+// 			else	{	strs[i] = p;	break;	}
+// 		}
 	}
 	HMDT dat[m];
 	mreal dx = 1./m;
@@ -1146,7 +1148,12 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 		if(label)	g->Box();
 		gr->SetRanges(ranges->v(0,i),ranges->v(1,i),ranges->v(0,j),ranges->v(1,j));
 		gr->ResetPal();
-		if(i==j)	mgl_putsw(gr,dx*(i+0.5),dx*(m-j-0.5),0,strs[i].c_str(),"aV",-1);
+		gr->SetFontSize(fsize);
+		if(i==j)
+		{
+			const char *tstl = wcschr(strs[i].c_str(),'\n') || wcsstr(strs[i].c_str(),L"\\n ") ? "a":"aV";
+			mgl_putsw(gr, dx*(i+0.5), dx*(m-j-0.5),0, strs[i].c_str(), tstl, res);
+		}
 		else	mgl_plot_xy(gr,dat[i],dat[j],stl,NULL);
 	}
 	if(label)
@@ -1154,19 +1161,18 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 		for(long i=0;i<m;i+=2)
 		{
 			gr->SetRanges(ranges->v(0,i),ranges->v(1,i),ranges->v(0,m-i-1),ranges->v(1,m-i-1));
-			g->InPlot(dx*i,dx*(i+1),0,dx,true);	g->Axis("x");
-			g->InPlot(0,dx,dx*i,dx*(i+1),true);	g->Axis("y");
+			gr->SetFontSize(fsize);	g->InPlot(dx*i,dx*(i+1),0,dx,true);	g->Axis("x");
+			gr->SetFontSize(fsize);	g->InPlot(0,dx,dx*i,dx*(i+1),true);	g->Axis("y");
 		}
 		for(long i=1;i<m;i+=2)
 		{
 			gr->SetRanges(ranges->v(0,i),ranges->v(1,i),ranges->v(0,m-i-1),ranges->v(1,m-i-1));
-			g->InPlot(dx*i,dx*(i+1),1-dx,1,true);	g->Axis("x^");
-			g->InPlot(1-dx,1,dx*i,dx*(i+1),true);	g->Axis("y^");
+			gr->SetFontSize(fsize);	g->InPlot(dx*i,dx*(i+1),1-dx,1,true);	g->Axis("x^");
+			gr->SetFontSize(fsize);	g->InPlot(1-dx,1,dx*i,dx*(i+1),true);	g->Axis("y^");
 		}
 	}
-	delete []strs;
-	for(long i=0;i<m;i++)	delete dat[i];
-	g->InPlot(0,1,0,1,true);	gr->EndGroup();
+	delete []strs;	for(long i=0;i<m;i++)	delete dat[i];
+	g->InPlot(0,1,0,1,true);	gr->EndGroup();	gr->SetFontSize(ofsize);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_irisw_1(HMGL gr, HCDT dats, const wchar_t *ids, const char *stl, const char *opt)
