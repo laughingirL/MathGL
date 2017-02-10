@@ -988,12 +988,12 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 
 @anchor{multiplot}
-@deftypefn {Команда MGL} {} multiplot @code{nx ny m dx dy} ['style'='<>_^']
+@deftypefn {Команда MGL} {} multiplot @code{nx ny m dx dy} ['style'='<>_^' sx sy]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} MultiPlot (@code{int} nx, @code{int} ny, @code{int} m, @code{int} dx, @code{int} dy, @code{const char *}stl=@code{"<>_^"})
 @deftypefnx {Функция С} @code{void} mgl_multiplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{int} dx, @code{int} dy, @code{const char *}stl)
 @end ifclear
-Помещает последующий вывод в прямоугольник из @var{dx}*@var{dy} ячеек, начиная с @var{m}-ой ячейки, сетки размером @var{nx}*@var{ny} от всего рисунка. Функция сбрасывает матрицу трансформации (повороты и сжатие графика) и должна вызываться первой для создания "подграфика". Место для осей/colorbar резервируется если строка @var{stl} содержит: @samp{L} или @samp{<} -- с левого края, @samp{R} или @samp{>} -- с правого края, @samp{A} или @samp{^} -- с верхнего края, @samp{U} или @samp{_} -- с нижнего края.
+Помещает последующий вывод в прямоугольник из @var{dx}*@var{dy} ячеек, начиная с @var{m}-ой ячейки, сетки размером @var{nx}*@var{ny} от всего рисунка. Функция сбрасывает матрицу трансформации (повороты и сжатие графика) и должна вызываться первой для создания "подграфика". Место для осей/colorbar резервируется если строка @var{stl} содержит: @samp{L} или @samp{<} -- с левого края, @samp{R} или @samp{>} -- с правого края, @samp{A} или @samp{^} -- с верхнего края, @samp{U} или @samp{_} -- с нижнего края. Облсать вывода может быть дополнительно сдвинута относительно своего обычного положения на относительный размер @var{sx}, @var{sy}.
 @end deftypefn
 
 @anchor{inplot}
@@ -2106,7 +2106,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_step_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_step_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют ступеньки для точек массива. См. также @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}. @sref{Step sample}
+Функции рисуют ступеньки для точек массива. Если @var{x}.nx>@var{y}.nx, то массив @var{x} задает границы ступенек, а не их конец. См. также @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}. @sref{Step sample}
 @end deftypefn
 
 @anchor{tens}
@@ -2198,7 +2198,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_bars_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. Если @var{pen} содержит @samp{<}, @samp{^} или @samp{>}, то полоски будут выровнены влево, вправо или центрированы относительно их координат. См. также @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
+Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. Если @var{pen} содержит @samp{<}, @samp{^} или @samp{>}, то полоски будут выровнены влево, вправо или центрированы относительно их координат. Если @var{pen} содержит @samp{F}, то одинаковая (минимальная) будет использоваться. Если @var{x}.nx>@var{y}.nx, то массив @var{x} задает границы полос, а не их центр. См. также @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
 @end deftypefn
 
 @anchor{barh}
@@ -2210,7 +2210,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_barh (@code{HMGL} gr, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. Если @var{pen} содержит @samp{<}, @samp{^} или @samp{>}, то полоски будут выровнены влево, вправо или центрированы относительно их координат. См. также @ref{bars}, @ref{barwidth}. @sref{Barh sample}
+Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. Если @var{pen} содержит @samp{<}, @samp{^} или @samp{>}, то полоски будут выровнены влево, вправо или центрированы относительно их координат. Если @var{pen} содержит @samp{F}, то одинаковая (минимальная) будет использоваться. Если @var{x}.nx>@var{y}.nx, то массив @var{x} задает границы полос, а не их центр. См. также @ref{bars}, @ref{barwidth}. @sref{Barh sample}
 @end deftypefn
 
 @anchor{cones}
@@ -2407,7 +2407,23 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @item @samp{-} для вывода обычного @samp{-};
 @item @samp{0123456789} для задания точности при выводе чисел.
 @end itemize
-Опция @code{value} задает ширину таблицы (по умолчанию 1). См. также @ref{label}. @sref{Table sample}
+Опция @code{value} задает ширину таблицы (по умолчанию 1). См. также @ref{plot}, @ref{label}. @sref{Table sample}
+@end deftypefn
+
+@anchor{iris}
+@deftypefn {Команда MGL} {} iris dats 'ids' ['stl'='']
+@deftypefnx {Команда MGL} {} iris dats rngs 'ids' ['stl'='']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Iris (@code{const mglDataA &}dats, @code{const char *}ids, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Iris (@code{const mglDataA &}dats, @code{const wchar_t *}ids, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Iris (@code{const mglDataA &}dats, @code{const mglDataA &}rngs, @code{const char *}ids, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Iris (@code{const mglDataA &}dats, @code{const mglDataA &}rngs, @code{const wchar_t *}ids, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_iris_1 (@code{HMGL} gr, @code{HCDT} dats, @code{const char *}ids, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_irisw_1 (@code{HMGL} gr, @code{HCDT} dats, @code{const wchar_t *}ids, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_iris (@code{HMGL} gr, @code{HCDT} dats, @code{HCDT} rngs, @code{const char *}ids, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_irisw (@code{HMGL} gr, @code{HCDT} dats, @code{HCDT} rngs, @code{const wchar_t *}ids, @code{const char *}stl, @code{const char *}opt)
+@end ifclear
+Рисует Ирисы Фишера для определения зависимостей данных @var{dats} друг от друга (см. @uref{http://en.wikipedia.org/wiki/Iris_flower_data_set}). Массив @var{rngs} размером 2*@var{dats}.nx задает диапазон изменения осей для каждой из колонки. Строка @var{ids} содержит имена колонок данных, разделенных символом @samp{;}. Опция @code{value} задает размер текста для имен данных. На график можно добавить новый набор данных если указать тот же размер @var{rngs} и использовать пустую строку имен @var{ids}. См. также @ref{plot}. @sref{Iris sample}
 @end deftypefn
 
 @anchor{tube}
@@ -2569,13 +2585,16 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @anchor{tile}
 @deftypefn {Команда MGL} {} tile zdat ['sch'='']
 @deftypefnx {Команда MGL} {} tile xdat ydat zdat ['sch'='']
+@deftypefnx {Команда MGL} {} tile xdat ydat zdat cdat ['sch'='']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_tile (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tile_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_tile_xyc (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует плитки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График может использоваться как 3d обобщение @ref{step}. См. также @ref{surf}, @ref{boxs}, @ref{step}, @ref{tiles}. @sref{Tile sample}
+Рисует плитки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с цветом, заданным массивом @var{c}[i,j]. Если строка @var{sch} содержит стиль @samp{x} или @samp{y}, то плитки будут ориентированы перпендикулярно x- или y-оси. График может использоваться как 3d обобщение @ref{step}. См. также @ref{surf}, @ref{boxs}, @ref{step}, @ref{tiles}. @sref{Tile sample}
 @end deftypefn
 
 @anchor{dens}
@@ -2979,13 +2998,16 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @anchor{tiles}
 @deftypefn {Команда MGL} {} tiles zdat rdat ['sch'='']
 @deftypefnx {Команда MGL} {} tiles xdat ydat zdat rdat ['sch'='']
+@deftypefnx {Команда MGL} {} tiles xdat ydat zdat rdat cdat ['sch'='']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} TileS (@code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} TileS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TileS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_tiles (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tiles_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_tiles_xyc (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует плитки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Аналогично Tile(), но размер плиток задается массивов @var{r}. Это создает эффект "прозрачности" при экспорте в файлы EPS. График строится для каждого z среза данных. См. также @ref{surfa}, @ref{tile}. @sref{TileS sample}
+Рисует плитки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с цветом, заданным массивом @var{c}[i,j]. Аналогично Tile(), но размер плиток задается массивов @var{r}. Если строка @var{sch} содержит стиль @samp{x} или @samp{y}, то плитки будут ориентированы перпендикулярно x- или y-оси. Это создает эффект "прозрачности" при экспорте в файлы EPS. График строится для каждого z среза данных. См. также @ref{surfa}, @ref{tile}. @sref{TileS sample}
 @end deftypefn
 
 @anchor{map}

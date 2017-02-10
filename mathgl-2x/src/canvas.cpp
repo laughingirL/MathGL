@@ -1078,11 +1078,11 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	if(*text)
 	{
 		ww = TextWidth(text,frm,-1)+sp;
-		long k1=AddPnt(&B,mglPoint(x+ww*align/2.,y+h*(m-0.99),Depth),-1,q,-1,0);
+		long k1=AddPnt(&B,mglPoint(x+ww*align/2.,y+h*(m-0.9),Depth),-1,q,-1,0);
 		text_plot(k1,text,frm);
 	}
 	else 	ww = 0;
-	for(i=0,xx=x+ww,yy=y+h*(m-0.99);i<n;i++)	// draw lines and legend
+	for(i=0,xx=x+ww,yy=y+h*(m-0.9);i<n;i++)	// draw lines and legend
 	{
 		ww = eqd ? w1:(TextWidth(str[i].c_str(),frm,-1)+sp);
 		long k1=AddPnt(&B,mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);

@@ -53,11 +53,9 @@ D. Docs about JS interface
 
 1. Update Qt and UDAV figures
 2. Sample about PDE -- add 'tridmat' + 'diffract'
-3. Replace mgl-qt!!!
-4. Step_xy() now can have x.nx>y.nx -- same as Bars()
+3. Update time.texi
+
 5. Docs about 'flame2d'
-6. Docs about mglDataS, mglDataW
-7. Docs about tile_xyc and tiles_xyc -- manual coloring + face rotation by "x", ":y"
 8. Hint about 'rasterize'
 	fsurf 'x^2+y^2' '#';value 10
 	rasterize:clf # все что выше будет только в растре
@@ -66,20 +64,10 @@ D. Docs about JS interface
 9. Docs about 'detect'
 10. Docs about 'apde'
 11. "copy var 'name'" -- to copy variable with "invalid" name
-12. Update 'multiplot' by adding sx,sy
-13. Docs about 'iris'
-14. Docs about new style "F" for bars,barh
 15. Docs about 'bbox'
-16. Docs about string manipulation:
-	* 'str'[n] -- get string of only n-th symbol
-	* 'str'+v -- add value v to the last character of the string.
-	* 'str',val || 'str',!val -- append numeric value to the string (as before)
 17. Docs about 'section'.
-18. Docs about \dfrac -- full-sized \frac, but without nesting
 19. Docs about .m[xyz][lf] and mgl_data_max_first()
-20. Docs about time values in MGL: "hh-mm-ss_DD.MM.YYYY" or "hh-mm-ss" or "DD.MM.YYYY".
 21. Docs about 'erode' and 'dilate'.
-22. Denote ';' as separator in 'iris' and 'ode'
 
 ============= UDAV =============
 

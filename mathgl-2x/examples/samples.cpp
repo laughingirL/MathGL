@@ -2821,13 +2821,13 @@ void smgl_detect(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_iris="read a 'iris.dat'\ncrop a 0 4 'x':rearrange a a.nx 50\n"
 "subplot 1 1 0 '':title 'Iris plot'\n"
-"iris a 'sepal\\n length;sepal\\n width;petal\\n length;petal\\n width' '. ';value -0.4;size -2";
+"iris a 'sepal\\n length;sepal\\n width;petal\\n length;petal\\n width' '. ';value -1.5;size -2";
 void smgl_iris(mglGraph *gr)
 {
 	mglData a("iris.dat");	a.Crop(0,4,'x');	a.Rearrange(4,50);
 	gr->SubPlot(1,1,0,"");
 	if(big!=3)	gr->Title("Iris sample");
-	gr->Iris(a, "sepal\nlength;sepal\nwidth;petal\nlength;petal\nwidth", ". ", "value -0.4;size -2");
+	gr->Iris(a, "sepal\nlength;sepal\nwidth;petal\nlength;petal\nwidth", ". ", "value -1.5;size -2");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_dilate="subplot 2 2 0:title 'Dilate&Erode 1D sample'\n"

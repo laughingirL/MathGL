@@ -1882,7 +1882,6 @@ Create variable which reference @var{col}-th column of data @var{d}.
 Set reference to another column of the same data and its name.
 @end deftypefn
 
-
 @heading Class @code{mglDataR}
 represent named reference to row of another data array.
 @deftypefn {Constructor on @code{mglDataR}} @code{} mglDataR (@code{const mglDataR &} d)
@@ -1894,6 +1893,40 @@ Create variable which reference @var{row}-th row of data @var{d}.
 @deftypefn {Method on @code{mglDataR}} @code{void} SetInd (@code{long} row, @code{wchar_t} name)
 @deftypefnx {Method on @code{mglDataR}} @code{void} SetInd (@code{long} row, @code{const wchar_t *} name)
 Set reference to another row of the same data and its name.
+@end deftypefn
+
+@heading Class @code{mglDataW}
+represent FFT frequency as data array.
+@deftypefn {Constructor on @code{mglDataW}} @code{} mglDataW (@code{const mglDataW &} d)
+Copy constructor.
+@end deftypefn
+@deftypefn {Constructor on @code{mglDataW}} @code{} mglDataW (@code{long} xx=@code{1}, @code{long} yy=@code{1}, @code{long} zz=@code{1}, @code{double} dp=@code{0}, @code{char} dir=@code{'x'})
+Set frequency sizes, direction @var{dir} and increment @var{dp}.
+@end deftypefn
+@deftypefn {Method on @code{mglDataR}} @code{void} Freq (@code{double} dp, @code{char} dir=@code{'x'})
+Equidistantly fill the data with step @var{dp} in direction @var{dir}.
+@end deftypefn
+
+
+@heading Class @code{mglDataS}
+incapsulate std::vector and present it as data array.
+@deftypecv {Variable} mglDataS @code{std::vector<mreal>} dat
+Data array itself.
+@end deftypecv
+@deftypefn {Constructor on @code{mglDataS}} @code{} mglDataS (@code{const mglDataS &} d)
+Copy constructor.
+@end deftypefn
+@deftypefn {Constructor on @code{mglDataS}} @code{} mglDataS (@code{const std::vector<mreal> &} d)
+Create copy data from @var{d}.
+@end deftypefn
+@deftypefn {Constructor on @code{mglDataS}} @code{} mglDataS (@code{size_t} s)
+Allocate memory for @var{s} .
+@end deftypefn
+@deftypefn {Method on @code{mglDataS}} @code{void} reserve (@code{size_t} num)
+Reserve space for @var{num} elements.
+@end deftypefn
+@deftypefn {Method on @code{mglDataS}} @code{void} push_back (@code{double} v)
+Appends value @var{v} to the end of data.
 @end deftypefn
 
 @end ifclear

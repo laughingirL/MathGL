@@ -1002,7 +1002,7 @@ These functions control how and where further plotting will be placed. There is 
 @deftypefnx {C function} @code{void} mgl_subplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl)
 @deftypefnx {C function} @code{void} mgl_subplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl, @code{mreal} dx, @code{mreal} dy)
 @end ifclear
-Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations. So it should be used first for creating the subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain:
+Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}. This function set off any aspects or rotations. So it should be used first for creating the subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain:
 @itemize @bullet
 @item
 @samp{L} or @samp{<} -- at left side,
@@ -1015,16 +1015,16 @@ Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whol
 @item
 @samp{#} -- reserve none space (use whole region for axis range) -- axis and tick labels will be invisible by default.
 @end itemize
-From the aesthetical point of view it is not recommended to use this function with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}. Note, colorbar can be invisible (be out of image borders) if you set empty style @samp{}.
+From the aesthetical point of view it is not recommended to use this function with different matrices in the same frame. Note, colorbar can be invisible (be out of image borders) if you set empty style @samp{}.
 @end deftypefn
 
 @anchor{multiplot}
-@deftypefn {MGL command} {} multiplot @code{nx ny m dx dy} ['style'='<>_^']
+@deftypefn {MGL command} {} multiplot @code{nx ny m dx dy} ['style'='<>_^' sx sy]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} MultiPlot (@code{int} nx, @code{int} ny, @code{int} m, @code{int} dx, @code{int} dy, @code{const char *}stl=@code{"<>_^"})
 @deftypefnx {C function} @code{void} mgl_multiplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{int} dx, @code{int} dy, @code{const char *}stl)
 @end ifclear
-Puts further plotting in a rectangle of @var{dx}*@var{dy} cells starting from @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations.  So it should be used first for creating subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain:
+Puts further plotting in a rectangle of @var{dx}*@var{dy} cells starting from @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. The position of the rectangular area can be shifted from its default position by relative size @var{sx}, @var{sy}. This function set off any aspects or rotations.  So it should be used first for creating subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain:
 @itemize @bullet
 @item
 @samp{L} or @samp{<} -- at left side,
@@ -2198,7 +2198,7 @@ This functions draws radar chart which is continuous lines between points locate
 @deftypefnx {C function} @code{void} mgl_step_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_step_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous stairs for points to axis plane. See also @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}. @sref{Step sample}
+These functions draw continuous stairs for points to axis plane. If @var{x}.nx>@var{y}.nx then @var{x} set the edges of bars, rather than its central positions. See also @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}. @sref{Step sample}
 @end deftypefn
 
 @anchor{tens}
@@ -2290,7 +2290,20 @@ These functions draw vertical lines from points to axis plane. See also @ref{are
 @deftypefnx {C function} @code{void} mgl_bars_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw vertical bars from points to axis plane. If string @var{pen} contain symbol @samp{a} then lines are drawn one above another (like summation). If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. If @var{pen} contain @samp{<}, @samp{^} or @samp{>} then boxes will be aligned left, right or centered at its x-coordinates. See also @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
+These functions draw vertical bars from points to axis plane. Parameter @var{pen} can contain:
+@itemize @bullet
+@item
+@samp{a} for drawing lines one above another (like summation);
+@item
+@samp{f} for drawing waterfall chart, which show the cumulative effect of sequential positive or negative values;
+@item
+@samp{t} for drawing tubes/cylinders instead of cones/prisms;
+@item
+@samp{F} for using fixed (minimal) width for all bars;
+@item
+@samp{<}, @samp{^} or @samp{>} for aligning boxes left, right or centering them at its x-coordinates.
+@end itemize
+You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. If @var{x}.nx>@var{y}.nx then @var{x} set the edges of bars, rather than its central positions. See also @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
 @end deftypefn
 
 @anchor{barh}
@@ -2302,7 +2315,20 @@ These functions draw vertical bars from points to axis plane. If string @var{pen
 @deftypefnx {C function} @code{void} mgl_barh (@code{HMGL} gr, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw horizontal bars from points to axis plane. If string contain symbol @samp{a} then lines are drawn one above another (like summation). If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. If @var{pen} contain @samp{<}, @samp{^} or @samp{>} then boxes will be aligned left, right or centered at its x-coordinates. See also @ref{bars}, @ref{barwidth}. @sref{Barh sample}
+These functions draw horizontal bars from points to axis plane. Parameter @var{pen} can contain:
+@itemize @bullet
+@item
+@samp{a} for drawing lines one above another (like summation);
+@item
+@samp{f} for drawing waterfall chart, which show the cumulative effect of sequential positive or negative values;
+@item
+@samp{t} for drawing tubes/cylinders instead of cones/prisms;
+@item
+@samp{F} for using fixed (minimal) width for all bars;
+@item
+@samp{<}, @samp{^} or @samp{>} for aligning boxes left, right or centering them at its x-coordinates.
+@end itemize
+You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. If @var{x}.nx>@var{y}.nx then @var{x} set the edges of bars, rather than its central positions. See also @ref{bars}, @ref{barwidth}. @sref{Barh sample}
 @end deftypefn
 
 @anchor{cones}
@@ -2502,6 +2528,22 @@ These functions draw table with values of @var{val} and captions from string @va
 Option @code{value} set the width of the table (default is 1). See also @ref{plot}, @ref{label}. @sref{Table sample}
 @end deftypefn
 
+@anchor{iris}
+@deftypefn {MGL command} {} iris dats 'ids' ['stl'='']
+@deftypefnx {MGL command} {} iris dats rngs 'ids' ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Iris (@code{const mglDataA &}dats, @code{const char *}ids, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Iris (@code{const mglDataA &}dats, @code{const wchar_t *}ids, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Iris (@code{const mglDataA &}dats, @code{const mglDataA &}rngs, @code{const char *}ids, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Iris (@code{const mglDataA &}dats, @code{const mglDataA &}rngs, @code{const wchar_t *}ids, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_iris_1 (@code{HMGL} gr, @code{HCDT} dats, @code{const char *}ids, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_irisw_1 (@code{HMGL} gr, @code{HCDT} dats, @code{const wchar_t *}ids, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_iris (@code{HMGL} gr, @code{HCDT} dats, @code{HCDT} rngs, @code{const char *}ids, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_irisw (@code{HMGL} gr, @code{HCDT} dats, @code{HCDT} rngs, @code{const wchar_t *}ids, @code{const char *}stl, @code{const char *}opt)
+@end ifclear
+Draws Iris plots for determining cross-dependences of data arrays @var{dats} (see @uref{http://en.wikipedia.org/wiki/Iris_flower_data_set}). Data @var{rngs} of size 2*@var{dats}.nx provide manual axis ranges for each column. String @var{ids} contain column names, separated by @samp{;} symbol. Option @code{value} set the text size for column names. You can add another data set to existing Iris plot by providing the same ranges @var{rngs} and empty column names @var{ids}. See also @ref{plot}. @sref{Iris sample}
+@end deftypefn
+
 @anchor{tube}
 @deftypefn {MGL command} {} tube ydat rdat ['stl'='']
 @deftypefnx {MGL command} {} tube ydat @code{rval} ['stl'='']
@@ -2659,13 +2701,16 @@ The function draws vertical boxes for surface specified parametrically @{@var{x}
 @anchor{tile}
 @deftypefn {MGL command} {} tile zdat ['sch'='']
 @deftypefnx {MGL command} {} tile xdat ydat zdat ['sch'='']
+@deftypefnx {MGL command} {} tile xdat ydat zdat cdat ['sch'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Tile (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Tile (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tile (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_tile (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tile_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tile_xyc (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Such plot can be used as 3d generalization of @ref{step}. See also @ref{surf}, @ref{boxs}, @ref{step}, @ref{tiles}. @sref{Tile sample}
+The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j] (@var{c}=@var{z} if @var{c} is not provided). If string @var{sch} contain style @samp{x} or @samp{y} then tiles will be oriented perpendicular to x- or y-axis. Such plot can be used as 3d generalization of @ref{step}. See also @ref{surf}, @ref{boxs}, @ref{step}, @ref{tiles}. @sref{Tile sample}
 @end deftypefn
 
 @anchor{dens}
@@ -3066,13 +3111,16 @@ Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data.
 @anchor{tiles}
 @deftypefn {MGL command} {} tiles zdat rdat ['sch'='']
 @deftypefnx {MGL command} {} tiles xdat ydat zdat rdat ['sch'='']
+@deftypefnx {MGL command} {} tiles xdat ydat zdat rdat cdat ['sch'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} TileS (@code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} TileS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} TileS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_tiles (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tiles_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tiles_xyc (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. It is mostly the same as @ref{tile} but the size of tiles is determined by @var{r} array. This is some kind of ``transparency'' useful for exporting to EPS files. Tiles is plotted for each z slice of the data. See also @ref{surfa}, @ref{tile}. @sref{TileS sample}
+The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. It is mostly the same as @ref{tile} but the size of tiles is determined by @var{r} array. If string @var{sch} contain style @samp{x} or @samp{y} then tiles will be oriented perpendicular to x- or y-axis. This is some kind of ``transparency'' useful for exporting to EPS files. Tiles is plotted for each z slice of the data. See also @ref{surfa}, @ref{tile}. @sref{TileS sample}
 @end deftypefn
 
 @anchor{map}

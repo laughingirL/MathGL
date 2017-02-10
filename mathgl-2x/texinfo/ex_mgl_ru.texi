@@ -883,6 +883,7 @@ Basically, you can put this text after the script. Note, that you need to termin
 * TextMark sample::
 * Label sample::
 * Table sample::
+* Iris sample::
 * Tube sample::
 * Tape sample::
 * Torus sample::
@@ -1311,7 +1312,7 @@ plot ys ' *':label ys 'y=%y'
 
 @c ------------------------------------------------------------------
 @external{}
-@node Table sample, Tube sample, Label sample, 1D samples
+@node Table sample, Iris sample, Label sample, 1D samples
 @subsection Table sample
 @nav{}
 
@@ -1336,7 +1337,23 @@ table 0.5 0.95 ys 'y_1\n{}y_2\n{}y_3' '#';value 0.7
 
 @c ------------------------------------------------------------------
 @external{}
-@node Tube sample, Tape sample, Table sample, 1D samples
+@node Iris sample, Tube sample, Table sample, 1D samples
+@subsection Iris sample
+@nav{}
+
+Command @ref{iris} draw Iris plot for columns of data array. The sample code is:
+@verbatim
+read a 'iris.dat'
+crop a 0 4 'x':rearrange a a.nx 50
+subplot 1 1 0 '':title 'Iris plot'
+iris a 'sepal\n length;sepal\n width;petal\n length;petal\n width' '. ';value -1.5;size -2
+@end verbatim
+
+@pfig{iris, Example of Iris()}
+
+@c ------------------------------------------------------------------
+@external{}
+@node Tube sample, Tape sample, Iris sample, 1D samples
 @subsection Tube sample
 @nav{}
 

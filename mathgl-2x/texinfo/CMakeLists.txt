@@ -11,7 +11,8 @@ set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 	surfa surfc surfca surf table tape tens ternary textmark text ticks tile tiles
 	torus traj triangulation triplot tube type0 type1 type2 vect vecta venn
 	projection5 mask correl refill ohlc ode indirect
-	pulse scanfile bifurcation lamerey pmap ifs2d ifs3d )
+	pulse scanfile bifurcation lamerey pmap ifs2d ifs3d
+	flame2d detect dilate iris section apde )
 set(MGL_PNG_N )
 set(MGL_PNG_S )
 set(MGL_PNG_J )

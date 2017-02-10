@@ -126,7 +126,7 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 			if(wcs[i]=='\n')	// parse '\n' symbol
 			{
 				wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,c1,c2);	// find width
-				Puts(buf,-w*(align&3)/2.f,-h - 660.*num/fact[0],1.f,font,c1,c2);	// draw it really
+				Puts(buf,-w*(align&3)/2.f,-h - 660*num/fact[0],1.f,font,c1,c2);	// draw it really
 				buf=wcs+i+1;	num++;	if(w>ww)	ww=w;
 			}
 // 			if(wcs[i]=='\\' && wcs[i+1]=='n' && (wcs[i+2]>' ' || wcschr(L"{}[]()!@#$%^&*/-?.,_=+\\\"", wcs[i+2])))	// parse '\n' symbol
@@ -138,7 +138,7 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 		}
 		// draw string itself
 		w = Puts(buf,0,0,1.f,0x10|font,c1,c2);	// find width
-		Puts(buf,-w*(align&3)/2.f,-h - 660.*num/fact[0],1.f,font,c1,c2);	// draw it really
+		Puts(buf,-w*(align&3)/2.f,-h - 660*num/fact[0],1.f,font,c1,c2);	// draw it really
 		if(w>ww)	ww=w;
 		delete []wcs;
 	}
@@ -204,7 +204,7 @@ float mglFont::Height(int font) const
 {
 	if(GetNumGlyph()==0)	return 0;
 	int s = (font/MGL_FONT_BOLD)&3;
-	return (500.f)/fact[s];
+	return 660/fact[s];
 }
 //-----------------------------------------------------------------------------
 float mglFont::Height(const char *how) const
@@ -216,7 +216,7 @@ float mglFont::Height(const char *how) const
 		if(strchr(how,'b'))	s = s|1;
 		if(strchr(how,'i'))	s = s|2;
 	}
-	return (500.f)/fact[s];
+	return 660/fact[s];
 }
 //-----------------------------------------------------------------------------
 /// Table of acents and its UTF8 codes

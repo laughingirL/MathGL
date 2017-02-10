@@ -1872,6 +1872,42 @@ MGL использует специальные классы автоматич�
 Задает ссылку на другой столбец того же массива данных.
 @end deftypefn
 
+
+@heading Class @code{mglDataW}
+представляет часоту для FFT в виде массива данных.
+@deftypefn {Конструктор @code{mglDataW}} @code{} mglDataW (@code{const mglDataW &} d)
+Конструктор копирования.
+@end deftypefn
+@deftypefn {Конструктор @code{mglDataW}} @code{} mglDataW (@code{long} xx=@code{1}, @code{long} yy=@code{1}, @code{long} zz=@code{1}, @code{double} dp=@code{0}, @code{char} dir=@code{'x'})
+Задает размеры, направление @var{dir} и шаг @var{dp} для частоты.
+@end deftypefn
+@deftypefn {Метод класса @code{mglDataR}} @code{void} Freq (@code{double} dp, @code{char} dir=@code{'x'})
+Равномерно распределяет данные с шагом @var{dp} в направлении @var{dir}.
+@end deftypefn
+
+
+@heading Class @code{mglDataS}
+представляет std::vector в виде массива данных.
+@deftypecv {Variable} mglDataS @code{std::vector<mreal>} dat
+Собственно данные.
+@end deftypecv
+@deftypefn {Конструктор @code{mglDataS}} @code{} mglDataS (@code{const mglDataS &} d)
+Конструктор копирования.
+@end deftypefn
+@deftypefn {Конструктор @code{mglDataS}} @code{} mglDataS (@code{const std::vector<mreal> &} d)
+Копирует данные из @var{d}.
+@end deftypefn
+@deftypefn {Конструктор @code{mglDataS}} @code{} mglDataS (@code{size_t} s)
+Выделяет память для @var{s} элементов.
+@end deftypefn
+@deftypefn {Метод класса @code{mglDataS}} @code{void} reserve (@code{size_t} num)
+Резервирует место для @var{num} элементов.
+@end deftypefn
+@deftypefn {Метод класса @code{mglDataS}} @code{void} push_back (@code{double} v)
+Добавляет значение @var{v} к концу массива данных.
+@end deftypefn
+
+
 @end ifclear
 
 @external{}

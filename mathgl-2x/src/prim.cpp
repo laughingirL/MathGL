@@ -1119,7 +1119,7 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(!g)	return;
 	mreal ofsize = gr->GetFontSize();
 	mreal res=gr->SaveState(opt), fsize = gr->GetFontSize();
-	if(mgl_isnan(res))	res=-1;
+	if(mgl_isnan(res))	res=-1;	res /= m;
 	static int cgid=1;	gr->StartGroup("Iris",cgid++);
 	std::wstring *strs = new std::wstring[m];
 	bool label = ids && ids[0];	// disable axis drawing

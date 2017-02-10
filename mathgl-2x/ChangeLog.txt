@@ -1,4 +1,4 @@
-2.3.6 Released ??? March 2017
+2.4 Released ??? March 2017
 
 * Add string manipulation in MGL language:
 	o 'str'[n] -- get string of only n-th symbol;

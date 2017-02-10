@@ -119,7 +119,7 @@ public:
 	inline void CutOff(const char *EqC)		{	mgl_set_cutoff(gr, EqC);	}
 
 	/// Set default font size
-	inline void SetFontSize(double size)	{	mgl_set_font_size(gr, size);}
+	inline void SetFontSize(double size)	{	mgl_set_font_size(gr, size);	}
 	/// Set default font style and color
 	inline void SetFontDef(const char *fnt)	{	mgl_set_font_def(gr, fnt);	}
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
