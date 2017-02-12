@@ -53,21 +53,15 @@ D. Docs about JS interface
 
 1. Update Qt and UDAV figures
 2. Sample about PDE -- add 'tridmat' + 'diffract'
-3. Update time.texi
+3. Sample about complex 'ode' (like Raman scattering)
 
 5. Docs about 'flame2d'
-8. Hint about 'rasterize'
-	fsurf 'x^2+y^2' '#';value 10
-	rasterize:clf # все что выше будет только в растре
-	axis:box
-	write '1.eps'
 9. Docs about 'detect'
 10. Docs about 'apde'
-11. "copy var 'name'" -- to copy variable with "invalid" name
-15. Docs about 'bbox'
 17. Docs about 'section'.
-19. Docs about .m[xyz][lf] and mgl_data_max_first()
 21. Docs about 'erode' and 'dilate'.
+
+ZZ. Update time.texi
 
 ============= UDAV =============
 

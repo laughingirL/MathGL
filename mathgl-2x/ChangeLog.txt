@@ -26,6 +26,8 @@
 * Add mglODEc() -- ODE solver for complex variables.
 * Update CMake find_package to find MathGL.
 * Increase line width for wired text.
+* Update documentation: add description of new commands, add hint @ref{Mixing bitmap and vector output}.
+
 * INCOMPATIBLE: Replace libmgl-qt by libmgl-qt4 and libmgl-qt5 for resolving conflicts of simultaneously installed both Qt4 and Qt5.
 * Minor bugfixes.
 

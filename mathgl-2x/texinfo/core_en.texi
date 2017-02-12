@@ -1283,6 +1283,16 @@ These functions export current view to a graphic file. The filename @var{fname} 
 Exports current frame to a file @var{fname} which type is determined by the extension. Parameter @var{descr} adds description to file (can be @code{""}). If @var{fname}=@code{""} then the file @samp{frame####.jpg} is used, where @samp{####} is current frame id and name @samp{frame} is defined by @ref{plotid} class property.
 @end deftypefn
 
+@anchor{bbox}
+@deftypefn {MGL command} {} bbox x1 y1 [x2=@code{-1} y2=@code{-1}]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetBBox (@code{int} x1=@code{0}, @code{int} y1=@code{0}, @code{int} x2=@code{-1}, @code{int} y2=@code{-1})
+@deftypefnx {C function} @code{void} mgl_set_bbox (@code{HMGL} gr, @code{int} x1, @code{int} y1, @code{int} x2, @code{int} y2)
+@end ifclear
+Set boundary box for export graphics into 2D file formats. If @var{x2}<0 (@var{y2}<0) then original image width (height) will be used. If @var{x1}<0 or @var{y1}<0 or @var{x1}>=@var{x2}|Width or @var{y1}>=@var{y2}|Height then cropping will be disabled.
+@end deftypefn
+
+
 @ifclear UDAV
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WritePNG (@code{const char *}fname, @code{const char *}descr=@code{""}, @code{int} compr=@code{""}, @code{bool} alpha=@code{true})

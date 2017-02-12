@@ -3507,6 +3507,7 @@ In this section I've included some small hints and advices for the improving of 
 * Stereo image::
 * Reduce memory usage::
 * Saving and scanning file::
+* Mixing bitmap and vector output::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -4396,7 +4397,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Saving and scanning file, , Reduce memory usage, Hints
+@node Saving and scanning file, Mixing bitmap and vector output, Reduce memory usage, Hints
 @subsection Scanning file
 @nav{}
 
@@ -4427,6 +4428,32 @@ gr->Axis();	gr->Plot(a.SubData(0),a.SubData(1),"o");
 @end verbatim
 
 Note, I keep only the leading part of template (i.e. "This is test: %g -> %g" instead of "This is test: %g -> %g q\n"), because there is no important for us information after the second number in the line.
+
+
+@c ------------------------------------------------------------------
+@external{}
+@node Mixing bitmap and vector output, , Saving and scanning file, Hints
+@subsection Mixing bitmap and vector output
+@nav{}
+
+Sometimes output plots contain surfaces with a lot of points, and some vector primitives (like axis, text, curves, etc.). Using vector output formats (like EPS or SVG) will produce huge files with possible loss of smoothed lighting. Contrary, the bitmap output may cause the roughness of text and curves. Hopefully, MathGL have a possibility to combine bitmap output for surfaces and vector one for other primitives in the same EPS file, by using @ref{rasterize} command. 
+
+The idea is to prepare part of picture with surfaces or other "heavy" plots and produce the background image from them by help of @ref{rasterize} command. Next, we draw everything to be saved in vector form (text, curves, axis and etc.). Note, that you need to clear primitives (use @ref{clf} command) after @ref{rasterize} if you want to disable duplication of surfaces in output files (like EPS). Note, that some of output formats (like 3D ones, and TeX) don't support the background bitmap, and use @ref{clf} for them will cause the loss of part of picture.
+
+The sample code is:
+@verbatim
+// first draw everything to be in bitmap output
+gr->FSurf("x^2+y^2", "#", "value 10");
+
+gr->Rasterize();  // set above plots as bitmap background
+gr->Clf();        // clear primitives, to exclude them from file
+
+// now draw everything to be in vector output
+gr->Axis(); gr->Box();
+
+// and save file
+gr->WriteFrame("fname.eps");
+@end verbatim
 
 @c ==================================================================
 @external{}

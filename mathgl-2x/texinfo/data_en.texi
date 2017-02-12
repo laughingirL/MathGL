@@ -166,6 +166,19 @@ Default constructor. Allocates the memory for data array and initializes it by z
 Copy constructor. Allocates the memory for data array and copy values from other array. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula similarly to @ref{fill}.
 @end deftypefn
 
+@deftypefn {MGL command} {} copy @sc{redat} @sc{imdat} dat2 ['eq'='']
+Allocates the memory for data array and copy real and imaginary values from complex array @var{dat2}.
+@end deftypefn
+
+@deftypefn {MGL command} {} copy 'name'
+Allocates the memory for data array and copy values from other array specified by its name, which can be "invalid" for MGL names (like one read from HDF5 files).
+@end deftypefn
+
+@deftypefn {MGL command} {} copy 'name'
+Copy constructor. Allocates the memory for data array and copy values from other array. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula similarly to @ref{fill}.
+@end deftypefn
+
+
 @deftypefn {MGL command} {} read @sc{dat} 'fname'
 @ifclear UDAV
 @deftypefnx {Constructor on @code{mglData}} {} mglData (@code{const char *}fname)
@@ -1362,6 +1375,23 @@ Gets approximated (interpolated) position of minimum to variables @var{x}, @var{
 @deftypefnx {C function} @code{mreal} mgl_data_max_real (@code{HCDT} dat, @code{mreal} *x, @code{mreal} *y, @code{mreal} *z)
 @end ifclear
 Gets approximated (interpolated) position of maximum to variables @var{x}, @var{y}, @var{z} and returns the maximal value.
+@end deftypefn
+
+
+@anchor{.mxf} @anchor{.myf} @anchor{.mzf}
+@anchor{.mxl} @anchor{.myl} @anchor{.mzl}
+@deftypefn {MGL suffix} {(dat)} .mxf
+@deftypefnx {MGL suffix} {(dat)} .myf
+@deftypefnx {MGL suffix} {(dat)} .mzf
+@deftypefnx {MGL suffix} {(dat)} .mxl
+@deftypefnx {MGL suffix} {(dat)} .myl
+@deftypefnx {MGL suffix} {(dat)} .mzl
+@ifclear UDAV
+@deftypefnx {Method on @code{mglDataA}} @code{long} Maximal (@code{char} dir, @code{long} from) @code{const}
+@deftypefnx {Method on @code{mglDataA}} @code{long} Maximal (@code{char} dir, @code{long} from, @code{long} &p1, @code{long} &p2) @code{const}
+@deftypefnx {C function} @code{mreal} mgl_data_max_firstl (@code{HCDT} dat, @code{char} dir, @code{long} from, @code{long} *p1, @code{long} *p2)
+@end ifclear
+Get first starting @var{from} give position (or last one if @var{from}<0) maximum along direction @var{dir}, and save its orthogonal coordinates in @var{p1}, @var{p2}.
 @end deftypefn
 
 

@@ -162,6 +162,16 @@ There are many functions, which can create data for output (see @ref{Data fillin
 Копирует данные из другого экземпляра данных. Если указана формула @var{eq}, то данные заполняются также как при использовании @ref{fill}.
 @end deftypefn
 
+@deftypefn {Команда MGL} {} copy @sc{redat} @sc{imdat} dat2
+Копирует действительную и мнимую часть данных из комплексного массива данных @var{dat2}.
+@end deftypefn
+
+@deftypefn {Команда MGL} {} copy @sc{dat} 'name'
+Копирует данные из другого экземпляра данных с именем @var{name}. При этом имя @var{name} может быть некорректным с точки зрения MGL (например, взятым из HDF5 файла).
+@end deftypefn
+
+
+
 @deftypefn {Команда MGL} {} read @sc{dat} 'fname'
 @ifclear UDAV
 @deftypefnx {Конструктор класса @code{mglData}} {} mglData (@code{const char *}fname)
@@ -1348,6 +1358,22 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Функция С} @code{mreal} mgl_data_max_real (@code{HCDT} dat, @code{mreal} *x, @code{mreal} *y, @code{mreal} *z)
 @end ifclear
 Возвращает минимальное значение массива данных и его приближенное (интерполированное) положение в переменные @var{x}, @var{y}, @var{z}.
+@end deftypefn
+
+@anchor{.mxf} @anchor{.myf} @anchor{.mzf}
+@anchor{.mxl} @anchor{.myl} @anchor{.mzl}
+@deftypefn {MGL suffix} {(dat)} .mxf
+@deftypefnx {MGL suffix} {(dat)} .myf
+@deftypefnx {MGL suffix} {(dat)} .mzf
+@deftypefnx {MGL suffix} {(dat)} .mxl
+@deftypefnx {MGL suffix} {(dat)} .myl
+@deftypefnx {MGL suffix} {(dat)} .mzl
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglDataA}} @code{long} Maximal (@code{char} dir, @code{long} from) @code{const}
+@deftypefnx {Метод класса @code{mglDataA}} @code{long} Maximal (@code{char} dir, @code{long} from, @code{long} &p1, @code{long} &p2) @code{const}
+@deftypefnx {Функция С} @code{mreal} mgl_data_max_firstl (@code{HCDT} dat, @code{char} dir, @code{long} from, @code{long} *p1, @code{long} *p2)
+@end ifclear
+Возвращает положение первого (последнего при @var{from}<0) максимума в направлении @var{dir}, начиная с позиции @var{from}. Положение остальных координат для максимума сохраняется в @var{p1}, @var{p2}.
 @end deftypefn
 
 
