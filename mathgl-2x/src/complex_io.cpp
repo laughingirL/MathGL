@@ -68,25 +68,15 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 	{
 		char *b = lines[k];
 		long nb = strlen(b);
-		long i=0, j=0;
-
-		while(j<nb)
+		for(long j=0;j<nb;j++)
 		{
-			while(j<nb && b[j]<=' ')	j++;
+			while(j<nb && b[j]<=' ')	j++;	// skip first spaces
 			if(j>=nb)	break;
-			while(b[j]=='#')		// skip comment
+			if(b[j]=='#')
 			{
-				if(i>0 || b[j+1]!='#')	// this is not columns id
-					while(j<nb && !isn(b[j]))	j++;
-				else	// NOTE I suppose that only single line contain column ids
-				{
-					while(j<nb && !isn(b[j]))
-					{
-						if(b[j]>='a' && b[j]<='z')	d->id.push_back(b[j]);
-						j++;
-					}	i++;
-				}
-				while(j<nb && b[j]<=' ')	j++;
+				if(j<nb-1 && b[j+1]=='#')	for(long i=j+2;i<nb;i++)
+					if(b[i]>='a' && b[i]<='z')	d->id.push_back(b[i]);
+				break;
 			}
 			char *s=b+j;
 			long sk=0;
@@ -110,8 +100,8 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 				int s2=sscanf(s,"%lg-%lg",&a,&b);
 				if(s1<2)
 				{
-				  if(s2==2)	{	re=a;	im=-b;	}
-				  else	{	im=atof(s);	re=0;	}
+					if(s2==2)	{	re=a;	im=-b;	}
+					else	{	im=atof(s);	re=0;	}
 				}
 			}
 			else
@@ -121,8 +111,8 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 				int s2=sscanf(s,"%lg-i%lg",&a,&b);
 				if(s1<2)
 				{
-				  if(s2==2)	{	re=a;	im=-b;	}
-				  else	{	re=atof(s);	im=0;	}
+					if(s2==2)	{	re=a;	im=-b;	}
+					else	{	re=atof(s);	im=0;	}
 				}
 			}
 			numbs[k].push_back(dual(re,im));
@@ -251,6 +241,8 @@ std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns)
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data
+		const mglDataC *dc = dynamic_cast<const mglDataC *>(d);
+		if(dc && !dc->id.empty())	out += "## "+dc->id+'\n';
 		for(long i=0;i<ny;i++)
 		{
 			for(long j=0;j<nx-1;j++)

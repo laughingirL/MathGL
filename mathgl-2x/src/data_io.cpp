@@ -74,27 +74,17 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 	{
 		char *b = lines[k];
 		long nb = strlen(b);
-		long i=0, j=0;
-		while(j<nb)
+		for(long j=0;j<nb;j++)
 		{
-			while(j<nb && b[j]<=' ')	j++;
+			while(j<nb && b[j]<=' ')	j++;	// skip first spaces
 			if(j>=nb)	break;
-			while(b[j]=='#')		// skip comment
+			if(b[j]=='#')
 			{
-				if(i>0 || b[j+1]!='#')	// this is not columns id
-					while(j<nb && !isn(b[j]))	j++;
-				else	// NOTE I suppose that only single line contain column ids
-				{
-					while(j<nb && !isn(b[j]))
-					{
-						if(b[j]>='a' && b[j]<='z')
-							d->id.push_back(b[j]);
-						j++;
-					}	i++;
-				}
-				while(j<nb && b[j]<=' ')	j++;
+				if(j<nb-1 && b[j+1]=='#')	for(long i=j+2;i<nb;i++)
+					if(b[i]>='a' && b[i]<='z')	d->id.push_back(b[i]);
+				break;
 			}
-			char *s=b+j;
+			const char *s=b+j;
 			while(j<nb && b[j]>' ' && b[j]!=',' && b[j]!=';')	j++;
 			b[j]=0;
 			numbs[k].push_back(strstr(s,"NAN")?NAN:atof(s));
@@ -103,7 +93,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 	long i=0, n=NX*NY*NZ;
 	for(long k=0;k<nl && i<n;k++)
 	{
-		std::vector<mreal> &vals = numbs[k];
+		const std::vector<mreal> &vals = numbs[k];
 		long c = vals.size();
 		if(c>n-i)	c = n-i;
 		memcpy(d->a+i,&(vals[0]),c*sizeof(mreal));
@@ -294,11 +284,7 @@ std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns)
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data
 		const mglData *dr = dynamic_cast<const mglData *>(d);
-		if(dr && !dr->id.empty())
-		{	snprintf(buf,512,"## %s\n",dr->id.c_str());	out += buf;	}
-		const mglDataC *dc = dynamic_cast<const mglDataC *>(d);
-		if(dc && !dc->id.empty())
-		{	snprintf(buf,512,"## %s\n",dc->id.c_str());	out += buf;	}
+		if(dr && !dr->id.empty())	out += "## "+dr->id+'\n';
 		for(long i=0;i<ny;i++)
 		{
 			for(long j=0;j<nx-1;j++)
