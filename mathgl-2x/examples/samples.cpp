@@ -2907,8 +2907,30 @@ void smgl_section(mglGraph *gr)
 	gr->Plot(b3.SubData(-1,1), b3.SubData(-1,0), "r#o");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_3wave="define t 50\n"
+"ode !r '-b*f;a*conj(f);a*conj(b)-0.1*f' 'abf' [1,1e-3,0] 0.1 t\n"
+"ranges 0 t 0 r.max\nplot r(0) 'b';legend 'a'\n"
+"plot r(1) 'g';legend 'b'\nplot r(2) 'r';legend 'f'\n"
+"axis:box:legend";
+void smgl_3wave(mglGraph *gr)
+{
+	gr->SubPlot(1,1,0,"<_");
+	if(big!=3)	gr->Title("Complex ODE sample");
+	double t=50;
+	mglData ini;	ini.SetList(3, 1., 1e-3, 0.);
+	mglDataC r(mglODEc("-b*f;a*conj(f);a*conj(b)-0.1*f","abf",ini,0.1,t));
+	gr->SetRanges(0, t, 0, r.Maximal());
+	gr->Plot(r.SubData(0),"b","legend 'a'");
+	gr->Plot(r.SubData(1),"g","legend 'b'");
+	gr->Plot(r.SubData(2),"r","legend 'f'");
+	gr->Axis();	gr->Box();	gr->Legend();
+}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 mglSample samp[] = {
+	{"3wave", smgl_3wave, mmgl_3wave},
 	{"alpha", smgl_alpha, mmgl_alpha},
 	{"apde", smgl_apde, mmgl_apde},
 	{"area", smgl_area, mmgl_area},

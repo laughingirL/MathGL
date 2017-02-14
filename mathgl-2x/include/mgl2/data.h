@@ -358,7 +358,6 @@ using mglDataA::Momentum;
 	/// Return eroded array of 0 or 1 for data values larger val 
 	inline void Erode(mreal val=1, long step=1)
 	{	mgl_data_erode(this, val, step);	}
-	
 
 	/// Set as the data envelop
 	inline void Envelop(char dir='x')
@@ -999,7 +998,7 @@ public:
 	{	return mglSpline3s(dat.data(),dat.size(),1,1,x,0,0);	}
 
 	mreal v(long i,long =0,long =0) const		{	return dat[i];	}
-	mreal vthr(long i) const	{	return dat[i];	};
+	mreal vthr(long i) const	{	return dat[i];	}
 	long GetNx() const	{	return dat.size();	}
 	long GetNy() const	{	return 1;	}
 	long GetNz() const	{	return 1;	}

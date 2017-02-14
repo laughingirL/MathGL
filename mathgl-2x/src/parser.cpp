@@ -22,6 +22,9 @@
 #include "mgl2/canvas_cf.h"
 #include "mgl2/base.h"
 //-----------------------------------------------------------------------------
+HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
+HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
+//-----------------------------------------------------------------------------
 MGL_EXPORT void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
 void MGL_EXPORT mgl_ask_gets(const wchar_t *quest, wchar_t *res)
 {	printf("%ls\n",quest);	if(!fgetws(res,1024,stdin))	*res=0;	}
@@ -102,10 +105,9 @@ const mglCommand *mglParser::FindCommand(const wchar_t *com) const
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command, 3 -- unclosed string
 int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const std::wstring &/*var*/, const wchar_t *opt)
 {
-	int i;
 	const char *id="dsn";
 	std::string k;
-	for(i=0;i<n;i++)
+	for(long i=0;i<n;i++)
 	{
 		k += id[a[i].type];
 		size_t len = wcstombs(NULL,a[i].w.c_str(),0)+1;
@@ -121,15 +123,56 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 		a[0].type = 0;	a[0].d = AddVar(var.c_str());
 		a[0].w = var;	k[0] = 'd';
 	}*/
-	char *o=0;
+	std::string vopt;
 	if(opt && *opt)	// TODO: parse arguments of options
 	{
-		long len = mgl_wcslen(opt);
-		o = new char[len+1];
-		for(i=0;i<len+1;i++)	o[i]=opt[i];
+		size_t len = mgl_wcslen(opt);
+		std::vector<std::wstring> ss;
+		std::wstring s, o;
+		bool st = true, name = true;
+		for(size_t i=0;i<len+1;i++)
+		{
+			if(st && opt[i]<=' ')	continue;	// skip spaces at beginning
+			st = false;
+			if(i<len && opt[i]!=';')
+			{
+				if(name && opt[i]<=' ')	{	name = false;	o = s;	}
+				s.push_back(opt[i]);
+			}
+			else
+			{
+				size_t j = o.size(),k;
+				wchar_t buf[64];
+				if(o==L"xrange" || o==L"yrange" || o==L"zrange" || o==L"crange")	// 2 arguments
+				{
+					bool alph=false;
+					for(k=j;k<s.length();k++)
+					{
+						if(s[k]>' ')	alph=true;
+						if(alph && s[k]<=' ')	break;
+					}
+					HMDT d1 = mglFormulaCalc(s.substr(j+1,k-j),this, DataList);
+					HMDT d2 = mglFormulaCalc(s.substr(k+1),this, DataList);
+					mglprintf(buf,64,L" %g %g",d1->a[0],d2->a[0]);
+					s = o+buf;	delete d1;	delete d2;
+				}
+				else if(o!=L"legend")	// 1 argument
+				{
+					HMDT dd = mglFormulaCalc(s.substr(j+1),this, DataList);
+					mglprintf(buf,64,L" %g",dd->a[0]);
+					s = o+buf;	delete dd;
+				}
+				st = name = true;	ss.push_back(s);
+				o.clear();	s.clear();
+			}
+		}
+		for(size_t i=0;i<ss.size();i++)
+		{
+			for(size_t j=0;j<ss[i].length();j++)	vopt += ss[i][j];
+			vopt += ';';
+		}
 	}
-	int res=rts->exec(gr, n, a, k.c_str(), o);
-	if(o)	delete []o;
+	int res=rts->exec(gr, n, a, k.c_str(), vopt.c_str());
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -150,6 +193,7 @@ mglParser::mglParser(bool setsize)
 	mglNum *v;
 	v = new mglNum(0);	v->s = L"off";	NumList.push_back(v);
 	v = new mglNum(1);	v->s = L"on";	NumList.push_back(v);
+	v = new mglNum(-1);	v->s = L"all";	NumList.push_back(v);
 	v = new mglNum(NAN);	v->s = L"nan";	NumList.push_back(v);
 	v = new mglNum(M_PI);	v->s = L"pi";	NumList.push_back(v);
 	v = new mglNum(INFINITY);	v->s = L"inf";	NumList.push_back(v);
@@ -180,6 +224,7 @@ void mglParser::DeleteAll()
 	mglNum *v;
 	v = new mglNum(0);	v->s = L"off";	NumList.push_back(v);
 	v = new mglNum(1);	v->s = L"on";	NumList.push_back(v);
+	v = new mglNum(-1);	v->s = L"all";	NumList.push_back(v);
 	v = new mglNum(NAN);	v->s = L"nan";	NumList.push_back(v);
 	v = new mglNum(M_PI);	v->s = L"pi";	NumList.push_back(v);
 	v = new mglNum(INFINITY);	v->s = L"inf";	NumList.push_back(v);
@@ -287,9 +332,6 @@ int MGL_LOCAL_PURE mglFindArg(const std::wstring &str)
 	}
 	return 0;
 }
-//-----------------------------------------------------------------------------
-HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
-HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 // convert substrings to arguments
 void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)

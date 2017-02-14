@@ -34,8 +34,8 @@ int DefineGlyph(const mglData &x, const mglData &y);
 void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl);
 5. Simplified triangle filling for Quality=1 ?!?
 
-6. Parse arguments of options
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
+8. Style to plot,tens,area and etc to draw segments/quads between points outside of axis range.
 
 13. "readhdf 'fname.hdf'" -- to read ALL data
 14. Read MAT files ?!!
@@ -54,6 +54,7 @@ D. Docs about JS interface
 1. Update Qt and UDAV figures
 2. Sample about PDE -- add 'tridmat' + 'diffract'
 3. Sample about complex 'ode' (like Raman scattering)
+4. Style 'i' for fourier
 
 5. Docs about 'flame2d'
 9. Docs about 'detect'

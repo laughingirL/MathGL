@@ -100,9 +100,9 @@ void QMGLSyntax::highlightBlock(const QString &text)
 			setFormat(i,1,mglColorScheme[5]);
 		else		// number as its symbolic id
 		{
-			const char *o[]={"nan","inf","pi","on","off"};
-			int l[5] = {3, 3, 2, 2, 3};
-			for(j=0;j<5;j++)
+			const char *o[6]={"nan","inf","pi","on","off","all"};
+			int l[6] = {3, 3, 2, 2, 3, 3};
+			for(j=0;j<6;j++)
 				if(text.indexOf(o[j],i)==i && (i+l[j]==text.length() || text[i+l[j]].isSpace()))
 					setFormat(i,l[j],mglColorScheme[5]);
 		}

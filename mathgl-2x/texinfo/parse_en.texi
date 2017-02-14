@@ -59,7 +59,7 @@ result of code for making new data (@pxref{Make another data}) inside @{@}. For 
 Temporary variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
 
 @item
-Special names @code{nan=#QNAN, inf=INFINITY, rnd=random value, pi=3.1415926..., on=1, off=0, :=-1}, variables with suffixes (@pxref{Data information}), names defined by @ref{define} command, time values (in format "hh-mm-ss_DD.MM.YYYY", "hh-mm-ss" or "DD.MM.YYYY") are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}). 
+Special names @code{nan=#QNAN, inf=INFINITY, rnd=random value, pi=3.1415926..., on=1, off=0, all=-1, :=-1}, variables with suffixes (@pxref{Data information}), names defined by @ref{define} command, time values (in format "hh-mm-ss_DD.MM.YYYY", "hh-mm-ss" or "DD.MM.YYYY") are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}). 
 @end itemize
 Before the first using all variables must be defined with the help of commands, like, @ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} and so on (see sections @ref{Data constructor}, @ref{Data filling} and @ref{Make another data}).
 

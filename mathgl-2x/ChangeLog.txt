@@ -16,6 +16,7 @@
 * Add function mgl_data_max_first() and data suffix .m[xyz][fl] to find first/last maximum along direction.
 * Add style 'F' for 'bars' and 'barh' to set fixed bar widths.
 * Add possibility of manual shift in 'multiplot'.
+* Add parsing arguments of options for MGL commands.
 * Function 'step' handle data with x.nx>y.nx similarly to 'bars'.
 * Extend 'tile' and 'tiles' by adding manual coloring and face orientation.
 * Add variant of MGL command 'copy' to copy data with "incorrect" names.
@@ -27,6 +28,7 @@
 * Update CMake find_package to find MathGL.
 * Increase line width for wired text.
 * Update documentation: add description of new commands, add hint @ref{Mixing bitmap and vector output}.
+* Name 'all' are reserved in MGL scripts now as synonim of -1.
 
 * INCOMPATIBLE: Replace libmgl-qt by libmgl-qt4 and libmgl-qt5 for resolving conflicts of simultaneously installed both Qt4 and Qt5.
 * Minor bugfixes.
