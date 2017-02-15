@@ -1135,7 +1135,9 @@ long MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size)
 #else
 void MGL_EXPORT mgl_data_save_hdf(HCDT ,const char *,const char *,int )
 {	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	}
-int MGL_EXPORT mgl_datas_hdf(const char *, char *, long )
+MGL_EXPORT const char * const * mgl_datas_hdf_str(const char *fname)
+{	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	return 0;}
+long MGL_EXPORT mgl_datas_hdf(const char *, char *, long )
 {	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	return 0;}
 int MGL_EXPORT mgl_data_read_hdf(HMDT ,const char *,const char *)
 {	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	return 0;}

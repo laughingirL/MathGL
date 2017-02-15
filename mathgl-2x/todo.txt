@@ -35,7 +35,7 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 5. Simplified triangle filling for Quality=1 ?!?
 
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
-8. Style to plot,tens,area and etc to draw segments/quads between points outside of axis range.
+8. Style 'a' to plot,tens,area and etc to draw segments/quads between points outside of axis range.
 
 14. Read MAT files ?!!
 15. Read WFM files ?!!
