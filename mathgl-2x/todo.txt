@@ -37,7 +37,6 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
 8. Style to plot,tens,area and etc to draw segments/quads between points outside of axis range.
 
-13. "readhdf 'fname.hdf'" -- to read ALL data
 14. Read MAT files ?!!
 15. Read WFM files ?!!
 
@@ -61,8 +60,10 @@ D. Docs about JS interface
 10. Docs about 'apde'
 17. Docs about 'section'.
 21. Docs about 'erode' and 'dilate'.
+22. Docs about mgl_datas_hdf_str().
+23. Docs about mglParse::OpenHDF()
 
-ZZ. Update time.texi
+ZZ. Update time.texi {before release!!!}
 
 ============= UDAV =============
 

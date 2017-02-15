@@ -638,6 +638,10 @@ void MGL_EXPORT mgl_rk_step(HMPR pr, const char *eqs, const char *vars, mreal dt
 void MGL_EXPORT mgl_rk_step_w(HMPR pr, const wchar_t *eqs, const wchar_t *vars, mreal dt);
 void MGL_EXPORT mgl_rk_step_(uintptr_t *p, const char *eqs, const char *vars, double *dt, int,int);
 
+// Open all data arrays from HDF file and assign it as variables of parser p
+void MGL_EXPORT mgl_parser_openhdf(HMPR p, const char *fname);
+void MGL_EXPORT mgl_parser_openhdf_(uintptr_t *p, const char *fname,int l);
+
 /// Parse and draw single line of the MGL script
 int MGL_EXPORT mgl_parse_line(HMGL gr, HMPR p, const char *str, int pos);
 int MGL_EXPORT mgl_parse_line_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int);

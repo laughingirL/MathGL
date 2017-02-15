@@ -2222,6 +2222,9 @@ public:
 	{	mgl_rk_step(pr, eqs, vars, dt);	}
 	inline void RK_Step(const wchar_t *eqs, const wchar_t *vars, mreal dt=1)
 	{	mgl_rk_step_w(pr, eqs, vars, dt);	}
+	// Open all data arrays from HDF file and assign it as variables of parser p
+	inline void OpenHDF(const char *fname)
+	{	mgl_parser_openhdf(pr, fname);	}
 
 	/// Set value for parameter $N
 	inline void AddParam(int id, const char *str)

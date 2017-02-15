@@ -1070,7 +1070,6 @@ void MGL_EXPORT mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,in
 int MGL_EXPORT mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 {
 	hid_t hf,hd,hs;
-	hsize_t dims[3];
 	long rank, res = H5Fis_hdf5(fname);
 	if(res<=0)	return mgl_data_read_hdf4(d,fname,data);
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
@@ -1081,6 +1080,7 @@ int MGL_EXPORT mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 	rank = H5Sget_simple_extent_ndims(hs);
 	if(rank>0 && rank<=3)
 	{
+		hsize_t dims[3];
 		H5Sget_simple_extent_dims(hs,dims,0);
 		if(rank==1)			{	dims[2]=dims[0];	dims[0]=dims[1]=1;	}
 		else if(rank==2)	{	dims[2]=dims[1];	dims[1]=dims[0];	dims[0]=1;	}
@@ -1095,31 +1095,42 @@ int MGL_EXPORT mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 	H5Sclose(hs);	H5Dclose(hd);	H5Fclose(hf);	return 1;
 }
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size)
+MGL_EXPORT const char * const * mgl_datas_hdf_str(const char *fname)
 {
+	static std::vector<std::string> names;
+	static const char **res=0;
 	hid_t hf,hg,hd,ht;
-	if(!buf || size<1)	return 0;
-	buf[0]=0;
-	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
+	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);	names.clear();
 	if(!hf)	return 0;
 	hg = H5Gopen(hf,"/");
-	hsize_t num, i;
+	hsize_t num;
 	char name[256];
-	long pos=0,len;
 	H5Gget_num_objs(hg, &num);	// replace by H5G_info_t t; H5Gget_info(hg,&t); num=t.nlinks;
-	for(i=0;i<num;i++)
+	for(hsize_t i=0;i<num;i++)
 	{
 		if(H5Gget_objtype_by_idx(hg, i)!=H5G_DATASET)	continue;
 		H5Gget_objname_by_idx(hg, i, name, 256);	// replace by H5Lget_name_by_idx(hg,".",i,0,0,name,256,0) ?!
 		hd = H5Dopen(hf,name);
 		ht = H5Dget_type(hd);
-		len = strlen(name);		if(pos+len+2>size)	break;
-		if(H5Tget_class(ht)==H5T_FLOAT || H5Tget_class(ht)==H5T_INTEGER)
-		{	strcat(buf,name);	strcat(buf,"\t");	pos += len+1;	}
+		if(H5Tget_class(ht)==H5T_FLOAT || H5Tget_class(ht)==H5T_INTEGER)	names.push_back(name);
 		H5Dclose(hd);	H5Tclose(ht);
 	}
-	H5Gclose(hg);	H5Fclose(hf);
-	return i;
+	H5Gclose(hg);	H5Fclose(hf);	names.push_back("");
+	if(res)	delete []res;
+	res = new const char*[names.size()];
+	for(size_t i=0;i<names.size();i++)	res[i]=names[i].c_str();
+}
+
+long MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size)
+{
+	const char * const *res = mgl_datas_hdf_str(fname);
+	if(!res)	return 0;
+	size_t n=0, len=1;
+	while(res[n][0])	{	len += strlen(res[n])+1;	n++;	}
+	if(len>size)	return -long(len);
+	strcpy(buf,res[0]);
+	for(size_t i=1;i<n;i++)	{	strcat(buf,"\t");	strcat(buf,res[i]);	}
+	return n;
 }
 #else
 void MGL_EXPORT mgl_data_save_hdf(HCDT ,const char *,const char *,int )
@@ -1138,7 +1149,7 @@ void MGL_EXPORT mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	char *t=new char[n+1];		memcpy(t,data,n);	t[n]=0;
 	mgl_data_save_hdf(_DT_,s,t,*rewrite);	delete []s;	delete []t;	}
-int MGL_EXPORT mgl_datas_hdf_(const char *fname, char *buf, int l, int size)
+long MGL_EXPORT mgl_datas_hdf_(const char *fname, char *buf, int l, int size)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_datas_hdf(s,buf,size);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------

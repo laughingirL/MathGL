@@ -1371,3 +1371,20 @@ void MGL_EXPORT mgl_rk_step_(uintptr_t *p, const char *eqs, const char *vars, do
 void MGL_EXPORT mgl_parser_variant(HMPR p, int var)	{	p->SetVariant(var);	}
 void MGL_EXPORT mgl_parser_variant_(uintptr_t *p, int *var)	{	mgl_parser_variant(_PR_,*var);	}
 //---------------------------------------------------------------------------
+void MGL_EXPORT mgl_parser_openhdf(HMPR p, const char *fname)
+{
+	const char * const *res = mgl_datas_hdf_str(fname);
+	if(!res)	return;
+	for(size_t n=0;res[n][0];n++)
+	{
+		mglDataA *d = p->AddVar(res[n]);
+		mglData *dr = dynamic_cast<mglData*>(d);
+		mglDataC *dc = dynamic_cast<mglDataC*>(d);
+		if(dr)	dr->ReadHDF(fname,res[n]);
+		if(dc)	dc->ReadHDF(fname,res[n]);
+	}
+}
+void MGL_EXPORT mgl_parser_openhdf_(uintptr_t *p, const char *fname,int l)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	mgl_parser_openhdf(_PR_,s);	delete []s;	}
+//---------------------------------------------------------------------------

@@ -1417,6 +1417,13 @@ int MGL_NO_EXPORT mgls_savehdf(mglGraph *, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_openhdf(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"s") && gr->pr)	mgl_parser_openhdf(gr->pr, a[0].s.c_str());
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_rect(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
@@ -2421,7 +2428,12 @@ int MGL_NO_EXPORT mgls_datas(mglGraph *gr, long , mglArg *a, const char *k, cons
 	if(!strcmp(k,"s"))
 	{
 		char *buf=new char[1024];
-		mgl_datas_hdf(a[0].s.c_str(),buf,1024);
+		long n=mgl_datas_hdf(a[0].s.c_str(),buf,1024);
+		if(n<0)
+		{
+			delete []buf;	buf=new char[-n];
+			mgl_datas_hdf(a[0].s.c_str(),buf,-n);
+		}
 		gr->SetWarn(-1,buf);
 		delete []buf;
 	}
@@ -3817,6 +3829,7 @@ mglCommand mgls_base_cmd[] = {
 	{"ode","Solve ODE","ode Res 'df' 'var' Ini [dt tmax]", mgls_ode ,4},
 	{"ohlc","Draw Open-High-Low-Close (OHLC) diagram","ohlc Odat Hdat Ldat Cdat ['fmt']|Xdat Odat Hdat Ldat Cdat ['fmt']", mgls_ohlc ,7},
 	{"once","Start/close commands which should executed only once","once val", 0, 6},
+	{"openhdf","Open all data arrays from HDF file","openhdf 'fname'", mgls_openhdf ,3},
 	{"origin","Set axis origin","origin x0 y0 [z0]", mgls_origin ,14},
 	{"origintick","Set tick labels drawing at origin","origintick val", mgls_origintick ,14},
 	{"palette","Set palette for 1D plots","palette 'colors'", mgls_palette ,2},

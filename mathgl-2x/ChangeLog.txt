@@ -17,6 +17,7 @@
 * Add style 'F' for 'bars' and 'barh' to set fixed bar widths.
 * Add possibility of manual shift in 'multiplot'.
 * Add parsing arguments of options for MGL commands.
+* Add 'openhdf' to open all data arrays from HDF file.
 * Function 'step' handle data with x.nx>y.nx similarly to 'bars'.
 * Extend 'tile' and 'tiles' by adding manual coloring and face orientation.
 * Add variant of MGL command 'copy' to copy data with "incorrect" names.
