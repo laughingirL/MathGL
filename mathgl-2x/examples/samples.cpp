@@ -2926,6 +2926,73 @@ void smgl_3wave(mglGraph *gr)
 	gr->Axis();	gr->Box();	gr->Legend();
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_diffract="define n 32	#number of points\ndefine m 20 # number of iterations\n"
+"define dt 0.01 # time step\nnew res n m+1\nranges -1 1 0 m*dt 0 1\n\n"
+"#tridmat periodic variant\nnew !a n 'i',dt*(n/2)^2/2\ncopy !b !(1-2*a)\n\n"
+"new !u n 'exp(-6*x^2)'\nput res u all 0\nfor $i 0 m\ntridmat u a b a u 'xdc'\n"
+"put res u all $i+1\nnext\nsubplot 2 2 0 '<_':title 'Tridmat, periodic b.c.'\naxis:box:dens res\n\n"
+"#fourier variant\nnew k n:fillsample k 'xk'\ncopy !e !exp(-i1*dt*k^2)\n\n"
+"new !u n 'exp(-6*x^2)'\nput res u all 0\nfor $i 0 m\nfourier u 'x'\nmulto u e\nfourier u 'ix'\n"
+"put res u all $i+1\nnext\nsubplot 2 2 1 '<_':title 'Fourier method'\naxis:box:dens res\n\n"
+"#tridmat zero variant\nnew !u n 'exp(-6*x^2)'\nput res u all 0\nfor $i 0 m\ntridmat u a b a u 'xd'\n"
+"put res u all $i+1\nnext\nsubplot 2 2 2 '<_':title 'Tridmat, zero b.c.'\naxis:box:dens res\n\n"
+"#diffract exp variant\nnew !u n 'exp(-6*x^2)'\ndefine q dt*(n/2)^2/8 # need q<0.4 !!!\n"
+"put res u all 0\nfor $i 0 m\nfor $j 1 8	# due to smaller dt\ndiffract u 'xe' q\nnext\n"
+"put res u all $i+1\nnext\nsubplot 2 2 3 '<_':title 'Diffract, exp b.c.'\naxis:box:dens res";
+void smgl_diffract(mglGraph *gr)
+{
+	long n=32;	// number of points
+	long m=20;	// number of iterations
+	double dt=0.01;	// time step
+	mglData res(n,m+1);
+	gr->SetRanges(-1,1, 0,m*dt, 0,1);
+
+	// tridmat periodic variant
+	mglDataC a(n), b(n);	a = dual(0,dt*n*n/8);
+	for(long i=0;i<n;i++)	b.a[i] = 1.-2.*a.a[i];
+	mglDataC u(n);	gr->Fill(u,"exp(-6*x^2)");	res.Put(u,-1,0);
+	for(long i=0;i<m;i++)
+	{
+		u = mglTridMatC(a,b,a,u,"xdc");
+		res.Put(u,-1,i+1);
+	}
+	gr->SubPlot(2,2,0,"<_");	gr->Title("Tridmat, periodic b.c.");
+	gr->Axis();	gr->Box();	gr->Dens(res);
+
+	// fourier variant
+	mglData k(n);	k.FillSample("xk");
+	mglDataC e(n);	for(long i=0;i<n;i++)	e.a[i] = exp(-dual(0,dt*k.a[i]*k.a[i]));
+	gr->Fill(u,"exp(-6*x^2)");	res.Put(u,-1,0);
+	for(long i=0;i<m;i++)
+	{
+		u.FFT("x");	u *= e;	u.FFT("ix");
+		res.Put(u,-1,i+1);
+	}
+	gr->SubPlot(2,2,1,"<_");	gr->Title("Fourier method");
+	gr->Axis();	gr->Box();	gr->Dens(res);
+
+	// tridmat zero variant
+	gr->Fill(u,"exp(-6*x^2)");	res.Put(u,-1,0);
+	for(long i=0;i<m;i++)
+	{
+		u = mglTridMatC(a,b,a,u,"xd");
+		res.Put(u,-1,i+1);
+	}
+	gr->SubPlot(2,2,2,"<_");	gr->Title("Tridmat, zero b.c.");
+	gr->Axis();	gr->Box();	gr->Dens(res);
+	
+	// diffract exp variant
+	gr->Fill(u,"exp(-6*x^2)");	res.Put(u,-1,0);
+	double q=dt*n*n/4/8;	// NOTE: need q<0.4 !!!
+	for(long i=0;i<m;i++)
+	{
+		for(long j=0;j<8;j++)	// due to smaller dt
+			u.Diffraction("xe",q);
+		res.Put(u,-1,i+1);
+	}
+	gr->SubPlot(2,2,3,"<_");	gr->Title("Diffract, exp b.c.");
+	gr->Axis();	gr->Box();	gr->Dens(res);
+}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
@@ -2971,6 +3038,7 @@ mglSample samp[] = {
 	{"densa", smgl_densa, mmgl_densa},
 	{"detect", smgl_detect, mmgl_detect},
 	{"dew", smgl_dew, mmgl_dew},
+	{"diffract", smgl_diffract, mmgl_diffract},
 	{"dilate", smgl_dilate, mmgl_dilate},
 	{"dots", smgl_dots, mmgl_dots},
 	{"error", smgl_error, mmgl_error},

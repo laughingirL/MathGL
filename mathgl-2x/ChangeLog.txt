@@ -26,6 +26,7 @@
 * Improve 'fplot' to handle several singularities.
 * Add LaTeX command \dfrac{}{}. This is full-sized version of \frac{}{}. Unfortunately, there is no support of nesting (i.e. \dfrac{\dfrac{}{}}{} not working). Contrary, \frac{}{} allow nesting.
 * Add mglODEc() -- ODE solver for complex variables.
+* Add cmplx(a,b)=a+i*b to the list of known functions in formula parsing
 * Update CMake find_package to find MathGL.
 * Increase line width for wired text.
 * Update documentation: add description of new commands, add hint @ref{Mixing bitmap and vector output}.

@@ -62,6 +62,8 @@ D. Docs about JS interface
 21. Docs about 'erode' and 'dilate'.
 22. Docs about mgl_datas_hdf_str().
 23. Docs about mglParse::OpenHDF()
+24. Docs about cmplx(a,b)=a+i*b in the list of known functions
+
 
 ZZ. Update time.texi {before release!!!}
 

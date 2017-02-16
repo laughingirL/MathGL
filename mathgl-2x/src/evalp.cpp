@@ -763,6 +763,7 @@ dual MGL_LOCAL_CONST cgtc(dual a,dual b);	//{return real(a-b)>0?1:0;}
 dual MGL_LOCAL_CONST ipwc(dual a,dual b);	//{return mgl_ipowc(a,int(b.real()));}
 dual MGL_LOCAL_CONST powc(dual a,dual b);	//{return exp(b*log(a));	}
 dual MGL_LOCAL_CONST llgc(dual a,dual b);	//{return log(a)/log(b);	}
+dual MGL_LOCAL_CONST cmplxc(dual a,dual b);	//{return a+dual(0,1)*b;	}
 dual MGL_LOCAL_CONST expi(dual a);	//{	return exp(dual(0,1)*a);	}
 dual MGL_LOCAL_CONST expi(double a);	//{	return dual(cos(a),sin(a));	}
 //-----------------------------------------------------------------------------
@@ -1027,6 +1028,8 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			if(!nm.compare(L"cos"))	return mglApplyFuncC(str, arg, head, cosc);
 			else if(!nm.compare(L"cosh") || !nm.compare(L"ch"))	return mglApplyFuncC(str, arg, head, coshc);
 			else if(!nm.compare(L"conj"))	return mglApplyFuncC(str, arg, head, conjc);
+			else if(!nm.compare(L"cmplx") && n>0)
+				return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, cmplxc);
 		}
 		else if(!nm.compare(L"exp"))	return mglApplyFuncC(str, arg, head, expc);
 		else if(nm[0]=='l')

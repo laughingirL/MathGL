@@ -360,7 +360,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 		else if(str[0]=='\'')	// this is string (simplest case)
 		{
 			a[n-1].type = 1;
-			long na=1, ns=0, ll=str.length(), ii=1, op=0;
+			long na=1, ns=0, np=0, ll=str.length(), ii=1, op=0;
 			std::vector<std::wstring> s;
 			std::vector<int> id;	// 0 - string, 1 - cval, 2 - rval, 3 - plus, 4 - index
 			for(long i=1;i<ll;i++)
@@ -373,7 +373,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 					{	id.push_back(op);	s.push_back(str.substr(ii,i-ii));	}
 					na++;	ii=i+1;	op=0;
 				}
-				else if(na%2==0 && ns==0)
+				else if(na%2==0 && ns==0 && np==0)
 				{
 					if(str[i]=='+' && str[i-1]=='\'')
 					{	op=3;	ii=i+1;	}
@@ -391,12 +391,14 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 					}
 					else if(str[i]=='[' && str[i-1]=='\'')
 					{	ii=i+1;	ns++;	}
+					else if(str[i]=='(')	np++;
 				}
-				else if(na%2==0 && str[i]==']' && ns==1)
+				else if(na%2==0 && np==0 && str[i]==']' && ns==1)
 				{
 					id.push_back(4);	s.push_back(str.substr(ii,i-ii));
 					op=0;	ii=i+1;	ns--;
 				}
+				else if(na%2==0 && np==1 && str[i]==')' && ns==0)	np--;
 			}
 			if(op && ll>ii)
 			{	id.push_back(op);	s.push_back(str.substr(ii,ll-ii));	}
