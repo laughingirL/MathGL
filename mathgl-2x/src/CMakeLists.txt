@@ -2,10 +2,11 @@ set(mgl_src
 	addon.cpp axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
 	complex.cpp complex_ex.cpp complex_io.cpp fft.cpp data_gr.cpp
 	data.cpp data_io.cpp data_ex.cpp data_png.cpp
-	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
+	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp export.cpp
 	fit.cpp font.cpp obj.cpp other.cpp parser.cpp pde.cpp pixel.cpp
 	plot.cpp prim.cpp surf.cpp vect.cpp volume.cpp evalc.cpp
 	s_hull/s_hull_pro.cpp window.cpp fractal.cpp
+	exec_dat.cpp exec_gr.cpp exec_set.cpp exec_prm.cpp 
 )
 
 set(mgl_hdr

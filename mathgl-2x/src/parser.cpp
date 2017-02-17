@@ -22,6 +22,39 @@
 #include "mgl2/canvas_cf.h"
 #include "mgl2/base.h"
 //-----------------------------------------------------------------------------
+int MGL_LOCAL_PURE mgl_cmd_cmp(const void *a, const void *b)
+{
+	const mglCommand *aa = (const mglCommand *)a;
+	const mglCommand *bb = (const mglCommand *)b;
+	return strcmp(aa->name, bb->name);
+}
+//-----------------------------------------------------------------------------
+mglCommand *mglParser::BaseCmd=NULL;	///< Base table of MGL commands. It MUST be sorted by 'name'!!!
+void mglParser::FillBaseCmd()
+{
+	if(BaseCmd)	return;
+	size_t na=0, nd=0, ng=0, np=0, ns=0, nsum=0;
+	while(mgls_prg_cmd[na].name[0])	na++;
+	while(mgls_dat_cmd[nd].name[0])	nd++;
+	while(mgls_grf_cmd[ng].name[0])	ng++;
+	while(mgls_prm_cmd[np].name[0])	np++;
+	while(mgls_set_cmd[ns].name[0])	ns++;
+	BaseCmd = new mglCommand[na+nd+ng+np+ns+1];
+	memcpy(BaseCmd, 	mgls_prg_cmd, na*sizeof(mglCommand));	nsum+=na;
+	memcpy(BaseCmd+nsum,mgls_dat_cmd, nd*sizeof(mglCommand));	nsum+=nd;
+	memcpy(BaseCmd+nsum,mgls_grf_cmd, ng*sizeof(mglCommand));	nsum+=ng;
+	memcpy(BaseCmd+nsum,mgls_prm_cmd, np*sizeof(mglCommand));	nsum+=np;
+	memcpy(BaseCmd+nsum,mgls_set_cmd, (ns+1)*sizeof(mglCommand));	nsum+=ns;
+	qsort(BaseCmd, nsum, sizeof(mglCommand), mgl_cmd_cmp);
+#if DEBUG
+	long stat[17];	memset(stat,0,17*sizeof(long));
+	const char *name[17] = {"0 - special plot", "1 - other plot", "2 - setup", "3 - data handle", "4 - data create", "5 - subplot", "6 - program flow", "7 - 1d plot", "8 - 2d plot", "9 - 3d plot", "10 - dd plot", "11 - vector plot", "12 - axis", "13 - primitives", "14 - axis setup", "15 - text/legend", "16 - data transform"};
+	for(size_t i=0;BaseCmd[i].name[0];i++)	stat[BaseCmd[i].type]+=1;
+	for(size_t i=0;i<17;i++)	printf("%s: %ld\n",name[i],stat[i]);
+	printf("\n");	fflush(stdout);
+#endif
+}
+//-----------------------------------------------------------------------------
 HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
 HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
@@ -68,13 +101,6 @@ MGL_NO_EXPORT wchar_t *mgl_str_copy(const char *s)
 	wchar_t *str = new wchar_t[l+1];
 	for(i=0;i<l;i++)	str[i] = s[i];
 	str[i] = 0;	return str;
-}
-//-----------------------------------------------------------------------------
-int MGL_LOCAL_PURE mgl_cmd_cmp(const void *a, const void *b)
-{
-	const mglCommand *aa = (const mglCommand *)a;
-	const mglCommand *bb = (const mglCommand *)b;
-	return strcmp(aa->name, bb->name);
 }
 //-----------------------------------------------------------------------------
 bool mglParser::CheckForName(const std::wstring &s)
@@ -186,7 +212,7 @@ mglParser::mglParser(bool setsize)
 	if_pos=for_addr=0;
 	for(long i=0;i<40;i++)	par[i]=L"";
 
-	Cmd = mgls_base_cmd;
+	FillBaseCmd();	Cmd = BaseCmd;
 	AllowSetSize=setsize;	AllowFileIO=true;	AllowDllCall=true;
 	Once = true;
 	fval = new mglData[40];
@@ -228,8 +254,7 @@ void mglParser::DeleteAll()
 	v = new mglNum(NAN);	v->s = L"nan";	NumList.push_back(v);
 	v = new mglNum(M_PI);	v->s = L"pi";	NumList.push_back(v);
 	v = new mglNum(INFINITY);	v->s = L"inf";	NumList.push_back(v);
-	if(Cmd && Cmd!=mgls_base_cmd)
-	{	delete []Cmd;	Cmd = mgls_base_cmd;	}
+	if(Cmd && Cmd!=BaseCmd)	{	delete []Cmd;	Cmd = BaseCmd;	}
 #if MGL_HAVE_LTDL
 	for(size_t i=0;i<DllOpened.size();i++)
 		lt_dlclose(DllOpened[i]);
@@ -1038,19 +1063,18 @@ void mglParser::DeleteVar(const wchar_t *name)
 	{	mglDataA *u=DataList[i];	DataList[i]=0;	delete u;	}
 }
 //-----------------------------------------------------------------------------
-void mglParser::AddCommand(mglCommand *cmd, int mc)
+void mglParser::AddCommand(const mglCommand *cmd)
 {
-	int i, mp;
-	if(mc<1)
-	{	for(i=0;cmd[i].name[0];i++){};	mc = i;	}
 	// determine the number of symbols
-	for(i=0;Cmd[i].name[0];i++){};	mp = i;
+	size_t mp=0;	while(Cmd[mp].name[0])	mp++;
+	size_t mc=0;	while(cmd[mc].name[0])	mc++;
+	// copy all together
 	mglCommand *buf = new mglCommand[mp+mc+1];
 	memcpy(buf, cmd, mc*sizeof(mglCommand));
 	memcpy(buf+mc, Cmd, (mp+1)*sizeof(mglCommand));
-	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
+	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);	// sort it
 #pragma omp critical(cmd_parser)
-	{	if(Cmd!=mgls_base_cmd)   delete []Cmd;	Cmd = buf;	}
+	{	if(Cmd && Cmd!=BaseCmd)   delete []Cmd;	Cmd = buf;	}
 }
 //-----------------------------------------------------------------------------
 HMPR MGL_EXPORT mgl_create_parser()		{	return new mglParser;	}
@@ -1173,22 +1197,12 @@ void MGL_EXPORT mgl_parser_load(HMPR pr, const char *so_name)
 	lt_dlhandle so = lt_dlopen(so_name);
 	if(!so)	return;
 	const mglCommand *cmd = (const mglCommand *)lt_dlsym(so,"mgl_cmd_extra");
-	if(!cmd)	return;
-
-	int i, mp, mc, exist=true;
-	// determine the number of symbols
-	for(i=0;pr->Cmd[i].name[0];i++){};	mp = i;
-	for(i=0;cmd[i].name[0];i++)
+	bool exist = true;
+	if(cmd)	for(size_t i=0;cmd[i].name[0];i++)
 		if(!pr->FindCommand(cmd[i].name))	exist=false;
 	if(exist)	{	lt_dlclose(so);	return;	}	// all commands already presents
 	else	pr->DllOpened.push_back(so);
-	mc = i;
-	mglCommand *buf = new mglCommand[mp+mc+1];
-	memcpy(buf, pr->Cmd, mp*sizeof(mglCommand));
-	memcpy(buf+mp, cmd, (mc+1)*sizeof(mglCommand));
-	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
-	if(pr->Cmd!=mgls_base_cmd)	delete []pr->Cmd;
-	pr->Cmd = buf;
+	pr->AddCommand(cmd);
 #endif
 }
 void MGL_EXPORT mgl_parser_load_(uintptr_t *p, const char *dll_name,int l)
@@ -1390,3 +1404,25 @@ void MGL_EXPORT mgl_parser_openhdf_(uintptr_t *p, const char *fname,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	mgl_parser_openhdf(_PR_,s);	delete []s;	}
 //---------------------------------------------------------------------------
+mglCommand mgls_prg_cmd[] = {
+	{"ask","Define parameter from user input","ask $N 'question'", 0, 6},
+	{"break","Break for-cycle","break", 0, 6},
+	{"call","Execute script in external file","call 'name' [args]", 0, 6},
+	{"continue","Skip commands and iterate for-cycle again","continue", 0, 6},
+	{"defchr","Define parameter as character","defchr $N val", 0, 6},
+	{"define","Define constant or parameter","define $N sth | Var val", 0, 6},
+	{"defnum","Define parameter as numerical value","defnum $N val", 0, 6},
+//	{"defpal","Define parameter as palette color","defpal $N val", 0, 6},
+	{"else","Execute if condition is false","else", 0, 6},
+	{"elseif","Conditional operator","elseif val|Dat ['cond']", 0, 6},
+	{"endif","Finish if/else block","endif", 0, 6},
+	{"for","For cycle","for $N v1 v2 [dv] | $N Dat", 0, 6},
+	{"func","Start function definition and stop execution of main script","func 'name' [narg]", 0, 6},
+	{"if","Conditional operator","if val|Dat ['cond']", 0, 6},
+	{"list","Creates new variable from list of numbers or data","list Var v1 ...|Var D1 ...", 0, 4},
+	{"next","Start next for-cycle iteration","next", 0, 6},
+	{"once","Start/close commands which should executed only once","once val", 0, 6},
+	{"return","Return from function","return", 0, 6},
+	{"stop","Stop execution","stop", 0, 6},
+{"","","",NULL,0}};
+//-----------------------------------------------------------------------------
