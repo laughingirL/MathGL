@@ -1016,7 +1016,7 @@ mglCommand mgls_grf_cmd[] = {
 	{"axial","Draw surfaces of contour lines rotation","axial Zdat ['fmt' num]|Xdat Ydat Zdat ['fmt' num]", mgls_axial ,8},
 	{"barh","Draw horizontal bars for 1D data", "barh Ydat ['fmt' above]|Xdat Ydat ['fmt' above]", mgls_barh ,7},
 	{"bars","Draw bars for 1D data","bars Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars ,7},
-	{"beam","Draw quasi-optical beam","beam Tr G1 G2 Adat r ['sch' flag num] ", mgls_beam ,9},
+	{"beam","Draw quasi-optical beam","beam Ray G1 G2 Adat r ['sch' flag num]|val Ray G1 G2 Adat r ['sch' flag num]", mgls_beam ,9},
 	{"belt","Draw belts","belt Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_belt ,8},
 	{"bifurcation","Draw Bifurcation diagram","bifurcation dx Func ['fmt']|dx 'func' ['fmt']", mgls_bifurcation,13},
 	{"boxplot","Draw boxplot for 2D data","boxplot Ydat ['fmt']|Xdat Ydat ['fmt']", mgls_boxplot ,7},
