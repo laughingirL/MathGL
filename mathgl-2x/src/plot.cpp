@@ -217,7 +217,7 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 	mreal dv=nx>n?1:0;
 	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
-	if(mglchr(pen,'>'))	dv = -1;
+	if(mglchr(pen,'>'))	dv =-1;
 	mreal zm = gr->AdjustZMin();
 	mreal c1,c2;	c2=c1=gr->NextColor(pal);
 	bool col2 = (gr->GetNumPal(pal)==2 && !sh);
@@ -285,6 +285,18 @@ void MGL_EXPORT mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_
 //	Plot series
 //
 //-----------------------------------------------------------------------------
+std::vector<mglPoint> MGL_NO_EXPORT prepare_dat(const mglPoint &p1, const mglPoint &p2, HCDT xx, HCDT yy, HCDT zz, HCDT cc, bool proj)
+{
+	std::vector<mglPoint> out;
+	long n = xx->GetNx();
+	mglPoint p(xx->v(0),yy->v(0),zz->v(0));
+	if(p>p1 && p<p2 && (!cc || mgl_isnum(cc->v(0))))	out.push_back(p);
+	else	out.push_back(mglPoint(NAN));
+	for(long i=1;i<n;i++)
+	{
+		
+	}
+}
 void MGL_EXPORT mgl_mark(HMGL gr, double x, double y, double z,const char *mark);
 void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {

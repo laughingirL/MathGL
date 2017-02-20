@@ -259,15 +259,15 @@ int MGL_NO_EXPORT mgls_light(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else if(!strcmp(k,"nnnns"))	gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.c_str()[0]);
 	else if(!strcmp(k,"nnnnsn"))gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.c_str()[0],a[5].v);
 	else if(!strcmp(k,"nnnnsnn"))
-		gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.c_str()[0],a[5].v,a[6].v);
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.c_str()[0],a[5].v,a[6].v);
 	else if(!strcmp(k,"nnnnnnn"))
-		gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v),mglPoint(a[4].v,a[5].v,a[6].v));
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v));
 	else if(!strcmp(k,"nnnnnnns"))
-		gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v),mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0]);
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0]);
 	else if(!strcmp(k,"nnnnnnnsn"))
-		gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v),mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0],a[8].v);
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0],a[8].v);
 	else if(!strcmp(k,"nnnnnnnsnn"))
-		gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v),mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0],a[8].v,a[9].v);
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0],a[8].v,a[9].v);
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -684,7 +684,7 @@ mglCommand mgls_set_cmd[] = {
 	{"arrowsize","Set size of arrows","arrowsize val", mgls_arrowsize ,2},
 	{"aspect","Set aspect ration","aspect valx valy [valz]", mgls_aspect ,5},
 	{"attachlight","Attach light settings to inplot","attachlight val", mgls_attachlight ,2},
-	{"axisstl","Set axis and tick style","axisstl 'stl' ['sub']", mgls_axisstl ,14},
+	{"axisstl","Set axis and tick style","axisstl 'stl' ['tick' 'sub']", mgls_axisstl ,14},
 	{"barwidth","Set default bars width","barwidth val", mgls_barwidth ,2},
 	{"bbox","Set bounding box for 2d export","bbox x1 y1 [x2 y2]", mgls_bbox ,2},
 	{"chdir","Change current directory","chdir 'path'", mgls_chdir ,2},
@@ -703,7 +703,7 @@ mglCommand mgls_set_cmd[] = {
 	{"gridplot","Set position of plot inside cell of matrix", "gridplot nx ny ind [d]", mgls_gridplot ,5},
 	{"inplot","Set position of plot in picture","x1 x2 y1 y2 [rel]", mgls_inplot ,5},
 	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks ,15},
-	{"light","Setup light","light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light ,2},
+	{"light","Setup light","light [val]|val num val|num xpos ypos zpos ['fmt' br ap]|num xpos ypos zpos px py pz ['fmt' br ap]", mgls_light ,2},
 	{"load","Load commands from external DLL","load 'fname'", mgls_load, 6},
 	{"loadfont","Load fontfaces","loadfont ['face']", mgls_loadfont ,15},
 	{"marksize","Set size of markers","marksize val", mgls_marksize ,2},
@@ -717,10 +717,10 @@ mglCommand mgls_set_cmd[] = {
 	{"perspective","Set perspective","perspective val", mgls_perspective ,2},
 	{"plotid","Set default filename","plotid 'name'", mgls_plotid ,2},
 	{"quality","Set plot quality","quality [val]", mgls_quality ,2},
-	{"ranges","Set axis ranges","ranges x1 x2 y1 y2 [z1 z2]", mgls_ranges ,14},
+	{"ranges","Set axis ranges","ranges x1 x2 y1 y2 [z1 z2]|Xdat Ydat [Zdat Cdat]", mgls_ranges ,14},
 	{"rasterize","Rasterize plot and save to background","rasterize", mgls_rasterize ,12},
 	{"reset","Reset settings and clear picture","reset", mgls_reset ,12},
-	{"rotate","Rotate plot","rotate tetz tetx [tety] | tet x y z", mgls_rotate ,5},
+	{"rotate","Rotate plot","rotate tetz tetx [tety]|tet x y z", mgls_rotate ,5},
 	{"rotatetext","Set to auto rotate text or not","rotatetext val", mgls_rotatetext ,15},
 	{"setsize","Set picture size","setsize width height", mgls_setsize ,2},
 	{"setsizescl","Set scaling factor for further setsize","setsizescl val", mgls_setsizescl ,2},
@@ -735,7 +735,7 @@ mglCommand mgls_set_cmd[] = {
 	{"transptype","Set type transparency","transptype val", mgls_transptype ,2},
 	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks ,14},
 	{"variant","Select variant of plot style(s)","variant var", mgls_variant, 6},
-	{"version","Print MathGL version or check if it is valid","version |'ver'", mgls_version, 2},
+	{"version","Print MathGL version or check if it is valid","version ['ver']", mgls_version, 2},
 	{"view","Change view angles - use 'rotate' for plot rotation","view tetz tetx [tety]", mgls_view ,5},
 	{"write","Write current image to graphical file","write ['fname']", mgls_write ,2},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2 [add]", mgls_xrange ,14},

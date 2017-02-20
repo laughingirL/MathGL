@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 		}
 		else if(ch=='h' || (ch==-1 && optind>=argc))
 		{
-			printf("mglconv convert mgl script to bitmap png file.\nCurrent version is 2.%g\n",MGL_VER2);
+			printf("mglconv convert mgl script to image file (default PNG).\nCurrent version is 2.%g\n",MGL_VER2);
 			printf("Usage:\tmglconv [parameter(s)] scriptfile\n");
 			printf(
 				"\t-1 str       set str as argument $1 for script\n"

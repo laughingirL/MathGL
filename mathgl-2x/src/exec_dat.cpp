@@ -1156,7 +1156,7 @@ int MGL_NO_EXPORT mgls_rkstep(mglGraph *gr, long , mglArg *a, const char *k, con
 	int res=0;
 	if(!strcmp(k,"ss") && gr->pr)
 		mgl_rk_step_w(gr->pr, a[0].w.c_str(), a[1].w.c_str(), 1);
-	else if(!strcmp(k,"ssd") && gr->pr)
+	else if(!strcmp(k,"ssn") && gr->pr)
 		mgl_rk_step_w(gr->pr, a[0].w.c_str(), a[1].w.c_str(), a[2].v);
 	else res = 1;	return res;
 }
@@ -1522,7 +1522,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"datas","Print list of data names in HDF file","datas 'fname'", mgls_datas ,3},
 	{"delete","Delete data or slice of data","delete Dat|'Dat'|Dat 'dir' [pos=0 num=1]", mgls_delete ,3},
 	{"detect", "Detect curves for maximums of data array", "detect Res Dat lvl dj [di min_len]", mgls_detect, 4},
-	{"diff","Numerically differentiate data","diff Var 'dir'", mgls_diff ,16},
+	{"diff","Numerically differentiate data","diff Var 'dir'|Var Dir Const1 [Const2]", mgls_diff ,16},
 	{"diff2","Numerically double differentiate data","diff2 Var 'dir'", mgls_diff2 ,16},
 	{"diffract","Step for pulse diffraction","diffract Res 'how' q", mgls_diffract ,16},
 	{"dilate","Dilate data larger val","dilate Dat [val step]", mgls_dilate ,3},
@@ -1540,14 +1540,14 @@ mglCommand mgls_dat_cmd[] = {
 	{"fourier","In-place Fourier transform","fourier ReDat ImDat 'dir'|Cmplx 'dir'", mgls_fourier , 16},
 	{"gspline","Fill data by global spline of Vdat","gspline Dat Xdat Vdat [sl]", mgls_gspline ,3},
 	{"hankel","Hankel transform at some direction","hankel Dat 'dir'", mgls_hankel ,16},
-	{"hist","Create histogram (distribution) of data values","hist Res Dat num v1 v2 [nsub]|Res Dat Wdat num v1 v2 [nsub]", mgls_hist ,4},
+	{"hist","Create histogram (distribution) of data values","hist Res Dat num v1 v2 [nsub]|Res Dat Wdat num v1 v2 [nsub]|Res Xdat Dat|Res Xdat Ydat Dat|Res Xdat Ydat Zdat Dat", mgls_hist ,4},
 	{"idset","Set column id for data","idset Dat 'ids'", mgls_idset ,3},
 	{"import","Import data from PNG picture","import Dat 'fname' 'scheme' [v1 v2]", mgls_import ,4},
-	{"info","Print message or information about the data","info Dat [detail]|'message'|const", mgls_info ,3},
+	{"info","Print message or information about the data","info Dat|'message'|const", mgls_info ,3},
 	{"insert","Insert slice of data","insert Dat 'dir' [pos=0 num=1]", mgls_insert ,3},
 	{"integrate","Integrate data","integrate Dat 'dir'", mgls_integrate ,16},
 	{"jacobian","Get Jacobian","jacobian Res Xdat Ydat [Zdat]", mgls_jacobian ,4},
-	{"join","Join data arrays","join Dat Add", mgls_join ,3},
+	{"join","Join data arrays","join Dat Add1 ...", mgls_join ,3},
 	{"limit","Limit data to be inside [-v,v]","limit Dat v", mgls_limit ,16},
 	{"max","Find maximal value over direction","max Res Dat 'dir'", mgls_max ,4},
 	{"min","Find minimal value over direction","min Res Dat 'dir'", mgls_min ,4},
@@ -1561,15 +1561,15 @@ mglCommand mgls_dat_cmd[] = {
 	{"ode","Solve ODE","ode Res 'df' 'var' Ini [dt tmax]", mgls_ode ,4},
 	{"openhdf","Open all data arrays from HDF file","openhdf 'fname'", mgls_openhdf ,3},
 	{"pde","Solve PDE","pde Res 'ham' IniRe IniIm [dz k0]", mgls_pde ,4},
-	{"print","Immediately print the message","info 'message'|Dat [detail]|const", mgls_print ,3},
+	{"print","Immediately print the message","print 'message'|Dat|const", mgls_print ,3},
 	{"pulse","Get pulse properties","pulse Res Dat 'dir'", mgls_pulse ,4},
 	{"put","Put value (numeric or array) to given data element","put Dat val [i j k] | Dat Val [i j k]", mgls_put ,3},
 	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit ,15},
 	{"qo2d","Solve PDE in accompanied coordinates for 2d case","qo2d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout]", mgls_qo2d ,4},
 	{"qo3d","Solve PDE in accompanied coordinates for 3d case","qo3d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout Zout]", mgls_qo3d ,4},
-	{"ray","Solve Hamiltonian ODE (find GO ray or trajectory)","ray Res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray ,4},
+	{"ray","Solve Hamiltonian ODE (find GO ray or trajectory)","ray Res 'ham' x0 y0 z0 px0 py0 pz0 [dt=0.1 tmax=10]", mgls_ray ,4},
 	{"read","Read data from file","read Dat 'file' [nx ny nz] | ReDat ImDat 'file' [nx ny nz]", mgls_read ,4},
-	{"readall","Read and join data from several files","readall Dat 'templ' [slice]", mgls_readall ,4},
+	{"readall","Read and join data from several files","readall Dat 'templ' [slice]|Dat 'templ' from to [step slice]", mgls_readall ,4},
 	{"readhdf","Read data from HDF5 file","readhdf Dat 'file' 'id'", mgls_readhdf ,4},
 	{"readmat","Read data from file with sizes specified in first row","readmat Dat 'file' [dim]", mgls_readmat ,4},
 	{"rearrange","Rearrange data dimensions","rearrange Dat mx [my mz]", mgls_rearrange ,3},
@@ -1589,7 +1589,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"sort","Sort data by values in column","sort Dat idx [idy]", mgls_sort ,3},
 	{"squeeze","Squeeze data","squeeze Dat kx [ky kz]", mgls_squeeze ,3},
 	{"stfad","Do STFA transform","stfad Res Real Imag dn ['dir']", mgls_stfad ,4},
-	{"subdata","Extract sub-array","subdata Res Dat nx [ny nz]", mgls_subdata ,4},
+	{"subdata","Extract sub-array","subdata Res Dat ix [iy iz]|Res Dat Xdat [Ydat Zdat]", mgls_subdata ,4},
 	{"subto","Subtract data or number","subto Var Dat|Var num", mgls_subto ,3},
 	{"sum","Find summation over direction","sum Res Dat 'dir'", mgls_sum ,4},
 	{"swap","Swap data (usefull after Fourier transform)","swap Dat 'dir'", mgls_swap ,16},
@@ -1597,7 +1597,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"transform","Do integral transform of data","transform Res 'how' Rdat Idat", mgls_transform ,4},
 	{"transforma","Do integral transform of data","transforma Res 'how' Adat Pdat", mgls_transforma ,4},
 	{"transpose","Transpose data array","transpose Dat ['dir']", mgls_transpose ,16},
-	{"triangulate","Find triangles of randomly placed points","triangulate Res Xdat Ydat [er]|Res Xdat Ydat Zdat [er]", mgls_triangulate ,4},
+	{"triangulate","Find triangles of randomly placed points","triangulate Res Xdat Ydat|Res Xdat Ydat Zdat", mgls_triangulate ,4},
 	{"tridmat","Solve tridiagonal matrix","tridmat Res A B C D 'how'", mgls_tridmat ,4},
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var ,4},
 	{"wavelet","Wavelet transform at some direction","wavelet Dat 'dir' k", mgls_wavelet ,16},
