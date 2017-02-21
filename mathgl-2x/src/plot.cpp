@@ -285,17 +285,41 @@ void MGL_EXPORT mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_
 //	Plot series
 //
 //-----------------------------------------------------------------------------
+mglPoint MGL_NO_EXPORT mgl_project(mglPoint p, mglPoint p1, mglPoint p2)
+{
+	mreal x=p.x, y=p.y, z=p.z, a, b;
+	a = p1.x;	b = p2.x;	if(p2.x<p1.x)	{	a = b;	b = p1.x;	}
+	if(p.x<a)	x = a;	else if(p.x>b)	x = b;
+	a = p1.y;	b = p2.y;	if(p2.y<p1.y)	{	a = b;	b = p1.y;	}
+	if(p.y<a)	y = a;	else if(p.y>b)	y = b;
+	a = p1.z;	b = p2.z;	if(p2.z<p1.z)	{	a = b;	b = p1.z;	}
+	if(p.z<a)	z = a;	else if(p.z>b)	z = b;
+	return mglPoint(x,y,z);
+}
 std::vector<mglPoint> MGL_NO_EXPORT prepare_dat(const mglPoint &p1, const mglPoint &p2, HCDT xx, HCDT yy, HCDT zz, HCDT cc, bool proj)
 {
 	std::vector<mglPoint> out;
 	long n = xx->GetNx();
-	mglPoint p(xx->v(0),yy->v(0),zz->v(0));
-	if(p>p1 && p<p2 && (!cc || mgl_isnum(cc->v(0))))	out.push_back(p);
+	mglPoint p(xx->v(0),yy->v(0),zz->v(0),cc?cc->v(0):0);
+	if(p>p1 && p<p2)	out.push_back(p);
+	else if(proj)	out.push_back(mgl_project(p,p1,p2));
 	else	out.push_back(mglPoint(NAN));
 	for(long i=1;i<n;i++)
 	{
-		
+		mglPoint q(xx->v(i),yy->v(i),zz->v(i),cc?cc->v(i):0);
+		mreal d1=mgl_d(p1.x, p.x, q.x), d2=mgl_d(p2.x, p.x, q.x), t;
+		t = mgl_d(p1.y, p.y, q.y);	if(t>d1)	d1=t;
+		t = mgl_d(p2.y, p.y, q.y);	if(t<d2)	d2=t;
+		t = mgl_d(p1.z, p.z, q.z);	if(t>d1)	d1=t;
+		t = mgl_d(p2.z, p.z, q.z);	if(t<d2)	d2=t;
+		if(d2<d1)	{	t=d1;	d1=d2;	d2=t;	}
+		if(d1>0 && d1<1)	out.push_back(p+d1*q);
+		if(d2>0 && d2<1)	out.push_back(p+d2*q);
+		if(d1<1 && d2>=1)	out.push_back(q);
+		else if(proj)	out.push_back(mgl_project(q,p1,p2));
+		p = q;
 	}
+	return out;
 }
 void MGL_EXPORT mgl_mark(HMGL gr, double x, double y, double z,const char *mark);
 void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)

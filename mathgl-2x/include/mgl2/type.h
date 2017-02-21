@@ -64,9 +64,9 @@ inline mglPoint operator-(const mglPoint &a, const mglPoint &b)
 inline mglPoint operator-(const mglPoint &a)
 {	return mglPoint(-a.x, -a.y, -a.z, -a.c);	}
 inline mglPoint operator*(mreal b, const mglPoint &a)
-{	return mglPoint(a.x*b, a.y*b, a.z*b);	}
+{	return mglPoint(a.x*b, a.y*b, a.z*b, a.c*b);	}	// TODO check conficts of a.c*b!!!
 inline mglPoint operator*(const mglPoint &a, mreal b)
-{	return mglPoint(a.x*b, a.y*b, a.z*b);	}
+{	return mglPoint(a.x*b, a.y*b, a.z*b, a.c*b);	}	// TODO check conficts of a.c*b!!!
 inline mglPoint operator/(const mglPoint &a, mreal b)
 {	return mglPoint(a.x/b, a.y/b, a.z/b);	}
 inline mreal operator*(const mglPoint &a, const mglPoint &b)

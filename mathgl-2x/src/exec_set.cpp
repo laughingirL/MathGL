@@ -556,7 +556,7 @@ int MGL_NO_EXPORT mgls_xtick(mglGraph *gr, long n, mglArg *a, const char *k, con
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('x', a[0].v);
-	else if(!strcmp(k,"ns"))	gr->SetTicks('x', a[0].v, 0, NAN, a[1].w.c_str());
+//	else if(!strcmp(k,"ns"))	gr->SetTicks('x', a[0].v, 0, NAN, a[1].w.c_str());
 	else if(!strcmp(k,"nn"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v));
 	else if(!strcmp(k,"nns"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v), NAN, a[2].w.c_str());
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v), a[2].v);
@@ -566,14 +566,15 @@ int MGL_NO_EXPORT mgls_xtick(mglGraph *gr, long n, mglArg *a, const char *k, con
 	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), a[2].v);
 	else if(!strncmp(k,"ns",2))
 	{
-		mreal v[50];	std::wstring s;	int i;
-		for(i=0;i<50 && i<n/2;i++)
+		std::wstring s;
+		std::vector<mreal> v;
+		for(long i=0;i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v[i] = a[2*i].v;	s += a[2*i+1].w+L"\n";	}
+			{	v.push_back(a[2*i].v);	s += a[2*i+1].w+L"\n";	}
 			else	break;
 		}
-		gr->SetTicksVal('x',mglData(i,v),s.c_str(),a[2*i].type==2?a[2*i].v:0);
+		gr->SetTicksVal('x',mglDataS(v),s.c_str(),v.size()==1?true:false);
 	}
 	else res = 1;	return res;
 }
@@ -596,7 +597,7 @@ int MGL_NO_EXPORT mgls_ytick(mglGraph *gr, long n, mglArg *a, const char *k, con
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('y', a[0].v);
-	else if(!strcmp(k,"ns"))	gr->SetTicks('y', a[0].v, 0, NAN, a[1].w.c_str());
+//	else if(!strcmp(k,"ns"))	gr->SetTicks('y', a[0].v, 0, NAN, a[1].w.c_str());
 	else if(!strcmp(k,"nn"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v));
 	else if(!strcmp(k,"nns"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v), NAN, a[2].w.c_str());
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v), a[2].v);
@@ -606,14 +607,15 @@ int MGL_NO_EXPORT mgls_ytick(mglGraph *gr, long n, mglArg *a, const char *k, con
 	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('y', *(a[0].d), a[1].w.c_str(), a[2].v);
 	else if(!strncmp(k,"ns",2))
 	{
-		mreal v[50];	std::wstring s;	int i;
-		for(i=0;i<50 && i<n/2;i++)
+		std::wstring s;
+		std::vector<mreal> v;
+		for(long i=0;i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v[i] = a[2*i].v;	s += a[2*i+1].w+L"\n";	}
+			{	v.push_back(a[2*i].v);	s += a[2*i+1].w+L"\n";	}
 			else	break;
 		}
-		gr->SetTicksVal('y',mglData(i,v),s.c_str());
+		gr->SetTicksVal('y',mglDataS(v),s.c_str(),v.size()==1?true:false);
 	}
 	else res = 1;	return res;
 }
@@ -653,7 +655,7 @@ int MGL_NO_EXPORT mgls_ztick(mglGraph *gr, long n, mglArg *a, const char *k, con
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('z', a[0].v);
-	else if(!strcmp(k,"ns"))	gr->SetTicks('z', a[0].v, 0, NAN, a[1].w.c_str());
+//	else if(!strcmp(k,"ns"))	gr->SetTicks('z', a[0].v, 0, NAN, a[1].w.c_str());
 	else if(!strcmp(k,"nn"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v));
 	else if(!strcmp(k,"nns"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v), NAN, a[2].w.c_str());
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v), a[2].v);
@@ -663,14 +665,15 @@ int MGL_NO_EXPORT mgls_ztick(mglGraph *gr, long n, mglArg *a, const char *k, con
 	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('z', *(a[0].d), a[1].w.c_str(), a[2].v);
 	else if(!strncmp(k,"ns",2))
 	{
-		mreal v[50];	std::wstring s;	int i;
-		for(i=0;i<50 && i<n/2;i++)
+		std::wstring s;
+		std::vector<mreal> v;
+		for(long i=0;i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v[i] = a[2*i].v;	s += a[2*i+1].w+L"\n";	}
+			{	v.push_back(a[2*i].v);	s += a[2*i+1].w+L"\n";	}
 			else	break;
 		}
-		gr->SetTicksVal('z',mglData(i,v),s.c_str());
+		gr->SetTicksVal('z',mglDataS(v),s.c_str(),v.size()==1?true:false);
 	}
 	else res = 1;	return res;
 }
@@ -697,13 +700,13 @@ mglCommand mgls_set_cmd[] = {
 	{"diffuse","Set diffusive light brightness","diffuse val", mgls_diffuse ,2},
 	{"drawreg","Set draw region for quality&4","drawreg|nx ny m", mgls_drawreg ,2},
 	{"facenum","Set number of visible faces","facenum val", mgls_facenum ,2},
-	{"fog","Switch on/off fog","fog val [pos]", mgls_fog ,2},
+	{"fog","Switch on/off fog","fog val [dz]", mgls_fog ,2},
 	{"font","Setup font","font 'fmt' [size]", mgls_font ,15},
 	{"gray","Switch on/off gray-scale mode","gray [val]", mgls_gray ,2},
 	{"gridplot","Set position of plot inside cell of matrix", "gridplot nx ny ind [d]", mgls_gridplot ,5},
 	{"inplot","Set position of plot in picture","x1 x2 y1 y2 [rel]", mgls_inplot ,5},
 	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks ,15},
-	{"light","Setup light","light [val]|val num val|num xpos ypos zpos ['fmt' br ap]|num xpos ypos zpos px py pz ['fmt' br ap]", mgls_light ,2},
+	{"light","Setup light","light [val]|num val|num xpos ypos zpos ['fmt' br ap]|num xpos ypos zpos px py pz ['fmt' br ap]", mgls_light ,2},
 	{"load","Load commands from external DLL","load 'fname'", mgls_load, 6},
 	{"loadfont","Load fontfaces","loadfont ['face']", mgls_loadfont ,15},
 	{"marksize","Set size of markers","marksize val", mgls_marksize ,2},
@@ -713,7 +716,7 @@ mglCommand mgls_set_cmd[] = {
 	{"origin","Set axis origin","origin x0 y0 [z0]", mgls_origin ,14},
 	{"origintick","Set tick labels drawing at origin","origintick val", mgls_origintick ,14},
 	{"palette","Set palette for 1D plots","palette 'colors'", mgls_palette ,2},
-	{"pendelta","Set size of semi-transparent area","pen_delta val", mgls_pendelta ,2},
+	{"pendelta","Set size of semi-transparent area","pendelta val", mgls_pendelta ,2},
 	{"perspective","Set perspective","perspective val", mgls_perspective ,2},
 	{"plotid","Set default filename","plotid 'name'", mgls_plotid ,2},
 	{"quality","Set plot quality","quality [val]", mgls_quality ,2},
@@ -733,7 +736,7 @@ mglCommand mgls_set_cmd[] = {
 	{"tickshift","Set additional tick and axis labels shift","tickshift dx [dy dz dc]", mgls_tickshift ,14},
 	{"ticktime","Set ticks in time format","ticktime 'dir' [dv 'tmpl']", mgls_ticktime ,14},
 	{"transptype","Set type transparency","transptype val", mgls_transptype ,2},
-	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks ,14},
+	{"tuneticks","Set ticks tuning","tuneticks val [pos]", mgls_tuneticks ,14},
 	{"variant","Select variant of plot style(s)","variant var", mgls_variant, 6},
 	{"version","Print MathGL version or check if it is valid","version ['ver']", mgls_version, 2},
 	{"view","Change view angles - use 'rotate' for plot rotation","view tetz tetx [tety]", mgls_view ,5},
@@ -743,7 +746,7 @@ mglCommand mgls_set_cmd[] = {
 	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2 [add]", mgls_yrange,14},
 	{"ytick","Set ticks for y-axis","ytick dy ['factor'] | dy sy ['factor'] | dy sy ty ['factor'] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick,14},
 	{"zoom","Zoom plot region","zoom x1 x2 y1 y2", mgls_zoom,5},
-	{"zoomaxis","Zoom axis range","zoomaxis x1 x2|x1 x2 y1 y2|x1 x2 y1 y2 z1 z2|x1 x2 y1 y2 z1 z2 c1 c2", mgls_zoomaxis,14},
+	{"zoomaxis","Zoom axis range","zoomaxis x1 x2|x1 y1 x2 y2|x1 y1 z1 x2 y2 z2|x1 y1 z1 c1 x2 y2 z2 c2", mgls_zoomaxis,14},
 	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2 [add]", mgls_zrange ,14},
 	{"ztick","Set ticks for z-axis","ztick dz ['factor'] | dz sz ['factor'] | dz sz tz ['factor'] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick,14},
 {"","","",NULL,0}};

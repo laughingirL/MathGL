@@ -558,7 +558,7 @@ mglCommand mgls_prm_cmd[] = {
 	{"ball","Draw point (ball)","ball posx posy ['fmt']|posx posy posz ['fmt']", mgls_ball ,13},
 	{"box","Draw bounding box","box ['fmt' ticks]", mgls_box ,12},
 	{"circle","Draw circle","circle x y r ['fmt']|x y z r ['fmt']", mgls_circle ,13},
-	{"colorbar","Draw colorbar","colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y [w h]|Vdat 'sch' pos x y [w h]", mgls_colorbar ,12},
+	{"colorbar","Draw colorbar","colorbar ['fmt']|Vdat ['fmt']|'sch' x y [w h]|Vdat 'sch' x y [w h]", mgls_colorbar ,12},
 	{"cone","Draw cone","cone x1 y1 z1 x2 y2 z2 r1 [r2 'fmt' edge]", mgls_cone ,13},
 	{"curve","Draw curve","curve x1 y1 dx1 dy1 x2 y2 dx2 dy2 ['fmt']|x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2 ['fmt']", mgls_curve ,13},
 	{"drop","Draw drop","drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop ,13},
