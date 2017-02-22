@@ -35,7 +35,6 @@ void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl
 5. Simplified triangle filling for Quality=1 ?!?
 
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
-8. Style 'a' to plot,tens,area and etc to draw segments/quads between points outside of axis range.
 
 14. Read MAT files ?!!
 15. Read WFM files ?!!
@@ -63,6 +62,7 @@ D. Docs about JS interface
 22. Docs about mgl_datas_hdf_str().
 23. Docs about mglParse::OpenHDF()
 24. Docs about cmplx(a,b)=a+i*b in the list of known functions
+25. Style 'a' to plot,tens,area to draw segments/quads between points outside of axis range.
 
 
 ZZ. Update time.texi {before release!!!}

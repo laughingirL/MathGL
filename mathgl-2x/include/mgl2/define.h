@@ -181,17 +181,16 @@ typedef float mreal;
 #define MGL_DEF_VIEWER "evince"
 #endif
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_TYPEOF
-#define mgl_isrange(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); fabs(_a-_b)>MGL_MIN_VAL && _a-_a==mreal(0.) && _b-_b==mreal(0.);})
-#define mgl_isbad(a)	({typeof (a) _a = (a); _a-_a!=mreal(0.);})
-#define mgl_isfin(a)	({typeof (a) _a = (a); _a-_a==mreal(0.);})
-#define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
-#define mgl_isnan(a)	({typeof (a) _a = (a); _a!=_a;})
-#define mgl_min(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _b : _a;})
-#define mgl_max(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _a : _b;})
-#define mgl_sign(a)		({typeof (a) _a = (a); _a<0 ? -1:1;})
-#define mgl_int(a)		({typeof (a) _a = (a); long(_a+(_a>=0 ? 0.5:-0.5));})
-#else
+// #if MGL_HAVE_TYPEOF	// NOTE: Temprorary disable due to KDevelop 5.* :-(
+// #define mgl_isrange(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); fabs(_a-_b)>MGL_MIN_VAL && _a-_a==mreal(0.) && _b-_b==mreal(0.);})
+// #define mgl_isbad(a)	({typeof (a) _a = (a); _a-_a!=mreal(0.);})
+// #define mgl_isfin(a)	({typeof (a) _a = (a); _a-_a==mreal(0.);})
+// #define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
+// #define mgl_isnan(a)	({typeof (a) _a = (a); _a!=_a;})
+// #define mgl_min(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _b : _a;})
+// #define mgl_max(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _a : _b;})
+// #define mgl_int(a)		({typeof (a) _a = (a); long(_a+(_a>=0 ? 0.5:-0.5));})
+// #else
 #define mgl_isrange(a,b)	(fabs((a)-(b))>MGL_MIN_VAL && (a)-(a)==mreal(0.) && (b)-(b)==mreal(0.))
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
@@ -199,9 +198,9 @@ typedef float mreal;
 #define mgl_isnum(a)	((a)==(a))
 #define mgl_isfin(a)	((a)-(a)==mreal(0.))
 #define mgl_isbad(a)	((a)-(a)!=mreal(0.))
+#define mgl_int(a)		(long((a)+((a)>=0 ? 0.5:-0.5)))
+// #endif
 #define mgl_sign(a)		((a)<0 ? -1:1)
-#define mgl_int(a)		(long(a+((a)>=0 ? 0.5:-0.5)))
-#endif
 //-----------------------------------------------------------------------------
 enum{	// types of predefined curvelinear coordinate systems
 	mglCartesian = 0,	// no transformation

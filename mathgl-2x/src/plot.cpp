@@ -286,38 +286,26 @@ void MGL_EXPORT mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_
 //
 //-----------------------------------------------------------------------------
 struct mglPointA {	mglPoint p;	bool orig;	mglPointA(const mglPoint &pp, bool o) : p(pp), orig(o) {}	};
-mglPoint MGL_NO_EXPORT mgl_project(mglPoint p, mglPoint p1, mglPoint p2)
-{
-	mreal x=p.x, y=p.y, z=p.z, a, b;
-	a = p1.x;	b = p2.x;	if(p2.x<p1.x)	{	a = b;	b = p1.x;	}
-	if(p.x<a)	x = a;	else if(p.x>b)	x = b;
-	a = p1.y;	b = p2.y;	if(p2.y<p1.y)	{	a = b;	b = p1.y;	}
-	if(p.y<a)	y = a;	else if(p.y>b)	y = b;
-	a = p1.z;	b = p2.z;	if(p2.z<p1.z)	{	a = b;	b = p1.z;	}
-	if(p.z<a)	z = a;	else if(p.z>b)	z = b;
-	return mglPoint(x,y,z);
-}
-std::vector<mglPointA> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &p1, const mglPoint &p2, HCDT xx, HCDT yy, HCDT zz, HCDT cc, bool proj)
+std::vector<mglPointA> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &p1, const mglPoint &p2, HCDT xx, HCDT yy, HCDT zz, HCDT cc)
 {
 	std::vector<mglPointA> out;
 	long n = xx->GetNx();
 	mglPoint p(xx->v(0),yy->v(0),zz->v(0),cc?cc->v(0):0);
 	if(p>p1 && p<p2)	out.push_back(mglPointA(p,true));
-	else if(proj)	out.push_back(mglPointA(mgl_project(p,p1,p2),true));
 	else	out.push_back(mglPointA(mglPoint(NAN),true));
 	for(long i=1;i<n;i++)
 	{
 		mglPoint q(xx->v(i),yy->v(i),zz->v(i),cc?cc->v(i):0);
-		mreal d1=mgl_d(p1.x, p.x, q.x), d2=mgl_d(p2.x, p.x, q.x), t;
-		t = mgl_d(p1.y, p.y, q.y);	if(t>d1)	d1=t;
-		t = mgl_d(p2.y, p.y, q.y);	if(t<d2)	d2=t;
-		t = mgl_d(p1.z, p.z, q.z);	if(t>d1)	d1=t;
-		t = mgl_d(p2.z, p.z, q.z);	if(t<d2)	d2=t;
-		if(d2<d1)	{	t=d1;	d1=d2;	d2=t;	}
-		if(d1>0 && d1<1)	out.push_back(mglPointA(p+d1*q,false));
-		if(d2>0 && d2<1)	out.push_back(mglPointA(p+d2*q,false));
+		mreal x1,x2,y1,y2,z1,z2,t;
+		x1=mgl_d(p1.x, p.x, q.x);	x2=mgl_d(p2.x, p.x, q.x);	if(x2<x1)	{	t=x1;	x1=x2;	x2=t;	}
+		y1=mgl_d(p1.y, p.y, q.y);	y2=mgl_d(p2.y, p.y, q.y);	if(y2<y1)	{	t=y1;	y1=y2;	y2=t;	}
+		z1=mgl_d(p1.z, p.z, q.z);	z2=mgl_d(p2.z, p.z, q.z);	if(z2<z1)	{	t=z1;	z1=z2;	z2=t;	}
+		mreal d1 = mgl_isnum(x1)?x1:0, d2 = mgl_isnum(x2)?x2:1;
+		if(y1>d1)	d1=y1;	if(y2<d2)	d2=y2;
+		if(z1>d1)	d1=z1;	if(z2<d2)	d2=z2;
+		if(d1>0 && d1<1)	out.push_back(mglPointA(p+d1*(q-p),false));
+		if(d2>0 && d2<1)	out.push_back(mglPointA(p+d2*(q-p),false));
 		if(d1<1 && d2>=1)	out.push_back(mglPointA(q,true));
-		else if(proj)	out.push_back(mglPointA(mgl_project(q,p1,p2),true));
 		else if(i==n-1)	out.push_back(mglPointA(mglPoint(NAN),true));
 		p = q;
 	}
@@ -359,7 +347,7 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	gr->SaveState(opt);
 	long m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
-	bool sh = mglchr(pen,'!');
+	bool sh = mglchr(pen,'!'), orig = !mglchr(pen,'a');
 
 	for(long j=0;j<m;j++)
 	{
@@ -367,8 +355,8 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
 		gr->NextColor(pal);
 		mglDataR xx(x,mx), yy(y,my), zz(z,mz);
-		const std::vector<mglPointA> &pp = !mglchr(pen,'a') ? mgl_pnt_copy(&xx, &yy, &zz, 0) :
-			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy, &zz, 0, false);
+		const std::vector<mglPointA> &pp = orig ? mgl_pnt_copy(&xx, &yy, &zz, 0) :
+			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy, &zz, 0);
 		long n1=-1, n2=-1;
 		
 		for(size_t i=0;i<pp.size();i++)
@@ -383,40 +371,6 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 			}
 		}
 		if(n1>=0 && n2>=0)	gr->arrow_plot(n1,n2,gr->Arrow2);
-		
-/*		bool t1 = false, t2 = false;
-		for(long i=0;i<n;i++)
-		{
-			if(i>0)	{	n2=n1;	p2 = p1;	t2=t1;	}
-			p1.Set(x->v(i,mx), y->v(i,my), z->v(i,mz));
-			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-			n1 = gr->AddPnt(p1,c);	t1 = n1>=0;
-			if(mk && t1)	gr->mark_plot(n1,mk);
-			if(t1 && t2)
-			{
-				gr->line_plot(n1,n2);
-				if(i==1)	gr->arrow_plot(n2,n1,gr->Arrow1);
-				if(i==n-1)	gr->arrow_plot(n1,n2,gr->Arrow2);
-			}
-
-			if(i>0 && ((t1 && !t2) || (t2 && !t1)))	// do smoothing
-			{
-				mreal i1=0, i2=1, ii;
-				mglPoint q(NAN),p;
-				do {
-					ii = (i1+i2)/2;
-					pt.x = p1.x*ii+p2.x*(1-ii);
-					pt.y = p1.y*ii+p2.y*(1-ii);
-					pt.z = p1.z*ii+p2.z*(1-ii);	p=pt;
-					bool t3 = gr->ScalePoint(gr->GetB(),p,q,false);
-					if((t1 && t3) || (t2 && !t3))	i2 = ii;
-					else	i1 = ii;
-				} while(fabs(i2-i1)>1e-3);
-				n3 = gr->AddPnt(pt,c,q,-1,2);
-				if(t2)	gr->line_plot(n3,n2);
-				else 	gr->line_plot(n1,n3);
-			}
-		}*/
 	}
 	gr->EndGroup();
 }
@@ -467,47 +421,28 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	char mk=gr->SetPenPal(pen, &pal);	gr->Reserve(2*n*m);
 	long ss=gr->AddTexture(pen);
-	mglPoint p1,p2,pt,nn;
-	long n1=-1,n2=-1,n3=-1;
+	bool orig = !mglchr(pen,'a');
 
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mc = j<c->GetNy() ? j:0;
-		bool t1 = false, t2 = false;
-		for(long i=0;i<n;i++)
+		mglDataR xx(x,mx), yy(y,my), zz(z,mz), cc(c,mc);
+		const std::vector<mglPointA> &pp = orig ? mgl_pnt_copy(&xx, &yy, &zz, &cc) :
+			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy, &zz, &cc);
+		long n1=-1, n2=-1;
+		for(size_t i=0;i<pp.size();i++)
 		{
-			if(i>0)	{	n2=n1;	p2=p1;	t2=t1;	}
-			p1.Set(x->v(i,mx), y->v(i,my), z->v(i,mz), c->v(i,mc));
-			n1 = gr->AddPnt(p1,gr->GetC(ss,p1.c));	t1 = n1>=0;
-			if(mk && t1)	gr->mark_plot(n1,mk);
-			if(t1 && t2)
+			n2 = n1;	n1 = gr->AddPnt(pp[i].p, gr->GetC(ss,pp[i].p.c));
+			if(mk && n1>=0 && pp[i].orig)	gr->mark_plot(n1,mk);
+			if(n1>=0 && n2>=0)
 			{
 				gr->line_plot(n1,n2);
 				if(i==1)	gr->arrow_plot(n2,n1,gr->Arrow1);
-				if(i==n-1)	gr->arrow_plot(n1,n2,gr->Arrow2);
-			}
-
-			if(i>0 && ((t1 && !t2) || (t2 && !t1)))	// do smoothing
-			{
-				mreal i1=0, i2=1, ii;
-				mglPoint q(NAN),p;
-				do {
-					ii = (i1+i2)/2;
-					pt.x = p1.x*ii+p2.x*(1-ii);
-					pt.y = p1.y*ii+p2.y*(1-ii);
-					pt.z = p1.z*ii+p2.z*(1-ii);	p=pt;
-					pt.c = p1.c*ii+p2.c*(1-ii);
-					bool t3 = gr->ScalePoint(gr->GetB(),p,q,false);
-					if((t1 && t3) || (t2 && !t3))	i2 = ii;
-					else	i1 = ii;
-				} while(fabs(i2-i1)>1e-3);
-				n3 = gr->AddPnt(pt,gr->GetC(ss,pt.c),q,-1,2);
-				if(t2)	gr->line_plot(n3,n2);
-				else 	gr->line_plot(n1,n3);
 			}
 		}
+		if(n1>=0 && n2>=0)	gr->arrow_plot(n1,n2,gr->Arrow2);
 	}
 	gr->EndGroup();
 }
@@ -556,31 +491,31 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Area3",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	bool sh = mglchr(pen,'!');
-	bool wire = mglchr(pen,'#');
+	bool sh = mglchr(pen,'!'), wire = mglchr(pen,'#'), orig = !mglchr(pen,'a');
 
 	mreal z0=gr->GetOrgZ('x');
-	mreal c1,c2;
-	mglPoint p1,p2,p3,p4,nn;
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
-		c2=c1=gr->NextColor(pal);
+		mreal c1=gr->NextColor(pal), c2=c1;
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
 
-		nn.Set(-y->dvx(0,my),x->dvx(0,mx));
-		mglPoint p(x->v(0,mx),y->v(0,my),z->v(0,mz));
-		long n1 = gr->AddPnt(p,c1,nn,-1,27);	p.z = z0;
-		long n2 = gr->AddPnt(p,c2,nn,-1,27);
-		for(long i=1;i<n;i++)
+		mglDataR xx(x,mx), yy(y,my), zz(z,mz);
+		std::vector<mglPointA> pp = orig ? mgl_pnt_copy(&xx, &yy, &zz, 0) :
+			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy, &zz, 0);
+		size_t np = pp.size();
+		long n1=-1, n2=-1;
+		mglPoint nn(pp[0].p.y-pp[1].p.y, pp[1].p.x-pp[0].p.x);
+		for(size_t i=0;i<np;i++)
 		{
 			long n3=n1, n4=n2;
-			nn.Set(-y->dvx(i,my),x->dvx(i,mx));
-			p.Set(x->v(i,mx),y->v(i,my),z->v(i,mz));
 			if(sh)	c2=c1=gr->NextColor(pal,i);
-			n1 = gr->AddPnt(p,c1,nn,-1,27);	p.z = z0;	n2 = gr->AddPnt(p,c2,nn,-1,27);
+			if(i>0 && i<np-1)	{	nn.x=(pp[i-1].p.y-pp[i+1].p.y)/2;	nn.y=(pp[i+1].p.x-pp[i-1].p.x)/2;	}
+			else if(i==np-1)	{	nn.x=pp[np-2].p.y-pp[np-1].p.y;	nn.y=pp[np-1].p.x-pp[np-2].p.x;	}
+			n1 = gr->AddPnt(pp[i].p, c1,nn,-1,27);	pp[i].p.z = z0;
+			n2 = gr->AddPnt(pp[i].p, c1,nn,-1,27);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -601,30 +536,29 @@ void MGL_EXPORT mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	static int cgid=1;	gr->StartGroup("Curve",cgid++);
 	mreal zm = gr->AdjustZMin();
 	mreal y0=gr->GetOrgY('x');
-	mreal c1,c2;
 	mglPoint nn(0,0,1);
-	bool sh = mglchr(pen,'!');
-	bool wire = mglchr(pen,'#');
+	bool sh = mglchr(pen,'!'), wire = mglchr(pen,'#'), orig = !mglchr(pen,'a');
 
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
-//	long s=gr->AddTexture(pen,1);
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
-		c2=c1=gr->NextColor(pal);
+		mreal c1=gr->NextColor(pal), c2=c1;
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2=gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		mreal z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
-		mglPoint p(x->v(0,mx),y->v(0,my),z0);
-		long n1 = gr->AddPnt(p,c1,nn,-1,27);	p.y = y0;
-		long n2 = gr->AddPnt(p,c2,nn,-1,27);
-		for(long i=1;i<n;i++)
+		mglDataR xx(x,mx), yy(y,my);	mglDataV zz(n,1,1,z0);
+		std::vector<mglPointA> pp = orig ? mgl_pnt_copy(&xx, &yy, &zz, 0) :
+			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy, &zz, 0);
+		size_t np = pp.size();
+		long n1=-1, n2=-1;
+		for(size_t i=0;i<np;i++)
 		{
 			long n3=n1, n4=n2;
-			p.Set(x->v(i,mx),y->v(i,my),z0);
 			if(sh)	c2=c1=gr->NextColor(pal,i);
-			n1 = gr->AddPnt(p,c1,nn,-1,27);	p.y = y0;	n2 = gr->AddPnt(p,c2,nn,-1,27);
+			n1 = gr->AddPnt(pp[i].p, c1,nn,-1,27);	pp[i].p.y = y0;
+			n2 = gr->AddPnt(pp[i].p, c1,nn,-1,27);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
