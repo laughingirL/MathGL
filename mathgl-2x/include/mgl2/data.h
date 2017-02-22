@@ -883,6 +883,7 @@ class MGL_EXPORT mglDataT : public mglDataA
 public:
 	mglDataT(const mglDataT &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
 	mglDataT(const mglDataA &d, long col=0) : dat(d), ind(col)	{}
+	mglDataT(HCDT d, long col=0) : dat(*d), ind(col)	{}
 #if MGL_HAVE_RVAL
 	mglDataT(mglDataT &&d):dat(d.dat),ind(d.ind)
 	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.func=0;	}
@@ -932,6 +933,7 @@ class MGL_EXPORT mglDataR : public mglDataA
 public:
 	mglDataR(const mglDataR &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
 	mglDataR(const mglDataA &d, long row=0) : dat(d), ind(row)	{}
+	mglDataR(HCDT d, long row=0) : dat(*d), ind(row)	{}
 #if MGL_HAVE_RVAL
 	mglDataR(mglDataR &&d):dat(d.dat),ind(d.ind)
 	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.func=0;	}
