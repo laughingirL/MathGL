@@ -33,7 +33,7 @@
 int DefineGlyph(const mglData &x, const mglData &y);
 void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl);
 5. Simplified triangle filling for Quality=1 ?!?
-
+6. Add 'a' style for 'range'
 7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
 
 14. Read MAT files ?!!

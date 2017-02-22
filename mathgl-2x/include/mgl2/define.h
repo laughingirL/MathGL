@@ -181,27 +181,6 @@ typedef float mreal;
 #define MGL_DEF_VIEWER "evince"
 #endif
 //-----------------------------------------------------------------------------
-// #if MGL_HAVE_TYPEOF	// NOTE: Temprorary disable due to KDevelop 5.* :-(
-// #define mgl_isrange(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); fabs(_a-_b)>MGL_MIN_VAL && _a-_a==mreal(0.) && _b-_b==mreal(0.);})
-// #define mgl_isbad(a)	({typeof (a) _a = (a); _a-_a!=mreal(0.);})
-// #define mgl_isfin(a)	({typeof (a) _a = (a); _a-_a==mreal(0.);})
-// #define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
-// #define mgl_isnan(a)	({typeof (a) _a = (a); _a!=_a;})
-// #define mgl_min(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _b : _a;})
-// #define mgl_max(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _a : _b;})
-// #define mgl_int(a)		({typeof (a) _a = (a); long(_a+(_a>=0 ? 0.5:-0.5));})
-// #else
-#define mgl_isrange(a,b)	(fabs((a)-(b))>MGL_MIN_VAL && (a)-(a)==mreal(0.) && (b)-(b)==mreal(0.))
-#define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
-#define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
-#define mgl_isnan(a)	((a)!=(a))
-#define mgl_isnum(a)	((a)==(a))
-#define mgl_isfin(a)	((a)-(a)==mreal(0.))
-#define mgl_isbad(a)	((a)-(a)!=mreal(0.))
-#define mgl_int(a)		(long((a)+((a)>=0 ? 0.5:-0.5)))
-// #endif
-#define mgl_sign(a)		((a)<0 ? -1:1)
-//-----------------------------------------------------------------------------
 enum{	// types of predefined curvelinear coordinate systems
 	mglCartesian = 0,	// no transformation
 	mglPolar,
@@ -328,6 +307,21 @@ typedef std::complex<double> ddual;
 #define mgl_I dual(0,1)
 #define mgl_abs(x)	abs(x)
 #endif
+//-----------------------------------------------------------------------------
+inline bool mgl_isrange(double a, double b)
+{	return fabs(a-b)>MGL_MIN_VAL && a-a==0. && b-b==0.;	}
+inline bool mgl_isbad(double a)	{	return a-a!=0;	}
+inline bool mgl_isbad(dual a)	{	return a-a!=mreal(0);	}
+inline bool mgl_isfin(double a)	{	return a-a==0;	}
+inline bool mgl_isfin(dual a)	{	return a-a==mreal(0);	}
+inline bool mgl_isnum(double a)	{	return a==a;	}
+inline bool mgl_isnum(dual a)	{	return a==a;	}
+inline bool mgl_isnan(double a)	{	return a!=a;	}
+inline bool mgl_isnan(dual a)	{	return a!=a;	}
+inline int mgl_sign(double a)	{	return a<0?-1:1;	}
+inline long mgl_int(double a)	{	return long(a+(a>=0?0.5:-0.5));	}
+inline double mgl_min(double a, double b)	{	return a>b?b:a;	}
+inline double mgl_max(double a, double b)	{	return a>b?a:b;	}
 //-----------------------------------------------------------------------------
 extern "C" {
 #else

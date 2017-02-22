@@ -316,11 +316,7 @@ std::vector<mglPointA> MGL_NO_EXPORT mgl_pnt_copy(HCDT xx, HCDT yy, HCDT zz, HCD
 	std::vector<mglPointA> out;
 	long n = xx->GetNx();
 	for(long i=0;i<n;i++)
-	{
-		mglPoint p(xx->v(i),yy->v(i),zz->v(i),cc?cc->v(i):0);
-		if(mgl_isnum(p.x) && mgl_isnum(p.y) && mgl_isnum(p.z))
-			out.push_back(mglPointA(p,true));
-	}
+		out.push_back(mglPointA(mglPoint(xx->v(i),yy->v(i),zz->v(i),cc?cc->v(i):0),true));
 	return out;
 }
 void MGL_EXPORT mgl_mark(HMGL gr, double x, double y, double z,const char *mark);

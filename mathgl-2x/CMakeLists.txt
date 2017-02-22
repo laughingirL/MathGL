@@ -282,14 +282,6 @@ if(NOT MGL_HAVE_ATTRIBUTE)
 	set(MGL_HAVE_ATTRIBUTE 0)
 endif(NOT MGL_HAVE_ATTRIBUTE)
 
-unset(MGL_HAVE_TYPEOF CACHE)
-CHECK_CXX_SOURCE_COMPILES(
-"#define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
-int main(){bool a=mgl_isnum(1);return 0;}" MGL_HAVE_TYPEOF)
-if(NOT MGL_HAVE_TYPEOF)
-	set(MGL_HAVE_TYPEOF 0)
-endif(NOT MGL_HAVE_TYPEOF)
-
 if(NOT MSVC AND enable-rvalue)
 	SET(CMAKE_CXX_FLAGS "-std=gnu++11 ${CMAKE_CXX_FLAGS}")
 	unset(MGL_HAVE_RVAL CACHE)
