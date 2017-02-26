@@ -5,10 +5,12 @@
 1. Export to COLLADA or X3D !!!
 2. Use mglDataV in 'var' ?!?
 
-3. Contour lines for bilinear interpolation (strong saddle-like faces)
+3. Contour lines for bilinear interpolation (strong saddle-like faces) -- best way by adding curve primitive (type=5)?!?
 4. 3D text (with depth), and text along 3D curve (for Quality=3) ???
 5. Get true coordinates in CalcXYZ for curved equations too.
 6. Extra markers for '&' and '&#' signs ?!? or user-defined signs
+
+7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань -- too slow)
 
 8. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 
@@ -33,8 +35,8 @@
 int DefineGlyph(const mglData &x, const mglData &y);
 void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl);
 5. Simplified triangle filling for Quality=1 ?!?
+
 6. Add 'a' style for 'range'
-7. Improve z-order for rapidly oscillating surfaces (сравнение проекций центров на грань)
 
 14. Read MAT files ?!!
 15. Read WFM files ?!!

@@ -424,6 +424,7 @@ protected:
 	void arrow_draw(long n1, long n2, char st, float ll);
 	void arrow_plot_3d(long n1, long n2, char st, float ll);
 	void glyph_draw(const mglPrim &P, mglDrawReg *d);
+	void glyph_draw_new(const mglPrim &P, mglDrawReg *d);
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
 
 	// restore normalized coordinates from screen ones
@@ -509,5 +510,12 @@ struct mglThreadG
 };
 /// Start several thread for the task
 void mglStartThread(void (mglCanvas::*func)(long i, long n), mglCanvas *gr, long n);
+//-----------------------------------------------------------------------------
+inline mreal get_persp(float pf, float z, float Depth)
+//{	return (1-pf)/(1-pf*z/Depth);	}
+{	return (1-pf/1.37)/(1-pf*z/Depth);	}
+inline mreal get_pfact(float pf, float Depth)
+//{	return pf/(1-pf)/Depth;	}
+{	return pf/(1-pf/1.37)/Depth;	}
 //-----------------------------------------------------------------------------
 #endif
