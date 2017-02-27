@@ -163,7 +163,7 @@ Default constructor. Allocates the memory for data array and initializes it by z
 @deftypefnx {Constructor on @code{mglDataC}} {} mglDataC (@code{int} size, @code{const dual *}dat2)
 @deftypefnx {Constructor on @code{mglDataC}} {} mglDataC (@code{int} size, @code{int} cols, @code{const dual *}dat2)
 @end ifclear
-Copy constructor. Allocates the memory for data array and copy values from other array. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula similarly to @ref{fill}.
+Copy constructor. Allocates the memory for data array and copy values from other array. At this, if parameter @var{eq} or @var{val} is specified then the data will be modified by corresponding formula similarly to @ref{fill}.
 @end deftypefn
 
 @deftypefn {MGL command} {} copy @sc{redat} @sc{imdat} dat2 ['eq'='']
@@ -172,10 +172,6 @@ Allocates the memory for data array and copy real and imaginary values from comp
 
 @deftypefn {MGL command} {} copy 'name'
 Allocates the memory for data array and copy values from other array specified by its name, which can be "invalid" for MGL names (like one read from HDF5 files).
-@end deftypefn
-
-@deftypefn {MGL command} {} copy 'name'
-Copy constructor. Allocates the memory for data array and copy values from other array. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula similarly to @ref{fill}.
 @end deftypefn
 
 
@@ -190,13 +186,14 @@ Reads data from tab-separated text file with auto determining sizes of the data.
 @end deftypefn
 
 @deftypefn {MGL command} {} delete dat
+@deftypefnx {MGL command} {} delete 'name'
 @ifclear UDAV
 @deftypefnx {Destructor on @code{mglData}} {} ~mglData ()
 @deftypefnx {C function} @code{void} mgl_delete_data (@code{HMDT} dat)
 @deftypefnx {Destructor on @code{mglDataC}} {} ~mglDataC ()
 @deftypefnx {C function} @code{void} mgl_delete_datac (@code{HADT} dat)
 @end ifclear
-Deletes the instance of class mglData.
+Deletes the data array from memory.
 @end deftypefn
 
 
@@ -314,6 +311,11 @@ Insert @var{num} slices along @var{dir}-direction at position @var{pos} and fill
 @deftypefnx {C function} @code{void} mgl_datac_delete (@code{HADT} dat, @code{char} dir, @code{int} pos, @code{char} num)
 @end ifclear
 Delete @var{num} slices along @var{dir}-direction at position @var{pos}.
+@end deftypefn
+
+@deftypefn {MGL command} {} delete dat
+@deftypefnx {MGL command} {} delete 'name'
+Deletes the whole data array.
 @end deftypefn
 
 @anchor{sort}
@@ -474,9 +476,7 @@ Creates new variable with name @var{dat} for one-dimensional array of size @var{
 Equidistantly fills the data values to range [@var{v1}, @var{v2}] in direction @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
 @end deftypefn
 
-@deftypefn {MGL command} {} fill dat 'eq'
-@deftypefnx {MGL command} {} fill dat 'eq' vdat
-@deftypefnx {MGL command} {} fill dat 'eq' vdat wdat
+@deftypefn {MGL command} {} fill dat 'eq' [vdat wdat]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglData}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const mglDataA &}vdat, @code{const char *}opt=@code{""})
@@ -492,8 +492,7 @@ Fills the value of array according to the formula in string @var{eq}. Formula is
 
 @anchor{modify}
 @deftypefn {MGL command} {} modify dat 'eq' [@code{dim=0}]
-@deftypefnx {MGL command} {} modify dat 'eq' vdat
-@deftypefnx {MGL command} {} modify dat 'eq' vdat wdat
+@deftypefnx {MGL command} {} modify dat 'eq' vdat [wdat]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} Modify (@code{const char *}eq, @code{int} dim=@code{0})
 @deftypefnx {Method on @code{mglData}} @code{void} Modify (@code{const char *}eq, @code{const mglDataA &}v)
@@ -532,7 +531,7 @@ Fills the value of array according to the linear interpolation of triangulated s
 
 
 @anchor{put}
-@deftypefn {MGL command} {} put dat @code{val [i=: j=: k=:]}
+@deftypefn {MGL command} {} put dat @code{val [i=all j=all k=all]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} Put (@code{mreal} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
 @deftypefnx {Method on @code{mglDataC}} @code{void} Put (@code{dual} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
@@ -542,7 +541,7 @@ Fills the value of array according to the linear interpolation of triangulated s
 Sets value(s) of array a[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the value @var{val} to whole range in corresponding direction(s). For example, @code{Put(val,-1,0,-1);} sets a[i,0,j]=@var{val} for i=0...(nx-1), j=0...(nz-1).
 @end deftypefn
 
-@deftypefn {MGL command} {} put dat vdat [@code{i=: j=: k=:}]
+@deftypefn {MGL command} {} put dat vdat [@code{i=all j=all k=all}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} Put (@code{const mglDataA &}v, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
 @deftypefnx {Method on @code{mglDataC}} @code{void} Put (@code{const mglDataA &}v, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
@@ -610,6 +609,7 @@ Sets the symbol @var{ids} for data columns. The string should contain one symbol
 
 @anchor{read}
 @deftypefn {MGL command} {} read @sc{dat} 'fname'
+@deftypefnx {MGL command} {} read @sc{redat} @sc{imdat} 'fname'
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{bool} Read (@code{const char *}fname)
 @deftypefnx {Method on @code{mglDataC}} @code{bool} Read (@code{const char *}fname)
@@ -620,6 +620,7 @@ Reads data from tab-separated text file with auto determining sizes of the data.
 @end deftypefn
 
 @deftypefn {MGL command} {} read @sc{dat} 'fname' @code{mx [my=1 mz=1]}
+@deftypefnx {MGL command} {} read @sc{redat} @sc{imdat} 'fname' @code{mx [my=1 mz=1]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{bool} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
 @deftypefnx {Method on @code{mglDataC}} @code{bool} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
@@ -755,7 +756,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 
 
 @anchor{subdata}
-@deftypefn {MGL command} {} subdata @sc{res} dat @code{xx [yy=: zz=:]}
+@deftypefn {MGL command} {} subdata @sc{res} dat @code{xx [yy=all zz=all]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{mglData} SubData (@code{mreal} xx, @code{mreal} yy=@code{-1}, @code{mreal} zz=@code{-1}) @code{const}
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} SubData (@code{mreal} xx, @code{mreal} yy=@code{-1}, @code{mreal} zz=@code{-1}) @code{const}
@@ -764,7 +765,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on. If argument(s) are non-integer then linear interpolation between slices is used. In MGL version this command usually is used as inline one @code{dat(xx,yy,zz)}. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
-@deftypefn {MGL command} {} subdata @sc{res} dat xdat [ydat=: zdat=:]
+@deftypefn {MGL command} {} subdata @sc{res} dat xdat [ydat zdat]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{mglData} SubData (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz) @code{const}
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} SubData (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz) @code{const}
@@ -1016,7 +1017,7 @@ Integrates (like cumulative summation) the data in given direction or directions
 Differentiates the data in given direction or directions.
 @end deftypefn
 
-@deftypefn {MGL command} {} diff dat xdat ydat [zdat=0]
+@deftypefn {MGL command} {} diff dat xdat ydat [zdat]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y)
 @deftypefnx {Method on @code{mglData}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z)

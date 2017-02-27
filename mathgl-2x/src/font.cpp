@@ -35,6 +35,13 @@
 //mglFont mglDefFont("nofont");
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------
+size_t MGL_EXPORT mgl_wcslen(const wchar_t *str)
+{
+	long i=0;
+	if(str)	while(str[i])	i++;
+	return i;
+}
+//-----------------------------------------------------------------------------
 long MGL_EXPORT_PURE mgl_internal_code(unsigned s, const std::vector<mglGlyphDescr> &glyphs)
 {
 	long i1=0,i2=glyphs.size()-1;

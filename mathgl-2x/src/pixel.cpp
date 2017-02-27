@@ -1126,7 +1126,7 @@ void mglCanvas::glyph_draw_new(const mglPrim &P, mglDrawReg *d)
 	const mglGlyph &g = Glf[P.n4];
 	mreal x1 = 1e10, x2=-1e10, y1=1e10, y2=-1e10;
 	const mreal dv = 0.5;
-	bool wire = (P.n3&4) || (Quality&3)==MGL_DRAW_WIRE;
+	bool fast = (Quality&3)==MGL_DRAW_WIRE;
 	// find sizes of glyph
 	if(P.n3&8)
 	{
@@ -1178,7 +1178,7 @@ void mglCanvas::glyph_draw_new(const mglPrim &P, mglDrawReg *d)
 		mgl_addpnts(xx1,yy1,xx3,yy3,b);
 		mgl_addpnts(xx4,yy4,xx2,yy2,b);
 		mgl_addpnts(xx4,yy4,xx3,yy3,b);
-//		if(wire)
+		if(fast)
 		{
 			mgl_drawline(xx1,yy1,xx2,yy2,m,w);
 			mgl_drawline(xx1,yy1,xx3,yy3,m,w);
@@ -1204,10 +1204,10 @@ void mglCanvas::glyph_draw_new(const mglPrim &P, mglDrawReg *d)
 			xx2 = (x*co+y*si)/2-x1;	yy2 = (y*co-x*si)/2-y1;
 		}
 		mgl_addpnts(xx1,yy1,xx2,yy2,b);
-//		if(wire)
+		if(fast)
 			mgl_drawline(xx1,yy1,xx2,yy2,m,w);
 	}
-	if(!wire)
+	if(!fast && !(P.n3&4))
 	{
 		for(long j=0;j<h;j++)
 		{

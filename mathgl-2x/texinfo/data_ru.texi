@@ -183,6 +183,7 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @end deftypefn
 
 @deftypefn {Команда MGL} {} delete dat
+@deftypefnx {Команда MGL} {} delete 'name'
 @ifclear UDAV
 @deftypefnx {Destructor on @code{mglData}} {} ~mglData ()
 @deftypefnx {Функция С} @code{void} mgl_delete_data (@code{HMDT} dat)
@@ -308,6 +309,11 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Функция С} @code{void} mgl_datac_delete (@code{HADT} dat, @code{char} dir, @code{int} pos, @code{char} num)
 @end ifclear
 Удаляет @var{num} срезов вдоль направления @var{dir} с позиции @var{pos}.
+@end deftypefn
+
+@deftypefn {Команда MGL} {} delete dat
+@deftypefn {Команда MGL} {} delete 'name'
+Удаляет массив данных из памяти.
 @end deftypefn
 
 @anchor{sort}
@@ -466,9 +472,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 Заполняет значениями равно распределёнными в диапазоне [@var{x1}, @var{x2}] в направлении @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
 @end deftypefn
 
-@deftypefn {Команда MGL} {} fill dat 'eq'
-@deftypefnx {Команда MGL} {} fill dat 'eq' vdat
-@deftypefnx {Команда MGL} {} fill dat 'eq' vdat wdat
+@deftypefn {Команда MGL} {} fill dat 'eq'[vdat wdat]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglData}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const mglDataA &}vdat, @code{const char *}opt=@code{""})
@@ -484,8 +488,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 
 @anchor{modify}
 @deftypefn {Команда MGL} {} modify dat 'eq' [@code{dim=0}]
-@deftypefnx {Команда MGL} {} modify dat 'eq' vdat
-@deftypefnx {Команда MGL} {} modify dat 'eq' vdat wdat
+@deftypefnx {Команда MGL} {} modify dat 'eq' vdat [wdat]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Modify (@code{const char *}eq, @code{int} dim=@code{0})
 @deftypefnx {Метод класса @code{mglData}} @code{void} Modify (@code{const char *}eq, @code{const mglDataA &}v)
@@ -524,7 +527,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 
 
 @anchor{put}
-@deftypefn {Команда MGL} {} put dat @code{val [i=: j=: k=:]}
+@deftypefn {Команда MGL} {} put dat @code{val [i=all j=all k=all]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Put (@code{mreal} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
 @deftypefnx {Метод класса @code{mglDataC}} @code{void} Put (@code{dual} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
@@ -534,7 +537,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 Присваивает значения (под-)массива @var{dat}[@var{i}, @var{j}, @var{k}] = @var{val}. Индексы @var{i}, @var{j}, @var{k} равные @samp{-1} задают значения @var{val} для всего диапазона соответствующего направления(ий). Например, @code{Put(val,-1,0,-1);} задает a[i,0,j]=@var{val} для i=0...(nx-1), j=0...(nz-1).
 @end deftypefn
 
-@deftypefn {Команда MGL} {} put dat vdat [@code{i=: j=: k=:}]
+@deftypefn {Команда MGL} {} put dat vdat [@code{i=all j=all k=all}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Put (@code{const mglDataA &}v, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
 @deftypefnx {Метод класса @code{mglDataC}} @code{void} Put (@code{const mglDataA &}v, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
@@ -602,6 +605,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 
 @anchor{read}
 @deftypefn {Команда MGL} {} read @sc{dat} 'fname'
+@deftypefnx {Команда MGL} {} read @sc{redat} @sc{imdat} 'fname'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Read (@code{const char *}fname)
 @deftypefnx {Метод класса @code{mglDataC}} @code{bool} Read (@code{const char *}fname)
@@ -612,6 +616,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 @end deftypefn
 
 @deftypefn {Команда MGL} {} read @sc{dat} 'fname' @code{mx [my=1 mz=1]}
+@deftypefnx {Команда MGL} {} read @sc{redat} @sc{imdat} 'fname' @code{mx [my=1 mz=1]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
 @deftypefnx {Метод класса @code{mglDataC}} @code{bool} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
@@ -745,7 +750,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 @cindex AutoCorrel
 
 @anchor{subdata}
-@deftypefn {Команда MGL} {} subdata @sc{res} dat @code{xx [yy=: zz=:]}
+@deftypefn {Команда MGL} {} subdata @sc{res} dat @code{xx [yy=all zz=all]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} SubData (@code{mreal} xx, @code{mreal} yy=@code{-1}, @code{mreal} zz=@code{-1}) @code{const}
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} SubData (@code{mreal} xx, @code{mreal} yy=@code{-1}, @code{mreal} zz=@code{-1}) @code{const}
@@ -754,7 +759,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 Возвращает в @var{res} подмассив массива данных @var{dat} с фиксированными значениями индексов с положительными значениями. Например, @code{SubData(-1,2)} выделяет третью строку (индексы начинаются с нуля), @code{SubData(4,-1)} выделяет 5-ую колонку, @code{SubData(-1,-1,3)} выделяет 4-ый срез и т.д. В MGL скриптах обычно используется упрощенная версия @code{dat(xx,yy,zz)}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
-@deftypefn {Команда MGL} {} subdata @sc{res} dat xdat [ydat=: zdat=:]
+@deftypefn {Команда MGL} {} subdata @sc{res} dat xdat [ydat zdat]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} SubData (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz) @code{const}
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} SubData (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz) @code{const}
@@ -1000,7 +1005,7 @@ These functions change the data in some direction like differentiations, integra
 Выполняет дифференцирование в выбранном направлении(ях).
 @end deftypefn
 
-@deftypefn {Команда MGL} {} diff dat xdat ydat [zdat=0]
+@deftypefn {Команда MGL} {} diff dat xdat ydat [zdat]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y)
 @deftypefnx {Метод класса @code{mglData}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z)

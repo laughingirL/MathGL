@@ -238,7 +238,7 @@ inline mglPnt operator*(float b, const mglPnt &a)
 /// Structure for glyph representation
 struct MGL_EXPORT mglGlyph
 {
-	long nt, nl;			///< number of triangles and lines
+	long nt, nl;		///< number of triangles and lines
 	short *trig, *line;	///< vertexes of triangles and lines
 
 	mglGlyph():nt(0),nl(0),trig(0),line(0)	{}

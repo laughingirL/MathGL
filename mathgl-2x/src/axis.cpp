@@ -51,13 +51,6 @@ void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 	str[i-k]=0;
 }
 //-----------------------------------------------------------------------------
-size_t MGL_EXPORT mgl_wcslen(const wchar_t *str)
-{
-	long i=0;
-	if(str)	while(str[i])	i++;
-	return i;
-}
-//-----------------------------------------------------------------------------
 //		Ticks setup
 //-----------------------------------------------------------------------------
 void mglCanvas::SetAxisStl(const char *stl, const char *tck, const char *sub)
