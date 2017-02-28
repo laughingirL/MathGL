@@ -155,16 +155,31 @@ void data_file(char *fn)
 	static int num=0;
 	static char name[32], res[256];
 	snprintf(name,32,"mgl_%d",num);	num++;
-	mglData *v = Parse->AddVar(name);
-	if(!v)	return;	// Wrong name
-	v->Read(fn);
-	if(v->nz>1)
-		snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nbox\nsurf3 %s\n", name, fn, name, name);
-	else if(v->ny>1)
-		snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nzrange %s\nbox\nsurf %s\n", name, fn, name, name, name);
-	else
-		snprintf(res,256,"#read %s '%s'\nyrange %s\nbox\nplot %s\n", name, fn, name, name);
-	textbuf->text(res);
+	mglDataA *v = Parse->AddVar(name);
+	mglData *d = dynamic_cast<mglData*>(v);
+	mglDataC *c = dynamic_cast<mglDataC*>(v);
+	if(d)
+	{
+		d->Read(fn);
+		if(d->nz>1)
+			snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nbox\nsurf3 %s\n", name, fn, name, name);
+		else if(d->ny>1)
+			snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nzrange %s\nbox\nsurf %s\n", name, fn, name, name, name);
+		else
+			snprintf(res,256,"#read %s '%s'\nyrange %s\nbox\nplot %s\n", name, fn, name, name);
+		textbuf->text(res);
+	}
+	else if(c)
+	{
+		c->Read(fn);
+		if(c->nz>1)
+			snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nbox\nsurf3 %s\n", name, fn, name, name);
+		else if(c->ny>1)
+			snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nzrange %s\nbox\nsurf %s\n", name, fn, name, name, name);
+		else
+			snprintf(res,256,"#read %s '%s'\nyrange %s\nbox\nplot %s\n", name, fn, name, name);
+		textbuf->text(res);
+	}
 }
 //-----------------------------------------------------------------------------
 //

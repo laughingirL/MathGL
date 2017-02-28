@@ -312,7 +312,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @end deftypefn
 
 @deftypefn {Команда MGL} {} delete dat
-@deftypefn {Команда MGL} {} delete 'name'
+@deftypefnx {Команда MGL} {} delete 'name'
 Удаляет массив данных из памяти.
 @end deftypefn
 

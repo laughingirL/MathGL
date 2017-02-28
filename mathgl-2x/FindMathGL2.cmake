@@ -17,19 +17,18 @@
 # The minimum required version and needed components can be specified using
 # the standard find_package()-syntax, here are some examples:
 #  find_package(MathGL2 REQUIRED)				- v.2.* (no interfaces), required
-#  find_package(MathGL2 2.1 REQUIRED Qt)		- v.2.1 + Qt interface, required
+#  find_package(MathGL2 REQUIRED Qt)		- v.2.1 + Qt interface, required
 #  find_package(MathGL2 2.1 REQUIRED)			- v.2.1 (no interfaces), required
-#  find_package(MathGL2 2.0 COMPONENTS Qt WX)	- v.2.0 + Qt and WX interfaces, optional
-#  find_package(MathGL2 2.1)					- v.2.1 (no interfaces), optional
+#  find_package(MathGL2 COMPONENTS Qt WX)	- v.2.0 + Qt and WX interfaces, optional
 #
 # Note, some cmake builds require to write "COMPONENTS" always, like
 #  find_package(MathGL2 REQUIRED COMPONENTS Qt)	- v.2.* + Qt interface, required
 #
 # Typical usage could be something like this:
-#   find_package(MathGL 2.1 GLUT REQUIRED)
+#   find_package(MathGL REQUIRED FLTK)
 #   include_directories(${MATHGL2_INCLUDE_DIRS})
 #   add_executable(myexe main.cpp)
-#   target_link_libraries(myexe ${MATHGL2_LIBRARIES})
+#   target_link_libraries(myexe ${MATHGL2_LIBRARIES} ${MATHGL2_FLTK_LIBRARIES})
 #
 
 #=============================================================================
@@ -113,16 +112,21 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(MathGL2
 		REQUIRED_VARS MATHGL2_LIBRARY MATHGL2_INCLUDE_DIR
 		VERSION_VAR MATHGL2_VERSION_STRING)
 
-FOREACH(_Component ${MATHGL2_FIND_COMPONENTS})
+FOREACH(_Component ${MathGL2_FIND_COMPONENTS})
 	STRING(TOLOWER ${_Component} _component)
 	STRING(TOUPPER ${_Component} _COMPONENT)
 
 	SET(MATHGL2_${_Component}_FIND_REQUIRED ${MATHGL2_FIND_REQUIRED})
 	SET(MATHGL2_${_Component}_FIND_QUIETLY true)
-	# TODO find qt.h for qt4 and qt5 !!!
-	FIND_PATH(MATHGL2_${_COMPONENT}_INCLUDE_DIR
+	if(${_component} STREQUAL "qt4" OR ${_component} STREQUAL "qt5")
+		FIND_PATH(MATHGL2_${_COMPONENT}_INCLUDE_DIR
+					NAMES mgl2/qt.h
+					PATHS ${MATHGL2_INCLUDE_DIR} NO_DEFAULT_PATH)
+	else(${_component} STREQUAL "qt4" OR ${_component} STREQUAL "qt5")
+		FIND_PATH(MATHGL2_${_COMPONENT}_INCLUDE_DIR
 				NAMES mgl2/${_component}.h
 				PATHS ${MATHGL2_INCLUDE_DIR} NO_DEFAULT_PATH)
+	endif(${_component} STREQUAL "qt4" OR ${_component} STREQUAL "qt5")
 	FIND_LIBRARY(MATHGL2_${_COMPONENT}_LIBRARY
 				NAMES mgl-${_component}
 				PATHS ${MATHGL2_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -138,8 +142,7 @@ FOREACH(_Component ${MATHGL2_FIND_COMPONENTS})
 			${MATHGL2_INCLUDE_DIRS} ${MATHGL2_${_COMPONENT}_INCLUDE_DIR})
 	ENDIF()
 
-	MARK_AS_ADVANCED(MATHGL2_${_COMPONENT}_INCLUDE_DIR
-					MATHGL2_${_COMPONENT}_LIBRARY)
+	MARK_AS_ADVANCED(MATHGL2_${_COMPONENT}_INCLUDE_DIR MATHGL2_${_COMPONENT}_LIBRARY)
 ENDFOREACH()
 
-MARK_AS_ADVANCED(MATHGL2_INCLUDE_DIR MATHGL2_LIBRARY)
+MARK_AS_ADVANCED(MATHGL2_INCLUDE_DIR MATHGL2_LIBRARY MATHGL2_VERSION_STRING)

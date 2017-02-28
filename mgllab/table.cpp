@@ -327,7 +327,7 @@ void asum_cb(Fl_Widget*, void*v)
 		else if(d)
 		{
 			mglData dd = d->Sum(r);
-			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
+// TODO			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
 		}
 	}
 }
@@ -351,7 +351,7 @@ void amax_cb(Fl_Widget*, void*v)
 		else if(d)
 		{
 			mglData dd = d->Max(r);
-			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
+// TODO			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
 		}
 	}
 }
@@ -375,7 +375,7 @@ void amin_cb(Fl_Widget*, void*v)
 		else if(d)
 		{
 			mglData dd = d->Min(r);
-			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
+// TODO			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
 		}
 	}
 }

@@ -59,7 +59,7 @@
 	#define UDAV_THIN_UP_BOX	FL_GTK_THIN_UP_BOX
 #endif
 //-----------------------------------------------------------------------------
-#include "mgl2/fltk.h"
+#include "mgl2/Fl_MathGL.h"
 //-----------------------------------------------------------------------------
 extern mglParse *Parse;
 extern Fl_Menu_Item colors[];
