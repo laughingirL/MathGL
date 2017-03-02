@@ -10,6 +10,7 @@ endif(NOT FLTK_FOUND)
 include_directories( ${MGLLAB_SOURCE_DIR} ${MGLLAB_BINARY_DIR})
 
 find_package(MathGL2 REQUIRED FLTK)
+#find_package(MathGL REQUIRED FLTK PATHS /usr/local/lib/CMake/MathGL/)
 
 find_package(OpenMP)
 if(OPENMP_FOUND)

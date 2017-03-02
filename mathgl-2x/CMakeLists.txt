@@ -3,7 +3,7 @@ if(POLICY CMP0043)
     cmake_policy(SET CMP0043 OLD)
 endif()
 
-project( MathGL )
+project( MathGL2 )
 
 set(MGL_DEP_LIBS)
 
@@ -23,9 +23,9 @@ set(MathGL_INSTALL_LIB_DIR "lib" CACHE PATH "Installation directory for librarie
 set(MathGL_INSTALL_BIN_DIR "bin" CACHE PATH "Installation directory for executables")
 set(MathGL_INSTALL_INCLUDE_DIR "include" CACHE PATH "Installation directory for headers")
 if(WIN32 AND NOT CYGWIN)
-  set(DEF_INSTALL_CMAKE_DIR CMake)
+  set(DEF_INSTALL_CMAKE_DIR cmake)
 else()
-  set(DEF_INSTALL_CMAKE_DIR lib/CMake/MathGL)
+  set(DEF_INSTALL_CMAKE_DIR lib/cmake/mathgl)
 endif()
 set(MathGL_INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
 # Make relative paths absolute (needed later on)
