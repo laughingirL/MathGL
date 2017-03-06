@@ -1114,14 +1114,27 @@ These functions change the data in some direction like differentiations, integra
 @end deftypefn
 
 @anchor{smooth}
-@deftypefn {Команда MGL} {} smooth data @code{type} ['dir'='xyz']
+@deftypefn {Команда MGL} {} smooth data ['dir'='xyz']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Smooth (@code{const char *}dir=@code{"xyz"}, @code{mreal} delta=@code{0})
 @deftypefnx {Метод класса @code{mglDataC}} @code{void} Smooth (@code{const char *}dir=@code{"xyz"}, @code{mreal} delta=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_data_smooth (@code{HMDT} dat, @code{const char *}dir, @code{mreal} delta)
 @deftypefnx {Функция С} @code{void} mgl_datac_smooth (@code{HADT} dat, @code{const char *}dir, @code{mreal} delta)
 @end ifclear
-Сглаживает данные в выбранном направлении(ях) @var{dir}. Строка @var{dirs} задает направления вдоль которых будет производиться сглаживание. Если @var{dirs} содержит: @samp{0} -- ничего не делает, @samp{3} линейное усреднение по 3 точкам, @samp{5} линейное усреднение по 5 точкам. Если @var{dir} содержит символы @samp{dN} (где @samp{N} -- цифра 1,2,...,9), то используется линейное усреднение по (2*N+1)-ой точке. По умолчанию используется квадратичное усреднение по 5 точкам.
+Сглаживает данные в выбранном направлении(ях) @var{dir}. Строка @var{dirs} задает направления вдоль которых будет производиться сглаживание. Строка @var{dir} может содержать:
+@itemize @bullet
+@item
+@samp{xyz} -- сглаживание по x-,y-,z-направлениям,
+@item
+@samp{0} -- ничего не делает,
+@item
+@samp{3} -- линейное усреднение по 3 точкам,
+@item
+@samp{5} -- линейное усреднение по 5 точкам,
+@item
+@samp{d1}...@samp{d9} -- линейное усреднение по (2*N+1) точкам.
+@end itemize
+По умолчанию используется квадратичное усреднение по 5 точкам.
 @end deftypefn
 
 @anchor{envelop}
@@ -1171,8 +1184,8 @@ These functions change the data in some direction like differentiations, integra
 @anchor{normsl}
 @deftypefn {Команда MGL} {} normsl dat @code{v1 v2} ['dir'='z' @code{keep=on sym=off}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglData}} @code{void} NormSl (@code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{char} dir=@code{'z'}, @code{bool} keep_en=@code{true}, @code{bool} sym=@code{false})
-@deftypefnx {Функция С} @code{void} mgl_data_norm_slice (@code{HMDT} dat, @code{mreal} v1, @code{mreal} v2, @code{char} dir, @code{int} keep_en, @code{int} sym)
+@deftypefnx {Метод класса @code{mglData}} @code{void} NormSl (@code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{char} dir=@code{'z'}, @code{bool} keep=@code{true}, @code{bool} sym=@code{false})
+@deftypefnx {Функция С} @code{void} mgl_data_norm_slice (@code{HMDT} dat, @code{mreal} v1, @code{mreal} v2, @code{char} dir, @code{int} keep, @code{int} sym)
 @end ifclear
 Нормирует данные срез-за-срезом в выбранном направлении @var{dir} в интервал [@var{v1},@var{v2}]. Если @var{sym}=@code{true}, то используется симметричный интервал [-max(|v1|,|v2|), max(|v1|,|v2|)]. Если @var{keep}=@code{true}, то максимальное значение k-го среза ограничено величиной
 @iftex
@@ -1576,7 +1589,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Команда MGL} {} fourier complexDat 'dir'
 @ifclear UDAV
 @deftypefnx {Global function} @code{void} mglFourier @code{const mglDataA &}re, @code{const mglDataA &}im, @code{const char *}dir)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} FFT (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_fourier @code{HCDT} re, @code{HCDT} im, @code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_fft (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
 Выполняет Фурье преобразование для комплексных данных @var{re}+i*@var{im} в направлениях @var{dir}. Результат помещается обратно в массивы @var{re} и @var{im}.
 @end deftypefn

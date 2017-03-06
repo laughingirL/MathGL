@@ -1126,14 +1126,26 @@ Remove value steps (like phase jumps after inverse trigonometric functions) with
 @end deftypefn
 
 @anchor{smooth}
-@deftypefn {MGL command} {} smooth data @code{type} ['dir'='xyz']
+@deftypefn {MGL command} {} smooth data ['dir'='xyz']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} Smooth (@code{const char *}dir=@code{"xyz"}, @code{mreal} delta=@code{0})
 @deftypefnx {Method on @code{mglDataC}} @code{void} Smooth (@code{const char *}dir=@code{"xyz"}, @code{mreal} delta=@code{0})
 @deftypefnx {C function} @code{void} mgl_data_smooth (@code{HMDT} dat, @code{const char *}dir, @code{mreal} delta)
 @deftypefnx {C function} @code{void} mgl_datac_smooth (@code{HADT} dat, @code{const char *}dir, @code{mreal} delta)
 @end ifclear
-Smooths the data on specified direction or directions. String @var{dirs} specifies the dimensions which will be smoothed. It may contain characters: @samp{x} for 1st dimension, @samp{y} for 2nd dimension, @samp{z} for 3d dimension. If string @var{dir} contain: @samp{0} then does nothing, @samp{3} -- linear averaging over 3 points, @samp{5} -- linear averaging over 5 points. If string @var{dir} contain @samp{dN} (where @samp{N} is digit 1,2,...,9) then linear averaging over (2*N+1)-th points is used.
+Smooths the data on specified direction or directions. String @var{dirs} specifies the dimensions which will be smoothed. It may contain characters:
+@itemize @bullet
+@item
+@samp{xyz} for smoothing along x-,y-,z-directions correspondingly,
+@item
+@samp{0} does nothing,
+@item
+@samp{3} for linear averaging over 3 points,
+@item
+@samp{5} for linear averaging over 5 points,
+@item
+@samp{d1}...@samp{d9} for linear averaging over (2*N+1)-th points.
+@end itemize
 By default quadratic averaging over 5 points is used.
 @end deftypefn
 
@@ -1172,7 +1184,6 @@ Calculates one step of diffraction by finite-difference method with parameter @v
 @end itemize
 @end deftypefn
 
-
 @anchor{norm}
 @deftypefn {MGL command} {} norm dat @code{v1 v2 [sym=off dim=0]}
 @ifclear UDAV
@@ -1185,10 +1196,10 @@ Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} 
 @anchor{normsl}
 @deftypefn {MGL command} {} normsl dat @code{v1 v2} ['dir'='z' @code{keep=on sym=off}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglData}} @code{void} NormSl (@code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{char} dir=@code{'z'}, @code{bool} keep_en=@code{true}, @code{bool} sym=@code{false})
-@deftypefnx {C function} @code{void} mgl_data_norm_slice (@code{HMDT} dat, @code{mreal} v1, @code{mreal} v2, @code{char} dir, @code{int} keep_en, @code{int} sym)
+@deftypefnx {Method on @code{mglData}} @code{void} NormSl (@code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{char} dir=@code{'z'}, @code{bool} keep=@code{true}, @code{bool} sym=@code{false})
+@deftypefnx {C function} @code{void} mgl_data_norm_slice (@code{HMDT} dat, @code{mreal} v1, @code{mreal} v2, @code{char} dir, @code{int} keep, @code{int} sym)
 @end ifclear
-Normalizes data slice-by-slice along direction @var{dir} the data in slices to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. If @var{keep_en} is set then maximal value of k-th slice will be limited by
+Normalizes data slice-by-slice along direction @var{dir} the data in slices to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. If @var{keep} is set then maximal value of k-th slice will be limited by
 @iftex
 @math{\sqrt{\sum a_{ij}(k)/\sum a_{ij}(0)}}.
 @end iftex
@@ -1590,7 +1601,9 @@ The same as previous but with specified amplitude @var{ampl} and phase @var{phas
 @deftypefnx {MGL command} {} fourier complexDat 'dir'
 @ifclear UDAV
 @deftypefnx {Global function} @code{void} mglFourier @code{const mglDataA &}re, @code{const mglDataA &}im, @code{const char *}dir)
+@deftypefnx {Method on @code{mglDataC}} @code{void} FFT (@code{const char *}dir)
 @deftypefnx {C function} @code{void} mgl_data_fourier @code{HCDT} re, @code{HCDT} im, @code{const char *}dir)
+@deftypefnx {C function} @code{void} mgl_datac_fft (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
 Does Fourier transform of complex data @var{re}+i*@var{im} in directions @var{dir}. Result is placed back into @var{re} and @var{im} data arrays.
 @end deftypefn
