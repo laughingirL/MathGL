@@ -1082,77 +1082,65 @@ float mglCanvas::GetGlyphPhi(const mglPnt &q, float phi)
 	return phi;
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
+{
+	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
+	if(mgl_isnan(phi))	return;
+	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=(P.n3&4)?1:1;	}
+	
+	mglPnt p=Pnt[P.n1];	p.a=1;
+	const int oi = d?d->ObjId:-1;
+	
+	mreal fact = get_persp(Bp.pf,p.z,Depth);
+	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2)*fact;
+	mreal size=P.s, f = P.p*pf*P.s;
+	p.u *= pf*size;	p.v *= pf*size;
+	
+	const mglGlyph &g = Glf[P.n4];
+	if(P.n3&8)
+	{
+		if(!(P.n3&4))	glyph_line(phi,p,f,true, d);
+		glyph_line(phi,p,f,false, d);
+	}
+	else
+	{
+		if(!(P.n3&4))	glyph_fill(phi,p,f,g, d);
+		glyph_wire(phi,p,f,g, d);
+	}
+}
+//-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_addpnts(mreal x1,mreal y1,mreal x2,mreal y2, std::vector<mreal> *b)
 {
 	if(y1<y2)	for(int i=long(y1);i<=long(y2)+1;i++)
 	{
-		mreal d = (i-y1)/(y2-y1);
+		mreal d = (i-0.5-y1)/(y2-y1);
 		if(d>=0 && d<=1)	b[i].push_back(x1+d*(x2-x1));
 	}
 	else	for(int i=long(y2);i<=long(y1)+1;i++)
 	{
-		mreal d = (i-y1)/(y2-y1);
+		mreal d = (i-0.5-y1)/(y2-y1);
 		if(d>=0 && d<=1)	b[i].push_back(x1+d*(x2-x1));
 	}
 }
-void MGL_NO_EXPORT mgl_drawline(mreal x1,mreal y1,mreal x2,mreal y2,unsigned char *m,long w)
+void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph &g, const mglDrawReg *d)
 {
-	if(fabs(x2-x1)>fabs(y2-y1))	// horizontal line
-	{
-		mreal d = (y2-y1)/(x2-x1), a = y1-d*x1+0.5;
-		if(x1<x2)	for(long k=x1;k<=x2;k++)	m[k+w*long(a+d*k)] = 255;
-		else		for(long k=x1;k>=x2;k--)	m[k+w*long(a+d*k)] = 255;
-	}
-	else	// vertical line
-	{
-		mreal d = (x2-x1)/(y2-y1), a = x1-d*y1+0.5;
-		if(y1<y2)	for(long k=y1;k<=y2;k++)	m[long(a+d*k)+w*k] = 255;
-		else		for(long k=y1;k>=y2;k--)	m[long(a+d*k)+w*k] = 255;
-	}
-}
-void mglCanvas::glyph_draw_new(const mglPrim &P, mglDrawReg *d)
-{
-	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
-	if(mgl_isnan(phi))	return;
-
-	mglPnt p=Pnt[P.n1];	p.a=1;
-	const int oi = d?d->ObjId:-1;
-	unsigned char r[4];	col2int(p,r,oi);
-
-	mreal fact = get_persp(Bp.pf,p.z,Depth), co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
-	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2)*fact;
-	mreal size=P.s, f = P.p*pf*P.s;
-	p.u *= pf*size;	p.v *= pf*size;
-	const mglGlyph &g = Glf[P.n4];
+	if(!g.line || g.nl<=0)	return;
+	const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
+	
 	mreal x1 = 1e10, x2=-1e10, y1=1e10, y2=-1e10;
-	const mreal dv = 0.5;
-	bool fast = (Quality&3)==MGL_DRAW_WIRE;
-	// find sizes of glyph
-	if(P.n3&8)
-	{
-		mreal x,y,xx1,yy1,xx2,yy2,xx3,yy3,xx4,yy4, t;
-		x=p.u;	y=p.v-dv;	xx1 = (x*co+y*si)/2;	yy1 = (y*co-x*si)/2;
-		x=p.u+f;y=p.v-dv;	xx2 = (x*co+y*si)/2;	yy2 = (y*co-x*si)/2;
-		x=p.u;	y=p.v+dv;	xx3 = (x*co+y*si)/2;	yy3 = (y*co-x*si)/2;
-		x=p.u+f;y=p.v+dv;	xx4 = (x*co+y*si)/2;	yy4 = (y*co-x*si)/2;
-		x1 = xx1<xx2?xx1:xx2;	t = xx3<xx4?xx3:xx4;	x1 = x1<t?x1:t;
-		y1 = yy1<yy2?yy1:yy2;	t = yy3<yy4?yy3:yy4;	y1 = y1<t?y1:t;
-		x2 = xx1>xx2?xx1:xx2;	t = xx3>xx4?xx3:xx4;	x2 = x2>t?x2:t;
-		y2 = yy1>yy2?yy1:yy2;	t = yy3>yy4?yy3:yy4;	y2 = y2>t?y2:t;
-	}
-	else	for(long i=0;i<g.nl;i++)
+	for(long i=0;i<g.nl;i++)	// find sizes of glyph
 	{
 		long ii=2*i;
 		if(g.line[ii]==0x3fff && g.line[ii+1]==0x3fff)	continue;
-		mreal x = p.u + g.line[ii]*f, y = p.v + g.line[ii+1]*f;
+		mreal x = pp.u + g.line[ii]*f, y = pp.v + g.line[ii+1]*f;
 		mreal xx = (x*co+y*si)/2, yy = (y*co-x*si)/2;
 		if(xx<x1)	x1=xx;	if(xx>x2)	x2=xx;
 		if(yy<y1)	y1=yy;	if(yy>y2)	y2=yy;
 	}
 	x1-=2;	x2+=2;	y1-=2;	y2+=2;
 	long w = long(x2-x1+1), h = long(y2-y1+1), il=0;
-	long x0=long(p.x+x1), y0=long(p.y+y1),i1=1,i2=w-2,j1=1,j2=h-2;
-	if(d)
+	long x0=long(pp.x+x1), y0=long(pp.y+y1),i1=1,i2=w-2,j1=1,j2=h-2;
+	if(d)	// apply mglDrawReg
 	{
 		if(x0+i1<d->x1)	i1 = d->x1-x0;	if(x0+i2>d->x2)	i2 = d->x2-x0;
 		if(y0+j1<d->y1)	j1 = d->y1-y0;	if(y0+j2>d->y2)	j2 = d->y2-y0;
@@ -1164,125 +1152,63 @@ void mglCanvas::glyph_draw_new(const mglPrim &P, mglDrawReg *d)
 	}
 	if(i1>=i2 || j1>=j2)	return;
 
-	unsigned char *m = new unsigned char[w*h];
-	memset(m,0,w*h*sizeof(unsigned char));
 	std::vector<mreal> b[h];
-	if(P.n3&8)	// draw rectangle
-	{
-		mreal x,y,xx1,yy1,xx2,yy2,xx3,yy3,xx4,yy4;
-		x=p.u;	y=p.v-dv;	xx1 = (x*co+y*si)/2-x1;	yy1 = (y*co-x*si)/2-y1;
-		x=p.u+f;y=p.v-dv;	xx2 = (x*co+y*si)/2-x1;	yy2 = (y*co-x*si)/2-y1;
-		x=p.u;	y=p.v+dv;	xx3 = (x*co+y*si)/2-x1;	yy3 = (y*co-x*si)/2-y1;
-		x=p.u+f;y=p.v+dv;	xx4 = (x*co+y*si)/2-x1;	yy4 = (y*co-x*si)/2-y1;
-		mgl_addpnts(xx1,yy1,xx2,yy2,b);
-		mgl_addpnts(xx1,yy1,xx3,yy3,b);
-		mgl_addpnts(xx4,yy4,xx2,yy2,b);
-		mgl_addpnts(xx4,yy4,xx3,yy3,b);
-		if(fast)
-		{
-			mgl_drawline(xx1,yy1,xx2,yy2,m,w);
-			mgl_drawline(xx1,yy1,xx3,yy3,m,w);
-			mgl_drawline(xx4,yy4,xx2,yy2,m,w);
-			mgl_drawline(xx4,yy4,xx3,yy3,m,w);
-		}
-	}
-	else	for(long i=0;i<g.nl;i++)	// draw lines of glyph
+	for(long i=0;i<g.nl;i++)	// add bounding points
 	{
 		long ii=2*i;
-		mreal x = p.u + g.line[ii]*f, y = p.v + g.line[ii+1]*f;
+		mreal x = pp.u + g.line[ii]*f, y = pp.v + g.line[ii+1]*f;
 		mreal xx1 = (x*co+y*si)/2-x1, yy1 = (y*co-x*si)/2-y1, xx2, yy2;
 		if(g.line[ii]==0x3fff && g.line[ii+1]==0x3fff)	// line breakthrough
 		{	il = i+1;	continue;	}
 		else if(i==g.nl-1 || (g.line[ii+2]==0x3fff && g.line[ii+3]==0x3fff))	// enclose the circle
 		{
-			ii=2*il;	x = p.u + g.line[ii]*f;	y = p.v + g.line[ii+1]*f;
+			ii=2*il;	x = pp.u + g.line[ii]*f;	y = pp.v + g.line[ii+1]*f;
 			xx2 = (x*co+y*si)/2-x1;	yy2 = (y*co-x*si)/2-y1;
 		}
 		else	// ordinary line
 		{
-			ii+=2;	x = p.u + g.line[ii]*f;	y = p.v + g.line[ii+1]*f;
+			ii+=2;	x = pp.u + g.line[ii]*f;	y = pp.v + g.line[ii+1]*f;
 			xx2 = (x*co+y*si)/2-x1;	yy2 = (y*co-x*si)/2-y1;
 		}
 		mgl_addpnts(xx1,yy1,xx2,yy2,b);
-		if(fast)
-			mgl_drawline(xx1,yy1,xx2,yy2,m,w);
 	}
-	if(!fast && !(P.n3&4))
+	const int oi = d?d->ObjId:-1;
+	unsigned char r[4];	col2int(pp,r,oi);
+	for(long j=j1;j<=j2;j++)	// draw glyph
 	{
-		for(long j=0;j<h;j++)
+		if(b[j].size()<2)	continue;
+		std::sort(b[j].begin(),b[j].end());
+		for(size_t k=0;k<b[j].size();k+=2)
 		{
-			if(b[j].size()<2)	continue;
-			std::sort(b[j].begin(),b[j].end());
-			unsigned char *mm = m+w*j;
-			for(size_t k=0;k<b[j].size();k+=2)
-			{
-				long i1 = long(b[j][k]), i2=long(b[j][k+1]);
-				mm[i1] = (unsigned char)(255*(1-b[j][k]+i1));
-				mm[i2] = (unsigned char)(255*(b[j][k]-i2));
-				for(long i=i1+1;i<i2;i++)	mm[i]=255;
-			}
+			long ii1 = long(b[j][k]+1.5), ii2=long(b[j][k+1]+0.5);
+			if(ii1<i1)	ii1=i1;
+			if(ii2>i2)	ii2=i2;
+			for(long i=ii1;i<=ii2;i++)	pnt_plot(x0+i,y0+j,pp.z,r,oi);
 		}
 	}
-	for(long j=j1;j<=j2;j++)	for(long i=i1;i<=i2;i++)	// blur by 3 points???
-	{
-		long ii=i+w*j;	r[3]=m[ii];
-		pnt_plot(x0+i,y0+j,p.z,r,oi);
-	}
-	delete []m;
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
-{
-	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
-	if(mgl_isnan(phi))	return;
-	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=(P.n3&4)?1:0.6;	}
-	mglPnt p=Pnt[P.n1];	p.a=1;
-	
-	// NOTE check this later for mglInPlot
-	mreal fact = get_persp(Bp.pf,p.z,Depth);
-	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2)*fact, f = P.p*pf;
-	
-	mglMatrix M;
-	M.b[0] = M.b[4] = M.b[8] = P.s;
-	M.RotateN(phi,0,0,1);
-	M.x=p.x;	M.y=p.y;	M.z=p.z;	M.pf = 1;
-	p.u *= pf;	p.v *= pf;
-	
-	const mglGlyph &g = Glf[P.n4];
-	if(P.n3&8)
-	{
-		if(!(P.n3&4))	glyph_line(&M,p,f,true, d);
-		glyph_line(&M,p,f,false, d);
-	}
-	else
-	{
-		if(!(P.n3&4))	glyph_fill(&M,p,f,g, d);
-		glyph_wire(&M,p,f,g, d);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::glyph_fill(const mglMatrix *M, const mglPnt &pp, mreal f, const mglGlyph &g, const mglDrawReg *d)
-{
-	if(!g.trig || g.nt<=0)	return;
+
+/*	if(!g.trig || g.nt<=0)	return;
+	const *mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
 	mglPnt q0=pp, q1=pp, q2=pp;
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=NAN;
 	for(long ik=0;ik<g.nt;ik++)
 	{
-		long ii = 6*ik;	mglPoint p;
-		p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
-		PostScale(M,p);	q0.x = p.x;	q0.y = p.y;	q0.z = p.z;
-		ii+=2;	p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
-		PostScale(M,p);	q1.x = p.x;	q1.y = p.y;	q1.z = p.z;
-		ii+=2;	p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
-		PostScale(M,p);	q2.x = p.x;	q2.y = p.y;	q2.z = p.z;
+		long ii = 6*ik;	mreal x, y;
+		x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+		q0.x = pp.x+(x*co+y*si)/2;	q0.y = pp.y+(y*co-x*si)/2;	ii+=2;
+		x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+		q1.x = pp.x+(x*co+y*si)/2;	q1.y = pp.y+(y*co-x*si)/2;	ii+=2;
+		x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+		q2.x = pp.x+(x*co+y*si)/2;	q2.y = pp.y+(y*co-x*si)/2;
 		trig_draw(q0,q1,q2,false,d);
-	}
+	}*/
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_wire(const mglMatrix *M, const mglPnt &pp, mreal f, const mglGlyph &g, const mglDrawReg *d)
+void mglCanvas::glyph_wire(mreal phi, const mglPnt &pp, mreal f, const mglGlyph &g, const mglDrawReg *d)
 {
 	if(!g.line || g.nl<=0)	return;
 	long il=0;
+	const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
 	mglPnt q0=pp, q1=pp;	q0.u=q0.v=q1.u=q1.v=NAN;
 	mglPoint p1,p2;
 	for(long ik=0;ik<g.nl;ik++)
@@ -1291,38 +1217,37 @@ void mglCanvas::glyph_wire(const mglMatrix *M, const mglPnt &pp, mreal f, const 
 		if(g.line[ii]==0x3fff && g.line[ii+1]==0x3fff)	// line breakthrough
 		{	il = ik+1;	continue;	}
 		else if(ik==g.nl-1 || (g.line[ii+2]==0x3fff && g.line[ii+3]==0x3fff))
-		{	// enclose the circle. May be in future this block should be commented
-			p1.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii=2*il;
-			p2.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
+		{	// enclose the circle
+			mreal x,y;
+			x = pp.u+g.line[ii]*f;	y = pp.v+g.line[ii+1]*f;
+			q0.x = pp.x+(x*co+y*si)/2;	q0.y = pp.y+(y*co-x*si)/2;	ii=2*il;
+			x = pp.u+g.line[ii]*f;	y = pp.v+g.line[ii+1]*f;
+			q1.x = pp.x+(x*co+y*si)/2;	q1.y = pp.y+(y*co-x*si)/2;
+			line_draw(q0,q1,d);
 		}
 		else
 		{	// normal line
-			p1.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii+=2;
-			p2.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
+			mreal x,y;
+			x = pp.u+g.line[ii]*f;	y = pp.v+g.line[ii+1]*f;
+			q0.x = pp.x+(x*co+y*si)/2;	q0.y = pp.y+(y*co-x*si)/2;	ii+=2;
+			x = pp.u+g.line[ii]*f;	y = pp.v+g.line[ii+1]*f;
+			q1.x = pp.x+(x*co+y*si)/2;	q1.y = pp.y+(y*co-x*si)/2;
+			line_draw(q0,q1,d);
 		}
-		PostScale(M,p1);	PostScale(M,p2);
-		q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
-		q1.x = p2.x;	q1.y = p2.y;	q1.z = p2.z;
-		line_draw(q0,q1,d);
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_line(const mglMatrix *M, const mglPnt &pp, mreal f, bool solid, const mglDrawReg *d)
+void mglCanvas::glyph_line(mreal phi, const mglPnt &pp, mreal f, bool solid, const mglDrawReg *d)
 {
+	const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
 	mglPnt q0=pp,q1=pp,q2=pp,q3=pp;
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=q3.u=q3.v=NAN;
-	mglPoint p1,p2,p3,p4;
 	
-	mreal dy = 0.004;
-	p1.Set(pp.u,pp.v-dy,0);	PostScale(M,p1);
-	p2.Set(pp.u,pp.v+dy,0);	PostScale(M,p2);
-	p3.Set(fabs(f)+pp.u,pp.v+dy,0);	PostScale(M,p3);
-	p4.Set(fabs(f)+pp.u,pp.v-dy,0);	PostScale(M,p4);
-	
-	q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
-	q1.x = p2.x;	q1.y = p2.y;	q1.z = p2.z;
-	q2.x = p3.x;	q2.y = p3.y;	q2.z = p3.z;
-	q3.x = p4.x;	q3.y = p4.y;	q3.z = p4.z;
+	mreal dy = 0.004,x,y;
+	x=pp.u;		y=pp.v-dy;	q0.x=pp.x+(x*co+y*si)/2;	q0.y=pp.y+(y*co-x*si)/2;
+	x=pp.u+f;	y=pp.v-dy;	q1.x=pp.x+(x*co+y*si)/2;	q1.y=pp.y+(y*co-x*si)/2;
+	x=pp.u;		y=pp.v+dy;	q2.x=pp.x+(x*co+y*si)/2;	q2.y=pp.y+(y*co-x*si)/2;
+	x=pp.u+f;	y=pp.v+dy;	q3.x=pp.x+(x*co+y*si)/2;	q3.y=pp.y+(y*co-x*si)/2;
 	
 	if(solid)	quad_draw(q0,q1,q3,q2,d);
 	else

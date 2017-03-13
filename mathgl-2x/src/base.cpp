@@ -255,7 +255,7 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 void mglGlyph::Create(long Nt, long Nl)
 {
-	if(Nt<0 || Nl<0)	return;
+//	if(Nt<0 || Nl<0)	return;
 	nt=Nt;	nl=Nl;
 #pragma omp critical(glf_create)
 	{
@@ -266,7 +266,7 @@ void mglGlyph::Create(long Nt, long Nl)
 	}
 }
 //-----------------------------------------------------------------------------
-bool mglGlyph::operator==(const mglGlyph &g)
+bool mglGlyph::operator==(const mglGlyph &g) const
 {
 	if(nl!=g.nl || nt!=g.nt)	return false;
 	if(trig && memcmp(trig,g.trig,6*nt*sizeof(short)))	return false;
@@ -288,6 +288,45 @@ long mglBase::AddGlyph(int s, long j)
 	long k;
 #pragma omp critical(glf)
 	{k=Glf.size();	MGL_PUSH(Glf,g,mutexGlf);}	return k;
+}
+//-----------------------------------------------------------------------------
+long mglBase::AddGlyph(unsigned char id)
+{
+	size_t j=0;
+	for(size_t i=0;i<UserGlf.size();i++)
+		if(UserGlf[i].nt==-id)	j=i+1;
+	if(j==0)	return -1;
+	const mglGlyph &g=UserGlf[j-1];
+	// let find the similar glyph
+	for(size_t i=0;i<Glf.size();i++)
+		if(g!=Glf[i])	continue;	else	return i;
+	// if no one then let add it
+	long k;
+#pragma omp critical(glf)
+	{k=Glf.size();	MGL_PUSH(Glf,g,mutexGlf);}	return k;
+}
+//-----------------------------------------------------------------------------
+void mglBase::DefineGlyph(HCDT x, HCDT y, unsigned char id)
+{
+	long n = x->GetNx();
+	if(y->GetNx()!=n || n<2)	return;
+	mglGlyph g(-id,n);
+	mreal x1=1e10,x2=-1e10,y1=1e10,y2=-1e10;
+	for(long i=0;i<n;i++)
+	{
+		mreal xx = x->v(i), yy = y->v(i);
+		if(x1>xx)	x1=xx;	if(x2<xx)	x2=xx;
+		if(y1>yy)	y1=yy;	if(y2<yy)	y2=yy;
+	}
+	mreal scale = 1;
+	if(fabs(x1)<10 && fabs(x2)<10 && fabs(y1)<10 && fabs(y2)<10)
+		scale=1000;
+	for(long i=0;i<n;i++)
+	{
+		short sx = short(x->v(i)*scale), sy = short(y->v(i)*scale);
+		g.line[2*i] = sx;	g.line[2*i+1] = sy;
+	}
+	UserGlf.push_back(g);
 }
 //-----------------------------------------------------------------------------
 //		Add points to the buffer

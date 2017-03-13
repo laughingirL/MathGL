@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "mgl2/canvas.h"
 #include "mgl2/prim.h"
+#include "mgl2/font.h"
 #include "mgl2/plot.h"
 #include "mgl2/data.h"
 std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt);
@@ -643,6 +644,46 @@ void MGL_EXPORT mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const c
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_dew_2d(_GR_, _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	Symbol series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_symbol(HMGL gr, double x, double y, double z, char id, const char *how, double size)
+{	mgl_symbol_dir(gr, x, y, z, NAN, NAN, 0, id, how, size);	}
+void MGL_EXPORT mgl_symbol_dir(HMGL gr, double x, double y, double z, double dx, double dy, double dz, char id, const char *how, double size)
+{
+	bool a=mglchr(how,'a'), A=mglchr(how,'A');
+//	static int cgid=1;	gr->StartGroup("Puts",cgid++);
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	if(g && (a||A))
+	{
+		g->Push();	g->Identity(a);
+		gr->set(MGL_DISABLE_SCALE);
+		mreal s=a?1:g->GetPlotFactor();
+		x = (2*x-1)*s;	y = (2*y-1)*s;
+		dx= (2*dx-1)*s;	dy= (2*dy-1)*s;
+	}
+	if(mgl_isnan(z))	z=2*gr->Max.z-gr->Min.z;
+	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
+	long cc = gr->AddTexture(how);
+	long k = gr->AddPnt(p,cc,d,-1,7);
+	gr->AddActive(k,0);
+	gr->AddActive(gr->AddPnt(mglPoint(dx,dy,dz),cc,d,-1,7),1);
+	if(g && (a||A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
+	if(size<0)	size *= -gr->GetFontSize();
+	
+	int font=0;	mglGetStyle(how, &font, NULL);
+	if(font&MGL_FONT_WIRE)	size = -size;
+	gr->smbl_plot(k,id,size);
+//	gr->EndGroup();
+}
+void MGL_EXPORT mgl_symbol_(uintptr_t *gr, double *x, double *y, double *z, char *id, const char *how, double *size,int,int n)
+{	char *f=new char[n+1];	memcpy(f,how,n);	f[n]=0;
+	mgl_symbol(_GR_, *x, *y, *z, *id, f, *size);	delete []f;	}
+void MGL_EXPORT mgl_symbol_dir_(uintptr_t *gr, double *x, double *y, double *z, double *dx, double *dy, double *dz, char *id, const char *how, double *size,int,int n)
+{	char *f=new char[n+1];	memcpy(f,how,n);	f[n]=0;
+	mgl_symbol_dir(_GR_, *x, *y, *z, *dx, *dy, *dz, *id, f, *size);	delete []f;	}
 //-----------------------------------------------------------------------------
 //
 //	Puts series

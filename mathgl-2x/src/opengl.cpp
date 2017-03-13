@@ -466,3 +466,22 @@ void mglCanvasGL::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *
 	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvasGL::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph &g, const mglDrawReg *d)
+{
+	if(!g.trig || g.nt<=0)	return;
+	const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
+	mglPnt q0=pp, q1=pp, q2=pp;
+	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=NAN;
+	for(long ik=0;ik<g.nt;ik++)
+	{
+		long ii = 6*ik;	mreal x, y;
+		x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+		q0.x = pp.x+(x*co+y*si)/2;	q0.y = pp.y+(y*co-x*si)/2;	ii+=2;
+		x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+		q1.x = pp.x+(x*co+y*si)/2;	q1.y = pp.y+(y*co-x*si)/2;	ii+=2;
+		x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+		q2.x = pp.x+(x*co+y*si)/2;	q2.y = pp.y+(y*co-x*si)/2;
+		trig_draw(q0,q1,q2,false,d);
+	}
+}
+//-----------------------------------------------------------------------------

@@ -210,6 +210,7 @@ void MGL_EXPORT mgl_load_font(HMGL gr, const char *name, const char *path)
 {	gr->LoadFont(name,path);	}
 void MGL_EXPORT mgl_copy_font(HMGL gr, HMGL gr_from)	{	gr->CopyFont(gr_from);	}
 void MGL_EXPORT mgl_restore_font(HMGL gr)	{	gr->RestoreFont();	}
+void MGL_EXPORT mgl_define_symbol(HMGL gr, char id, HCDT x, HCDT y)	{	gr->DefineGlyph(x,y,id);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_bar_width_(uintptr_t *gr, mreal *width)	{	_GR_->SetBarWidth(*width);	}
 void MGL_EXPORT mgl_set_rotated_text_(uintptr_t *gr, int *rotated)	{	_GR_->SetRotatedText(*rotated);	}
@@ -226,6 +227,8 @@ void MGL_EXPORT mgl_load_font_(uintptr_t *gr, char *name, char *path, int l,int 
 void MGL_EXPORT mgl_copy_font_(uintptr_t *gr, uintptr_t *gr_from)
 {	_GR_->CopyFont((mglBase *)(*gr_from));	}
 void MGL_EXPORT mgl_restore_font_(uintptr_t *gr)	{	_GR_->RestoreFont();	}
+void MGL_EXPORT mgl_define_symbol_(uintptr_t *gr, char *id, uintptr_t *x, uintptr_t *y, int)
+{	_GR_->DefineGlyph(_DA_(x),_DA_(y),id?*id:0);	}
 //-----------------------------------------------------------------------------
 extern mglFont mglDefFont;
 void MGL_EXPORT mgl_def_font(const char *name, const char *path)

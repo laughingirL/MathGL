@@ -7,6 +7,7 @@
 * Add time value to MGL language in format: "hh-mm-ss_DD.MM.YYYY" or "hh-mm-ss" or "DD.MM.YYYY".
 * Add 'iris' plot to show cross-dependencies of several data arrays.
 * Add 'flame2d' to draw flame fractals.
+* Add 'symbol' to draw the glyphs defined by 'addsymbol'.
 * Add 'bbox' to set bounding box for 2D output.
 * Add 'section' to get part of data between specified values.
 * Add 'detect' to found curves along data maximums.

@@ -35,6 +35,13 @@ int MGL_NO_EXPORT mgls_addlegend(mglGraph *gr, long , mglArg *a, const char *k, 
 	else	res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_addsymbol(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"sdd"))	gr->DefineSymbol(a[0].s[0],*(a[1].d),*(a[2].d));
+	else	res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_adjust(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -680,6 +687,7 @@ int MGL_NO_EXPORT mgls_ztick(mglGraph *gr, long n, mglArg *a, const char *k, con
 //-----------------------------------------------------------------------------
 mglCommand mgls_set_cmd[] = {
 	{"addlegend","Add legend entry","addlegend 'txt' 'fmt'", mgls_addlegend,15},
+	{"addsymbol","Add user-defined symbol","addsymbol 'id' Xdat Ydat", mgls_addsymbol,15},
 	{"adjust","Adjust ticks for best view","adjust ['dir']", mgls_adjust ,14},
 	{"alpha","Switch on/off transparency","alpha [val]", mgls_alpha ,2},
 	{"alphadef","Set default transparency","alphadef val", mgls_alphadef ,2},

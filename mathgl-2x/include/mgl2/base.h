@@ -237,24 +237,23 @@ inline mglPnt operator*(float b, const mglPnt &a)
 //-----------------------------------------------------------------------------
 /// Structure for glyph representation
 struct MGL_EXPORT mglGlyph
-{
+{	// NOTE nt<0 is used to set char id for user-defined glyphs
 	long nt, nl;		///< number of triangles and lines
 	short *trig, *line;	///< vertexes of triangles and lines
 
 	mglGlyph():nt(0),nl(0),trig(0),line(0)	{}
 	mglGlyph(const mglGlyph &a):nt(0),nl(0),trig(0),line(0)	{	*this=a;	}
 	mglGlyph(long Nt, long Nl):nt(0),nl(0),trig(0),line(0)	{	Create(Nt,Nl);	}
-#if MGL_HAVE_RVAL
-	mglGlyph(mglGlyph &&aa) : nt(aa.nt),nl(aa.nl),trig(aa.trig), line(aa.line)	{	aa.trig=aa.line=0;	}
-#endif
 	~mglGlyph()	{	if(trig)	delete []trig;	if(line)	delete []line;	}
 
 	void Create(long Nt, long Nl);
-	bool operator==(const mglGlyph &g) MGL_FUNC_PURE;
-	inline bool operator!=(const mglGlyph &g)	{	return !(*this==g);	}
+	bool operator==(const mglGlyph &g) const MGL_FUNC_PURE;
+	inline bool operator!=(const mglGlyph &g) const MGL_FUNC_PURE
+	{	return !(*this==g);	}
 	inline const mglGlyph &operator=(const mglGlyph &a)
-	{	Create(a.nt, a.nl);	memcpy(trig, a.trig, 6*nt*sizeof(short));
-		memcpy(line, a.line, 2*nl*sizeof(short));	return a;	}
+	{	Create(a.nt, a.nl);	
+		if(a.trig)	memcpy(trig, a.trig, 6*nt*sizeof(short));
+		if(a.line)	memcpy(line, a.line, 2*nl*sizeof(short));	return a;	}
 };
 //-----------------------------------------------------------------------------
 #define MGL_TEXTURE_COLOURS 512
@@ -338,7 +337,8 @@ public:
 	mglStack<mglActivePos> Act;	///< Position of active points
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 	int BBoxX1, BBoxY1, BBoxX2, BBoxY2;	///< BBox region for exporting 2d graphics
-
+	std::vector<mglGlyph> UserGlf;	///< User-defined glyphs data
+	
 	mreal CDef;			///< Default (current) color in texture
 	mreal AlphaDef;		///< Default value of alpha channel (transparency)
 	mreal BarWidth;		///< Relative width of rectangles in Bars().
@@ -476,6 +476,8 @@ public:
 	virtual mreal GetRatio() const MGL_FUNC_CONST;
 	virtual int GetWidth() const MGL_FUNC_CONST;
 	virtual int GetHeight() const MGL_FUNC_CONST;
+	/// Add user-defined glyph
+	void DefineGlyph(HCDT x, HCDT y, unsigned char id=0);
 
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
@@ -511,6 +513,8 @@ public:
 	inline void SetReduceAcc(bool val)	{	set(val, MGL_REDUCEACC);	}
 	/// Add glyph of current font to the Glf and return its position
 	long AddGlyph(int s, long j);
+	/// Add glyph to the Glf and return its position
+	long AddGlyph(unsigned char id);
 	/// Add active point as k-th element of Pnt
 	void AddActive(long k,int n=0);
 	/// Clear unused points and primitives
@@ -570,6 +574,7 @@ public:
 	virtual void line_plot(long p1, long p2)=0;
 	virtual void trig_plot(long p1, long p2, long p3)=0;
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
+	virtual void smbl_plot(long p1, char id, double size)=0;
 	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col)=0;
 	virtual float GetGlyphPhi(const mglPnt &q, float phi)=0;
 	virtual mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'),bool rot=true)=0;

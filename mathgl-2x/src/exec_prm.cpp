@@ -480,6 +480,30 @@ int MGL_NO_EXPORT mgls_sphere(mglGraph *gr, long , mglArg *a, const char *k, con
 	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_symbol(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
+{
+	int res=0;
+	if(k[0]=='n')
+	{
+		gr->Self()->SaveState(opt);
+		if(!strcmp(k,"nns"))	gr->Symbol(mglPoint(a[0].v,a[1].v,NAN),a[2].s[0]);
+		else if(!strcmp(k,"nnss"))	gr->Symbol(mglPoint(a[0].v,a[1].v,NAN),a[2].s[0], a[3].s.c_str());
+		else if(!strcmp(k,"nnssn"))	gr->Symbol(mglPoint(a[0].v,a[1].v,NAN),a[2].s[0], a[3].s.c_str(),a[4].v);
+		else if(!strcmp(k,"nnns"))	gr->Symbol(mglPoint(a[0].v,a[1].v,a[2].v),a[3].s[0]);
+		else if(!strcmp(k,"nnnss"))	gr->Symbol(mglPoint(a[0].v,a[1].v,a[2].v),a[3].s[0], a[4].s.c_str());
+		else if(!strcmp(k,"nnnssn"))gr->Symbol(mglPoint(a[0].v,a[1].v,a[2].v),a[3].s[0], a[4].s.c_str(),a[5].v);
+		else if(!strcmp(k,"nnnns"))		gr->Symbol(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].s[0]);
+		else if(!strcmp(k,"nnnnss"))	gr->Symbol(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].s[0], a[5].s.c_str());
+		else if(!strcmp(k,"nnnnssn"))	gr->Symbol(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].s[0], a[5].s.c_str(),a[6].v);
+		else if(!strcmp(k,"nnnnnns"))	gr->Symbol(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].s[0]);
+		else if(!strcmp(k,"nnnnnnss"))	gr->Symbol(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].s[0], a[7].s.c_str());
+		else if(!strcmp(k,"nnnnnnssn"))	gr->Symbol(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].s[0], a[7].s.c_str(),a[8].v);
+		else	res=1;
+		gr->Self()->LoadState();
+	}
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_text(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
 {
 	int res=0;
@@ -583,6 +607,7 @@ mglCommand mgls_prm_cmd[] = {
 	{"rect","Draw rectangle","rect x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_rect ,13},
 	{"rhomb","Draw rhombus","rhomb x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_rhomb ,13},
 	{"sphere","Draw sphere","sphere x0 y0 r ['fmt']|x0 y0 z0 r ['fmt']", mgls_sphere ,13},
+	{"symbol","Draw user-defined symbol at given position and direction","symbol x y 'id' ['fmt' size]|x y z 'id' ['fmt' size]|x y dx dy 'id' ['fmt' size]|x y z dx dy dz 'id' ['fmt' size]", mgls_symbol ,15},
 	{"text","Draw text at some position or along curve","text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font']|Xdat Ydat 'txt' ['font']|Xdat Ydat Zdat 'txt' ['font']", mgls_text ,15},
 	{"title","Add title for current subplot/inplot","title 'txt' ['fmt' size]", mgls_title ,5},
 	{"tlabel","Draw label for t-axis","tlabel 'txt' [pos]", mgls_tlabel ,12},

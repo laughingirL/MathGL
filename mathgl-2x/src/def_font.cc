@@ -1,5 +1,5 @@
 const unsigned long mgl_numg=411, mgl_cur=243136;
-const float mgl_fact=35.7143;
+const float mgl_fact=250./7.;
 long mgl_gen_fnt[411][6] = {
 	{0x21,166,41,0,39,164},
 	{0x22,204,43,398,38,570},

@@ -412,6 +412,7 @@ protected:
 	void trig_plot(long p1, long p2, long p3);
 	void quad_plot(long p1, long p2, long p3, long p4);
 	void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col);
+	void smbl_plot(long p1, char id, double size);
 	mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'), bool rot=true);
 
 	void add_prim(mglPrim &a);	///< add primitive to list
@@ -426,7 +427,12 @@ protected:
 	void glyph_draw(const mglPrim &P, mglDrawReg *d);
 	void glyph_draw_new(const mglPrim &P, mglDrawReg *d);
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
-
+	
+	// functions for glyph drawing
+	virtual void glyph_fill(mreal phi, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
+	void glyph_wire(mreal phi, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
+	void glyph_line(mreal phi, const mglPnt &p, mreal f, bool solid, const mglDrawReg *d);
+	
 	// restore normalized coordinates from screen ones
 	mglPoint RestorePnt(mglPoint ps, bool norm=false) const MGL_FUNC_PURE;
 
@@ -481,11 +487,6 @@ private:
 	long ProjScale(int nface, long p, bool text=false);
 	/// Set coordinate and add the point, return its id
 	long setPp(mglPnt &q, const mglPoint &p);
-
-	// functions for glyph drawing
-	void glyph_fill(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
-	void glyph_wire(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
-	void glyph_line(const mglMatrix *M, const mglPnt &p, mreal f, bool solid, const mglDrawReg *d);
 
 	// fill pixel for given primitive
 	void mark_pix(long i,long j,const mglPnt &p, char type, mreal size, mglDrawReg *d);

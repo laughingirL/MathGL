@@ -568,6 +568,32 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	else	add_prim(a);
 }
 //-----------------------------------------------------------------------------
+#define MGL_GLYPH_PLOT	if(Quality&MGL_DRAW_LMEM)	glyph_draw(a,&d);\
+						else	add_prim(a);
+void mglCanvas::smbl_plot(long p1, char id, double size)
+//Glyph(mreal x, mreal y, mreal f, char id, mreal col)
+{
+	if(p1<0)	return;
+	mglPnt q=Pnt[p1];
+	mreal ftet=NAN, ll = q.u*q.u+q.v*q.v;
+	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
+	else if(ll)	ftet = -180*atan2(q.v,q.u)/M_PI;
+	long pk;	q.u=q.v=0;	q.w=NAN;
+	#pragma omp critical(pnt)
+	{pk=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}
+
+	mglPrim a(4);
+	a.s = fabs(size)/6.5*font_factor/Bt.pf;
+	a.w = get(MGL_ENABLE_RTEXT)?ftet:1e5;
+	a.p = 1./(mgl_fact*mgl_fgen);
+	a.n1 = pk;	a.n2 = p1; 	a.n3 = size<0?4:0;	a.n4 = AddGlyph(id);
+	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);
+	d.PDef = size<0?4:0;	d.pPos = a.s;	d.PenWidth=a.w;
+	if(TernAxis&12) for(int i=0;i<4;i++)
+	{	a.n1 = ProjScale(i, pk);	MGL_GLYPH_PLOT	}
+	else	{	MGL_GLYPH_PLOT	}
+}
+//-----------------------------------------------------------------------------
 //	Plot positioning functions
 //-----------------------------------------------------------------------------
 void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)

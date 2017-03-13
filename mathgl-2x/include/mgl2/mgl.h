@@ -139,7 +139,10 @@ public:
 	inline void SetRotatedText(bool rotated)	{	mgl_set_rotated_text(gr, rotated);	}
 	/// Set default font for all new HMGL and mglGraph objects
 	static inline void SetDefFont(const char *name, const char *path=NULL)	{	mgl_def_font(name,path);	}
-
+	/// Add user-defined glyph for symbol and set its optional id
+	inline void DefineSymbol(char id, const mglDataA &x, const mglDataA &y)
+	{	mgl_define_symbol(gr, id, &x, &y);	}
+	
 	/// Set default palette
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
 	/// Set default color scheme
@@ -677,6 +680,13 @@ public:
 	inline void Logo(const char *fname, bool smooth=false, const char *opt="")
 	{	mgl_logo_file(gr, fname, smooth, opt);	}
 
+	/// Draw user-defined symbol in position p
+	inline void Symbol(mglPoint p, char id, const char *how="", double size=-1)
+	{	mgl_symbol(gr, p.x, p.y, p.z, id, how, size);	}
+	/// Draw user-defined symbol in position p along direction d
+	inline void Symbol(mglPoint p, mglPoint d, char id, const char *how="", double size=-1)
+	{	mgl_symbol_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, id, how, size);	}
+	
 	/// Print text in position p with specified font
 	inline void Putsw(mglPoint p,const wchar_t *text,const char *font=":C",double size=-1)
 	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
