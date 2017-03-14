@@ -1208,6 +1208,8 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		}
 		if((s=strstr(p,"{&"))!=0)
 		{	mk = last_style[3] = p[3];	strcpy(last_style+11,s);	}
+		else if(mk && mglchr(p,'&'))
+		{	mk += 128;	last_style[3] = mk;	}
 		last_style[0] = Arrow1;	last_style[1] = Arrow2;
 	}
 	if(pal)

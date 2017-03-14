@@ -354,6 +354,8 @@ mreal mglCanvas::GetOrgZ(char dir, bool inv) const
 void mglCanvas::mark_plot(long p, char type, mreal size)
 {
 	if(p<0 || mgl_isnan(Pnt[p].x) || mgl_isnan(size))	return;
+	if(type>128 || type<0)
+	{	smbl_plot(p,type-128,20*MarkSize*(size?fabs(size):1));	return;	}
 	long pp=p;
 	mreal pw = 0.15/sqrt(font_factor);
 	size = size?fabs(size):1;
@@ -571,7 +573,6 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 #define MGL_GLYPH_PLOT	if(Quality&MGL_DRAW_LMEM)	glyph_draw(a,&d);\
 						else	add_prim(a);
 void mglCanvas::smbl_plot(long p1, char id, double size)
-//Glyph(mreal x, mreal y, mreal f, char id, mreal col)
 {
 	if(p1<0)	return;
 	mglPnt q=Pnt[p1];
@@ -579,7 +580,7 @@ void mglCanvas::smbl_plot(long p1, char id, double size)
 	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
 	else if(ll)	ftet = -180*atan2(q.v,q.u)/M_PI;
 	long pk;	q.u=q.v=0;	q.w=NAN;
-	#pragma omp critical(pnt)
+#pragma omp critical(pnt)
 	{pk=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}
 
 	mglPrim a(4);
