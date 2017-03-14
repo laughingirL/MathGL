@@ -31,18 +31,13 @@
 
 3. Centered curved text (see text2)
 
-4. Alternative algorithm for filled glyphs + user-defined glyphs.
-int DefineGlyph(const mglData &x, const mglData &y);
-void DrawGlyph(int id, mglPoint pos, double angle, double scale, const char *stl);
-5. Simplified triangle filling for Quality=1 ?!?
+4. User-defined glyphs for markers
 
 6. Add 'a' style for 'range'
 7. meshnum option for rarefied markers?!
 
 8. Manual AddPnt() with specified id + openmp ?!? -- possible memory overuse
-9. glyph_new() as glyph_fill() ???
 10. User glyphs as markers
-11. User glyphs in text ???
 
 14. Read MAT files ?!!
 15. Read WFM files ?!!

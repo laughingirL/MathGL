@@ -32,13 +32,14 @@ MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, 
 //-----------------------------------------------------------------------------
 long MGL_EXPORT mgl_have_color(const char *stl)
 {
-	long j=0;
-	if(stl)	for(long i=0;stl[i];i++)
-	{
-		if(strchr(MGL_COLORS,stl[i]))	j++;
-		if(stl[i]=='{' && stl[i+1]=='x')	j++;
-	}
-	return j;
+	return mgl_get_num_color(stl,0);
+// 	long j=0;
+// 	if(stl)	for(long i=0;stl[i];i++)
+// 	{
+// 		if(strchr(MGL_COLORS,stl[i]))	j++;
+// 		if(stl[i]=='{' && stl[i+1]=='x')	j++;
+// 	}
+// 	return j;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_wcstrim(wchar_t *str)

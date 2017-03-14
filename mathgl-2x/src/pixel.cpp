@@ -1086,7 +1086,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 {
 	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
 	if(mgl_isnan(phi))	return;
-	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=(P.n3&4)?1:1;	}
+	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=(P.n3&4)?1:0.8;	}
 	
 	mglPnt p=Pnt[P.n1];	p.a=1;
 	const int oi = d?d->ObjId:-1;
@@ -1153,6 +1153,8 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 	if(i1>=i2 || j1>=j2)	return;
 
 	std::vector<mreal> b[h];
+	const int oi = d?d->ObjId:-1;
+	unsigned char r[4];	col2int(pp,r,oi);
 	for(long i=0;i<g.nl;i++)	// add bounding points
 	{
 		long ii=2*i;
@@ -1171,19 +1173,39 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 			xx2 = (x*co+y*si)/2-x1;	yy2 = (y*co-x*si)/2-y1;
 		}
 		mgl_addpnts(xx1,yy1,xx2,yy2,b);
+		// draw boundary lines in any case ???
+// 		if(fabs(xx2-xx1)>fabs(yy2-yy1))	// horizontal line
+// 		{
+// 			mreal d = (yy2-yy1)/(xx2-xx1), a = yy1-d*xx1+0.5;
+// 			if(xx1>xx2)	{	mreal t=xx1;	xx1=xx2;	xx2=t;	}
+// 			for(long k=xx1;k<=xx2;k++)
+// 			{
+// 				long ii = long(k), jj = long(a+d*k);
+// 				if(ii>=i1 && ii<=i2 && jj>=j1 && jj<=j2)	pnt_plot(x0+ii,y0+jj,pp.z,r,oi);
+// 			}
+// 		}
+// 		else	// vertical line
+// 		{
+// 			mreal d = (xx2-xx1)/(yy2-yy1), a = xx1-d*yy1+0.5;
+// 			if(yy1>yy2)	{	mreal t=yy1;	yy1=yy2;	yy2=t;	}
+// 			for(long k=yy1;k<=yy2;k++)
+// 			{
+// 				long jj = long(k), ii = long(a+d*k);
+// 				if(ii>=i1 && ii<=i2 && jj>=j1 && jj<=j2)	pnt_plot(x0+ii,y0+jj,pp.z,r,oi);
+// 			}
+// 		}
 	}
-	const int oi = d?d->ObjId:-1;
-	unsigned char r[4];	col2int(pp,r,oi);
+	long kx=long(x0);	mreal dx=x0-kx;
 	for(long j=j1;j<=j2;j++)	// draw glyph
 	{
 		if(b[j].size()<2)	continue;
 		std::sort(b[j].begin(),b[j].end());
 		for(size_t k=0;k<b[j].size();k+=2)
 		{
-			long ii1 = long(b[j][k]+1.5), ii2=long(b[j][k+1]+0.5);
+			long ii1 = long(dx+b[j][k]+1.5), ii2=long(dx+b[j][k+1]+0.5);
 			if(ii1<i1)	ii1=i1;
 			if(ii2>i2)	ii2=i2;
-			for(long i=ii1;i<=ii2;i++)	pnt_plot(x0+i,y0+j,pp.z,r,oi);
+			for(long i=ii1;i<=ii2;i++)	pnt_plot(kx+i,y0+j,pp.z,r,oi);
 		}
 	}
 

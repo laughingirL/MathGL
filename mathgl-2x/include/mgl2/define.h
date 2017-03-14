@@ -335,6 +335,8 @@ double MGL_EXPORT_CONST mgl_hypot(double x, double y);
 size_t MGL_EXPORT mgl_wcslen(const wchar_t *str);
 /// Get RGB values for given color id or fill by -1 if no one found
 void MGL_EXPORT mgl_chrrgb(char id, float rgb[3]);
+/// Get number of colors in the string
+size_t MGL_EXPORT mgl_get_num_color(const char *s, int smooth);
 /// Check if string contain color id and return its number
 long MGL_EXPORT mgl_have_color(const char *stl);
 /// Find symbol in string excluding {} and return its position or NULL

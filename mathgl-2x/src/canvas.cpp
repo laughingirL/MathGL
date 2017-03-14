@@ -583,7 +583,7 @@ void mglCanvas::smbl_plot(long p1, char id, double size)
 	{pk=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}
 
 	mglPrim a(4);
-	a.s = fabs(size)/6.5*font_factor/Bt.pf;
+	a.s = fabs(size)/6.5*font_factor/B.pf;
 	a.w = get(MGL_ENABLE_RTEXT)?ftet:1e5;
 	a.p = 1./(mgl_fact*mgl_fgen);
 	a.n1 = pk;	a.n2 = p1; 	a.n3 = size<0?4:0;	a.n4 = AddGlyph(id);

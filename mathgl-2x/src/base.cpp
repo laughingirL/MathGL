@@ -942,6 +942,21 @@ void MGL_EXPORT mgl_chrrgb(char p, float c[3])
 		}
 }
 //-----------------------------------------------------------------------------
+size_t MGL_EXPORT mgl_get_num_color(const char *s, int smooth)
+{
+	if(!s || !s[0])	return 0;
+	size_t l=strlen(s), n=0;	long j=0;
+	for(size_t i=0;i<l;i++)		// find number of colors
+	{
+		if(smooth>=0 && s[i]==':' && j<1)	break;
+		if(s[i]=='{' && strchr(MGL_COLORS"x",s[i+1]) && j<1)	n++;
+		if(s[i]=='[' || s[i]=='{')	j++;	if(s[i]==']' || s[i]=='}')	j--;
+		if(strchr(MGL_COLORS,s[i]) && j<1)	n++;
+//		if(smooth && s[i]==':')	break;	// NOTE: should use []
+	}
+	return n;
+}
+//-----------------------------------------------------------------------------
 void mglTexture::Set(const char *s, int smooth, mreal alpha)
 {
 	// NOTE: New syntax -- colors are CCCCC or {CNCNCCCN}; options inside []
@@ -950,14 +965,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 
 	long l=strlen(s);
 	bool map = smooth==2 || mglchr(s,'%'), sm = smooth>=0 && !strchr(s,'|');	// Use mapping, smoothed colors
-	for(long i=0, j=n=0;i<l;i++)		// find number of colors
-	{
-		if(smooth>=0 && s[i]==':' && j<1)	break;
-		if(s[i]=='{' && strchr(MGL_COLORS"x",s[i+1]) && j<1)	n++;
-		if(s[i]=='[' || s[i]=='{')	j++;	if(s[i]==']' || s[i]=='}')	j--;
-		if(strchr(MGL_COLORS,s[i]) && j<1)	n++;
-//		if(smooth && s[i]==':')	break;	// NOTE: should use []
-	}
+	n = mgl_get_num_color(s,smooth);
 	if(!n)
 	{
 		if(strchr(s,'|') && !smooth)	// sharp colors

@@ -666,7 +666,7 @@ void MGL_EXPORT mgl_symbol_dir(HMGL gr, double x, double y, double z, double dx,
 	}
 	if(mgl_isnan(z))	z=2*gr->Max.z-gr->Min.z;
 	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
-	long cc = gr->AddTexture(how);
+	long cc = mgl_get_num_color(how,0)?gr->AddTexture(how):gr->AddTexture('k');
 	long k = gr->AddPnt(p,cc,d,-1,7);
 	gr->AddActive(k,0);
 	gr->AddActive(gr->AddPnt(mglPoint(dx,dy,dz),cc,d,-1,7),1);
