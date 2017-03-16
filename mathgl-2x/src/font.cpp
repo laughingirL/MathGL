@@ -72,7 +72,7 @@ bool MGL_EXPORT mglGetStyle(const char *how, int *font, int *align)
 	{
 		*align = 1;
 		if(strchr(how,'R'))	*align = 2;
-		if(strchr(how,'C'))	*align = 1;
+//		if(strchr(how,'C'))	*align = 1;
 		if(strchr(how,'L'))	*align = 0;
 		if(strchr(how,'D'))	*align+= 4;
 	}

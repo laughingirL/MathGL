@@ -277,7 +277,7 @@ void MGL_EXPORT mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal 
 	mgl_cone(_GR_, *x1,*y1,*z1, *x2,*y2,*z2,*r1,*r2,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 //
-//	Bars series
+//	Cones series
 //
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
@@ -369,7 +369,7 @@ void MGL_EXPORT mgl_cones_(uintptr_t *gr, uintptr_t *y,	const char *pen, const c
 	mgl_cones(_GR_,_DA_(y),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
-//	Ellipse & Rhomb
+//	Polygon & Arc
 //
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, int n, const char *stl)

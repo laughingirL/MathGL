@@ -1153,6 +1153,7 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 	if(i1>=i2 || j1>=j2)	return;
 
 	std::vector<mreal> b[h];
+	const float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 	const int oi = d?d->ObjId:-1;
 	unsigned char r[4];	col2int(pp,r,oi);
 	for(long i=0;i<g.nl;i++)	// add bounding points
@@ -1181,7 +1182,7 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 // 			for(long k=xx1;k<=xx2;k++)
 // 			{
 // 				long ii = long(k), jj = long(a+d*k);
-// 				if(ii>=i1 && ii<=i2 && jj>=j1 && jj<=j2)	pnt_plot(x0+ii,y0+jj,pp.z,r,oi);
+// 				if(ii>=i1 && ii<=i2 && jj>=j1 && jj<=j2)	pnt_plot(x0+ii,y0+jj,pp.z+dz,r,oi);
 // 			}
 // 		}
 // 		else	// vertical line
@@ -1191,7 +1192,7 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 // 			for(long k=yy1;k<=yy2;k++)
 // 			{
 // 				long jj = long(k), ii = long(a+d*k);
-// 				if(ii>=i1 && ii<=i2 && jj>=j1 && jj<=j2)	pnt_plot(x0+ii,y0+jj,pp.z,r,oi);
+// 				if(ii>=i1 && ii<=i2 && jj>=j1 && jj<=j2)	pnt_plot(x0+ii,y0+jj,pp.z+dz,r,oi);
 // 			}
 // 		}
 	}
@@ -1205,7 +1206,7 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 			long ii1 = long(dx+b[j][k]+1.5), ii2=long(dx+b[j][k+1]+0.5);
 			if(ii1<i1)	ii1=i1;
 			if(ii2>i2)	ii2=i2;
-			for(long i=ii1;i<=ii2;i++)	pnt_plot(kx+i,y0+j,pp.z,r,oi);
+			for(long i=ii1;i<=ii2;i++)	pnt_plot(kx+i,y0+j,pp.z+dz,r,oi);
 		}
 	}
 

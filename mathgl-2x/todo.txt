@@ -20,22 +20,17 @@
 	A. мысли о frame??? для группы графиков -- не "удалять" их, а запихивать в отдельный кадр -- вопрос что с анимацией???
 	B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
 
-11. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
+11. Parallel drawing in QMathGL (looks to complicated -- FLTK is better!)
 12. \overline{\overline{a}} ???
+13. Manual AddPnt() with specified id + openmp ?!? -- possible memory overuse
 
 
 ============= NEW FEATURES =============
 
 1. Speed up QMathGL + option to whole redraw instead of view
-2. Parallel drawing in QMathGL.
 
 3. Centered curved text (see text2)
 
-6. Add 'a' style for 'range'
-7. meshnum option for rarefied markers?!
-
-8. Manual AddPnt() with specified id + openmp ?!? -- possible memory overuse
-10. User glyphs as markers
 
 14. Read MAT files ?!!
 15. Read WFM files ?!!
@@ -63,11 +58,13 @@ D. Docs about JS interface
 22. Docs about mgl_datas_hdf_str().
 23. Docs about mglParse::OpenHDF()
 24. Docs about cmplx(a,b)=a+i*b in the list of known functions
-25. Style 'a' to plot,tens,area to draw segments/quads between points outside of axis range.
+25. Style 'a' to plot,tens,area,region to draw segments/quads between points outside of axis range.
 26. Update installation (dll from mgl_script + Qt plugins/ + Win10)
 27. Docs about 'addsymbol'
 28. Docs about 'symbol'
 29. Docs about user-defined marks (from 'addsymbol' if '&' is specified in plot style) + denote that "size<0" will draw wired.
+30. Style '#' for 'region'
+31. Meshnum option now change the number of drawn marks for 'plot','tens','step'
 
 
 ZZ. Update time.texi {before release!!!}
@@ -100,6 +97,7 @@ ZZ. Update time.texi {before release!!!}
 9. Save data from the summary panel
 10. Select subdata section (between NAN in curve) by mouse + adding it to script ?!!
 11. Zoom in a region by middle mouse (if not in rotation mode)
+12. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
 
 ============= UNSURE ===========
 
