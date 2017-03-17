@@ -294,7 +294,7 @@ MGL не требует создания данного типа объекто�
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetMeshNum (@code{int} val)
 @deftypefnx {Функция С} @code{void} mgl_set_meshnum (@code{HMGL} gr, @code{int} num)
 @end ifclear
-Задает ориентировочное число линий в @ref{mesh}, @ref{fall} и число стрелок (штрихов) в @ref{vect}, @ref{dew} и число ячеек в @ref{cloud}. По умолчанию (=0) рисуются все линии, стрелки, ячейки.
+Задает ориентировочное число линий в @ref{mesh}, @ref{fall}, и число стрелок (штрихов) в @ref{vect}, @ref{dew}, и число ячеек в @ref{cloud}, и число маркеров в @ref{plot}, @ref{tens}, @ref{step}, @ref{mark}, @ref{textmark}. По умолчанию (=0) рисуются все линии, стрелки, ячейки и т.д.
 @end deftypefn
 
 @anchor{facenum}
@@ -1866,6 +1866,37 @@ These functions change background image.
 Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command options}. Bitmap can be loaded from file or specified as RGBA values for pixels. Parameter @var{smooth} set to draw bitmap without or with color interpolation.
 @end deftypefn
 
+
+
+@anchor{symbol}
+@deftypefn {Команда MGL} {} symbol @code{x y} 'id' ['fnt'='' @code{size=-1}]
+@deftypefnx {Команда MGL} {} symbol @code{x y z} 'id' ['fnt'='' @code{size=-1}]
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Symbol (@code{mglPoint} p, @code{char} id, @code{const char *}fnt=@code{""}, @code{mreal} size=@code{-1})
+@deftypefnx {Функция С} @code{void} mgl_symbol (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{char} id, @code{const char *}fnt, @code{mreal} size)
+@end ifclear
+Рисует определенный пользователем символ с именем @var{id} в точке @var{p} стилем @var{fnt}. Размер задается параметром @var{size} (по умолчанию @code{-1}). Строка @var{fnt}  может содержать цвет (до разделителя @samp{:}); стили @samp{a} или @samp{A} для вывода в абсолютной позиции (@{@var{x}, @var{y}@} полагаются в диапазоне [0,1]) относительно рисунка (для @samp{A}) или subplot/inplot (для @samp{a}); и стиль @samp{w} для рисования только контура символа.
+@end deftypefn
+
+@deftypefn {Команда MGL} {} symbol @code{x y dx dy} 'id' ['fnt'=':L' @code{size=-1}]
+@deftypefnx {Команда MGL} {} symbol @code{x y z dx dy dz} 'id' ['fnt'=':L' @code{size=-1}]
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Symbol (@code{mglPoint} p, @code{mglPoint} d, @code{char} id, @code{const char *}fnt=@code{""}, @code{mreal} size=@code{-1})
+@deftypefnx {Функция С} @code{void} mgl_symbol_dir (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{const char *}text, @code{const char *}fnt, @code{mreal} size)
+@end ifclear
+Аналогично предыдущему, но символ рисуется в повернутым в направлении @var{d}.
+@end deftypefn
+
+@anchor{addsymbol}
+@deftypefn {Команда MGL} {} addsymbol 'id' xdat ydat
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} DefineSymbol (@code{char} id, @code{const mglDataA &}xdat, @code{const mglDataA &}ydat)
+@deftypefnx {Функция С} @code{void} mgl_define_symbol (@code{HMGL} gr, @code{HCDT} xdat, @code{HCDT} ydat)
+@end ifclear
+Добавляет определенный пользователем символ с именем @var{id} и границей @{@var{xdat}, @var{ydat}@}. Значения @code{NAN} задают разрыв (скачок) граничной кривой.
+@end deftypefn
+
+
 @c ##################################################################
 @external{}
 @node Text printing, Axis and Colorbar, Primitives, MathGL core
@@ -2176,7 +2207,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_plot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_plot_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют ломанную линию по точкам @{@var{x}[i], @var{y}[i], @var{z}[i]@}. См. также @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}. @sref{Plot sample}
+Функции рисуют ломанную линию по точкам @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. См. также @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}, @ref{meshnum}. @sref{Plot sample}
 @end deftypefn
 
 @anchor{radar}
@@ -2185,7 +2216,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Radar (@code{const mglDataA &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_radar (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют radar chart, представляющий собой ломанную с вершинами на радиальных линиях (типа ломанной в полярных координатах). Параметр @code{value} в опциях @var{opt} задает дополнительный сдвиг данных (т.е. использование @var{a}+@code{value} вместо @var{a}). Если @var{pen} содержит @samp{#}, то рисуется "сетка" (радиальные линии). См. также @ref{plot}. @sref{Radar sample}
+Функции рисуют radar chart, представляющий собой ломанную с вершинами на радиальных линиях (типа ломанной в полярных координатах). Параметр @code{value} в опциях @var{opt} задает дополнительный сдвиг данных (т.е. использование @var{a}+@code{value} вместо @var{a}). Если @var{pen} содержит @samp{#}, то рисуется "сетка" (радиальные линии). Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. См. также @ref{plot}, @ref{meshnum}. @sref{Radar sample}
 @end deftypefn
 
 @anchor{step}
@@ -2200,7 +2231,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_step_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_step_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют ступеньки для точек массива. Если @var{x}.nx>@var{y}.nx, то массив @var{x} задает границы ступенек, а не их конец. См. также @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}. @sref{Step sample}
+Функции рисуют ступеньки для точек массива. Если @var{x}.nx>@var{y}.nx, то массив @var{x} задает границы ступенек, а не их конец. См. также @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}, @ref{meshnum}. @sref{Step sample}
 @end deftypefn
 
 @anchor{tens}
@@ -2215,7 +2246,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют ломанную линию по точкам с цветом, определяемым массивом @var{c} (типа графика натяжений). Строка @var{pen} задает цветовую схему (см. @ref{Color scheme}) и стиль линий и/или маркеров (см. @ref{Line styles}). См. также @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Tens sample}
+Функции рисуют ломанную линию по точкам с цветом, определяемым массивом @var{c} (типа графика натяжений). Строка @var{pen} задает цветовую схему (см. @ref{Color scheme}) и стиль линий и/или маркеров (см. @ref{Line styles}). Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. См. также @ref{plot}, @ref{mesh}, @ref{fall}, @ref{meshnum}. @sref{Tens sample}
 @end deftypefn
 
 @anchor{tape}
@@ -2245,7 +2276,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_area_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют ломанную линию между точками и закрашивает её вниз до плоскости осей координат. Градиентная заливка используется если число цветов равно удвоенному число кривых. См. также @ref{plot}, @ref{bars}, @ref{stem}, @ref{region}. @sref{Area sample}
+Функции рисуют ломанную линию между точками и закрашивает её вниз до плоскости осей координат. Градиентная заливка используется если число цветов равно удвоенному число кривых. Если @var{pen} содержит @samp{#}, то рисуется только каркас. Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. См. также @ref{plot}, @ref{bars}, @ref{stem}, @ref{region}. @sref{Area sample}
 @end deftypefn
 
 @anchor{region}
@@ -2262,7 +2293,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_region_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_region_3d (@code{HMGL} gr, @code{HCDT} x1, @code{HCDT} y1, @code{HCDT} z1, @code{HCDT} x2, @code{HCDT} y2, @code{HCDT} z2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции закрашивают область между 2 кривыми. Градиентная заливка используется если число цветов равно удвоенному число кривых. Если в 2d версии @var{pen} содержит @samp{i}, то закрашивается только область y1<y<y2, в противном случае будет закрашена и область y2<y<y1. См. также @ref{area}, @ref{bars}, @ref{stem}. @sref{Region sample}
+Функции закрашивают область между 2 кривыми. Градиентная заливка используется если число цветов равно удвоенному число кривых. Если в 2d версии @var{pen} содержит @samp{i}, то закрашивается только область y1<y<y2, в противном случае будет закрашена и область y2<y<y1. Если @var{pen} содержит @samp{#}, то рисуется только каркас. Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. См. также @ref{area}, @ref{bars}, @ref{stem}. @sref{Region sample}
 @end deftypefn
 
 @anchor{stem}
@@ -2439,7 +2470,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_mark_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_mark_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют маркеры размером @var{r}[i]*@ref{marksize} (см. @ref{Default sizes}) в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Для рисования маркеров одинакового размера можно использовать функцию @ref{plot} с невидимой линией (со стилем содержащим @samp{ }). Для маркеров с размером как у координат можно использовать @ref{error} со стилем @samp{@@}. См. также @ref{plot}, @ref{textmark}, @ref{error}, @ref{stem}. @sref{Mark sample}
+Функции рисуют маркеры размером @var{r}[i]*@ref{marksize} (см. @ref{Default sizes}) в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Для рисования маркеров одинакового размера можно использовать функцию @ref{plot} с невидимой линией (со стилем содержащим @samp{ }). Для маркеров с размером как у координат можно использовать @ref{error} со стилем @samp{@@}. См. также @ref{plot}, @ref{textmark}, @ref{error}, @ref{stem}, @ref{meshnum}. @sref{Mark sample}
 @end deftypefn
 
 @anchor{textmark}
@@ -2465,7 +2496,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_textmark_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_textmarkw_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Функции рисуют текст @var{txt} как маркер с размером пропорциональным @var{r}[i]*@var{marksize} в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. См. также @ref{plot}, @ref{mark}, @ref{stem}. @sref{TextMark sample}
+Функции рисуют текст @var{txt} как маркер с размером пропорциональным @var{r}[i]*@var{marksize} в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. См. также @ref{plot}, @ref{mark}, @ref{stem}, @ref{meshnum}. @sref{TextMark sample}
 @end deftypefn
 
 @anchor{label}

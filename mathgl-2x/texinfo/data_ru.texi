@@ -711,6 +711,21 @@ Allocate memory and set data from variable argument list of @emph{double} values
 Помещает имена массивов данных в HDF5 файле @var{fname} в строку @var{buf} разделёнными символом табуляции '\t'. В версии MGL имена массивов будут выведены как сообщение. Функция ничего не делает если библиотека была собрана без поддержки HDF5.
 @end deftypefn
 
+@anchor{openhdf}
+@deftypefn {Команда MGL} {} openhdf 'fname'
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglParse}} @code{void} OpenHDF (@code{const char *}fname)
+@deftypefnx {Функция С} @code{void} mgl_parser_openhdf (@code{HMPR} pr, @code{const char *}fname)
+@end ifclear
+Читает все массивы данных из HDF5 файла @var{fname} и создает переменные MGL с соответствующими именами. Если имя данных начинается с @samp{!}, то будут созданы комплексные массивы.
+@end deftypefn
+
+@ifclear UDAV
+@deftypefn {Функция С} @code{const char * const *} mgl_datas_hdf_str (@code{HMPR} pr, @code{const char *}fname)
+Помещает имена данных из HDF файла @var{fname} в массив строк (последняя строка ""). Массив строк будет изменен при следующем вызове функции.
+@end deftypefn
+@end ifclear
+
 @anchor{import}
 @deftypefn {Команда MGL} {} import @sc{dat} 'fname' 'sch' [@code{v1=0 v2=1}]
 @ifclear UDAV
@@ -805,6 +820,22 @@ Allocate memory and set data from variable argument list of @emph{double} values
 Возвращает массив данных, полученный в результате интерполяции исходного массива в точках других массивов (например, res[i,j]=dat[idat[i,j],jdat[i,j]]). Размеры массивов @var{idat}, @var{jdat}, @var{kdat} должны совпадать. Координаты в @var{idat}, @var{jdat}, @var{kdat} полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
+@anchor{section}
+@deftypefn {Команда MGL} {} section @sc{res} dat ids ['dir'='y' @code{val=nan}]
+@deftypefnx {Команда MGL} {} section @sc{res} dat @code{id} ['dir'='y' @code{val=nan}]
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Section (@code{const mglDataA &}ids, @code{const char *}dir=@code{'y'}, @code{mreal} val=@code{NAN}) @code{const}
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Section (@code{long} id, @code{const char *}dir=@code{'y'}, @code{mreal} val=@code{NAN}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Section (@code{const mglDataA &}ids, @code{const char *}dir=@code{'y'}, @code{mreal} val=@code{NAN}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Section (@code{long} id, @code{const char *}dir=@code{'y'}, @code{mreal} val=@code{NAN}) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_section (@code{HCDT} dat, @code{HCDT} ids, @code{const char *}dir, @code{mreal} val)
+@deftypefnx {Функция С} @code{HMDT} mgl_data_section_val (@code{HCDT} dat, @code{long} id, @code{const char *}dir, @code{mreal} val)
+@deftypefnx {Функция С} @code{HADT} mgl_datac_section (@code{HCDT} dat, @code{HCDT} ids, @code{const char *}dir, @code{mreal} val)
+@deftypefnx {Функция С} @code{HADT} mgl_datac_section_val (@code{HCDT} dat, @code{long} id, @code{const char *}dir, @code{mreal} val)
+@end ifclear
+Возвращает массив данных, являющийся @var{id}-ой секцией (диапазоном срезов, разделенных значениями @var{val}) исходного массива @var{dat}. Для @var{id}<0 используется обратный порядок (т.e. -1 даст последнюю секцию). Если указано несколько @var{ids}, то выходной массив будет результатом последовательного объединения секций.
+@end deftypefn
+
 @anchor{solve}
 @deftypefn {Команда MGL} {} solve @sc{res} dat @code{val} 'dir' [@code{norm=on}]
 @deftypefnx {Команда MGL} {} solve @sc{res} dat @code{val} 'dir' idat [@code{norm=on}]
@@ -825,6 +856,15 @@ Allocate memory and set data from variable argument list of @emph{double} values
 @deftypefnx {Функция С} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
 @end ifclear
 Возвращает массив корней уравнения 'func'=0 для переменной @var{var} с начальными положениями @var{ini}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
+@end deftypefn
+
+@anchor{detect}
+@deftypefn {Команда MGL} {} detect @sc{res} dat @code{lvl dj [di=0 minlen=0]}
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Detect (@code{mreal} lvl, @code{mreal} dj, @code{mreal} di=@code{0}, @code{mreal} minlen=@code{0}) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_detect (@code{HCDT} dat, @code{mreal} lvl, @code{mreal} dj, @code{mreal} di, @code{mreal} minlen)
+@end ifclear
+Возвращает массив кривых @{x,y@}, разделенных NAN значениями, для локальных максимумов массива @var{dat} как функцию координаты x. Шумы амплитудой меньше @var{lvl} игнорируются. Параметр @var{dj} (в диапазоне [0,ny]) задает область "притяжения" точек в y-направлении к кривой. Аналогично, @var{di} продолжает кривые в x-направлении через разрывы длиной менее @var{di} точек. Кривые с минимальной длинной менее @var{minlen} игнорируются.
 @end deftypefn
 
 @anchor{hist}
@@ -1593,7 +1633,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Функция С} @code{void} mgl_data_fourier @code{HCDT} re, @code{HCDT} im, @code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_datac_fft (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
-Выполняет Фурье преобразование для комплексных данных @var{re}+i*@var{im} в направлениях @var{dir}. Результат помещается обратно в массивы @var{re} и @var{im}.
+Выполняет Фурье преобразование для комплексных данных @var{re}+i*@var{im} в направлениях @var{dir}. Результат помещается обратно в массивы @var{re} и @var{im}. Если @var{dir} содержит @samp{i}, то выполняется обратное преобразование Фурье.
 @end deftypefn
 
 @anchor{stfad}

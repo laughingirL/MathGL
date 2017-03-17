@@ -34,7 +34,7 @@ define complex variable/expression in MGL script if placed at beginning.
 @item #
 set to use solid marks (see @ref{Line styles}) or solid @ref{error} boxes;
 
-set to draw wired plot for @ref{axial}, @ref{surf3}, @ref{surf3a}, @ref{surf3c}, @ref{triplot}, @ref{quadplot}, @ref{area}, @ref{bars}, @ref{barh}, @ref{tube}, @ref{tape}, @ref{cone}, @ref{boxs} and draw boundary only for @ref{circle}, @ref{ellipse}, @ref{rhomb};
+set to draw wired plot for @ref{axial}, @ref{surf3}, @ref{surf3a}, @ref{surf3c}, @ref{triplot}, @ref{quadplot}, @ref{area}, @ref{region}, @ref{bars}, @ref{barh}, @ref{tube}, @ref{tape}, @ref{cone}, @ref{boxs} and draw boundary only for @ref{circle}, @ref{ellipse}, @ref{rhomb};
 
 set to draw also mesh lines for @ref{surf}, @ref{surfc}, @ref{surfa}, @ref{dens}, @ref{densx}, @ref{densy}, @ref{densz}, @ref{dens3}, or boundary for @ref{chart}, @ref{facex}, @ref{facey}, @ref{facez}, @ref{rect};
 
@@ -58,7 +58,9 @@ set color scheme along 2 coordinates @ref{Color scheme}.
 
 @item &
 
-set to pass long integer number in tick template @ref{xtick}, @ref{ytick}, @ref{ztick}, @ref{ctick}.
+set to pass long integer number in tick template @ref{xtick}, @ref{ytick}, @ref{ztick}, @ref{ctick};
+
+specifier of drawing user-defined symbols as mark (see @ref{Line styles});
 
 operation in @ref{Textual formulas}.
 
@@ -282,6 +284,8 @@ set to use absolute position in whole picture for @ref{text}, @ref{colorbar}, @r
 @item a
 set to use absolute position in subplot for @ref{text};
 
+style of @ref{plot}, @ref{radar}, @ref{tens}, @ref{area}, @ref{region} to draw segments between points outside of axis range;
+
 style of @ref{bars}, @ref{barh}, @ref{cones}.
 
 @item B
@@ -365,7 +369,7 @@ set to use inverse values for @ref{cloud}, @ref{pipe}, @ref{dew};
 
 set to fill only area with y1<y<y2 for @ref{region};
 
-inverse Fourier transform for @ref{transform}.
+inverse Fourier transform for @ref{transform}, @ref{transforma}, @ref{fourier}.
 
 @item j
 line dashing style (see @ref{Line styles});

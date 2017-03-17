@@ -14,11 +14,16 @@
 * Add 'dilate' to extend the region of 1-th value.
 * Add 'erode' to narrow the region of 1-th value.
 * Add 'apde' to solve PDE equation in inhomogeneous nonlinear media with spatial dispersion.
-* Add function mgl_data_max_first() and data suffix .m[xyz][fl] to find first/last maximum along direction.
+* Add 'addsymbol' to declare user-defined symbol (or glyph), which can be used as markers for plot (with style '&') or drawn itself by 'symbol' command.
+* Add 'symbol' to draw user-defined symbol (or glyph).
+* Add 'openhdf' to open all data arrays from HDF file.
+* Add function mgl_data_max_first() and data suffixes .m[xyz][fl] to find first/last maximum along direction.
 * Add style 'F' for 'bars' and 'barh' to set fixed bar widths.
+* Add style 'a' for 'plot', 'tens', 'area' and 'region' to accurate drawing of data, which partially lie out of axis range.
+* Add style '#' for 'region' to draw wired plot.
 * Add possibility of manual shift in 'multiplot'.
 * Add parsing arguments of options for MGL commands.
-* Add 'openhdf' to open all data arrays from HDF file.
+* Option 'meshnum' now change the number of drawn markers for 'plot', 'tens', 'step, 'mark' and 'textmark'.
 * Function 'step' handle data with x.nx>y.nx similarly to 'bars'.
 * Extend 'tile' and 'tiles' by adding manual coloring and face orientation.
 * Add variant of MGL command 'copy' to copy data with "incorrect" names.

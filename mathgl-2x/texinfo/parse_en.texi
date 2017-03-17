@@ -415,6 +415,11 @@ Function returns the pointer to variable with name @var{name} or zero if variabl
 Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
 @end deftypefn
 
+@deftypefn {Method on @code{mglParse}} @code{void} OpenHDF (@code{const char *}fname)
+@deftypefnx {C function} @code{void} mgl_parser_openhdf (@code{HMPR} pr, @code{const char *}fname)
+Reads all data array from HDF5 file @var{fname} and create MGL variables with names of data names in HDF file. Complex variables will be created if data name starts with @samp{!}.
+@end deftypefn
+
 @deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
 @deftypefnx{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const wchar_t *}name)
 @deftypefnx {C function} @code{void} mgl_parser_del_var (@code{HMPR} p, @code{const char *}name)

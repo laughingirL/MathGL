@@ -41,6 +41,7 @@ EQ_IPOW,	// power x^n for integer n
 EQ_POW,		// power x^y
 EQ_LOG,		// logarithm of x on base a, log_a(x) = ln(x)/ln(a)
 EQ_CMPLX,	// return a+i*b
+EQ_HYPOT,	// return sqrt(a*a+b*b)
 // normal functions of 1 argument
 EQ_SIN,		// sine function \sin(x).			!!! MUST BE FIRST 1-PLACE FUNCTION
 EQ_COS,		// cosine function \cos(x).
@@ -181,6 +182,7 @@ mglFormulaC::mglFormulaC(const char *string)
 		else if(!strcmp(name,"imag")) Kod=EQ_IMAG;
 		else if(!strcmp(name,"norm")) Kod=EQ_NORM;
 		else if(!strcmp(name,"cmplx")) Kod=EQ_CMPLX;
+		else if(!strcmp(name,"hypot")) Kod=EQ_HYPOT;
 		else {	delete []str;	return;	}	// unknown function
 		n=mglFindInText(str,",");
 		if(n>=0)
@@ -245,6 +247,7 @@ dual MGL_LOCAL_CONST expi(dual a)	{	return exp(dual(0,1)*a);	}
 dual MGL_LOCAL_CONST expi(double a)	{	return dual(cos(a),sin(a));	}
 //-----------------------------------------------------------------------------
 dual MGL_NO_EXPORT ic = dual(0,1);
+dual MGL_LOCAL_CONST hypotc(dual x, dual y)	{	return sqrt(x*x+y*y);	}
 dual MGL_LOCAL_CONST asinhc(dual x)	{	return log(x+sqrt(x*x+mreal(1)));	}
 dual MGL_LOCAL_CONST acoshc(dual x)	{	return log(x+sqrt(x*x-mreal(1)));	}
 dual MGL_LOCAL_CONST atanhc(dual x)	{	return log((mreal(1)+x)/(mreal(1)-x))/mreal(2);	}
@@ -270,7 +273,7 @@ dual MGL_LOCAL_CONST normc(dual x)	{	return norm(x);	}
 //-----------------------------------------------------------------------------
 typedef dual (*func_1)(dual);
 typedef dual (*func_2)(dual, dual);
-static const func_2 f2[EQ_SIN-EQ_LT] = {cltc,cgtc,ceqc,addc,subc,mulc,divc,ipwc,powc,llgc,cmplxc};
+static const func_2 f2[EQ_SIN-EQ_LT] = {cltc,cgtc,ceqc,addc,subc,mulc,divc,ipwc,powc,llgc,cmplxc,hypotc};
 static const func_1 f1[EQ_LAST-EQ_SIN] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc,coshc,tanhc,
 					asinhc,acoshc,atanhc,sqrtc,expc,expi,logc,lgc,absc,argc,conjc,realc,imagc,normc};
 // evaluation of embedded (included) expressions

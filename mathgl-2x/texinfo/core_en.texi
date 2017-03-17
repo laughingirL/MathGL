@@ -294,7 +294,7 @@ Sets size of arrows for @ref{1D plotting}, lines and curves (see @ref{Primitives
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetMeshNum (@code{int} val)
 @deftypefnx {C function} @code{void} mgl_set_meshnum (@code{HMGL} gr, @code{int} num)
 @end ifclear
-Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid2} and also the number of hachures in @ref{vect}, @ref{dew} and the number of cells in @ref{cloud}. By default (=0) it draws all lines/hachures/cells.
+Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid2}, and also the number of hachures in @ref{vect}, @ref{dew}, and the number of cells in @ref{cloud}, and the number of markers in @ref{plot}, @ref{tens}, @ref{step}, @ref{mark}, @ref{textmark}. By default (=0) it draws all lines/hachures/cells/markers.
 @end deftypefn
 
 @anchor{facenum}
@@ -1901,6 +1901,36 @@ colors for filling and boundary (second one if style @samp{@@} is used, black co
 Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command options}. Bitmap can be loaded from file or specified as RGBA values for pixels. Parameter @var{smooth} set to draw bitmap without or with color interpolation.
 @end deftypefn
 
+
+@anchor{symbol}
+@deftypefn {MGL command} {} symbol @code{x y} 'id' ['fnt'='' @code{size=-1}]
+@deftypefnx {MGL command} {} symbol @code{x y z} 'id' ['fnt'='' @code{size=-1}]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Symbol (@code{mglPoint} p, @code{char} id, @code{const char *}fnt=@code{""}, @code{mreal} size=@code{-1})
+@deftypefnx {C function} @code{void} mgl_symbol (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{char} id, @code{const char *}fnt, @code{mreal} size)
+@end ifclear
+Draws user-defined symbol with name @var{id} at position @var{p} with style specifying by @var{fnt}. The size of font is set by @var{size} parameter (default is @code{-1}). The string @var{fnt} may contain color specification ended by @samp{:} symbol; styles @samp{a}, @samp{A} to draw at absolute position @{@var{x}, @var{y}@} (supposed to be in range [0,1]) of picture (for @samp{A}) or subplot/inplot (for @samp{a}); and style @samp{w} to draw wired symbol.
+@end deftypefn
+
+@deftypefn {MGL command} {} symbol @code{x y dx dy} 'id' ['fnt'=':L' @code{size=-1}]
+@deftypefnx {MGL command} {} symbol @code{x y z dx dy dz} 'id' ['fnt'=':L' @code{size=-1}]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Symbol (@code{mglPoint} p, @code{mglPoint} d, @code{char} id, @code{const char *}fnt=@code{""}, @code{mreal} size=@code{-1})
+@deftypefnx {C function} @code{void} mgl_symbol_dir (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{const char *}text, @code{const char *}fnt, @code{mreal} size)
+@end ifclear
+The same as previous but symbol will be drawn rotated along direction @var{d}.
+@end deftypefn
+
+@anchor{addsymbol}
+@deftypefn {MGL command} {} addsymbol 'id' xdat ydat
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} DefineSymbol (@code{char} id, @code{const mglDataA &}xdat, @code{const mglDataA &}ydat)
+@deftypefnx {C function} @code{void} mgl_define_symbol (@code{HMGL} gr, @code{HCDT} xdat, @code{HCDT} ydat)
+@end ifclear
+Add user-defined symbol with name @var{id} and contour @{@var{xdat}, @var{ydat}@}. You can use @code{NAN} values to set break (jump) of contour curve.
+@end deftypefn
+
+
 @c ##################################################################
 @external{}
 @node Text printing, Axis and Colorbar, Primitives, MathGL core
@@ -1933,7 +1963,7 @@ If string contains symbols @samp{aA} then text is printed at absolute position @
 @deftypefnx {C function} @code{void} mgl_puts (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{const char *}text, @code{const char *}fnt, @code{mreal} size)
 @deftypefnx {C function} @code{void} mgl_putsw (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{const wchar_t *}text, @code{const char *}fnt, @code{mreal} size)
 @end ifclear
-The function plots the string @var{text} at position @var{p} with fonts specifying by the criteria @var{fnt}. The size of font is set by @var{size} parameter (default is @code{-1}).
+Draws the string @var{text} at position @var{p} with fonts specifying by the criteria @var{fnt}. The size of font is set by @var{size} parameter (default is @code{-1}).
 @end deftypefn
 
 @deftypefn {MGL command} {} text @code{x y dx dy} 'text' ['fnt'=':L' @code{size=-1}]
@@ -1944,7 +1974,7 @@ The function plots the string @var{text} at position @var{p} with fonts specifyi
 @deftypefnx {C function} @code{void} mgl_puts_dir (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{const char *}text, @code{const char *}fnt, @code{mreal} size)
 @deftypefnx {C function} @code{void} mgl_putsw_dir (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{const wchar_t *}text, @code{const char *}fnt, @code{mreal} size)
 @end ifclear
-The function plots the string @var{text} at position @var{p} along direction @var{d} with specified @var{size}. Parameter @var{fnt} set text style and text position: under (@samp{T}) or above (@samp{t}) the line.
+Draws the string @var{text} at position @var{p} along direction @var{d} with specified @var{size}. Parameter @var{fnt} set text style and text position: under (@samp{T}) or above (@samp{t}) the line.
 @end deftypefn
 
 @anchor{fgets}
@@ -2213,7 +2243,7 @@ String @var{pen} specifies the color and style of line and marks (see @ref{Line 
 @deftypefnx {C function} @code{void} mgl_plot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_plot_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. See also @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}. @sref{Plot sample}
+These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. See also @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}, @ref{meshnum}. @sref{Plot sample}
 @end deftypefn
 
 @anchor{radar}
@@ -2222,7 +2252,7 @@ These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @
 @deftypefnx {Method on @code{mglGraph}} @code{void} Radar (@code{const mglDataA &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_radar (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-This functions draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). Option @code{value} set the additional shift of data (i.e. the data @var{a}+@code{value} is used instead of @var{a}). If @code{value<0} then @code{r=max(0, -min(value)}. If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn. See also @ref{plot}. @sref{Radar sample}
+This functions draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). Option @code{value} set the additional shift of data (i.e. the data @var{a}+@code{value} is used instead of @var{a}). If @code{value<0} then @code{r=max(0, -min(value)}. If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn. If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. See also @ref{plot}, @ref{meshnum}. @sref{Radar sample}
 @end deftypefn
 
 @anchor{step}
@@ -2237,7 +2267,7 @@ This functions draws radar chart which is continuous lines between points locate
 @deftypefnx {C function} @code{void} mgl_step_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_step_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous stairs for points to axis plane. If @var{x}.nx>@var{y}.nx then @var{x} set the edges of bars, rather than its central positions. See also @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}. @sref{Step sample}
+These functions draw continuous stairs for points to axis plane. If @var{x}.nx>@var{y}.nx then @var{x} set the edges of bars, rather than its central positions. See also @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}, @ref{meshnum}. @sref{Step sample}
 @end deftypefn
 
 @anchor{tens}
@@ -2252,7 +2282,7 @@ These functions draw continuous stairs for points to axis plane. If @var{x}.nx>@
 @deftypefnx {C function} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (see @ref{Color scheme}) and style and/or width of line (see @ref{Line styles}). See also @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Tens sample}
+These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (see @ref{Color scheme}) and style and/or width of line (see @ref{Line styles}). If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. See also @ref{plot}, @ref{mesh}, @ref{fall}, @ref{meshnum}. @sref{Tens sample}
 @end deftypefn
 
 @anchor{tape}
@@ -2282,7 +2312,7 @@ These functions draw tapes of normals for curve between points @{@var{x}[i], @va
 @deftypefnx {C function} @code{void} mgl_area_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points and fills it to axis plane. Also you can use gradient filling if number of specified colors is equal to 2*number of curves. See also @ref{plot}, @ref{bars}, @ref{stem}, @ref{region}. @sref{Area sample}
+These functions draw continuous lines between points and fills it to axis plane. Also you can use gradient filling if number of specified colors is equal to 2*number of curves. If @var{pen} contain @samp{#} then wired plot is drawn. If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. See also @ref{plot}, @ref{bars}, @ref{stem}, @ref{region}. @sref{Area sample}
 @end deftypefn
 
 @anchor{region}
@@ -2299,7 +2329,7 @@ These functions draw continuous lines between points and fills it to axis plane.
 @deftypefnx {C function} @code{void} mgl_region_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_region_3d (@code{HMGL} gr, @code{HCDT} x1, @code{HCDT} y1, @code{HCDT} z1, @code{HCDT} x2, @code{HCDT} y2, @code{HCDT} z2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions fill area between 2 curves. Dimensions of arrays @var{y1} and @var{y2} must be equal. Also you can use gradient filling if number of specified colors is equal to 2*number of curves. If for 2D version @var{pen} contain symbol @samp{i} then only area with y1<y<y2 will be filled else the area with y2<y<y1 will be filled too. See also @ref{area}, @ref{bars}, @ref{stem}. @sref{Region sample}
+These functions fill area between 2 curves. Dimensions of arrays @var{y1} and @var{y2} must be equal. Also you can use gradient filling if number of specified colors is equal to 2*number of curves. If for 2D version @var{pen} contain symbol @samp{i} then only area with y1<y<y2 will be filled else the area with y2<y<y1 will be filled too. If @var{pen} contain @samp{#} then wired plot is drawn. If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. See also @ref{area}, @ref{bars}, @ref{stem}. @sref{Region sample}
 @end deftypefn
 
 @anchor{stem}
@@ -2476,7 +2506,7 @@ These functions draw error boxes @{@var{ex}[i], @var{ey}[i]@} at points @{@var{x
 @deftypefnx {C function} @code{void} mgl_mark_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_mark_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw marks with size @var{r}[i]*@ref{marksize} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If you need to draw markers of the same size then you can use @ref{plot} function with empty line style @samp{ }. For markers with size in axis range use @ref{error} with style @samp{@@}. See also @ref{plot}, @ref{textmark}, @ref{error}, @ref{stem}. @sref{Mark sample}
+These functions draw marks with size @var{r}[i]*@ref{marksize} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If you need to draw markers of the same size then you can use @ref{plot} function with empty line style @samp{ }. For markers with size in axis range use @ref{error} with style @samp{@@}. See also @ref{plot}, @ref{textmark}, @ref{error}, @ref{stem}, @ref{meshnum}. @sref{Mark sample}
 @end deftypefn
 
 @anchor{textmark}
@@ -2502,7 +2532,7 @@ These functions draw marks with size @var{r}[i]*@ref{marksize} at points @{@var{
 @deftypefnx {C function} @code{void} mgl_textmark_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_textmarkw_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-These functions draw string @var{txt} as marks with size proportional to @var{r}[i]*@var{marksize} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. By default (if omitted) @var{r}[i]=1. See also @ref{plot}, @ref{mark}, @ref{stem}. @sref{TextMark sample}
+These functions draw string @var{txt} as marks with size proportional to @var{r}[i]*@var{marksize} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. By default (if omitted) @var{r}[i]=1. See also @ref{plot}, @ref{mark}, @ref{stem}, @ref{meshnum}. @sref{TextMark sample}
 @end deftypefn
 
 @anchor{label}

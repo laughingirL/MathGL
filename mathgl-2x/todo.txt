@@ -46,26 +46,19 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 1. Update Qt and UDAV figures
+
 2. Sample about PDE -- add 'tridmat' + 'diffract'
 3. Sample about complex 'ode' (like Raman scattering)
-4. Style 'i' for fourier
 
 5. Docs about 'flame2d'
-9. Docs about 'detect'
+6. Sample about 'flame2d'
+9. Sample about 'detect'
 10. Docs about 'apde'
-17. Docs about 'section'.
-21. Docs about 'erode' and 'dilate'.
-22. Docs about mgl_datas_hdf_str().
-23. Docs about mglParse::OpenHDF()
-24. Docs about cmplx(a,b)=a+i*b in the list of known functions
-25. Style 'a' to plot,tens,area,region to draw segments/quads between points outside of axis range.
-26. Update installation (dll from mgl_script + Qt plugins/ + Win10)
-27. Docs about 'addsymbol'
-28. Docs about 'symbol'
-29. Docs about user-defined marks (from 'addsymbol' if '&' is specified in plot style) + denote that "size<0" will draw wired.
-30. Style '#' for 'region'
-31. Meshnum option now change the number of drawn marks for 'plot','tens','step','mark','textmark'
+17. Sample about 'section'
+21. Docs about 'erode' and 'dilate'
+22. Sample about 'erode' and 'dilate'
 
+26. Update installation (dll from mgl_script + Qt plugins/ + Win10)
 
 ZZ. Update time.texi {before release!!!}
 

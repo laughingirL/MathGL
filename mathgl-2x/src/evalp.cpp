@@ -767,6 +767,7 @@ dual MGL_LOCAL_CONST cmplxc(dual a,dual b);	//{return a+dual(0,1)*b;	}
 dual MGL_LOCAL_CONST expi(dual a);	//{	return exp(dual(0,1)*a);	}
 dual MGL_LOCAL_CONST expi(double a);	//{	return dual(cos(a),sin(a));	}
 //-----------------------------------------------------------------------------
+dual MGL_LOCAL_CONST hypotc(dual x, dual y);	//{	return sqrt(x*x+y*y);	}
 dual MGL_LOCAL_CONST asinhc(dual x);	//{	return log(x+sqrt(x*x+mreal(1)));	}
 dual MGL_LOCAL_CONST acoshc(dual x);	//{	return log(x+sqrt(x*x-mreal(1)));	}
 dual MGL_LOCAL_CONST atanhc(dual x);	//{	return log((mreal(1)+x)/(mreal(1)-x))/mreal(2);	}
@@ -1053,6 +1054,8 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 		else if(!nm.compare(L"random"))
 		{	HADT res=mglFormulaCalcC(str, arg, head);	dual *a = res->a;
 			for(long i=0;i<res->GetNN();i++)	a[i] = dual(mgl_rnd(), mgl_rnd());	return res;	}
+		else if(!nm.compare(L"hypot"))
+			return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, hypotc);
 		else if(!nm.compare(L"real"))	return mglApplyFuncC(str, arg, head, realc);
 		else if(!nm.compare(L"imag"))	return mglApplyFuncC(str, arg, head, imagc);
 		else if(!nm.compare(L"norm"))	return mglApplyFuncC(str, arg, head, normc);

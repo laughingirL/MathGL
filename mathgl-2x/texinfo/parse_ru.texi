@@ -427,6 +427,11 @@ As an additional feature, when an image is not found or cannot be included, inst
 Возвращает указатель на переменную с именем @var{name}. Если переменная отсутствует, то она будет создана. Используйте эту функцию для добавления внешних массивов в скрипт. @strong{Не удаляйте} полученный массив!
 @end deftypefn
 
+@deftypefn {Метод класса @code{mglParse}} @code{void} OpenHDF (@code{const char *}fname)
+@deftypefnx {Функция С} @code{void} mgl_parser_openhdf (@code{HMPR} pr, @code{const char *}fname)
+Читает все массивы данных из HDF5 файла @var{fname} и создает переменные MGL с соответствующими именами. Если имя данных начинается с @samp{!}, то будут созданы комплексные массивы.
+@end deftypefn
+
 @deftypefn{Метод класса @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
 @deftypefnx{Метод класса @code{mglParse} (C++)} @code{void} DeleteVar (@code{const wchar_t *}name)
 @deftypefnx {Функция С} @code{void} mgl_parser_del_var (@code{HMPR} p, @code{const char *}name)
