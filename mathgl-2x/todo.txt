@@ -64,7 +64,7 @@ D. Docs about JS interface
 28. Docs about 'symbol'
 29. Docs about user-defined marks (from 'addsymbol' if '&' is specified in plot style) + denote that "size<0" will draw wired.
 30. Style '#' for 'region'
-31. Meshnum option now change the number of drawn marks for 'plot','tens','step'
+31. Meshnum option now change the number of drawn marks for 'plot','tens','step','mark','textmark'
 
 
 ZZ. Update time.texi {before release!!!}

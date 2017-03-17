@@ -750,16 +750,16 @@ void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, cons
 	m = r->GetNy() > m ? r->GetNy() : m;
 	gr->Reserve(n*m);
 
-	mglPoint p,q(NAN);
+	mglPoint q(NAN);
+	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n, dx = n>d?n/d:1;
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mr = j<r->GetNy() ? j:0;
-		for(long i=0;i<n;i++)
+		for(long i=0;i<n;i+=dx)
 		{
-			p.Set(x->v(i,mx), y->v(i,my), z->v(i,mz));
-			long k = gr->AddPnt(p,-1,q);
+			long k = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz)),-1,q);
 			gr->text_plot(k, text, fnt, -0.5*fabs(r->v(i,mr)));
 		}
 	}

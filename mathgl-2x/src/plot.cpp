@@ -1718,13 +1718,14 @@ void MGL_EXPORT mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char
 	if(mk==0)	mk='.';
 	bool sh = mglchr(pen,'!');
 
+	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n, dx = n>d?n/d:1;
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
 		gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mr = j<r->GetNy() ? j:0;
-		for(long i=0;i<n;i++)
+		for(long i=0;i<n;i+=dx)
 		{
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
 			gr->mark_plot(gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz)),c), mk, fabs(r->v(i,mr)));
