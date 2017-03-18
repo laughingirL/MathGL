@@ -50,12 +50,10 @@ D. Docs about JS interface
 2. Sample about PDE -- add 'tridmat' + 'diffract'
 3. Sample about complex 'ode' (like Raman scattering)
 
-5. Docs about 'flame2d'
 6. Sample about 'flame2d'
 9. Sample about 'detect'
 10. Docs about 'apde'
 17. Sample about 'section'
-21. Docs about 'erode' and 'dilate'
 22. Sample about 'erode' and 'dilate'
 
 26. Update installation (dll from mgl_script + Qt plugins/ + Win10)

@@ -1247,6 +1247,24 @@ These functions change the data in some direction like differentiations, integra
 Ограничивает амплитуду данных диапазоном [-@var{val},@var{val}]. При этом сохраняется исходный знак (фаза для комплексных чисел). Эквивалентно операции @code{a[i] *= abs(a[i])<val?1.:val/abs(a[i]);}.
 @end deftypefn
 
+@anchor{dilate}
+@deftypefn {Команда MGL} {} dilate dat @code{[val=1 step=1]}
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Dilate (@code{mreal} val=@code{1}, @code{long} step=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_dilate (@code{HMDT} dat, @code{mreal} val, @code{long} step)
+@end ifclear
+Возвращает "расширенный" на @var{step} ячеек массив из 0 и 1 для данных больших порогового значения @var{val}. @c TODO @sref{Dilate and erode sample}
+@end deftypefn
+
+@anchor{erode}
+@deftypefn {Команда MGL} {} erode dat @code{[val=1 step=1]}
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Erode (@code{mreal} val=@code{1}, @code{long} step=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_erode (@code{HMDT} dat, @code{mreal} val, @code{long} step)
+@end ifclear
+Возвращает "суженный" на @var{step} ячеек массив из 0 и 1 для данных больших порогового значения @var{val}. @c TODO @sref{Dilate and erode sample}
+@end deftypefn
+
 @c ------------------------------------------------------------------
 @external{}
 @node Interpolation, Data information, Data changing, Data processing
@@ -1824,6 +1842,45 @@ z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[10,i];
   }
 @end verbatim
 @end deftypefn
+
+@anchor{flame2d}
+@deftypefn {Команда MGL} {} flame2d @sc{res} dat func @code{num} [@code{skip=20}]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglFlame2d (@code{const mglDataA &}dat, @code{const mglDataA &}func, @code{long} num, @code{long} skip=@code{20})
+@deftypefnx {Функция С} @code{HMDT} mgl_data_flame_2d (@code{HCDT} dat, @code{HCDT} func, @code{long} num, @code{long} skip)
+@end ifclear
+Находит @var{num} точек @{x[i]=res[0,i], y[i]=res[1,i]@} фрактала с использованием итерационной системы функций (IFS). Массив @var{func} задает идентификатор функции (@var{func}[0,i,j]), ее вес (@var{func}[0,i,j]) и аргументы (@var{func}[2 ... 5,i,j]). Матрица @var{dat} используется для преобразования координат для аргументов функции. Результирующее преобразование имеет вид:
+@verbatim
+xx = dat[0,i]*x[j] + dat[1,j]*y[i] + dat[4,j];
+yy = dat[2,i]*x[j] + dat[3,j]*y[i] + dat[5,j];
+x[j+1] = sum_i @var{func}[1,i,j]*@var{func}[0,i,j]_x(xx, yy; @var{func}[2,i,j],...,@var{func}[5,i,j]);
+y[j+1] = sum_i @var{func}[1,i,j]*@var{func}[0,i,j]_y(xx, yy; @var{func}[2,i,j],...,@var{func}[5,i,j]);
+@end verbatim
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 7. @sref{IFS sample}
+Доступные идентификаторы функций: @code{mglFlame2d_linear=0,	mglFlame2d_sinusoidal,	mglFlame2d_spherical,	mglFlame2d_swirl,		mglFlame2d_horseshoe,
+	mglFlame2d_polar,		mglFlame2d_handkerchief,mglFlame2d_heart,		mglFlame2d_disc,		mglFlame2d_spiral,
+	mglFlame2d_hyperbolic,	mglFlame2d_diamond,		mglFlame2d_ex,			mglFlame2d_julia,		mglFlame2d_bent,
+	mglFlame2d_waves,		mglFlame2d_fisheye,		mglFlame2d_popcorn,		mglFlame2d_exponential,	mglFlame2d_power,
+	mglFlame2d_cosine,		mglFlame2d_rings,		mglFlame2d_fan,			mglFlame2d_blob,		mglFlame2d_pdj,
+	mglFlame2d_fan2,		mglFlame2d_rings2,		mglFlame2d_eyefish,		mglFlame2d_bubble,		mglFlame2d_cylinder,
+	mglFlame2d_perspective,	mglFlame2d_noise,		mglFlame2d_juliaN,		mglFlame2d_juliaScope,	mglFlame2d_blur,
+	mglFlame2d_gaussian,	mglFlame2d_radialBlur,	mglFlame2d_pie,			mglFlame2d_ngon,		mglFlame2d_curl,
+	mglFlame2d_rectangles,	mglFlame2d_arch,		mglFlame2d_tangent,		mglFlame2d_square,		mglFlame2d_blade,
+	mglFlame2d_secant,		mglFlame2d_rays,		mglFlame2d_twintrian,	mglFlame2d_cross,		mglFlame2d_disc2,
+	mglFlame2d_supershape,	mglFlame2d_flower,		mglFlame2d_conic,		mglFlame2d_parabola,	mglFlame2d_bent2,
+	mglFlame2d_bipolar,		mglFlame2d_boarders,	mglFlame2d_butterfly,	mglFlame2d_cell,		mglFlame2d_cpow,
+	mglFlame2d_curve,		mglFlame2d_edisc,		mglFlame2d_elliptic,	mglFlame2d_escher,		mglFlame2d_foci,
+	mglFlame2d_lazySusan,	mglFlame2d_loonie,		mglFlame2d_preBlur,		mglFlame2d_modulus,		mglFlame2d_oscope,
+	mglFlame2d_polar2,		mglFlame2d_popcorn2,	mglFlame2d_scry,		mglFlame2d_separation,	mglFlame2d_split,
+	mglFlame2d_splits,		mglFlame2d_stripes,		mglFlame2d_wedge,		mglFlame2d_wedgeJulia,	mglFlame2d_wedgeSph,
+	mglFlame2d_whorl,		mglFlame2d_waves2,		mglFlame2d_exp,			mglFlame2d_log,			mglFlame2d_sin,
+	mglFlame2d_cos,			mglFlame2d_tan,			mglFlame2d_sec,			mglFlame2d_csc,			mglFlame2d_cot,
+	mglFlame2d_sinh,		mglFlame2d_cosh,		mglFlame2d_tanh,		mglFlame2d_sech,		mglFlame2d_csch,
+	mglFlame2d_coth,		mglFlame2d_auger,		mglFlame2d_flux.}
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Размеры массивов должны удовлетворять требованиям: @var{dat}.nx>=7, @var{func}.nx>=2 и @var{func}.nz=@var{dat}.ny. @c @sref{Flame sample}
+@end deftypefn
+
+
 
 @c ------------------------------------------------------------------
 @external{}
