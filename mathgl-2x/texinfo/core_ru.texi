@@ -2825,6 +2825,24 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
 @end deftypefn
 
+
+@anchor{contp}
+@deftypefn {Команда MGL} {} contp vdat xdat ydat zdat adat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContP (@code{const mglDataA &}v, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_contp_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует линии уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Линии уровня рисуются для @var{a}[i,j]=@var{v}[k]. Если @var{sch} содержит @samp{t} или @samp{T}, то значения @var{v}[k] будут выведены вдоль контуров над (или под) кривой. Если @var{sch} содержит @samp{f}, то контуры будут закрашены. См. также @ref{cont}, @ref{contf}, @ref{surfc}, @code{cont[xyz]}. @c TODO @sref{Cont sample}
+@end deftypefn
+
+@deftypefn {Команда MGL} {} contp xdat ydat zdat adat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContP (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_contp (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
+@end deftypefn
+
 @anchor{contv}
 @deftypefn {Команда MGL} {} contv vdat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} contv vdat xdat ydat zdat ['sch'='']

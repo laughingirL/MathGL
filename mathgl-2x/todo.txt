@@ -53,8 +53,7 @@ D. Docs about JS interface
 6. Sample about 'flame2d'
 9. Sample about 'detect'
 10. Docs about 'apde'
-11. Docs about 'contp'
-12. Sample about earth map
+11. Sample about earth map
 17. Sample about 'section'
 22. Sample about 'erode' and 'dilate'
 
