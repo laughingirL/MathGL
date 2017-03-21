@@ -78,6 +78,7 @@ Fl_MGL::Fl_MGL(int x, int y, int w, int h, const char *label) : Fl_MGLView(x,y,w
 	script = script_pre = 0;	par = this;
 	next = udav_next;	delay = udav_delay;
 	prev = udav_prev;	reload = udav_reload;
+	FMGL->set_draw(this);
 /*#ifdef WIN32
 //	setlocale(LC_TYPE,"russian_Russia.CP1251");
 	char *path;
@@ -102,6 +103,12 @@ int Fl_MGL::Draw(mglGraph *gr)
 {
 	Parse->Execute(gr,script_pre);
 	Parse->Execute(gr,script);
+	if(textbuf)
+	{
+		char *text = textbuf->text();
+		Parse->Execute(gr,text);
+		free(text);
+	}
 	status->label(gr->Message());
 	return 0;
 }
@@ -126,5 +133,103 @@ void add_suffix(char *fname, const char *ext)
 	{	fname[n-3]=ext[0];	fname[n-2]=ext[1];	fname[n-1]=ext[2];	}
 	else	{	strcat(fname,".");	strcat(fname,ext);	}
 
+}
+//-----------------------------------------------------------------------------
+void export_png_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.png":filename+".png";
+	mgl_write_png(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_spng_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.png":filename+".png";
+	mgl_write_png_solid(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_jpg_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.jpg":filename+".jpg";
+	mgl_write_jpg(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_gif_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.gif":filename+".gif";
+	mgl_write_gif(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_bmp_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.bmp":filename+".bmp";
+	mgl_write_bmp(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_eps_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.eps":filename+".eps";
+	mgl_write_eps(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_bps_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.eps":filename+".eps";
+	mgl_write_bps(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_svg_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.svg":filename+".svg";
+	mgl_write_svg(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_tex_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.tex":filename+".tex";
+	mgl_write_tex(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_prc_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.prc":filename+".prc";
+	mgl_write_prc(e->graph->get_graph(), fname.c_str(),"",0);
+}
+//-----------------------------------------------------------------------------
+void export_obj_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.obj":filename+".obj";
+	mgl_write_obj(e->graph->get_graph(), fname.c_str(),"",0);
+}
+//-----------------------------------------------------------------------------
+void export_xyz_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.xyz":filename+".xyz";
+	mgl_write_xyz(e->graph->get_graph(), fname.c_str(),"");
+}
+//-----------------------------------------------------------------------------
+void export_3pdf_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.pdf":filename+".pdf";
+	mgl_write_prc(e->graph->get_graph(), fname.c_str(),"",1);
+}
+//-----------------------------------------------------------------------------
+void export_stl_cb(Fl_Widget*, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string fname = filename.empty()?"mgllab.stl":filename+".stl";
+	mgl_write_stl(e->graph->get_graph(), fname.c_str(),"");
 }
 //-----------------------------------------------------------------------------

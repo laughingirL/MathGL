@@ -112,7 +112,7 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widge
 {
 	gr = new mglCanvas;
 	tet=phi=x1=y1=0;	x2=y2=1;
-	zoom = rotate = false;
+	zoom = rotate = handle_keys = false;
 	flag=x0=y0=xe=ye=0;
 	tet_val = phi_val = 0;
 	draw_par = 0;	draw_func = 0;	draw_cl = 0;
@@ -215,7 +215,7 @@ int Fl_MathGL::handle(int code)
 	else if((!rotate && !zoom) || Fl::event_button()!=FL_LEFT_MOUSE)
 	{
 		if(code==FL_FOCUS || code==FL_UNFOCUS)	return 1;
-		if(code==FL_KEYUP)
+		if(handle_keys && code==FL_KEYUP)
 		{
 			int key=Fl::event_key();
 			if(!strchr(" .,wasdrfx",key))	return 0;
@@ -770,6 +770,7 @@ HMGL MGL_EXPORT mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char 
 {
 	mglCanvasFL *g = new mglCanvasFL;
 	g->Window(0,0,draw,title,par,load);
+	g->mgl->FMGL->set_handle_key(true);
 	return g;
 }
 void* mgl_fltk_widget(HMGL gr)

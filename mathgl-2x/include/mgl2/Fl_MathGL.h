@@ -81,6 +81,8 @@ public:
 	inline void zoom_region(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 	void stop(bool stop=true);
+	/// Enable/disable key handling (default is false)
+	inline void set_handle_key(bool val)	{	handle_keys=true;	}
 
 protected:
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
@@ -95,6 +97,7 @@ protected:
 	bool rotate;				///< flag for handle mouse
 	bool zoom;					///< flag for zoom by mouse
 	bool wire;
+	bool handle_keys;
 	mreal x1,x2,y1,y2;			///< zoom region
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position

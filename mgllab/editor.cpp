@@ -21,57 +21,77 @@
 #endif
 #include "udav.h"
 //-----------------------------------------------------------------------------
-int		changed = 0;
-char	filename[256] = "";
-Fl_Text_Buffer	*textbuf = 0;
-void data_file(char *v);
+int changed = 0;
+std::string filename;
+Fl_Text_Buffer *textbuf = 0;
+void data_file(const char *v);
 //-----------------------------------------------------------------------------
-// Syntax highlighting stuff...
+// Syntax highlighting
 Fl_Text_Buffer	 *stylebuf = 0;
-Fl_Text_Display::Style_Table_Entry styletable[] = {	// Style table
-		{ FL_BLACK,		FL_COURIER,			14, 0 },	// A - Plain
+Fl_Text_Display::Style_Table_Entry styletable[9] = {	// Style table
+		{ FL_BLACK,		FL_COURIER,		14, 0 },		// A - Plain
 		{ FL_DARK_GREEN,FL_COURIER_ITALIC,	14, 0 },	// B - Line comments
-		{ FL_BLUE,		FL_COURIER,			14, 0 },	// C - Number
-		{ FL_RED,		FL_COURIER,			14, 0 },	// D - Strings
-		{ FL_DARK_BLUE,	FL_COURIER_BOLD,	14, 0 },	// E - Usual ommand
-		{ FL_DARK_CYAN,	FL_COURIER_BOLD,	14, 0 },	// F - Flow command
-		{ FL_DARK_MAGENTA,	FL_COURIER_BOLD,14, 0 },	// G - New-data command
-		{ FL_DARK_RED,	FL_COURIER,	14, 0 },	// H - Option
-		{ FL_DARK_GREEN,FL_COURIER_BOLD,	14, 0 }};  // I - Inactive command
+		{ FL_BLUE,	FL_COURIER,			14, 0 },		// C - Number
+		{ FL_RED,		FL_COURIER,		14, 0 },		// D - Strings
+		{ FL_DARK_BLUE,	FL_COURIER,		14, 0 },		// E - Usual ommand
+		{ FL_DARK_CYAN,	FL_COURIER,		14, 0 },		// F - Flow command
+		{ FL_DARK_MAGENTA,	FL_COURIER,	14, 0 },		// G - New-data command
+		{ FL_DARK_RED,	FL_COURIER,		14, 0 },		// H - Option
+		{ FL_DARK_GREEN,FL_COURIER,		14, 0 }};		// I - Inactive command
+int font_kind;	///< Editor font kind
+int font_size;	///< Editor font size
+//-----------------------------------------------------------------------------
+void set_style(int kind, int size)
+{
+	if(kind<0 || kind>2)	kind = 1;
+	if(size<1)	size = 14;
+	for(int i=0;i<9;i++)	// set font for styles
+	{	styletable[i].size = size;	styletable[i].font = 4*kind;	}
+	styletable[1].font = 4*kind+2;
+	font_kind = kind;	font_size = size;
+}
 //-----------------------------------------------------------------------------
 bool is_sfx(const char *s)	// suffix
 {
-	register long i,n=strlen(s);
+	size_t i,n=strlen(s);
 	for(i=0;i<n && s[i]>='a';i++);
 	if(i==1 && s[0]=='a')	return true;
-	if(i==2 && strchr("axyz",s[1]) && strchr("nmawsk",s[0]))	return true;
+	if(i==2 && strchr("nmawsk",s[0]) && strchr("axyz",s[1]))	return true;
 	if(i==3 && (!strncmp("fst",s,3) || !strncmp("lst",s,3) || !strncmp("max",s,3) ||
 				!strncmp("min",s,3) || !strncmp("sum",s,3)))
 		return true;
+	if(i==3 && s[0]=='m' && strchr("xyz",s[1]) && strchr("fl",s[2]))	return true;
 	return false;
 //	char *t = new char[i+1];	memcpy(t,s,i*sizeof(char));	t[i]=0;
 }
 //-----------------------------------------------------------------------------
 bool is_opt(const char *s)	// option
 {
-	const char *o[]={"xrange","yrange","zrange","crange","alpha",
-					"cut","value","meshnum","size","legend"};
-	int l[10] = {6, 6, 6, 6, 5, 3, 5, 7, 4, 6};
-	register long i;
-	for(i=0;i<10;i++)	if(!strncmp(o[i],s,l[i]) && s[l[i]]<=' ')	return true;
+	const char *o[13]={"xrange","yrange","zrange","crange","alpha",
+					"cut","value","meshnum","size","legend",
+					"ambient","diffuse","light"};
+	int l[13] = {6,6,6,6,5, 3,5,7,4,6, 7,7,5};
+	for(size_t i=0;i<13;i++)	if(!strncmp(o[i],s,l[i]) && s[l[i]]<=' ')	return true;
 	return false;
 }
 //-----------------------------------------------------------------------------
 bool is_num(const char *s)	// number
 {
-	register long i,n=strlen(s);
-	if(s[0]==':' && (s[1]<=' ' || s[1]==';'))	return true;
-	if(n>=2 && !strncmp("pi",s,2) && (s[2]<=' ' || s[2]==';' || s[2]==':'))	return true;
-	if(n>=2 && !strncmp("on",s,2) && (s[2]<=' ' || s[2]==';' || s[2]==':'))	return true;
-	if(n>=3 && !strncmp("off",s,3) && (s[3]<=' ' || s[3]==';' || s[2]==':'))	return true;
-	if(n>=3 && !strncmp("nan",s,3) && (s[3]<=' ' || s[3]==';' || s[2]==':'))	return true;
-	if(n>=3 && !strncmp("inf",s,3) && (s[3]<=' ' || s[3]==';' || s[2]==':'))	return true;
-	for(i=0;i<n;i++)
+	size_t n=strlen(s);
+//	if(s[0]==':' && (s[1]<=' ' || s[1]==';'))	return true;
+	if(n>=2 && (s[2]<=' ' || s[2]==';' || s[2]==':'))
+	{
+		if(!strncmp("pi",s,2))	return true;
+		if(!strncmp("on",s,2))	return true;
+	}
+	if(n>=3 && (s[3]<=' ' || s[3]==';' || s[3]==':'))
+	{
+		if(!strncmp("off",s,3))	return true;
+		if(!strncmp("nan",s,3))	return true;
+		if(!strncmp("inf",s,3))	return true;
+		if(!strncmp("all",s,3))	return true;
+	}
+	for(size_t i=0;i<n;i++)
 	{
 		if(s[i]<=' ' || s[i]==';')	break;
 		if(!strchr("+-.eE0123456789",s[i]))	return false;
@@ -143,8 +163,8 @@ void style_parse(const char *text, char *style, int /*length*/)
 	}
 }
 //-----------------------------------------------------------------------------
-// Initialize the style buffer...
-void style_init(void)
+// Initialize the style buffer
+void style_init()
 {
 	char *style = new char[textbuf->length() + 1];
 	char *text = textbuf->text();
@@ -269,22 +289,22 @@ int check_save(void)
 }
 //-----------------------------------------------------------------------------
 int loading = 0;
-void load_file(char *newfile, int ipos)
+void load_file(const char *newfile, int ipos)
 {
 	long len = strlen(newfile);
 	pref.set("last_file",newfile);
 	if(ipos==-1 && (!strcmp(newfile+len-4,".dat") || !strcmp(newfile+len-4,".csv")))
 	{
 		data_file(newfile);
-		strncpy(newfile+len-4,".mgl",4);
-		strncpy(filename, newfile,256);
+//		strncpy(newfile+len-4,".mgl",4);
+		filename = newfile;	filename += ".mgl";
 	}
 	else
 	{
 		loading = 1;
 		int insert = (ipos != -1);
 		changed = insert;
-		if(!insert) *filename=0;
+		if(!insert) filename="";
 		long r;
 		if(!insert)	r = textbuf->loadfile(newfile);
 		else r = textbuf->insertfile(newfile, ipos);
@@ -299,19 +319,19 @@ void load_file(char *newfile, int ipos)
 
 		if (r)
 			fl_alert(mgl_gettext("Error reading from file \'%s\':\n%s."), newfile, strerror(errno));
-		else	if(!insert)	strncpy(filename, newfile,256);
+		else	if(!insert)	filename = newfile;
 		loading = 0;
 		textbuf->call_modify_callbacks();
 	}
 }
 //-----------------------------------------------------------------------------
-void save_file(char *newfile)
+void save_file(const char *newfile)
 {
 	pref.set("last_file",newfile);
 	if (textbuf->savefile(newfile))
 		fl_alert(mgl_gettext("Error writing to file \'%s\':\n%s."), newfile, strerror(errno));
 	else
-		strncpy(filename, newfile,256);
+		filename = newfile;
 	changed = 0;
 	textbuf->call_modify_callbacks();
 }
@@ -364,7 +384,7 @@ void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
 //-----------------------------------------------------------------------------
 void insert_cb(Fl_Widget*, void *v)
 {
-	char *newfile = fl_file_chooser(mgl_gettext("Insert File?"), "*", filename);
+	char *newfile = fl_file_chooser(mgl_gettext("Insert File?"), "*", filename.c_str());
 	ScriptWindow *w = (ScriptWindow *)v;
 	if (newfile != NULL) load_file(newfile, w->editor->insert_position());
 }
@@ -455,50 +475,55 @@ void view_cb(Fl_Widget*, void*);
 #include "xpm/document-open.xpm"
 #include "xpm/document-new.xpm"
 #include "xpm/document-save.xpm"
+#include "image.h"
 Fl_Widget *add_editor(ScriptWindow *w)
 {
 	Fl_Window *w1=new Fl_Window(0,30,300,430,0);
 	Fl_Group *g = new Fl_Group(0,0,290,30);
 	Fl_Button *o;
 
-	o = new Fl_Button(0, 1, 25, 25);	o->image(new Fl_Pixmap(document_new_xpm));
-	o->tooltip(mgl_gettext("New script"));	o->callback(new_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(25, 1, 25, 25);	o->tooltip(mgl_gettext("Open script or data file"));
-	o->image(new Fl_Pixmap(document_open_xpm));	o->callback(open_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(50, 1, 25, 25);	o->tooltip(mgl_gettext("Save script to file"));
-	o->image(new Fl_Pixmap(document_save_xpm));	o->callback(save_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+	o = new Fl_Button(0, 1, 25, 25);	o->image(img_load);	o->callback(open_cb,w);
+	o->tooltip(mgl_gettext("Open script or data file"));
+	o = new Fl_Button(25, 1, 25, 25);	o->image(img_save);	o->callback(save_cb,w);
+	o->tooltip(mgl_gettext("Save script to file"));
+	o = new Fl_Button(50, 1, 25, 25);	o->image(img_copy);	o->callback(copy_cb,w);
+	o->tooltip(mgl_gettext("Copy selection to clipboard"));
+	o = new Fl_Button(75, 1, 25, 25);	o->image(img_paste);o->callback(paste_cb,w);
+	o->tooltip(mgl_gettext("Paste text from clipboard"));
+	o = new Fl_Button(100, 1, 25, 25);	o->image(img_find);	o->callback(find_cb,w);
+	o->tooltip(mgl_gettext("Find or replace text"));
+	o = new Fl_Button(125, 1, 25, 25);	o->image(img_insert);	o->callback(command_cb,w);
+	o->tooltip(mgl_gettext("Insert MGL command"));
+//	o = new Fl_Button(150, 1, 25, 25);	o->image(img_calc);	o->callback(calc_cb,w);
+//	o->tooltip(mgl_gettext("Show calculator window"));	// TODO
 
-	o = new Fl_Button(80, 1, 25, 25);	o->tooltip(mgl_gettext("Cut selection to clipboard"));
-	o->image(new Fl_Pixmap(edit_cut_xpm));	o->callback(cut_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(105, 1, 25, 25);	o->tooltip(mgl_gettext("Copy selection to clipboard"));
-	o->image(new Fl_Pixmap(edit_copy_xpm));	o->callback(copy_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(130, 1, 25, 25);	o->tooltip(mgl_gettext("Paste text from clipboard"));
-	o->image(new Fl_Pixmap(edit_paste_xpm));	o->callback(paste_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(mgl_gettext("Find text"));
-	o->image(new Fl_Pixmap(edit_find_xpm));	o->callback(find_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-
-	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(mgl_gettext("Insert MGL command"));
-	o->image(new Fl_Pixmap(plot_xpm));	o->callback(command_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+	// ------------ old --------------
+// 	o = new Fl_Button(0, 1, 25, 25);	o->image(new Fl_Pixmap(document_new_xpm));
+// 	o->tooltip(mgl_gettext("New script"));	o->callback(new_cb,w);
+// 	o = new Fl_Button(25, 1, 25, 25);	o->tooltip(mgl_gettext("Open script or data file"));
+// 	o->image(new Fl_Pixmap(document_open_xpm));	o->callback(open_cb,w);
+// 	o = new Fl_Button(50, 1, 25, 25);	o->tooltip(mgl_gettext("Save script to file"));
+// 	o->image(new Fl_Pixmap(document_save_xpm));	o->callback(save_cb,w);
+// 
+// 	o = new Fl_Button(80, 1, 25, 25);	o->tooltip(mgl_gettext("Cut selection to clipboard"));
+// 	o->image(new Fl_Pixmap(edit_cut_xpm));	o->callback(cut_cb,w);
+// 	o = new Fl_Button(105, 1, 25, 25);	o->tooltip(mgl_gettext("Copy selection to clipboard"));
+// 	o->image(new Fl_Pixmap(edit_copy_xpm));	o->callback(copy_cb,w);
+// 	o = new Fl_Button(130, 1, 25, 25);	o->tooltip(mgl_gettext("Paste text from clipboard"));
+// 	o->image(new Fl_Pixmap(edit_paste_xpm));	o->callback(paste_cb,w);
+// 	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(mgl_gettext("Find text"));
+// 	o->image(new Fl_Pixmap(edit_find_xpm));	o->callback(find_cb,w);
+// 	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(mgl_gettext("Insert MGL command"));
+// 	o->image(new Fl_Pixmap(plot_xpm));	o->callback(command_cb,w);
 //	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(mgl_gettext("Insert command options"));
 //	o->image(new Fl_Pixmap(option_xpm));	o->callback(option_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 //	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(mgl_gettext("Edit data array"));
 //	o->image(new Fl_Pixmap(table_xpm));	o->callback(table_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 //	o = new Fl_Button(235, 1, 25, 25);	o->tooltip(mgl_gettext("New view window"));
 //	o->image(new Fl_Pixmap(window_xpm));o->callback(view_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(mgl_gettext("Show help window"));
-	o->image(new Fl_Pixmap(help_contents_xpm));	o->callback(help_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+// 	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(mgl_gettext("Show help window"));
+// 	o->image(new Fl_Pixmap(help_contents_xpm));	o->callback(help_cb,w);
+	// ------------ old --------------
 	g->end();	g->resizable(0);
 
 	w->editor = new Fl_Text_Editor(0, 28, 300, 400);

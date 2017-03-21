@@ -21,7 +21,7 @@ else(OPENMP_FOUND)
 endif(OPENMP_FOUND)
 
 include_directories(${FLTK_INCLUDE_DIR})
-set(mgl_lab_src animate.cpp editor.cpp help.cpp mathgl.cpp setup.cpp write.cpp data.cpp grid.cpp main.cpp option.cpp table.cpp)
+set(mgl_lab_src animate.cpp editor.cpp help.cpp mathgl.cpp setup.cpp write.cpp data.cpp grid.cpp main.cpp option.cpp table.cpp image.cpp)
 add_executable(mgllab ${mgl_lab_src})
 target_link_libraries(mgllab ${MATHGL2_FLTK_LIBRARY} ${MATHGL2_LIBRARY} ${FLTK_LIBRARIES})
 install(

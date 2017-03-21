@@ -150,7 +150,7 @@ const char *cmds[]={
 const char *first[]={"plot", "surf", "surf3", "map", "flow", "contx", "text", "new", "fill", "combine", "alpha", "axis", "subplot", "call", "fit", "fplot"};
 const char *cmd_types="1D plots|2D plots|3D plots|Dual plots|Vector plots|Other plots|Text and legend|Create data and I-O|Data handling|Data extraction|Axis and colorbar|General setup|Axis setup|Scale and rotate|Program flow|Nonlinear fitting|Primitives";
 //-----------------------------------------------------------------------------
-void data_file(char *fn)
+void data_file(const char *fn)
 {
 	static int num=0;
 	static char name[32], res[256];

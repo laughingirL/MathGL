@@ -138,6 +138,8 @@ public:
 	void next_frame();
 	/// Show prev frame
 	void prev_frame();
+	/// Get pointer to grapher
+	HMGL get_graph()	{	return FMGL->get_graph();	}
 
 protected:
 	char *Args[1000], *ArgBuf;
@@ -266,8 +268,8 @@ void data_cb(Fl_Widget *, void *v);
 //-----------------------------------------------------------------------------
 void style_init(void);
 int check_save(void);
-void load_file(char *newfile, int ipos);
-void save_file(char *newfile);
+void load_file(const char *newfile, int ipos);
+void save_file(const char *newfile);
 Fl_Widget *add_editor(ScriptWindow *w);
 Fl_Widget *add_mem(ScriptWindow *w);
 void set_title(Fl_Window* w);
@@ -276,6 +278,21 @@ void set_title(Fl_Window* w);
 void animate_cb(Fl_Widget *, void *v);
 void fill_animate(const char *text);
 //-----------------------------------------------------------------------------
+void export_png_cb(Fl_Widget*, void* );
+void export_spng_cb(Fl_Widget*, void* );
+void export_jpg_cb(Fl_Widget*, void* );
+void export_gif_cb(Fl_Widget*, void* );
+void export_bmp_cb(Fl_Widget*, void* );
+void export_eps_cb(Fl_Widget*, void* );
+void export_bps_cb(Fl_Widget*, void* );
+void export_svg_cb(Fl_Widget*, void* );
+void export_tex_cb(Fl_Widget*, void* );
+void export_prc_cb(Fl_Widget*, void* );
+void export_obj_cb(Fl_Widget*, void* );
+void export_xyz_cb(Fl_Widget*, void* );
+void export_3pdf_cb(Fl_Widget*, void* );
+void export_stl_cb(Fl_Widget*, void* );
+//-----------------------------------------------------------------------------
 Fl_Widget *add_help(ScriptWindow *w);
 void help_cb(Fl_Widget*, void*v);
 void example_cb(Fl_Widget*, void*v);
@@ -283,8 +300,8 @@ void about_cb(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
 void newcmd_cb(Fl_Widget*,void*);
 //-----------------------------------------------------------------------------
-extern Fl_Text_Buffer	*textbuf;
-extern char	filename[256];
+extern Fl_Text_Buffer *textbuf;
+extern std::string filename;
 extern int	changed;
 //-----------------------------------------------------------------------------
 #endif
