@@ -1328,6 +1328,19 @@ public:
 	inline void Boxs(const mglDataA &z, const char *stl="", const char *opt="")
 	{	mgl_boxs(gr, &z, stl, opt);	}
 
+	/// Draw contour lines on parametric surface at manual levels for 2d data specified parametrically
+	/** Style ‘f’ to draw solid contours.
+	 * Style 't'/'T' draw contour labels below/above contours.*/
+	inline void ContP(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_contp_val(gr, &v, &x, &y, &z, &a, sch, opt);	}
+	/// Draw contour lines on parametric surface at manual levels for 2d data specified parametrically
+	/** Style ‘f’ to draw solid contours.
+	 * Style ‘t’/‘T’ draw contour labels below/above contours.
+	 * Option "value" set the number of contour levels (default is 7). */
+	inline void ContP(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_contp(gr, &x, &y, &z, &a, sch, opt);	}
+
+	
 	/// Draw contour lines at manual levels for 2d data specified parametrically
 	/** Style ‘_’ to draw contours at bottom of axis box.
 	 * Style 't'/'T' draw contour labels below/above contours.*/

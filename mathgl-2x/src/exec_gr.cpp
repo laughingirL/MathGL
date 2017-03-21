@@ -406,6 +406,16 @@ int MGL_NO_EXPORT mgls_contf(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_contp(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"dddd"))	gr->ContP(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), "",opt);
+	else if(!strcmp(k,"dddds"))	gr->ContP(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s.c_str(),opt);
+	else if(!strcmp(k,"ddddd"))	gr->ContP(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), "",opt);
+	else if(!strcmp(k,"ddddds"))	gr->ContP(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_contv(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -1033,6 +1043,7 @@ mglCommand mgls_grf_cmd[] = {
 	{"contfx","Draw solid contour lines at x-slice (or x-plane)","contfx Dat ['fmt' pos num]", mgls_contfx ,0},
 	{"contfy","Draw solid contour lines at y-slice (or y-plane)","contfy Dat ['fmt' pos num]", mgls_contfy ,0},
 	{"contfz","Draw solid contour lines at z-slice (or z-plane)","contfz Dat ['fmt' pos num]", mgls_contfz ,0},
+	{"contp","Draw contour lines on parametric surface","contp Xdat Ydat Zdat Adat ['fmt' num zpos]|Vdat Xdat Ydat Zdat Adat ['fmt' zpos]", mgls_contp ,8},
 	{"contv","Draw contour tubes","contv Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_contv ,0},
 	{"contx","Draw contour lines at x-slice (or x-plane)","contx Dat ['fmt' pos num]", mgls_contx ,0},
 	{"conty","Draw contour lines at y-slice (or y-plane)","conty Dat ['fmt' pos num]", mgls_conty ,0},

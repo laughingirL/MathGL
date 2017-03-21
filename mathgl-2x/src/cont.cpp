@@ -747,6 +747,70 @@ void MGL_EXPORT mgl_contf_(uintptr_t *gr, uintptr_t *a, const char *sch, const c
 	mgl_contf(_GR_, _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
+//	ContP series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_contp_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+{
+	long n=z->GetNx(),m=z->GetNy();
+	if(mgl_check_dim2(gr,x,y,z,a,"Cont"))	return;
+
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Cont",cgid++);
+
+	int text=0;
+	if(mglchr(sch,'t'))	text=1;
+	if(mglchr(sch,'T'))	text=2;
+	bool fill = mglchr(sch,'f');
+	long s=gr->AddTexture(sch);
+	gr->SetPenPal(sch);
+
+	mglData xx, yy;
+	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
+	{
+		xx.Create(n, m);		yy.Create(n, m);
+		for(long i=0;i<n;i++)	xx.a[i]=x->v(i);
+		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
+		for(long j=0;j<m;j++)
+		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
+		x = &xx;	y = &yy;
+	}
+	// x, y -- have the same size z
+#pragma omp parallel for collapse(2)
+	for(long i=0;i<v->GetNx();i++)	for(long j=0;j<a->GetNz();j++)
+	{
+		if(gr->NeedStop())	continue;
+		if(fill)
+			mgl_contf_gen(gr,v->v(i),v->v(i+1),a,x,y,z,gr->GetC(s,v->v(i)),j);
+		else
+			mgl_cont_gen(gr,v->v(i),a,x,y,z,gr->GetC(s,v->v(i)),text,j);
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_contp(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+{
+	mreal r = gr->SaveState(opt);
+	long Num = mgl_isnan(r)?7:long(r+0.5);
+	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
+	mglData v(Num);
+	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*mreal(i+1)/(Num+1);
+	mgl_contp_val(gr,&v,x,y,z,a,sch,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_contp_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_contp_val(_GR_, _DA_(v), _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);
+	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_contp_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_contp(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);
+	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
 //	ContD series
 //
 //-----------------------------------------------------------------------------
