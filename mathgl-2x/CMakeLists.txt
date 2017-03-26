@@ -657,7 +657,7 @@ add_subdirectory( examples )
 if(NOT WIN32)
 	add_subdirectory( fonts )
 endif(NOT WIN32)
-# 	add_subdirectory( mgllab )
+add_subdirectory( mgllab )
 endif(NOT enable-lgpl)
 
 if(NOT MSVC AND NOT BORLAND)

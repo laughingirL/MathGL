@@ -19,7 +19,7 @@
 #include <FL/Fl_Int_Input.H>
 #include <FL/Fl_Value_Slider.H>
 #include <FL/fl_draw.H>
-#include "udav.h"
+#include "mgllab.h"
 //-----------------------------------------------------------------------------
 Fl_Callback input_cb;
 //-----------------------------------------------------------------------------

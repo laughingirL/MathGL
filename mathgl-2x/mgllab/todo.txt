@@ -1,0 +1,5 @@
+1. Start/Stop on single button
+2. Update FLTK icons
+3. Flat toolbuttons
+4. Detach data table
+5. Menu items to show/hide extra toolbars

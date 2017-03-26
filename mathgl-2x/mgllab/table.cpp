@@ -19,7 +19,7 @@
 #include <FL/Fl_Float_Input.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Round_Button.H>
-#include "udav.h"
+#include "mgllab.h"
 //-----------------------------------------------------------------------------
 void addto_cb(Fl_Widget*, void*v)
 {
@@ -73,7 +73,6 @@ void XYZDlg::create_dlg()
 {
 	wnd = new Fl_Double_Window(325, 125, mgl_gettext("Change data sizes"));
 	box = new Fl_Box(10, 10, 305, 40);
-	box->box(UDAV_THIN_UP_BOX);
 	box->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 
 	mx = new Fl_Spinner(30, 55, 75, 25, "mx");
@@ -86,10 +85,8 @@ void XYZDlg::create_dlg()
 
 	Fl_Button *o;
 	o = new Fl_Button(125, 90, 85, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Do nothing and close this window"));
 	o = new Fl_Return_Button(230, 90, 85, 25, mgl_gettext("Change"));o->callback(xyz_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Change (resize) data"));
 	wnd->end();
 }
@@ -194,9 +191,7 @@ void ChngDlg::create_dlg()
 
 	Fl_Button *o;
 	o = new Fl_Button(10, 180, 65, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o = new Fl_Return_Button(90, 180, 65, 25, mgl_gettext("Do"));o->callback(chng_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
@@ -302,9 +297,7 @@ void NwdtDlg::create_dlg()
 
 	Fl_Button *o;
 	o = new Fl_Button(10, 180, 65, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o = new Fl_Return_Button(90, 180, 65, 25, mgl_gettext("Do"));o->callback(chng_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
@@ -494,10 +487,8 @@ void NrmDlg::create_dlg()
 
 	Fl_Button *o;
 	o = new Fl_Button(25, 150, 85, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Do nothing and close this window"));
 	o = new Fl_Return_Button(25, 180, 85, 25, mgl_gettext("Change"));o->callback(nrm_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Change data values and close this window"));
 	wnd->end();
 }
@@ -564,10 +555,8 @@ void CropDlg::create_dlg()
 	new Fl_Box(15, 85, 25, 25, "Z");
 	Fl_Button *o;
 	o = new Fl_Button(45, 120, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Do nothing and close this window"));
 	o = new Fl_Return_Button(145, 120, 75, 25, mgl_gettext("Crop"));	o->callback(crop_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Change data values and close this window"));
 	wnd->end();
 }
@@ -636,10 +625,8 @@ void TrspDlg::create_dlg()
 
 	Fl_Button *o;
 	o = new Fl_Button(25, 130, 75, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Do nothing and close this window"));
 	o = new Fl_Return_Button(125, 130, 75, 25, mgl_gettext("Do"));	o->callback(trsp_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Change data values and close this window"));
 	wnd->end();
 }

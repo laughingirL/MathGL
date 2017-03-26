@@ -2068,7 +2068,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefn {Команда MGL} {} box ['stl'='k' @code{ticks=on}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Box (@code{const char *}col=@code{""}, @code{bool} ticks=@code{true})
-@deftypefnx {Функция С} @code{void} mgl_box (@code{HMGL} gr, @code{int} ticks)
+@deftypefnx {Функция С} @code{void} mgl_box (@code{HMGL} gr)
 @deftypefnx {Функция С} @code{void} mgl_box_str (@code{HMGL} gr, @code{const char *}col, @code{int} ticks)
 @end ifclear
 Рисует ограничивающий параллелепипед цветом @var{col}. Если @var{col} содержит @samp{@@}, то рисуются закрашенные задние грани. При этом первый цвет используется для граней (по умолчанию светло жёлтый), а последний для рёбер и меток.

@@ -20,7 +20,7 @@
 #include <FL/Fl_Round_Button.H>
 #include <FL/Fl_Multiline_Input.H>
 #include <FL/Fl_Float_Input.H>
-#include "udav.h"
+#include "mgllab.h"
 //-----------------------------------------------------------------------------
 struct ArgumentDlg
 {
@@ -55,9 +55,7 @@ void ArgumentDlg::create_dlg()
 
 	Fl_Button *o;
 	o = new Fl_Button(75, 240, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o = new Fl_Return_Button(175, 240, 75, 25, mgl_gettext("OK"));	o->callback(argument_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
@@ -171,15 +169,12 @@ void AnimateDlg::create_dlg()
 
 	Fl_Button *o;
 	o = new Fl_Button(230, 215, 80, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o = new Fl_Return_Button(230, 250, 80, 25, mgl_gettext("OK"));	o->callback(animate_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	save = new Fl_Check_Button(220, 285, 105, 25, mgl_gettext("save slides"));
 	save->tooltip(mgl_gettext("Keep slides in memory (faster animation but require more memory)"));
 	save->down_box(FL_DOWN_BOX);	save->hide();
 
 	o = new Fl_Button(10, 315, 100, 25, mgl_gettext("Put to script"));	o->callback(animate_put_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	dt = new Fl_Float_Input(220, 315, 105, 25, mgl_gettext("Delay (in sec)"));//	dx->align(FL_ALIGN_TOP_LEFT);
 
 	wnd->end();
@@ -235,7 +230,7 @@ void animate_cb(Fl_Widget *, void *v)
 	s->wnd->set_modal();
 	s->wnd->show();
 	while(s->wnd->shown())	Fl::wait();
-	if(s->OK)	s->FillResult(e->graph);
+	if(s->OK)	s->FillResult(e->draw);
 }
 //-----------------------------------------------------------------------------
 void cpy_arg_buf(const char *str, long *size, char **buf)

@@ -47,25 +47,37 @@
 #include <Fl/Fl_Float_Input.H>
 #include <Fl/Fl_Multiline_Input.H>
 //-----------------------------------------------------------------------------
-#ifdef USE_PLASTIC
-	#define UDAV_UP_BOX			FL_PLASTIC_UP_BOX
-	#define UDAV_DOWN_BOX		FL_PLASTIC_DOWN_BOX
-	#define UDAV_EDIT_BOX		FL_PLASTIC_THIN_DOWN_BOX
-	#define UDAV_THIN_UP_BOX	FL_PLASTIC_THIN_UP_BOX
-#else
-	#define UDAV_UP_BOX			FL_GTK_UP_BOX
-	#define UDAV_DOWN_BOX		FL_GTK_DOWN_BOX
-	#define UDAV_EDIT_BOX		FL_GTK_DOWN_BOX
-	#define UDAV_THIN_UP_BOX	FL_GTK_THIN_UP_BOX
-#endif
-//-----------------------------------------------------------------------------
 #include "mgl2/Fl_MathGL.h"
 //-----------------------------------------------------------------------------
 extern mglParse *Parse;
 extern Fl_Menu_Item colors[];
-extern Fl_Preferences pref;
-extern char *docdir;
 class Fl_MGL;
+//-----------------------------------------------------------------------------
+extern Fl_Preferences pref;
+extern Fl_Text_Display::Style_Table_Entry styletable[9];
+extern int changed;	///< flag of script is changed or not
+extern std::string filename;	///< Current filename
+extern std::string lastfiles[5];///< Last opened files
+extern std::string search;		///< Text to search
+extern Fl_Text_Buffer *textbuf;
+//-----------------------------------------------------------------------------
+extern int auto_exec;	///< Enable auto execution
+extern int exec_save;	///< Save before running
+extern int highlight;	///< Highlight current line
+extern int mouse_zoom;	///< Use mouse wheel for zooming
+extern std::string docdir;	///< Path to help files
+extern std::string	fontname;	///< Path to font files
+extern int lang;	///< Locale for script and help files
+extern int scheme;	///< FLTK scheme
+extern int font_kind;	///< Editor font kind
+extern int font_size;	///< Editor font size
+//-----------------------------------------------------------------------------
+void set_scheme_lang(int s, int l);		///< Set FLTK scheme and locale
+void set_style(int fkind, int fsize);	///< Change the style of highlight
+void style_init();	///< Initialize the style buffer
+void save_pref();	///< Apply and save preferences
+void load_pref();	///< Load preferences
+void add_filename(const char *fname);	///< Add filename to lastfiles
 //-----------------------------------------------------------------------------
 class Fl_Data_Table : public Fl_Table
 {
@@ -113,17 +125,18 @@ protected:
 	void create_dlg();
 };
 //-----------------------------------------------------------------------------
-class Fl_MGL : public Fl_MGLView, public mglDraw
+class Fl_MGL : public mglDraw
 {
 friend class AnimateDlg;
 public:
+	Fl_MGLView *gr;
 	Fl_Widget *status;		///< StatusBar for mouse coordinates
 	const char *AnimBuf;		///< buffer for animation
 	const char **AnimS0;
 	int AnimNum;
 	mreal AnimDelay;
 
-	Fl_MGL(int x, int y, int w, int h, const char *label=0);
+	Fl_MGL(Fl_MGLView *GR);
 	~Fl_MGL();
 
 	/// Drawing itself
@@ -139,7 +152,7 @@ public:
 	/// Show prev frame
 	void prev_frame();
 	/// Get pointer to grapher
-	HMGL get_graph()	{	return FMGL->get_graph();	}
+	HMGL get_graph()	{	return gr->FMGL->get_graph();	}
 
 protected:
 	char *Args[1000], *ArgBuf;
@@ -226,8 +239,22 @@ public:
 	void mem_pressed(int n);
 	SetupDlg 	*setup_dlg;
 	char		search[256];
-	Fl_MGL		*graph;
+	Fl_MGLView	*graph;
+	Fl_MGL		*draw;
 };
+//-----------------------------------------------------------------------------
+class GeneralDlg
+{
+protected:
+	Fl_Double_Window *w;
+public:
+	std::string result;
+	virtual void cb_ok()	{}
+	void show()	{	w->show();	}
+	void hide()	{	w->hide();	}
+};
+static void cb_dlg_cancel(Fl_Widget*, void*);
+static void cb_dlg_ok(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
 // Editor window functions
 void find2_cb(Fl_Widget *, void *);
@@ -242,6 +269,9 @@ void cut_cb(Fl_Widget *, void *);
 void find_cb(Fl_Widget *, void *);
 void delete_cb(Fl_Widget *, void *);
 void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v);
+void ins_fname_cb(Fl_Widget *, void *);
+void ins_path_cb(Fl_Widget *, void *);
+void ins_fits_cb(Fl_Widget *, void *);
 //-----------------------------------------------------------------------------
 // General callback functions
 void new_cb(Fl_Widget *, void *);
@@ -278,26 +308,13 @@ void set_title(Fl_Window* w);
 void animate_cb(Fl_Widget *, void *v);
 void fill_animate(const char *text);
 //-----------------------------------------------------------------------------
-void export_png_cb(Fl_Widget*, void* );
-void export_spng_cb(Fl_Widget*, void* );
-void export_jpg_cb(Fl_Widget*, void* );
-void export_gif_cb(Fl_Widget*, void* );
-void export_bmp_cb(Fl_Widget*, void* );
-void export_eps_cb(Fl_Widget*, void* );
-void export_bps_cb(Fl_Widget*, void* );
-void export_svg_cb(Fl_Widget*, void* );
-void export_tex_cb(Fl_Widget*, void* );
-void export_prc_cb(Fl_Widget*, void* );
-void export_obj_cb(Fl_Widget*, void* );
-void export_xyz_cb(Fl_Widget*, void* );
-void export_3pdf_cb(Fl_Widget*, void* );
-void export_stl_cb(Fl_Widget*, void* );
-//-----------------------------------------------------------------------------
 Fl_Widget *add_help(ScriptWindow *w);
 void help_cb(Fl_Widget*, void*v);
 void example_cb(Fl_Widget*, void*v);
 void about_cb(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
+void prop_dlg_cb(Fl_Widget*, void*);
+void args_dlg_cb(Fl_Widget*, void*);
 void newcmd_cb(Fl_Widget*,void*);
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

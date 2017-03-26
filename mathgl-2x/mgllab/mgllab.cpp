@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <locale.h>
 #include <getopt.h>
-#include "udav.h"
+#include "mgllab.h"
 //-----------------------------------------------------------------------------
 #ifndef MGL_DOC_DIR
 #ifdef WIN32
@@ -28,9 +28,77 @@
 #endif
 #endif
 //-----------------------------------------------------------------------------
-int num_windows = 0, auto_exec=1, plastic_scheme=1, internal_font=0;
+//int num_windows = 0, auto_exec=1, plastic_scheme=1, internal_font=0;
+int num_windows = 0;
+int auto_exec;
+int exec_save;
+int highlight;
+int mouse_zoom;
+std::string docdir;
+std::string fontname;
+int lang;
+int scheme;
+std::string lastfiles[5];
 Fl_Preferences pref(Fl_Preferences::USER,"abalakin","mgllab");
-char *docdir=0;
+//-----------------------------------------------------------------------------
+void set_scheme_lang(int s, int l)
+{
+	static const char *sch[4]={"base","gtk+","plastic","gleam"};
+	static const char *loc[3]={"C.UTF8",	"ru_RU.utf8",	"ru_RU.cp1251"};
+	static const char *hlp[3]={"doc_en.html","doc_ru.html",	"doc_ru.html"};
+	if(s<0 || s>3)	s=1;
+	if(l<0 || l>2)	l=1;
+	setlocale(LC_CTYPE, loc[l]);
+	Fl::scheme(sch[s]);
+	scheme = s;	lang = l;
+	// TODO reload help file!!!
+}
+//-----------------------------------------------------------------------------
+void save_pref()
+{
+	pref.set("locale",lang);
+	pref.set("scheme",scheme);
+	pref.set("help_dir",docdir.c_str());
+	pref.set("auto_exec",auto_exec);
+	pref.set("exec_save",exec_save);
+	pref.set("highlight",highlight);
+	pref.set("mouse_zoom",mouse_zoom);
+	pref.set("font_kind",font_kind);
+	pref.set("font_size",font_size);
+	pref.set("font_name",fontname.c_str());
+	pref.set("fname1",lastfiles[0].c_str());
+	pref.set("fname2",lastfiles[1].c_str());
+	pref.set("fname3",lastfiles[2].c_str());
+	pref.set("fname4",lastfiles[3].c_str());
+	pref.set("fname5",lastfiles[4].c_str());
+}
+//-----------------------------------------------------------------------------
+void load_pref(ScriptWindow *w)
+{
+	static char *s;
+	pref.get("locale",lang,1);
+	pref.get("scheme",scheme,2);
+	set_scheme_lang(scheme,lang);
+	// doc should be freed before next call
+	pref.get("help_dir",s,MGL_DOC_DIR);
+	if(s)	{	docdir=s;	free(s);	}
+	pref.get("auto_exec",auto_exec,1);
+	pref.get("exec_save",exec_save,1);
+	pref.get("highlight",highlight,1);
+	pref.get("mouse_zoom",mouse_zoom,0);
+	pref.get("font_kind",font_kind,1);
+	pref.get("font_size",font_size,14);
+	set_style(font_kind, font_size);
+	pref.get("font_name",s,"");
+	if(s)	{	fontname=s;	free(s);	}
+	if(w && w->graph)
+		mgl_load_font(w->graph->get_graph(),fontname.c_str(),NULL);
+	pref.get("fname1",s,"");	if(s)	{	lastfiles[0]=s;	free(s);	}
+	pref.get("fname2",s,"");	if(s)	{	lastfiles[1]=s;	free(s);	}
+	pref.get("fname3",s,"");	if(s)	{	lastfiles[2]=s;	free(s);	}
+	pref.get("fname4",s,"");	if(s)	{	lastfiles[3]=s;	free(s);	}
+	pref.get("fname5",s,"");	if(s)	{	lastfiles[4]=s;	free(s);	}
+}
 //-----------------------------------------------------------------------------
 void set_title(Fl_Window* w)
 {
@@ -80,7 +148,7 @@ void open_cb(Fl_Widget*, void *v)
 	char *lastname=0;
 	if(filename.empty())	{	pref.get("last_file",lastname,"");	filename=lastname;	}
 	char *newfile = fl_file_chooser(mgl_gettext("Open File?"),
-		mgl_gettext("MGL Files (*.mgl)\tDAT Files (*.{dat,csv})\tAll Files (*)"), filename.c_str());
+		mgl_gettext("MGL files (*.mgl)\tDAT files (*.{dat,csv})\tAll files (*)"), filename.c_str());
 	if(lastname)	free(lastname);
 	if(newfile != NULL)
 	{
@@ -147,45 +215,6 @@ void view_cb(Fl_Widget*, void*)
 //-----------------------------------------------------------------------------
 void hint_cb(Fl_Widget*, void*)	{}
 //-----------------------------------------------------------------------------
-// Fl_Menu_Item menuitems[] = {
-// 	{ mgl_gettext("File"), 0, 0, 0, FL_SUBMENU },
-// 		{ mgl_gettext("File/New File"),			0, new_cb },
-// 		{ mgl_gettext("File/Open File..."),		FL_CTRL + 'o', open_cb },
-// 		{ mgl_gettext("File/Insert File..."),	FL_CTRL + 'i', insert_cb },
-// 		{ mgl_gettext("File/Save File"),			FL_CTRL + 's', save_cb },
-// 		{ mgl_gettext("File/Save File As..._"),	FL_CTRL + FL_SHIFT + 's', saveas_cb, 0, FL_MENU_DIVIDER },
-// /*TODO	{ mgl_gettext("Export"), 0, 0, 0, 	FL_SUBMENU },*/
-// 		{ mgl_gettext("File/New View"),		FL_ALT + 'w', view_cb },
-// 		{ mgl_gettext("File/Close View_"),	FL_CTRL + 'w', close_cb, 0, FL_MENU_DIVIDER },
-// 		{ mgl_gettext("File/Exit"),			FL_ALT + 'x', quit_cb },
-// 	{ mgl_gettext("Edit"), 0, 0, 0, FL_SUBMENU },
-// 		{ mgl_gettext("Edit/Cut"),			FL_CTRL + 'x', cut_cb },
-// 		{ mgl_gettext("Edit/Copy"),			FL_CTRL + 'c', copy_cb },
-// 		{ mgl_gettext("Edit/Paste"),			FL_CTRL + 'v', paste_cb },
-// 		{ mgl_gettext("Edit/Delete"),		0, delete_cb, 0, FL_MENU_DIVIDER },
-// 		{ mgl_gettext("Edit/Insert"), 0, 0, 0, 	FL_SUBMENU },
-// 			{ mgl_gettext("Edit/Insert/options"),	FL_ALT + 'o', option_cb },
-// 			{ mgl_gettext("Edit/Insert/style"),		FL_ALT + 'i', style_cb },
-// 			{ mgl_gettext("Edit/Insert/filename"),	0, fname_cb },
-// 			{ mgl_gettext("Edit/Insert/command"),	FL_ALT + 'c', command_cb },
-// 		{ mgl_gettext("Edit/Properties"),	0, settings_cb },
-// 		{ mgl_gettext("Search"), 0, 0, 0, FL_SUBMENU },
-// 			{ mgl_gettext("Edit/Search/Find..."),		FL_CTRL + 'f', find_cb },
-// 			{ mgl_gettext("Edit/Search/Find Again"),	FL_F + 3, find2_cb },
-// 			{ mgl_gettext("Edit/Search/Replace..."),	FL_CTRL + 'r', replace_cb },
-// 			{ mgl_gettext("Edit/Search/Replace Again"), FL_F + 4, replace2_cb },
-// 		{ 0 },
-// /*TODO{ mgl_gettext("Graphics"), 0, 0, 0, FL_SUBMENU },*/
-// /*TODO{ mgl_gettext("Data"), 0, 0, 0, FL_SUBMENU },*/
-// 	{ mgl_gettext("Help"), 0, 0, 0, FL_SUBMENU },
-// 		{ mgl_gettext("Help/MGL Help"),		FL_F + 1, help_cb },
-// 		{ mgl_gettext("Help/MGL Examples"),	0, example_cb },
-// 		{ mgl_gettext("Help/Hints and FAQ"),	0, hint_cb , 0, FL_MENU_INACTIVE},
-// 		{ mgl_gettext("Help/About UDAV"),	0, about_cb },
-// 		{ 0 },
-// 	{ 0 }
-// };
-//-----------------------------------------------------------------------------
 Fl_Menu_Item menuitems[] = {
 	{"File", 0,  0, 0, FL_SUBMENU},
 		{"New script", 0,  new_cb},
@@ -212,90 +241,26 @@ Fl_Menu_Item menuitems[] = {
 		{"Find|Replace", FL_CTRL+'f',  0},
 		{"Find next", FL_F+3,  find2_cb, 0, FL_MENU_DIVIDER},
 		{"Insert", 0,  0, 0, FL_SUBMENU},
+			{"File path", FL_META+'p',  ins_path_cb},
+			{"Folder path", 0,  ins_fname_cb},
 			// TODO{"Command", FL_META+'c',  0},
 			// TODO{"Inplot", FL_META+'i',  0},
-			// TODO{"Fitted formula", FL_META+'f',  0},
+			{"Fitted formula", FL_META+'f',  ins_fits_cb},
 			// TODO{"Plot style", 0,  0},
 			// TODO{"Option(s)", FL_META+'o',  0},
-			// TODO{"File path", FL_META+'p',  0},
-			// TODO{"Folder path", 0,  0},
-			// TODO{"Numeric value", FL_META+'n',  0},
 			{0},
 		{0},
-	{"Plot", 0,  0, 0, FL_SUBMENU},
-		// TODO{"Alpha", FL_CTRL+'t',  0, 0, FL_MENU_TOGGLE},
-		// TODO{"Light", FL_CTRL+'l',  0, 0, FL_MENU_TOGGLE},
-		// TODO{"Grid", FL_CTRL+'g',  0, 0, FL_MENU_TOGGLE|FL_MENU_DIVIDER},
-		// TODO{"Restore zoom", FL_CTRL+'r',  0},
-		// TODO{"Update plot", FL_F+5,  0},
-		// TODO{"Adjust size", FL_F+6,  0},
-		// TODO{"Stop", 0,  0, 0, FL_MENU_DIVIDER},
-		// TODO{"Copy image", FL_CTRL+FL_SHIFT+'c',  0},
-		// TODO{"Copy click coor.", 0,  0, 0, FL_MENU_DIVIDER},
-		{"Add objects", 0,  0, 0, FL_SUBMENU},
-			// TODO{"Line", 0,  0},
-			// TODO{"Arc", 0,  0},
-			// TODO{"Curve", 0,  0},
-			// TODO{"Rectangle", 0,  0},
-			// TODO{"Rhombus", 0,  0},
-			// TODO{"Ellipse", 0,  0},
-			// TODO{"Polygon", 0,  0},
-			// TODO{"Marker", 0,  0},
-			// TODO{"Text", 0,  0},
-			{0},
-		{"Selection", 0,  0, 0, FL_SUBMENU},
-			// TODO{"Hide", 0,  0},
-			// TODO{"Delete", 0,  0},
-			// TODO{"Move up", 0,  0},
-			// TODO{"Move down", 0,  0},
-			// TODO{"Show hidden", FL_F+8,  0, 0, FL_MENU_TOGGLE},
-			{0},
-		{"Export as 2D", 0,  0, 0, FL_SUBMENU},
-			{"PNG", FL_ALT+'p',  export_png_cb},
-			{"solid PNG", FL_ALT+'f',  export_spng_cb},
-			{"JPEG", FL_ALT+'j',  export_jpg_cb},
-			{"GIF", FL_ALT+'g',  export_gif_cb},
-			{"BMP", FL_ALT+'b',  export_bmp_cb},
-			{"bitmap EPS", 0,  export_bps_cb},
-			{"vector EPS", FL_ALT+'e',  export_eps_cb},
-			{"SVG", FL_ALT+'s',  export_svg_cb},
-			{"LaTeX", FL_ALT+'l',  export_tex_cb},
-			{0},
-		{"Export as 3D", 0,  0, 0, FL_SUBMENU},
-			{"3D PDF", FL_ALT+'d',  export_3pdf_cb},
-			{"PRC", 0,  export_prc_cb},
-			{"OBJ", FL_ALT+'o',  export_obj_cb},
-			{"STL", 0,  export_stl_cb},
-			{"XYZ", 0,  export_xyz_cb},
-			{0},
-		{"Transform", 0,  0, 0, FL_SUBMENU},
-			// TODO{"Move left", FL_ALT+FL_Left,  0},
-			// TODO{"Move up", FL_ALT+FL_Up,  0},
-			// TODO{"Zoom in", FL_ALT+'=',  0},
-			// TODO{"Zoom out", FL_ALT+'-',  0},
-			// TODO{"Move down", FL_ALT+FL_Down,  0},
-			// TODO{"Move right", FL_ALT+FL_Right,  0, 0, FL_MENU_DIVIDER},
-			// TODO{"Rotate up", FL_CTRL+FL_Up,  0},
-			// TODO{"Rotate down", FL_CTRL+FL_Down,  0},
-			// TODO{"Rotate left", FL_CTRL+FL_Left,  0},
-			// TODO{"Rotate right", FL_CTRL+FL_Right,  0},
-			{0},
-		{"Animation", 0,  0, 0, FL_SUBMENU},
-			// TODO{"Next slide", FL_CTRL+'.',  0},
-			// TODO{"Slideshow", FL_CTRL+FL_F+5,  0},
-			// TODO{"Prev. slide", FL_CTRL+',',  0},
-			// TODO{"Setup show", FL_CTRL+'w',  0},
-			{0},
+	{"Graphics", 0,  0, 0, FL_SUBMENU},
 		{0},
 	{"Setup", 0,  0, 0, FL_SUBMENU},
-		// TODO{"Properties", 0,  /*cb_Properties*/},
-		// TODO{"Set arguments", 0,  /*cb_Set*/},
+		{"Properties", 0,  prop_dlg_cb},
+		{"Set arguments", 0,  args_dlg_cb},
 		// TODO{"Plot setup", FL_META+'g',  0, 0, FL_MENU_DIVIDER},
 		// TODO{"Calculator", FL_F+4,  0, 0, FL_MENU_TOGGLE},
 		// TODO{"Messages", FL_F+2,  0, 0, FL_MENU_TOGGLE},
 		{0},
 	{"Help", 0,  0, 0, FL_SUBMENU},
-		// TODO{"Help", FL_F+1,  0},
+		{"Help", FL_F+1,  help_cb},
 		// TODO{"Hints", 0,  0},
 		// TODO{"About", 0,  0},
 		{0},
@@ -309,32 +274,20 @@ ScriptWindow *new_view()
 {
 	Fl_Tabs* tt;
 	Fl_Group *gg;
-	ScriptWindow *w = new ScriptWindow(930, 510, "Untitled - mgllab");
+	ScriptWindow *w = new ScriptWindow(930, 510, mgl_gettext("Untitled - mgllab"));
 	w->begin();
 	w->menu = new Fl_Menu_Bar(0, 0, 930, 30);
-
-//	w->menu->add(mgl_gettext("File"), 0, 0, 0, FL_SUBMENU);	
-// 	w->menu->add(mgl_gettext("File/New File"), "", new_cb);
-// 	w->menu->add(mgl_gettext("File/Open File..."), "^o", open_cb, w);
-// 	w->menu->add(mgl_gettext("File/Insert File..."),	"^i", insert_cb, w);
-// 	w->menu->add(mgl_gettext("File/Save File"), "^s", save_cb, w);
-// 	w->menu->add(mgl_gettext("File/Save File As..."), 0, saveas_cb, w, FL_MENU_DIVIDER);
-// 	/*TODO	{ mgl_gettext("Export"), 0, 0, 0, 	FL_SUBMENU },*/
-// 	w->menu->add(mgl_gettext("File/New View"), "#w", view_cb, w);
-// 	w->menu->add(mgl_gettext("File/Close View"), "^w", close_cb, w, FL_MENU_DIVIDER);
-// 	w->menu->add(mgl_gettext("File/Exit"), "#x", quit_cb);
-
 	w->menu->copy(menuitems, w);
 
 	Fl_Tile *t = new Fl_Tile(0,30,930,455);
-	tt = new Fl_Tabs(0,30,300,455,0);	tt->box(UDAV_UP_BOX);	w->ltab = tt;
+	tt = new Fl_Tabs(0,30,300,455,0);	w->ltab = tt;
 	gg = new Fl_Group(0,30,300,430);	gg->label(mgl_gettext("Script"));
 	add_editor(w);	gg->end();
 	tt->end();
 
-	tt = new Fl_Tabs(300,30,630,455,0);	tt->box(UDAV_UP_BOX);	w->rtab = tt;
+	tt = new Fl_Tabs(300,30,630,455,0);	w->rtab = tt;
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Canvas"));
-	w->graph = new Fl_MGL(300,30,630,430);	gg->end();
+	w->graph = new Fl_MGLView(300,30,630,430);	gg->end();
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Help"));
 	w->ghelp = gg;	add_help(w);	gg->end();
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Memory"));
@@ -345,10 +298,13 @@ ScriptWindow *new_view()
 	w->status->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 	w->status->color(FL_BACKGROUND_COLOR);
 	w->status->box(FL_DOWN_BOX);
-	w->graph->status = w->status;
-
+	w->draw = new Fl_MGL(w->graph);
+	w->draw->status = w->status;
+	mgl_makemenu_fltk(w->menu, w->graph);
+	
 	t->end();	w->end();	w->resizable(t);
 	tt->callback(mem_upd_cb, w);
+	tt->value(w->graph);
 	w->callback((Fl_Callback *)close_cb, w);
 
 	num_windows++;
@@ -360,15 +316,6 @@ int main(int argc, char **argv)
 {
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
-	char *buf, *buf2, ch;
-	pref.get("locale",buf,"ru_RU.cp1251");	setlocale(LC_CTYPE, buf);	free(buf);
-	pref.get("plastic_scheme",plastic_scheme,1);
-	pref.get("internal_font",internal_font,0);
-	pref.get("auto_exec",auto_exec,1);
-	pref.get("help_dir",docdir,MGL_DOC_DIR);	// docdir should be freed at exit
-
-	Fl::visual(FL_DOUBLE|FL_RGB);
-	if(plastic_scheme) Fl::scheme("gtk+");
 
 #ifdef USE_GETTEXT
 //	setlocale (LC_NUMERIC, "");
@@ -379,17 +326,13 @@ int main(int argc, char **argv)
 	textbuf = new Fl_Text_Buffer;
 	style_init();
 	ScriptWindow *w = new_view();
+	Fl::visual(FL_DOUBLE|FL_RGB);
+	load_pref(w);
 
-	pref.get("font_dir",buf2,"");
-	pref.get("font_name",buf,"");
-	mgl_load_font(w->graph->FMGL->get_graph(),buf,buf2);
-	if(buf)	free(buf);
-	if(buf2)	free(buf2);
-
-	buf = 0;
+	char *buf = 0;
 	while(1)
 	{
-		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:");
+		char ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:");
 		if(ch>='1' && ch<='9')	argument_set(ch-'0', optarg);
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
 		else if(ch=='h')
@@ -402,7 +345,7 @@ int main(int argc, char **argv)
 					"\t-L loc       set locale to loc\n"
 //					"\t-            get script from standard input\n"
 					"\t-h           print this message\n" );
-			free(docdir);	return 0;
+			return 0;
 		}
 		// NOTE: I will not parse stdin here
 		else if(ch==-1 && optind<argc)	buf = argv[optind];

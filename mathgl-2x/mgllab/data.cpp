@@ -18,7 +18,7 @@
 #include <FL/Fl_Spinner.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Check_Button.H>
-#include "udav.h"
+#include "mgllab.h"
 //-----------------------------------------------------------------------------
 void option_in_cb(Fl_Widget *, void *v);
 void style_in_cb(Fl_Widget *, void *v);
@@ -217,9 +217,9 @@ void type_cmd_cb(Fl_Widget *, void *)
 
 		static char str[300];	// load help for command
 #ifdef WIN32
-		snprintf(str,300,"%s\\mgl_en.html#%s",docdir,first[val]);
+		snprintf(str,300,"%s\\mgl_en.html#%s",docdir.c_str(),first[val]);
 #else
-		snprintf(str,300,"%s/mgl_en.html#%s",docdir,first[val]);
+		snprintf(str,300,"%s/mgl_en.html#%s",docdir.c_str(),first[val]);
 #endif
 		cmd_dlg.help->load(str);
 	}
@@ -234,9 +234,9 @@ void desc_cmd_cb(Fl_Widget *, void *)
 
 	static char str[300];	// load help for command
 #ifdef WIN32
-	snprintf(str,300,"%s\\mgl_en.html#%s",docdir,name);
+	snprintf(str,300,"%s\\mgl_en.html#%s",docdir.c_str(),name);
 #else
-	snprintf(str,300,"%s/mgl_en.html#%s",docdir,name);
+	snprintf(str,300,"%s/mgl_en.html#%s",docdir.c_str(),name);
 #endif
 	cmd_dlg.help->load(str);
 }
@@ -251,7 +251,6 @@ void CmdDlg::create_dlg()
 	cmd->tooltip(mgl_gettext("Select kind of plot in this group"));
 
 	fmt = new Fl_Box(0, 40, 500, 25);
-	fmt->box(UDAV_DOWN_BOX);
 	fmt->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 	fmt->tooltip(mgl_gettext("Format of command and its arguments"));
 	dsc = new Fl_Box(0, 70, 500, 25);

@@ -453,6 +453,20 @@ void MGL_NO_EXPORT mgl_export_eps_cb(Fl_Widget*, void* v)
 	mgl_write_eps(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_export_gif_cb(Fl_Widget*, void* v)
+{
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.gif", 0);
+	if(!fname || !fname[0])	return;
+	mgl_write_gif(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_export_bmp_cb(Fl_Widget*, void* v)
+{
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.bmp", 0);
+	if(!fname || !fname[0])	return;
+	mgl_write_bmp(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+}
+//-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_prc_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.prc", 0);
@@ -486,6 +500,13 @@ void MGL_NO_EXPORT mgl_export_stl_cb(Fl_Widget*, void* v)
 	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.stl", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_stl(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_export_xyz_cb(Fl_Widget*, void* v)
+{
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.xyz", 0);
+	if(!fname || !fname[0])	return;
+	mgl_write_xyz(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_su_cb(Fl_Widget*, void* v)
@@ -580,26 +601,35 @@ void MGL_LOCAL_CONST mgl_no_cb(Fl_Widget *, void *)	{}
 void MGL_NO_EXPORT mgl_stop_cb(Fl_Widget*, void* v)
 {	Fl_MGLView *e = (Fl_MGLView*)v;	if(e)	e->FMGL->stop();	}
 //-----------------------------------------------------------------------------
-Fl_Menu_Item pop_graph[20] = {
-	{ mgl_gettext("Export"), 0, mgl_no_cb, 0, FL_SUBMENU,0,0,0,0},
-		{ mgl_gettext("... as PNG"),	0, mgl_export_png_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as PNG (solid)"),	0, mgl_export_pngn_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as JPEG"),	0, mgl_export_jpeg_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as SVG"),	0, mgl_export_svg_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as vector EPS"),	0, mgl_export_eps_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as bitmap EPS"),	0, mgl_export_bps_cb, 0, FL_MENU_DIVIDER,0,0,0,0 },
-		{ mgl_gettext("... as TeX"),	0, mgl_export_tex_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as OBJ"),	0, mgl_export_obj_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as PRC"),	0, mgl_export_prc_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as OFF"),	0, mgl_export_off_cb,0,0,0,0,0,0 },
-		{ mgl_gettext("... as STL"),	0, mgl_export_stl_cb,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0 },
-	{ mgl_gettext("Copy graphics"),	0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER,0,0,0,0},
-	{ mgl_gettext("Normal view"),	0, mgl_norm_cb,0,0,0,0,0,0 },
-	{ mgl_gettext("Redraw plot"),	0, mgl_draw_cb,0,0,0,0,0,0 },
-	{ mgl_gettext("Adjust size"),	0, mgl_adjust_cb,0,0,0,0,0,0 },
-	{ mgl_gettext("Reload data"),	0, mgl_oncemore_cb,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0 }
+Fl_Menu_Item pop_graph[] = {
+	{ mgl_gettext("Export"), 0, mgl_no_cb, 0, FL_SUBMENU},
+#if MGL_HAVE_PNG
+		{ mgl_gettext("... as PNG"),	0, mgl_export_png_cb},
+		{ mgl_gettext("... as PNG (solid)"),	0, mgl_export_pngn_cb},
+#endif
+#if MGL_HAVE_JPEG
+		{ mgl_gettext("... as JPEG"),	0, mgl_export_jpeg_cb},
+#endif
+#if MGL_HAVE_GIF
+		{ mgl_gettext("... as GIF"),	0, mgl_export_gif_cb},
+#endif
+		{ mgl_gettext("... as BMP"),	0, mgl_export_bmp_cb},
+		{ mgl_gettext("... as SVG"),	0, mgl_export_svg_cb},
+		{ mgl_gettext("... as vector EPS"),	0, mgl_export_eps_cb},
+		{ mgl_gettext("... as bitmap EPS"),	0, mgl_export_bps_cb},
+		{ mgl_gettext("... as TeX"),	0, mgl_export_tex_cb,0, FL_MENU_DIVIDER},
+		{ mgl_gettext("... as OBJ"),	0, mgl_export_obj_cb},
+		{ mgl_gettext("... as PRC"),	0, mgl_export_prc_cb},
+		{ mgl_gettext("... as OFF"),	0, mgl_export_off_cb},
+		{ mgl_gettext("... as STL"),	0, mgl_export_stl_cb},
+		{ mgl_gettext("... as XYZ"),	0, mgl_export_xyz_cb},
+		{0},
+	{ mgl_gettext("Copy graphics"),	0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
+	{ mgl_gettext("Normal view"),	0, mgl_norm_cb},
+	{ mgl_gettext("Redraw plot"),	0, mgl_draw_cb},
+	{ mgl_gettext("Adjust size"),	0, mgl_adjust_cb},
+	{ mgl_gettext("Reload data"),	0, mgl_oncemore_cb},
+	{0}
 };
 //-----------------------------------------------------------------------------
 Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Window(xx,yy,ww,hh,lbl)
@@ -710,24 +740,66 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 	m->add("Graphics/Grid", "^g", mgl_grid_cb, w, FL_MENU_TOGGLE|FL_MENU_DIVIDER);
 
 	m->add("Graphics/Restore", "^ ", mgl_norm_cb, w);
-	m->add("Graphics/Redraw", "f5", mgl_draw_cb, w);
-	m->add("Graphics/Adjust size", "f6", mgl_adjust_cb, w);
-	m->add("Graphics/Reload data", "f9", mgl_oncemore_cb, w);
-	m->add("Graphics/Stop", "f7", mgl_stop_cb, w);
+	m->add("Graphics/Redraw", FL_F+5, mgl_draw_cb, w);
+	m->add("Graphics/Adjust size", FL_F+6, mgl_adjust_cb, w);
+	m->add("Graphics/Reload data", FL_F+9, mgl_oncemore_cb, w);
+	m->add("Graphics/Stop", FL_F+7, mgl_stop_cb, w);
 	//TODO	m->add("Graphics/Copy graphics","+^c", mgl_copyimg_cb, w);
 	m->add("Graphics/Pause calc", "^t", mgl_pause_cb, w, FL_MENU_TOGGLE);
 
+#if MGL_HAVE_PNG
 	m->add("Graphics/Export/as PNG", "#p", mgl_export_png_cb, w);
 	m->add("Graphics/Export/as solid PNG", "#f", mgl_export_pngn_cb, w);
+#endif
+#if MGL_HAVE_JPEG
 	m->add("Graphics/Export/as JPEG", "#j", mgl_export_jpeg_cb, w);
+#endif
+#if MGL_HAVE_GIF
+	m->add("Graphics/Export/as GIF", "#g", mgl_export_gif_cb, w);
+#endif
+	m->add("Graphics/Export/as BMP", "", mgl_export_bmp_cb, w);
 	m->add("Graphics/Export/as SVG", "#s", mgl_export_svg_cb, w);
 	m->add("Graphics/Export/as vector EPS", "#e", mgl_export_eps_cb, w);
 	m->add("Graphics/Export/as bitmap EPS", "", mgl_export_bps_cb, w);
+	m->add("Graphics/Export/as TeX", "#l", mgl_export_tex_cb, w, FL_MENU_DIVIDER);
+	m->add("Graphics/Export/as PRC", "#d", mgl_export_prc_cb, w);
+	m->add("Graphics/Export/as OBJ", "#o", mgl_export_obj_cb, w);
+	m->add("Graphics/Export/as OFF", "", mgl_export_off_cb, w);
+	m->add("Graphics/Export/as STL", "", mgl_export_stl_cb, w);
+	m->add("Graphics/Export/as XYZ", "", mgl_export_xyz_cb, w);
 
-	m->add("Graphics/Animation/Slideshow", "^f5", mgl_sshow_cb, w, FL_MENU_TOGGLE);
+	m->add("Graphics/Animation/Slideshow", FL_CTRL+FL_F+5, mgl_sshow_cb, w, FL_MENU_TOGGLE);
 	m->add("Graphics/Animation/Next frame", "#<", mgl_snext_cb, w);
 	m->add("Graphics/Animation/Prev frame", "#>", mgl_sprev_cb, w);
 	//TODO	m->add("Graphics/Animation/Setup", "", mgl_ssetup_cb, w);
+
+	m->add("Graphics/Transform/Move left", FL_ALT+FL_Left, mgl_sl_cb, w);
+	m->add("Graphics/Transform/Move up", FL_ALT+FL_Up, mgl_su_cb, w);
+	m->add("Graphics/Transform/Zoom in", "#=", mgl_sz_cb, w);
+	m->add("Graphics/Transform/Zoom out", "#-", mgl_so_cb, w);
+	m->add("Graphics/Transform/Move down", FL_ALT+FL_Down, mgl_sd_cb, w);
+	m->add("Graphics/Transform/Move right", FL_ALT+FL_Right, mgl_sr_cb, w);
+	// TODO{"Rotate up", FL_CTRL+FL_Up,  0},
+	// TODO{"Rotate down", FL_CTRL+FL_Down,  0},
+	// TODO{"Rotate left", FL_CTRL+FL_Left,  0},
+	// TODO{"Rotate right", FL_CTRL+FL_Right,  0},
+	
+	// TODO{"Add objects", 0,  0, 0, FL_SUBMENU},
+		// TODO{"Line", 0,  0},
+		// TODO{"Arc", 0,  0},
+		// TODO{"Curve", 0,  0},
+		// TODO{"Rectangle", 0,  0},
+		// TODO{"Rhombus", 0,  0},
+		// TODO{"Ellipse", 0,  0},
+		// TODO{"Polygon", 0,  0},
+		// TODO{"Marker", 0,  0},
+		// TODO{"Text", 0,  0},
+	// TODO{"Selection", 0,  0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
+		// TODO{"Hide", 0,  0},
+		// TODO{"Delete", 0,  0},
+		// TODO{"Move up", 0,  0},
+		// TODO{"Move down", 0,  0},
+		// TODO{"Show hidden", FL_F+8,  0, 0, FL_MENU_TOGGLE},
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)

@@ -2104,7 +2104,7 @@ Draws grid lines perpendicular to direction determined by string parameter @var{
 @deftypefn {MGL command} {} box ['stl'='k' @code{ticks=on}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Box (@code{const char *}col=@code{""}, @code{bool} ticks=@code{true})
-@deftypefnx {C function} @code{void} mgl_box (@code{HMGL} gr, @code{int} ticks)
+@deftypefnx {C function} @code{void} mgl_box (@code{HMGL} gr)
 @deftypefnx {C function} @code{void} mgl_box_str (@code{HMGL} gr, @code{const char *}col, @code{int} ticks)
 @end ifclear
 Draws bounding box outside the plotting volume with color @var{col}. If @var{col} contain @samp{@@} then filled faces are drawn. At this first color is used for faces (default is light yellow), last one for edges. @sref{Bounding box}

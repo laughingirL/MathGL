@@ -1,4 +1,4 @@
-/* write.cpp is part of Math Graphic Library
+/* func.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>
  *
  * This program is free software; you can redistribute it and/or

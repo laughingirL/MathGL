@@ -29,7 +29,7 @@
 #include <FL/Fl_Spinner.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Text_Buffer.H>
-#include "udav.h"
+#include "mgllab.h"
 //-----------------------------------------------------------------------------
 extern Fl_Menu_Item colors[];
 extern Fl_Text_Buffer	*textbuf;
@@ -121,9 +121,7 @@ void OptionDlg::create_dlg()
 	cut->tooltip(mgl_gettext("Set cutting off/on for particular plot"));
 
 	o = new Fl_Button(320, 145, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o = new Fl_Return_Button(405, 145, 75, 25, mgl_gettext("OK"));	o->callback(option_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
@@ -286,7 +284,6 @@ void StyleDlg::create_dlg()
 {
 	wnd = new Fl_Window(295, 337, mgl_gettext("String with line/surf/text style"));
 	tab = new Fl_Tabs(0, 0, 295, 255);	tab->callback(style_set_cb);
-	tab->box(UDAV_UP_BOX);
 
 	ltab = new Fl_Group(0, 25, 295, 230, mgl_gettext("Line style"));
 	as = new Fl_Choice(10, 50, 80, 25, mgl_gettext("Arrow at start"));
@@ -350,9 +347,7 @@ void StyleDlg::create_dlg()
 //	res->tooltip(mgl_gettext("Resulting string which will be used as argument of a command"));
 	Fl_Button *o;
 	o = new Fl_Button(125, 300, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o = new Fl_Return_Button(210, 300, 75, 25, mgl_gettext("OK"));	o->callback(style_dlg_cb,wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
 //-----------------------------------------------------------------------------

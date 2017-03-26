@@ -19,7 +19,7 @@
 #ifdef __MWERKS__
 # define FL_DLL
 #endif
-#include "udav.h"
+#include "mgllab.h"
 //-----------------------------------------------------------------------------
 int changed = 0;
 std::string filename;
@@ -254,15 +254,12 @@ ScriptWindow::ScriptWindow(int w, int h, const char* t) : Fl_Double_Window(w, h,
 
 	replace_all = new Fl_Button(10, 70, 90, 25, mgl_gettext("Replace All"));
 	replace_all->callback((Fl_Callback *)replall_cb, this);
-	replace_all->box(UDAV_UP_BOX);	replace_all->down_box(UDAV_DOWN_BOX);
 
 	replace_next = new Fl_Return_Button(105, 70, 120, 25, "Replace Next");
 	replace_next->callback((Fl_Callback *)replace2_cb, this);
-	replace_next->box(UDAV_UP_BOX);	replace_next->down_box(UDAV_DOWN_BOX);
 
 	replace_cancel = new Fl_Button(230, 70, 60, 25, mgl_gettext("Cancel"));
 	replace_cancel->callback((Fl_Callback *)replcan_cb, this);
-	replace_cancel->box(UDAV_UP_BOX);	replace_cancel->down_box(UDAV_DOWN_BOX);
 
 	replace_dlg->end();
 	replace_dlg->set_non_modal();

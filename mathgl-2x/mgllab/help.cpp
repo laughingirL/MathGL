@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "udav.h"
+#include "mgllab.h"
 #include <ctype.h>
 #include <FL/Fl_Select_Browser.H>
 //-----------------------------------------------------------------------------
@@ -30,9 +30,9 @@ void help_cb(Fl_Widget*, void*v)
 		s[j-j0] = buf[j];
 	free(buf);
 #ifdef WIN32
-	snprintf(str,300,"%s\\mgl_en.html#%s",docdir,s);
+	snprintf(str,300,"%s\\mgl_en.html#%s",docdir.c_str(),s);
 #else
-	snprintf(str,300,"%s/mgl_en.html#%s",docdir,s);
+	snprintf(str,300,"%s/mgl_en.html#%s",docdir.c_str(),s);
 #endif
 	e->hd->load(str);
 	if(e->rtab)	e->rtab->value(e->ghelp);
@@ -43,9 +43,9 @@ void link_cb(Fl_Widget*, void*v)
 	ScriptWindow* e = (ScriptWindow*)v;
 	static char str[300];
 #ifdef WIN32
-	snprintf(str,300,"%s\\mgl_en.html#%s",docdir,e->link_cmd->value());
+	snprintf(str,300,"%s\\mgl_en.html#%s",docdir.c_str(),e->link_cmd->value());
 #else
-	snprintf(str,300,"%s/mgl_en.html#%s",docdir,e->link_cmd->value());
+	snprintf(str,300,"%s/mgl_en.html#%s",docdir.c_str(),e->link_cmd->value());
 #endif
 	e->hd->load(str);
 	if(e->rtab)	e->rtab->value(e->ghelp);
@@ -56,9 +56,9 @@ void example_cb(Fl_Widget*, void*v)
 	static char str[300];
 	ScriptWindow* e = (ScriptWindow*)v;
 #ifdef WIN32
-	snprintf(str,300,"%s\\mgl_en.html\\mgl_en_2.html",docdir);
+	snprintf(str,300,"%s\\mgl_en.html#Examples",docdir.c_str());
 #else
-	snprintf(str,300,"%s/mgl_en.html/mgl_en_2.html",docdir);
+	snprintf(str,300,"%s/mgl_en.html#Examples",docdir.c_str());
 #endif
 	e->hd->load(str);	e->rtab->value(e->ghelp);
 	if(e->rtab)	e->rtab->value(e->ghelp);
@@ -84,11 +84,9 @@ void about_cb(Fl_Widget*, void*)
 	Fl_Double_Window* w = new Fl_Double_Window(355, 130, "About UDAV");
 	Fl_Box* o = new Fl_Box(10, 15, 65, 65);
 	o->box(FL_UP_BOX);	o->color(55);	o->image(new Fl_Pixmap(udav_xpm));
-	o = new Fl_Box(85, 15, 260, 65);	o->box(UDAV_DOWN_BOX);
-	o->label(s);
+	o = new Fl_Box(85, 15, 260, 65);	o->label(s);
 	Fl_Button *b = new Fl_Return_Button(255, 90, 90, 30, "Close");
 	b->callback(close_dlg_cb,w);
-	b->box(UDAV_UP_BOX);	b->down_box(UDAV_DOWN_BOX);
 	w->end();	w->set_modal();	w->show();
 }
 //-----------------------------------------------------------------------------

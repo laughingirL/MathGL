@@ -133,7 +133,8 @@ public:
 	void toggle_pause()	{	toggle(pauseC, pause_bt, "Graphics/Pause calc");	exec_pause();	}
 	void adjust()
 	{	mgl_set_size(FMGL->get_graph(),scroll->w(),scroll->h());	FMGL->size(scroll->w(),scroll->h());	update();	}
-
+	HMGL get_graph()	{	return FMGL->get_graph();	}
+	
 	Fl_MGLView(int x, int y, int w, int h, const char *label=0);
 	virtual ~Fl_MGLView();
 	void update();			///< Update picture by calling user drawing function

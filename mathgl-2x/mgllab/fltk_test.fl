@@ -1,0 +1,1840 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0303 
+i18n_type 1 
+i18n_include <libintl.h> 
+i18n_function gettext 
+header_name {.h} 
+code_name {.cxx}
+decl {\#include <mgllab.h>} {public local
+} 
+
+Function {make_window()} {
+  comment {Main mgllab window}
+} {
+  Fl_Window {} {
+    label mgllab open
+    xywh {6 393 780 375} type Double align 80 hide resizable
+    code0 {load_pref();}
+    code1 {create_common();}
+  } {
+    Fl_Tile {} {open
+      xywh {0 30 740 320} resizable
+    } {
+      Fl_Group {} {open
+        xywh {0 35 260 310}
+      } {
+        Fl_Text_Editor edit {
+          xywh {0 60 260 285} resizable
+        }
+        Fl_Pack {} {open
+          private xywh {0 35 260 25}
+          code0 {o->type(Fl_Pack::HORIZONTAL);}
+        } {
+          Fl_Button open {
+            image {png/document-open.png} xywh {0 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/document-save.png} xywh {25 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/accessories-calculator.png} xywh {50 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/edit-undo.png} xywh {75 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/edit-redo.png} xywh {100 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/edit-copy.png} xywh {125 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/edit-paste.png} xywh {150 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/edit-find.png} xywh {175 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/document-properties.png} xywh {200 35 25 25} box ENGRAVED_BOX
+          }
+        }
+      }
+      Fl_Group {} {open
+        xywh {260 35 480 315}
+      } {
+        Fl_Pack {} {open
+          private xywh {260 35 480 25}
+          code0 {o->type(Fl_Pack::HORIZONTAL);}
+        } {
+          Fl_Button {} {
+            image {png/alpha.png} xywh {260 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/weather-clear.png} xywh {285 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/view-grid.png} xywh {310 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/transform-move.png} xywh {335 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/zoom-original.png} xywh {360 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/view-refresh.png} xywh {385 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/process-stop.png} xywh {410 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/edit-copy.png} xywh {435 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/format-indent-more.png} xywh {460 35 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/document-print.png} xywh {485 35 25 25} box ENGRAVED_BOX
+          }
+        }
+        Fl_Pack {} {open
+          private xywh {260 60 25 285}
+          code0 {o->type(Fl_Pack::VERTICAL);}
+        } {
+          Fl_Button {} {
+            image {png/go-previous.png} xywh {260 60 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/go-up.png} xywh {260 85 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/zoom-in.png} xywh {260 110 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/zoom-out.png} xywh {260 135 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/go-down.png} xywh {260 160 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/go-next.png} xywh {260 185 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/arrow-right-double.png} xywh {260 210 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/media-playback-start.png} xywh {260 235 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/arrow-left-double.png} xywh {260 260 25 25} box ENGRAVED_BOX
+          }
+        }
+        Fl_Tabs {} {open
+          xywh {285 60 425 290} align 289 resizable
+        } {
+          Fl_Scroll {} {
+            label Plot open
+            image {png/office-chart-line.png} xywh {285 85 425 265} align 257 hide
+          } {
+            Fl_Box graph {
+              xywh {285 85 425 265} box ENGRAVED_BOX resizable
+              class Fl_MathGL
+            }
+          }
+          Fl_Group {} {
+            label Data open
+            image {png/system-file-manager.png} xywh {285 85 425 260} hide
+          } {}
+          Fl_Group {} {
+            label Info open
+            image {png/dialog-information.png} xywh {285 85 425 260} hide
+          } {}
+          Fl_Group {} {
+            label Help open
+            image {png/help-contents.png} xywh {285 85 425 260} align 289 resizable
+          } {
+            Fl_Help_View {} {
+              xywh {285 110 425 235} resizable
+            }
+          }
+        }
+        Fl_Pack {} {open
+          private xywh {710 60 25 285}
+          code0 {o->type(Fl_Pack::VERTICAL);}
+        } {
+          Fl_Button {} {
+            image {png/edit-delete.png} xywh {710 60 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/object-order-lower.png} xywh {710 85 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/object-order-raise.png} xywh {710 110 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/layer-visible-on.png} xywh {710 135 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/document-new.png} xywh {710 160 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/document-print.png} xywh {710 185 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/edit-clear.png} xywh {710 210 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/list-add.png} xywh {710 235 25 25} box ENGRAVED_BOX
+          }
+          Fl_Button {} {
+            image {png/list-remove.png} xywh {710 260 25 25} box ENGRAVED_BOX
+          }
+        }
+      }
+    }
+    Fl_Menu_Bar menu {open
+      xywh {0 0 680 25} align 288
+    } {
+      Submenu {} {
+        label File
+        xywh {0 0 100 20}
+      } {
+        MenuItem {} {
+          label {New script}
+          xywh {0 0 100 20}
+        }
+        MenuItem {} {
+          label {Open file ...}
+          xywh {0 0 100 20} shortcut 0x4006f
+        }
+        MenuItem {} {
+          label {Save file}
+          xywh {0 0 100 20} shortcut 0x40073
+        }
+        MenuItem {} {
+          label {Save as ...}
+          xywh {0 0 100 20} divider
+        }
+        MenuItem {} {
+          label {Print script}
+          xywh {0 0 100 20}
+        }
+        MenuItem {} {
+          label {Print plot}
+          xywh {0 0 100 20} divider
+        }
+        Submenu {} {
+          label {Recent files} open
+          xywh {0 0 100 20} divider
+        } {
+          MenuItem {} {
+            label {1.}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {2.}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {3.}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {4.}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {5.}
+            xywh {0 0 100 20}
+          }
+        }
+        MenuItem {} {
+          label Exit
+          callback {exit(0);}
+          xywh {0 0 100 20}
+        }
+      }
+      Submenu {} {
+        label Edit
+        xywh {0 0 100 20}
+      } {
+        MenuItem {} {
+          label Undo
+          xywh {0 0 100 20} shortcut 0x4007a
+        }
+        MenuItem {} {
+          label Redo
+          xywh {0 0 100 20} divider
+        }
+        MenuItem {} {
+          label {Cut text}
+          xywh {0 0 100 20} shortcut 0x40078
+        }
+        MenuItem {} {
+          label {Copy text}
+          xywh {0 0 100 20} shortcut 0x40063
+        }
+        MenuItem {} {
+          label {Paste text}
+          xywh {0 0 100 20} shortcut 0x40076
+        }
+        MenuItem {} {
+          label {Select all}
+          xywh {0 0 100 20} shortcut 0x40061 divider
+        }
+        MenuItem {} {
+          label {Find|Replace}
+          xywh {0 0 100 20} shortcut 0x40066
+        }
+        MenuItem {} {
+          label {Find next}
+          xywh {0 0 100 20} shortcut 0xffc0 divider
+        }
+        Submenu {} {
+          label Insert open
+          xywh {0 0 100 20}
+        } {
+          MenuItem {} {
+            label Command
+            xywh {0 0 100 20} shortcut 0x400063
+          }
+          MenuItem {} {
+            label Inplot
+            xywh {0 0 100 20} shortcut 0x400069
+          }
+          MenuItem {} {
+            label {Fitted formula}
+            xywh {0 0 100 20} shortcut 0x400066
+          }
+          MenuItem {} {
+            label {Plot style}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {Option(s)}
+            xywh {0 0 100 20} shortcut 0x40006f
+          }
+          MenuItem {} {
+            label {File path}
+            xywh {0 0 100 20} shortcut 0x400070
+          }
+          MenuItem {} {
+            label {Folder path}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {Numeric value}
+            xywh {0 0 100 20} shortcut 0x40006e
+          }
+        }
+      }
+      Submenu {} {
+        label Plot
+        xywh {0 0 100 20}
+      } {
+        MenuItem {} {
+          label Alpha
+          xywh {0 0 100 20} shortcut 0x40073
+        }
+        MenuItem {} {
+          label Light
+          xywh {0 0 100 20} shortcut 0x4006c
+        }
+        MenuItem {} {
+          label Grid
+          xywh {0 0 100 20} shortcut 0x40067 divider
+        }
+        MenuItem {} {
+          label {Restore size}
+          xywh {0 0 100 20} shortcut 0x40020
+        }
+        MenuItem {} {
+          label {Update plot}
+          xywh {0 0 100 20} shortcut 0xffc2
+        }
+        MenuItem {} {
+          label {Adjust size}
+          xywh {0 0 100 20} shortcut 0xffc3
+        }
+        MenuItem {} {
+          label Stop
+          xywh {0 0 100 20} divider
+        }
+        MenuItem {} {
+          label {Copy image}
+          xywh {0 0 100 20} shortcut 0x50067
+        }
+        MenuItem {} {
+          label {Copy click coor.}
+          xywh {0 0 100 20} divider
+        }
+        Submenu {} {
+          label {Add objects}
+          xywh {5 5 100 20}
+        } {
+          MenuItem {} {
+            label Line
+            xywh {5 5 100 20}
+          }
+          MenuItem {} {
+            label Arc
+            xywh {5 5 100 20}
+          }
+          MenuItem {} {
+            label Curve
+            xywh {5 5 100 20}
+          }
+          MenuItem {} {
+            label Rectangle
+            xywh {5 5 100 20}
+          }
+          MenuItem {} {
+            label Rhombus
+            xywh {5 5 100 20}
+          }
+          MenuItem {} {
+            label Ellipse
+            xywh {5 5 100 20}
+          }
+          MenuItem {} {
+            label Polygon
+            xywh {5 5 100 20}
+          }
+          MenuItem {} {
+            label Marker
+            xywh {5 5 100 20}
+          }
+          MenuItem {} {
+            label Text
+            xywh {5 5 100 20}
+          }
+        }
+        Submenu {} {
+          label Selection
+          xywh {0 0 100 20}
+        } {
+          MenuItem {} {
+            label Hide
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label Delete
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {Move up}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {Move down}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {Show hidden}
+            xywh {0 0 100 20} shortcut 0xffc5
+          }
+        }
+        Submenu {} {
+          label {Export as 2D}
+          xywh {0 0 100 20}
+        } {
+          MenuItem {} {
+            label PNG
+            xywh {0 0 100 20} shortcut 0x80070
+          }
+          MenuItem {} {
+            label {solid PNG}
+            xywh {0 0 100 20} shortcut 0x80066
+          }
+          MenuItem {} {
+            label JPEG
+            xywh {0 0 100 20} shortcut 0x8006a
+          }
+          MenuItem {} {
+            label GIF
+            xywh {0 0 100 20} shortcut 0x80067
+          }
+          MenuItem {} {
+            label BMP
+            xywh {0 0 100 20} shortcut 0x80062
+          }
+          MenuItem {} {
+            label {bitmap EPS}
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label {vector EPS}
+            xywh {0 0 100 20} shortcut 0x80065
+          }
+          MenuItem {} {
+            label SVG
+            xywh {0 0 100 20} shortcut 0x80073
+          }
+          MenuItem {} {
+            label LaTeX
+            xywh {0 0 100 20} shortcut 0x40073
+          }
+        }
+        Submenu {} {
+          label {Export as 3D}
+          xywh {0 0 100 20}
+        } {
+          MenuItem {} {
+            label {3D PDF}
+            xywh {0 0 100 20} shortcut 0x80064
+          }
+          MenuItem {} {
+            label PRC
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label OBJ
+            xywh {0 0 100 20} shortcut 0x8006f
+          }
+          MenuItem {} {
+            label STL
+            xywh {0 0 100 20}
+          }
+          MenuItem {} {
+            label XYZ
+            xywh {0 0 100 20}
+          }
+        }
+        Submenu {} {
+          label Transform
+          xywh {0 0 100 20}
+        } {
+          MenuItem {} {
+            label {Move left}
+            xywh {0 0 100 20} shortcut 0x8ff51
+          }
+          MenuItem {} {
+            label {Move up}
+            xywh {0 0 100 20} shortcut 0x8ff52
+          }
+          MenuItem {} {
+            label {Zoom in}
+            xywh {0 0 100 20} shortcut 0x8003d
+          }
+          MenuItem {} {
+            label {Zoom out}
+            xywh {0 0 100 20} shortcut 0x8002d
+          }
+          MenuItem {} {
+            label {Move down}
+            xywh {0 0 100 20} shortcut 0x8ff54
+          }
+          MenuItem {} {
+            label {Move right}
+            xywh {0 0 100 20} shortcut 0x8ff53 divider
+          }
+          MenuItem {} {
+            label {Rotate up}
+            xywh {0 0 100 20} shortcut 0x41ff52
+          }
+          MenuItem {} {
+            label {Rotate down}
+            xywh {0 0 100 20} shortcut 0x9ff54
+          }
+          MenuItem {} {
+            label {Rotate left}
+            xywh {0 0 100 20} shortcut 0x9ff51
+          }
+          MenuItem {} {
+            label {Rotate right}
+            xywh {0 0 100 20} shortcut 0x9ff53
+          }
+        }
+        Submenu {} {
+          label Animation
+          xywh {0 0 100 20}
+        } {
+          MenuItem {} {
+            label {Next slide}
+            xywh {0 0 100 20} shortcut 0x4002e
+          }
+          MenuItem {} {
+            label Slideshow
+            xywh {0 0 100 20} shortcut 0x4ffc2
+          }
+          MenuItem {} {
+            label {Prev. slide}
+            xywh {0 0 100 20} shortcut 0x4002c
+          }
+          MenuItem {} {
+            label {Setup show}
+            xywh {0 0 100 20} shortcut 0x40077
+          }
+        }
+      }
+      Submenu {} {
+        label Setup
+        xywh {0 0 100 20}
+      } {
+        MenuItem {} {
+          label Properties
+          callback {prop_dlg->show();}
+          xywh {0 0 100 20}
+        }
+        MenuItem {} {
+          label {Set arguments}
+          callback {args_dlg->show();}
+          xywh {0 0 100 20}
+        }
+        MenuItem {} {
+          label {Plot setup}
+          xywh {10 10 100 20} shortcut 0x400067 divider
+        }
+        MenuItem {} {
+          label Calculator
+          xywh {0 0 100 20} shortcut 0xffc1
+        }
+        MenuItem {} {
+          label Messages
+          xywh {0 0 100 20} shortcut 0xffbf
+        }
+      }
+      Submenu {} {
+        label Help
+        xywh {0 0 100 20}
+      } {
+        MenuItem {} {
+          label Help
+          xywh {0 0 100 20} shortcut 0xffbe
+        }
+        MenuItem {} {
+          label Hints
+          xywh {0 0 100 20}
+        }
+        MenuItem {} {
+          label About
+          xywh {0 0 100 20}
+        }
+      }
+    }
+    Fl_Output {} {
+      xywh {0 350 680 25}
+    }
+  }
+} 
+
+Function {create_common()} {return_type void
+} {
+  code {make_prop();
+make_args();
+make_find();} {}
+} 
+
+Function {make_args()} {
+  comment {Dialog to set MGL arguments}
+} {
+  Fl_Window args_dlg {
+    label {Set script arguments}
+    xywh {966 713 290 320} type Double hide
+  } {
+    Fl_Input arg1 {
+      label {String for $1}
+      xywh {5 20 135 30} align 5
+    }
+    Fl_Input arg2 {
+      label {String for $2}
+      xywh {150 20 135 30} align 5
+    }
+    Fl_Input arg3 {
+      label {String for $3}
+      xywh {5 75 135 30} align 5
+    }
+    Fl_Input arg4 {
+      label {String for $4}
+      xywh {150 75 135 30} align 5
+    }
+    Fl_Input arg5 {
+      label {String for $5}
+      xywh {5 130 135 30} align 5
+    }
+    Fl_Input arg6 {
+      label {String for $6}
+      xywh {150 130 135 30} align 5
+    }
+    Fl_Input arg7 {
+      label {String for $7}
+      xywh {5 185 135 30} align 5
+    }
+    Fl_Input arg8 {
+      label {String for $8}
+      xywh {150 185 135 30} align 5
+    }
+    Fl_Input arg9 {
+      label {String for $9}
+      xywh {5 240 135 30} align 5
+    }
+    Fl_Input arg0 {
+      label {String for $0}
+      xywh {150 240 135 30} align 5
+    }
+    Fl_Button {} {
+      label Cancel
+      callback {args_dlg->hide();}
+      xywh {60 290 75 25}
+    }
+    Fl_Return_Button {} {
+      label Set
+      callback {parser.AddParam(0,arg0->value());
+parser.AddParam(1,arg1->value());
+parser.AddParam(2,arg2->value());
+parser.AddParam(3,arg3->value());
+parser.AddParam(4,arg4->value());
+parser.AddParam(5,arg5->value());
+parser.AddParam(6,arg6->value());
+parser.AddParam(7,arg7->value());
+parser.AddParam(8,arg8->value());
+parser.AddParam(9,arg9->value());
+args_dlg->hide();}
+      xywh {155 290 75 25}
+    }
+  }
+} 
+
+Function {make_prop()} {
+  comment {Dialog for mgllab properties}
+} {
+  Fl_Window prop_dlg {
+    label Properties
+    xywh {1026 403 340 365} type Double align 80 hide modal
+  } {
+    Fl_Choice fkind {
+      label {Font kind} open
+      xywh {75 10 90 25} down_box BORDER_BOX
+      code0 {fkind->add("Helvetica");}
+      code1 {fkind->add("Courier");}
+      code2 {fkind->add("Times");}
+      code3 {fkind->value(styletable[0].font/4);}
+    } {}
+    Fl_Spinner fsize {
+      label {Font size}
+      xywh {245 10 90 25}
+      code0 {fsize->value(styletable[0].size);}
+    }
+    Fl_File_Input help_path {
+      label {Path for help files}
+      xywh {5 55 305 35} align 5
+      code0 {help_path->value(docdir.c_str());}
+    }
+    Fl_Button {} {
+      label {...}
+      xywh {310 65 25 25}
+    }
+    Fl_File_Input font_path {
+      label {Path for MathGL font (without extension)}
+      xywh {5 110 305 35} align 5
+      code0 {font_path->value(fontname.c_str());}
+    }
+    Fl_Button {} {
+      label {...}
+      xywh {310 120 25 25}
+    }
+    Fl_Check_Button auto_exec_w {
+      label {Execute script after loading}
+      xywh {5 145 330 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button exec_save_w {
+      label {Save file before redrawing}
+      xywh {5 170 330 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button complete_w {
+      label {Enable keywords completition}
+      xywh {5 195 330 25} down_box DOWN_BOX deactivate
+    }
+    Fl_Check_Button highlight_w {
+      label {Highlight current object(s)}
+      xywh {5 220 330 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button mouse_zoom_w {
+      label {Enable mouse wheel for zooming}
+      xywh {5 245 330 25} down_box DOWN_BOX
+    }
+    Fl_Choice lang_w {
+      label {Language for mgllab} open
+      xywh {160 275 175 25} down_box BORDER_BOX
+      code0 {lang_w->add("C.UTF8");}
+      code1 {lang_w->add("ru_RU.utf8");}
+      code2 {lang_w->add("ru_RU.cp1251");}
+    } {}
+    Fl_Choice scheme_w {
+      label {Widget scheme} open
+      xywh {160 305 175 25} down_box BORDER_BOX
+      code0 {scheme_w->add("base");}
+      code1 {scheme_w->add("gtk+");}
+      code2 {scheme_w->add("plastic");}
+      code3 {scheme_w->add("gleam");}
+    } {}
+    Fl_Button {} {
+      label Cancel
+      callback {prop_dlg->hide();}
+      xywh {85 340 75 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      callback {set_style(fkind->value(),fsize->value());
+auto_exec = auto_exec_w->value();
+exec_save = exec_save_w->value();
+highlight = highlight_w->value();
+mouse_zoom = mouse_zoom_w->value();
+docdir = help_path->value();
+fontname = font_path->value();
+mgl_load_font(graph->get_graph(),fontname.c_str(),NULL);
+set_scheme_lang(scheme_w->value(),lang_w->value());
+save_pref();
+prop_dlg->hide();}
+      xywh {180 340 75 25}
+    }
+  }
+} 
+
+Function {make_calc()} {
+  comment Calculator open
+} {
+  Fl_Window {} {
+    label Calculator open
+    xywh {455 679 275 275} type Double hide
+  } {
+    Fl_Input edit {
+      xywh {5 5 265 25}
+    }
+    Fl_Output result {
+      label Result
+      xywh {55 35 120 25}
+    }
+    Fl_Button {} {
+      label {@-> to script}
+      xywh {180 35 90 25}
+    }
+    Fl_Browser prev {
+      label {Previous expressions}
+      xywh {5 80 265 70} align 5
+    }
+    Fl_Button {} {
+      label 7
+      user_data {"7"}
+      xywh {5 155 25 25}
+    }
+    Fl_Button {} {
+      label 8
+      user_data {"8"}
+      xywh {35 155 25 25}
+    }
+    Fl_Button {} {
+      label 9
+      user_data {"9"}
+      xywh {65 155 25 25}
+    }
+    Fl_Button {} {
+      label {+}
+      user_data {"+"}
+      xywh {95 155 25 25}
+    }
+    Fl_Button {} {
+      label pi
+      user_data {"pi"}
+      xywh {125 155 25 25}
+    }
+    Fl_Button {} {
+      label 4
+      user_data {"4"}
+      xywh {5 185 25 25}
+    }
+    Fl_Button {} {
+      label 5
+      user_data {"5"}
+      xywh {35 185 25 25}
+    }
+    Fl_Button {} {
+      label 6
+      user_data {"6"}
+      xywh {65 185 25 25}
+    }
+    Fl_Button {} {
+      label {-}
+      user_data {"-"}
+      xywh {95 185 25 25}
+    }
+    Fl_Button {} {
+      label {^}
+      user_data {"^"}
+      xywh {125 185 25 25}
+    }
+    Fl_Button {} {
+      label 1
+      user_data {"1"}
+      xywh {5 215 25 25}
+    }
+    Fl_Button {} {
+      label 2
+      user_data {"2"}
+      xywh {35 215 25 25}
+    }
+    Fl_Button {} {
+      label 3
+      user_data {"3"}
+      xywh {65 215 25 25}
+    }
+    Fl_Button {} {
+      label {*}
+      user_data {"8"}
+      xywh {95 215 25 25}
+    }
+    Fl_Button {} {
+      label {(}
+      user_data {"("}
+      xywh {125 215 25 25}
+    }
+    Fl_Button {} {
+      label 0
+      user_data {"0"}
+      xywh {5 245 25 25}
+    }
+    Fl_Button {} {
+      label {.}
+      user_data {"."}
+      xywh {35 245 25 25}
+    }
+    Fl_Button {} {
+      label E
+      xywh {65 245 25 25}
+    }
+    Fl_Button {} {
+      label {/}
+      user_data {"/"}
+      xywh {95 245 25 25}
+    }
+    Fl_Button {} {
+      label {)}
+      user_data {")"}
+      xywh {125 245 25 25}
+    }
+    Fl_Group {} {
+      label Function open
+      xywh {155 174 115 95} box DOWN_BOX
+    } {
+      Fl_Choice kind {open
+        xywh {160 179 105 25} down_box BORDER_BOX
+      } {}
+      Fl_Choice func {open
+        xywh {160 209 105 25} down_box BORDER_BOX
+      } {}
+      Fl_Button {} {
+        label {Put function}
+        xywh {160 239 105 25}
+      }
+    }
+  }
+} 
+
+Function {make_option()} {open
+} {
+  Fl_Window {} {
+    label {Add command option(s)} open selected
+    xywh {336 575 570 185} type Double hide modal
+  } {
+    Fl_Input x1 {
+      label {X-range}
+      xywh {65 5 85 25}
+    }
+    Fl_Input x2 {
+      label {-}
+      xywh {160 5 85 25}
+    }
+    Fl_Input y1 {
+      label {Y-range}
+      xywh {65 35 85 25}
+    }
+    Fl_Input y2 {
+      label {-}
+      xywh {160 35 85 25}
+    }
+    Fl_Input z1 {
+      label {Z-range}
+      xywh {65 65 85 25}
+    }
+    Fl_Input z2 {
+      label {-}
+      xywh {160 65 85 25}
+    }
+    Fl_Input c1 {
+      label {C-range}
+      xywh {65 95 85 25} deactivate
+    }
+    Fl_Input c2 {
+      label {-}
+      xywh {160 95 85 25} deactivate
+    }
+    Fl_Input val {
+      label Value
+      xywh {325 5 85 25} labelfont 1
+    }
+    Fl_Input meshnum {
+      label MeshNum
+      xywh {325 35 85 25}
+    }
+    Fl_Input size {
+      label Size
+      xywh {325 65 85 25}
+    }
+    Fl_Choice cut {
+      label Cutting open
+      xywh {325 95 85 25} down_box BORDER_BOX
+      code0 {cut->add("default");}
+      code1 {cut->add("on");}
+      code2 {cut->add("off");}
+    } {}
+    Fl_Input alpha {
+      label Alpha
+      xywh {480 5 85 25}
+    }
+    Fl_Input amb {
+      label Ambient
+      xywh {480 35 85 25}
+    }
+    Fl_Input dif {
+      label Diffuse
+      xywh {480 65 85 25}
+    }
+    Fl_Choice light {
+      label Light open
+      xywh {480 95 85 25} down_box BORDER_BOX
+      code0 {light->add("default");}
+      code1 {light->add("on");}
+      code2 {light->add("off");}
+    } {}
+    Fl_Input legend {
+      label Legend
+      xywh {65 125 500 25}
+    }
+    Fl_Button {} {
+      label Cancel
+      xywh {385 155 85 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      xywh {480 155 85 25}
+    }
+  }
+} 
+
+Function {make_style()} {open
+} {
+  Fl_Window {} {open
+    xywh {385 550 380 380} type Double hide
+  } {
+    Fl_Tabs {} {open
+      xywh {0 5 375 260}
+    } {
+      Fl_Group {} {
+        label {Line style}
+        xywh {0 30 375 235} hide
+      } {
+        Fl_Choice arr1 {
+          label {Arrow at start} open
+          xywh {5 50 110 25} down_box BORDER_BOX align 5
+        } {}
+        Fl_Choice dash {
+          label Dashing open
+          xywh {125 50 110 25} down_box BORDER_BOX align 5
+        } {}
+        Fl_Choice arr2 {
+          label {Arrow at end} open
+          xywh {245 50 110 25} down_box BORDER_BOX align 5
+        } {}
+        Fl_Choice col {
+          label Color open
+          xywh {125 80 110 25} down_box BORDER_BOX
+        } {}
+        Fl_Spinner satur {
+          label {Satur.}
+          xywh {285 80 40 25}
+          code0 {o->bounds(1,9); o->value(5);}
+        }
+        Fl_Choice mark {
+          label Marks open
+          xywh {125 110 110 25} down_box BORDER_BOX
+        } {}
+        Fl_Spinner width {
+          label Width
+          xywh {125 140 110 25}
+          code0 {o->bounds(1,9); o->value(1);}
+        }
+        Fl_Button {} {
+          label {Manual dashing}
+          xywh {10 185 20 20} align 5
+        }
+        Fl_Button {} {
+          xywh {30 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {50 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {70 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {90 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {110 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {130 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {150 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {170 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {190 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {210 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {230 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {250 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {270 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {290 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {310 185 20 20}
+        }
+      }
+      Fl_Group {} {
+        label {Color scheme}
+        xywh {0 30 375 235} hide
+      } {
+        Fl_Choice c1 {
+          label {Color order} open
+          xywh {5 50 95 25} down_box BORDER_BOX align 5
+        } {}
+        Fl_Spinner s1 {
+          label {Satur.}
+          xywh {105 50 40 25} align 1
+          code0 {o->bounds(1,9); o->value(5);}
+        }
+        Fl_Choice c2 {open
+          xywh {5 80 95 25} down_box BORDER_BOX
+        } {}
+        Fl_Spinner s2 {
+          xywh {105 80 40 25}
+          code0 {o->bounds(1,9); o->value(5);}
+        }
+        Fl_Choice c3 {open
+          xywh {5 110 95 25} down_box BORDER_BOX
+        } {}
+        Fl_Spinner s3 {
+          xywh {105 110 40 25}
+          code0 {o->bounds(1,9); o->value(5);}
+        }
+        Fl_Choice c4 {open
+          xywh {5 140 95 25} down_box BORDER_BOX
+        } {}
+        Fl_Spinner s4 {
+          xywh {105 140 40 25}
+          code0 {o->bounds(1,9); o->value(5);}
+        }
+        Fl_Choice c5 {open
+          xywh {5 170 95 25} down_box BORDER_BOX
+        } {}
+        Fl_Spinner s5 {
+          xywh {105 170 40 25}
+          code0 {o->bounds(1,9); o->value(5);}
+        }
+        Fl_Choice c6 {open
+          xywh {5 200 95 25} down_box BORDER_BOX
+        } {}
+        Fl_Spinner s6 {
+          xywh {105 200 40 25}
+          code0 {o->bounds(1,9); o->value(5);}
+        }
+        Fl_Choice c7 {open
+          xywh {5 230 95 25} down_box BORDER_BOX
+        } {}
+        Fl_Spinner s7 {
+          xywh {105 230 40 25}
+          code0 {o->bounds(1,9); o->value(5);}
+        }
+        Fl_Choice axial {
+          label {Axial direction} open
+          xywh {275 50 95 25} down_box BORDER_BOX
+          code0 {axial->add("none");}
+          code1 {axial->add("x");}
+          code2 {axial->add("y");}
+          code3 {axial->add("z");}
+        } {}
+        Fl_Choice contt {
+          label {Text on contours} open
+          xywh {275 80 95 25} down_box BORDER_BOX
+          code0 {contt->add("none");}
+          code1 {contt->add("under");}
+          code2 {contt->add("above");}
+        } {}
+        Fl_Choice mask {
+          label {Mask for bitmap} open
+          xywh {275 110 95 25} down_box BORDER_BOX
+        } {}
+        Fl_Choice angle {
+          label {Mask rotation} open
+          xywh {275 140 95 25} down_box BORDER_BOX
+          code0 {angle->add("none");}
+          code1 {angle->add("+45");}
+          code2 {angle->add("perp");}
+          code3 {angle->add("-45");}
+        } {}
+        Fl_Spinner msize {
+          label {Mask size}
+          xywh {275 170 95 25}
+        }
+        Fl_Input alpha {
+          label Transparency
+          xywh {275 200 95 25}
+        }
+        Fl_Check_Button wire {
+          label {Wire or mesh plot}
+          xywh {220 230 150 25} down_box DOWN_BOX
+        }
+      }
+      Fl_Group {} {
+        label {Text style}
+        xywh {0 30 375 235} hide
+      } {
+        Fl_Check_Button bold {
+          label {Bold style}
+          xywh {5 40 150 25} down_box DOWN_BOX
+        }
+        Fl_Check_Button ital {
+          label {Italic style}
+          xywh {5 65 150 25} down_box DOWN_BOX
+        }
+        Fl_Check_Button twire {
+          label {Wire style}
+          xywh {5 90 150 25} down_box DOWN_BOX
+        }
+        Fl_Check_Button uline {
+          label Underline
+          xywh {5 115 150 25} down_box DOWN_BOX
+        }
+        Fl_Check_Button oline {
+          label Overline
+          xywh {5 140 150 25} down_box DOWN_BOX
+        }
+        Fl_Check_Button tsch {
+          label {Use color scheme}
+          xywh {5 165 150 25} down_box DOWN_BOX
+        }
+        Fl_Choice tcol {
+          label {Text color} open
+          xywh {260 45 95 25} down_box BORDER_BOX
+        } {}
+        Fl_Choice align {
+          label {Text align} open
+          xywh {260 80 95 25} down_box BORDER_BOX
+          code0 {align->add("left");}
+          code1 {align->add("center");}
+          code2 {align->add("right");}
+          code3 {align->value(1);}
+        } {}
+        Fl_Choice align {
+          label {Vertical align} open
+          xywh {260 115 95 25} down_box BORDER_BOX
+          code0 {align->add("default");}
+          code1 {align->add("center");}
+          code2 {align->add("right");}
+        } {}
+      }
+      Fl_Group {} {
+        label {Manual mask}
+        xywh {0 30 375 235}
+      } {
+        Fl_Button {} {
+          xywh {15 45 20 20}
+        }
+        Fl_Button {} {
+          xywh {35 45 20 20}
+        }
+        Fl_Button {} {
+          xywh {55 45 20 20}
+        }
+        Fl_Button {} {
+          xywh {75 45 20 20}
+        }
+        Fl_Button {} {
+          xywh {95 45 20 20}
+        }
+        Fl_Button {} {
+          xywh {115 45 20 20}
+        }
+        Fl_Button {} {
+          xywh {135 45 20 20}
+        }
+        Fl_Button {} {
+          xywh {155 45 20 20}
+        }
+        Fl_Button {} {
+          xywh {15 65 20 20}
+        }
+        Fl_Button {} {
+          xywh {35 65 20 20}
+        }
+        Fl_Button {} {
+          xywh {55 65 20 20}
+        }
+        Fl_Button {} {
+          xywh {75 65 20 20}
+        }
+        Fl_Button {} {
+          xywh {95 65 20 20}
+        }
+        Fl_Button {} {
+          xywh {115 65 20 20}
+        }
+        Fl_Button {} {
+          xywh {135 65 20 20}
+        }
+        Fl_Button {} {
+          xywh {155 65 20 20}
+        }
+        Fl_Button {} {
+          xywh {15 85 20 20}
+        }
+        Fl_Button {} {
+          xywh {35 85 20 20}
+        }
+        Fl_Button {} {
+          xywh {55 85 20 20}
+        }
+        Fl_Button {} {
+          xywh {75 85 20 20}
+        }
+        Fl_Button {} {
+          xywh {95 85 20 20}
+        }
+        Fl_Button {} {
+          xywh {115 85 20 20}
+        }
+        Fl_Button {} {
+          xywh {135 85 20 20}
+        }
+        Fl_Button {} {
+          xywh {155 85 20 20}
+        }
+        Fl_Button {} {
+          xywh {15 105 20 20}
+        }
+        Fl_Button {} {
+          xywh {35 105 20 20}
+        }
+        Fl_Button {} {
+          xywh {55 105 20 20}
+        }
+        Fl_Button {} {
+          xywh {75 105 20 20}
+        }
+        Fl_Button {} {
+          xywh {95 105 20 20}
+        }
+        Fl_Button {} {
+          xywh {115 105 20 20}
+        }
+        Fl_Button {} {
+          xywh {135 105 20 20}
+        }
+        Fl_Button {} {
+          xywh {155 105 20 20}
+        }
+        Fl_Button {} {
+          xywh {15 125 20 20}
+        }
+        Fl_Button {} {
+          xywh {35 125 20 20}
+        }
+        Fl_Button {} {
+          xywh {55 125 20 20}
+        }
+        Fl_Button {} {
+          xywh {75 125 20 20}
+        }
+        Fl_Button {} {
+          xywh {95 125 20 20}
+        }
+        Fl_Button {} {
+          xywh {115 125 20 20}
+        }
+        Fl_Button {} {
+          xywh {135 125 20 20}
+        }
+        Fl_Button {} {
+          xywh {155 125 20 20}
+        }
+        Fl_Button {} {
+          xywh {15 145 20 20}
+        }
+        Fl_Button {} {
+          xywh {35 145 20 20}
+        }
+        Fl_Button {} {
+          xywh {55 145 20 20}
+        }
+        Fl_Button {} {
+          xywh {75 145 20 20}
+        }
+        Fl_Button {} {
+          xywh {95 145 20 20}
+        }
+        Fl_Button {} {
+          xywh {115 145 20 20}
+        }
+        Fl_Button {} {
+          xywh {135 145 20 20}
+        }
+        Fl_Button {} {
+          xywh {155 145 20 20}
+        }
+        Fl_Button {} {
+          xywh {15 165 20 20}
+        }
+        Fl_Button {} {
+          xywh {35 165 20 20}
+        }
+        Fl_Button {} {
+          xywh {55 165 20 20}
+        }
+        Fl_Button {} {
+          xywh {75 165 20 20}
+        }
+        Fl_Button {} {
+          xywh {95 165 20 20}
+        }
+        Fl_Button {} {
+          xywh {115 165 20 20}
+        }
+        Fl_Button {} {
+          xywh {135 165 20 20}
+        }
+        Fl_Button {} {
+          xywh {155 165 20 20}
+        }
+        Fl_Button {} {
+          xywh {15 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {35 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {55 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {75 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {95 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {115 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {135 185 20 20}
+        }
+        Fl_Button {} {
+          xywh {155 185 20 20}
+        }
+      }
+    }
+    Fl_Output {} {
+      label {Resulting string}
+      xywh {5 285 370 25} align 5
+    }
+    Fl_Button {} {
+      label Cancel
+      xywh {300 320 75 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      xywh {300 350 75 25}
+    }
+    Fl_Box {} {
+      label Preview
+      xywh {60 315 230 65} box ENGRAVED_BOX align 4
+    }
+  }
+} 
+
+Function {make_datsel()} {open
+} {
+  Fl_Window {} {
+    label {Select data argument}
+    xywh {440 689 355 255} type Double hide modal
+  } {
+    Fl_Choice name {
+      label {Data name} open
+      xywh {105 5 145 25} down_box BORDER_BOX
+    } {}
+    Fl_Choice oper {
+      label Operation open
+      xywh {105 155 130 25} down_box BORDER_BOX
+      code0 {oper->add("max"); oper->add("min");}
+      code1 {oper->add("sum"); oper->add("trace");}
+      code2 {oper->add("pulse");}
+    } {}
+    Fl_Choice dir {
+      label along open
+      xywh {285 155 65 25} down_box BORDER_BOX
+      code0 {dir->add("none");}
+      code1 {dir->add("x"); dir->add("y"); dir->add("z");}
+      code2 {dir->add("xy"); dir->add("xz"); dir->add("yz");}
+    } {}
+    Fl_Spinner x1 {
+      label {X-slice from}
+      xywh {105 35 60 25}
+    }
+    Fl_Spinner x2 {
+      label to
+      xywh {190 35 60 25}
+    }
+    Fl_Spinner y1 {
+      label {Y-slice from}
+      xywh {105 65 60 25}
+    }
+    Fl_Spinner y2 {
+      label to
+      xywh {190 65 60 25}
+    }
+    Fl_Spinner z1 {
+      label {Z-slice from}
+      xywh {105 95 60 25}
+    }
+    Fl_Spinner z2 {
+      label to
+      xywh {190 95 60 25}
+    }
+    Fl_Output res {
+      label Result
+      xywh {60 190 290 25}
+    }
+    Fl_Button {} {
+      label Cancel
+      xywh {190 225 75 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      xywh {275 225 75 25}
+    }
+    Fl_Input clmn {
+      label {Column expr}
+      xywh {105 125 245 25}
+    }
+  }
+} 
+
+Function {make_dirsel()} {open
+} {
+  Fl_Window {} {
+    label {Select direction}
+    xywh {454 309 220 85} type Double hide modal
+  } {
+    Fl_Choice dir {
+      label Direction open
+      xywh {80 10 135 25} down_box BORDER_BOX
+      code0 {dir->add("default"); dir->add("xyz");}
+      code1 {dir->add("x"); dir->add("y"); dir->add("z");}
+      code2 {dir->add("xy"); dir->add("xz"); dir->add("yz");}
+    } {}
+    Fl_Button {} {
+      label Cancel
+      xywh {55 50 75 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      xywh {140 50 75 25}
+    }
+  }
+} 
+
+Function {make_newcmd()} {open
+} {
+  Fl_Window {} {
+    label {New command} open
+    xywh {0 438 780 330} type Double modal visible
+  } {
+    Fl_Choice kind {
+      label Kind open
+      xywh {80 5 270 25} down_box BORDER_BOX
+    } {}
+    Fl_Choice cmd {
+      label Command open
+      xywh {80 35 270 25} down_box BORDER_BOX
+    } {}
+    Fl_Choice var {
+      label Variant open
+      xywh {80 95 270 25} down_box BORDER_BOX
+    } {}
+    Fl_Group desc {
+      label Description open
+      xywh {0 65 350 25} box ENGRAVED_BOX labelsize 12 align 0
+    } {}
+    Fl_Browser args {
+      label Arguments
+      xywh {5 140 345 95} align 5
+    }
+    Fl_Output res {
+      label Result
+      xywh {60 270 290 25}
+    }
+    Fl_Button {} {
+      label {Add command options}
+      xywh {160 240 190 25}
+    }
+    Fl_Button {} {
+      label Cancel
+      xywh {190 300 75 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      xywh {275 300 75 25}
+    }
+    Fl_Help_View help {
+      xywh {360 5 415 320} labelsize 12
+    }
+  }
+} 
+
+Function {make_inplot()} {open
+} {
+  Fl_Window {} {
+    label {Add inplot} open
+    xywh {305 453 715 315} type Double modal visible
+  } {
+    Fl_Round_Button k1 {
+      label SubPlot
+      xywh {5 5 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k2 {
+      label MultiPlot
+      xywh {5 35 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k1 {
+      label GridPlot
+      xywh {5 65 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k1 {
+      label ColumnPlot
+      xywh {5 95 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k1 {
+      label StickPlot
+      xywh {5 125 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k1 {
+      label InPlot
+      xywh {5 155 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Spinner {} {
+      label nx
+      xywh {145 5 55 25}
+    }
+    Fl_Spinner {} {
+      label ny
+      xywh {230 5 55 25}
+    }
+    Fl_Spinner {} {
+      label ind
+      xywh {315 5 55 25}
+    }
+    Fl_Counter {} {
+      label dx
+      xywh {400 5 80 25} align 4
+    }
+    Fl_Counter {} {
+      label dy
+      xywh {505 5 80 25} align 4
+    }
+    Fl_Spinner {} {
+      label nx
+      xywh {145 35 55 25}
+    }
+    Fl_Spinner {} {
+      label ny
+      xywh {230 35 55 25}
+    }
+    Fl_Spinner {} {
+      label ind
+      xywh {315 35 55 25}
+    }
+    Fl_Counter {} {
+      label dx
+      xywh {400 35 80 25} align 4
+    }
+    Fl_Counter {} {
+      label dy
+      xywh {505 35 80 25} align 4
+    }
+    Fl_Spinner {} {
+      label nx
+      xywh {145 65 55 25}
+    }
+    Fl_Spinner {} {
+      label ny
+      xywh {230 65 55 25}
+    }
+    Fl_Spinner {} {
+      label ind
+      xywh {315 65 55 25}
+    }
+    Fl_Counter {} {
+      label d
+      xywh {400 65 80 25} align 4
+    }
+    Fl_Spinner {} {
+      label nx
+      xywh {145 95 55 25}
+    }
+    Fl_Spinner {} {
+      label ind
+      xywh {315 95 55 25}
+    }
+    Fl_Counter {} {
+      label d
+      xywh {400 95 80 25} align 4
+    }
+    Fl_Spinner {} {
+      label nx
+      xywh {145 125 55 25}
+    }
+    Fl_Spinner {} {
+      label ind
+      xywh {315 125 55 25}
+    }
+    Fl_Input {} {
+      label {x:}
+      xywh {145 155 60 25}
+    }
+    Fl_Input {} {
+      label {...}
+      xywh {225 155 60 25}
+    }
+    Fl_Input {} {
+      label {y:}
+      xywh {315 155 60 25}
+    }
+    Fl_Input {} {
+      label {...}
+      xywh {400 155 60 25}
+    }
+    Fl_Spinner {} {
+      label {Rotate on}
+      xywh {75 190 60 25}
+    }
+    Fl_Spinner {} {
+      label and
+      xywh {170 190 60 25}
+    }
+    Fl_Input {} {
+      label {Aspect x/z}
+      xywh {315 190 60 25}
+    }
+    Fl_Input {} {
+      label {y/z}
+      xywh {400 190 60 25}
+    }
+    Fl_Box {} {
+      label {Reserve at:}
+      xywh {0 225 90 25}
+    }
+    Fl_Check_Button {} {
+      label left
+      xywh {90 225 75 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button {} {
+      label bottom
+      xywh {145 225 75 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button {} {
+      label top
+      xywh {225 225 75 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button {} {
+      label right
+      xywh {285 225 75 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button {} {
+      label {whole area}
+      xywh {360 225 100 25} down_box DOWN_BOX
+    }
+    Fl_Input {} {
+      label Title
+      xywh {35 255 360 25}
+    }
+    Fl_Button {} {
+      label Style
+      xywh {400 255 60 25}
+    }
+    Fl_Output {} {
+      label Result
+      xywh {50 285 410 25}
+    }
+    Fl_Box {} {
+      xywh {470 130 240 180} box ENGRAVED_BOX
+    }
+    Fl_Button {} {
+      label Cancel
+      xywh {545 95 75 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      xywh {630 95 75 25}
+    }
+  }
+} 
+
+Function {make_find()} {
+  comment {Dialog to Find/Replace text} open
+} {
+  Fl_Window find_dlg {
+    label {Find/Replace} open
+    xywh {906 51 355 125} type Double hide modal
+  } {
+    Fl_Input find_w {
+      label {Find what:}
+      xywh {90 10 180 25}
+    }
+    Fl_Button {} {
+      label Find
+      xywh {275 10 75 25}
+    }
+    Fl_Input replace_w {
+      label {Replace by:}
+      xywh {90 40 180 25}
+    }
+    Fl_Button {} {
+      label Replace
+      xywh {275 40 75 25}
+    }
+    Fl_Check_Button case_w {
+      label {Match case}
+      xywh {5 70 265 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button sback_w {
+      label {Search backward}
+      xywh {5 95 265 25} down_box DOWN_BOX
+    }
+    Fl_Button {} {
+      label Close
+      callback {find_dlg->hide();}
+      xywh {275 70 75 25}
+    }
+  }
+} 

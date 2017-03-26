@@ -21,7 +21,7 @@
 #include <FL/Fl_Multiline_Input.H>
 #include <FL/Fl_Spinner.H>
 #include <locale.h>
-#include "udav.h"
+#include "mgllab.h"
 //-----------------------------------------------------------------------------
 extern int auto_exec, plastic_scheme, internal_font;
 //-----------------------------------------------------------------------------
@@ -82,8 +82,7 @@ void SetupDlg::CreateGen()
 	axial = new Fl_Choice(360, 285, 75, 25, mgl_gettext("Axial Dir"));	axial->align(FL_ALIGN_TOP);
 	axial->add("x");	axial->add("y");	axial->add("z");
 	font = new Fl_Input(20, 330, 50, 25, mgl_gettext("Font"));			font->align(FL_ALIGN_TOP);
-	{ Fl_Button* o = new Fl_Button(70, 330, 25, 25, "..");	o->callback(font_cb, font);
-		o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);	}
+	{ Fl_Button* o = new Fl_Button(70, 330, 25, 25, "..");	o->callback(font_cb, font);	}
 	size = new Fl_Input(105, 330, 75, 25, mgl_gettext("Font Size"));	size->align(FL_ALIGN_TOP);
 	alpha = new Fl_Check_Button(190, 330, 75, 25, mgl_gettext("Alpha on"));
 	light = new Fl_Check_Button(275, 330, 75, 25, mgl_gettext("Light on"));
@@ -112,7 +111,7 @@ void SetupDlg::CreateDlg()
 {
 	OK = false;
 	wnd = new Fl_Window(490, 406, mgl_gettext("Setup graphics"));
-	Fl_Tabs* t = new Fl_Tabs(0, 0, 490, 360);	t->box(UDAV_UP_BOX);
+	Fl_Tabs* t = new Fl_Tabs(0, 0, 490, 360);
 
 	Fl_Group *g = new Fl_Group(0, 25, 485, 330, mgl_gettext("General"));
 	new Fl_Box(105, 30, 75, 20, mgl_gettext("X axis"));
@@ -150,13 +149,10 @@ void SetupDlg::CreateDlg()
 	templ = new Fl_Input(120, 370, 110, 25, mgl_gettext("Template name"));
 	templ->value("template.mgl");
 	o = new Fl_Button(230, 370, 80, 25, mgl_gettext("Save"));	o->callback(setup_sav_cb, wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o->tooltip(mgl_gettext("Save settings to file template.mgl.\nYou may use it later by 'call template.mgl'"));
 
 	o = new Fl_Button(315, 370, 80, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb, wnd);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	o = new Fl_Return_Button(400, 370, 80, 25, mgl_gettext("OK"));	o->callback(setup_dlg_cb, this);
-	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
@@ -293,130 +289,5 @@ void setup_cb(Fl_Widget *, void *d)
 	s->wnd->show();
 	while(s->wnd->shown())	Fl::wait();
 	if(s->OK)	((ScriptWindow *)d)->graph->update();
-}
-//-----------------------------------------------------------------------------
-Fl_Menu_Item colors[] = {
-	{"-----", 0,0,0,0,0,0,0, 0},	//
-	{("white"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},	//w
-	{("blue"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,255)},			//b
-	{("lime"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,0)},			//g
-	{("red"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,0)},			//r
-	{("cyan"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,255)},		//c
-	{("magenta"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,255)},	//m
-	{("yellow"), 0,0,0,0,0,0,0, fl_rgb_color(255,255,0)},		//y
-	{("springgreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,127)},//l
-	{("lawngreen"), 0,0,0,0,0,0,0, fl_rgb_color(127,255,0)},	//e
-	{("skyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,255)},	//n
-	{("blueviolet"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,255)},	//u
-	{("orange"), 0,0,0,0,0,0,0, fl_rgb_color(255,127,0)},		//q
-	{("deeppink"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,127)},	//p
-	{("gray"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,127)},		//h
-
-	{("black"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},	//k
-	{("lightgray"), 0,0,0,0,0,0,0, fl_rgb_color(179,179,179)},	//W
-	{("navy"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,127)},	//B
-	{("green"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,0)},	//G
-	{("maroon"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,0)},	//R
-	{("teal"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,127)},	//C
-	{("purple"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,127)},	//M
-	{("olive"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,0)},	//Y
-	{("seagreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,77)},	//L
-	{("darklawn"), 0,0,0,0,0,0,0, fl_rgb_color(77,127,0)},	//E
-	{("darkskyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,77,127)},	//N
-	{("indigo"), 0,0,0,0,0,0,0, fl_rgb_color(77,0,127)},	//U
-	{("brown"), 0,0,0,0,0,0,0, fl_rgb_color(127,77,0)},	//Q
-	{("darkpink"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,77)},	//P
-	{("darkgray"), 0,0,0,0,0,0,0, fl_rgb_color(77,77,77)},	//H
-{0, 0,0,0,0,0,0,0, 0}};
-//-----------------------------------------------------------------------------
-struct PropDlg
-{
-	Fl_Window *wnd;
-	Fl_MGL *graph;
-
-	Fl_Input *path, *locale, *font, *fpath;
-	Fl_Check_Button *plast, *aexec, *ifont;
-	PropDlg()	{	memset(this,0,sizeof(PropDlg));	create_dlg();	}
-	~PropDlg()	{	delete wnd;	}
-	void create_dlg();
-	void finish();
-	void init();
-} prop_dlg;
-//-----------------------------------------------------------------------------
-void PropDlg::init()
-{
-	int a, p;
-	char *buf;
-	pref.get("plastic_scheme",p,1);	plast->value(p);
-	pref.get("auto_exec",a,1);		aexec->value(a);
-	pref.get("internal_font",a,0);	ifont->value(a);
-	path->value(docdir);
-	pref.get("font_dir",buf,"");	fpath->value(buf);	free(buf);
-	pref.get("font_name",buf,"");	font->value(buf);	free(buf);
-	pref.get("locale",buf,"ru_RU.cp1251");	locale->value(buf);	free(buf);
-}
-//-----------------------------------------------------------------------------
-void PropDlg::finish()
-{
-	int a, p;
-	p = plast->value();
-	if(p!=plastic_scheme)
-	{
-		plastic_scheme = p;
-		pref.set("plastic_scheme",p);
-		Fl::scheme(p?"plastic":"none");
-	}
-	a = aexec->value();
-	if(a!=auto_exec)
-	{
-		auto_exec = a;
-		pref.set("auto_exec",a);
-	}
-	a = ifont->value();
-	if(a!=internal_font)
-	{
-		internal_font = a;
-		pref.set("internal_font",a);
-	}
-	if(path->value()[0])	pref.set("help_dir",path->value());
-	if(locale->value()[0])
-	{
-		pref.set("locale", locale->value());
-		setlocale(LC_CTYPE, locale->value());
-	}
-	pref.set("font_dir",fpath->value());
-	pref.set("font_name",font->value());
-	if(graph)	mgl_load_font(graph->FMGL->get_graph(), font->value(), fpath->value());
-}
-//-----------------------------------------------------------------------------
-void prop_dlg_cb(Fl_Widget *, void *v)
-{	prop_dlg.finish();	((Fl_Window *)v)->hide();	}
-//-----------------------------------------------------------------------------
-void PropDlg::create_dlg()
-{
-	wnd = new Fl_Double_Window(320, 300, mgl_gettext("UDAV settings"));
-	path = new Fl_Input(10, 25, 305, 25, mgl_gettext("Path for help files"));	path->align(FL_ALIGN_TOP_LEFT);
-
-	font = new Fl_Input(10, 75, 305, 25, mgl_gettext("Font typeface"));	font->align(FL_ALIGN_TOP_LEFT);
-	fpath = new Fl_Input(10, 125, 305, 25, mgl_gettext("Path for font files"));	fpath->align(FL_ALIGN_TOP_LEFT);
-	locale = new Fl_Input(10, 175, 305, 25, mgl_gettext("Select locale"));	locale->align(FL_ALIGN_TOP_LEFT);
-
-	plast = new Fl_Check_Button(10, 210, 210, 25, mgl_gettext("Use plastic scheme"));
-	aexec = new Fl_Check_Button(10, 240, 210, 25, mgl_gettext("Execute after script loading"));
-	ifont = new Fl_Check_Button(10, 270, 210, 25, mgl_gettext("Use only internal font"));
-
-	Fl_Button *o;
-	o = new Fl_Button(240, 210, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o = new Fl_Return_Button(240, 240, 75, 25, mgl_gettext("OK"));	o->callback(prop_dlg_cb,wnd);
-	wnd->end();
-}
-//-----------------------------------------------------------------------------
-void settings_cb(Fl_Widget *, void *v)
-{
-	PropDlg *s = &prop_dlg;
-	s->graph = ((ScriptWindow *)v)->graph;
-	s->init();
-	s->wnd->set_modal();
-	s->wnd->show();
 }
 //-----------------------------------------------------------------------------
