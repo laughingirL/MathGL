@@ -204,7 +204,7 @@ MGL_DEPENDENT_OPTION(enable-lua "Enable Lua (v.5.1) interface" OFF "NOT enable-l
 MGL_DEPENDENT_OPTION(enable-octave "Enable octave interface" OFF "NOT enable-lgpl" ON "NOT enable-all-swig" ON)
 MGL_DEPENDENT_OPTION(enable-octave-install "Octave interface will install for all users" ON "NOT enable-lgpl" ON "NOT enable-all-swig" ON)
 
-include_directories( ${MathGL_SOURCE_DIR}/include ${MathGL_BINARY_DIR}/include)
+include_directories( ${MathGL2_SOURCE_DIR}/include ${MathGL2_BINARY_DIR}/include)
 set(MGL_INCLUDE_PATH "${CMAKE_INSTALL_PREFIX}/include/mgl2")
 set(MGL_CGI_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl" CACHE STRING "Set CGI install directory")
 set(MGL_DEF_FONT "STIX" CACHE STRING "Set default font name")
@@ -303,7 +303,7 @@ CHECK_CXX_SOURCE_COMPILES(
 int main(int argc, char *args[]) {
 int ch = getopt(argc, args, \"1:2:3:4:5:6:7:8:9:hno:L:C:A:s:S:q:\"); return 0; }" MGL_HAVE_GETOPT)
 if(NOT MGL_HAVE_GETOPT)
-	include_directories(${MathGL_SOURCE_DIR}/addons/getopt)
+	include_directories(${MathGL2_SOURCE_DIR}/addons/getopt)
 	set(getopt_lib-static getopt-static)
 endif(NOT MGL_HAVE_GETOPT)
 
@@ -681,12 +681,12 @@ endif(enable-mgltex)
 #export(TARGETS MathGLTargets FILE "${PROJECT_BINARY_DIR}/MathGLTargets.cmake")
 export(PACKAGE FooBar)
 
-configure_file(MathGLConfig.cmake.in "${MathGL_BINARY_DIR}/MathGLConfig.cmake" @ONLY)
-configure_file(MathGLConfigVersion.cmake.in "${MathGL_BINARY_DIR}/MathGLConfigVersion.cmake" @ONLY)
+configure_file(MathGLConfig.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfig.cmake" @ONLY)
+configure_file(MathGLConfigVersion.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake" @ONLY)
 
 install(FILES
-  "${MathGL_BINARY_DIR}/MathGLConfig.cmake"
-  "${MathGL_BINARY_DIR}/MathGLConfigVersion.cmake"
+  "${MathGL2_BINARY_DIR}/MathGLConfig.cmake"
+  "${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake"
   DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
 
 install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)

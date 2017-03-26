@@ -1,4 +1,4 @@
-configure_file(${MathGL_SOURCE_DIR}/texinfo/version.texi.in ${MathGL_BINARY_DIR}/texinfo/version.texi)
+configure_file(${MathGL2_SOURCE_DIR}/texinfo/version.texi.in ${MathGL2_BINARY_DIR}/texinfo/version.texi)
 
 set(MGL_EXTRA light pendelta)
 set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
@@ -80,8 +80,8 @@ foreach(SAMPLE ${MGL_EXTRA})
 		WORKING_DIRECTORY ${MGL_OUT}/small )
 endforeach(SAMPLE)
 
-set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi formats_en.texi udav_en.texi symbols_en.texi core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi ${MathGL_BINARY_DIR}/texinfo/version.texi time.texi time_big.texi )
-set(list_texi_files_ru overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi formats_ru.texi udav_ru.texi symbols_ru.texi core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi ${MathGL_BINARY_DIR}/texinfo/version.texi time.texi time_big.texi )
+set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi formats_en.texi udav_en.texi symbols_en.texi core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi ${MathGL2_BINARY_DIR}/texinfo/version.texi time.texi time_big.texi )
+set(list_texi_files_ru overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi formats_ru.texi udav_ru.texi symbols_ru.texi core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi ${MathGL2_BINARY_DIR}/texinfo/version.texi time.texi time_big.texi )
 
 add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en.info
 	COMMAND ${findmi} ${MGL_TEX}/mathgl_en.texi

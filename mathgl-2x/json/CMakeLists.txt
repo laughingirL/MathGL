@@ -42,7 +42,7 @@ if(enable-json-sample)
 set(json_src Backend.cpp MainWindow.cpp MainWindow.ui)
 set(json_moc_hdr Backend.hpp MainWindow.hpp)
 
-include_directories(${MathGL_BINARY_DIR}/json)
+include_directories(${MathGL2_BINARY_DIR}/json)
 add_executable(MglForJsTestBench ${json_src} ${json_moc_hdr})
 if(enable-qt5)
 	target_compile_definitions(MglForJsTestBench PUBLIC MGL_USE_QT5 ${mgl_qt_def})

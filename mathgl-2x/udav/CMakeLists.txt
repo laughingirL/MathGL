@@ -1,6 +1,6 @@
 if(QT_ENABLED)
 
-configure_file(${MathGL_SOURCE_DIR}/udav/mgl.xml.in ${MathGL_BINARY_DIR}/udav/mgl.xml)
+configure_file(${MathGL2_SOURCE_DIR}/udav/mgl.xml.in ${MathGL2_BINARY_DIR}/udav/mgl.xml)
 
 #set(mgl_wnd_src window.cpp)
 set(udav_src anim_dlg.cpp find_dlg.cpp mem_pnl.cpp prop_dlg.cpp textedit.cpp args_dlg.cpp
