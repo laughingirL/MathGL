@@ -703,7 +703,8 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 
 	g->end();	g->resizable(0);
 
-	scroll = new Fl_Scroll(30, 30, 800, 600);
+	scroll = new Fl_Scroll(30, 30, ww-30, hh-30);
+//	scroll = new Fl_Scroll(30, 30, 800, 600);
 	//scroll->begin();
 	FMGL = new Fl_MathGL(30, 30, 800, 600);
 	FMGL->tet_val = tet;

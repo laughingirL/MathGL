@@ -98,12 +98,13 @@ void load_pref(ScriptWindow *w)
 	pref.get("fname3",s,"");	if(s)	{	lastfiles[2]=s;	free(s);	}
 	pref.get("fname4",s,"");	if(s)	{	lastfiles[3]=s;	free(s);	}
 	pref.get("fname5",s,"");	if(s)	{	lastfiles[4]=s;	free(s);	}
+	link_cb(NULL, w);
 }
 //-----------------------------------------------------------------------------
 void set_title(Fl_Window* w)
 {
-	std::string title;
-	if (filename.empty()) title="Untitled";
+	static std::string title;
+	if (filename.empty()) title=mgl_gettext("Untitled");
 	else
 	{
 		size_t sep = filename.find_last_of('/');
@@ -241,7 +242,7 @@ Fl_Menu_Item menuitems[] = {
 		{"Find|Replace", FL_CTRL+'f',  0},
 		{"Find next", FL_F+3,  find2_cb, 0, FL_MENU_DIVIDER},
 		{"Insert", 0,  0, 0, FL_SUBMENU},
-			{"File path", FL_META+'p',  ins_path_cb},
+			{"File path", FL_META+'p', ins_path_cb},
 			{"Folder path", 0,  ins_fname_cb},
 			// TODO{"Command", FL_META+'c',  0},
 			// TODO{"Inplot", FL_META+'i',  0},
@@ -262,7 +263,7 @@ Fl_Menu_Item menuitems[] = {
 	{"Help", 0,  0, 0, FL_SUBMENU},
 		{"Help", FL_F+1,  help_cb},
 		// TODO{"Hints", 0,  0},
-		// TODO{"About", 0,  0},
+		{"About", 0,  about_cb},
 		{0},
 	{0}
 };
@@ -278,7 +279,8 @@ ScriptWindow *new_view()
 	w->begin();
 	w->menu = new Fl_Menu_Bar(0, 0, 930, 30);
 	w->menu->copy(menuitems, w);
-
+	w->label(mgl_gettext("Untitled - mgllab"));
+	
 	Fl_Tile *t = new Fl_Tile(0,30,930,455);
 	tt = new Fl_Tabs(0,30,300,455,0);	w->ltab = tt;
 	gg = new Fl_Group(0,30,300,430);	gg->label(mgl_gettext("Script"));
@@ -287,10 +289,10 @@ ScriptWindow *new_view()
 
 	tt = new Fl_Tabs(300,30,630,455,0);	w->rtab = tt;
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Canvas"));
-	w->graph = new Fl_MGLView(300,30,630,430);	gg->end();
-	gg = new Fl_Group(300,30,630,430,mgl_gettext("Help"));
+	w->graph = new Fl_MGLView(300,30,630,430);	gg->resizable(w->graph);	gg->end();
+	gg = new Fl_Group(300,30,630,430,mgl_gettext("Help"));		gg->hide();
 	w->ghelp = gg;	add_help(w);	gg->end();
-	gg = new Fl_Group(300,30,630,430,mgl_gettext("Memory"));
+	gg = new Fl_Group(300,30,630,430,mgl_gettext("Memory"));	gg->hide();
 	add_mem(w);		gg->end();
 	tt->end();
 
@@ -304,8 +306,7 @@ ScriptWindow *new_view()
 	
 	t->end();	w->end();	w->resizable(t);
 	tt->callback(mem_upd_cb, w);
-	tt->value(w->graph);
-	w->callback((Fl_Callback *)close_cb, w);
+	w->callback(close_cb, w);
 
 	num_windows++;
 	return w;
@@ -328,7 +329,7 @@ int main(int argc, char **argv)
 	ScriptWindow *w = new_view();
 	Fl::visual(FL_DOUBLE|FL_RGB);
 	load_pref(w);
-
+	
 	char *buf = 0;
 	while(1)
 	{

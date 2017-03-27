@@ -21,46 +21,43 @@
 void help_cb(Fl_Widget*, void*v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-	long i=e->editor->insert_position(), j0=textbuf->line_start(i),j;
+	long i=e->editor->insert_position(), j0=textbuf->line_start(i),j;	// TODO closest ':' should be
 
-	static char str[300];
 	char s[32]="", *buf = textbuf->text();
 	memset(s,0,32*sizeof(char));
 	for(j=j0;!isspace(buf[j]) && buf[j]!='#' && buf[j]!=';' && j<31+j0;j++)
 		s[j-j0] = buf[j];
 	free(buf);
 #ifdef WIN32
-	snprintf(str,300,"%s\\mgl_en.html#%s",docdir.c_str(),s);
+	static std::string str = docdir+"\\mgl_en.html#"+s;
 #else
-	snprintf(str,300,"%s/mgl_en.html#%s",docdir.c_str(),s);
+	static std::string str = docdir+"/mgl_en.html#"+s;
 #endif
-	e->hd->load(str);
+	e->hd->load(str.c_str());
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
 //-----------------------------------------------------------------------------
 void link_cb(Fl_Widget*, void*v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-	static char str[300];
 #ifdef WIN32
-	snprintf(str,300,"%s\\mgl_en.html#%s",docdir.c_str(),e->link_cmd->value());
+	static std::string str = docdir+"\\mgl_en.html#"+e->link_cmd->value();
 #else
-	snprintf(str,300,"%s/mgl_en.html#%s",docdir.c_str(),e->link_cmd->value());
+	static std::string str = docdir+"/mgl_en.html#"+e->link_cmd->value();
 #endif
-	e->hd->load(str);
+	e->hd->load(str.c_str());
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
 //-----------------------------------------------------------------------------
 void example_cb(Fl_Widget*, void*v)
 {
-	static char str[300];
 	ScriptWindow* e = (ScriptWindow*)v;
 #ifdef WIN32
-	snprintf(str,300,"%s\\mgl_en.html#Examples",docdir.c_str());
+	static std::string str = docdir+"\\mgl_en.html#Examples";
 #else
-	snprintf(str,300,"%s/mgl_en.html#Examples",docdir.c_str());
+	static std::string str = docdir+"/mgl_en.html#Examples";
 #endif
-	e->hd->load(str);	e->rtab->value(e->ghelp);
+	e->hd->load(str.c_str());	e->rtab->value(e->ghelp);
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
 //-----------------------------------------------------------------------------
@@ -80,7 +77,7 @@ void help_out_cb(Fl_Widget*, void*v)
 void about_cb(Fl_Widget*, void*)
 {
 	static char s[128];
-	snprintf(s,128,mgl_gettext("UDAV v. 2.%g\n(c) Alexey Balakin, 2007\nhttp://udav.sf.net/"), MGL_VER2);
+	snprintf(s,128,mgl_gettext("mgllab v. 2.%g\n(c) Alexey Balakin, 2017\nhttp://mathgl.sf.net/"), MGL_VER2);
 	Fl_Double_Window* w = new Fl_Double_Window(355, 130, "About UDAV");
 	Fl_Box* o = new Fl_Box(10, 15, 65, 65);
 	o->box(FL_UP_BOX);	o->color(55);	o->image(new Fl_Pixmap(udav_xpm));

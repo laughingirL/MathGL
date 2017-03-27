@@ -23,8 +23,6 @@
 #include <locale.h>
 #include "mgllab.h"
 //-----------------------------------------------------------------------------
-extern int auto_exec, plastic_scheme, internal_font;
-//-----------------------------------------------------------------------------
 void setup_dlg_cb(Fl_Widget *, void *v)
 {	SetupDlg *s = (SetupDlg *)v;	s->OK = true;	s->wnd->hide();	}
 //-----------------------------------------------------------------------------

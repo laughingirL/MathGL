@@ -20,114 +20,9 @@
 #include <FL/Fl_Check_Button.H>
 #include "mgllab.h"
 //-----------------------------------------------------------------------------
-void option_in_cb(Fl_Widget *, void *v);
-void style_in_cb(Fl_Widget *, void *v);
-//-----------------------------------------------------------------------------
-struct VarDlg
-{
-	Fl_Window *wnd;
-	bool OK;
-
-	Fl_Choice *var;
-	Fl_Spinner *dim1, *dim2, *dim3;
-	VarDlg()	{	memset(this,0,sizeof(VarDlg));	create_dlg();	}
-	~VarDlg()	{	delete wnd;	}
-	void create_dlg();
-	char *get_result();
-	void init();
-} var_dlg;
-//-----------------------------------------------------------------------------
-void VarDlg::init()
-{
-	char ss[1024];
-	var->clear();
-	long n = Parse->GetNumVar();
-	for(long i=0;i<n;i++)
-	{
-		mglDataA *v=Parse->GetVar(i);
-		wcstombs(ss,v->s.c_str(),1024);
-		var->add(ss,0,0,v);
-	}
-}
-//-----------------------------------------------------------------------------
-char *VarDlg::get_result()
-{
-	static char res[64];
-	char a1[16]=":",a2[16]=":",a3[16]=":";
-	res[0]=0;
-	if(var->value()<0)	return res;
-	const Fl_Menu_Item m=var->menu()[var->value()];
-	if(m.text[0])
-	{
-		if(dim3->value()>=0)
-		{
-			if(dim1->value()>=0)	snprintf(a1,16,"%g",dim1->value());
-			if(dim2->value()>=0)	snprintf(a2,16,"%g",dim2->value());
-			snprintf(a3,16,"%g",dim3->value());
-			snprintf(res,64,"%s(%s,%s,%s)",m.text,a1,a2,a3);
-		}
-		else if(dim2->value()>=0)
-		{
-			if(dim1->value()>=0)	snprintf(a1,16,"%g",dim1->value());
-			snprintf(a2,16,"%g",dim2->value());
-			snprintf(res,64,"%s(%s,%s)",m.text,a1,a2);
-		}
-		else if(dim1->value()>=0)
-		{
-			snprintf(a1,16,"%g",dim1->value());
-			snprintf(res,64,"%s(%s)",m.text,a1);
-		}
-		else	strncpy(res,m.text,64);
-	}
-	return res;
-}
-//-----------------------------------------------------------------------------
-void var_chg_cb(Fl_Widget *, void *)
-{
-	const Fl_Menu_Item m=var_dlg.var->menu()[var_dlg.var->value()];
-	if(m.text[0] && m.user_data())
-	{
-		mglDataA *a = (mglDataA *)m.user_data();
-		var_dlg.dim1->range(-1,a->GetNx()-1);
-		var_dlg.dim2->range(-1,a->GetNy()-1);
-		var_dlg.dim3->range(-1,a->GetNz()-1);
-	}
-}
-//-----------------------------------------------------------------------------
-void var_in_cb(Fl_Widget *, void *v)
-{
-	Fl_Input *e = (Fl_Input*)v;
-	VarDlg *s = &var_dlg;
-	s->OK = false;
-	s->init();
-	s->wnd->set_modal();
-	s->wnd->show();
-	while(s->wnd->shown())	Fl::wait();
-	if(s->OK)	e->value(s->get_result());
-}
-//-----------------------------------------------------------------------------
-void var_dlg_cb(Fl_Widget *, void *v)
-{	var_dlg.OK = true;	((Fl_Window *)v)->hide();	}
-//-----------------------------------------------------------------------------
-void VarDlg::create_dlg()
-{
-	wnd = new Fl_Double_Window(190, 180, mgl_gettext("Variable"));
-	var = new Fl_Choice(100, 10, 75, 25, mgl_gettext("Variable name"));	// !!!  add variables here !!!
-	var->callback(var_chg_cb);
-	dim1 = new Fl_Spinner(100, 40, 75, 25, mgl_gettext("First index"));
-	dim1->range(-1,0);	dim1->value(-1);	dim1->step(1);
-	dim1->tooltip(mgl_gettext("Value of first dimensions (-1 for all range)"));
-	dim2 = new Fl_Spinner(100, 70, 75, 25, mgl_gettext("Second index"));
-	dim2->range(-1,0);	dim2->value(-1);	dim2->step(1);
-	dim2->tooltip(mgl_gettext("Value of second dimensions (-1 for all range)"));
-	dim3 = new Fl_Spinner(100, 100, 75, 25, mgl_gettext("Third index"));
-	dim3->range(-1,0);	dim3->value(-1);	dim3->step(1);
-	dim3->tooltip(mgl_gettext("Value of third dimensions (-1 for all range)"));
-	Fl_Button *o;
-	o = new Fl_Button(15, 140, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o = new Fl_Return_Button(100, 140, 75, 25, mgl_gettext("OK"));	o->callback(var_dlg_cb,wnd);
-	wnd->end();
-}
+void option_in_cb(Fl_Widget*, void *v);
+void style_in_cb(Fl_Widget*, void *v);
+void datsel_in_cb(Fl_Widget*, void *v);
 //-----------------------------------------------------------------------------
 const char *cmds[]={
 "plot|area|bars|barh|boxplot|chart|error|mark|region|stem|step|tens|textmark|torus|tube",
@@ -261,17 +156,17 @@ void CmdDlg::create_dlg()
 	type->add(mgl_gettext(cmd_types));		type_cmd_cb(0,0);
 
 	var_x = new Fl_Input(15, 115, 50, 25, "X");	var_x->align(FL_ALIGN_TOP);
-	o = new Fl_Button(65, 115, 25, 25, "..");	o->callback(var_in_cb,var_x);
+	o = new Fl_Button(65, 115, 25, 25, "..");	o->callback(datsel_in_cb,var_x);
 	var_y = new Fl_Input(95, 115, 50, 25, "Y");	var_y->align(FL_ALIGN_TOP);
-	o = new Fl_Button(145, 115, 25, 25, "..");	o->callback(var_in_cb,var_y);
+	o = new Fl_Button(145, 115, 25, 25, "..");	o->callback(datsel_in_cb,var_y);
 	var_z = new Fl_Input(175, 115, 50, 25, "Z");	var_z->align(FL_ALIGN_TOP);
-	o = new Fl_Button(225, 115, 25, 25, "..");	o->callback(var_in_cb,var_z);
+	o = new Fl_Button(225, 115, 25, 25, "..");	o->callback(datsel_in_cb,var_z);
 	var_u = new Fl_Input(255, 115, 50, 25, mgl_gettext("Vx or A"));	var_u->align(FL_ALIGN_TOP);
-	o = new Fl_Button(305, 115, 25, 25, "..");	o->callback(var_in_cb,var_u);
+	o = new Fl_Button(305, 115, 25, 25, "..");	o->callback(datsel_in_cb,var_u);
 	var_v = new Fl_Input(335, 115, 50, 25, mgl_gettext("Vy or C"));	var_v->align(FL_ALIGN_TOP);
-	o = new Fl_Button(385, 115, 25, 25, "..");	o->callback(var_in_cb,var_v);
+	o = new Fl_Button(385, 115, 25, 25, "..");	o->callback(datsel_in_cb,var_v);
 	var_w = new Fl_Input(415, 115, 50, 25, "Vz");var_w->align(FL_ALIGN_TOP);
-	o = new Fl_Button(465, 115, 25, 25, "..");	o->callback(var_in_cb,var_w);
+	o = new Fl_Button(465, 115, 25, 25, "..");	o->callback(datsel_in_cb,var_w);
 
 	stl = new Fl_Input(15, 165, 50, 25, mgl_gettext("Style"));
 	stl->align(FL_ALIGN_TOP);	stl->tooltip(mgl_gettext("String argument with command style (or scheme or font)"));

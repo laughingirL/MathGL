@@ -310,6 +310,7 @@ void fill_animate(const char *text);
 //-----------------------------------------------------------------------------
 Fl_Widget *add_help(ScriptWindow *w);
 void help_cb(Fl_Widget*, void*v);
+void link_cb(Fl_Widget*, void*v);
 void example_cb(Fl_Widget*, void*v);
 void about_cb(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
@@ -318,6 +319,7 @@ void calc_dlg_cb(Fl_Widget*, void*);
 void args_dlg_cb(Fl_Widget*, void*);
 void option_dlg_cb(Fl_Widget*, void*);
 void dirsel_dlg_cb(Fl_Widget*, void*);
+void datsel_dlg_cb(Fl_Widget*, void*);
 void style_dlg_cb(Fl_Widget*, void*);
 void newcmd_cb(Fl_Widget*,void*);
 //-----------------------------------------------------------------------------

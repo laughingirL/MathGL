@@ -1,12 +1,12 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0304
-i18n_type 1
-i18n_include <libintl.h>
-i18n_function gettext
-header_name {.h}
+version 1.0303 
+i18n_type 1 
+i18n_include <libintl.h> 
+i18n_function gettext 
+header_name {.h} 
 code_name {.cxx}
 decl {\#include <mgllab.h>} {public local
-}
+} 
 
 Function {make_window()} {
   comment {Main mgllab window}
@@ -616,14 +616,14 @@ Function {make_window()} {
       xywh {0 350 680 25}
     }
   }
-}
+} 
 
 Function {create_common()} {return_type void
 } {
   code {make_prop();
 make_args();
 make_find();} {}
-}
+} 
 
 Function {make_args()} {
   comment {Dialog to set MGL arguments}
@@ -693,7 +693,7 @@ args_dlg->hide();}
       xywh {155 290 75 25}
     }
   }
-}
+} 
 
 Function {make_prop()} {
   comment {Dialog for mgllab properties}
@@ -789,14 +789,14 @@ prop_dlg->hide();}
       xywh {180 340 75 25}
     }
   }
-}
+} 
 
 Function {make_calc()} {
   comment Calculator
 } {
   Fl_Window {} {
-    label Calculator
-    xywh {455 679 275 275} type Double hide
+    label Calculator open
+    xywh {378 341 275 275} type Double hide
   } {
     Fl_Input edit {
       xywh {5 5 240 25}
@@ -817,104 +817,108 @@ Function {make_calc()} {
       label {Previous expressions}
       xywh {5 80 265 70} align 5
     }
-    Fl_Button {} {
-      label 7
-      user_data {"7"}
-      xywh {5 155 25 25}
-    }
-    Fl_Button {} {
-      label 8
-      user_data {"8"}
-      xywh {35 155 25 25}
-    }
-    Fl_Button {} {
-      label 9
-      user_data {"9"}
-      xywh {65 155 25 25}
-    }
-    Fl_Button {} {
-      label {+}
-      user_data {"+"}
-      xywh {95 155 25 25}
-    }
-    Fl_Button {} {
-      label pi
-      user_data {"pi"}
-      xywh {125 155 25 25}
-    }
-    Fl_Button {} {
-      label 4
-      user_data {"4"}
-      xywh {5 185 25 25}
-    }
-    Fl_Button {} {
-      label 5
-      user_data {"5"}
-      xywh {35 185 25 25}
-    }
-    Fl_Button {} {
-      label 6
-      user_data {"6"}
-      xywh {65 185 25 25}
-    }
-    Fl_Button {} {
-      label {-}
-      user_data {"-"}
-      xywh {95 185 25 25}
-    }
-    Fl_Button {} {
-      label {^}
-      user_data {"^"}
-      xywh {125 185 25 25}
-    }
-    Fl_Button {} {
-      label 1
-      user_data {"1"}
-      xywh {5 215 25 25}
-    }
-    Fl_Button {} {
-      label 2
-      user_data {"2"}
-      xywh {35 215 25 25}
-    }
-    Fl_Button {} {
-      label 3
-      user_data {"3"}
-      xywh {65 215 25 25}
-    }
-    Fl_Button {} {
-      label {*}
-      user_data {"8"}
-      xywh {95 215 25 25}
-    }
-    Fl_Button {} {
-      label {(}
-      user_data {"("}
-      xywh {125 215 25 25}
-    }
-    Fl_Button {} {
-      label 0
-      user_data {"0"}
-      xywh {5 245 25 25}
-    }
-    Fl_Button {} {
-      label {.}
-      user_data {"."}
-      xywh {35 245 25 25}
-    }
-    Fl_Button {} {
-      label E
-      xywh {65 245 25 25}
-    }
-    Fl_Button {} {
-      label {/}
-      user_data {"/"}
-      xywh {95 245 25 25}
-    }
-    Fl_Button {} {
-      label {)}
-      user_data {")"}
-      xywh {125 245 25 25}
+    Fl_Group {} {open
+      xywh {5 155 145 120}
+    } {
+      Fl_Button {} {
+        label 7
+        user_data {"7"}
+        xywh {10 160 25 25}
+      }
+      Fl_Button {} {
+        label 8
+        user_data {"8"}
+        xywh {40 160 25 25}
+      }
+      Fl_Button {} {
+        label 9
+        user_data {"9"}
+        xywh {70 160 25 25}
+      }
+      Fl_Button {} {
+        label {+}
+        user_data {"+"}
+        xywh {100 160 25 25}
+      }
+      Fl_Button {} {
+        label pi
+        user_data {"pi"}
+        xywh {130 160 25 25}
+      }
+      Fl_Button {} {
+        label 4
+        user_data {"4"}
+        xywh {10 190 25 25}
+      }
+      Fl_Button {} {
+        label 5
+        user_data {"5"}
+        xywh {40 190 25 25}
+      }
+      Fl_Button {} {
+        label 6
+        user_data {"6"}
+        xywh {70 190 25 25}
+      }
+      Fl_Button {} {
+        label {-}
+        user_data {"-"}
+        xywh {100 190 25 25}
+      }
+      Fl_Button {} {
+        label {^}
+        user_data {"^"}
+        xywh {130 190 25 25}
+      }
+      Fl_Button {} {
+        label 1
+        user_data {"1"}
+        xywh {10 220 25 25}
+      }
+      Fl_Button {} {
+        label 2
+        user_data {"2"}
+        xywh {40 220 25 25}
+      }
+      Fl_Button {} {
+        label 3
+        user_data {"3"}
+        xywh {70 220 25 25}
+      }
+      Fl_Button {} {
+        label {*}
+        user_data {"8"}
+        xywh {100 220 25 25}
+      }
+      Fl_Button {} {
+        label {(}
+        user_data {"("}
+        xywh {130 220 25 25}
+      }
+      Fl_Button {} {
+        label 0
+        user_data {"0"}
+        xywh {10 250 25 25}
+      }
+      Fl_Button {} {
+        label {.}
+        user_data {"."}
+        xywh {40 250 25 25}
+      }
+      Fl_Button {} {
+        label E
+        xywh {70 250 25 25}
+      }
+      Fl_Button {} {
+        label {/}
+        user_data {"/"}
+        xywh {100 250 25 25}
+      }
+      Fl_Button {} {
+        label {)}
+        user_data {")"}
+        xywh {130 250 25 25}
+      }
     }
     Fl_Group {} {
       label Function open
@@ -932,7 +936,7 @@ Function {make_calc()} {
       }
     }
   }
-}
+} 
 
 Function {make_option()} {} {
   Fl_Window {} {
@@ -1022,7 +1026,7 @@ Function {make_option()} {} {
       xywh {480 155 85 25}
     }
   }
-}
+} 
 
 Function {make_dirsel()} {} {
   Fl_Window {} {
@@ -1045,11 +1049,10 @@ Function {make_dirsel()} {} {
       xywh {140 50 75 25}
     }
   }
-}
+} 
 
-Function {make_style()} {open
-} {
-  Fl_Window {} {open
+Function {make_style()} {} {
+  Fl_Window {} {
     xywh {385 550 380 380} type Double hide
   } {
     Fl_Tabs {} {open
@@ -1242,7 +1245,7 @@ Function {make_style()} {open
           xywh {155 230 115 25} down_box DOWN_BOX
         }
         Fl_Check_Button sharp {
-          label Sharp selected
+          label Sharp
           xywh {275 230 95 25} down_box DOWN_BOX
         }
       }
@@ -1508,12 +1511,11 @@ Function {make_style()} {open
       xywh {5 315 285 65} box ENGRAVED_BOX align 4
     }
   }
-}
+} 
 
-Function {make_datsel()} {open
-} {
+Function {make_datsel()} {} {
   Fl_Window {} {
-    label {Select data argument} open
+    label {Select data argument}
     xywh {440 689 355 255} type Double hide modal
   } {
     Fl_Choice name {
@@ -1575,13 +1577,13 @@ Function {make_datsel()} {open
       xywh {105 125 245 25}
     }
   }
-}
+} 
 
 Function {make_newcmd()} {open
 } {
   Fl_Window {} {
     label {New command} open
-    xywh {1134 744 780 330} type Double modal visible
+    xywh {306 249 780 330} type Double modal visible
   } {
     Fl_Choice kind {
       label Kind open
@@ -1607,9 +1609,13 @@ Function {make_newcmd()} {open
       label Result
       xywh {60 270 290 25}
     }
+    Fl_Input {} {
+      label Options selected
+      xywh {60 240 265 25}
+    }
     Fl_Button {} {
-      label {Add command options}
-      xywh {160 240 190 25}
+      label {...}
+      xywh {325 240 25 25}
     }
     Fl_Button {} {
       label Cancel
@@ -1623,13 +1629,13 @@ Function {make_newcmd()} {open
       xywh {360 5 415 320} labelsize 12
     }
   }
-}
+} 
 
 Function {make_inplot()} {open
 } {
   Fl_Window {} {
     label {Add inplot} open
-    xywh {407 759 715 315} type Double modal visible
+    xywh {407 449 715 315} type Double modal visible
   } {
     Fl_Round_Button k1 {
       label SubPlot
@@ -1810,8 +1816,12 @@ Function {make_inplot()} {open
       label OK
       xywh {630 95 75 25}
     }
+    Fl_Button {} {
+      label Refresh
+      xywh {630 60 75 25}
+    }
   }
-}
+} 
 
 Function {make_find()} {
   comment {Dialog to Find/Replace text} open
@@ -1850,4 +1860,4 @@ Function {make_find()} {
       xywh {275 70 75 25}
     }
   }
-}
+} 

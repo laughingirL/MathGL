@@ -491,8 +491,8 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	o->tooltip(mgl_gettext("Find or replace text"));
 	o = new Fl_Button(125, 1, 25, 25);	o->image(img_insert);	o->callback(command_cb,w);
 	o->tooltip(mgl_gettext("Insert MGL command"));
-//	o = new Fl_Button(150, 1, 25, 25);	o->image(img_calc);	o->callback(calc_cb,w);
-//	o->tooltip(mgl_gettext("Show calculator window"));	// TODO
+	o = new Fl_Button(150, 1, 25, 25);	o->image(img_calc);	o->callback(calc_dlg_cb,w);
+	o->tooltip(mgl_gettext("Show calculator window"));
 
 	// ------------ old --------------
 // 	o = new Fl_Button(0, 1, 25, 25);	o->image(new Fl_Pixmap(document_new_xpm));

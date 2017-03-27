@@ -16,6 +16,7 @@
  */
 #include "mgl2/mgl.h"
 #include "mgllab.h"
+#include <string.h>
 #include <FL/Fl_Spinner.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Select_Browser.H>
@@ -74,6 +75,7 @@ class PropDlg : public GeneralDlg
 	Fl_Choice *lang_w;
 	Fl_Choice *scheme_w;
 public:
+	ScriptWindow *e;
 	HMGL gr;
 	PropDlg()
 	{
@@ -126,9 +128,10 @@ public:
 		mouse_zoom = mouse_zoom_w->value();
 		docdir = help_path->value();
 		fontname = font_path->value();
-		if(gr)	mgl_load_font(gr,fontname.c_str(),NULL);
+		if(e->graph->get_graph())
+			mgl_load_font(e->graph->get_graph(),fontname.c_str(),NULL);
 		set_scheme_lang(scheme_w->value(),lang_w->value());
-		save_pref();	hide();
+		link_cb(NULL, e);	save_pref();	hide();
 	}
 } prop_dlg;
 //-----------------------------------------------------------------------------
@@ -148,10 +151,7 @@ void cb_filech(Fl_Widget*, void *v)
 	}
 }
 void prop_dlg_cb(Fl_Widget *, void *v)
-{
-	prop_dlg.gr = v?((ScriptWindow *)v)->graph->get_graph():NULL;
-	prop_dlg.show();	
-}
+{	prop_dlg.e = (ScriptWindow *)v;	prop_dlg.show();	}
 //-----------------------------------------------------------------------------
 void ins_fname_cb(Fl_Widget *, void *v)
 {
@@ -182,54 +182,36 @@ void ins_fits_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 class ArgsDlg : public GeneralDlg
 {
-	Fl_Input *arg1;
-	Fl_Input *arg2;
-	Fl_Input *arg3;
-	Fl_Input *arg4;
-	Fl_Input *arg5;
-	Fl_Input *arg6;
-	Fl_Input *arg7;
-	Fl_Input *arg8;
-	Fl_Input *arg9;
-	Fl_Input *arg0;
+	Fl_Input *arg[10];
 public:
 	void cb_ok()
 	{
-		Parse->AddParam(0,arg0->value());
-		Parse->AddParam(1,arg1->value());
-		Parse->AddParam(2,arg2->value());
-		Parse->AddParam(3,arg3->value());
-		Parse->AddParam(4,arg4->value());
-		Parse->AddParam(5,arg5->value());
-		Parse->AddParam(6,arg6->value());
-		Parse->AddParam(7,arg7->value());
-		Parse->AddParam(8,arg8->value());
-		Parse->AddParam(9,arg9->value());
+		for(int i=0;i<10;i++)	Parse->AddParam(i,arg[i]->value());
 		hide();
 	}
 	ArgsDlg()
 	{
 		w = new Fl_Double_Window(290, 320, mgl_gettext("Set script arguments"));
-		arg1 = new Fl_Input(5, 20, 135, 30, mgl_gettext("String for $1"));
-		arg1->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg2 = new Fl_Input(150, 20, 135, 30, mgl_gettext("String for $2"));
-		arg2->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg3 = new Fl_Input(5, 75, 135, 30, mgl_gettext("String for $3"));
-		arg3->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg4 = new Fl_Input(150, 75, 135, 30, mgl_gettext("String for $4"));
-		arg4->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg5 = new Fl_Input(5, 130, 135, 30, mgl_gettext("String for $5"));
-		arg5->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg6 = new Fl_Input(150, 130, 135, 30, mgl_gettext("String for $6"));
-		arg6->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg7 = new Fl_Input(5, 185, 135, 30, mgl_gettext("String for $7"));
-		arg7->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg8 = new Fl_Input(150, 185, 135, 30, mgl_gettext("String for $8"));
-		arg8->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg9 = new Fl_Input(5, 240, 135, 30, mgl_gettext("String for $9"));
-		arg9->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		arg0 = new Fl_Input(150, 240, 135, 30, mgl_gettext("String for $0"));
-		arg0->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[1] = new Fl_Input(5, 20, 135, 30, mgl_gettext("String for $1"));
+		arg[1]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[2] = new Fl_Input(150, 20, 135, 30, mgl_gettext("String for $2"));
+		arg[2]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[3] = new Fl_Input(5, 75, 135, 30, mgl_gettext("String for $3"));
+		arg[3]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[4] = new Fl_Input(150, 75, 135, 30, mgl_gettext("String for $4"));
+		arg[4]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[5] = new Fl_Input(5, 130, 135, 30, mgl_gettext("String for $5"));
+		arg[5]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[6] = new Fl_Input(150, 130, 135, 30, mgl_gettext("String for $6"));
+		arg[6]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[7] = new Fl_Input(5, 185, 135, 30, mgl_gettext("String for $7"));
+		arg[7]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[8] = new Fl_Input(150, 185, 135, 30, mgl_gettext("String for $8"));
+		arg[8]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[9] = new Fl_Input(5, 240, 135, 30, mgl_gettext("String for $9"));
+		arg[9]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[0] = new Fl_Input(150, 240, 135, 30, mgl_gettext("String for $0"));
+		arg[0]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
 		Fl_Button* o = new Fl_Button(60, 290, 75, 25, mgl_gettext("Cancel"));
 		o->callback(cb_dlg_cancel, this);
 		o = new Fl_Return_Button(155, 290, 75, 25, mgl_gettext("Set"));
@@ -257,44 +239,55 @@ public:
 	ScriptWindow *e;
 	CalcDlg()
 	{
-		Fl_Button *o;
+		Fl_Button *o;	Fl_Group* g, *gg;
 		w = new Fl_Double_Window(275, 275, mgl_gettext("Calculator"));
+		g = new Fl_Group(5, 5, 265, 25);
 		edit = new Fl_Input(5, 5, 240, 25);	//edit->callback(cb_calc_edit);
-		o = new Fl_Return_Button(245, 5, 25, 25, "@>");	o->callback(cb_calc_edit);
+		o = new Fl_Return_Button(245, 5, 25, 25, "@>");
+		o->callback(cb_calc_edit);	g->end();	g->resizable(edit);
+		g = new Fl_Group(5, 35, 265, 25);
 		output = new Fl_Output(55, 35, 120, 25, mgl_gettext("Result"));
-		o = new Fl_Button(180, 35, 90, 25, mgl_gettext("@-> to script"));	o->callback(cb_calc_ins);
+		o = new Fl_Button(180, 35, 90, 25, mgl_gettext("@-> to script"));
+		o->callback(cb_calc_ins);	g->end();	g->resizable(output);
 		prev = new Fl_Select_Browser(5, 80, 265, 70, mgl_gettext("Previous expressions"));
 		prev->align(Fl_Align(FL_ALIGN_TOP_LEFT));	prev->callback(cb_calc_prev);
-		o = new Fl_Button(5, 155, 25, 25, mgl_gettext("7"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(35, 155, 25, 25, mgl_gettext("8"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(65, 155, 25, 25, mgl_gettext("9"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(95, 155, 25, 25, mgl_gettext("+"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(125, 155, 25, 25, mgl_gettext("pi"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(5, 185, 25, 25, mgl_gettext("4"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(35, 185, 25, 25, mgl_gettext("5"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(65, 185, 25, 25, mgl_gettext("6"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(95, 185, 25, 25, mgl_gettext("-"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(125, 185, 25, 25, mgl_gettext("^"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(5, 215, 25, 25, mgl_gettext("1"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(35, 215, 25, 25, mgl_gettext("2"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(65, 215, 25, 25, mgl_gettext("3"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(95, 215, 25, 25, mgl_gettext("*"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(125, 215, 25, 25, mgl_gettext("("));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(5, 245, 25, 25, mgl_gettext("0"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(35, 245, 25, 25, mgl_gettext("."));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(65, 245, 25, 25, mgl_gettext("E"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(95, 245, 25, 25, mgl_gettext("/"));	o->callback(cb_calc_key,o);
-		o = new Fl_Button(125, 245, 25, 25, mgl_gettext(")"));	o->callback(cb_calc_key,o);
+		static int widths[] = { 200, 65, 0 };  // widths for each column
+		prev->column_widths(widths);	prev->column_char('\t');
+		gg = new Fl_Group(5, 155, 265, 115);
+			o = new Fl_Button(5, 155, 25, 25, mgl_gettext("7"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 155, 25, 25, mgl_gettext("8"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 155, 25, 25, mgl_gettext("9"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 155, 25, 25, mgl_gettext("+"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 155, 25, 25, mgl_gettext("pi"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 185, 25, 25, mgl_gettext("4"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 185, 25, 25, mgl_gettext("5"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 185, 25, 25, mgl_gettext("6"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 185, 25, 25, mgl_gettext("-"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 185, 25, 25, mgl_gettext("^"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 215, 25, 25, mgl_gettext("1"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 215, 25, 25, mgl_gettext("2"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 215, 25, 25, mgl_gettext("3"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 215, 25, 25, mgl_gettext("*"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 215, 25, 25, mgl_gettext("("));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 245, 25, 25, mgl_gettext("0"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 245, 25, 25, mgl_gettext("."));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 245, 25, 25, mgl_gettext("E"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 245, 25, 25, mgl_gettext("/"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 245, 25, 25, mgl_gettext(")"));	o->callback(cb_calc_key,o);
 
-		Fl_Group* g = new Fl_Group(155, 174, 115, 95, mgl_gettext("Function"));	g->box(FL_DOWN_BOX);
-		kind = new Fl_Choice(160, 179, 105, 25);	kind->down_box(FL_BORDER_BOX);	kind->callback(cb_calc_kind);
-		kind->add("Basic");	kind->add("Exp and log");	kind->add("Trigonometric");	kind->add("Hyperbolic");
-		kind->add("Bessel");	kind->add("Elliptic");	kind->add("Jacobi");	 kind->add("Airy and Gamma");
-		kind->add("Exp-integrals"); kind->add("Special");	kind->value(0);
+			g = new Fl_Group(155, 175, 115, 95, mgl_gettext("Function"));
+			kind = new Fl_Choice(160, 179, 105, 25);	kind->callback(cb_calc_kind);
+			kind->add("Basic");	kind->add("Exp and log");	kind->add("Trigonometric");	
+			kind->add("Hyperbolic");	kind->add("Bessel");	kind->add("Elliptic");	
+			kind->add("Jacobi");	 kind->add("Airy and Gamma");
+			kind->add("Exp-integrals"); kind->add("Special");	kind->value(0);
+			
+			func = new Fl_Choice(160, 209, 105, 25);
+			o = new Fl_Button(160, 239, 105, 25, mgl_gettext("Put function"));	o->callback(cb_calc_func);
+			g->end();	g->box(FL_DOWN_BOX);
+		gg->end();	gg->resizable(g);
 		
-		func = new Fl_Choice(160, 209, 105, 25);	func->down_box(FL_BORDER_BOX);
-		o = new Fl_Button(160, 239, 105, 25, mgl_gettext("Put function"));	o->callback(cb_calc_func);
-		g->end();	w->end();
+		w->end();	w->resizable(prev);
 	}
 	void eval()
 	{
@@ -730,7 +723,11 @@ public:
 			v = msize->value();	if(v>1)	result += char(v+'0');
 			uint64_t mask=0;
 			for(int i=0;i<64;i++)	if(mask_m[i]->value())	mask += uint64_t(1)<<i;
+#ifdef WIN32
 			char buf[128];	snprintf(buf,128,"{s%llX}",mask);
+#else
+			char buf[128];	snprintf(buf,128,"{s%lX}",mask);
+#endif
 			result += buf;
 		}
 		if(wire->value())	result += '#';
@@ -788,13 +785,13 @@ void style_in_cb(Fl_Widget *, void *v)
 {	style_dlg.ext=(Fl_Input*)v;	style_dlg.e=NULL;	style_dlg.show();	}
 //-----------------------------------------------------------------------------
 void cb_datsel_upd(Fl_Widget *, void *);
+void cb_datsel_act(Fl_Widget *, void *);
 class DatSelDlg : public GeneralDlg
 {
 	Fl_Choice *name;
 	Fl_Choice *oper;
 	Fl_Choice *dir;
 	Fl_Spinner *x1, *x2, *y1, *y2, *z1, *z2;
-	Fl_Output *res;
 	Fl_Input *clmn;
 	Fl_Check_Button *ax, *ay, *az;
 public:
@@ -808,13 +805,13 @@ public:
 		name->callback(cb_datsel_upd);
 		x1 = new Fl_Spinner(105, 35, 60, 25, mgl_gettext("X-slice from"));
 		x2 = new Fl_Spinner(190, 35, 60, 25, mgl_gettext("to"));
-		ax = new Fl_Check_Button(260, 35, 90, 25, mgl_gettext("all"));	ax->callback(cb_datsel_upd);
+		ax = new Fl_Check_Button(260, 35, 90, 25, mgl_gettext("all"));	ax->callback(cb_datsel_act);
 		y1 = new Fl_Spinner(105, 65, 60, 25, mgl_gettext("Y-slice from"));
 		y2 = new Fl_Spinner(190, 65, 60, 25, mgl_gettext("to"));
-		ay = new Fl_Check_Button(260, 65, 90, 25, mgl_gettext("all"));	ay->callback(cb_datsel_upd);
+		ay = new Fl_Check_Button(260, 65, 90, 25, mgl_gettext("all"));	ay->callback(cb_datsel_act);
 		z1 = new Fl_Spinner(105, 95, 60, 25, mgl_gettext("Z-slice from"));
 		z2 = new Fl_Spinner(190, 95, 60, 25, mgl_gettext("to"));
-		az = new Fl_Check_Button(260, 95, 90, 25, mgl_gettext("all"));	az->callback(cb_datsel_upd);
+		az = new Fl_Check_Button(260, 95, 90, 25, mgl_gettext("all"));	az->callback(cb_datsel_act);
 		clmn = new Fl_Input(105, 125, 245, 25, mgl_gettext("Column expr"));
 		oper = new Fl_Choice(105, 155, 130, 25, mgl_gettext("Operation"));
 		oper->add("none");	oper->add("max");	oper->add("min");	oper->add("sum");
@@ -822,9 +819,8 @@ public:
 		dir = new Fl_Choice(285, 155, 65, 25, mgl_gettext("along"));
 		dir->add("none");	dir->add("x");	dir->add("y");	dir->add("z");
 		dir->add("xy");		dir->add("xz");	dir->add("yz");
-		res = new Fl_Output(60, 190, 290, 25, mgl_gettext("Result"));
-		o = new Fl_Button(190, 225, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(275, 225, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(190, 190, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(275, 190, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
@@ -834,9 +830,24 @@ public:
 		{	fl_alert(mgl_gettext("You need to select data array"));	return;	}
 		std::string data = name->text();
 		const char *eq = clmn->value();
+		int rx=ax->value(), ry=ay->value(), rz=az->value();
+		int vx1=x1->value(), vy1=y1->value(), vz1=z1->value();
+		int vx2=x2->value(), vy2=y2->value(), vz2=z2->value();
 		if(eq && *eq)	data = data+"('"+eq+"')";
-		else
+		else	if(!rx || !ry || !rz)
 		{
+			char bx[256],by[256],bz[256];
+			if(rx)	strcpy(bx,"(:");
+			else if(vx2<=vx1)	snprintf(bx,255,"(%d",vx1);
+			else	snprintf(bx,255,"(%d:%d",vx1,vx2);
+			if(ry)	strcpy(by,",:");
+			else if(vy2<=vy1)	snprintf(by,255,",%d",vy1);
+			else	snprintf(by,255,",%d:%d",vy1,vy2);
+			if(vz2<=vz1)	snprintf(bz,255,",%d)",vz1);
+			else	snprintf(bz,255,",%d:%d)",vz1,vz2);
+			if(!rz)	data = data+bx+by+bz;
+			else if(!ry)	data = data+bx+by+')';
+			else if(!rx)	data = data+bx+')';
 		}
 		if(oper->value()>0)
 		{
@@ -850,16 +861,188 @@ public:
 		hide();
 	}
 	void init()
-	{}
+	{
+		name->clear();
+		long n = Parse->GetNumVar();
+		for(long i=0;i<n;i++)
+		{
+			HCDT d = Parse->GetVar(i);
+			if(!d->temp)
+			{
+				const wchar_t *ss = d->s.c_str();
+				size_t s=wcstombs(0,ss,0);	char *buf=new char[s+1];
+				wcstombs(buf,ss,s); buf[s]=0;
+				name->add(buf);	delete []buf;
+			}
+		}
+		x1->value(0);	x2->value(0);
+		y1->value(0);	y2->value(0);
+		z1->value(0);	z2->value(0);
+	}
 	void update()
-	{}
+	{
+		HCDT d = Parse->FindVar(name->text());
+		if(d)
+		{
+			long nx=d->GetNx()-1, ny=d->GetNy()-1, nz=d->GetNz()-1;
+			x1->range(0,nx);	if(x1->value()>nx)	x1->value(0);
+			x2->range(0,nx);	if(x2->value()>nx)	x2->value(0);
+			y1->range(0,ny);	if(y1->value()>ny)	y1->value(0);
+			y2->range(0,ny);	if(y2->value()>ny)	y2->value(0);
+			z1->range(0,nz);	if(z1->value()>nz)	z1->value(0);
+			z2->range(0,nz);	if(z2->value()>nz)	z2->value(0);
+			ax->value(1);	ay->value(1);	az->value(1);
+			x1->deactivate();	y1->deactivate();	z1->deactivate();
+			x2->deactivate();	y2->deactivate();	z2->deactivate();
+			clmn->value("");
+		}
+	}
+	void activate()
+	{
+		if(!ax->value())	{	x1->activate();	x2->activate();	}
+		else	{	x1->deactivate();	x2->deactivate();	}
+		if(!ay->value())	{	y1->activate();	y2->activate();	}
+		else	{	y1->deactivate();	y2->deactivate();	}
+		if(!az->value())	{	z1->activate();	z2->activate();	}
+		else	{	z1->deactivate();	z2->deactivate();	}
+	}
 } datsel_dlg;
 //-----------------------------------------------------------------------------
 void cb_datsel_upd(Fl_Widget *, void *)	{	datsel_dlg.update();	}
+void cb_datsel_act(Fl_Widget *, void *)	{	datsel_dlg.activate();	}
 //-----------------------------------------------------------------------------
 void datsel_dlg_cb(Fl_Widget *, void *v)
 {	datsel_dlg.ext=NULL;	datsel_dlg.e=(ScriptWindow *)v;	datsel_dlg.show();	}
 //-----------------------------------------------------------------------------
+void datsel_in_cb(Fl_Widget *, void *v)
+{	datsel_dlg.ext=(Fl_Input*)v;	datsel_dlg.e=NULL;	datsel_dlg.show();	}
 //-----------------------------------------------------------------------------
+void cb_cmd_type(Fl_Widget*, void*);
+void cb_cmd_cmd(Fl_Widget*, void*);
+void cb_cmd_var(Fl_Widget*, void*);
+void cb_cmd_args(Fl_Widget*, void*);
+class NewCmdDlg : public GeneralDlg
+{
+	Fl_Choice *type, *cmd, *var;
+	Fl_Group *desc;
+	Fl_Select_Browser *args;
+	Fl_Input *opt;
+	Fl_Output *res;
+	Fl_Help_View *help;
+	std::vector<std::string> cmds[17];	///< commands divided by type
+public:
+	NewCmdDlg()
+	{
+		Fl_Button *o;
+		w = new Fl_Double_Window(780, 330, mgl_gettext("New command"));
+		Fl_Group *g = new Fl_Group(5,5,345,320);
+		type = new Fl_Choice(80, 5, 270, 25, mgl_gettext("Type"));
+		type->tooltip(mgl_gettext("Groups of MGL commands"));
+		type->callback(cb_cmd_type);
+		type->add(mgl_gettext("1D plots"));
+		type->add(mgl_gettext("2D plots"));
+		type->add(mgl_gettext("3D plots"));
+		type->add(mgl_gettext("Dual plots"));
+		type->add(mgl_gettext("Vector plots"));
+		type->add(mgl_gettext("Other plots"));
+		type->add(mgl_gettext("Text and legend"));
+		type->add(mgl_gettext("Create data and I/O"));
+		type->add(mgl_gettext("Data transform"));
+		type->add(mgl_gettext("Data handling"));
+		type->add(mgl_gettext("Axis and colorbar"));
+		type->add(mgl_gettext("Axis setup"));
+		type->add(mgl_gettext("General setup"));
+		type->add(mgl_gettext("Scale and rotate"));
+		type->add(mgl_gettext("Program flow"));
+		type->add(mgl_gettext("Primitives"));
+
+		cmd = new Fl_Choice(80, 35, 270, 25, mgl_gettext("Command"));
+		cmd->tooltip(mgl_gettext("MGL commands for selected group"));
+		cmd->callback(cb_cmd_cmd);
+		var = new Fl_Choice(80, 95, 270, 25, mgl_gettext("Variant"));
+		var->tooltip(mgl_gettext("Variant of command argument order. The notation is:\n"
+								" * Capital arguments are data (like, Ydat);\n"
+								" * Argument in '' are strings (like, 'fmt');\n"
+								" * Other arguments are numbers (like, zval);\n"
+								" * Arguments in [] are optional arguments."));
+		var->callback(cb_cmd_var);
+		desc = new Fl_Group(0, 65, 350, 25, mgl_gettext("Description"));
+		desc->box(FL_ENGRAVED_BOX);	desc->labelsize(12);
+		desc->align(FL_ALIGN_CENTER);	desc->end();
+		desc->tooltip(mgl_gettext("Short description of selected command"));
+		args = new Fl_Select_Browser(5, 140, 345, 95, mgl_gettext("Arguments"));
+		args->align(FL_ALIGN_TOP_LEFT);	args->callback(cb_cmd_args);
+		args->tooltip(mgl_gettext("Command arguments. Bold ones are required arguments.\n"
+			"Other are optional arguments but its order is required.\n"
+			"You can use '' for default format. See help at right\nfor default values."));
+		static int widths[] = { 95, 250, 0 };  // widths for each column
+		args->column_widths(widths);	args->column_char('\t');
+		
+		opt = new Fl_Input(60, 240, 265, 25, mgl_gettext("Options"));
+		o = new Fl_Button(325, 240, 25, 25, "...");	o->callback(option_in_cb,opt);
+		res = new Fl_Output(60, 270, 290, 25, mgl_gettext("Result"));
+		o = new Fl_Button(190, 300, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(275, 300, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
+		g->end();	g->resizable(args);
+
+		help = new Fl_Help_View(360, 5, 415, 320);	help->labelsize(12);
+		w->set_modal();	w->end();	w->resizable(help);
+	}
+	void init()
+	{
+		// fill cmds from parser for all categories
+		long i, n = Parse->GetCmdNum();
+		for(i=0;i<n;i++)
+		{
+			std::string name = Parse->GetCmdName(i);
+			switch(Parse->CmdType(name.c_str()))
+			{
+				case 1:	cmds[5].push_back(name);	break;
+				case 2:	cmds[5].push_back(name);	break;
+				case 3:	cmds[12].push_back(name);	break;
+				case 4:	cmds[9].push_back(name);	break;
+				case 5:	cmds[7].push_back(name);	break;
+				case 6:	cmds[13].push_back(name);	break;
+				case 7:	cmds[14].push_back(name);	break;
+				case 8:	cmds[0].push_back(name);	break;
+				case 9:	cmds[1].push_back(name);	break;
+				case 10:cmds[2].push_back(name);	break;
+				case 11:cmds[3].push_back(name);	break;
+				case 12:cmds[4].push_back(name);	break;
+				case 13:cmds[10].push_back(name);	break;
+				case 14:cmds[15].push_back(name);	break;
+				case 15:cmds[11].push_back(name);	break;
+				case 16:cmds[6].push_back(name);	break;
+				case 17:cmds[8].push_back(name);	break;
+			}
+		}
+		type->value(0);	type_sel();
+	}
+	void type_sel()
+	{
+		int t = type->value();	cmd->clear();
+		for(size_t i=0;i<cmds[t].size();i++)	cmd->add(cmds[t][i].c_str());
+		cmd->value(0);	cmd_sel();
+	}
+	void cmd_sel()
+	{
+		const char *c = cmd->text();
+		desc->label(Parse->CmdDesc(c));
+		static std::string str = docdir+"/mgl_en.html#"+c;
+		help->load(str.c_str());
+		std::string par = Parse->CmdFormat(cmd);
+	}
+	void var_sel()
+	{}
+	void args_sel()
+	{}
+	void set_cmd(const char *line)
+	{}
+} newcmd_dlg;
+//-----------------------------------------------------------------------------
+void cb_cmd_type(Fl_Widget*, void*)	{	newcmd_dlg.type_sel();	}
+void cb_cmd_cmd(Fl_Widget*, void*)	{	newcmd_dlg.cmd_sel();	}
+void cb_cmd_var(Fl_Widget*, void*)	{	newcmd_dlg.var_sel();	}
+void cb_cmd_args(Fl_Widget*, void*)	{	newcmd_dlg.args_sel();	}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
