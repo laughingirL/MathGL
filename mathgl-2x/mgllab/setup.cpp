@@ -82,7 +82,7 @@ void SetupDlg::CreateGen()
 	axial = new Fl_Choice(360, 285, 75, 25, mgl_gettext("Axial Dir"));	axial->align(FL_ALIGN_TOP);
 	axial->add("x");	axial->add("y");	axial->add("z");
 	font = new Fl_Input(20, 330, 50, 25, mgl_gettext("Font"));			font->align(FL_ALIGN_TOP);
-	{ Fl_Button* o = new Fl_Button(70, 330, 25, 25, "..");	o->callback(font_cb, font);	}
+//	{ Fl_Button* o = new Fl_Button(70, 330, 25, 25, "..");	o->callback(font_cb, font);	}
 	size = new Fl_Input(105, 330, 75, 25, mgl_gettext("Font Size"));	size->align(FL_ALIGN_TOP);
 	alpha = new Fl_Check_Button(190, 330, 75, 25, mgl_gettext("Alpha on"));
 	light = new Fl_Check_Button(275, 330, 75, 25, mgl_gettext("Light on"));

@@ -1117,8 +1117,10 @@ MGL_EXPORT const char * const * mgl_datas_hdf_str(const char *fname)
 	}
 	H5Gclose(hg);	H5Fclose(hf);	names.push_back("");
 	if(res)	delete []res;
-	res = new const char*[names.size()];
-	for(size_t i=0;i<names.size();i++)	res[i]=names[i].c_str();
+	size_t nn = names.size();
+	res = new const char*[nn+1];
+	for(size_t i=0;i<nn;i++)	res[i]=names[i].c_str();
+	res[nn]=NULL;	return res;
 }
 
 long MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size)
@@ -1330,6 +1332,7 @@ size_t MGL_EXPORT mgl_fread(FILE *fp, void *vals, size_t size, size_t num, int s
 			ch=buf[3];	buf[3]=buf[4];	buf[4]=ch;
 		}
 	}
+	return r;
 }
 //-----------------------------------------------------------------------------
 /// Read data array from Tektronix WFM file

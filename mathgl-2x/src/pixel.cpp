@@ -1152,7 +1152,7 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 	}
 	if(i1>=i2 || j1>=j2)	return;
 
-	std::vector<mreal> b[h];
+	std::vector<mreal> *b = new std::vector<mreal>[h];
 	const float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 	const int oi = d?d->ObjId:-1;
 	unsigned char r[4];	col2int(pp,r,oi);
@@ -1209,6 +1209,7 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 			for(long i=ii1;i<=ii2;i++)	pnt_plot(kx+i,y0+j,pp.z+dz,r,oi);
 		}
 	}
+	delete []b;
 
 /*	if(!g.trig || g.nt<=0)	return;
 	const *mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);

@@ -249,8 +249,9 @@ protected:
 	Fl_Double_Window *w;
 public:
 	std::string result;
-	virtual void cb_ok()	{}
-	void show()	{	w->show();	}
+	virtual void cb_ok(){}
+	virtual void init()	{	result.clear();	}
+	void show()	{	init();	w->show();	}
 	void hide()	{	w->hide();	}
 };
 static void cb_dlg_cancel(Fl_Widget*, void*);
@@ -283,7 +284,6 @@ void help_cb(Fl_Widget*, void*);
 // Graphical callback functions
 void setup_cb(Fl_Widget *, void *);
 void style_cb(Fl_Widget *, void *);
-void option_cb(Fl_Widget *, void *);
 void argument_cb(Fl_Widget *, void *);
 void variables_cb(Fl_Widget *, void *);
 void settings_cb(Fl_Widget *, void *);
@@ -314,7 +314,11 @@ void example_cb(Fl_Widget*, void*v);
 void about_cb(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
 void prop_dlg_cb(Fl_Widget*, void*);
+void calc_dlg_cb(Fl_Widget*, void*);
 void args_dlg_cb(Fl_Widget*, void*);
+void option_dlg_cb(Fl_Widget*, void*);
+void dirsel_dlg_cb(Fl_Widget*, void*);
+void style_dlg_cb(Fl_Widget*, void*);
 void newcmd_cb(Fl_Widget*,void*);
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

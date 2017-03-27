@@ -880,7 +880,7 @@ bool mglFont::Load(const char *base, const char *path)
 }
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_PTHREAD
-extern pthread_mutex_t mutexRnd;
+pthread_mutex_t mutexRnd;
 #endif
 //-----------------------------------------------------------------------------
 float mgl_cos[360];

@@ -588,6 +588,7 @@ void mglCanvas::smbl_plot(long p1, char id, double size)
 	a.w = get(MGL_ENABLE_RTEXT)?ftet:1e5;
 	a.p = 1./(mgl_fact*mgl_fgen);
 	a.n1 = pk;	a.n2 = p1; 	a.n3 = size<0?4:0;	a.n4 = AddGlyph(id);
+	if(a.n4<0)	return;	// no symbol is defined by user
 	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);
 	d.PDef = size<0?4:0;	d.pPos = a.s;	d.PenWidth=a.w;
 	if(TernAxis&12) for(int i=0;i<4;i++)

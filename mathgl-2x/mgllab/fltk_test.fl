@@ -1,12 +1,12 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0303 
-i18n_type 1 
-i18n_include <libintl.h> 
-i18n_function gettext 
-header_name {.h} 
+version 1.0304
+i18n_type 1
+i18n_include <libintl.h>
+i18n_function gettext
+header_name {.h}
 code_name {.cxx}
 decl {\#include <mgllab.h>} {public local
-} 
+}
 
 Function {make_window()} {
   comment {Main mgllab window}
@@ -616,14 +616,14 @@ Function {make_window()} {
       xywh {0 350 680 25}
     }
   }
-} 
+}
 
 Function {create_common()} {return_type void
 } {
   code {make_prop();
 make_args();
 make_find();} {}
-} 
+}
 
 Function {make_args()} {
   comment {Dialog to set MGL arguments}
@@ -693,7 +693,7 @@ args_dlg->hide();}
       xywh {155 290 75 25}
     }
   }
-} 
+}
 
 Function {make_prop()} {
   comment {Dialog for mgllab properties}
@@ -789,17 +789,21 @@ prop_dlg->hide();}
       xywh {180 340 75 25}
     }
   }
-} 
+}
 
 Function {make_calc()} {
-  comment Calculator open
+  comment Calculator
 } {
   Fl_Window {} {
-    label Calculator open
+    label Calculator
     xywh {455 679 275 275} type Double hide
   } {
     Fl_Input edit {
-      xywh {5 5 265 25}
+      xywh {5 5 240 25}
+    }
+    Fl_Button {} {
+      label {@>}
+      xywh {245 5 25 25}
     }
     Fl_Output result {
       label Result
@@ -928,12 +932,11 @@ Function {make_calc()} {
       }
     }
   }
-} 
+}
 
-Function {make_option()} {open
-} {
+Function {make_option()} {} {
   Fl_Window {} {
-    label {Add command option(s)} open selected
+    label {Add command option(s)}
     xywh {336 575 570 185} type Double hide modal
   } {
     Fl_Input x1 {
@@ -1019,7 +1022,30 @@ Function {make_option()} {open
       xywh {480 155 85 25}
     }
   }
-} 
+}
+
+Function {make_dirsel()} {} {
+  Fl_Window {} {
+    label {Select direction}
+    xywh {454 309 220 85} type Double hide modal
+  } {
+    Fl_Choice dir {
+      label Direction open
+      xywh {80 10 135 25} down_box BORDER_BOX
+      code0 {dir->add("default"); dir->add("xyz");}
+      code1 {dir->add("x"); dir->add("y"); dir->add("z");}
+      code2 {dir->add("xy"); dir->add("xz"); dir->add("yz");}
+    } {}
+    Fl_Button {} {
+      label Cancel
+      xywh {55 50 75 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      xywh {140 50 75 25}
+    }
+  }
+}
 
 Function {make_style()} {open
 } {
@@ -1030,7 +1056,7 @@ Function {make_style()} {open
       xywh {0 5 375 260}
     } {
       Fl_Group {} {
-        label {Line style}
+        label {Line style} open
         xywh {0 30 375 235} hide
       } {
         Fl_Choice arr1 {
@@ -1058,6 +1084,14 @@ Function {make_style()} {open
           label Marks open
           xywh {125 110 110 25} down_box BORDER_BOX
         } {}
+        Fl_Check_Button solid {
+          label solid
+          xywh {240 110 55 25} down_box DOWN_BOX
+        }
+        Fl_Check_Button user {
+          label user
+          xywh {300 110 55 25} down_box DOWN_BOX
+        }
         Fl_Spinner width {
           label Width
           xywh {125 140 110 25}
@@ -1114,8 +1148,8 @@ Function {make_style()} {open
         }
       }
       Fl_Group {} {
-        label {Color scheme}
-        xywh {0 30 375 235} hide
+        label {Color scheme} open
+        xywh {0 30 375 235}
       } {
         Fl_Choice c1 {
           label {Color order} open
@@ -1204,8 +1238,12 @@ Function {make_style()} {open
           xywh {275 200 95 25}
         }
         Fl_Check_Button wire {
-          label {Wire or mesh plot}
-          xywh {220 230 150 25} down_box DOWN_BOX
+          label {Wire or mesh}
+          xywh {155 230 115 25} down_box DOWN_BOX
+        }
+        Fl_Check_Button sharp {
+          label Sharp selected
+          xywh {275 230 95 25} down_box DOWN_BOX
         }
       }
       Fl_Group {} {
@@ -1258,7 +1296,7 @@ Function {make_style()} {open
       }
       Fl_Group {} {
         label {Manual mask}
-        xywh {0 30 375 235}
+        xywh {0 30 375 235} hide
       } {
         Fl_Button {} {
           xywh {15 45 20 20}
@@ -1467,16 +1505,15 @@ Function {make_style()} {open
       xywh {300 350 75 25}
     }
     Fl_Box {} {
-      label Preview
-      xywh {60 315 230 65} box ENGRAVED_BOX align 4
+      xywh {5 315 285 65} box ENGRAVED_BOX align 4
     }
   }
-} 
+}
 
 Function {make_datsel()} {open
 } {
   Fl_Window {} {
-    label {Select data argument}
+    label {Select data argument} open
     xywh {440 689 355 255} type Double hide modal
   } {
     Fl_Choice name {
@@ -1538,37 +1575,13 @@ Function {make_datsel()} {open
       xywh {105 125 245 25}
     }
   }
-} 
-
-Function {make_dirsel()} {open
-} {
-  Fl_Window {} {
-    label {Select direction}
-    xywh {454 309 220 85} type Double hide modal
-  } {
-    Fl_Choice dir {
-      label Direction open
-      xywh {80 10 135 25} down_box BORDER_BOX
-      code0 {dir->add("default"); dir->add("xyz");}
-      code1 {dir->add("x"); dir->add("y"); dir->add("z");}
-      code2 {dir->add("xy"); dir->add("xz"); dir->add("yz");}
-    } {}
-    Fl_Button {} {
-      label Cancel
-      xywh {55 50 75 25}
-    }
-    Fl_Return_Button {} {
-      label OK
-      xywh {140 50 75 25}
-    }
-  }
-} 
+}
 
 Function {make_newcmd()} {open
 } {
   Fl_Window {} {
     label {New command} open
-    xywh {0 438 780 330} type Double modal visible
+    xywh {1134 744 780 330} type Double modal visible
   } {
     Fl_Choice kind {
       label Kind open
@@ -1610,13 +1623,13 @@ Function {make_newcmd()} {open
       xywh {360 5 415 320} labelsize 12
     }
   }
-} 
+}
 
 Function {make_inplot()} {open
 } {
   Fl_Window {} {
     label {Add inplot} open
-    xywh {305 453 715 315} type Double modal visible
+    xywh {407 759 715 315} type Double modal visible
   } {
     Fl_Round_Button k1 {
       label SubPlot
@@ -1798,7 +1811,7 @@ Function {make_inplot()} {open
       xywh {630 95 75 25}
     }
   }
-} 
+}
 
 Function {make_find()} {
   comment {Dialog to Find/Replace text} open
@@ -1837,4 +1850,4 @@ Function {make_find()} {
       xywh {275 70 75 25}
     }
   }
-} 
+}

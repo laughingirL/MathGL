@@ -155,7 +155,7 @@ void MGL_EXPORT mgl_srnd_(int *seed)	{	mgl_srnd(*seed);	}
 double MGL_EXPORT_CONST mgl_hypot(double x, double y)	{	return hypot(x,y);	}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_PTHREAD
-pthread_mutex_t mutexRnd;
+extern pthread_mutex_t mutexRnd;
 #endif
 double MGL_EXPORT mgl_rnd()
 {
