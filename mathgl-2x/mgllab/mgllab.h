@@ -135,7 +135,8 @@ public:
 	const char **AnimS0;
 	int AnimNum;
 	mreal AnimDelay;
-
+	std::string script;		///< script with settings
+	
 	Fl_MGL(Fl_MGLView *GR);
 	~Fl_MGL();
 
@@ -143,10 +144,6 @@ public:
 	int Draw(mglGraph *);
 	/// Update (redraw) plot
 	void update();
-	/// Set main scr and optional pre scripts for execution
-	void scripts(char *scr, char *pre);
-	/// Clear scripts internally saved
-	void clear_scripts();
 	/// Show next frame
 	void next_frame();
 	/// Show prev frame
@@ -158,8 +155,6 @@ protected:
 	char *Args[1000], *ArgBuf;
 	int NArgs, ArgCur;
 
-	char *script;		///< main script
-	char *script_pre;	///< script with settings
 };
 //-----------------------------------------------------------------------------
 struct TableWindow : public Fl_Window
@@ -186,34 +181,6 @@ protected:
 	char sl_id[64];	// slice id
 };
 //-----------------------------------------------------------------------------
-class SetupDlg
-{
-public:
-	Fl_Window *wnd;
-	bool OK;
-	Fl_Input *templ;
-
-	SetupDlg()	{	memset(this,0,sizeof(SetupDlg));	}
-	~SetupDlg()	{	delete wnd;	}
-	void CreateDlg();
-	char *ToScript();
-private:
-	Fl_Input *xmin, *ymin, *zmin, *cmin;
-	Fl_Input *xmax, *ymax, *zmax, *cmax;
-	Fl_Input *xorg, *yorg, *zorg;
-	Fl_Input *xlab, *ylab, *zlab, *font;
-	Fl_Choice *xpos, *ypos, *zpos, *axial, *cid[10];
-	Fl_Input *xtik, *ytik, *ztik;
-	Fl_Input *xsub, *ysub, *zsub;
-	Fl_Input *alphad, *ambient, *basew, *mesh, *size;
-	Fl_Check_Button *alpha, *light, *rotate, *lid[10];
-	Fl_Input *xid[10], *yid[10], *zid[10], *bid[10];
-	Fl_Help_View *code;
-
-	void CreateGen();
-	void CreateLid();
-};
-//-----------------------------------------------------------------------------
 class ScriptWindow : public Fl_Double_Window
 {
 public:
@@ -237,7 +204,6 @@ public:
 
 	void mem_init();
 	void mem_pressed(int n);
-	SetupDlg 	*setup_dlg;
 	char		search[256];
 	Fl_MGLView	*graph;
 	Fl_MGL		*draw;
@@ -248,6 +214,8 @@ class GeneralDlg
 protected:
 	Fl_Double_Window *w;
 public:
+	mglDataA *dat;
+	ScriptWindow *e;
 	std::string result;
 	virtual void cb_ok(){}
 	virtual void init()	{	result.clear();	}
@@ -324,6 +292,7 @@ void dirsel_dlg_cb(Fl_Widget*, void*);
 void datsel_dlg_cb(Fl_Widget*, void*);
 void style_dlg_cb(Fl_Widget*, void*);
 void newcmd_dlg_cb(Fl_Widget*,void*);
+void setup_dlg_cb(Fl_Widget*,void *);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

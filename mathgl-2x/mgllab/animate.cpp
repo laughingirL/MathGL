@@ -39,6 +39,8 @@ protected:
 void argument_dlg_cb(Fl_Widget *, void *v)
 {	argument_dlg.OK = true;	((Fl_Window *)v)->hide();	}
 //-----------------------------------------------------------------------------
+void close_dlg_cb(Fl_Widget *, void *v)	{	((Fl_Window *)v)->hide();	}
+//-----------------------------------------------------------------------------
 void ArgumentDlg::create_dlg()
 {
 	wnd = new Fl_Window(325, 275, mgl_gettext("Script arguments"));

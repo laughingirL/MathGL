@@ -264,15 +264,11 @@ ScriptWindow::ScriptWindow(int w, int h, const char* t) : Fl_Double_Window(w, h,
 	replace_dlg->end();
 	replace_dlg->set_non_modal();
 	editor = 0;		*search = 0;
-
-	setup_dlg = new SetupDlg;
-	setup_dlg->CreateDlg();
 }
 //-----------------------------------------------------------------------------
 ScriptWindow::~ScriptWindow()
 {
 	delete replace_dlg;
-	delete setup_dlg->wnd;
 }
 //-----------------------------------------------------------------------------
 int check_save(void)
@@ -289,7 +285,7 @@ int loading = 0;
 void load_file(const char *newfile, int ipos)
 {
 	long len = strlen(newfile);
-	pref.set("last_file",newfile);
+	pref.set("last_file",newfile);	//TODO
 	if(ipos==-1 && (!strcmp(newfile+len-4,".dat") || !strcmp(newfile+len-4,".csv")))
 	{
 		data_file(newfile);
@@ -471,19 +467,6 @@ void replcan_cb(Fl_Widget*, void* v)
 	e->replace_dlg->hide();
 }
 //-----------------------------------------------------------------------------
-void view_cb(Fl_Widget*, void*);
-//#include "xpm/window.xpm"
-//#include "xpm/option.xpm"
-//#include "xpm/table.xpm"
-#include "xpm/plot.xpm"
-#include "xpm/help-contents.xpm"
-#include "xpm/edit-cut.xpm"
-#include "xpm/edit-copy.xpm"
-#include "xpm/edit-paste.xpm"
-#include "xpm/edit-find.xpm"
-#include "xpm/document-open.xpm"
-#include "xpm/document-new.xpm"
-#include "xpm/document-save.xpm"
 #include "image.h"
 Fl_Widget *add_editor(ScriptWindow *w)
 {
@@ -505,34 +488,6 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	o->tooltip(mgl_gettext("Insert MGL command"));
 	o = new Fl_Button(150, 1, 25, 25);	o->image(img_calc);	o->callback(calc_dlg_cb,w);
 	o->tooltip(mgl_gettext("Show calculator window"));
-
-	// ------------ old --------------
-// 	o = new Fl_Button(0, 1, 25, 25);	o->image(new Fl_Pixmap(document_new_xpm));
-// 	o->tooltip(mgl_gettext("New script"));	o->callback(new_cb,w);
-// 	o = new Fl_Button(25, 1, 25, 25);	o->tooltip(mgl_gettext("Open script or data file"));
-// 	o->image(new Fl_Pixmap(document_open_xpm));	o->callback(open_cb,w);
-// 	o = new Fl_Button(50, 1, 25, 25);	o->tooltip(mgl_gettext("Save script to file"));
-// 	o->image(new Fl_Pixmap(document_save_xpm));	o->callback(save_cb,w);
-// 
-// 	o = new Fl_Button(80, 1, 25, 25);	o->tooltip(mgl_gettext("Cut selection to clipboard"));
-// 	o->image(new Fl_Pixmap(edit_cut_xpm));	o->callback(cut_cb,w);
-// 	o = new Fl_Button(105, 1, 25, 25);	o->tooltip(mgl_gettext("Copy selection to clipboard"));
-// 	o->image(new Fl_Pixmap(edit_copy_xpm));	o->callback(copy_cb,w);
-// 	o = new Fl_Button(130, 1, 25, 25);	o->tooltip(mgl_gettext("Paste text from clipboard"));
-// 	o->image(new Fl_Pixmap(edit_paste_xpm));	o->callback(paste_cb,w);
-// 	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(mgl_gettext("Find text"));
-// 	o->image(new Fl_Pixmap(edit_find_xpm));	o->callback(find_cb,w);
-// 	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(mgl_gettext("Insert MGL command"));
-// 	o->image(new Fl_Pixmap(plot_xpm));	o->callback(command_cb,w);
-//	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(mgl_gettext("Insert command options"));
-//	o->image(new Fl_Pixmap(option_xpm));	o->callback(option_cb,w);
-//	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(mgl_gettext("Edit data array"));
-//	o->image(new Fl_Pixmap(table_xpm));	o->callback(table_cb,w);
-//	o = new Fl_Button(235, 1, 25, 25);	o->tooltip(mgl_gettext("New view window"));
-//	o->image(new Fl_Pixmap(window_xpm));o->callback(view_cb,w);
-// 	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(mgl_gettext("Show help window"));
-// 	o->image(new Fl_Pixmap(help_contents_xpm));	o->callback(help_cb,w);
-	// ------------ old --------------
 	g->end();	g->resizable(0);
 
 	w->editor = new Fl_Text_Editor(0, 28, 300, 400);

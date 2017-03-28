@@ -57,7 +57,6 @@ Fl_MGL::Fl_MGL(Fl_MGLView *GR)
 	if(!Parse)	Parse = new mglParse;
 	Parse->AllowSetSize(true);
 	ArgBuf = 0;	NArgs = ArgCur = 0;
-	script = script_pre = 0;
 	gr = GR;	gr->par = this;
 	gr->next = udav_next;	gr->delay = udav_delay;
 	gr->prev = udav_prev;	gr->reload = udav_reload;
@@ -71,21 +70,11 @@ Fl_MGL::Fl_MGL(Fl_MGLView *GR)
 #endif*/
 }
 //-----------------------------------------------------------------------------
-Fl_MGL::~Fl_MGL()	{	clear_scripts();	if(ArgBuf)	delete []ArgBuf;	}
-//-----------------------------------------------------------------------------
-void Fl_MGL::clear_scripts()
-{
-	if(script)		free(script);
-	if(script_pre)	free(script_pre);
-}
-//-----------------------------------------------------------------------------
-void Fl_MGL::scripts(char *scr, char *pre)
-{	clear_scripts();	script=scr;	script_pre=pre;	}
+Fl_MGL::~Fl_MGL()	{	if(ArgBuf)	delete []ArgBuf;	}
 //-----------------------------------------------------------------------------
 int Fl_MGL::Draw(mglGraph *gr)
 {
-	Parse->Execute(gr,script_pre);
-	Parse->Execute(gr,script);
+	Parse->Execute(gr,script.c_str());
 	if(textbuf)
 	{
 		char *text = textbuf->text();
@@ -99,7 +88,9 @@ int Fl_MGL::Draw(mglGraph *gr)
 void Fl_MGL::update()
 {
 	// NOTE: hint for old style View(). May be I should remove it!
-	if(!script || !strstr(script,"rotate"))	mgl_rotate(gr->get_graph(),0,0,0);
+	char *text = textbuf->text();
+	if(script.empty() || !text || !strstr(text,"rotate"))
+		mgl_rotate(gr->get_graph(),0,0,0);
 
 	gr->update();
 	for(long i=0;i<Parse->GetNumVar();i++)

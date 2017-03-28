@@ -255,7 +255,7 @@ Fl_Menu_Item menuitems[] = {
 	{"Setup", 0, 0, 0, FL_SUBMENU},
 		{"Properties", 0, prop_dlg_cb},
 		{"Set arguments", 0, args_dlg_cb},
-		// TODO{"Plot setup", FL_META+'g', 0, 0, FL_MENU_DIVIDER},
+		{"Plot setup", FL_META+'g', setup_dlg_cb, 0, FL_MENU_DIVIDER},
 		{"Calculator", FL_F+4, calc_dlg_cb},
 		// TODO{"Messages", FL_F+2, 0, 0, FL_MENU_TOGGLE},
 		{0},

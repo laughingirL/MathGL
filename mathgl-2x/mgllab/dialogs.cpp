@@ -76,7 +76,6 @@ class PropDlg : public GeneralDlg
 	Fl_Choice *lang_w;
 	Fl_Choice *scheme_w;
 public:
-	ScriptWindow *e;
 	HMGL gr;
 	PropDlg()
 	{
@@ -245,7 +244,6 @@ public:
 	Fl_Browser *prev;
 	Fl_Choice *kind;
 	Fl_Choice *func;
-	ScriptWindow *e;
 	CalcDlg()
 	{
 		Fl_Button *o;	Fl_Group* g, *gg;
@@ -378,7 +376,6 @@ class OptionDlg : public GeneralDlg
 	Fl_Choice *cut, *light;
 	Fl_Input *alpha, *amb, *dif, *legend;
 public:
-	ScriptWindow *e;
 	Fl_Input *ext;
 	OptionDlg()
 	{
@@ -456,7 +453,6 @@ class DirSelDlg : public GeneralDlg
 {
 	Fl_Choice *dir;
 public:
-	ScriptWindow *e;
 	Fl_Input *ext;
 	DirSelDlg()
 	{
@@ -609,7 +605,6 @@ class StyleDlg : public GeneralDlg
 	Fl_MathGL *gr;
 	std::string script;
 public:
-	ScriptWindow *e;
 	Fl_Input *ext;
 	StyleDlg()
 	{
@@ -861,7 +856,6 @@ class DatSelDlg : public GeneralDlg
 	Fl_Input *clmn;
 	Fl_Check_Button *ax, *ay, *az;
 public:
-	ScriptWindow *e;
 	Fl_Input *ext;
 	DatSelDlg()
 	{
@@ -997,7 +991,6 @@ class NewCmdDlg : public GeneralDlg
 	Fl_Help_View *help;
 	std::vector<std::string> cmds[17];	///< commands divided by type
 public:
-	ScriptWindow *e;
 	NewCmdDlg()
 	{
 		Fl_Button *o;
@@ -1153,13 +1146,13 @@ public:
 		else if(arg=="'dir'")	dirsel_dlg_cb(0,0);	// this is path
 		else if(arg[0]=='\'')	// this is general string
 		{
-			const char *s = fl_input(question.c_str(),0);
+			const char *s = fl_input(question.c_str(),"");
 			if(s)
 			{	std::string ss=s;	args_set(('\''+ss+'\'').c_str());	}
 		}
 		else	// this is general constant
 		{
-			const char *s = fl_input(question.c_str(),0);
+			const char *s = fl_input(question.c_str(),"");
 			if(s)	args_set(s);
 		}
 	}
@@ -1184,9 +1177,7 @@ public:
 			const char *p = strchr(s,'\t');
 			if(s[0]=='@' && !p)
 			{
-				std::string arg = s+3;
-				arg = mgl_gettext("Required argument ")+arg+mgl_gettext(" is not specified!");
-				fl_alert(arg.c_str());	return;
+				fl_alert(mgl_gettext("Required argument %s is not specified!"),s+3);	return;
 			}
 			if(p)	result = result+' '+p;
 		}
@@ -1206,4 +1197,286 @@ void cb_args_set(const char *val)	{	newcmd_dlg.args_set(val);	}
 //-----------------------------------------------------------------------------
 void newcmd_dlg_cb(Fl_Widget*,void *v)
 {	newcmd_dlg.e=(ScriptWindow *)v;	newcmd_dlg.show();	}
+//-----------------------------------------------------------------------------
+void cb_setup_save(Fl_Widget*,void *v);
+class SetupDlg : public GeneralDlg
+{
+	Fl_Input *x1, *x2, *x0, *xlabel, *xtick;
+	Fl_Choice *xlpos, *ylpos, *zlpos, *clpos;
+	Fl_Input *xstick, *xotick, *xtmpl, *xfact;
+	Fl_Input *y1, *y2, *y0, *ylabel, *ytick;
+	Fl_Input *ystick, *yotick, *ytmpl, *yfact;
+	Fl_Input *z1, *z2, *z0, *zlabel, *ztick;
+	Fl_Input *zstick, *zotick, *ztmpl, *zfact;
+	Fl_Input *c1, *c2, *c0, *clabel, *ctick, *ctmpl, *cfact;
+	Fl_Input *alphadef, *ambient, *diffuse;
+	Fl_Input *palette, *font_stl, *axis_stl;
+	Fl_Input *fog, *fog_dz, *pendelta;
+	Fl_Input *meshnum, *facenum, *arr_size, *bar_size;
+	Fl_Input *mrk_size, *txt_size, *tick_size, *plotid;
+
+	Fl_Check_Button *alpha, *light, *cut, *attach;
+	Fl_Check_Button *origintick, *gray, *rotatetext;
+	Fl_Choice *time, *tunetick, *ternary, *transptype;
+	Fl_Spinner *variant;
+	
+	Fl_Toggle_Button *lb[10];
+	Fl_Choice *lc[10];
+	Fl_Input *lx[10], *ly[10], *lz[10], *lbr[10];
+	Fl_Input *fname;
+public:
+	SetupDlg()
+	{
+		Fl_Button *o;	Fl_Group *g, *gg;
+		w = new Fl_Double_Window(525, 395, mgl_gettext("Setup script"));
+		Fl_Tabs* tt = new Fl_Tabs(0, 0, 525, 355);
+		gg = new Fl_Group(0, 25, 525, 330, mgl_gettext("Axis settings"));
+			new Fl_Box(85, 30, 100, 25, mgl_gettext("X axis"));
+			x1 = new Fl_Input(85, 55, 100, 25, mgl_gettext("Minimal"));
+			x2 = new Fl_Input(85, 85, 100, 25, mgl_gettext("Maximal"));
+			x0 = new Fl_Input(85, 115, 100, 25, mgl_gettext("Origin"));
+			xlabel = new Fl_Input(85, 145, 100, 25, mgl_gettext("Label"));
+			xtick = new Fl_Input(85, 205, 100, 25, mgl_gettext("Ticks"));
+			xlpos = new Fl_Choice(85, 175, 100, 25, mgl_gettext("at position"));
+			xlpos->add(mgl_gettext("left"));	xlpos->add(mgl_gettext("center"));
+			xlpos->add(mgl_gettext("right"));	xlpos->value(1);
+			xstick = new Fl_Input(85, 235, 100, 25, mgl_gettext("Subticks"));
+			xotick = new Fl_Input(85, 265, 100, 25, mgl_gettext("Ticks start"));
+			xtmpl = new Fl_Input(85, 295, 100, 25, mgl_gettext("Template"));
+			xfact = new Fl_Input(85, 325, 100, 25, mgl_gettext("Template"));		
+			new Fl_Box(195, 30, 100, 25, mgl_gettext("Y axis"));
+			y1 = new Fl_Input(195, 55, 100, 25);
+			y2 = new Fl_Input(195, 85, 100, 25);
+			y0 = new Fl_Input(195, 115, 100, 25);
+			ylabel = new Fl_Input(195, 145, 100, 25);
+			ytick = new Fl_Input(195, 205, 100, 25);
+			ylpos = new Fl_Choice(195, 175, 100, 25);
+			ylpos->add(mgl_gettext("left"));	ylpos->add(mgl_gettext("center"));
+			ylpos->add(mgl_gettext("right"));	ylpos->value(1);
+			ystick = new Fl_Input(195, 235, 100, 25);
+			yotick = new Fl_Input(195, 265, 100, 25);
+			ytmpl = new Fl_Input(195, 295, 100, 25);
+			yfact = new Fl_Input(195, 325, 100, 25);
+			new Fl_Box(305, 30, 100, 25, mgl_gettext("Z axis"));
+			z1 = new Fl_Input(305, 55, 100, 25);
+			z2 = new Fl_Input(305, 85, 100, 25);
+			z0 = new Fl_Input(305, 115, 100, 25);
+			zlabel = new Fl_Input(305, 145, 100, 25);
+			ztick = new Fl_Input(305, 205, 100, 25);
+			zlpos = new Fl_Choice(305, 175, 100, 25);
+			zlpos->add(mgl_gettext("left"));	zlpos->add(mgl_gettext("center"));
+			zlpos->add(mgl_gettext("right"));	zlpos->value(1);
+			zstick = new Fl_Input(305, 235, 100, 25);
+			zotick = new Fl_Input(305, 265, 100, 25);
+			ztmpl = new Fl_Input(305, 295, 100, 25);
+			zfact = new Fl_Input(305, 325, 100, 25);
+			new Fl_Box(415, 30, 100, 25, mgl_gettext("C axis"));
+			c1 = new Fl_Input(415, 55, 100, 25);
+			c2 = new Fl_Input(415, 85, 100, 25);
+			c0 = new Fl_Input(415, 115, 100, 25);
+			clabel = new Fl_Input(415, 145, 100, 25);
+			clpos = new Fl_Choice(415, 175, 100, 25);
+			clpos->add(mgl_gettext("left"));	clpos->add(mgl_gettext("center"));
+			clpos->add(mgl_gettext("right"));	clpos->value(1);
+			ctmpl = new Fl_Input(415, 295, 100, 25);
+			cfact = new Fl_Input(415, 325, 100, 25);
+			gg->end();
+		gg = new Fl_Group(0, 25, 525, 330, mgl_gettext("General settings"));	gg->hide();
+			g = new Fl_Group(5, 45, 180, 305, mgl_gettext("Colors"));	g->box(FL_ENGRAVED_BOX);
+			alphadef = new Fl_Input(80, 55, 100, 25, mgl_gettext("AlphaDef"));
+			ambient = new Fl_Input(80, 85, 100, 25, mgl_gettext("Ambient"));
+			diffuse = new Fl_Input(80, 115, 100, 25, mgl_gettext("Diffuse"));
+			palette = new Fl_Input(80, 145, 100, 25, mgl_gettext("Palette"));
+			font_stl = new Fl_Input(80, 175, 100, 25, mgl_gettext("Font"));
+			axis_stl = new Fl_Input(80, 205, 100, 25, mgl_gettext("Axis"));
+			fog = new Fl_Input(80, 235, 100, 25, mgl_gettext("Fog"));
+			fog_dz = new Fl_Input(80, 265, 100, 25, mgl_gettext("Fog dist."));
+			gray = new Fl_Check_Button(80, 290, 100, 25, mgl_gettext("grayscale"));
+			alpha = new Fl_Check_Button(10, 315, 65, 25, mgl_gettext("alpha"));
+			light = new Fl_Check_Button(80, 315, 100, 25, mgl_gettext("lighting"));
+			g->end();
+			g = new Fl_Group(185, 45, 180, 250, mgl_gettext("Sizes"));	g->box(FL_ENGRAVED_BOX);
+			meshnum = new Fl_Input(260, 55, 100, 25, mgl_gettext("meshnum"));
+			facenum = new Fl_Input(260, 85, 100, 25, mgl_gettext("facenum"));
+			arr_size = new Fl_Input(260, 115, 100, 25, mgl_gettext("arrows"));
+			bar_size = new Fl_Input(260, 145, 100, 25, mgl_gettext("bars"));
+			mrk_size = new Fl_Input(260, 175, 100, 25, mgl_gettext("markers"));
+			txt_size = new Fl_Input(260, 205, 100, 25, mgl_gettext("text"));
+			tick_size = new Fl_Input(260, 235, 100, 25, mgl_gettext("ticks"));
+			pendelta = new Fl_Input(260, 265, 100, 25, mgl_gettext("pen blur"));
+			g->end();
+			g = new Fl_Group(365, 45, 155, 305, mgl_gettext("Others"));	g->box(FL_ENGRAVED_BOX);
+			cut = new Fl_Check_Button(370, 50, 115, 25, mgl_gettext("cutting"));
+			attach = new Fl_Check_Button(370, 70, 115, 25, mgl_gettext("attach light"));
+			origintick = new Fl_Check_Button(370, 90, 115, 25, mgl_gettext("no origin tick"));
+			rotatetext = new Fl_Check_Button(370, 110, 115, 25, mgl_gettext("rotate text"));
+			
+			time = new Fl_Choice(370, 150, 145, 25, mgl_gettext("Time ticks"));
+			time->add("none");	time->add("x");	time->add("y");	time->add("z");
+			time->align(FL_ALIGN_TOP_LEFT);	time->value(0);
+			tunetick = new Fl_Choice(370, 195, 145, 25, mgl_gettext("Tune ticks"));
+			tunetick->add(mgl_gettext("none"));	tunetick->add(mgl_gettext("factor"));
+			tunetick->add(mgl_gettext("increment"));	tunetick->add(mgl_gettext("both"));	
+			tunetick->align(FL_ALIGN_TOP_LEFT);	tunetick->value(0);
+			ternary = new Fl_Choice(370, 235, 145, 25, mgl_gettext("Ternary"));
+			ternary->add(mgl_gettext("none"));	ternary->add(mgl_gettext("ternary"));
+			ternary->add(mgl_gettext("quaternary"));	ternary->add(mgl_gettext("projection"));
+			ternary->add(mgl_gettext("ternary proj"));	ternary->add(mgl_gettext("quaternary proj"));
+			ternary->align(FL_ALIGN_TOP_LEFT);	ternary->value(0);
+			transptype = new Fl_Choice(370, 275, 145, 25, mgl_gettext("Transparency type"));
+			transptype->add(mgl_gettext("default"));	ternary->add(mgl_gettext("glass-like"));
+			transptype->add(mgl_gettext("lamp-like"));
+			transptype->align(FL_ALIGN_TOP_LEFT);	transptype->value(0);
+			variant = new Fl_Spinner(370, 315, 145, 25, mgl_gettext("Variant"));
+			variant->align(FL_ALIGN_TOP_LEFT);	variant->range(0,100);	variant->value(0);
+			g->end();	gg->end();
+			plotid = new Fl_Input(190, 321, 172, 25, mgl_gettext("Plot ID"));
+			plotid->align(FL_ALIGN_TOP_LEFT);
+		gg = new Fl_Group(0, 25, 525, 330, mgl_gettext("Light settings"));	gg->hide();
+			static const char *id[10]={"0:","1:","2:","3:""4:","5:","6:","7:","8:","9:"};
+			for(int i=0;i<10;i++)
+			{
+				lb[i] = new Fl_Toggle_Button(10, 50+30*i, 25, 25, id[i]);
+				lx[i] = new Fl_Input(40, 50+30*i, 90, 25);
+				ly[i] = new Fl_Input(135, 50+30*i, 90, 25);
+				lz[i] = new Fl_Input(230, 50+30*i, 90, 25);
+				lc[i] = new Fl_Choice(325, 50+30*i, 95, 25);
+				lbr[i]= new Fl_Input(425, 50+30*i, 90, 25);
+				lc[i]->copy(colors);	lc[i]->value(0);
+			}
+			lx[0]->label(mgl_gettext("X position"));	lx[0]->align(FL_ALIGN_TOP_LEFT);
+			ly[0]->label(mgl_gettext("Y position"));	ly[0]->align(FL_ALIGN_TOP_LEFT);
+			lz[0]->label(mgl_gettext("Z position"));	lz[0]->align(FL_ALIGN_TOP_LEFT);
+			lc[0]->label(mgl_gettext("Color"));			lc[0]->align(FL_ALIGN_TOP_LEFT);
+			lbr[0]->label(mgl_gettext("Brightness"));	lbr[0]->align(FL_ALIGN_TOP_LEFT);
+			gg->end();	tt->end();
+		o = new Fl_Button(365, 365, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(445, 365, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
+		fname = new Fl_Input(100, 365, 175, 25, mgl_gettext("File to export"));
+		o = new Fl_Button(275, 365, 25, 25, mgl_gettext("@->"));	o->callback(cb_setup_save);
+		o->tooltip(mgl_gettext("Keep empty to put at beginning of main script."));
+		w->end();
+	}
+	void prepare()
+	{
+		result.clear();
+		const char *s1, *s2, *s3, *s4;
+		s1=x1->value();	s2=x2->value();
+		if(s1 && *s1 && s2 && *s2)	result = result+"xrange "+s1+' '+s2+'\n';
+		s1=y1->value();	s2=y2->value();
+		if(s1 && *s1 && s2 && *s2)	result = result+"yrange "+s1+' '+s2+'\n';
+		s1=z1->value();	s2=z2->value();
+		if(s1 && *s1 && s2 && *s2)	result = result+"zrange "+s1+' '+s2+'\n';
+		s1=c1->value();	s2=c2->value();
+		if(s1 && *s1 && s2 && *s2)	result = result+"crange "+s1+' '+s2+'\n';
+		s1=x0->value();	s2=y0->value();	s3=z0->value();
+		if(s3 && *s3)	result = result+"origin "+(s1?s1:"nan")+' '+(s2?s2:"nan")+' '+s3+'\n';
+		else if(s2 && *s2)	result = result+"origin "+(s1?s1:"nan")+' '+s2+'\n';
+		else if(s1 && *s1)	result = result+"origin "+s1+"nan\n";
+		
+		s1=xtmpl->value();	if(s1 && *s1)	result = result+"xtick '"+s1+"'\n";
+		s1=ytmpl->value();	if(s1 && *s1)	result = result+"ytick '"+s1+"'\n";
+		s1=ztmpl->value();	if(s1 && *s1)	result = result+"ztick '"+s1+"'\n";
+		s1=ctmpl->value();	if(s1 && *s1)	result = result+"ctick '"+s1+"'\n";
+		
+		s1=xtick->value();	s2=xstick->value();	s3=xotick->value();	s4=xfact->value();
+		if(s4 && *s4)	result = result+"xtick "+(s1?s1:"0")+' '+(s2?s2:"0")+' '+(s3?s3:"nan")+" '"+s4+"'\n";
+		else if(s3 && *s3)	result = result+"xtick "+(s1?s1:"0")+' '+(s2?s2:"0")+' '+s3+'\n';
+		else if(s2 && *s2)	result = result+"xtick "+(s1?s1:"0")+' '+s2+'\n';
+		else if(s1 && *s1)	result = result+"xtick "+s1+'\n';
+		s1=ytick->value();	s2=ystick->value();	s3=yotick->value();	s4=yfact->value();
+		if(s4 && *s4)	result = result+"ytick "+(s1?s1:"0")+' '+(s2?s2:"0")+' '+(s3?s3:"nan")+" '"+s4+"'\n";
+		else if(s3 && *s3)	result = result+"ytick "+(s1?s1:"0")+' '+(s2?s2:"0")+' '+s3+'\n';
+		else if(s2 && *s2)	result = result+"ytick "+(s1?s1:"0")+' '+s2+'\n';
+		else if(s1 && *s1)	result = result+"ytick "+s1+'\n';
+		s1=ztick->value();	s2=zstick->value();	s3=zotick->value();	s4=zfact->value();
+		if(s4 && *s4)	result = result+"ztick "+(s1?s1:"0")+' '+(s2?s2:"0")+' '+(s3?s3:"nan")+" '"+s4+"'\n";
+		else if(s3 && *s3)	result = result+"ztick "+(s1?s1:"0")+' '+(s2?s2:"0")+' '+s3+'\n';
+		else if(s2 && *s2)	result = result+"ztick "+(s1?s1:"0")+' '+s2+'\n';
+		else if(s1 && *s1)	result = result+"ztick "+s1+'\n';
+		s1=ctick->value();	s4=cfact->value();
+		if(s4 && *s4)	result = result+"ctick "+(s1?s1:"0")+" '"+s4+"'\n";
+		else if(s1 && *s1)	result = result+"ctick "+s1+'\n';
+		const char *pos[3]={"' -1\n","' 0\n","' 1\n"};
+		s1=xlabel->value();	if(s1 && *s1)	result = result+"xlabel '"+s1+pos[xlpos->value()];
+		s1=ylabel->value();	if(s1 && *s1)	result = result+"ylabel '"+s1+pos[ylpos->value()];
+		s1=zlabel->value();	if(s1 && *s1)	result = result+"zlabel '"+s1+pos[zlpos->value()];
+//TODO	s1=clabel->value();	if(s1 && *s1)	result = result+"clabel '"+s1+pos[clpos->value()];
+		
+		s1=alphadef->value();	if(s1 && *s1)	result = result+"alphadef "+s1+'\n';
+		s1=ambient->value();	if(s1 && *s1)	result = result+"ambient "+s1+'\n';
+		s1=diffuse->value();	if(s1 && *s1)	result = result+"diffuse "+s1+'\n';
+		s1=palette->value();	if(s1 && *s1)	result = result+"palette '"+s1+"'\n";
+		s1=plotid->value();		if(s1 && *s1)	result = result+"plotid '"+s1+"'\n";
+		s1=axis_stl->value();	if(s1 && *s1)	result = result+"axisstl '"+s1+"'\n";
+		s1=meshnum->value();	if(s1 && *s1)	result = result+"meshnum "+s1+'\n';
+		s1=facenum->value();	if(s1 && *s1)	result = result+"facenum "+s1+'\n';
+		s1=arr_size->value();	if(s1 && *s1)	result = result+"arrowsize "+s1+'\n';
+		s1=bar_size->value();	if(s1 && *s1)	result = result+"barwidth "+s1+'\n';
+		s1=mrk_size->value();	if(s1 && *s1)	result = result+"marksize "+s1+'\n';
+		s1=pendelta->value();	if(s1 && *s1)	result = result+"pendelta "+s1+'\n';
+		s1=tick_size->value();	if(s1 && *s1)	result = result+"ticklen "+s1+'\n';
+
+		s1=font_stl->value();	s2=txt_size->value();
+		if(s2 && *s2)	result = result+"font '"+(s1?s1:"")+"' "+s2+'\n';
+		else if(s1 && *s1)	result = result+"font '"+s1+"'\n";
+		s1=fog->value();	s2=fog_dz->value();
+		if(s1 && *s1 && s2 && *s2)	result = result+"fog "+s1+' '+s2+'\n';
+		else if(s1 && *s1)	result = result+"font "+s1+"\n";
+
+		if(alpha->value())	result = result+"alpha on\n";
+		if(light->value())	result = result+"light on\n";
+		if(cut->value())	result = result+"cut on\n";
+		if(attach->value())	result = result+"attachlight on\n";
+		if(gray->value())	result = result+"gray on\n";
+		if(rotatetext->value())	result = result+"rotatetext on\n";
+		if(origintick->value())	result = result+"origintick off\n";
+		if(variant->value()>0)
+		{	char buf[32];	snprintf(buf,31,"variant %d\n",variant->value());	result += buf;	}
+		const char *stime[4]={"''\n","'x'\n","'y'\n","'z'\n"};
+		if(time->value()>0)	result = result+"timetick "+stime[time->value()];
+		const char *stune[4]={" 0\n"," 1\n"," 2\n"," 3\n"};
+		if(tunetick->value()>0)	result = result+"tunetick "+stune[tunetick->value()];
+		const char *stern[6]={" 0\n"," 1\n"," 2\n"," 4\n"," 5\n"," 6\n"};
+		if(ternary->value()>0)	result = result+"ternary "+stern[ternary->value()];
+		const char *stype[3]={" 0\n"," 1\n"," 2\n"};
+		if(transptype->value()>0)	result = result+"ternary "+stype[transptype->value()];
+		for(int i=0;i<10;i++)
+		{
+			if(!lb[i]->value())	continue;
+			s1 = lx[i]->value();	s2 = ly[i]->value();
+			s3 = lz[i]->value();	s4 = lbr[i]->value();
+			char col = cols[lc[i]->value()];	if(col==' ')	col='w';
+			if(s1 && *s1 && s2 && *s2 && s3 && *s3)
+			{
+				result = result+"light "+char('0'+i)+' '+s1+' '+s2+' '+s3+" '"+col+'\'';
+				if(s4 && *s4)	result = result+' '+s4;
+				result += '\n';
+			}
+		}
+	}
+	void cb_ok()
+	{
+		prepare();
+		if(e)	{	e->draw->script=result;	e->graph->update();	}
+		hide();
+	}
+	void save()
+	{
+		prepare();
+		const char *s=fname->value();
+		if(s && *s)
+		{
+			FILE *fp=fopen(s,"wt");
+			if(fp)	{	fputs(result.c_str(),fp);	fclose(fp);	}
+			else	fl_alert(mgl_gettext("Couldn't open file %s"),s);
+		}
+		else	textbuf->insert(0,result.c_str());
+	}
+} setup_dlg;
+//-----------------------------------------------------------------------------
+void setup_dlg_cb(Fl_Widget*,void *v)
+{	setup_dlg.e = (ScriptWindow*)v;	setup_dlg.show();	}
+//-----------------------------------------------------------------------------
+void cb_setup_save(Fl_Widget*,void *v)	{	setup_dlg.save();	}
 //-----------------------------------------------------------------------------
