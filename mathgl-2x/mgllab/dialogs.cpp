@@ -22,6 +22,7 @@
 #include <FL/Fl_Select_Browser.H>
 #include <FL/Fl_Toggle_Button.H>
 //-----------------------------------------------------------------------------
+const char *cols = " wbgrcmylenuqphkWBGRCMYLENUQPH";
 Fl_Menu_Item colors[] = {
 	{"-----", 0,0,0,0,0,0,0, 0},	//
 	{mgl_gettext("white"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//w
@@ -86,10 +87,10 @@ public:
 		fkind->add("Helvetica");	fkind->add("Courier");	fkind->add("Times");
 		fsize = new Fl_Spinner(245, 10, 90, 25, mgl_gettext("Font size"));
 		help_path = new Fl_File_Input(5, 55, 305, 35, mgl_gettext("Path for help files"));
-		help_path->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		help_path->align(FL_ALIGN_TOP_LEFT);
 		o = new Fl_Button(310, 65, 25, 25, mgl_gettext("..."));	o->callback(cb_filech, 0);
 		font_path = new Fl_File_Input(5, 110, 305, 35, mgl_gettext("Path for MathGL font (without extension)"));
-		font_path->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		font_path->align(FL_ALIGN_TOP_LEFT);
 		o = new Fl_Button(310, 120, 25, 25, mgl_gettext("..."));	o->callback(cb_filech, (void *)1);
 		auto_exec_w = new Fl_Check_Button(5, 145, 330, 25, mgl_gettext("Execute script after loading"));
 		exec_save_w = new Fl_Check_Button(5, 170, 330, 25, mgl_gettext("Save file before redrawing"));
@@ -159,7 +160,11 @@ void ins_fname_cb(Fl_Widget *, void *v)
 	ScriptWindow* e = (ScriptWindow*)v;
 	char *s = fl_file_chooser(mgl_gettext("Select file name"), "DAT files (*.{dat,csv})\tHDF files (*.{hdf,h5})\tAll files (*.*)", prev.c_str(), 0);
 	if(s)
-	{	std::string ss=prev=s;	ss = '\''+ss+'\'';	e->editor->insert(ss.c_str());	}
+	{
+		std::string ss=prev=s;	ss = '\''+ss+'\'';
+		if(e)	e->editor->insert(ss.c_str());
+		else	cb_args_set(ss.c_str());
+	}
 }
 //-----------------------------------------------------------------------------
 void ins_path_cb(Fl_Widget *, void *v)
@@ -168,7 +173,11 @@ void ins_path_cb(Fl_Widget *, void *v)
 	ScriptWindow* e = (ScriptWindow*)v;
 	char *s = fl_dir_chooser(mgl_gettext("Select folder name"), prev.c_str(), 0);
 	if(s)
-	{	std::string ss=prev=s;	ss = '\''+ss+'\'';	e->editor->insert(ss.c_str());	}
+	{
+		std::string ss=prev=s;	ss = '\''+ss+'\'';
+		if(e)	e->editor->insert(ss.c_str());
+		else	cb_args_set(ss.c_str());
+	}
 }
 //-----------------------------------------------------------------------------
 void ins_fits_cb(Fl_Widget *, void *v)
@@ -193,25 +202,25 @@ public:
 	{
 		w = new Fl_Double_Window(290, 320, mgl_gettext("Set script arguments"));
 		arg[1] = new Fl_Input(5, 20, 135, 30, mgl_gettext("String for $1"));
-		arg[1]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[1]->align(FL_ALIGN_TOP_LEFT);
 		arg[2] = new Fl_Input(150, 20, 135, 30, mgl_gettext("String for $2"));
-		arg[2]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[2]->align(FL_ALIGN_TOP_LEFT);
 		arg[3] = new Fl_Input(5, 75, 135, 30, mgl_gettext("String for $3"));
-		arg[3]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[3]->align(FL_ALIGN_TOP_LEFT);
 		arg[4] = new Fl_Input(150, 75, 135, 30, mgl_gettext("String for $4"));
-		arg[4]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[4]->align(FL_ALIGN_TOP_LEFT);
 		arg[5] = new Fl_Input(5, 130, 135, 30, mgl_gettext("String for $5"));
-		arg[5]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[5]->align(FL_ALIGN_TOP_LEFT);
 		arg[6] = new Fl_Input(150, 130, 135, 30, mgl_gettext("String for $6"));
-		arg[6]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[6]->align(FL_ALIGN_TOP_LEFT);
 		arg[7] = new Fl_Input(5, 185, 135, 30, mgl_gettext("String for $7"));
-		arg[7]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[7]->align(FL_ALIGN_TOP_LEFT);
 		arg[8] = new Fl_Input(150, 185, 135, 30, mgl_gettext("String for $8"));
-		arg[8]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[8]->align(FL_ALIGN_TOP_LEFT);
 		arg[9] = new Fl_Input(5, 240, 135, 30, mgl_gettext("String for $9"));
-		arg[9]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[9]->align(FL_ALIGN_TOP_LEFT);
 		arg[0] = new Fl_Input(150, 240, 135, 30, mgl_gettext("String for $0"));
-		arg[0]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		arg[0]->align(FL_ALIGN_TOP_LEFT);
 		Fl_Button* o = new Fl_Button(60, 290, 75, 25, mgl_gettext("Cancel"));
 		o->callback(cb_dlg_cancel, this);
 		o = new Fl_Return_Button(155, 290, 75, 25, mgl_gettext("Set"));
@@ -250,7 +259,7 @@ public:
 		o = new Fl_Button(180, 35, 90, 25, mgl_gettext("@-> to script"));
 		o->callback(cb_calc_ins);	g->end();	g->resizable(output);
 		prev = new Fl_Select_Browser(5, 80, 265, 70, mgl_gettext("Previous expressions"));
-		prev->align(Fl_Align(FL_ALIGN_TOP_LEFT));	prev->callback(cb_calc_prev);
+		prev->align(FL_ALIGN_TOP_LEFT);	prev->callback(cb_calc_prev);
 		static int widths[] = { 200, 65, 0 };  // widths for each column
 		prev->column_widths(widths);	prev->column_char('\t');
 		gg = new Fl_Group(5, 155, 265, 115);
@@ -465,7 +474,8 @@ public:
 		const char *s = dir->text();
 		if(s && *s)	result = std::string("'")+s+"'";
 		if(e)	e->editor->insert(result.c_str());
-		if(ext)	ext->value(result.c_str());
+		else if(ext)	ext->value(result.c_str());
+		else	cb_args_set(result.c_str());
 		hide();
 	}
 } dirsel_dlg;
@@ -541,46 +551,60 @@ Fl_Menu_Item masks[] = {
 	{("manual")},			//M
 	{0}};
 //-----------------------------------------------------------------------------
-std::string get_color(Fl_Choice *c, Fl_Spinner *s)
+std::string get_color(Fl_Choice *c, Fl_Spinner *s, Fl_Input *p)
 {
 	std::string res;
-	const char *cols = " wbgrcmylenuqphkWBGRCMYLENUQPH";
-	int cv = c?c->value():0, sv = s?s->value():-1;
+	const char *ps = p->value();
+	int cv = c->value(), sv = s->value();
+	int pv = ps?10*atof(ps):-1;
+	if(pv<0 || pv>9)	ps = NULL;
 	if(cv>0 && cv<strlen(cols))
 	{
-		if(sv>0 && sv<10 && sv!=5)
+		if(ps)
 		{
-			char buf[16];	snprintf(buf,16,"{%c%d}",cols[cv],sv);
-			res = buf;
+			if(sv>0 && sv<10 && sv!=5)
+			{
+				char buf[16];	snprintf(buf,16,"{%c%d,0.%d}",cols[cv],sv,pv);
+				res = buf;
+			}
+			else	res = cols[cv];
 		}
-		else	res = cols[cv];
+		else
+		{
+			if(sv>0 && sv<10 && sv!=5)
+			{
+				char buf[16];	snprintf(buf,16,"{%c%d}",cols[cv],sv);
+				res = buf;
+			}
+			else	res = cols[cv];
+		}
 	}
 	return res;
 }
 //-----------------------------------------------------------------------------
 void cb_style_upd(Fl_Widget *, void *);
+void cb_style_sch(Fl_Widget *, void *);
 class StyleDlg : public GeneralDlg
 {
 	Fl_Choice *arr1, *dash, *arr2;
-	Fl_Choice *col;
-	Fl_Spinner *satur;
 	Fl_Choice *mark;
 	Fl_Check_Button *solid, *user;
 	Fl_Spinner *width;
 	Fl_Button *dash_m[16];
 	
-	Fl_Choice *c[7];
-	Fl_Spinner *s[7];
+	Fl_Choice *c[8], *sch;
+	Fl_Spinner *s[8];
+	Fl_Input *p[8];
 	Fl_Choice *axial, *contt, *mask, *angle;
 	Fl_Spinner *msize;
 	Fl_Input *alpha;
 	Fl_Button *mask_m[64];
 	Fl_Check_Button *wire, *sharp;
 	
-	Fl_Check_Button *bold, *ital, *twire, *uline, *oline, *tsch;
-	Fl_Choice *tcol, *align, *vert;
+	Fl_Check_Button *bold, *ital, *twire, *uline, *oline, *plain;
+	Fl_Choice *align, *vert;
 	
-	Fl_Group *gline, *gsurf, *gfont, *gmask;
+	Fl_Group *gline, *gsurf, *gfont;
 	Fl_Output *res;
 	Fl_MathGL *gr;
 	std::string script;
@@ -590,94 +614,133 @@ public:
 	StyleDlg()
 	{
 		Fl_Group *g;	Fl_Button *o;
-		w = new Fl_Double_Window(380, 380, mgl_gettext("Select plot style"));
-		Fl_Tabs* tt = new Fl_Tabs(0, 5, 375, 260);
-
-		gline = new Fl_Group(0, 30, 375, 235, mgl_gettext("Line style"));	//gline->hide();
+		w = new Fl_Double_Window(380, 540, mgl_gettext("Plot style"));
+		Fl_Tabs* tt = new Fl_Tabs(0, 5, 375, 235);
+		gline = new Fl_Group(0, 30, 375, 210, mgl_gettext("Line style"));
 			arr1 = new Fl_Choice(5, 50, 110, 25, mgl_gettext("Arrow at start"));
-			arr1->align(Fl_Align(FL_ALIGN_TOP_LEFT));	arr1->copy(arrows);		arr1->callback(cb_style_upd);
+			arr1->align(FL_ALIGN_TOP_LEFT);	arr1->copy(arrows);
+			arr1->callback(cb_style_upd);
 			dash = new Fl_Choice(125, 50, 110, 25, mgl_gettext("Dashing"));
-			dash->align(Fl_Align(FL_ALIGN_TOP_LEFT));	dash->copy(dashing);	dash->callback(cb_style_upd);
+			dash->align(FL_ALIGN_TOP_LEFT);	dash->copy(dashing);
+			dash->callback(cb_style_upd);
 			arr2 = new Fl_Choice(245, 50, 110, 25, mgl_gettext("Arrow at end"));
-			arr2->align(Fl_Align(FL_ALIGN_TOP_LEFT));	arr2->copy(arrows);		arr2->callback(cb_style_upd);
-			col = new Fl_Choice(125, 80, 110, 25, mgl_gettext("Color"));
-			col->copy(colors);		col->callback(cb_style_upd);
-			satur = new Fl_Spinner(285, 80, 40, 25, mgl_gettext("Satur."));
-			satur->range(1,9);	satur->value(5);	col->callback(cb_style_upd);
-			mark = new Fl_Choice(125, 110, 110, 25, mgl_gettext("Marks"));
+			arr2->align(FL_ALIGN_TOP_LEFT);	arr2->copy(arrows);
+			arr2->callback(cb_style_upd);
+			mark = new Fl_Choice(125, 80, 110, 25, mgl_gettext("Marks"));
 			mark->copy(markers);	mark->callback(cb_style_upd);
-			solid = new Fl_Check_Button(240, 110, 55, 25, mgl_gettext("solid"));	solid->callback(cb_style_upd);
-			user = new Fl_Check_Button(300, 110, 55, 25, mgl_gettext("user"));		user->callback(cb_style_upd);
-			width = new Fl_Spinner(125, 140, 110, 25, mgl_gettext("Width"));
+			solid = new Fl_Check_Button(240, 80, 55, 25, mgl_gettext("solid"));
+			user = new Fl_Check_Button(300, 80, 55, 25, mgl_gettext("user"));
+			solid->callback(cb_style_upd);	user->callback(cb_style_upd);
+			width = new Fl_Spinner(125, 110, 110, 25, mgl_gettext("Width"));
 			width->range(1,9);	width->value(1);	width->callback(cb_style_upd);
 			for(int i=0;i<16;i++)
 			{
-				dash_m[i] = new Fl_Toggle_Button(10+20*i, 185, 20, 20);
+				dash_m[i] = new Fl_Toggle_Button(10+20*i, 210, 20, 20);
 				dash_m[i]->callback(cb_style_upd);
 			}
 			dash_m[0]->label(mgl_gettext("Manual dashing"));
-			dash_m[0]->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+			dash_m[0]->align(FL_ALIGN_TOP_LEFT);
 			gline->end();
-		gsurf = new Fl_Group(0, 30, 375, 235, mgl_gettext("Color scheme"));	gsurf->hide();
-			for(int i=0;i<7;i++)
-			{
-				c[i] = new Fl_Choice(5, 50+30*i, 95, 25);	c[i]->copy(colors);
-				c[i]->callback(cb_style_upd);
-				s[i] = new Fl_Spinner(105, 50+30*i, 40, 25);
-				s[i]->range(1,9);	s[i]->value(5);
-				s[i]->callback(cb_style_upd);
-			}
-			c[0]->align(FL_ALIGN_TOP_LEFT);	c[0]->label(mgl_gettext("Color order"));
-			s[0]->align(FL_ALIGN_TOP);		s[0]->label(mgl_gettext("Satur."));
-			axial = new Fl_Choice(275, 50, 95, 25, mgl_gettext("Axial direction"));	axial->callback(cb_style_upd);
+		gsurf = new Fl_Group(0, 30, 375, 210, mgl_gettext("Color scheme"));	gsurf->hide();
+			axial = new Fl_Choice(5, 50, 110, 25, mgl_gettext("Axial direction"));
+			axial->align(FL_ALIGN_TOP_LEFT);	axial->callback(cb_style_upd);
 			axial->add("none");	axial->add("x");	axial->add("y");	axial->add("z");
-			contt = new Fl_Choice(275, 80, 95, 25, mgl_gettext("Text on contours"));
-			contt->add("none");	contt->add("under");	contt->add("above");	contt->callback(cb_style_upd);
-			mask = new Fl_Choice(275, 110, 95, 25, mgl_gettext("Mask for bitmap"));
-			mask->copy(masks);	mask->callback(cb_style_upd);
-			angle = new Fl_Choice(275, 140, 95, 25, mgl_gettext("Mask rotation"));	angle->callback(cb_style_upd);
-			angle->add("none");	angle->add("+45");	angle->add("perp");	angle->add("-45");
-			msize = new Fl_Spinner(275, 170, 95, 25, mgl_gettext("Mask size"));
-			msize->range(1,9);	msize->value(1);	msize->callback(cb_style_upd);
-			alpha = new Fl_Input(275, 200, 95, 25, mgl_gettext("Transparency"));	alpha->callback(cb_style_upd);
-			wire = new Fl_Check_Button(155, 230, 115, 25, mgl_gettext("Wire or mesh"));	wire->callback(cb_style_upd);
-			sharp = new Fl_Check_Button(275, 230, 95, 25, mgl_gettext("Sharp"));		sharp->callback(cb_style_upd);
-			gsurf->end();
-		gfont = new Fl_Group(0, 30, 375, 235, mgl_gettext("Text style"));	gfont->hide();
-			bold = new Fl_Check_Button(5, 40, 150, 25, mgl_gettext("Bold style"));	bold->callback(cb_style_upd);
-			ital = new Fl_Check_Button(5, 65, 150, 25, mgl_gettext("Italic style"));ital->callback(cb_style_upd);
-			twire = new Fl_Check_Button(5, 90, 150, 25, mgl_gettext("Wire style"));	twire->callback(cb_style_upd);
-			uline = new Fl_Check_Button(5, 115, 150, 25, mgl_gettext("Underline"));	uline->callback(cb_style_upd);
-			oline = new Fl_Check_Button(5, 140, 150, 25, mgl_gettext("Overline"));	oline->callback(cb_style_upd);
-//			tsch = new Fl_Check_Button(5, 165, 150, 25, mgl_gettext("Use color scheme"));	tsch->callback(cb_style_upd);
-			tcol = new Fl_Choice(260, 45, 95, 25, mgl_gettext("Text color"));
-			tcol->copy(colors);	tcol->callback(cb_style_upd);
-			align = new Fl_Choice(260, 80, 95, 25, mgl_gettext("Text align"));	align->callback(cb_style_upd);
-			align->add("left");	align->add("center");	align->add("right");	align->value(1);
-			vert = new Fl_Choice(260, 115, 95, 25, mgl_gettext("Vertical align"));	vert->callback(cb_style_upd);
-			vert->add("default");	vert->add("center");	vert->add("under");	vert->value(0);
-			gfont->end();
-		gmask = new Fl_Group(0, 30, 375, 235, mgl_gettext("Manual mask"));	gmask->hide();
-			for(int i=0;i<8;i++)	for(int j=0;j<8;j++)
+			contt = new Fl_Choice(125, 50, 110, 25, mgl_gettext("Text on contours"));
+			contt->add("none");	contt->add("under");	contt->add("above");
+			contt->align(FL_ALIGN_TOP_LEFT);	contt->callback(cb_style_upd);
+			alpha = new Fl_Input(255, 50, 110, 25, mgl_gettext("Transparency"));
+			alpha->align(FL_ALIGN_TOP_LEFT);	alpha->callback(cb_style_upd);
+			wire = new Fl_Check_Button(125, 80, 115, 25, mgl_gettext("Wire or mesh"));
+			wire->callback(cb_style_upd);
+			sharp = new Fl_Check_Button(250, 80, 110, 25, mgl_gettext("Sharp colors"));
+			sharp->callback(cb_style_upd);
+			g = new Fl_Group(10, 105, 360, 130, mgl_gettext("Mask"));
+				g->box(FL_ENGRAVED_BOX);	g->align(FL_ALIGN_TOP_LEFT);
+				mask = new Fl_Choice(80, 110, 95, 25, mgl_gettext("Kind"));
+				mask->copy(masks);	mask->callback(cb_style_upd);
+				angle = new Fl_Choice(80, 140, 95, 25, mgl_gettext("Rotation"));
+				angle->add("none");	angle->add("+45");	angle->add("perp");	angle->add("-45");
+				angle->callback(cb_style_upd);
+				msize = new Fl_Spinner(80, 170, 95, 25, mgl_gettext("Size"));
+				msize->range(1,9);	msize->value(1);	msize->callback(cb_style_upd);
+				for(int i=0;i<8;i++)	for(int j=0;j<8;j++)
+				{
+					mask_m[i+8*j] = new Fl_Toggle_Button(240+15*i, 110+15*(7-j), 15, 15);
+					mask_m[i+8*j]->callback(cb_style_upd);
+				}
+			g->end();	gsurf->end();
+		gfont = new Fl_Group(0, 30, 375, 210, mgl_gettext("Text style"));	gfont->hide();
+			bold = new Fl_Check_Button(5, 40, 150, 25, mgl_gettext("Bold style"));
+			ital = new Fl_Check_Button(5, 65, 150, 25, mgl_gettext("Italic style"));
+			twire = new Fl_Check_Button(5, 90, 150, 25, mgl_gettext("Wire style"));
+			uline = new Fl_Check_Button(5, 115, 150, 25, mgl_gettext("Underline"));
+			oline = new Fl_Check_Button(5, 140, 150, 25, mgl_gettext("Overline"));
+			bold->callback(cb_style_upd);	ital->callback(cb_style_upd);
+			twire->callback(cb_style_upd);	uline->callback(cb_style_upd);
+			oline->callback(cb_style_upd);
+			align = new Fl_Choice(270, 40, 95, 25, mgl_gettext("Text align"));
+			align->add("left");	align->add("center");	align->add("right");
+			align->value(1);	align->callback(cb_style_upd);
+			vert = new Fl_Choice(270, 75, 95, 25, mgl_gettext("Vertical align"));
+			vert->add("default");	vert->add("center");	vert->add("under");
+			vert->value(0);	vert->callback(cb_style_upd);
+		gfont->end();	tt->end();	tt->callback(cb_style_upd);
+
+		g = new Fl_Group(0, 265, 375, 155, mgl_gettext("Color(s) or color scheme"));
+		g->box(FL_ENGRAVED_BOX);	g->align(FL_ALIGN_TOP_LEFT);
+			sch = new Fl_Choice(170, 270, 115, 25, mgl_gettext("Popular color schemes"));
+			sch->add("BbcyrR");	sch->add("kw");		sch->add("wk");		sch->add("bwr");
+			sch->add("kHCcw");	sch->add("kBbcw");	sch->add("kRryw");	sch->add("kGgew");
+			sch->add("BbwrR");	sch->add("BbwgG");	sch->add("GgwmM");	sch->add("UuwqR");
+			sch->add("QqwcC");	sch->add("CcwyY");	sch->add("bcwyr");	sch->add("wUrqy");
+			sch->add("UbcyqR");	sch->add("bgr");	sch->callback(cb_style_sch);
+			plain = new Fl_Check_Button(290, 270, 80, 25, mgl_gettext("plain"));
+			plain->callback(cb_style_upd);
+			for(int i=0;i<8;i++)
 			{
-				mask_m[i+8*j] = new Fl_Toggle_Button(15+20*i, 45+20*(7-j), 20, 20);
-				mask_m[i+8*j]->callback(cb_style_upd);
+				c[i] = new Fl_Choice(5+185*(i/4), 300+30*(i%4), 95, 25);
+				c[i]->copy(colors);	c[i]->callback(cb_style_upd);
+				c[i]->tooltip(mgl_gettext("Value for i-th color"));
+				s[i] = new Fl_Spinner(105+185*(i/4), 300+30*(i%4), 40, 25);
+				s[i]->range(1,9);	s[i]->value(5);
+				c[i]->tooltip(mgl_gettext("Brightness of i-th color"));
+				s[i]->callback(cb_style_upd);
+				p[i] = new Fl_Input(145+185*(i/4), 300+30*(i%4), 40, 25);
+				p[i]->tooltip(mgl_gettext("Relative position of i-th color"));
+				p[i]->callback(cb_style_upd);
 			}
-			gmask->end();
-		tt->end();
-
-		res = new Fl_Output(5, 285, 370, 25, mgl_gettext("Resulting string"));
+			g->end();
+		res = new Fl_Output(5, 440, 370, 25, mgl_gettext("Resulting string"));
 		res->align(FL_ALIGN_TOP_LEFT);
-		o = new Fl_Button(300, 320, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(300, 350, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
-
-		gr = new Fl_MathGL(5, 315, 285, 65);	gr->box(FL_ENGRAVED_BOX);
-		mgl_set_size(gr->get_graph(),285,65);
+		o = new Fl_Button(300, 475, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(300, 505, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
+		gr = new Fl_MathGL(5, 470, 285, 65);	gr->box(FL_ENGRAVED_BOX);
+		mgl_set_size(gr->get_graph(),285,65);	gr->align(FL_ALIGN_LEFT);
 		w->set_modal();	w->end();
+	}
+	void set_scheme()
+	{
+		const char *ss = sch->text();
+		if(!ss || *ss==0)	return;
+		for(int i=0;i<8;i++)
+		{	p[i]->value(NULL);	s[i]->value(5);	c[i]->value(0);	}
+		for(int i=0;i<8;i++)
+		{
+			if(ss[i]==0)	break;
+			size_t pos = strchr(cols,ss[i])-cols;
+			c[i]->value(pos);
+		}
+		update();
+	}
+	void stl_color()
+	{
+		result.clear();
+		for(int i=0;i<8;i++)
+			result += get_color(c[i],s[i],p[i]);
 	}
 	void stl_line()
 	{
-		result = get_color(col,satur);
+		stl_color();
 		char dsh = dash->text()[1];
 		char a1 = arr1->text()[1], a2 = arr2->text()[1];
 		const char *s = mark->text();
@@ -700,13 +763,12 @@ public:
 		}
 		else if(dsh!='-')	result += dsh;
 		result = '\''+result+'\'';
-		script = "new a 5:plot a "+result+";size 10";
+		script = "new a 5 5 'y':plot a "+result+";size 8";
 	}
 	void stl_surf()
 	{
-		int v;
-		for(int i=0;i<7;i++)	result += get_color(c[i],s[i]);
-		v = contt->value();	const char *tt="Tt";
+		stl_color();
+		int v = contt->value();	const char *tt="Tt";
 		if(v>0 && v<3)	result += tt[v-1];
 		const char *m = mask->text();
 		if(*m=='\'')
@@ -732,6 +794,7 @@ public:
 		}
 		if(wire->value())	result += '#';
 		if(sharp->value())	result += '|';
+		if(plain->value())	result += '%';
 		v = atoi(alpha->value());
 		if(v>0 && v<10)	result = result + "{A"+char(v+'0')+'}';
 		v = axial->value();	const char *ax="xyz";
@@ -741,8 +804,9 @@ public:
 	}
 	void stl_font()
 	{
+		stl_color();
 		const char *a="LCR";
-		result = get_color(tcol,NULL)+':'+a[align->value()];
+		result = result+':'+a[align->value()];
 		if(bold->value())	result += 'b';
 		if(ital->value())	result += 'i';
 		if(twire->value())	result += 'w';
@@ -763,7 +827,7 @@ public:
 			else	stl_surf();
 			res->value(result.c_str());
 			mglParse pr;
-			script = "clf:subplot 1 1 0 '':box:"+script;
+			script = "clf:subplot 1 1 0 '':"+script;
 			mgl_parse_text(gr->get_graph(), pr.Self(), script.c_str());
 			gr->update();
 		busy=0;	}
@@ -771,12 +835,14 @@ public:
 	void cb_ok()
 	{
 		if(e)	e->editor->insert(result.c_str());
-		if(ext)	ext->value(result.c_str());
+		else if(ext)	ext->value(result.c_str());
+		else	cb_args_set(result.c_str());
 		hide();
 	}
 } style_dlg;
 //-----------------------------------------------------------------------------
 void cb_style_upd(Fl_Widget *, void *)	{	style_dlg.update();	}
+void cb_style_sch(Fl_Widget *, void *)	{	style_dlg.set_scheme();	}
 //-----------------------------------------------------------------------------
 void style_dlg_cb(Fl_Widget *, void *v)
 {	style_dlg.ext=NULL;	style_dlg.e=(ScriptWindow *)v;	style_dlg.show();	}
@@ -857,7 +923,8 @@ public:
 		}
 		else	result = data;
 		if(e)	e->editor->insert(result.c_str());
-		if(ext)	ext->value(result.c_str());
+		else if(ext)	ext->value(result.c_str());
+		else	cb_args_set(result.c_str());
 		hide();
 	}
 	void init()
@@ -927,15 +994,15 @@ class NewCmdDlg : public GeneralDlg
 	Fl_Group *desc;
 	Fl_Select_Browser *args;
 	Fl_Input *opt;
-	Fl_Output *res;
 	Fl_Help_View *help;
 	std::vector<std::string> cmds[17];	///< commands divided by type
 public:
+	ScriptWindow *e;
 	NewCmdDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(780, 330, mgl_gettext("New command"));
-		Fl_Group *g = new Fl_Group(5,5,345,320);
+		w = new Fl_Double_Window(780, 300, mgl_gettext("New command"));
+		Fl_Group *g = new Fl_Group(5,5,315,320);
 		type = new Fl_Choice(80, 5, 270, 25, mgl_gettext("Type"));
 		type->tooltip(mgl_gettext("Groups of MGL commands"));
 		type->callback(cb_cmd_type);
@@ -946,7 +1013,7 @@ public:
 		type->add(mgl_gettext("Vector plots"));
 		type->add(mgl_gettext("Other plots"));
 		type->add(mgl_gettext("Text and legend"));
-		type->add(mgl_gettext("Create data and I/O"));
+		type->add(mgl_gettext("Create data and IO"));
 		type->add(mgl_gettext("Data transform"));
 		type->add(mgl_gettext("Data handling"));
 		type->add(mgl_gettext("Axis and colorbar"));
@@ -980,17 +1047,16 @@ public:
 		
 		opt = new Fl_Input(60, 240, 265, 25, mgl_gettext("Options"));
 		o = new Fl_Button(325, 240, 25, 25, "...");	o->callback(option_in_cb,opt);
-		res = new Fl_Output(60, 270, 290, 25, mgl_gettext("Result"));
-		o = new Fl_Button(190, 300, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(275, 300, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
+
+		o = new Fl_Button(190, 270, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(275, 270, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
 		g->end();	g->resizable(args);
 
-		help = new Fl_Help_View(360, 5, 415, 320);	help->labelsize(12);
+		help = new Fl_Help_View(360, 5, 415, 290);	help->labelsize(12);
 		w->set_modal();	w->end();	w->resizable(help);
 	}
-	void init()
+	void init()	// fill cmds from parser for all categories
 	{
-		// fill cmds from parser for all categories
 		long i, n = Parse->GetCmdNum();
 		for(i=0;i<n;i++)
 		{
@@ -1018,25 +1084,117 @@ public:
 		}
 		type->value(0);	type_sel();
 	}
-	void type_sel()
+	void type_sel()	// fill list of commands for selected type
 	{
 		int t = type->value();	cmd->clear();
 		for(size_t i=0;i<cmds[t].size();i++)	cmd->add(cmds[t][i].c_str());
 		cmd->value(0);	cmd_sel();
 	}
-	void cmd_sel()
+	void cmd_sel()	// fill list of variants for selected command
 	{
 		const char *c = cmd->text();
 		desc->label(Parse->CmdDesc(c));
 		static std::string str = docdir+"/mgl_en.html#"+c;
 		help->load(str.c_str());
-		std::string par = Parse->CmdFormat(cmd);
+		std::string par = Parse->CmdFormat(c), cname;
+		std::vector<std::string> vars;
+		size_t isp = par.find_first_of(' ');
+		if(isp<par.length())
+		{
+			cname = par.substr(0,isp+1);
+			par = par.substr(isp+1);
+			while((isp=par.find_first_of('|'))<par.length())
+			{
+				vars.push_back(cname+par.substr(0,isp));
+				par = par.substr(isp+1);
+			}
+			vars.push_back(cname+par);
+		}
+		else	vars.push_back(par);
+		var->clear();
+		for(size_t i=0;i<vars.size();i++)	var->add(vars[i].c_str());
+		var->value(0);	var_sel();
 	}
-	void var_sel()
-	{}
-	void args_sel()
-	{}
-	void set_cmd(const char *line)
+	void var_sel()	// fill list of arguments for selected variant
+	{
+		std::string par = var->text(), sec;
+		size_t isp = par.find_first_of(' ');
+		par = par.substr(isp+1);	// remove command name
+		isp = par.find_first_of('[');	// here secional args starts
+		sec = isp<par.length()?par.substr(isp+1,par.length()-isp-2):"";
+		par = isp>0?par.substr(0,isp-1):"";
+		args->clear();
+		while((isp=par.find_first_of(' '))<par.length())
+		{
+			args->add(("@b "+par.substr(0,isp)).c_str());
+			par = par.substr(isp+1);
+		}
+		if(!par.empty())	args->add(("@b "+par).c_str());
+		while((isp=sec.find_first_of(' '))<sec.length())
+		{
+			args->add(sec.substr(0,isp).c_str());
+			sec = sec.substr(isp+1);
+		}
+		if(!sec.empty())	args->add(sec.c_str());
+	}
+	void args_sel()	// fill argument by calling external dialog
+	{
+		int a = args->value();
+		const char *s = args->text(a);	if(!s || *s==0)	return;
+		std::string arg = s, val;
+		size_t isp = arg.find_first_of('\t');
+		val = arg.substr(isp+1);	arg = arg.substr(0,isp);
+		if(arg[0]=='@')	arg = arg.substr(3);
+		std::string question = mgl_gettext("Enter value for ")+arg+mgl_gettext(" argument");
+		if(arg[0]>='A' && arg[0]<='Z')	datsel_dlg_cb(0,0);	// this is data
+		else if(arg=="'fmt'")	style_dlg_cb(0,0);	// this is style
+		else if(arg=="'fname'")	ins_fname_cb(0,0);	// this is file name
+		else if(arg=="'path'")	ins_path_cb(0,0);	// this is path
+		else if(arg=="'dir'")	dirsel_dlg_cb(0,0);	// this is path
+		else if(arg[0]=='\'')	// this is general string
+		{
+			const char *s = fl_input(question.c_str(),0);
+			if(s)
+			{	std::string ss=s;	args_set(('\''+ss+'\'').c_str());	}
+		}
+		else	// this is general constant
+		{
+			const char *s = fl_input(question.c_str(),0);
+			if(s)	args_set(s);
+		}
+	}
+	void args_set(const char *val)	// set value for current argument
+	{
+		int a = args->value();
+		const char *s = args->text(a);	if(!s || *s==0)	return;
+		std::string arg = s;
+		size_t isp = arg.find_first_of('\t');
+		arg = arg.substr(0,isp)+'\t'+val;
+		args->text(a,arg.c_str());
+	}
+	void cb_ok()
+	{
+		std::string par = var->text(), a;
+		size_t isp = par.find_first_of(' ');
+		result = par.substr(0,isp);	// command name
+		for(int i=0;i<args->size();i++)
+		{
+			const char *s = args->text(i);
+			if(!s)	continue;
+			const char *p = strchr(s,'\t');
+			if(s[0]=='@' && !p)
+			{
+				std::string arg = s+3;
+				arg = mgl_gettext("Required argument ")+arg+mgl_gettext(" is not specified!");
+				fl_alert(arg.c_str());	return;
+			}
+			if(p)	result = result+' '+p;
+		}
+		result += opt->value();
+		if(e)	e->editor->insert(result.c_str());
+		hide();
+	}
+	void set_cmd(const char *line)	// TODO
 	{}
 } newcmd_dlg;
 //-----------------------------------------------------------------------------
@@ -1044,5 +1202,8 @@ void cb_cmd_type(Fl_Widget*, void*)	{	newcmd_dlg.type_sel();	}
 void cb_cmd_cmd(Fl_Widget*, void*)	{	newcmd_dlg.cmd_sel();	}
 void cb_cmd_var(Fl_Widget*, void*)	{	newcmd_dlg.var_sel();	}
 void cb_cmd_args(Fl_Widget*, void*)	{	newcmd_dlg.args_sel();	}
+void cb_args_set(const char *val)	{	newcmd_dlg.args_set(val);	}
 //-----------------------------------------------------------------------------
+void newcmd_dlg_cb(Fl_Widget*,void *v)
+{	newcmd_dlg.e=(ScriptWindow *)v;	newcmd_dlg.show();	}
 //-----------------------------------------------------------------------------

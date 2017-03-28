@@ -977,9 +977,8 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	bool man=sm;
 	mglColor *c = new mglColor[2*n];		// Colors itself
 	mreal *val = new mreal[n];
-	for(long i=0, j=n=0;i<l;i++)	// fill colors
+	for(long i=0, m=0, j=n=0;i<l;i++)	// fill colors
 	{
-		long m=0;
 		if(smooth>=0 && s[i]==':' && j<1)	break;
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;

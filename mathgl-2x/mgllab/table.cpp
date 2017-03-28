@@ -20,6 +20,8 @@
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Round_Button.H>
 #include "mgllab.h"
+
+//TODO Fl::delete_widget
 //-----------------------------------------------------------------------------
 void addto_cb(Fl_Widget*, void*v)
 {
@@ -451,8 +453,6 @@ void modify_cb(Fl_Widget*, void*v)
 	if(d && eq != NULL)	{	d->Modify(eq);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
-void plot_dat_cb(Fl_Widget *, void *v);
-//-----------------------------------------------------------------------------
 struct NrmDlg
 {
 	Fl_Window *wnd;
@@ -704,7 +704,7 @@ Fl_Menu_Item tablemenu[60] = {
 		{ mgl_gettext("Save to file"),	0, save_dat_cb },
 		{ mgl_gettext("Export to PNG"),	0, exp_dat_cb, 0, FL_MENU_DIVIDER },
 		{ mgl_gettext("Insert as list"),	0, list_dat_cb },
-		{ mgl_gettext("Plot data"),		0, plot_dat_cb },
+//		{ mgl_gettext("Plot data"),		0, plot_dat_cb },
 //		{ mgl_gettext("Info for data"),	0, info_dat_cb },
 		{ 0 },
 	{ mgl_gettext("Sizes"), 0, 0, 0, FL_SUBMENU },
@@ -778,52 +778,38 @@ TableWindow::TableWindow(int x, int y, int w, int h, const char* t) : Fl_Window(
 	g = new Fl_Group(0,0,30,350);
 	o = new Fl_Button(0, 0, 25, 25);	o->image(new Fl_Pixmap(document_new_xpm));
 	o->callback(new_dat_cb,this);		o->tooltip(mgl_gettext("Create new data with zero filling"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 25, 25, 25);	o->image(new Fl_Pixmap(document_open_xpm));
 	o->callback(load_dat_cb,this);		o->tooltip(mgl_gettext("Load data from file"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 50, 25, 25);	o->image(new Fl_Pixmap(document_import_xpm));
 	o->callback(imp_dat_cb,this);		o->tooltip(mgl_gettext("Import data from PNG file"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 75, 25, 25);	o->image(new Fl_Pixmap(document_save_xpm));
 	o->callback(save_dat_cb,this);		o->tooltip(mgl_gettext("Save data to file"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 100, 25, 25);	o->image(new Fl_Pixmap(document_export_xpm));
 	o->callback(exp_dat_cb,this);		o->tooltip(mgl_gettext("Export data to PNG file"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	o = new Fl_Button(0, 130, 25, 25);	o->image(new Fl_Pixmap(format_indent_more_xpm));
 	o->callback(list_dat_cb,this);		o->tooltip(mgl_gettext("Insert to script as 'list' command"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(0, 155, 25, 25);	o->image(new Fl_Pixmap(plot_xpm));
-	o->callback(plot_dat_cb,this);		o->tooltip(mgl_gettext("Plot data"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+// TODO	o = new Fl_Button(0, 155, 25, 25);	o->image(new Fl_Pixmap(plot_xpm));
+// TODO	o->callback(plot_dat_cb,this);		o->tooltip(mgl_gettext("Plot data"));
 
 	o = new Fl_Button(0, 185, 25, 25);	o->image(new Fl_Pixmap(diff_xpm));
 	o->callback(smooth_cb,this);		o->tooltip(mgl_gettext("Apply operator (smoothing, integration, difference ...) to data"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 210, 25, 25);	o->image(new Fl_Pixmap(func_xpm));
 	o->callback(modify_cb,this);		o->tooltip(mgl_gettext("Fill data by formula"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 235, 25, 25);	o->image(new Fl_Pixmap(size_xpm));
 	o->callback(resize_cb,this);		o->tooltip(mgl_gettext("Resize data with smoothing"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 260, 25, 25);	o->image(new Fl_Pixmap(crop_xpm));
 	o->callback(crop_cb,this);		o->tooltip(mgl_gettext("Crop (cut off edges) data"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 285, 25, 25);	o->image(new Fl_Pixmap(tran_xpm));
 	o->callback(transp_cb,this);		o->tooltip(mgl_gettext("Transpose data dimensions"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	g->end();	g->resizable(0);
 
 
 	g = new Fl_Group(30,0,200,30);
 	o = new Fl_Button(30, 0, 25, 25);	o->image(new Fl_Pixmap(go_first_xpm));
 	o->callback(first_sl_cb,this);		o->tooltip(mgl_gettext("Go to first slice (Ctrl-F1)"));
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	slice = new Fl_Counter(55, 0, 90, 25, 0);	slice->callback(change_sl_cb,this);
 	slice->lstep(10);	slice->step(1);	slice->tooltip(mgl_gettext("Id of slice on third (z-) dimension"));
-//	slice->box(FL_PLASTIC_UP_BOX);//	slice->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(147, 0, 25, 25);	o->image(new Fl_Pixmap(go_last_xpm));
 	o->callback(last_sl_cb,this);		o->tooltip(mgl_gettext("Go to last slice (Ctrl-F4)"));
 	g->end();	g->resizable(0);

@@ -22,6 +22,7 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_File_Chooser.H>
+#include <FL/Fl_Copy_Surface.H>
 //-----------------------------------------------------------------------------
 #ifdef USE_GETTEXT
 #include <libintl.h>
@@ -734,6 +735,26 @@ void MGL_NO_EXPORT mgl_fl_prev(void *v)	{	((mglCanvasWnd*)v)->PrevFrame();	}	///
 void MGL_NO_EXPORT mgl_fl_reload(void *v)	{	((mglCanvasWnd*)v)->ReLoad();	}		///< Callback function for reloading
 mreal MGL_LOCAL_PURE mgl_fl_delay(void *v)	{	return ((mglCanvasWnd*)v)->GetDelay();	}	///< Callback function for delay
 //-----------------------------------------------------------------------------
+void copy_coor_cb(Fl_Widget *,void *v)
+{
+	HMGL gr = ((Fl_MGLView*)v)->get_graph();
+	mreal x,y,z;	mgl_get_last_mouse_pos(gr,&x,&y,&z);
+	static char buf[256];
+	snprintf(buf,255,mgl_gettext("click at %g, %g, %g"),x,y,z);
+	Fl::copy(buf,strlen(buf),1);
+}
+//-----------------------------------------------------------------------------
+void mgl_copyimg_cb(Fl_Widget *,void *v)
+{
+	Fl_MathGL *g = ((Fl_MGLView*)v)->FMGL;
+	Fl_Copy_Surface *copy_surf = new Fl_Copy_Surface(g->w(), g->h());	// create an Fl_Copy_Surface object
+	copy_surf->set_current();							// direct graphics requests to the clipboard
+	fl_color(FL_WHITE);	fl_rectf(0, 0, g->w(), g->h());	// draw a white background
+	copy_surf->draw(g);									// draw the g widget in the clipboard
+	delete copy_surf;									// after this, the clipboard is loaded
+	Fl_Display_Device::display_device()->set_current();	// direct graphics requests back to the display
+}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 {
 	m->add("Graphics/Alpha", "^t", mgl_alpha_cb, w, FL_MENU_TOGGLE);
@@ -745,7 +766,8 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 	m->add("Graphics/Adjust size", FL_F+6, mgl_adjust_cb, w);
 	m->add("Graphics/Reload data", FL_F+9, mgl_oncemore_cb, w);
 	m->add("Graphics/Stop", FL_F+7, mgl_stop_cb, w);
-	//TODO	m->add("Graphics/Copy graphics","+^c", mgl_copyimg_cb, w);
+	m->add("Graphics/Copy graphics","+^c", mgl_copyimg_cb, w);
+	m->add("Graphics/Copy click coor.","", copy_coor_cb, w);
 	m->add("Graphics/Pause calc", "^t", mgl_pause_cb, w, FL_MENU_TOGGLE);
 
 #if MGL_HAVE_PNG

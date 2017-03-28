@@ -333,6 +333,18 @@ void save_file(const char *newfile)
 	textbuf->call_modify_callbacks();
 }
 //-----------------------------------------------------------------------------
+void undo_cb(Fl_Widget*, void* v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	Fl_Text_Editor::kf_undo(0, e->editor);
+}
+//-----------------------------------------------------------------------------
+void select_all_cb(Fl_Widget *, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	Fl_Text_Editor::kf_select_all(0, e->editor);
+}
+//-----------------------------------------------------------------------------
 void copy_cb(Fl_Widget*, void* v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
@@ -489,7 +501,7 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	o->tooltip(mgl_gettext("Paste text from clipboard"));
 	o = new Fl_Button(100, 1, 25, 25);	o->image(img_find);	o->callback(find_cb,w);
 	o->tooltip(mgl_gettext("Find or replace text"));
-	o = new Fl_Button(125, 1, 25, 25);	o->image(img_insert);	o->callback(command_cb,w);
+	o = new Fl_Button(125, 1, 25, 25);	o->image(img_insert);	o->callback(newcmd_dlg_cb,w);
 	o->tooltip(mgl_gettext("Insert MGL command"));
 	o = new Fl_Button(150, 1, 25, 25);	o->image(img_calc);	o->callback(calc_dlg_cb,w);
 	o->tooltip(mgl_gettext("Show calculator window"));

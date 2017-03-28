@@ -262,12 +262,15 @@ void find2_cb(Fl_Widget *, void *);
 void replall_cb(Fl_Widget *, void *);
 void replace2_cb(Fl_Widget *, void *);
 void replcan_cb(Fl_Widget *, void *);
-void insert_cb(Fl_Widget *, void *);
-void paste_cb(Fl_Widget *, void *);
 void replace_cb(Fl_Widget *, void *);
+void find_cb(Fl_Widget *, void *);
+void insert_cb(Fl_Widget *, void *);
+//-----------------------------------------------------------------------------
+void paste_cb(Fl_Widget *, void *);
+void select_all_cb(Fl_Widget *, void *);
+void undo_cb(Fl_Widget *, void *);
 void copy_cb(Fl_Widget *, void *);
 void cut_cb(Fl_Widget *, void *);
-void find_cb(Fl_Widget *, void *);
 void delete_cb(Fl_Widget *, void *);
 void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v);
 void ins_fname_cb(Fl_Widget *, void *);
@@ -287,7 +290,6 @@ void style_cb(Fl_Widget *, void *);
 void argument_cb(Fl_Widget *, void *);
 void variables_cb(Fl_Widget *, void *);
 void settings_cb(Fl_Widget *, void *);
-void command_cb(Fl_Widget *, void *);
 //-----------------------------------------------------------------------------
 // Dialogs callback functions
 void close_dlg_cb(Fl_Widget *w, void *);
@@ -321,7 +323,8 @@ void option_dlg_cb(Fl_Widget*, void*);
 void dirsel_dlg_cb(Fl_Widget*, void*);
 void datsel_dlg_cb(Fl_Widget*, void*);
 void style_dlg_cb(Fl_Widget*, void*);
-void newcmd_cb(Fl_Widget*,void*);
+void newcmd_dlg_cb(Fl_Widget*,void*);
+void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;
 extern std::string filename;

@@ -177,8 +177,11 @@ void ScriptWindow::mem_init()
 	for(long i=0;i<Parse->GetNumVar();i++)
 	{
 		mglDataA *v = Parse->GetVar(i);
-		snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->GetNx(), v->GetNy(), v->GetNz(), sizeof(mreal)*v->GetNN());
-		var->add(str,v);
+		if(v && !v->temp)
+		{
+			snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->GetNx(), v->GetNy(), v->GetNz(), sizeof(mreal)*v->GetNN());
+			var->add(str,v);
+		}
 	}
 }
 //-----------------------------------------------------------------------------
