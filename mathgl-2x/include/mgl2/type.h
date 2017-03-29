@@ -121,7 +121,8 @@ struct MGL_EXPORT mglColor
 	/// Set color as Red, Green, Blue values
 	void Set(mglColor c, float bright=1)
 	{
-		if(bright<0)	bright=0;	if(bright>2.f)	bright=2.f;
+		if(bright<0)	bright=0;
+		if(bright>2.f)	bright=2.f;
 		r = bright<=1 ? c.r*bright : 1 - (1-c.r)*(2-bright);
 		g = bright<=1 ? c.g*bright : 1 - (1-c.g)*(2-bright);
 		b = bright<=1 ? c.b*bright : 1 - (1-c.b)*(2-bright);	a = 1;

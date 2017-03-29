@@ -1083,7 +1083,7 @@ MGL_NO_EXPORT void *mgl_difr(void *par)
 void MGL_EXPORT mgl_datac_diffr(HADT d, const char *how, mreal q)
 {
 	if(!how || *how==0)	return;
-	long nx=d->nx,ny=d->ny,nz=d->nz,ll=strlen(how);
+	long nx=d->nx,ny=d->ny,nz=d->nz;
 	long p[4]={0,0,0,0};
 	dual qq=q;
 	if(mglchr(how,'e'))	p[3]=-1;

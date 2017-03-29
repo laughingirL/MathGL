@@ -1127,7 +1127,7 @@ long MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size)
 {
 	const char * const *res = mgl_datas_hdf_str(fname);
 	if(!res)	return 0;
-	size_t n=0, len=1;
+	long n=0, len=1;
 	while(res[n][0])	{	len += strlen(res[n])+1;	n++;	}
 	if(len>size)	return -long(len);
 	strcpy(buf,res[0]);

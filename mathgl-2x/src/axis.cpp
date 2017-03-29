@@ -241,7 +241,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 // 		else if(t1.tm_mon!=t2.tm_mon)	d = 30*24*3600;	// number of second in month
 		else if(abs(t1.tm_yday-t2.tm_yday)>=14)	// number of second in week 
 		{	d = mgl_adj_val(abs(t1.tm_yday-t2.tm_yday)/7,&ds);
-			if(ds<1)	ds=1./7;	if(d<1)	d=1;	d *= 7*24*3600;	ds *= 7*24*3600;	}
+			ds = ((ds<1)?1./7:ds)*7*24*3600;	d = ((d>=1)?d:1)*7*24*3600;	}
 		else if(abs(t1.tm_yday-t2.tm_yday)>1)	// localtime("%x") cannot print time < 1 day
 		{	d = 24*3600.*mgl_adj_val(abs(t1.tm_yday-t2.tm_yday),&ds);
 			ds *= 24*3600;	if(d<24*3600)	{	d=24*3600;	ds=d/2;}	}
@@ -851,7 +851,8 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 	if(aa)
 	{
 		char font[64],ff[3]=":C";	memset(font,0,64);
-		if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
+		if(pos<-0.2)	ff[1]='L';
+		if(pos>0.2)	ff[1]='R';
 		strncpy(font,FontDef,63);	strcat(font,ff);
 		long kk = AddPnt(&B, p,-1,q,0,7);	ff[1]=0;
 		if(kk>=0)

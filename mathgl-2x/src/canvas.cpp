@@ -878,7 +878,8 @@ std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 
 	// clear fix format
 	for(i=lf-1;i>=lf-fdig && sf[i]=='0';i--)	sf[i]=0;
-	if(sf[i]=='.')	sf[i]=0;	lf = strlen(sf);
+	if(sf[i]=='.')	sf[i]=0;
+	lf = strlen(sf);
 	// parse -nan numbers
 	if(!strcmp(sf,"-nan"))	memcpy(sf,"nan",4);
 
@@ -910,7 +911,8 @@ std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 	if(plus && !strchr("-0niNI",se[0]))
 	{	memmove(se+1,se,le+1);	se[0]='+';
 		memmove(sf+1,sf,lf+1);	sf[0]='+';	}
-	if((lf>le && !mglchr(fmt,'f')) || !strcmp(sf,"0") || !strcmp(sf,"-0"))	strcpy(sf,se);	lf = strlen(sf);
+	if((lf>le && !mglchr(fmt,'f')) || !strcmp(sf,"0") || !strcmp(sf,"-0"))	strcpy(sf,se);
+	lf = strlen(sf);
 	std::wstring res;	res.reserve(lf+8);
 
 	if(mglchr(fmt,'-') && !(plus||tex))		// replace '-' by "\minus"
@@ -1041,7 +1043,7 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	bool grid = mglchr(frm,'#'), eqd = mglchr(frm,'='), lim = mglchr(frm,'|');
 	if(mgl_isnan(vw))	vw=1;	else 	lim = true;
 	if(!text)	text=L"";
-	if(x<0)	x=0; 	if(y<0)	y=0; 	if(y>1)	y=1;
+	x=x<0?0:x; 	y=y<0?0:y; 	y=y>1?1:y;
 //	if(vw>1-x)	vw=1-x;
 
 	char fmt[8]="3",ss[2]=" ";

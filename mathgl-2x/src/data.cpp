@@ -2213,7 +2213,7 @@ HMDT MGL_EXPORT mgl_data_detect(HCDT d, mreal lvl, mreal dj, mreal di, mreal min
 			for(long i=ii+1;i<nx;i++)	// join points to selected curve
 			{
 				bool none=true;
-				for(size_t k=0;k<di && i+k<nx;k++)	// try next points
+				for(long k=0;k<di && i+k<nx;k++)	// try next points
 				{
 					mreal val = mgl_find_pnt(max_pos[i+k],p1.y,dj);
 					if(mgl_isnum(val))	// first try closest point (for noise data)

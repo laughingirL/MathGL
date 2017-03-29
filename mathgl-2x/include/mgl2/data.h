@@ -806,7 +806,9 @@ public:
 	mreal valueD(mreal i,mreal j=0,mreal k=0, mreal *di=0,mreal *dj=0,mreal *dk=0) const
 	{
 		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
-		if(di)	*di = 0;	if(dj)	*dj = 0;	if(dk)	*dk = 0;
+		if(di)	*di = 0;
+		if(dj)	*dj = 0;
+		if(dk)	*dk = 0;
 		if(dfunc)
 		{
 			res = dfunc(x,y,z, par);

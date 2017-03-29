@@ -628,10 +628,10 @@ void MGL_EXPORT mgl_datac_sub_num_(uintptr_t *d, dual *b)		{	mgl_datac_sub_num(_
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_section(HCDT dat, HCDT ids, char dir, mreal val)
 {
-	long di = 1, n = dat->GetNx(), m;
+	long di = 1, n = dat->GetNx();
 	if(dir=='y')	{	di = dat->GetNx();	n = dat->GetNy();	}
 	if(dir=='z')	{	di = dat->GetNx()*dat->GetNy();	n = dat->GetNz();	}
-	m = dat->GetNN()/n;
+	long m = dat->GetNN()/n;
 	// first collect position of key values
 	std::vector<long> pos;	pos.push_back(0);
 	if(mgl_isnan(val))	for(long i=1;i<n;i++)

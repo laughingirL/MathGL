@@ -315,8 +315,8 @@ void mglBase::DefineGlyph(HCDT x, HCDT y, unsigned char id)
 	for(long i=0;i<n;i++)
 	{
 		mreal xx = x->v(i), yy = y->v(i);
-		if(x1>xx)	x1=xx;	if(x2<xx)	x2=xx;
-		if(y1>yy)	y1=yy;	if(y2<yy)	y2=yy;
+		x1=x1>xx?xx:x1;	x2=x2<xx?xx:x2;
+		y1=y1>yy?yy:y1;	y2=y2<yy?yy:y2;
 	}
 	mreal scale = 1;
 	if(fabs(x1)<10 && fabs(x2)<10 && fabs(y1)<10 && fabs(y2)<10)
@@ -950,7 +950,8 @@ size_t MGL_EXPORT mgl_get_num_color(const char *s, int smooth)
 	{
 		if(smooth>=0 && s[i]==':' && j<1)	break;
 		if(s[i]=='{' && strchr(MGL_COLORS"x",s[i+1]) && j<1)	n++;
-		if(s[i]=='[' || s[i]=='{')	j++;	if(s[i]==']' || s[i]=='}')	j--;
+		if(s[i]=='[' || s[i]=='{')	j++;
+		if(s[i]==']' || s[i]=='}')	j--;
 		if(strchr(MGL_COLORS,s[i]) && j<1)	n++;
 //		if(smooth && s[i]==':')	break;	// NOTE: should use []
 	}
@@ -980,8 +981,10 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	for(long i=0, m=0, j=n=0;i<l;i++)	// fill colors
 	{
 		if(smooth>=0 && s[i]==':' && j<1)	break;
-		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
-		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
+		if(s[i]=='[')	j++;
+		if(s[i]==']')	j--;
+		if(s[i]=='{')	m++;
+		if(s[i]=='}')	m--;
 		if(strchr(MGL_COLORS,s[i]) && j<1 && (m==0 || s[i-1]=='{'))	// {CN,val} format, where val in [0,1]
 		{
 			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
@@ -1182,7 +1185,8 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		size_t l=strlen(p);
 		for(size_t i=0;i<l;i++)
 		{
-			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
+			if(p[i]=='{')	m++;
+			if(p[i]=='}')	m--;
 			if(m>0 && p[i]=='d')	PDef = strtol(p+i+1,0,16);
 			if(m>0)	continue;
 			s = mglchr(stl,p[i]);
@@ -1198,7 +1202,8 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 				else	Arrow1 = p[i];
 			}
 		}
-		if(!Arrow1)	Arrow1='_';		if(!Arrow2)	Arrow2='_';
+		if(!Arrow1)	Arrow1='_';
+		if(!Arrow2)	Arrow2='_';
 		if(mglchr(p,'#'))
 		{
 			s = mglchr(mrk,mk);
@@ -1227,7 +1232,8 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 			sprintf(last_style+11,"{&%g}",CDef);
 		}
 	}
-	if(Arrow1=='_')	Arrow1=0;	if(Arrow2=='_')	Arrow2=0;
+	if(Arrow1=='_')	Arrow1=0;
+	if(Arrow2=='_')	Arrow2=0;
 	return mk;
 }
 //-----------------------------------------------------------------------------
@@ -1251,7 +1257,8 @@ void mglBase::SetMask(const char *p)
 		long m=0, l=strlen(p);
 		for(long i=0;i<l;i++)
 		{
-			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
+			if(p[i]=='{')	m++;
+			if(p[i]=='}')	m--;
 			if(m>0 && p[i]=='s')	mask = strtoull(p+i+1,0,16);
 			if(m>0)	continue;
 			if(p[i]==':')	break;

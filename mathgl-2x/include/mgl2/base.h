@@ -253,7 +253,8 @@ struct MGL_EXPORT mglGlyph
 	inline const mglGlyph &operator=(const mglGlyph &a)
 	{	Create(a.nt, a.nl);	
 		if(a.trig)	memcpy(trig, a.trig, 6*nt*sizeof(short));
-		if(a.line)	memcpy(line, a.line, 2*nl*sizeof(short));	return a;	}
+		if(a.line)	memcpy(line, a.line, 2*nl*sizeof(short));
+		return a;	}
 };
 //-----------------------------------------------------------------------------
 #define MGL_TEXTURE_COLOURS 512
