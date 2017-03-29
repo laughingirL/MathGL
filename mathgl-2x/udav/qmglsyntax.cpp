@@ -50,7 +50,8 @@ void QMGLSyntax::highlightBlock(const QString &text)
 	}
 	for(;i<m;i++)				// highlight paragraph
 	{
-		if(text[i]=='(')	s++;	if(text[i]==')')	s--;
+		if(text[i]=='(')	s++;
+		if(text[i]==')')	s--;
 		if(text[i]==' ' || text[i]=='\t')	continue;
 		else if(text[i]=='#')	// comment
 		{	setFormat(i,m-i,mglColorScheme[0]);	break;	}

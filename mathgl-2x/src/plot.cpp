@@ -64,11 +64,11 @@ void MGL_EXPORT mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char 
 
 	bool check=true;
 	mreal ym=fabs(gr->Max.y - gr->Min.y)/nd;
-	while(check && x.dat.size()<nm)
+	while(check && long(x.dat.size())<nm)
 	{
 		if(gr->NeedStop())	{	delete eq;	return;	}
 		check = false;
-		for(long i=1;i<x.size();i++)
+		for(long i=1;i<long(x.size());i++)
 		{
 			mreal xs=(x[i]+x[i-1])/2;
 			mreal ys=(y[i]+y[i-1])/2, yr=eq->Calc(xs);
@@ -107,11 +107,11 @@ void MGL_EXPORT mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const c
 
 	bool check=true;
 	mreal xm=fabs(gr->Max.x-gr->Min.x)/nd, ym=fabs(gr->Max.y-gr->Min.y)/nd, zm=fabs(gr->Max.z-gr->Min.z)/nd;
-	while(check && x.dat.size()<nm)
+	while(check && long(x.dat.size())<nm)
 	{
 		if(gr->NeedStop())	{	delete ex;	delete ey;	delete ez;	return;	}
 		check = false;
-		for(long i=1;i<t.size();i++)
+		for(long i=1;i<long(t.size());i++)
 		{
 			mreal ts=(t[i]+t[i-1])/2;
 			mreal xs=(x[i]+x[i-1])/2, xr=ex->Calc(0,0,ts);
@@ -247,7 +247,8 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 		gr->line_plot(n4,n2);	gr->line_plot(n4,n3);
 		if(m1>m2 || (col2 && !wire))	gr->quad_plot(n1,n2,n3,n4);
 	}
-	if(d1)	delete y1;	if(d2)	delete y2;
+	if(d1)	delete y1;
+	if(d2)	delete y2;
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -302,8 +303,10 @@ std::vector<mglPointA> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &p1, const m
 		y1=mgl_d(p1.y, p.y, q.y);	y2=mgl_d(p2.y, p.y, q.y);	if(y2<y1)	{	t=y1;	y1=y2;	y2=t;	}
 		z1=mgl_d(p1.z, p.z, q.z);	z2=mgl_d(p2.z, p.z, q.z);	if(z2<z1)	{	t=z1;	z1=z2;	z2=t;	}
 		mreal d1 = mgl_isnum(x1)?x1:0, d2 = mgl_isnum(x2)?x2:1;
-		if(y1>d1)	d1=y1;	if(y2<d2)	d2=y2;
-		if(z1>d1)	d1=z1;	if(z2<d2)	d2=z2;
+		if(y1>d1)	d1=y1;
+		if(y2<d2)	d2=y2;
+		if(z1>d1)	d1=z1;
+		if(z2<d2)	d2=z2;
 		if(d1>0 && d1<1)	out.push_back(mglPointA(p+d1*(q-p),false));
 		if(d2>0 && d2<1)	out.push_back(mglPointA(p+d2*(q-p),false));
 		if(d1<1 && d2>=1)	out.push_back(mglPointA(q,true));
@@ -515,7 +518,7 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 			if(i>0 && i<np-1)	{	nn.x=(pp[i-1].p.y-pp[i+1].p.y)/2;	nn.y=(pp[i+1].p.x-pp[i-1].p.x)/2;	}
 			else if(i==np-1)	{	nn.x=pp[np-2].p.y-pp[np-1].p.y;	nn.y=pp[np-1].p.x-pp[np-2].p.x;	}
 			n1 = gr->AddPnt(pp[i].p, c1,nn,-1,27);	pp[i].p.z = z0;
-			n2 = gr->AddPnt(pp[i].p, c1,nn,-1,27);
+			n2 = gr->AddPnt(pp[i].p, c2,nn,-1,27);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -614,14 +617,18 @@ std::vector<mglPointB> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &a1, const m
 		y1=mgl_d(a1.y, p1.y, q1.y);	y2=mgl_d(a2.y, p1.y, q1.y);	if(y2<y1)	{	t=y1;	y1=y2;	y2=t;	}
 		z1=mgl_d(a1.z, p1.z, q1.z);	z2=mgl_d(a2.z, p1.z, q1.z);	if(z2<z1)	{	t=z1;	z1=z2;	z2=t;	}
 		mreal d11 = mgl_isnum(x1)?x1:0, d12 = mgl_isnum(x2)?x2:1;
-		if(y1>d11)	d11=y1;	if(y2<d12)	d12=y2;
-		if(z1>d11)	d11=z1;	if(z2<d12)	d12=z2;
+		if(y1>d11)	d11=y1;
+		if(y2<d12)	d12=y2;
+		if(z1>d11)	d11=z1;
+		if(z2<d12)	d12=z2;
 		x1=mgl_d(a1.x, p2.x, q2.x);	x2=mgl_d(a2.x, p2.x, q2.x);	if(x2<x1)	{	t=x1;	x1=x2;	x2=t;	}
 		y1=mgl_d(a1.y, p2.y, q2.y);	y2=mgl_d(a2.y, p2.y, q2.y);	if(y2<y1)	{	t=y1;	y1=y2;	y2=t;	}
 		z1=mgl_d(a1.z, p2.z, q2.z);	z2=mgl_d(a2.z, p2.z, q2.z);	if(z2<z1)	{	t=z1;	z1=z2;	z2=t;	}
 		mreal d21 = mgl_isnum(x1)?x1:0, d22 = mgl_isnum(x2)?x2:1;
-		if(y1>d21)	d21=y1;	if(y2<d22)	d22=y2;
-		if(z1>d21)	d21=z1;	if(z2<d22)	d22=z2;
+		if(y1>d21)	d21=y1;
+		if(y2<d22)	d22=y2;
+		if(z1>d21)	d21=z1;
+		if(z2<d22)	d22=z2;
 		
 		std::vector<mreal> dd;
 		if(d11>0 && d11<1)	dd.push_back(d11);

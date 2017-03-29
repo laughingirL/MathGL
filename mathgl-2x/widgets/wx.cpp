@@ -279,8 +279,10 @@ void wxMathGL::OnMouseMove(wxMouseEvent &ev)
 			mreal ff = 240/sqrt(mreal(w*h));
 			phi += int((x0-xe)*ff);
 			tet += int((y0-ye)*ff);
-			if(phi>180)	phi-=360;		if(phi<-180)	phi+=360;
-			if(tet>180)	tet-=360;		if(tet<-180)	tet+=360;
+			if(phi>180)		phi-=360;
+			if(phi<-180)	phi+=360;
+			if(tet>180)		tet-=360;
+			if(tet<-180)	tet+=360;
 //			Update();
 		}
 		if(ev.ButtonDown(wxMOUSE_BTN_RIGHT))	// zoom and perspective
@@ -290,7 +292,8 @@ void wxMathGL::OnMouseMove(wxMouseEvent &ev)
 			x1 = cx+(x1-cx)*exp(-ff);	x2 = cx+(x2-cx)*exp(-ff);
 			y1 = cy+(y1-cy)*exp(-ff);	y2 = cy+(y2-cy)*exp(-ff);
 			per = per + gg;
-			if(per<0)	per = 0;	if(per>=1)	per = 0.9999;
+			if(per<0)	per = 0;
+			if(per>=1)	per = 0.9999;
 //			Update();
 		}
 		if(ev.ButtonDown(wxMOUSE_BTN_MIDDLE))	// shift

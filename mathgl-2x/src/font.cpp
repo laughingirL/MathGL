@@ -763,7 +763,8 @@ bool mglFont::Load(const char *base, const char *path)
 	if(!(base && *base) || !read_main(str,norm))
 	{
 		read_def();	setlocale(LC_NUMERIC,loc.c_str());
-		if(buf)	delete []buf;	return true;
+		if(buf)	delete []buf;
+		return true;
 	}
 	fact[1] = fact[2] = fact[3] = fact[0];
 

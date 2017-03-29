@@ -1088,9 +1088,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	if(mgl_isnan(phi))	return;
 	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=(P.n3&4)?1:0.8;	}
 	
-	mglPnt p=Pnt[P.n1];	p.a=1;
-	const int oi = d?d->ObjId:-1;
-	
+	mglPnt p=Pnt[P.n1];	p.a=1;	
 	mreal fact = get_persp(Bp.pf,p.z,Depth);
 	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2)*fact;
 	mreal size=P.s, f = P.p*pf*P.s;
@@ -1134,21 +1132,27 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 		if(g.line[ii]==0x3fff && g.line[ii+1]==0x3fff)	continue;
 		mreal x = pp.u + g.line[ii]*f, y = pp.v + g.line[ii+1]*f;
 		mreal xx = (x*co+y*si)/2, yy = (y*co-x*si)/2;
-		if(xx<x1)	x1=xx;	if(xx>x2)	x2=xx;
-		if(yy<y1)	y1=yy;	if(yy>y2)	y2=yy;
+		if(xx<x1)	x1=xx;
+		if(xx>x2)	x2=xx;
+		if(yy<y1)	y1=yy;
+		if(yy>y2)	y2=yy;
 	}
 	x1-=2;	x2+=2;	y1-=2;	y2+=2;
 	long w = long(x2-x1+1), h = long(y2-y1+1), il=0;
 	long x0=long(pp.x+x1), y0=long(pp.y+y1),i1=1,i2=w-2,j1=1,j2=h-2;
 	if(d)	// apply mglDrawReg
 	{
-		if(x0+i1<d->x1)	i1 = d->x1-x0;	if(x0+i2>d->x2)	i2 = d->x2-x0;
-		if(y0+j1<d->y1)	j1 = d->y1-y0;	if(y0+j2>d->y2)	j2 = d->y2-y0;
+		if(x0+i1<d->x1)	i1 = d->x1-x0;
+		if(x0+i2>d->x2)	i2 = d->x2-x0;
+		if(y0+j1<d->y1)	j1 = d->y1-y0;
+		if(y0+j2>d->y2)	j2 = d->y2-y0;
 	}
 	else
 	{
-		if(x0+i1<0)	i1 = -x0;	if(x0+i2>Width)  i2 = Width-x0;
-		if(y0+j1<0)	j1 = -y0;	if(y0+j2>Height) j2 = Height-y0;
+		if(x0+i1<0)		i1 = -x0;
+		if(x0+i2>Width)	i2 = Width-x0;
+		if(y0+j1<0)		j1 = -y0;
+		if(y0+j2>Height)j2 = Height-y0;
 	}
 	if(i1>=i2 || j1>=j2)	return;
 

@@ -246,8 +246,10 @@ std::vector<mglSegment> MGL_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegment
 	for(long i=0;i<n;i++)	// group lines by position of its x-coor
 	{
 		long i1 = (lines[i].p1.x-x0)*dxsl, i2 = (lines[i].p2.x-x0)*dxsl;
-		if(i1<0)	i1=0;	if(i1>nsl)	i1=nsl;
-		if(i2<0)	i2=0;	if(i2>nsl)	i2=nsl;
+		if(i1<0)	i1=0;
+		if(i1>nsl)	i1=nsl;
+		if(i2<0)	i2=0;
+		if(i2>nsl)	i2=nsl;
 		if(i1==i2 && i1*(i1-nsl)<=0)	xsl[i1].push_back(i);
 		else
 		{
@@ -256,8 +258,10 @@ std::vector<mglSegment> MGL_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegment
 		}
 		i1 = (lines[i].p1.y-y0)*dysl;
 		i2 = (lines[i].p2.y-y0)*dysl;
-		if(i1<0)	i1=0;	if(i1>nsl)	i1=nsl;
-		if(i2<0)	i2=0;	if(i2>nsl)	i2=nsl;
+		if(i1<0)	i1=0;
+		if(i1>nsl)	i1=nsl;
+		if(i2<0)	i2=0;
+		if(i2>nsl)	i2=nsl;
 		if(i1==i2 && i1*(i1-nsl)<=0)	ysl[i1].push_back(i);
 		else
 		{
@@ -293,8 +297,10 @@ std::vector<mglSegment> MGL_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegment
 			{	i1 = (curv.p1.x-x0)*dxsl;	i2 = (curv.p2.x-x0)*dxsl;	}
 			else
 			{	i1 = (curv.p1.y-y0)*dysl;	i2 = (curv.p2.y-y0)*dysl;	}
-			if(i1<0)	i1=0;	if(i1>nsl)	i1=nsl;
-			if(i2<0)	i2=0;	if(i2>nsl)	i2=nsl;
+			if(i1<0)	i1=0;
+			if(i1>nsl)	i1=nsl;
+			if(i2<0)	i2=0;
+			if(i2>nsl)	i2=nsl;
 			const std::vector<long> &isl1=(xm<=ym)?xsl[i1]:ysl[i1];
 			for(size_t i=0;i<isl1.size();i++)	// first find continuation of first point
 			{
@@ -554,12 +560,18 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 			mgl_add_edges(gr,a,x,y,z, i,j,1,0, c,d1,d2, ak,v1,v2);
 			kk[4*i+2]=d1;	kk[4*i+3]=d2;
 			// collect points
-			if(b1>=0)	p[num++] = b1;	if(t1>=0)	p[num++] = t1;
-			if(t2>=0)	p[num++] = t2;	if(b2>=0)	p[num++] = b2;
-			if(r1>=0)	p[num++] = r1;	if(r2>=0)	p[num++] = r2;
-			if(d2>=0)	p[num++] = d2;	if(u2>=0)	p[num++] = u2;
-			if(u1>=0)	p[num++] = u1;	if(d1>=0)	p[num++] = d1;
-			if(l2>=0)	p[num++] = l2;	if(l1>=0)	p[num++] = l1;
+			if(b1>=0)	p[num++] = b1;
+			if(t1>=0)	p[num++] = t1;
+			if(t2>=0)	p[num++] = t2;
+			if(b2>=0)	p[num++] = b2;
+			if(r1>=0)	p[num++] = r1;
+			if(r2>=0)	p[num++] = r2;
+			if(d2>=0)	p[num++] = d2;
+			if(u2>=0)	p[num++] = u2;
+			if(u1>=0)	p[num++] = u1;
+			if(d1>=0)	p[num++] = d1;
+			if(l2>=0)	p[num++] = l2;
+			if(l1>=0)	p[num++] = l1;
 
 			//	d1	u1	u2	d2
 			//	l2			r2
@@ -642,12 +654,16 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 			else if(num==8)
 			{
 				if(b2d1)
-				{	if(l2<0)	{	l2=l1;	l1=b1;	}	if(r2<0)	r2=d2;
-					if(t2<0)	{	t2=t1;	t1=b1;	}	if(u2<0)	u2=d2;
+				{	if(l2<0)	{	l2=l1;	l1=b1;	}
+					if(r2<0)	r2=d2;
+					if(t2<0)	{	t2=t1;	t1=b1;	}
+					if(u2<0)	u2=d2;
 					gr->quad_plot(r1,r2,u1,u2);	gr->quad_plot(l1,l2,t1,t2);	}
 				else
-				{	if(l2<0)	l2=d1;	if(r2<0)	{	r2=r1;	r1=b2;	}
-					if(t2<0)	t2=b2;	if(u2<0)	{	u2=u1;	u1=d1;	}
+				{	if(l2<0)	l2=d1;
+					if(r2<0)	{	r2=r1;	r1=b2;	}
+					if(t2<0)	t2=b2;
+					if(u2<0)	{	u2=u1;	u1=d1;	}
 					gr->quad_plot(r1,r2,t2,t1);	gr->quad_plot(l1,l2,u2,u1);	}
 			}
 		}

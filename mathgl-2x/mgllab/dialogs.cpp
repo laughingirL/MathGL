@@ -555,7 +555,7 @@ std::string get_color(Fl_Choice *c, Fl_Spinner *s, Fl_Input *p)
 	int cv = c->value(), sv = s->value();
 	int pv = ps?10*atof(ps):-1;
 	if(pv<0 || pv>9)	ps = NULL;
-	if(cv>0 && cv<strlen(cols))
+	if(cv>0 && cv<long(strlen(cols)))
 	{
 		if(ps)
 		{
@@ -1501,7 +1501,8 @@ void setup_dlg_cb(Fl_Widget*,void *v)
 //-----------------------------------------------------------------------------
 void cb_setup_save(Fl_Widget*,void *v)	{	setup_dlg.save();	}
 //-----------------------------------------------------------------------------
-void inplot_dlg_upd(Fl_Widget*,void*);
+void cp_inplot_upd(Fl_Widget*,void*);
+void cb_only_inplot(Fl_Widget*,void*);
 class InplotDlg : public GeneralDlg
 {
 	Fl_Round_Button *k1, *k2, *k3, *k4, *k5, *k6;
@@ -1518,76 +1519,90 @@ class InplotDlg : public GeneralDlg
 	Fl_Spinner *tet, *phi;
 	Fl_Float_Input *ax, *ay;
 	Fl_Check_Button *rl, *rb, *rt, *rr, *rw;
-	Fl_Input *title=(Fl_Input *)0;
-	Fl_Output *res=(Fl_Output *)0;
+	Fl_Input *title;
+	Fl_Output *res;
 	Fl_MathGL *gr;
 public:
 	InplotDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(715, 315, mgl_gettext("Add inplot"));
-		k1 = new Fl_Round_Button(5, 5, 105, 25, "SubPlot");	k1->callback(cb_dlg_cancel,this);
-		n1 = new Fl_Spinner(145, 5, 55, 25, "nx");		n1->callback(cb_dlg_cancel,this);
-		m1 = new Fl_Spinner(230, 5, 55, 25, "ny");		m1->callback(cb_dlg_cancel,this);
-		i1 = new Fl_Spinner(315, 5, 55, 25, "ind");		i1->callback(cb_dlg_cancel,this);
-		x1 = new Fl_Counter(400, 5, 95, 25, "dx");		x1->callback(cb_dlg_cancel,this);
-		y1 = new Fl_Counter(525, 5, 95, 25, "dy");		y1->callback(cb_dlg_cancel,this);
+		k1 = new Fl_Round_Button(5, 5, 105, 25, "SubPlot");
+		k1->callback(cb_only_inplot,k1);	k1->type(FL_RADIO_BUTTON);
+		n1 = new Fl_Spinner(145, 5, 55, 25, "nx");		n1->callback(cp_inplot_upd);
+		m1 = new Fl_Spinner(230, 5, 55, 25, "ny");		m1->callback(cp_inplot_upd);
+		i1 = new Fl_Spinner(315, 5, 55, 25, "ind");		i1->callback(cp_inplot_upd);
+		x1 = new Fl_Counter(400, 5, 95, 25, "dx");		x1->callback(cp_inplot_upd);
+		y1 = new Fl_Counter(525, 5, 95, 25, "dy");		y1->callback(cp_inplot_upd);
 
-		k2 = new Fl_Round_Button(5, 35, 105, 25, "MultiPlot");	k2->callback(cb_dlg_cancel,this);
-		n2 = new Fl_Spinner(145, 35, 55, 25, "nx");		n2->callback(cb_dlg_cancel,this);
-		m2 = new Fl_Spinner(230, 35, 55, 25, "ny");		m2->callback(cb_dlg_cancel,this);
-		i2 = new Fl_Spinner(315, 35, 55, 25, "ind");	i2->callback(cb_dlg_cancel,this);
-		x2 = new Fl_Counter(400, 35, 95, 25, "dx");		x2->callback(cb_dlg_cancel,this);
-		y2 = new Fl_Counter(525, 35, 95, 25, "dy");		y2->callback(cb_dlg_cancel,this);
+		k2 = new Fl_Round_Button(5, 35, 105, 25, "MultiPlot");
+		k2->callback(cb_only_inplot,k2);	k2->type(FL_RADIO_BUTTON);
+		n2 = new Fl_Spinner(145, 35, 55, 25, "nx");		n2->callback(cp_inplot_upd);
+		m2 = new Fl_Spinner(230, 35, 55, 25, "ny");		m2->callback(cp_inplot_upd);
+		i2 = new Fl_Spinner(315, 35, 55, 25, "ind");	i2->callback(cp_inplot_upd);
+		x2 = new Fl_Counter(400, 35, 95, 25, "dx");		x2->callback(cp_inplot_upd);
+		y2 = new Fl_Counter(525, 35, 95, 25, "dy");		y2->callback(cp_inplot_upd);
 
-		k3 = new Fl_Round_Button(5, 65, 105, 25, "GridPlot");	k3->callback(cb_dlg_cancel,this);
-		n3 = new Fl_Spinner(145, 65, 55, 25, "nx");		n3->callback(cb_dlg_cancel,this);
-		m3 = new Fl_Spinner(230, 65, 55, 25, "ny");		m3->callback(cb_dlg_cancel,this);
-		i3 = new Fl_Spinner(315, 65, 55, 25, "ind");	i3->callback(cb_dlg_cancel,this);
-		d3 = new Fl_Counter(400, 65, 95, 25, "d");		d3->callback(cb_dlg_cancel,this);
+		k3 = new Fl_Round_Button(5, 65, 105, 25, "GridPlot");
+		k3->callback(cb_only_inplot,k3);	k3->type(FL_RADIO_BUTTON);
+		n3 = new Fl_Spinner(145, 65, 55, 25, "nx");		n3->callback(cp_inplot_upd);
+		m3 = new Fl_Spinner(230, 65, 55, 25, "ny");		m3->callback(cp_inplot_upd);
+		i3 = new Fl_Spinner(315, 65, 55, 25, "ind");	i3->callback(cp_inplot_upd);
+		d3 = new Fl_Counter(400, 65, 95, 25, "d");		d3->callback(cp_inplot_upd);
 
-		k4 = new Fl_Round_Button(5, 95, 105, 25, "ColumnPlot");	k4->callback(cb_dlg_cancel,this);
-		n4 = new Fl_Spinner(145, 95, 55, 25, "nx");		n4->callback(cb_dlg_cancel,this);
-		i4 = new Fl_Spinner(315, 95, 55, 25, "ind");	i4->callback(cb_dlg_cancel,this);
-		d4 = new Fl_Counter(400, 95, 95, 25, "d");		d4->callback(cb_dlg_cancel,this);
+		k4 = new Fl_Round_Button(5, 95, 105, 25, "ColumnPlot");
+		k4->callback(cb_only_inplot,k4);	k4->type(FL_RADIO_BUTTON);
+		n4 = new Fl_Spinner(145, 95, 55, 25, "nx");		n4->callback(cp_inplot_upd);
+		i4 = new Fl_Spinner(315, 95, 55, 25, "ind");	i4->callback(cp_inplot_upd);
+		d4 = new Fl_Counter(400, 95, 95, 25, "d");		d4->callback(cp_inplot_upd);
 
-		k5 = new Fl_Round_Button(5, 125, 105, 25, "StickPlot");	k5->callback(cb_dlg_cancel,this);
-		n5 = new Fl_Spinner(145, 125, 55, 25, "nx");	n5->callback(cb_dlg_cancel,this);
-		i5 = new Fl_Spinner(315, 125, 55, 25, "ind");	i5->callback(cb_dlg_cancel,this);
+		k5 = new Fl_Round_Button(5, 125, 105, 25, "StickPlot");
+		k5->callback(cb_only_inplot,k5);	k5->type(FL_RADIO_BUTTON);
+		n5 = new Fl_Spinner(145, 125, 55, 25, "nx");	n5->callback(cp_inplot_upd);
+		i5 = new Fl_Spinner(315, 125, 55, 25, "ind");	i5->callback(cp_inplot_upd);
 
-		k6 = new Fl_Round_Button(5, 155, 105, 25, "InPlot");	k6->callback(cb_dlg_cancel,this);
-		xx1 = new Fl_Float_Input(145, 155, 60, 25, "x:");	xx1->callback(cb_dlg_cancel,this);
-		xx2 = new Fl_Float_Input(225, 155, 60, 25, "...");	xx2->callback(cb_dlg_cancel,this);
-		yy1 = new Fl_Float_Input(315, 155, 60, 25, "y:");	yy1->callback(cb_dlg_cancel,this);
-		yy2 = new Fl_Float_Input(400, 155, 60, 25, "...");	yy2->callback(cb_dlg_cancel,this);
+		k6 = new Fl_Round_Button(5, 155, 105, 25, "InPlot");
+		k6->callback(cb_only_inplot,k6);	k6->type(FL_RADIO_BUTTON);
+		xx1 = new Fl_Float_Input(145, 155, 60, 25, "x:");	xx1->callback(cp_inplot_upd);
+		xx2 = new Fl_Float_Input(225, 155, 60, 25, "...");	xx2->callback(cp_inplot_upd);
+		yy1 = new Fl_Float_Input(315, 155, 60, 25, "y:");	yy1->callback(cp_inplot_upd);
+		yy2 = new Fl_Float_Input(400, 155, 60, 25, "...");	yy2->callback(cp_inplot_upd);
 
-		tet = new Fl_Spinner(75, 190, 60, 25, mgl_gettext("Rotate on"));	tet->callback(cb_dlg_cancel,this);
-		phi = new Fl_Spinner(170, 190, 60, 25, mgl_gettext("and"));			phi->callback(cb_dlg_cancel,this);
-		ax = new Fl_Float_Input(315, 190, 60, 25, mgl_gettext("Aspect x/z"));ax->callback(cb_dlg_cancel,this);
-		ay = new Fl_Float_Input(400, 190, 60, 25, mgl_gettext("y/z"));		ay->callback(cb_dlg_cancel,this);
+		tet = new Fl_Spinner(75, 190, 60, 25, mgl_gettext("Rotate on"));	tet->callback(cp_inplot_upd);
+		phi = new Fl_Spinner(170, 190, 60, 25, mgl_gettext("and"));			phi->callback(cp_inplot_upd);
+		ax = new Fl_Float_Input(315, 190, 60, 25, mgl_gettext("Aspect x/z"));ax->callback(cp_inplot_upd);
+		ay = new Fl_Float_Input(400, 190, 60, 25, mgl_gettext("y/z"));		ay->callback(cp_inplot_upd);
 
 		new Fl_Box(0, 225, 90, 25, mgl_gettext("Reserve at:"));
-		rl = new Fl_Check_Button(90, 225, 75, 25, mgl_gettext("left"));		rl->callback(cb_dlg_cancel,this);
-		rb = new Fl_Check_Button(145, 225, 75, 25, mgl_gettext("bottom"));	rb->callback(cb_dlg_cancel,this);
-		rt = new Fl_Check_Button(225, 225, 75, 25, mgl_gettext("top"));		rt->callback(cb_dlg_cancel,this);
-		rr = new Fl_Check_Button(285, 225, 75, 25, mgl_gettext("right"));	rr->callback(cb_dlg_cancel,this);
-		rw = new Fl_Check_Button(360, 225, 100, 25, mgl_gettext("whole area"));	rw->callback(cb_dlg_cancel,this);
-		title = new Fl_Input(50, 255, 350, 25, mgl_gettext("Title"));	title->callback(cb_dlg_cancel,this);
-		o = new Fl_Button(400, 255, 60, 25, mgl_gettext("Style"));
+		rl = new Fl_Check_Button(90, 225, 75, 25, mgl_gettext("left"));		rl->callback(cp_inplot_upd);
+		rb = new Fl_Check_Button(145, 225, 75, 25, mgl_gettext("bottom"));	rb->callback(cp_inplot_upd);
+		rt = new Fl_Check_Button(225, 225, 75, 25, mgl_gettext("top"));		rt->callback(cp_inplot_upd);
+		rr = new Fl_Check_Button(285, 225, 75, 25, mgl_gettext("right"));	rr->callback(cp_inplot_upd);
+		rw = new Fl_Check_Button(360, 225, 100, 25, mgl_gettext("whole area"));	rw->callback(cp_inplot_upd);
+		title = new Fl_Input(50, 255, 350, 25, mgl_gettext("Title"));	title->callback(cp_inplot_upd);
+		o = new Fl_Button(400, 255, 60, 25, mgl_gettext("Style"));	// TODO
 		res = new Fl_Output(50, 285, 410, 25, mgl_gettext("Result"));
 		gr = new Fl_MathGL(470, 130, 240, 180);	gr->box(FL_ENGRAVED_BOX);
 		o = new Fl_Button(545, 95, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(630, 95, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
-		o = new Fl_Button(630, 60, 75, 25, mgl_gettext("Refresh"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Button(630, 60, 75, 25, mgl_gettext("Refresh"));	o->callback(cp_inplot_upd);
 		w->set_modal();	w->end();
 	}
 	void update()
 	{}
 	void cb_ok()
-	{}
+	{
+		update();
+		if(e)	e->editor->insert(result.c_str());
+	}
 } inplot_dlg;
 //-----------------------------------------------------------------------------
-void inplot_dlg_upd(Fl_Widget*,void*)	{	inplot_dlg.update();	}
+void cp_inplot_upd(Fl_Widget*,void*)	{	inplot_dlg.update();	}
+void cb_only_inplot(Fl_Widget*,void *v)
+{	((Fl_Round_Button*)v)->setonly();	inplot_dlg.update();	}
+//-----------------------------------------------------------------------------
+void inplot_dlg_cb(Fl_Widget*,void *v)
+{	inplot_dlg.e = (ScriptWindow*)v;	inplot_dlg.show();	}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

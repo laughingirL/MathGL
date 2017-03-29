@@ -39,8 +39,8 @@ void mglCanvasWnd::SetCurFig(int c)
 //-----------------------------------------------------------------------------
 void mglCanvasWnd::ResetFrames()
 {
-	if(GG)	free(GG);	GG = 0;
-	NumFig = CurFig = 0;
+	if(GG)	free(GG);
+	GG = 0;	NumFig = CurFig = 0;
 	mglCanvas::ResetFrames();
 }
 //-----------------------------------------------------------------------------

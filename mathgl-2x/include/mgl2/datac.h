@@ -473,7 +473,8 @@ using mglDataA::Momentum;
 		aa = mglSpline3C(a,nx,ny,nz,x,y,z,&ax,&ay,&az);	res = abs(aa);
 		if(dx)	*dx = res?(real(aa)*real(ax)+imag(aa)*imag(ax))/res:0;
 		if(dy)	*dy = res?(real(aa)*real(ay)+imag(aa)*imag(ay))/res:0;
-		if(dz)	*dz = res?(real(aa)*real(az)+imag(aa)*imag(az))/res:0;	return res;	}
+		if(dz)	*dz = res?(real(aa)*real(az)+imag(aa)*imag(az))/res:0;
+		return res;	}
 	/// Get the interpolated value in given data cell without border checking
 	mreal value(mreal x,mreal y=0,mreal z=0) const
 	{	return abs(mglSpline3Cs(a,nx,ny,nz,x,y,z));	}

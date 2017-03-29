@@ -454,7 +454,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 				{
 					HMDT d = mglFormulaCalc(s[i], this, DataList);
 					long v = long(d->a[0]+0.5);	delete d;
-					if(v>=0 && v<a[n-1].w.size())	a[n-1].w = a[n-1].w[v];
+					if(v>=0 && v<long(a[n-1].w.size()))	a[n-1].w = a[n-1].w[v];
 					else	a[n-1].w = L"";
 				}
 			}
@@ -690,8 +690,10 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 	{
 		if(str[n]=='\'' && (n==0 || str[n-1]!='\\'))	k++;
 		if(k%2)	continue;
-		if(str[n]=='(')	m++;	if(str[n]==')')	m--;
-		if(str[n]=='{')	mm++;	if(str[n]=='}')	mm--;
+		if(str[n]=='(')	m++;
+		if(str[n]==')')	m--;
+		if(str[n]=='{')	mm++;
+		if(str[n]=='}')	mm--;
 		if(str[n]=='#')	break;
 		if((str[n]==':' || str[n]=='\n') && k%2==0 && m==0 && mm==0)
 		{

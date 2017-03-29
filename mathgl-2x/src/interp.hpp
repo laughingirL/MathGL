@@ -172,7 +172,9 @@ template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long 
 	}
 	else	// 1d interpolation
 		b = mglSpline1t<Treal>(a,nx,x,&gx);
-	if(dx)	*dx=gx;	if(dy)	*dy=gy;	if(dz)	*dz=gz;
+	if(dx)	*dx=gx;
+	if(dy)	*dy=gy;
+	if(dz)	*dz=gz;
 	return b;
 }
 //-----------------------------------------------------------------------------

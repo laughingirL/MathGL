@@ -150,8 +150,10 @@ void MGL_EXPORT mgl_face(HMGL gr, double x0, double y0, double z0, double x1, do
 //	mreal c1,c2,c3,c4,zz=(gr->Min.z+gr->Max.z)/2;
 	mreal c1,c2,c3,c4,zz=2*gr->Max.z-gr->Min.z;
 	c1=c2=c3=c4=gr->CDef;
-	if(mgl_isnan(z0))	z0 = zz;	if(mgl_isnan(z1))	z1 = zz;
-	if(mgl_isnan(z2))	z2 = zz;	if(mgl_isnan(z3))	z3 = zz;
+	if(mgl_isnan(z0))	z0 = zz;
+	if(mgl_isnan(z1))	z1 = zz;
+	if(mgl_isnan(z2))	z2 = zz;
+	if(mgl_isnan(z3))	z3 = zz;
 	mglPoint p1(x0,y0,z0), p2(x1,y1,z1), p3(x2,y2,z2), p4(x3,y3,z3);
 	if(gr->GetNumPal(pal)>=4)
 	{	c2=gr->NextColor(pal,1);	c3=gr->NextColor(pal,2);	c4=gr->NextColor(pal,3);	}
@@ -598,7 +600,8 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 	mreal zVal = gr->Min.z, xm=0;
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
-	if(tx<1)	tx=1;	if(ty<1)	ty=1;
+	if(tx<1)	tx=1;
+	if(ty<1)	ty=1;
 
 	for(long k=0;k<ax->GetNz();k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
@@ -1089,7 +1092,7 @@ void MGL_EXPORT mgl_bifurcation(HMGL gr, double dx, double (*f)(double,double,vo
 		r = f(gr->Min.x,r,par);
 		for(long j=0;j<m1;j++)	if(fabs(v1[j]-r)<dd)
 		{	fin=true;	break;	}
-		if(fin)	break;	v1[m1]=r;
+		if(fin)	break;	else	v1[m1]=r;
 	}
 	for(mreal xx = gr->Min.x+dx;xx<=gr->Max.x;xx+=dx)
 	{
@@ -1100,7 +1103,7 @@ void MGL_EXPORT mgl_bifurcation(HMGL gr, double dx, double (*f)(double,double,vo
 			r = f(xx,r,par);
 			for(long j=0;j<m1;j++)	if(fabs(v1[j]-r)<dd)
 			{	fin=true;	break;	}
-			if(fin)	break;	v1[m1]=r;
+			if(fin)	break;	else	v1[m1]=r;
 		}
 		if(m1>=m2)	for(long i=0;i<m1;i++)
 		{
@@ -1154,13 +1157,14 @@ void MGL_EXPORT mgl_bifurcation_str_(uintptr_t *gr, double *dx, const char *func
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, const char *stl, const char *opt)
 {
-	long m=dats->GetNx(), nx=dats->GetNy(), ny=dats->GetNz();
+	long m=dats->GetNx(), nx=dats->GetNy(), ny=dats->GetNz();	// TODO parse several slices?
 	if(m<2 || nx<2)	{	gr->SetWarn(mglWarnLow,"Iris");	return;	}
 	if(m!=ranges->GetNy())	{	gr->SetWarn(mglWarnDim,"Iris");	return;	}
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(!g)	return;
 	mreal ofsize = gr->GetFontSize();
 	mreal res=gr->SaveState(opt), fsize = gr->GetFontSize();
-	if(mgl_isnan(res))	res=-1;	res /= m;
+	if(mgl_isnan(res))	res=-1;
+	res /= m;
 	static int cgid=1;	gr->StartGroup("Iris",cgid++);
 	std::wstring *strs = new std::wstring[m];
 	bool label = ids && ids[0];	// disable axis drawing

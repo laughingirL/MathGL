@@ -158,7 +158,8 @@ void DatPanel::setVar(mglDataA *v)
 //-----------------------------------------------------------------------------
 void DatPanel::setSlice(int k)
 {
-	if(k>=nz)	k=nz-1;	if(k<0)	k=0;
+	if(k>=nz)	k=nz-1;
+	if(k<0)	k=0;
 	if(k!=kz)
 	{
 		infoDlg->setSlice(k);

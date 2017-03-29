@@ -654,7 +654,9 @@ mdual MGL_EXPORT mgl_datac_spline_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,
 	{
 		mreal rx=0,ry=0,rz=0,res;
 		res=d->valueD(x,y,z,&rx,&ry,&rz);
-		if(dx)	*dx=rx;	if(dy)	*dy=ry;	if(dz)	*dz=rz;
+		if(dx)	*dx=rx;
+		if(dy)	*dy=ry;
+		if(dz)	*dz=rz;
 		return res;
 	}
 	dual r = mglSpline3t<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
@@ -675,7 +677,9 @@ mdual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,
 	{
 		mreal rx=0,ry=0,rz=0,res;
 		res=mgl_data_linear_ext(d,x,y,z,&rx,&ry,&rz);
-		if(dx)	*dx=rx;	if(dy)	*dy=ry;	if(dz)	*dz=rz;
+		if(dx)	*dx=rx;
+		if(dy)	*dy=ry;
+		if(dz)	*dz=rz;
 		return res;
 	}
 

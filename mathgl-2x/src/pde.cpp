@@ -62,7 +62,8 @@ void MGL_NO_EXPORT mgl_operator_exp(long n, dual *h, dual *a, dual *f)
 	for(long i=0;i<2*n;i++)
 	{
 		long ii=i-i1;
-		if(ii<0)	ii=0;	if(ii>n-1)	ii=n-1;
+		if(ii<0)	ii=0;
+		if(ii>n-1)	ii=n-1;
 		double kk=M_PI*2*i/n;
 		for(long j=0;j<n;j++)
 		{
@@ -111,7 +112,8 @@ void MGL_NO_EXPORT mgl_operator_lin(long n, mreal *h, dual *a, dual *f, dual *g,
 	for(long i=0;i<2*n;i++)
 	{
 		long ii=i-i1;
-		if(ii<0)	ii=0;	if(ii>n-1)	ii=n-1;
+		if(ii<0)	ii=0;
+		if(ii>n-1)	ii=n-1;
 		double kk=M_PI*2*i/n;
 		for(long j=0;j<n;j++)
 		{

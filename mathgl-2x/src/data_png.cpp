@@ -222,7 +222,8 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	for(long i=0;i<ny;i++)	for(long j=0;j<nx;j++)
 	{
 		long k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
-		if(k<0)	k=0;	if(k>=num) k=num-1;
+		if(k<0)		k=0;
+		if(k>=num) k=num-1;
 		memcpy(d+3*(j+i*nx),c+3*k,3);
 	}
 	delete []c;

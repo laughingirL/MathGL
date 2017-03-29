@@ -491,13 +491,15 @@ int MGL_EXPORT mgl_data_read_mat(HMDT d, const char *fname, long dim)
 	if(dim==1)
 	{
 		sscanf(buf+j,"%ld",&nx);
-		while(j<nb && buf[j]!='\n')	j++;	j++;
+		while(j<nb && buf[j]!='\n')	j++;
+		j++;
 //		while(buf[j]>' ')	j++;
 	}
 	else if(dim==2)
 	{
 		sscanf(buf+j,"%ld%ld",&nx,&ny);
-		while(j<nb && buf[j]!='\n')	j++;	j++;
+		while(j<nb && buf[j]!='\n')	j++;
+		j++;
 		char *b=buf+j;
 		long l=0;
 		for(long i=0;b[i];i++)
@@ -521,7 +523,8 @@ int MGL_EXPORT mgl_data_read_mat(HMDT d, const char *fname, long dim)
 	else if(dim==3)
 	{
 		sscanf(buf+j,"%ld%ld%ld",&nx,&ny,&nz);
-		while(j<nb && buf[j]!='\n')	j++;	j++;
+		while(j<nb && buf[j]!='\n')	j++;
+		j++;
 /*		while(buf[j]>' ' && j<nb)	j++;
 		while(buf[j]<=' ' && j<nb)	j++;
 		while(buf[j]>' ' && j<nb)	j++;
@@ -817,9 +820,12 @@ void MGL_EXPORT mgl_data_squeeze(HMDT d, long rx,long ry,long rz,long smooth)
 	mreal *b;
 
 	// simple checking
-	if(rx>=nx)	rx=nx-1;	if(rx<1)	rx=1;
-	if(ry>=ny)	ry=ny-1;	if(ry<1)	ry=1;
-	if(rz>=nz)	rz=nz-1;	if(rz<1)	rz=1;
+	if(rx>=nx)	rx=nx-1;
+	if(rx<1)	rx=1;
+	if(ry>=ny)	ry=ny-1;
+	if(ry<1)	ry=1;
+	if(rz>=nz)	rz=nz-1;
+	if(rz<1)	rz=1;
 	// new sizes
 	kx = 1+(nx-1)/rx;	ky = 1+(ny-1)/ry;	kz = 1+(nz-1)/rz;
 	b = new mreal[kx*ky*kz];
@@ -1131,7 +1137,7 @@ long MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size)
 	while(res[n][0])	{	len += strlen(res[n])+1;	n++;	}
 	if(len>size)	return -long(len);
 	strcpy(buf,res[0]);
-	for(size_t i=1;i<n;i++)	{	strcat(buf,"\t");	strcat(buf,res[i]);	}
+	for(long i=1;i<n;i++)	{	strcat(buf,"\t");	strcat(buf,res[i]);	}
 	return n;
 }
 #else
@@ -1345,7 +1351,7 @@ int MGL_EXPORT mgl_data_read_wfm(HMDT d,const char *fname, long num, long step/*
 	if(!fp)	return 0;	// couldn't open file
 	unsigned short byte_order;
 	fread(&byte_order,2,1,fp);
-	bool byteorder;
+	bool byteorder;	// TODO
 }
 int MGL_EXPORT mgl_data_read_wfm_(uintptr_t *d, const char *fname, long *num, long *step, long *start,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -1354,7 +1360,7 @@ int MGL_EXPORT mgl_data_read_wfm_(uintptr_t *d, const char *fname, long *num, lo
 /// Read data array from Matlab MAT file (parse versions 4 and 5)
 int MGL_EXPORT mgl_data_read_matlab(HMDT d,const char *fname,const char *data)
 {
-
+	// TODO
 }
 int MGL_EXPORT mgl_data_read_matlab_(uintptr_t *d, const char *fname, const char *data,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

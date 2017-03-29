@@ -382,13 +382,15 @@ int MGL_EXPORT mgl_datac_read_mat(HADT d, const char *fname, long dim)
 	if(dim==1)
 	{
 		sscanf(buf+j,"%ld",&nx);
-		while(j<nb && buf[j]!='\n')	j++;	j++;
+		while(j<nb && buf[j]!='\n')	j++;
+		j++;
 //		while(buf[j]>' ')	j++;
 	}
 	else if(dim==2)
 	{
 		sscanf(buf+j,"%ld%ld",&nx,&ny);
-		while(j<nb && buf[j]!='\n')	j++;	j++;
+		while(j<nb && buf[j]!='\n')	j++;
+		j++;
 		char *b=buf+j;
 		long l=0;
 		for(long i=0;b[i];i++)
@@ -412,7 +414,8 @@ int MGL_EXPORT mgl_datac_read_mat(HADT d, const char *fname, long dim)
 	else if(dim==3)
 	{
 		sscanf(buf+j,"%ld%ld%ld",&nx,&ny,&nz);
-		while(j<nb && buf[j]!='\n')	j++;	j++;
+		while(j<nb && buf[j]!='\n')	j++;
+		j++;
 	}
 	mglFromStr(d,buf+j,nx,ny,nz);
 	free(buf);	return 1;
@@ -458,9 +461,12 @@ void MGL_EXPORT mgl_datac_squeeze(HADT d, long rx,long ry,long rz,long smooth)
 	dual *b;
 
 	// simple checking
-	if(rx>=nx)	rx=nx-1;	if(rx<1)	rx=1;
-	if(ry>=ny)	ry=ny-1;	if(ry<1)	ry=1;
-	if(rz>=nz)	rz=nz-1;	if(rz<1)	rz=1;
+	if(rx>=nx)	rx=nx-1;
+	if(rx<1)	rx=1;
+	if(ry>=ny)	ry=ny-1;
+	if(ry<1)	ry=1;
+	if(rz>=nz)	rz=nz-1;
+	if(rz<1)	rz=1;
 	// new sizes
 	kx = 1+(nx-1)/rx;	ky = 1+(ny-1)/ry;	kz = 1+(nz-1)/rz;
 	b = new dual[kx*ky*kz];

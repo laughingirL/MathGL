@@ -222,8 +222,8 @@ public:
 	void show()	{	init();	w->show();	}
 	void hide()	{	w->hide();	}
 };
-static void cb_dlg_cancel(Fl_Widget*, void*);
-static void cb_dlg_ok(Fl_Widget*, void*);
+void cb_dlg_cancel(Fl_Widget*, void*);
+void cb_dlg_ok(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
 // Editor window functions
 void find2_cb(Fl_Widget *, void *);
@@ -293,7 +293,7 @@ void datsel_dlg_cb(Fl_Widget*, void*);
 void style_dlg_cb(Fl_Widget*, void*);
 void newcmd_dlg_cb(Fl_Widget*,void*);
 void setup_dlg_cb(Fl_Widget*,void *);
-void inplot_dlg_upd(Fl_Widget*,void*);
+void inplot_dlg_cb(Fl_Widget*,void*);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

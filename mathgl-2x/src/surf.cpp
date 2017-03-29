@@ -911,8 +911,10 @@ void MGL_EXPORT mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 			xx = (x->v(i,j) - gr->Min.x)/(gr->Max.x - gr->Min.x);
 			yy = (y->v(i,j) - gr->Min.y)/(gr->Max.y - gr->Min.y);
 		}
-		if(xx<0)	xx=0;	if(xx>=1)	xx=1/MGL_FEPSILON;
-		if(yy<0)	yy=0;	if(yy>=1)	yy=1/MGL_FEPSILON;
+		if(xx<0)	xx=0;
+		if(xx>=1)	xx=1/MGL_FEPSILON;
+		if(yy<0)	yy=0;
+		if(yy>=1)	yy=1/MGL_FEPSILON;
 		pos[i+n*j] = gr->AddPnt(mglPoint(ax->v(i,j), ay->v(i,j), xdx),gr->GetC(ss,xx,false),t,yy);
 	}
 	if(sch && mglchr(sch,'.'))

@@ -283,8 +283,10 @@ int Fl_MathGL::handle(int code)
 		{
 			phi += (x0-xe)*ff;
 			tet += (y0-ye)*ff;
-			if(phi>180)	phi-=360;		if(phi<-180)	phi+=360;
-			if(tet>180)	tet-=360;		if(tet<-180)	tet+=360;
+			if(phi>180)		phi-=360;
+			if(phi<-180)	phi+=360;
+			if(tet>180)		tet-=360;
+			if(tet<-180)	tet+=360;
 			if(tet_val)	tet_val->value(tet);
 			if(phi_val)	phi_val->value(phi);
 			x0 = xe;	y0 = ye;

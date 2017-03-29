@@ -1786,24 +1786,26 @@ const char *mmgl_surfc="call 'prepare2d'\ntitle 'SurfC plot':rotate 50 60:light 
 void smgl_surfc(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
-	if(big!=3)	gr->Title("SurfC plot");	gr->Rotate(50,60);
-	gr->Light(true);	gr->Box();	gr->SurfC(a,b);
+	if(big!=3)	gr->Title("SurfC plot");
+	gr->Rotate(50,60);	gr->Light(true);	gr->Box();	gr->SurfC(a,b);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_surfca="call 'prepare2d'\ntitle 'SurfCA plot':rotate 50 60:light on:alpha on:box:surfca a b a";
 void smgl_surfca(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
-	if(big!=3)	gr->Title("SurfCA plot");	gr->Rotate(50,60);
-	gr->Alpha(true);	gr->Light(true);	gr->Box();	gr->SurfCA(a,b,a);
+	if(big!=3)	gr->Title("SurfCA plot");
+	gr->Rotate(50,60);	gr->Alpha(true);	gr->Light(true);	gr->Box();
+	gr->SurfCA(a,b,a);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_surfa="call 'prepare2d'\ntitle 'SurfA plot':rotate 50 60:light on:alpha on:box:surfa a b";
 void smgl_surfa(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
-	if(big!=3)	gr->Title("SurfA plot");	gr->Rotate(50,60);
-	gr->Alpha(true);	gr->Light(true);	gr->Box();	gr->SurfA(a,b);
+	if(big!=3)	gr->Title("SurfA plot");
+	gr->Rotate(50,60);	gr->Alpha(true);	gr->Light(true);	gr->Box();
+	gr->SurfA(a,b);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_tile="call 'prepare2d'\ntitle 'Tile plot':rotate 50 60:box:tile a";

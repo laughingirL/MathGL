@@ -65,7 +65,8 @@ public:
 	inline mglDraw *getClass()
 	{	mglDraw *d=0;
 		if(draw_func==mgl_draw_class)	d = (mglDraw*)draw_par;
-		if(draw)	d = draw;	return d;	}
+		if(draw)	d = draw;
+		return d;	}
 
 	int getPer() const	{return int(per);}	///< Get perspective value
 	int getPhi() const	{return int(phi);}	///< Get Phi-angle value

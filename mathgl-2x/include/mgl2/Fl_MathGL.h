@@ -61,7 +61,8 @@ public:
 	inline mglDraw *get_class()
 	{	mglDraw *d=0;
 		if(draw_func==mgl_draw_class)	d = (mglDraw*)draw_par;
-		if(draw_cl)	d = draw_cl;	return d;	}
+		if(draw_cl)	d = draw_cl;
+		return d;	}
 	/// Set drawing functions and its parameter
 	inline void set_draw(int (*func)(mglBase *gr, void *par), void *par)
 	{	if(draw_cl)	delete draw_cl;	draw_cl=0;	draw_func=func;	draw_par=par;	}

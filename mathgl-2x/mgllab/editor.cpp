@@ -278,8 +278,8 @@ void add_filename(const char *fname, ScriptWindow *e)
 	int ii=4;
 	for(int i=1;i<5;i++)
 		if(lastfiles[i]==fname)	{	ii=i;	break;	}
-		for(int i=ii;i>0;i--)	lastfiles[i]=lastfiles[i-1];
-		lastfiles[0]=fname;
+	for(int i=ii;i>0;i--)	lastfiles[i]=lastfiles[i-1];
+	lastfiles[0]=fname;
 	int ir = e->menu->find_index("File/Recent files");
 	e->menu->replace(ir+1, lastfiles[0].c_str());
 	e->menu->replace(ir+2, lastfiles[1].c_str());

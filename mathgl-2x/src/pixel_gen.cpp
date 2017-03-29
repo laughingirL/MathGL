@@ -555,7 +555,7 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 {
 	unsigned char **p;
 	Finish();
-	long c = alpha?4:3, d = c*Width, dj=0;
+	long c = alpha?4:3, d = c*Width;
 	unsigned char *gg = (alpha?G4:G);
 	int x2 = BBoxX2<0?Width:BBoxX2, y2 = BBoxY2<0?Height:BBoxY2;
 	if(BBoxX1>=0 && BBoxX1<x2 && BBoxY1>=0 && BBoxY1<y2)

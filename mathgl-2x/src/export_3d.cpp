@@ -1023,17 +1023,26 @@ void MGL_EXPORT mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim q = gr->GetPrm(i,false);
-		if(q.type>0)	continue;		if(q.n4=='+')	m_p = true;
-		if(q.n4=='x')	m_x = true;		if(q.n4=='s')	m_s = true;
-		if(q.n4=='d')	m_d = true;		if(q.n4=='v')	m_v = true;
-		if(q.n4=='^')	m_t = true;		if(q.n4=='*')	m_a = true;
+		if(q.type>0)	continue;
+		if(q.n4=='+')	m_p = true;
+		if(q.n4=='x')	m_x = true;
+		if(q.n4=='s')	m_s = true;
+		if(q.n4=='d')	m_d = true;
+		if(q.n4=='v')	m_v = true;
+		if(q.n4=='^')	m_t = true;
+		if(q.n4=='*')	m_a = true;
 		if(q.n4=='o' || q.n4=='O' || q.n4=='C')	m_o = true;
-		if(q.n4=='S')	m_S = true;		if(q.n4=='D')	m_D = true;
-		if(q.n4=='V')	m_V = true;		if(q.n4=='T')	m_T = true;
-		if(q.n4=='<')	m_l = true;		if(q.n4=='L')	m_L = true;
-		if(q.n4=='>')	m_r = true;		if(q.n4=='R')	m_R = true;
+		if(q.n4=='S')	m_S = true;
+		if(q.n4=='D')	m_D = true;
+		if(q.n4=='V')	m_V = true;
+		if(q.n4=='T')	m_T = true;
+		if(q.n4=='<')	m_l = true;
+		if(q.n4=='L')	m_L = true;
+		if(q.n4=='>')	m_r = true;
+		if(q.n4=='R')	m_R = true;
 		if(q.n4=='Y')	m_Y = true;
-		if(q.n4=='P')	m_P = true;		if(q.n4=='X')	m_X = true;
+		if(q.n4=='P')	m_P = true;
+		if(q.n4=='X')	m_X = true;
 	}
 	if(m_P)	{	m_p=true;	m_s=true;	}
 	if(m_X)	{	m_x=true;	m_s=true;	}

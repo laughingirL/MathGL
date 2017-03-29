@@ -712,7 +712,8 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		else if(!nm.compare(L"int"))	return mglApplyFunc(str, arg, head, floor);
 		else if(!nm.compare(L"random"))
 		{	HMDT res=mglFormulaCalc(str, arg, head);	mreal *a = res->a;
-			for(long i=0;i<res->GetNN();i++)	a[i] = mgl_rnd();	return res;	}
+			for(long i=0;i<res->GetNN();i++)	a[i] = mgl_rnd();
+			return res;	}
 		else if(!nm.compare(L"real"))
 		{
 			HADT a1 = mglFormulaCalcC(str, arg, head);
@@ -1053,7 +1054,8 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, powc);
 		else if(!nm.compare(L"random"))
 		{	HADT res=mglFormulaCalcC(str, arg, head);	dual *a = res->a;
-			for(long i=0;i<res->GetNN();i++)	a[i] = dual(mgl_rnd(), mgl_rnd());	return res;	}
+			for(long i=0;i<res->GetNN();i++)	a[i] = dual(mgl_rnd(), mgl_rnd());
+			return res;	}
 		else if(!nm.compare(L"hypot"))
 			return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, hypotc);
 		else if(!nm.compare(L"real"))	return mglApplyFuncC(str, arg, head, realc);

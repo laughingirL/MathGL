@@ -504,8 +504,10 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	for(long i=0;i<n;i++)
 	{
 		mreal xx=x->vthr(i), yy = y->vthr(i);
-		if(xx<x1)	x1=xx;	if(xx>x2)	x2=xx;
-		if(yy<y1)	y1=yy;	if(yy>y2)	y2=yy;
+		if(xx<x1)	x1=xx;
+		if(xx>x2)	x2=xx;
+		if(yy<y1)	y1=yy;
+		if(yy>y2)	y2=yy;
 	}
 	const double dx=x2-x1, dy=y2-y1;
 	if(dx==0 || dy==0)	return nums;

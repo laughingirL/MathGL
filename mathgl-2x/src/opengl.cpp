@@ -106,7 +106,7 @@ bool mglCanvasGL::Alpha(bool enable)
 void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, mreal br,mreal ap)
 {
 	mglColor c(cc);
-	float amb[4],dif[4],spc[4], pos[4],dir[4];
+	float amb[4],dif[4],spc[4], pos[4];
 	bool inf = mgl_isnan(r.x);
 	if(n<0 || n>7)	{	SetWarn(mglWarnLId,"AddLight");	return;	}
 	if(c.Valid())
@@ -126,7 +126,6 @@ void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, mreal br,mreal a
 	{	pos[0] = d.x;	pos[1] = d.y;	pos[2] = d.z;	pos[3] = 0;	}
 	else
 	{	pos[0] = r.x;	pos[1] = r.y;	pos[2] = r.z;	pos[3] = 1;	}
-	dir[0] = d.x;	dir[1] = d.y;	dir[2] = d.z;	dir[3] = 0;
 
 	glShadeModel(GL_SMOOTH);
 	glLightfv(GL_LIGHT0+n, GL_AMBIENT, amb);
@@ -135,6 +134,7 @@ void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, mreal br,mreal a
 	glLightfv(GL_LIGHT0+n, GL_POSITION, pos);
 	if(!inf)
 	{
+//		float dir[4]={d.x, d.y, d.z, 0};
 //		glLightfv(GL_LIGHT0+n, GL_SPOT_DIRECTION, dir);
 //		glLightf(GL_LIGHT0+n, GL_SPOT_CUTOFF, ap);
 	}

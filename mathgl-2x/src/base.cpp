@@ -837,8 +837,10 @@ void mglBase::Ternary(int t)
 //-----------------------------------------------------------------------------
 void mglBase::SetFunc(const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
 {
-	if(fa)	delete fa;	if(fx)	delete fx;
-	if(fy)	delete fy;	if(fz)	delete fz;
+	if(fa)	delete fa;
+	if(fx)	delete fx;
+	if(fy)	delete fy;
+	if(fz)	delete fz;
 	if(EqX && *EqX && (EqX[0]!='x' || EqX[1]!=0))
 		fx = new mglFormula(EqX);
 	else	fx = 0;
@@ -902,8 +904,11 @@ void mglBase::ClearEq()
 {
 #pragma omp critical(eq)
 	{
-		if(fx)	delete fx;	if(fy)	delete fy;	if(fz)	delete fz;
-		if(fa)	delete fa;	if(fc)	delete fc;
+		if(fx)	delete fx;
+		if(fy)	delete fy;
+		if(fz)	delete fz;
+		if(fa)	delete fa;
+		if(fc)	delete fc;
 		fx = fy = fz = fc = fa = 0;
 	}
 	RecalcBorder();
@@ -1553,11 +1558,13 @@ void mglBase::ClearUnused()
 			used[p.n1] = 1;
 			switch(p.type)
 			{
-			case 1:	case 4:	if(p.n2>=0)	used[p.n2] = 1;	break;
-			case 2:	if(p.n2>=0 && p.n3>=0)
-				used[p.n2] = used[p.n3] = 1;	break;
+			case 1:	case 4:	if(p.n2>=0)	used[p.n2] = 1;
+				break;
+			case 2:	if(p.n2>=0 && p.n3>=0)	used[p.n2] = used[p.n3] = 1;
+				break;
 			case 3:	if(p.n2>=0 && p.n3>=0 && p.n4>=0)
-				used[p.n2] = used[p.n3] = used[p.n4] = 1;	break;
+					used[p.n2] = used[p.n3] = used[p.n4] = 1;
+				break;
 			}
 		}
 		// now add proper indexes

@@ -132,8 +132,8 @@ void QMathGL::setDotsPreview(bool d)
 //-----------------------------------------------------------------------------
 void QMathGL::setDraw(int (*func)(mglBase *gr, void *par), void *par)
 {
-	if(draw)	delete draw;	draw = 0;
-	draw_func = func;	draw_par = par;
+	if(draw)	delete draw;
+	draw = 0;	draw_func = func;	draw_par = par;
 	emit usePrimChanged(draw_func || draw);
 }
 //-----------------------------------------------------------------------------
@@ -474,8 +474,10 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 			mreal ff = 240/sqrt(mreal(width()*height()));
 			phi += int((x0-xe)*ff);
 			tet -= int((y0-ye)*ff);
-			if(phi>180)	phi-=360;		if(phi<-180)	phi+=360;
-			if(tet>180)	tet-=360;		if(tet<-180)	tet+=360;
+			if(phi>180)		phi-=360;
+			if(phi<-180)	phi+=360;
+			if(tet>180)		tet-=360;
+			if(tet<-180)	tet+=360;
 			emit tetChanged(int(tet));		emit phiChanged(int(phi));
 			refresh();
 		}
@@ -486,7 +488,8 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 			x1 = cx+(x1-cx)*exp(-ff);	x2 = cx+(x2-cx)*exp(-ff);
 			y1 = cy+(y1-cy)*exp(-ff);	y2 = cy+(y2-cy)*exp(-ff);
 			per = per + gg;
-			if(per<0)	per = 0;	if(per>=1)	per = 0.9999;
+			if(per<0)	per = 0;
+			if(per>=1)	per = 0.9999;
 			if(gg)	emit perChanged(int(per));
 			refresh();
 		}
@@ -916,7 +919,8 @@ void QMathGL::print()
 		QRectF r = printer->pageRect(QPrinter::Inch);
 		int d1 = int(pic.width()/r.width()), d2 = int(pic.height()/r.height());
 		int dpi = printer->resolution();
-		if(dpi<d1)	dpi=d1;		if(dpi<d2)	dpi=d2;
+		if(dpi<d1)	dpi=d1;
+		if(dpi<d2)	dpi=d2;
 		printer->setResolution(dpi);
 
 		QPainter p;

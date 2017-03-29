@@ -39,7 +39,8 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	long m = x->GetNy()>y->GetNy() ? x->GetNy():y->GetNy();
 	long i = ax->GetNy()>ay->GetNy() ? ax->GetNy():ay->GetNy();
 	long j = z->GetNy()>az->GetNy() ? z->GetNy():az->GetNy();
-	if(i>m)	m=i;	if(j>m)	m=j;
+	if(i>m)	m=i;
+	if(j>m)	m=j;
 	gr->SetPenPal(sch,&pal);	gr->Reserve(4*n*m);
 
 	mglPoint p1,p2;
@@ -118,7 +119,8 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
-	if(tx<1)	tx=1;	if(ty<1)	ty=1;
+	if(tx<1)	tx=1;
+	if(ty<1)	ty=1;
 
 	mreal xm=0,cm=0,ca=0;
 	mreal dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
@@ -215,7 +217,9 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	long tx=1,ty=1,tz=1;
 	if(gr->MeshNum>1)
 	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	tz=(l-1)/(gr->MeshNum-1);}
-	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
+	if(tx<1)	tx=1;
+	if(ty<1)	ty=1;
+	if(tz<1)	tz=1;
 
 	mreal xm=0,cm=0,ca=0;
 	mreal dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
@@ -419,7 +423,8 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 
 	long n=s.ax.nx,m=s.ax.ny, tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
-	if(tx<1)	tx=1;	if(ty<1)	ty=1;
+	if(tx<1)	tx=1;
+	if(ty<1)	ty=1;
 	mreal xm=0,cm=0,ca=0;
 	mreal dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	// use whole array for determining maximal vectors length

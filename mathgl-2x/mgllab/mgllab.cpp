@@ -45,13 +45,13 @@ void set_scheme_lang(int s, int l)
 {
 	static const char *sch[4]={"base","gtk+","plastic","gleam"};
 	static const char *loc[3]={"C.UTF8",	"ru_RU.utf8",	"ru_RU.cp1251"};
-	static const char *hlp[3]={"doc_en.html","doc_ru.html",	"doc_ru.html"};
 	if(s<0 || s>3)	s=1;
 	if(l<0 || l>2)	l=1;
 	setlocale(LC_CTYPE, loc[l]);
 	Fl::scheme(sch[s]);
 	scheme = s;	lang = l;
 	// TODO reload help file!!!
+	static const char *hlp[3]={"doc_en.html","doc_ru.html",	"doc_ru.html"};
 }
 //-----------------------------------------------------------------------------
 void save_pref()
@@ -249,7 +249,7 @@ Fl_Menu_Item menuitems[] = {
 			{"File path", FL_META+'p', ins_path_cb},
 			{"Folder path", 0, ins_fname_cb},
 			{"Command", FL_META+'c', newcmd_dlg_cb},
-			{"Inplot", FL_META+'i', inplot_dlg_upd},
+			{"Inplot", FL_META+'i', inplot_dlg_cb},
 			{"Fitted formula", FL_META+'f', ins_fits_cb},
 			{"Plot style", 0, style_dlg_cb},
 			{"Option(s)", FL_META+'o', option_dlg_cb},
@@ -294,7 +294,8 @@ ScriptWindow *new_view()
 
 	tt = new Fl_Tabs(300,30,630,455,0);	w->rtab = tt;
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Canvas"));
-	w->graph = new Fl_MGLView(300,30,630,430);	gg->resizable(w->graph);	gg->end();
+	w->graph = new Fl_MGLView(300,30,630,430,mgl_gettext("Canvas"));
+	gg->resizable(w->graph);	gg->end();
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Help"));		gg->hide();
 	w->ghelp = gg;	add_help(w);	gg->end();
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Memory"));	gg->hide();

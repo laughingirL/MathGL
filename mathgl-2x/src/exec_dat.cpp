@@ -26,6 +26,7 @@
 
 #include "mgl2/base.h"
 #include "mgl2/parser.h"
+#pragma GCC diagnostic ignored "-Wmisleading-indentation"
 wchar_t *mgl_str_copy(const char *s);
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_addto(mglGraph *, long , mglArg *a, const char *k, const char *)
