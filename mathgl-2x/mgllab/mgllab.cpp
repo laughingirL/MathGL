@@ -98,7 +98,7 @@ void load_pref(ScriptWindow *w)
 	pref.get("fname3",s,"");	if(s)	{	lastfiles[2]=s;	free(s);	}
 	pref.get("fname4",s,"");	if(s)	{	lastfiles[3]=s;	free(s);	}
 	pref.get("fname5",s,"");	if(s)	{	lastfiles[4]=s;	free(s);	}
-	link_cb(NULL, w);
+	example_cb(NULL, w);	w->graph->parent()->show();
 }
 //-----------------------------------------------------------------------------
 void set_title(Fl_Window* w)
@@ -147,14 +147,14 @@ void open_cb(Fl_Widget*, void *v)
 {
 	if (!check_save()) return;
 	char *lastname=0;
-	if(filename.empty())	{	pref.get("last_file",lastname,"");	filename=lastname;	}
 	char *newfile = fl_file_chooser(mgl_gettext("Open File?"),
 		mgl_gettext("MGL files (*.mgl)\tDAT files (*.{dat,csv})\tAll files (*)"), filename.c_str());
 	if(lastname)	free(lastname);
 	if(newfile != NULL)
 	{
-		load_file(newfile, -1);
-		if(auto_exec)	((ScriptWindow*)v)->graph->update();
+		ScriptWindow* e = (ScriptWindow*)v;
+		load_file(newfile, -1,e);
+		if(auto_exec)	e->graph->update();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -179,10 +179,10 @@ void quit_cb(Fl_Widget*, void*)
 void save_cb(Fl_Widget*w, void*v)
 {
 	if(filename.empty())	{	saveas_cb(w,v);	return;	}	// No filename - get one!
-	else save_file(filename.c_str());
+	else save_file(filename.c_str(),(ScriptWindow*)v);
 }
 //-----------------------------------------------------------------------------
-void saveas_cb(Fl_Widget*, void*)
+void saveas_cb(Fl_Widget*, void *v)
 {
 	char *newfile, *fname=0;
 	FILE *fp=0;
@@ -206,7 +206,7 @@ void saveas_cb(Fl_Widget*, void*)
 		}
 		else	break;
 	}
-	if (newfile != NULL)	save_file(newfile);
+	if (newfile != NULL)	save_file(newfile, (ScriptWindow*)v);
 	if(fname)	delete []fname;
 }
 //-----------------------------------------------------------------------------
@@ -215,6 +215,11 @@ void view_cb(Fl_Widget*, void*)
 {	Fl_Window* w = new_view();	w->show();	}
 //-----------------------------------------------------------------------------
 void hint_cb(Fl_Widget*, void*)	{}
+void lastfile1_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[0].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile2_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[1].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile3_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[2].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile4_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[3].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile5_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[4].c_str(),-1,(ScriptWindow*)v);	}
 //-----------------------------------------------------------------------------
 Fl_Menu_Item menuitems[] = {
 	{"File", 0, 0, 0, FL_SUBMENU},
@@ -224,11 +229,11 @@ Fl_Menu_Item menuitems[] = {
 		{"Save as ...", 0, saveas_cb, 0, FL_MENU_DIVIDER},
 		// TODO{"Print plot", 0, 0, 0, FL_MENU_DIVIDER},
 		{"Recent files", 0, 0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
-			{"1.", 0, 0},
-			{"2.", 0, 0},
-			{"3.", 0, 0},
-			{"4.", 0, 0},
-			{"5.", 0, 0},
+			{"1.", 0, lastfile1_cb},
+			{"2.", 0, lastfile2_cb},
+			{"3.", 0, lastfile3_cb},
+			{"4.", 0, lastfile4_cb},
+			{"5.", 0, lastfile5_cb},
 			{0},
 		{"Exit", 0, quit_cb},
 		{0},
@@ -328,6 +333,12 @@ int main(int argc, char **argv)
 	ScriptWindow *w = new_view();
 	Fl::visual(FL_DOUBLE|FL_RGB);
 	load_pref(w);
+	int ir = w->menu->find_index("File/Recent files");
+	w->menu->replace(ir+1, lastfiles[0].c_str());
+	w->menu->replace(ir+2, lastfiles[1].c_str());
+	w->menu->replace(ir+3, lastfiles[2].c_str());
+	w->menu->replace(ir+4, lastfiles[3].c_str());
+	w->menu->replace(ir+5, lastfiles[4].c_str());
 	
 	char *buf = 0;
 	while(1)
@@ -355,7 +366,7 @@ int main(int argc, char **argv)
 	w->show(1, argv);
 	if(buf && *buf && *buf!='-')
 	{
-		load_file(buf, -1);
+		load_file(buf, -1,w);
 		if(auto_exec)	w->graph->update();
 	}
 	return Fl::run();

@@ -271,6 +271,25 @@ ScriptWindow::~ScriptWindow()
 	delete replace_dlg;
 }
 //-----------------------------------------------------------------------------
+void add_filename(const char *fname, ScriptWindow *e)
+{
+	if(!fname || !fname[0] || lastfiles[0]==fname)	return;
+	pref.set("last_file",fname);
+	int ii=4;
+	for(int i=1;i<5;i++)
+		if(lastfiles[i]==fname)	{	ii=i;	break;	}
+		for(int i=ii;i>0;i--)	lastfiles[i]=lastfiles[i-1];
+		lastfiles[0]=fname;
+	int ir = e->menu->find_index("File/Recent files");
+	e->menu->replace(ir+1, lastfiles[0].c_str());
+	e->menu->replace(ir+2, lastfiles[1].c_str());
+	e->menu->replace(ir+3, lastfiles[2].c_str());
+	e->menu->replace(ir+4, lastfiles[3].c_str());
+	e->menu->replace(ir+5, lastfiles[4].c_str());
+	// TODO change menu
+	save_pref();
+}
+//-----------------------------------------------------------------------------
 int check_save(void)
 {
   if (!changed) return 1;
@@ -282,15 +301,14 @@ int check_save(void)
 }
 //-----------------------------------------------------------------------------
 int loading = 0;
-void load_file(const char *newfile, int ipos)
+void load_file(const char *newfile, int ipos, ScriptWindow *e)
 {
 	long len = strlen(newfile);
-	pref.set("last_file",newfile);	//TODO
 	if(ipos==-1 && (!strcmp(newfile+len-4,".dat") || !strcmp(newfile+len-4,".csv")))
 	{
 		data_file(newfile);
-//		strncpy(newfile+len-4,".mgl",4);
 		filename = newfile;	filename += ".mgl";
+		add_filename(filename.c_str(),e);
 	}
 	else
 	{
@@ -312,19 +330,19 @@ void load_file(const char *newfile, int ipos)
 
 		if (r)
 			fl_alert(mgl_gettext("Error reading from file \'%s\':\n%s."), newfile, strerror(errno));
-		else	if(!insert)	filename = newfile;
+		else	if(!insert)
+		{	filename = newfile;	add_filename(filename.c_str(),e);	}
 		loading = 0;
 		textbuf->call_modify_callbacks();
 	}
 }
 //-----------------------------------------------------------------------------
-void save_file(const char *newfile)
+void save_file(const char *newfile, ScriptWindow *e)
 {
-	pref.set("last_file",newfile);
 	if (textbuf->savefile(newfile))
 		fl_alert(mgl_gettext("Error writing to file \'%s\':\n%s."), newfile, strerror(errno));
 	else
-		filename = newfile;
+	{	filename = newfile;	add_filename(filename.c_str(),e);	}
 	changed = 0;
 	textbuf->call_modify_callbacks();
 }
@@ -391,7 +409,7 @@ void insert_cb(Fl_Widget*, void *v)
 {
 	char *newfile = fl_file_chooser(mgl_gettext("Insert File?"), "*", filename.c_str());
 	ScriptWindow *w = (ScriptWindow *)v;
-	if (newfile != NULL) load_file(newfile, w->editor->insert_position());
+	if (newfile != NULL) load_file(newfile, w->editor->insert_position(),w);
 }
 //-----------------------------------------------------------------------------
 void paste_cb(Fl_Widget*, void* v)

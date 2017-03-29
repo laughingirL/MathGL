@@ -268,8 +268,8 @@ void data_cb(Fl_Widget *, void *v);
 //-----------------------------------------------------------------------------
 void style_init(void);
 int check_save(void);
-void load_file(const char *newfile, int ipos);
-void save_file(const char *newfile);
+void load_file(const char *newfile, int ipos, ScriptWindow *e);
+void save_file(const char *newfile, ScriptWindow *e);
 Fl_Widget *add_editor(ScriptWindow *w);
 Fl_Widget *add_mem(ScriptWindow *w);
 void set_title(Fl_Window* w);

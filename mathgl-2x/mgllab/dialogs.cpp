@@ -131,7 +131,8 @@ public:
 		if(e->graph->get_graph())
 			mgl_load_font(e->graph->get_graph(),fontname.c_str(),NULL);
 		set_scheme_lang(scheme_w->value(),lang_w->value());
-		link_cb(NULL, e);	save_pref();	hide();
+		example_cb(NULL, e);	e->graph->parent()->show();
+		save_pref();	hide();
 	}
 } prop_dlg;
 //-----------------------------------------------------------------------------
@@ -1201,19 +1202,20 @@ void newcmd_dlg_cb(Fl_Widget*,void *v)
 void cb_setup_save(Fl_Widget*,void *v);
 class SetupDlg : public GeneralDlg
 {
-	Fl_Input *x1, *x2, *x0, *xlabel, *xtick;
 	Fl_Choice *xlpos, *ylpos, *zlpos, *clpos;
-	Fl_Input *xstick, *xotick, *xtmpl, *xfact;
-	Fl_Input *y1, *y2, *y0, *ylabel, *ytick;
-	Fl_Input *ystick, *yotick, *ytmpl, *yfact;
-	Fl_Input *z1, *z2, *z0, *zlabel, *ztick;
-	Fl_Input *zstick, *zotick, *ztmpl, *zfact;
-	Fl_Input *c1, *c2, *c0, *clabel, *ctick, *ctmpl, *cfact;
-	Fl_Input *alphadef, *ambient, *diffuse;
-	Fl_Input *palette, *font_stl, *axis_stl;
-	Fl_Input *fog, *fog_dz, *pendelta;
-	Fl_Input *meshnum, *facenum, *arr_size, *bar_size;
-	Fl_Input *mrk_size, *txt_size, *tick_size, *plotid;
+	Fl_Float_Input *x1, *x2, *x0, *xtick, *xstick, *xotick;
+	Fl_Input *xlabel, *xtmpl, *xfact;
+	Fl_Float_Input *y1, *y2, *y0, *ytick, *ystick, *yotick;
+	Fl_Input *ylabel, *ytmpl, *yfact;
+	Fl_Float_Input *z1, *z2, *z0, *ztick, *zstick, *zotick;
+	Fl_Input *zlabel, *ztmpl, *zfact;
+	Fl_Float_Input *c1, *c2, *c0, *ctick;
+	Fl_Input *clabel, *ctmpl, *cfact;
+	Fl_Float_Input *alphadef, *ambient, *diffuse;
+	Fl_Input *palette, *font_stl, *axis_stl, *plotid;
+	Fl_Float_Input *fog, *fog_dz, *pendelta;
+	Fl_Float_Input *meshnum, *facenum, *arr_size, *bar_size;
+	Fl_Float_Input *mrk_size, *txt_size, *tick_size;
 
 	Fl_Check_Button *alpha, *light, *cut, *attach;
 	Fl_Check_Button *origintick, *gray, *rotatetext;
@@ -1222,7 +1224,7 @@ class SetupDlg : public GeneralDlg
 	
 	Fl_Toggle_Button *lb[10];
 	Fl_Choice *lc[10];
-	Fl_Input *lx[10], *ly[10], *lz[10], *lbr[10];
+	Fl_Float_Input *lx[10], *ly[10], *lz[10], *lbr[10];
 	Fl_Input *fname;
 public:
 	SetupDlg()
@@ -1232,48 +1234,48 @@ public:
 		Fl_Tabs* tt = new Fl_Tabs(0, 0, 525, 355);
 		gg = new Fl_Group(0, 25, 525, 330, mgl_gettext("Axis settings"));
 			new Fl_Box(85, 30, 100, 25, mgl_gettext("X axis"));
-			x1 = new Fl_Input(85, 55, 100, 25, mgl_gettext("Minimal"));
-			x2 = new Fl_Input(85, 85, 100, 25, mgl_gettext("Maximal"));
-			x0 = new Fl_Input(85, 115, 100, 25, mgl_gettext("Origin"));
+			x1 = new Fl_Float_Input(85, 55, 100, 25, mgl_gettext("Minimal"));
+			x2 = new Fl_Float_Input(85, 85, 100, 25, mgl_gettext("Maximal"));
+			x0 = new Fl_Float_Input(85, 115, 100, 25, mgl_gettext("Origin"));
 			xlabel = new Fl_Input(85, 145, 100, 25, mgl_gettext("Label"));
-			xtick = new Fl_Input(85, 205, 100, 25, mgl_gettext("Ticks"));
+			xtick = new Fl_Float_Input(85, 205, 100, 25, mgl_gettext("Ticks"));
 			xlpos = new Fl_Choice(85, 175, 100, 25, mgl_gettext("at position"));
 			xlpos->add(mgl_gettext("left"));	xlpos->add(mgl_gettext("center"));
 			xlpos->add(mgl_gettext("right"));	xlpos->value(1);
-			xstick = new Fl_Input(85, 235, 100, 25, mgl_gettext("Subticks"));
-			xotick = new Fl_Input(85, 265, 100, 25, mgl_gettext("Ticks start"));
+			xstick = new Fl_Float_Input(85, 235, 100, 25, mgl_gettext("Subticks"));
+			xotick = new Fl_Float_Input(85, 265, 100, 25, mgl_gettext("Ticks start"));
 			xtmpl = new Fl_Input(85, 295, 100, 25, mgl_gettext("Template"));
 			xfact = new Fl_Input(85, 325, 100, 25, mgl_gettext("Template"));		
 			new Fl_Box(195, 30, 100, 25, mgl_gettext("Y axis"));
-			y1 = new Fl_Input(195, 55, 100, 25);
-			y2 = new Fl_Input(195, 85, 100, 25);
-			y0 = new Fl_Input(195, 115, 100, 25);
+			y1 = new Fl_Float_Input(195, 55, 100, 25);
+			y2 = new Fl_Float_Input(195, 85, 100, 25);
+			y0 = new Fl_Float_Input(195, 115, 100, 25);
 			ylabel = new Fl_Input(195, 145, 100, 25);
-			ytick = new Fl_Input(195, 205, 100, 25);
+			ytick = new Fl_Float_Input(195, 205, 100, 25);
 			ylpos = new Fl_Choice(195, 175, 100, 25);
 			ylpos->add(mgl_gettext("left"));	ylpos->add(mgl_gettext("center"));
 			ylpos->add(mgl_gettext("right"));	ylpos->value(1);
-			ystick = new Fl_Input(195, 235, 100, 25);
-			yotick = new Fl_Input(195, 265, 100, 25);
+			ystick = new Fl_Float_Input(195, 235, 100, 25);
+			yotick = new Fl_Float_Input(195, 265, 100, 25);
 			ytmpl = new Fl_Input(195, 295, 100, 25);
 			yfact = new Fl_Input(195, 325, 100, 25);
 			new Fl_Box(305, 30, 100, 25, mgl_gettext("Z axis"));
-			z1 = new Fl_Input(305, 55, 100, 25);
-			z2 = new Fl_Input(305, 85, 100, 25);
-			z0 = new Fl_Input(305, 115, 100, 25);
+			z1 = new Fl_Float_Input(305, 55, 100, 25);
+			z2 = new Fl_Float_Input(305, 85, 100, 25);
+			z0 = new Fl_Float_Input(305, 115, 100, 25);
 			zlabel = new Fl_Input(305, 145, 100, 25);
-			ztick = new Fl_Input(305, 205, 100, 25);
+			ztick = new Fl_Float_Input(305, 205, 100, 25);
 			zlpos = new Fl_Choice(305, 175, 100, 25);
 			zlpos->add(mgl_gettext("left"));	zlpos->add(mgl_gettext("center"));
 			zlpos->add(mgl_gettext("right"));	zlpos->value(1);
-			zstick = new Fl_Input(305, 235, 100, 25);
-			zotick = new Fl_Input(305, 265, 100, 25);
+			zstick = new Fl_Float_Input(305, 235, 100, 25);
+			zotick = new Fl_Float_Input(305, 265, 100, 25);
 			ztmpl = new Fl_Input(305, 295, 100, 25);
 			zfact = new Fl_Input(305, 325, 100, 25);
 			new Fl_Box(415, 30, 100, 25, mgl_gettext("C axis"));
-			c1 = new Fl_Input(415, 55, 100, 25);
-			c2 = new Fl_Input(415, 85, 100, 25);
-			c0 = new Fl_Input(415, 115, 100, 25);
+			c1 = new Fl_Float_Input(415, 55, 100, 25);
+			c2 = new Fl_Float_Input(415, 85, 100, 25);
+			c0 = new Fl_Float_Input(415, 115, 100, 25);
 			clabel = new Fl_Input(415, 145, 100, 25);
 			clpos = new Fl_Choice(415, 175, 100, 25);
 			clpos->add(mgl_gettext("left"));	clpos->add(mgl_gettext("center"));
@@ -1283,27 +1285,27 @@ public:
 			gg->end();
 		gg = new Fl_Group(0, 25, 525, 330, mgl_gettext("General settings"));	gg->hide();
 			g = new Fl_Group(5, 45, 180, 305, mgl_gettext("Colors"));	g->box(FL_ENGRAVED_BOX);
-			alphadef = new Fl_Input(80, 55, 100, 25, mgl_gettext("AlphaDef"));
-			ambient = new Fl_Input(80, 85, 100, 25, mgl_gettext("Ambient"));
-			diffuse = new Fl_Input(80, 115, 100, 25, mgl_gettext("Diffuse"));
+			alphadef = new Fl_Float_Input(80, 55, 100, 25, mgl_gettext("AlphaDef"));
+			ambient = new Fl_Float_Input(80, 85, 100, 25, mgl_gettext("Ambient"));
+			diffuse = new Fl_Float_Input(80, 115, 100, 25, mgl_gettext("Diffuse"));
 			palette = new Fl_Input(80, 145, 100, 25, mgl_gettext("Palette"));
 			font_stl = new Fl_Input(80, 175, 100, 25, mgl_gettext("Font"));
 			axis_stl = new Fl_Input(80, 205, 100, 25, mgl_gettext("Axis"));
-			fog = new Fl_Input(80, 235, 100, 25, mgl_gettext("Fog"));
-			fog_dz = new Fl_Input(80, 265, 100, 25, mgl_gettext("Fog dist."));
+			fog = new Fl_Float_Input(80, 235, 100, 25, mgl_gettext("Fog"));
+			fog_dz = new Fl_Float_Input(80, 265, 100, 25, mgl_gettext("Fog dist."));
 			gray = new Fl_Check_Button(80, 290, 100, 25, mgl_gettext("grayscale"));
 			alpha = new Fl_Check_Button(10, 315, 65, 25, mgl_gettext("alpha"));
 			light = new Fl_Check_Button(80, 315, 100, 25, mgl_gettext("lighting"));
 			g->end();
 			g = new Fl_Group(185, 45, 180, 250, mgl_gettext("Sizes"));	g->box(FL_ENGRAVED_BOX);
-			meshnum = new Fl_Input(260, 55, 100, 25, mgl_gettext("meshnum"));
-			facenum = new Fl_Input(260, 85, 100, 25, mgl_gettext("facenum"));
-			arr_size = new Fl_Input(260, 115, 100, 25, mgl_gettext("arrows"));
-			bar_size = new Fl_Input(260, 145, 100, 25, mgl_gettext("bars"));
-			mrk_size = new Fl_Input(260, 175, 100, 25, mgl_gettext("markers"));
-			txt_size = new Fl_Input(260, 205, 100, 25, mgl_gettext("text"));
-			tick_size = new Fl_Input(260, 235, 100, 25, mgl_gettext("ticks"));
-			pendelta = new Fl_Input(260, 265, 100, 25, mgl_gettext("pen blur"));
+			meshnum = new Fl_Float_Input(260, 55, 100, 25, mgl_gettext("meshnum"));
+			facenum = new Fl_Float_Input(260, 85, 100, 25, mgl_gettext("facenum"));
+			arr_size = new Fl_Float_Input(260, 115, 100, 25, mgl_gettext("arrows"));
+			bar_size = new Fl_Float_Input(260, 145, 100, 25, mgl_gettext("bars"));
+			mrk_size = new Fl_Float_Input(260, 175, 100, 25, mgl_gettext("markers"));
+			txt_size = new Fl_Float_Input(260, 205, 100, 25, mgl_gettext("text"));
+			tick_size = new Fl_Float_Input(260, 235, 100, 25, mgl_gettext("ticks"));
+			pendelta = new Fl_Float_Input(260, 265, 100, 25, mgl_gettext("pen blur"));
 			g->end();
 			g = new Fl_Group(365, 45, 155, 305, mgl_gettext("Others"));	g->box(FL_ENGRAVED_BOX);
 			cut = new Fl_Check_Button(370, 50, 115, 25, mgl_gettext("cutting"));
@@ -1329,19 +1331,20 @@ public:
 			transptype->align(FL_ALIGN_TOP_LEFT);	transptype->value(0);
 			variant = new Fl_Spinner(370, 315, 145, 25, mgl_gettext("Variant"));
 			variant->align(FL_ALIGN_TOP_LEFT);	variant->range(0,100);	variant->value(0);
-			g->end();	gg->end();
-			plotid = new Fl_Input(190, 321, 172, 25, mgl_gettext("Plot ID"));
-			plotid->align(FL_ALIGN_TOP_LEFT);
+			g->end();
+		plotid = new Fl_Input(190, 321, 172, 25, mgl_gettext("Plot ID"));
+		plotid->align(FL_ALIGN_TOP_LEFT);
+		gg->end();
 		gg = new Fl_Group(0, 25, 525, 330, mgl_gettext("Light settings"));	gg->hide();
 			static const char *id[10]={"0:","1:","2:","3:""4:","5:","6:","7:","8:","9:"};
 			for(int i=0;i<10;i++)
 			{
 				lb[i] = new Fl_Toggle_Button(10, 50+30*i, 25, 25, id[i]);
-				lx[i] = new Fl_Input(40, 50+30*i, 90, 25);
-				ly[i] = new Fl_Input(135, 50+30*i, 90, 25);
-				lz[i] = new Fl_Input(230, 50+30*i, 90, 25);
+				lx[i] = new Fl_Float_Input(40, 50+30*i, 90, 25);
+				ly[i] = new Fl_Float_Input(135, 50+30*i, 90, 25);
+				lz[i] = new Fl_Float_Input(230, 50+30*i, 90, 25);
 				lc[i] = new Fl_Choice(325, 50+30*i, 95, 25);
-				lbr[i]= new Fl_Input(425, 50+30*i, 90, 25);
+				lbr[i]= new Fl_Float_Input(425, 50+30*i, 90, 25);
 				lc[i]->copy(colors);	lc[i]->value(0);
 			}
 			lx[0]->label(mgl_gettext("X position"));	lx[0]->align(FL_ALIGN_TOP_LEFT);
@@ -1432,7 +1435,7 @@ public:
 		if(rotatetext->value())	result = result+"rotatetext on\n";
 		if(origintick->value())	result = result+"origintick off\n";
 		if(variant->value()>0)
-		{	char buf[32];	snprintf(buf,31,"variant %d\n",variant->value());	result += buf;	}
+		{	char buf[32];	snprintf(buf,31,"variant %ld\n",mgl_int(variant->value()));	result += buf;	}
 		const char *stime[4]={"''\n","'x'\n","'y'\n","'z'\n"};
 		if(time->value()>0)	result = result+"timetick "+stime[time->value()];
 		const char *stune[4]={" 0\n"," 1\n"," 2\n"," 3\n"};

@@ -64,7 +64,7 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_push_clip(X+3, Y+3, W-6, H-6);
 		fl_font(FL_HELVETICA, 14);
 		fl_color(FL_BLACK);
-		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
+		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");	// TODO complex numbers
 		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
 		else	snprintf(s,32,"%g",data->v(C,R,sl));
 		fl_draw(s, X+3, Y+3, W-6, H-6, FL_ALIGN_RIGHT);
