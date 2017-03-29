@@ -249,7 +249,7 @@ Fl_Menu_Item menuitems[] = {
 			{"File path", FL_META+'p', ins_path_cb},
 			{"Folder path", 0, ins_fname_cb},
 			{"Command", FL_META+'c', newcmd_dlg_cb},
-			// TODO{"Inplot", FL_META+'i', 0},
+			{"Inplot", FL_META+'i', inplot_dlg_upd},
 			{"Fitted formula", FL_META+'f', ins_fits_cb},
 			{"Plot style", 0, style_dlg_cb},
 			{"Option(s)", FL_META+'o', option_dlg_cb},
@@ -275,6 +275,7 @@ Fl_Menu_Item menuitems[] = {
 void mem_upd_cb(Fl_Widget *, void *v)
 {	((ScriptWindow*)v)->mem_init();	}
 //-----------------------------------------------------------------------------
+extern Fl_RGB_Image image_udav;
 ScriptWindow *new_view()
 {
 	Fl_Tabs* tt;
@@ -284,7 +285,7 @@ ScriptWindow *new_view()
 	w->menu = new Fl_Menu_Bar(0, 0, 930, 30);
 	w->menu->copy(menuitems, w);
 	w->label(mgl_gettext("Untitled - mgllab"));
-	
+
 	Fl_Tile *t = new Fl_Tile(0,30,930,455);
 	tt = new Fl_Tabs(0,30,300,455,0);	w->ltab = tt;
 	gg = new Fl_Group(0,30,300,430);	gg->label(mgl_gettext("Script"));
@@ -307,10 +308,11 @@ ScriptWindow *new_view()
 	w->draw = new Fl_MGL(w->graph);
 	w->draw->status = w->status;
 	mgl_makemenu_fltk(w->menu, w->graph);
-	
+
 	t->end();	w->end();	w->resizable(t);
 	tt->callback(mem_upd_cb, w);
 	w->callback(close_cb, w);
+	w->icon(&image_udav);
 
 	num_windows++;
 	return w;
@@ -339,7 +341,7 @@ int main(int argc, char **argv)
 	w->menu->replace(ir+3, lastfiles[2].c_str());
 	w->menu->replace(ir+4, lastfiles[3].c_str());
 	w->menu->replace(ir+5, lastfiles[4].c_str());
-	
+
 	char *buf = 0;
 	while(1)
 	{

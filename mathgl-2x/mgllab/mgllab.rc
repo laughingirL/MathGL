@@ -22,3 +22,4 @@
 
 APPICON ICON "udav.ico"
 APPICON48 ICON "udav48.ico"
+IDI_ICON1               ICON    DISCARDABLE     "udav.ico"

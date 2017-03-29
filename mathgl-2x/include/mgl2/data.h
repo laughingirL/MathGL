@@ -335,6 +335,9 @@ using mglDataA::Momentum;
 	inline void Integral(const char *dir)	{	mgl_data_integral(this,dir);	}
 	/// Differentiate the data in given direction or directions
 	inline void Diff(const char *dir)	{	mgl_data_diff(this,dir);	}
+	/// Differentiate the parametrically specified data along direction v1
+	inline void Diff(const mglDataA &v1)
+	{	mgl_data_diff_par(this,&v1,0,0);	}
 	/// Differentiate the parametrically specified data along direction v1 with v2=const
 	inline void Diff(const mglDataA &v1, const mglDataA &v2)
 	{	mgl_data_diff_par(this,&v1,&v2,0);	}

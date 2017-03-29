@@ -59,4 +59,5 @@ extern Fl_RGB_Image img_new;
 extern Fl_RGB_Image img_clear;
 extern Fl_RGB_Image img_plus;
 extern Fl_RGB_Image img_minus;
+extern Fl_RGB_Image image_udav;
 #endif

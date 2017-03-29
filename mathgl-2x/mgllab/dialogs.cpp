@@ -65,9 +65,9 @@ class PropDlg : public GeneralDlg
 {
 	friend void cb_filech(Fl_Widget*, void *v);
 	Fl_Choice *fkind;
-	Fl_Spinner *fsize;	
-	Fl_File_Input *help_path;	
-	Fl_File_Input *font_path;	
+	Fl_Spinner *fsize;
+	Fl_File_Input *help_path;
+	Fl_File_Input *font_path;
 	Fl_Check_Button *auto_exec_w;
 	Fl_Check_Button *exec_save_w;
 	Fl_Check_Button *complete_w;
@@ -285,16 +285,16 @@ public:
 
 			g = new Fl_Group(155, 175, 115, 95, mgl_gettext("Function"));
 			kind = new Fl_Choice(160, 179, 105, 25);	kind->callback(cb_calc_kind);
-			kind->add("Basic");	kind->add("Exp and log");	kind->add("Trigonometric");	
-			kind->add("Hyperbolic");	kind->add("Bessel");	kind->add("Elliptic");	
+			kind->add("Basic");	kind->add("Exp and log");	kind->add("Trigonometric");
+			kind->add("Hyperbolic");	kind->add("Bessel");	kind->add("Elliptic");
 			kind->add("Jacobi");	 kind->add("Airy and Gamma");
 			kind->add("Exp-integrals"); kind->add("Special");	kind->value(0);
-			
+
 			func = new Fl_Choice(160, 209, 105, 25);
 			o = new Fl_Button(160, 239, 105, 25, mgl_gettext("Put function"));	o->callback(cb_calc_func);
 			g->end();	g->box(FL_DOWN_BOX);
 		gg->end();	gg->resizable(g);
-		
+
 		w->end();	w->resizable(prev);
 	}
 	void eval()
@@ -588,7 +588,7 @@ class StyleDlg : public GeneralDlg
 	Fl_Check_Button *solid, *user;
 	Fl_Spinner *width;
 	Fl_Button *dash_m[16];
-	
+
 	Fl_Choice *c[8], *sch;
 	Fl_Spinner *s[8];
 	Fl_Input *p[8];
@@ -597,10 +597,10 @@ class StyleDlg : public GeneralDlg
 	Fl_Input *alpha;
 	Fl_Button *mask_m[64];
 	Fl_Check_Button *wire, *sharp;
-	
+
 	Fl_Check_Button *bold, *ital, *twire, *uline, *oline, *plain;
 	Fl_Choice *align, *vert;
-	
+
 	Fl_Group *gline, *gsurf, *gfont;
 	Fl_Output *res;
 	Fl_MathGL *gr;
@@ -714,6 +714,7 @@ public:
 		mgl_set_size(gr->get_graph(),285,65);	gr->align(FL_ALIGN_LEFT);
 		w->set_modal();	w->end();
 	}
+	void init()	{	update();	}
 	void set_scheme()
 	{
 		const char *ss = sch->text();
@@ -830,6 +831,7 @@ public:
 	}
 	void cb_ok()
 	{
+		update();
 		if(e)	e->editor->insert(result.c_str());
 		else if(ext)	ext->value(result.c_str());
 		else	cb_args_set(result.c_str());
@@ -979,6 +981,15 @@ void datsel_dlg_cb(Fl_Widget *, void *v)
 void datsel_in_cb(Fl_Widget *, void *v)
 {	datsel_dlg.ext=(Fl_Input*)v;	datsel_dlg.e=NULL;	datsel_dlg.show();	}
 //-----------------------------------------------------------------------------
+std::string with_arg(std::string ss, std::vector<std::string> prev)
+{
+	size_t l=ss.length(), n=prev.size();
+	for(size_t i=0;i<n;i++)
+		if(!strncmp(prev[i].c_str(),ss.c_str(),l))
+		{	ss = prev[i];	break;	}
+	return ss;
+}
+//-----------------------------------------------------------------------------
 void cb_cmd_type(Fl_Widget*, void*);
 void cb_cmd_cmd(Fl_Widget*, void*);
 void cb_cmd_var(Fl_Widget*, void*);
@@ -1038,7 +1049,7 @@ public:
 			"You can use '' for default format. See help at right\nfor default values."));
 		static int widths[] = { 95, 250, 0 };  // widths for each column
 		args->column_widths(widths);	args->column_char('\t');
-		
+
 		opt = new Fl_Input(60, 240, 265, 25, mgl_gettext("Options"));
 		o = new Fl_Button(325, 240, 25, 25, "...");	o->callback(option_in_cb,opt);
 
@@ -1086,9 +1097,10 @@ public:
 	}
 	void cmd_sel()	// fill list of variants for selected command
 	{
+		static std::string str;
 		const char *c = cmd->text();
 		desc->label(Parse->CmdDesc(c));
-		static std::string str = docdir+"/mgl_en.html#"+c;
+		str = docdir+"/mgl_en.html#"+c;
 		help->load(str.c_str());
 		std::string par = Parse->CmdFormat(c), cname;
 		std::vector<std::string> vars;
@@ -1117,19 +1129,25 @@ public:
 		isp = par.find_first_of('[');	// here secional args starts
 		sec = isp<par.length()?par.substr(isp+1,par.length()-isp-2):"";
 		par = isp>0?par.substr(0,isp-1):"";
+		std::vector<std::string> prev_args;
+		for(int i=1;i<=args->size();i++)
+		{
+			const char *s = args->text(i);
+			if(s && *s && strchr(s,'\t'))	prev_args.push_back(s[0]=='@'?s+3:s);
+		}
 		args->clear();
 		while((isp=par.find_first_of(' '))<par.length())
 		{
-			args->add(("@b "+par.substr(0,isp)).c_str());
+			args->add(("@b "+with_arg(par.substr(0,isp), prev_args)).c_str());
 			par = par.substr(isp+1);
 		}
-		if(!par.empty())	args->add(("@b "+par).c_str());
+		if(!par.empty())	args->add(("@b "+with_arg(par, prev_args)).c_str());
 		while((isp=sec.find_first_of(' '))<sec.length())
 		{
-			args->add(sec.substr(0,isp).c_str());
+			args->add(with_arg(sec.substr(0,isp), prev_args).c_str());
 			sec = sec.substr(isp+1);
 		}
-		if(!sec.empty())	args->add(sec.c_str());
+		if(!sec.empty())	args->add(with_arg(sec, prev_args).c_str());
 	}
 	void args_sel()	// fill argument by calling external dialog
 	{
@@ -1171,7 +1189,7 @@ public:
 		std::string par = var->text(), a;
 		size_t isp = par.find_first_of(' ');
 		result = par.substr(0,isp);	// command name
-		for(int i=0;i<args->size();i++)
+		for(int i=1;i<=args->size();i++)
 		{
 			const char *s = args->text(i);
 			if(!s)	continue;
@@ -1180,7 +1198,7 @@ public:
 			{
 				fl_alert(mgl_gettext("Required argument %s is not specified!"),s+3);	return;
 			}
-			if(p)	result = result+' '+p;
+			if(p)	result = result+' '+(p+1);
 		}
 		result += opt->value();
 		if(e)	e->editor->insert(result.c_str());
@@ -1196,7 +1214,7 @@ void cb_cmd_var(Fl_Widget*, void*)	{	newcmd_dlg.var_sel();	}
 void cb_cmd_args(Fl_Widget*, void*)	{	newcmd_dlg.args_sel();	}
 void cb_args_set(const char *val)	{	newcmd_dlg.args_set(val);	}
 //-----------------------------------------------------------------------------
-void newcmd_dlg_cb(Fl_Widget*,void *v)
+void newcmd_dlg_cb(Fl_Widget*,void *v)		// TODO parse current line?!?
 {	newcmd_dlg.e=(ScriptWindow *)v;	newcmd_dlg.show();	}
 //-----------------------------------------------------------------------------
 void cb_setup_save(Fl_Widget*,void *v);
@@ -1221,7 +1239,7 @@ class SetupDlg : public GeneralDlg
 	Fl_Check_Button *origintick, *gray, *rotatetext;
 	Fl_Choice *time, *tunetick, *ternary, *transptype;
 	Fl_Spinner *variant;
-	
+
 	Fl_Toggle_Button *lb[10];
 	Fl_Choice *lc[10];
 	Fl_Float_Input *lx[10], *ly[10], *lz[10], *lbr[10];
@@ -1245,7 +1263,7 @@ public:
 			xstick = new Fl_Float_Input(85, 235, 100, 25, mgl_gettext("Subticks"));
 			xotick = new Fl_Float_Input(85, 265, 100, 25, mgl_gettext("Ticks start"));
 			xtmpl = new Fl_Input(85, 295, 100, 25, mgl_gettext("Template"));
-			xfact = new Fl_Input(85, 325, 100, 25, mgl_gettext("Template"));		
+			xfact = new Fl_Input(85, 325, 100, 25, mgl_gettext("Template"));
 			new Fl_Box(195, 30, 100, 25, mgl_gettext("Y axis"));
 			y1 = new Fl_Float_Input(195, 55, 100, 25);
 			y2 = new Fl_Float_Input(195, 85, 100, 25);
@@ -1312,13 +1330,13 @@ public:
 			attach = new Fl_Check_Button(370, 70, 115, 25, mgl_gettext("attach light"));
 			origintick = new Fl_Check_Button(370, 90, 115, 25, mgl_gettext("no origin tick"));
 			rotatetext = new Fl_Check_Button(370, 110, 115, 25, mgl_gettext("rotate text"));
-			
+
 			time = new Fl_Choice(370, 150, 145, 25, mgl_gettext("Time ticks"));
 			time->add("none");	time->add("x");	time->add("y");	time->add("z");
 			time->align(FL_ALIGN_TOP_LEFT);	time->value(0);
 			tunetick = new Fl_Choice(370, 195, 145, 25, mgl_gettext("Tune ticks"));
 			tunetick->add(mgl_gettext("none"));	tunetick->add(mgl_gettext("factor"));
-			tunetick->add(mgl_gettext("increment"));	tunetick->add(mgl_gettext("both"));	
+			tunetick->add(mgl_gettext("increment"));	tunetick->add(mgl_gettext("both"));
 			tunetick->align(FL_ALIGN_TOP_LEFT);	tunetick->value(0);
 			ternary = new Fl_Choice(370, 235, 145, 25, mgl_gettext("Ternary"));
 			ternary->add(mgl_gettext("none"));	ternary->add(mgl_gettext("ternary"));
@@ -1376,12 +1394,12 @@ public:
 		if(s3 && *s3)	result = result+"origin "+(s1?s1:"nan")+' '+(s2?s2:"nan")+' '+s3+'\n';
 		else if(s2 && *s2)	result = result+"origin "+(s1?s1:"nan")+' '+s2+'\n';
 		else if(s1 && *s1)	result = result+"origin "+s1+"nan\n";
-		
+
 		s1=xtmpl->value();	if(s1 && *s1)	result = result+"xtick '"+s1+"'\n";
 		s1=ytmpl->value();	if(s1 && *s1)	result = result+"ytick '"+s1+"'\n";
 		s1=ztmpl->value();	if(s1 && *s1)	result = result+"ztick '"+s1+"'\n";
 		s1=ctmpl->value();	if(s1 && *s1)	result = result+"ctick '"+s1+"'\n";
-		
+
 		s1=xtick->value();	s2=xstick->value();	s3=xotick->value();	s4=xfact->value();
 		if(s4 && *s4)	result = result+"xtick "+(s1?s1:"0")+' '+(s2?s2:"0")+' '+(s3?s3:"nan")+" '"+s4+"'\n";
 		else if(s3 && *s3)	result = result+"xtick "+(s1?s1:"0")+' '+(s2?s2:"0")+' '+s3+'\n';
@@ -1405,7 +1423,7 @@ public:
 		s1=ylabel->value();	if(s1 && *s1)	result = result+"ylabel '"+s1+pos[ylpos->value()];
 		s1=zlabel->value();	if(s1 && *s1)	result = result+"zlabel '"+s1+pos[zlpos->value()];
 //TODO	s1=clabel->value();	if(s1 && *s1)	result = result+"clabel '"+s1+pos[clpos->value()];
-		
+
 		s1=alphadef->value();	if(s1 && *s1)	result = result+"alphadef "+s1+'\n';
 		s1=ambient->value();	if(s1 && *s1)	result = result+"ambient "+s1+'\n';
 		s1=diffuse->value();	if(s1 && *s1)	result = result+"diffuse "+s1+'\n';
@@ -1482,4 +1500,94 @@ void setup_dlg_cb(Fl_Widget*,void *v)
 {	setup_dlg.e = (ScriptWindow*)v;	setup_dlg.show();	}
 //-----------------------------------------------------------------------------
 void cb_setup_save(Fl_Widget*,void *v)	{	setup_dlg.save();	}
+//-----------------------------------------------------------------------------
+void inplot_dlg_upd(Fl_Widget*,void*);
+class InplotDlg : public GeneralDlg
+{
+	Fl_Round_Button *k1, *k2, *k3, *k4, *k5, *k6;
+	Fl_Spinner *n1, *m1, *i1;
+	Fl_Counter *x1, *y1;
+	Fl_Spinner *n2, *m2, *i2;
+	Fl_Counter *x2, *y2;
+	Fl_Spinner *n3, *m3, *i3;
+	Fl_Counter *d3;
+	Fl_Spinner *n4, *i4;
+	Fl_Counter *d4;
+	Fl_Spinner *n5, *i5;
+	Fl_Float_Input *xx1, *xx2, *yy1, *yy2;
+	Fl_Spinner *tet, *phi;
+	Fl_Float_Input *ax, *ay;
+	Fl_Check_Button *rl, *rb, *rt, *rr, *rw;
+	Fl_Input *title=(Fl_Input *)0;
+	Fl_Output *res=(Fl_Output *)0;
+	Fl_MathGL *gr;
+public:
+	InplotDlg()
+	{
+		Fl_Button *o;
+		w = new Fl_Double_Window(715, 315, mgl_gettext("Add inplot"));
+		k1 = new Fl_Round_Button(5, 5, 105, 25, "SubPlot");	k1->callback(cb_dlg_cancel,this);
+		n1 = new Fl_Spinner(145, 5, 55, 25, "nx");		n1->callback(cb_dlg_cancel,this);
+		m1 = new Fl_Spinner(230, 5, 55, 25, "ny");		m1->callback(cb_dlg_cancel,this);
+		i1 = new Fl_Spinner(315, 5, 55, 25, "ind");		i1->callback(cb_dlg_cancel,this);
+		x1 = new Fl_Counter(400, 5, 95, 25, "dx");		x1->callback(cb_dlg_cancel,this);
+		y1 = new Fl_Counter(525, 5, 95, 25, "dy");		y1->callback(cb_dlg_cancel,this);
+
+		k2 = new Fl_Round_Button(5, 35, 105, 25, "MultiPlot");	k2->callback(cb_dlg_cancel,this);
+		n2 = new Fl_Spinner(145, 35, 55, 25, "nx");		n2->callback(cb_dlg_cancel,this);
+		m2 = new Fl_Spinner(230, 35, 55, 25, "ny");		m2->callback(cb_dlg_cancel,this);
+		i2 = new Fl_Spinner(315, 35, 55, 25, "ind");	i2->callback(cb_dlg_cancel,this);
+		x2 = new Fl_Counter(400, 35, 95, 25, "dx");		x2->callback(cb_dlg_cancel,this);
+		y2 = new Fl_Counter(525, 35, 95, 25, "dy");		y2->callback(cb_dlg_cancel,this);
+
+		k3 = new Fl_Round_Button(5, 65, 105, 25, "GridPlot");	k3->callback(cb_dlg_cancel,this);
+		n3 = new Fl_Spinner(145, 65, 55, 25, "nx");		n3->callback(cb_dlg_cancel,this);
+		m3 = new Fl_Spinner(230, 65, 55, 25, "ny");		m3->callback(cb_dlg_cancel,this);
+		i3 = new Fl_Spinner(315, 65, 55, 25, "ind");	i3->callback(cb_dlg_cancel,this);
+		d3 = new Fl_Counter(400, 65, 95, 25, "d");		d3->callback(cb_dlg_cancel,this);
+
+		k4 = new Fl_Round_Button(5, 95, 105, 25, "ColumnPlot");	k4->callback(cb_dlg_cancel,this);
+		n4 = new Fl_Spinner(145, 95, 55, 25, "nx");		n4->callback(cb_dlg_cancel,this);
+		i4 = new Fl_Spinner(315, 95, 55, 25, "ind");	i4->callback(cb_dlg_cancel,this);
+		d4 = new Fl_Counter(400, 95, 95, 25, "d");		d4->callback(cb_dlg_cancel,this);
+
+		k5 = new Fl_Round_Button(5, 125, 105, 25, "StickPlot");	k5->callback(cb_dlg_cancel,this);
+		n5 = new Fl_Spinner(145, 125, 55, 25, "nx");	n5->callback(cb_dlg_cancel,this);
+		i5 = new Fl_Spinner(315, 125, 55, 25, "ind");	i5->callback(cb_dlg_cancel,this);
+
+		k6 = new Fl_Round_Button(5, 155, 105, 25, "InPlot");	k6->callback(cb_dlg_cancel,this);
+		xx1 = new Fl_Float_Input(145, 155, 60, 25, "x:");	xx1->callback(cb_dlg_cancel,this);
+		xx2 = new Fl_Float_Input(225, 155, 60, 25, "...");	xx2->callback(cb_dlg_cancel,this);
+		yy1 = new Fl_Float_Input(315, 155, 60, 25, "y:");	yy1->callback(cb_dlg_cancel,this);
+		yy2 = new Fl_Float_Input(400, 155, 60, 25, "...");	yy2->callback(cb_dlg_cancel,this);
+
+		tet = new Fl_Spinner(75, 190, 60, 25, mgl_gettext("Rotate on"));	tet->callback(cb_dlg_cancel,this);
+		phi = new Fl_Spinner(170, 190, 60, 25, mgl_gettext("and"));			phi->callback(cb_dlg_cancel,this);
+		ax = new Fl_Float_Input(315, 190, 60, 25, mgl_gettext("Aspect x/z"));ax->callback(cb_dlg_cancel,this);
+		ay = new Fl_Float_Input(400, 190, 60, 25, mgl_gettext("y/z"));		ay->callback(cb_dlg_cancel,this);
+
+		new Fl_Box(0, 225, 90, 25, mgl_gettext("Reserve at:"));
+		rl = new Fl_Check_Button(90, 225, 75, 25, mgl_gettext("left"));		rl->callback(cb_dlg_cancel,this);
+		rb = new Fl_Check_Button(145, 225, 75, 25, mgl_gettext("bottom"));	rb->callback(cb_dlg_cancel,this);
+		rt = new Fl_Check_Button(225, 225, 75, 25, mgl_gettext("top"));		rt->callback(cb_dlg_cancel,this);
+		rr = new Fl_Check_Button(285, 225, 75, 25, mgl_gettext("right"));	rr->callback(cb_dlg_cancel,this);
+		rw = new Fl_Check_Button(360, 225, 100, 25, mgl_gettext("whole area"));	rw->callback(cb_dlg_cancel,this);
+		title = new Fl_Input(50, 255, 350, 25, mgl_gettext("Title"));	title->callback(cb_dlg_cancel,this);
+		o = new Fl_Button(400, 255, 60, 25, mgl_gettext("Style"));
+		res = new Fl_Output(50, 285, 410, 25, mgl_gettext("Result"));
+		gr = new Fl_MathGL(470, 130, 240, 180);	gr->box(FL_ENGRAVED_BOX);
+		o = new Fl_Button(545, 95, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(630, 95, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(630, 60, 75, 25, mgl_gettext("Refresh"));	o->callback(cb_dlg_cancel,this);
+		w->set_modal();	w->end();
+	}
+	void update()
+	{}
+	void cb_ok()
+	{}
+} inplot_dlg;
+//-----------------------------------------------------------------------------
+void inplot_dlg_upd(Fl_Widget*,void*)	{	inplot_dlg.update();	}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

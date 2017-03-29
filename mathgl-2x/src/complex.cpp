@@ -1325,3 +1325,195 @@ void MGL_EXPORT mgl_datac_refill_xyz(HADT dat, HCDT xdat, HCDT ydat, HCDT zdat, 
 	}
 }
 //-----------------------------------------------------------------------------
+MGL_NO_EXPORT void *mgl_diffc_3(void *par)
+{
+	mglThreadC *t=(mglThreadC *)par;
+	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n, n2=nx*ny;
+	dual *b=t->a,au,av,aw;
+	HCDT x=(HCDT)(t->c),y=(HCDT)(t->d),z=(HCDT)(t->e);
+	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(au,av,aw)
+#endif
+	for(long i0=t->id;i0<nn;i0+=mglNumThr)
+	{
+		long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
+		mreal xu,xv,xw,yu,yv,yw,zu,zv,zw;
+		if(i==0)
+		{
+			au = mreal(3)*a[i0]-mreal(4)*a[i0+1]+a[i0+2];
+			xu = 3*x->vthr(i0)-4*x->vthr(i0+1)+x->vthr(i0+2);
+			yu = 3*y->vthr(i0)-4*y->vthr(i0+1)+y->vthr(i0+2);
+			zu = 3*z->vthr(i0)-4*z->vthr(i0+1)+z->vthr(i0+2);
+		}
+		else if(i==nx-1)
+		{
+			au = mreal(3)*a[i0]-mreal(4)*a[i0-1]+a[i0-2];
+			xu = 3*x->vthr(i0)-4*x->vthr(i0-1)+x->vthr(i0-2);
+			yu = 3*y->vthr(i0)-4*y->vthr(i0-1)+y->vthr(i0-2);
+			zu = 3*z->vthr(i0)-4*z->vthr(i0-1)+z->vthr(i0-2);
+		}
+		else
+		{
+			au = a[i0+1]-a[i0-1];
+			xu = x->vthr(i0+1)-x->vthr(i0-1);
+			yu = y->vthr(i0+1)-y->vthr(i0-1);
+			zu = z->vthr(i0+1)-z->vthr(i0-1);
+		}
+		if(j==0)
+		{
+			av = mreal(3)*a[i0]-mreal(4)*a[i0+nx]+a[i0+2*nx];
+			xv = 3*x->vthr(i0)-4*x->vthr(i0+nx)+x->vthr(i0+2*nx);
+			yv = 3*y->vthr(i0)-4*y->vthr(i0+nx)+y->vthr(i0+2*nx);
+			zv = 3*z->vthr(i0)-4*z->vthr(i0+nx)+z->vthr(i0+2*nx);
+		}
+		else if(j==ny-1)
+		{
+			av = mreal(3)*a[i0]-mreal(4)*a[i0-nx]+a[i0+(ny-3)*nx];
+			xv = 3*x->vthr(i0)-4*x->vthr(i0-nx)+x->vthr(i0-2*nx);
+			yv = 3*y->vthr(i0)-4*y->vthr(i0-nx)+y->vthr(i0-2*nx);
+			zv = 3*z->vthr(i0)-4*z->vthr(i0-nx)+z->vthr(i0-2*nx);
+		}
+		else
+		{
+			av = a[i0+nx]-a[i0-nx];
+			xv = x->vthr(i0+nx)-x->vthr(i0-nx);
+			yv = y->vthr(i0+nx)-y->vthr(i0-nx);
+			zv = z->vthr(i0+nx)-z->vthr(i0-nx);
+		}
+		if(k==0)
+		{
+			aw = mreal(3)*a[i0]-mreal(4)*a[i0+n2]+a[i0+2*n2];
+			xw = 3*x->vthr(i0)-4*x->vthr(i0+n2)+x->vthr(i0+2*n2);
+			yw = 3*y->vthr(i0)-4*y->vthr(i0+n2)+y->vthr(i0+2*n2);
+			zw = 3*z->vthr(i0)-4*z->vthr(i0+n2)+z->vthr(i0+2*n2);
+		}
+		else if(k==nz-1)
+		{
+			aw = mreal(3)*a[i0]-mreal(4)*a[i0-n2]+a[i0-2*n2];
+			xw = 3*x->vthr(i0)-4*x->vthr(i0-n2)+x->vthr(i0-2*n2);
+			yw = 3*y->vthr(i0)-4*y->vthr(i0-n2)+y->vthr(i0-2*n2);
+			zw = 3*z->vthr(i0)-4*z->vthr(i0-n2)+z->vthr(i0-2*n2);
+		}
+		else
+		{
+			aw = a[i0+n2]-a[i0-n2];
+			xw = x->vthr(i0+n2)-x->vthr(i0-n2);
+			yw = y->vthr(i0+n2)-y->vthr(i0-n2);
+			zw = z->vthr(i0+n2)-z->vthr(i0-n2);
+		}
+		b[i0] = (au*yv*zw-av*yu*zw-au*yw*zv+aw*yu*zv+av*yw*zu-aw*yv*zu) / (xu*yv*zw-xv*yu*zw-xu*yw*zv+xw*yu*zv+xv*yw*zu-xw*yv*zu);
+	}
+	return 0;
+}
+MGL_NO_EXPORT void *mgl_diffc_2(void *par)
+{
+	mglThreadC *t=(mglThreadC *)par;
+	long nx=t->p[0], ny=t->p[1], nn=t->n, same=t->p[2];
+	dual *b=t->a,au,av;
+	HCDT x=(HCDT)(t->c),y=(HCDT)(t->d);
+	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(au,av)
+#endif
+	for(long i0=t->id;i0<nn;i0+=mglNumThr)
+	{
+		long i=i0%nx, j=((i0/nx)%ny), i1 = same ? i0 : i0%(nx*ny);
+		mreal xu,xv,yu,yv;
+		if(i==0)
+		{
+			au = mreal(3)*a[i0]-mreal(4)*a[i0+1]+a[i0+2];
+			xu = 3*x->vthr(i1)-4*x->vthr(i1+1)+x->vthr(i1+2);
+			yu = 3*y->vthr(i1)-4*y->vthr(i1+1)+y->vthr(i1+2);
+		}
+		else if(i==nx-1)
+		{
+			au = mreal(3)*a[i0]-mreal(4)*a[i0-1]+a[i0-2];
+			xu = 3*x->vthr(i1)-4*x->vthr(i1-1)+x->vthr(i1-2);
+			yu = 3*y->vthr(i1)-4*y->vthr(i1-1)+y->vthr(i1-2);
+		}
+		else
+		{
+			au = a[i0+1]-a[i0-1];
+			xu = x->vthr(i1+1)-x->vthr(i1-1);
+			yu = y->vthr(i1+1)-y->vthr(i1-1);
+		}
+		if(j==0)
+		{
+			av = mreal(3)*a[i0]-mreal(4)*a[i0+nx]+a[i0+2*nx];
+			xv = 3*x->vthr(i1)-4*x->vthr(i1+nx)+x->vthr(i1+2*nx);
+			yv = 3*y->vthr(i1)-4*y->vthr(i1+nx)+y->vthr(i1+2*nx);
+		}
+		else if(j==ny-1)
+		{
+			av = mreal(3)*a[i0]-mreal(4)*a[i0-nx]+a[i0-2*nx];
+			xv = 3*x->vthr(i1)-4*x->vthr(i1-nx)+x->vthr(i1-2*nx);
+			yv = 3*y->vthr(i1)-4*y->vthr(i1-nx)+y->vthr(i1-2*nx);
+		}
+		else
+		{
+			av = a[i0+nx]-a[i0-nx];
+			xv = x->vthr(i1+nx)-x->vthr(i1-nx);
+			yv = y->vthr(i1+nx)-y->vthr(i1-nx);
+		}
+		b[i0] = (av*yu-au*yv)/(xv*yu-xu*yv);
+	}
+	return 0;
+}
+MGL_NO_EXPORT void *mgl_diffc_1(void *par)
+{
+	mglThreadC *t=(mglThreadC *)par;
+	long nx=t->p[0], nn=t->n, same=t->p[1];
+	dual *b=t->a,au;
+	HCDT x=(HCDT)(t->c);
+	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(au)
+#endif
+	for(long i0=t->id;i0<nn;i0+=mglNumThr)
+	{
+		long i=i0%nx, i1 = same ? i0 : i;
+		mreal xu;
+		if(i==0)
+		{
+			au = mreal(3)*a[i0]-mreal(4)*a[i0+1]+a[i0+2];
+			xu = 3*x->vthr(i1)-4*x->vthr(i1+1)+x->vthr(i1+2);
+		}
+		else if(i==nx-1)
+		{
+			au = mreal(3)*a[i0]-mreal(4)*a[i0-1]+a[i0-2];
+			xu = 3*x->vthr(i1)-4*x->vthr(i1-1)+x->vthr(i1-2);
+		}
+		else
+		{
+			au = a[i0+1]-a[i0-1];
+			xu = x->vthr(i1+1)-x->vthr(i1-1);
+		}
+		b[i0] = au/xu;
+	}
+	return 0;
+}
+void MGL_EXPORT mgl_datac_diff_par(HADT d, HCDT x, HCDT y, HCDT z)
+{
+	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz(), nn=nx*ny*nz;
+	if(nx<2 || ny<2)	return;
+	dual *b = new dual[nn];	memset(b,0,nn*sizeof(dual));
+	long p[3]={nx,ny,nz};
+
+	if(x&&y&&z && x->GetNN()==nn && y->GetNN()==nn && z->GetNN()==nn)
+		mglStartThreadC(mgl_diffc_3,0,nn,b,d->a,(const dual *)x,p,0,(const dual *)y,(const dual *)z);
+	else if(x&&y && x->GetNx()*x->GetNy()==nx*ny && y->GetNx()*y->GetNy()==nx*ny)
+	{
+		p[2]=(x->GetNz()==nz && y->GetNz()==nz);
+		mglStartThreadC(mgl_diffc_2,0,nn,b,d->a,(const dual *)x,p,0,(const dual *)y);
+	}
+	else if(x && x->GetNx()==nx)
+	{
+		p[1]=(x->GetNy()*x->GetNz()==ny*nz);
+		mglStartThreadC(mgl_diffc_1,0,nn,b,d->a,(const dual *)x,p,0,0);
+	}
+	memcpy(d->a,b,nn*sizeof(dual));	delete []b;
+}
+void MGL_EXPORT mgl_datac_diff_par_(uintptr_t *d, uintptr_t *v1, uintptr_t *v2, uintptr_t *v3)
+{	mgl_datac_diff_par(_DC_,_DA_(v1),_DA_(v2),_DA_(v3));	}
+//-----------------------------------------------------------------------------

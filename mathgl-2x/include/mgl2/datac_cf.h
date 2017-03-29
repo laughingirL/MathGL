@@ -259,6 +259,9 @@ void MGL_EXPORT mgl_datac_integral_(uintptr_t *dat, const char *dir,int);
 /// Differentiate the data in given direction or directions
 void MGL_EXPORT mgl_datac_diff(HADT dat, const char *dir);
 void MGL_EXPORT mgl_datac_diff_(uintptr_t *dat, const char *dir,int);
+/// Differentiate the parametrically specified data along direction v1 with v2,v3=const (v3 can be NULL)
+void MGL_EXPORT mgl_datac_diff_par(HADT dat, HCDT v1, HCDT v2, HCDT v3);
+void MGL_EXPORT mgl_datac_diff_par_(uintptr_t *dat, uintptr_t *v1, uintptr_t *v2, uintptr_t *v3);
 /// Double-differentiate (like Laplace operator) the data in given direction
 void MGL_EXPORT mgl_datac_diff2(HADT dat, const char *dir);
 void MGL_EXPORT mgl_datac_diff2_(uintptr_t *dat, const char *dir,int);

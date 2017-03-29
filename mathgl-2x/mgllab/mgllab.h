@@ -136,7 +136,7 @@ public:
 	int AnimNum;
 	mreal AnimDelay;
 	std::string script;		///< script with settings
-	
+
 	Fl_MGL(Fl_MGLView *GR);
 	~Fl_MGL();
 
@@ -293,6 +293,7 @@ void datsel_dlg_cb(Fl_Widget*, void*);
 void style_dlg_cb(Fl_Widget*, void*);
 void newcmd_dlg_cb(Fl_Widget*,void*);
 void setup_dlg_cb(Fl_Widget*,void *);
+void inplot_dlg_upd(Fl_Widget*,void*);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

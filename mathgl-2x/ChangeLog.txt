@@ -1,5 +1,6 @@
-2.4 Released ??? March 2017
+2.4 Released ??? April 2017
 
+* Add mgllab executable, which is FLTK based version of UDAV. Most things mgllab do faster.
 * Add string manipulation in MGL language:
 	o 'str'[n] -- get string of only n-th symbol;
 	o 'str'+v -- add value v to the last character of the string;
@@ -18,6 +19,7 @@
 * Add 'symbol' to draw user-defined symbol (or glyph).
 * Add 'openhdf' to open all data arrays from HDF file.
 * Add function mgl_data_max_first() and data suffixes .m[xyz][fl] to find first/last maximum along direction.
+* Add function mgl_datac_diff_par() to parametric derivative of complex data.
 * Add style 'F' for 'bars' and 'barh' to set fixed bar widths.
 * Add style 'a' for 'plot', 'tens', 'area' and 'region' to accurate drawing of data, which partially lie out of axis range.
 * Add style '#' for 'region' to draw wired plot.

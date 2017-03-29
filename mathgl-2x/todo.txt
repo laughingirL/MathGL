@@ -52,6 +52,7 @@ D. Docs about JS interface
 11. Sample about earth map
 17. Sample about 'section'
 22. Sample about 'erode' and 'dilate'
+21. Docs about mgl_datac_diff_par()
 
 26. Update installation (dll from mgl_script + Qt plugins/ + Win10)
 

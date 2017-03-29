@@ -1175,8 +1175,7 @@ Function {make_newcmd()} {} {
   }
 } 
 
-Function {make_style()} {open
-} {
+Function {make_style()} {} {
   Fl_Window {} {
     label {Plot style} open
     xywh {322 168 380 540} type Double hide
@@ -1665,242 +1664,10 @@ Function {make_style()} {open
   }
 } 
 
-Function {make_inplot()} {open
-} {
+Function {make_setup()} {} {
   Fl_Window {} {
-    label {Add inplot} open
-    xywh {120 449 715 315} type Double modal visible
-  } {
-    Fl_Round_Button k1 {
-      label SubPlot
-      xywh {5 5 105 25} down_box ROUND_DOWN_BOX
-    }
-    Fl_Round_Button k2 {
-      label MultiPlot
-      xywh {5 35 105 25} down_box ROUND_DOWN_BOX
-    }
-    Fl_Round_Button k1 {
-      label GridPlot
-      xywh {5 65 105 25} down_box ROUND_DOWN_BOX
-    }
-    Fl_Round_Button k1 {
-      label ColumnPlot
-      xywh {5 95 105 25} down_box ROUND_DOWN_BOX
-    }
-    Fl_Round_Button k1 {
-      label StickPlot
-      xywh {5 125 105 25} down_box ROUND_DOWN_BOX
-    }
-    Fl_Round_Button k1 {
-      label InPlot
-      xywh {5 155 105 25} down_box ROUND_DOWN_BOX
-    }
-    Fl_Spinner {} {
-      label nx
-      xywh {145 5 55 25}
-    }
-    Fl_Spinner {} {
-      label ny
-      xywh {230 5 55 25}
-    }
-    Fl_Spinner {} {
-      label ind
-      xywh {315 5 55 25}
-    }
-    Fl_Counter {} {
-      label dx
-      xywh {400 5 95 25} align 4
-    }
-    Fl_Counter {} {
-      label dy
-      xywh {525 5 95 25} align 4
-    }
-    Fl_Spinner {} {
-      label nx
-      xywh {145 35 55 25}
-    }
-    Fl_Spinner {} {
-      label ny
-      xywh {230 35 55 25}
-    }
-    Fl_Spinner {} {
-      label ind
-      xywh {315 35 55 25}
-    }
-    Fl_Counter {} {
-      label dx
-      xywh {400 35 95 25} align 4
-    }
-    Fl_Counter {} {
-      label dy
-      xywh {525 35 95 25} align 4
-    }
-    Fl_Spinner {} {
-      label nx
-      xywh {145 65 55 25}
-    }
-    Fl_Spinner {} {
-      label ny
-      xywh {230 65 55 25}
-    }
-    Fl_Spinner {} {
-      label ind
-      xywh {315 65 55 25}
-    }
-    Fl_Counter {} {
-      label d
-      xywh {400 65 95 25} align 4
-    }
-    Fl_Spinner {} {
-      label nx
-      xywh {145 95 55 25}
-    }
-    Fl_Spinner {} {
-      label ind
-      xywh {315 95 55 25}
-    }
-    Fl_Counter {} {
-      label d
-      xywh {400 95 95 25} align 4
-    }
-    Fl_Spinner {} {
-      label nx
-      xywh {145 125 55 25}
-    }
-    Fl_Spinner {} {
-      label ind
-      xywh {315 125 55 25}
-    }
-    Fl_Input {} {
-      label {x:}
-      xywh {145 155 60 25}
-    }
-    Fl_Input {} {
-      label {...}
-      xywh {225 155 60 25}
-    }
-    Fl_Input {} {
-      label {y:}
-      xywh {315 155 60 25}
-    }
-    Fl_Input {} {
-      label {...}
-      xywh {400 155 60 25}
-    }
-    Fl_Spinner {} {
-      label {Rotate on}
-      xywh {75 190 60 25}
-    }
-    Fl_Spinner {} {
-      label and
-      xywh {170 190 60 25}
-    }
-    Fl_Input {} {
-      label {Aspect x/z}
-      xywh {315 190 60 25}
-    }
-    Fl_Input {} {
-      label {y/z}
-      xywh {400 190 60 25}
-    }
-    Fl_Box {} {
-      label {Reserve at:}
-      xywh {0 225 90 25}
-    }
-    Fl_Check_Button {} {
-      label left
-      xywh {90 225 75 25} down_box DOWN_BOX
-    }
-    Fl_Check_Button {} {
-      label bottom
-      xywh {145 225 75 25} down_box DOWN_BOX
-    }
-    Fl_Check_Button {} {
-      label top
-      xywh {225 225 75 25} down_box DOWN_BOX
-    }
-    Fl_Check_Button {} {
-      label right
-      xywh {285 225 75 25} down_box DOWN_BOX
-    }
-    Fl_Check_Button {} {
-      label {whole area}
-      xywh {360 225 100 25} down_box DOWN_BOX
-    }
-    Fl_Input {} {
-      label Title
-      xywh {35 255 360 25}
-    }
-    Fl_Button {} {
-      label Style
-      xywh {400 255 60 25}
-    }
-    Fl_Output {} {
-      label Result
-      xywh {50 285 410 25}
-    }
-    Fl_Box {} {
-      xywh {470 130 240 180} box ENGRAVED_BOX
-    }
-    Fl_Button {} {
-      label Cancel
-      xywh {545 95 75 25}
-    }
-    Fl_Return_Button {} {
-      label OK
-      xywh {630 95 75 25}
-    }
-    Fl_Button {} {
-      label Refresh
-      xywh {630 60 75 25}
-    }
-  }
-} 
-
-Function {make_find()} {
-  comment {Dialog to Find/Replace text} open
-} {
-  Fl_Window find_dlg {
-    label {Find/Replace} open
-    xywh {906 51 355 125} type Double hide modal
-  } {
-    Fl_Input find_w {
-      label {Find what:}
-      xywh {90 10 180 25}
-    }
-    Fl_Button {} {
-      label Find
-      xywh {275 10 75 25}
-    }
-    Fl_Input replace_w {
-      label {Replace by:}
-      xywh {90 40 180 25}
-    }
-    Fl_Button {} {
-      label Replace
-      xywh {275 40 75 25}
-    }
-    Fl_Check_Button case_w {
-      label {Match case}
-      xywh {5 70 265 25} down_box DOWN_BOX
-    }
-    Fl_Check_Button sback_w {
-      label {Search backward}
-      xywh {5 95 265 25} down_box DOWN_BOX
-    }
-    Fl_Button {} {
-      label Close
-      callback {find_dlg->hide();}
-      xywh {275 70 75 25}
-    }
-  }
-} 
-
-Function {make_setup()} {open
-} {
-  Fl_Window {} {
-    label {Setup script} open
-    xywh {838 369 525 395} type Double visible
+    label {Setup script}
+    xywh {838 369 525 395} type Double hide
   } {
     Fl_Tabs {} {open
       xywh {0 0 525 355}
@@ -2174,7 +1941,7 @@ Function {make_setup()} {open
             xywh {370 277 145 25} down_box BORDER_BOX align 5
           } {}
           Fl_Spinner variant {
-            label Variant selected
+            label Variant
             xywh {372 321 145 25} align 5
           }
         }
@@ -2399,6 +2166,237 @@ Function {make_setup()} {open
     Fl_Button {} {
       label {@->}
       xywh {275 365 25 25}
+    }
+  }
+} 
+
+Function {make_inplot()} {open
+} {
+  Fl_Window {} {
+    label {Add inplot} open
+    xywh {378 759 715 315} type Double modal visible
+  } {
+    Fl_Round_Button k1 {
+      label SubPlot
+      xywh {5 5 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k2 {
+      label MultiPlot
+      xywh {5 35 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k3 {
+      label GridPlot
+      xywh {5 65 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k4 {
+      label ColumnPlot
+      xywh {5 95 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k5 {
+      label StickPlot
+      xywh {5 125 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Round_Button k6 {
+      label InPlot
+      xywh {5 155 105 25} down_box ROUND_DOWN_BOX
+    }
+    Fl_Spinner n1 {
+      label nx
+      xywh {145 5 55 25}
+    }
+    Fl_Spinner m1 {
+      label ny
+      xywh {230 5 55 25}
+    }
+    Fl_Spinner i1 {
+      label ind
+      xywh {315 5 55 25}
+    }
+    Fl_Counter x1 {
+      label dx
+      xywh {400 5 95 25} align 4
+    }
+    Fl_Counter y1 {
+      label dy
+      xywh {525 5 95 25} align 4
+    }
+    Fl_Spinner n2 {
+      label nx
+      xywh {145 35 55 25}
+    }
+    Fl_Spinner m2 {
+      label ny
+      xywh {230 35 55 25}
+    }
+    Fl_Spinner i2 {
+      label ind
+      xywh {315 35 55 25}
+    }
+    Fl_Counter x2 {
+      label dx
+      xywh {400 35 95 25} align 4
+    }
+    Fl_Counter y2 {
+      label dy
+      xywh {525 35 95 25} align 4
+    }
+    Fl_Spinner n3 {
+      label nx
+      xywh {145 65 55 25}
+    }
+    Fl_Spinner m3 {
+      label ny
+      xywh {230 65 55 25}
+    }
+    Fl_Spinner i3 {
+      label ind
+      xywh {315 65 55 25}
+    }
+    Fl_Counter d3 {
+      label d
+      xywh {400 65 95 25} align 4
+    }
+    Fl_Spinner n4 {
+      label nx
+      xywh {145 95 55 25}
+    }
+    Fl_Spinner i4 {
+      label ind
+      xywh {315 95 55 25}
+    }
+    Fl_Counter d4 {
+      label d
+      xywh {400 95 95 25} align 4
+    }
+    Fl_Spinner n5 {
+      label nx
+      xywh {145 125 55 25}
+    }
+    Fl_Spinner i5 {
+      label ind
+      xywh {315 125 55 25}
+    }
+    Fl_Input xx1 {
+      label {x:}
+      xywh {145 155 60 25}
+    }
+    Fl_Input xx2 {
+      label {...} selected
+      xywh {225 155 60 25}
+    }
+    Fl_Input yy1 {
+      label {y:}
+      xywh {315 155 60 25}
+    }
+    Fl_Input yy2 {
+      label {...}
+      xywh {400 155 60 25}
+    }
+    Fl_Spinner tet {
+      label {Rotate on}
+      xywh {75 190 60 25}
+    }
+    Fl_Spinner phi {
+      label and
+      xywh {170 190 60 25}
+    }
+    Fl_Input ax {
+      label {Aspect x/z}
+      xywh {315 190 60 25}
+    }
+    Fl_Input ay {
+      label {y/z}
+      xywh {400 190 60 25}
+    }
+    Fl_Box {} {
+      label {Reserve at:}
+      xywh {0 225 90 25}
+    }
+    Fl_Check_Button rl {
+      label left
+      xywh {90 225 75 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button rb {
+      label bottom
+      xywh {145 225 75 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button rt {
+      label top
+      xywh {225 225 75 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button rr {
+      label right
+      xywh {285 225 75 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button rw {
+      label {whole area}
+      xywh {360 225 100 25} down_box DOWN_BOX
+    }
+    Fl_Input title {
+      label Title
+      xywh {50 255 350 25}
+    }
+    Fl_Button {} {
+      label Style
+      xywh {400 255 60 25}
+    }
+    Fl_Output res {
+      label Result
+      xywh {50 285 410 25}
+    }
+    Fl_Box gr {
+      xywh {470 130 240 180} box ENGRAVED_BOX
+    }
+    Fl_Button {} {
+      label Cancel
+      xywh {545 95 75 25}
+    }
+    Fl_Return_Button {} {
+      label OK
+      xywh {630 95 75 25}
+    }
+    Fl_Button {} {
+      label Refresh
+      xywh {630 60 75 25}
+    }
+  }
+} 
+
+Function {make_find()} {
+  comment {Dialog to Find/Replace text} open
+} {
+  Fl_Window find_dlg {
+    label {Find/Replace} open
+    xywh {88 605 355 125} type Double modal visible
+  } {
+    Fl_Input find_w {
+      label {Find what:}
+      xywh {90 10 180 25}
+    }
+    Fl_Button {} {
+      label Find
+      xywh {275 10 75 25}
+    }
+    Fl_Input replace_w {
+      label {Replace by:}
+      xywh {90 40 180 25}
+    }
+    Fl_Button {} {
+      label Replace
+      xywh {275 40 75 25}
+    }
+    Fl_Check_Button case_w {
+      label {Match case}
+      xywh {5 70 265 25} down_box DOWN_BOX
+    }
+    Fl_Check_Button sback_w {
+      label {Search backward}
+      xywh {5 95 265 25} down_box DOWN_BOX
+    }
+    Fl_Button {} {
+      label Close
+      callback {find_dlg->hide();}
+      xywh {275 70 75 25}
     }
   }
 } 
