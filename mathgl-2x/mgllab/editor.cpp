@@ -208,10 +208,8 @@ void style_update(int pos,		// Position of update
 	}
 	else	// Just delete characters in the style buffer...
 		stylebuf->remove(pos, pos + nDeleted);
-
 	// Select the area that was just updated to avoid unnecessary callbacks...
 	stylebuf->select(pos, pos + nInserted - nDeleted);
-
 	// Re-parse the changed region; we do this by parsing from the
 	// beginning of the previous line of the changed region to the end of
 	// the line of the changed region...  Then we check the last
@@ -232,7 +230,6 @@ void style_update(int pos,		// Position of update
 		// Either the user deleted some text, or the last character on
 		// the line changed styles, so reparse the remainder of the buffer...
 		free(text);	free(style);
-
 		end   = textbuf->length();
 		text  = textbuf->text_range(start, end);
 		style = stylebuf->text_range(start, end);
@@ -244,32 +241,7 @@ void style_update(int pos,		// Position of update
 }
 //-----------------------------------------------------------------------------
 ScriptWindow::ScriptWindow(int w, int h, const char* t) : Fl_Double_Window(w, h, t)
-{
-	replace_dlg = new Fl_Window(300, 105, mgl_gettext("Replace"));
-	replace_find = new Fl_Input(80, 10, 210, 25, mgl_gettext("Find:"));
-	replace_find->align(FL_ALIGN_LEFT);
-
-	replace_with = new Fl_Input(80, 40, 210, 25, mgl_gettext("Replace:"));
-	replace_with->align(FL_ALIGN_LEFT);
-
-	replace_all = new Fl_Button(10, 70, 90, 25, mgl_gettext("Replace All"));
-	replace_all->callback((Fl_Callback *)replall_cb, this);
-
-	replace_next = new Fl_Return_Button(105, 70, 120, 25, "Replace Next");
-	replace_next->callback((Fl_Callback *)replace2_cb, this);
-
-	replace_cancel = new Fl_Button(230, 70, 60, 25, mgl_gettext("Cancel"));
-	replace_cancel->callback((Fl_Callback *)replcan_cb, this);
-
-	replace_dlg->end();
-	replace_dlg->set_non_modal();
-	editor = 0;		*search = 0;
-}
-//-----------------------------------------------------------------------------
-ScriptWindow::~ScriptWindow()
-{
-	delete replace_dlg;
-}
+{	editor = 0;	}
 //-----------------------------------------------------------------------------
 void add_filename(const char *fname, ScriptWindow *e)
 {
@@ -373,30 +345,6 @@ void cut_cb(Fl_Widget*, void* v)
 //-----------------------------------------------------------------------------
 void delete_cb(Fl_Widget*, void*) {	textbuf->remove_selection();	}
 //-----------------------------------------------------------------------------
-void find_cb(Fl_Widget* w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	const char *val;
-	val = fl_input(mgl_gettext("Search String:"), e->search);
-	if (val != NULL) {	strncpy(e->search, val,256);	find2_cb(w, v);	}
-}
-//-----------------------------------------------------------------------------
-void find2_cb(Fl_Widget* w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if (e->search[0] == '\0')	{	find_cb(w, v);	return;	}
-
-	int pos = e->editor->insert_position();
-	long found = textbuf->search_forward(pos, e->search, &pos);
-	if (found) {
-		// Found a match; select and update the position...
-		textbuf->select(pos, pos+strlen(e->search));
-		e->editor->insert_position(pos+strlen(e->search));
-		e->editor->show_insert_position();
-	}
-	else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), e->search);
-}
-//-----------------------------------------------------------------------------
 void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
 {
 	if ((nInserted || nDeleted) && !loading) changed = 1;
@@ -418,73 +366,6 @@ void paste_cb(Fl_Widget*, void* v)
 	Fl_Text_Editor::kf_paste(0, e->editor);
 }
 //-----------------------------------------------------------------------------
-void replace_cb(Fl_Widget*, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	e->replace_dlg->show();
-}
-//-----------------------------------------------------------------------------
-void replace2_cb(Fl_Widget*, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	const char *find = e->replace_find->value();
-	const char *replace = e->replace_with->value();
-	if (find[0] == '\0')	{	e->replace_dlg->show();	return;	}
-	e->replace_dlg->hide();
-
-	int pos = e->editor->insert_position();
-	long found = textbuf->search_forward(pos, find, &pos);
-	if (found)
-	{
-		// Found a match; update the position and replace text...
-		textbuf->select(pos, pos+strlen(find));
-		textbuf->remove_selection();
-		textbuf->insert(pos, replace);
-		textbuf->select(pos, pos+strlen(replace));
-		e->editor->insert_position(pos+strlen(replace));
-		e->editor->show_insert_position();
-	}
-	else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), find);
-}
-//-----------------------------------------------------------------------------
-void replall_cb(Fl_Widget*, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	const char *find = e->replace_find->value();
-	const char *replace = e->replace_with->value();
-
-	find = e->replace_find->value();
-	if (find[0] == '\0')	{	e->replace_dlg->show();	return;	}
-	e->replace_dlg->hide();
-	e->editor->insert_position(0);
-	long times = 0;
-
-	// Loop through the whole string
-	for (long found = 1; found;)
-	{
-		int pos = e->editor->insert_position();
-		found = textbuf->search_forward(pos, find, &pos);
-		if (found)
-		{
-			// Found a match; update the position and replace text...
-			textbuf->select(pos, pos+strlen(find));
-			textbuf->remove_selection();
-			textbuf->insert(pos, replace);
-			e->editor->insert_position(pos+strlen(replace));
-			e->editor->show_insert_position();
-			times++;
-		}
-	}
-	if (times) fl_message(mgl_gettext("Replaced %ld occurrences."), times);
-	else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), find);
-}
-//-----------------------------------------------------------------------------
-void replcan_cb(Fl_Widget*, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	e->replace_dlg->hide();
-}
-//-----------------------------------------------------------------------------
 #include "image.h"
 Fl_Widget *add_editor(ScriptWindow *w)
 {
@@ -500,7 +381,7 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	o->tooltip(mgl_gettext("Copy selection to clipboard"));
 	o = new Fl_Button(75, 1, 25, 25);	o->image(img_paste);o->callback(paste_cb,w);
 	o->tooltip(mgl_gettext("Paste text from clipboard"));
-	o = new Fl_Button(100, 1, 25, 25);	o->image(img_find);	o->callback(find_cb,w);
+	o = new Fl_Button(100, 1, 25, 25);	o->image(img_find);	o->callback(find_dlg_cb,w);
 	o->tooltip(mgl_gettext("Find or replace text"));
 	o = new Fl_Button(125, 1, 25, 25);	o->image(img_insert);	o->callback(newcmd_dlg_cb,w);
 	o->tooltip(mgl_gettext("Insert MGL command"));
@@ -512,6 +393,7 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	w->editor->buffer(textbuf);
 	w->editor->highlight_data(stylebuf, styletable, sizeof(styletable) / sizeof(styletable[0]), 'A', style_unfinished_cb, 0);
 	w->editor->textfont(FL_COURIER);
+	w->editor->linenumber_width(30);
 
 	textbuf->add_modify_callback(style_update, w->editor);
 	textbuf->add_modify_callback(changed_cb, w);
@@ -520,5 +402,109 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	w1->end();
 	w1->resizable(w->editor);	//w->graph);
 	return w1;
+}
+//-----------------------------------------------------------------------------
+void cp_find_next(Fl_Widget*,void*);
+void cp_repl_next(Fl_Widget*,void*);
+void cp_repl_all(Fl_Widget*,void*);
+class FindDlg : public GeneralDlg
+{
+	Fl_Input *find, *replace;
+	Fl_Check_Button *mcase, *sback;
+public:
+	FindDlg()
+	{
+		Fl_Button* o;
+		w = new Fl_Double_Window(375, 130, mgl_gettext("Find/Replace"));
+		find = new Fl_Input(90, 10, 180, 25, mgl_gettext("Find what:"));
+		o = new Fl_Return_Button(275, 10, 95, 25, mgl_gettext("Find"));	o->callback(cp_find_next);
+		replace = new Fl_Input(90, 40, 180, 25, mgl_gettext("Replace by:"));
+		o = new Fl_Button(275, 40, 95, 25, mgl_gettext("Replace"));		o->callback(cp_repl_next);
+		mcase = new Fl_Check_Button(5, 70, 265, 25, mgl_gettext("Match case"));
+		sback = new Fl_Check_Button(5, 95, 265, 25, mgl_gettext("Search backward"));
+		o = new Fl_Button(275, 70, 95, 25, mgl_gettext("Replace all"));	o->callback(cp_repl_all);
+		o = new Fl_Button(275, 100, 95, 25, mgl_gettext("Close"));	o->callback(cb_dlg_cancel,this);
+		w->end();
+	}
+	const char *to_find()	{	return find->value();	}
+	void find_next()
+	{
+		const char *s = find->value();
+		int c = mcase->value(), b = sback->value();
+		if(s && *s)
+		{
+			int pos = e->editor->insert_position();
+			int found = b ? textbuf->search_backward(pos,s,&pos,c) : textbuf->search_forward(pos,s,&pos,c);
+			if(found)
+			{	// Found a match; select and update the position...
+				size_t len = strlen(s);
+				textbuf->select(pos, pos+len);
+				e->editor->insert_position(pos+len);
+				e->editor->show_insert_position();
+			}
+			else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), s);
+		}
+	}
+	void repl_next()
+	{
+		const char *s = find->value();
+		const char *r = replace->value();
+		int c = mcase->value(), b = sback->value();
+		if(s && *s)
+		{
+			int pos = e->editor->insert_position();
+			int found = b ? textbuf->search_backward(pos,s,&pos,c) : textbuf->search_forward(pos,s,&pos,c);
+			if(found)
+			{	// Found a match; select and update the position...
+				size_t len = strlen(r);
+				textbuf->select(pos, pos+strlen(s));
+				textbuf->remove_selection();
+				textbuf->insert(pos, r);
+				textbuf->select(pos, pos+len);
+				e->editor->insert_position(pos+len);
+				e->editor->show_insert_position();
+			}
+			else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), s);
+		}
+	}
+	void repl_all()
+	{
+		const char *s = find->value();
+		const char *r = replace->value();
+		int c = mcase->value(), b = sback->value();
+		int found = (s && *s)?1:0;
+		long num=0;
+		while(found)
+		{
+			int pos = e->editor->insert_position();
+			int found = b ? textbuf->search_backward(pos,s,&pos,c) : textbuf->search_forward(pos,s,&pos,c);
+			if(!found)	break;
+			size_t len = strlen(r);
+			textbuf->select(pos, pos+strlen(s));
+			textbuf->remove_selection();
+			textbuf->insert(pos, r);
+			textbuf->select(pos, pos+len);
+			e->editor->insert_position(pos+len);
+			e->editor->show_insert_position();
+			num++;
+		}
+		if(num) fl_message(mgl_gettext("Replaced %ld occurrences."), num);
+		else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), s);
+	}
+} find_dlg;
+//-----------------------------------------------------------------------------
+void cp_find_next(Fl_Widget*,void*)	{	find_dlg.find_next();	}
+void cp_repl_next(Fl_Widget*,void*)	{	find_dlg.repl_next();	}
+void cp_repl_all(Fl_Widget*,void*)	{	find_dlg.repl_all();	}
+//-----------------------------------------------------------------------------
+void find_dlg_cb(Fl_Widget*,void *v)
+{	find_dlg.e = (ScriptWindow*)v;	find_dlg.show();	}
+//-----------------------------------------------------------------------------
+void find_next_cb(Fl_Widget*,void *v)
+{
+	find_dlg.e = (ScriptWindow*)v;
+	const char *s = find_dlg.to_find();
+	if(s && *s)	find_dlg.find_next();
+	else	find_dlg.show();
 }
 //-----------------------------------------------------------------------------

@@ -106,7 +106,7 @@ void animate_dlg_cb(Fl_Widget *, void *v)
 		double t0=atof(animate_dlg.x0->value()), t1=atof(animate_dlg.x1->value()), dt=atof(animate_dlg.dx->value());
 		if((t1-t0)*dt<0)
 		{
-			if(fl_ask(mgl_gettext("Order of first and last value is wrong. Swap it?")))
+			if(fl_choice(mgl_gettext("Order of first and last value is wrong. Swap it?"), mgl_gettext("No"), mgl_gettext("Yes (default)"), NULL))
 			{
 				char s[32];	snprintf(s,32,"%g",t0);
 				animate_dlg.x0->value(animate_dlg.x1->value());

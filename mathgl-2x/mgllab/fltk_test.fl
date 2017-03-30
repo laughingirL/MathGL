@@ -2232,14 +2232,6 @@ Function {make_inplot()} {open
       label ind
       xywh {315 35 55 25}
     }
-    Fl_Counter x2 {
-      label dx
-      xywh {400 35 95 25} align 4
-    }
-    Fl_Counter y2 {
-      label dy
-      xywh {525 35 95 25} align 4
-    }
     Fl_Spinner n3 {
       label nx
       xywh {145 65 55 25}
@@ -2281,7 +2273,7 @@ Function {make_inplot()} {open
       xywh {145 155 60 25}
     }
     Fl_Input xx2 {
-      label {...} selected
+      label {...}
       xywh {225 155 60 25}
     }
     Fl_Input yy1 {
@@ -2359,6 +2351,14 @@ Function {make_inplot()} {open
       label Refresh
       xywh {630 60 75 25}
     }
+    Fl_Spinner {} {
+      label {x-size}
+      xywh {425 35 70 25}
+    }
+    Fl_Spinner {} {
+      label {y-size} selected
+      xywh {550 35 70 25}
+    }
   }
 } 
 
@@ -2367,15 +2367,15 @@ Function {make_find()} {
 } {
   Fl_Window find_dlg {
     label {Find/Replace} open
-    xywh {88 605 355 125} type Double modal visible
+    xywh {88 605 375 130} type Double modal visible
   } {
     Fl_Input find_w {
       label {Find what:}
       xywh {90 10 180 25}
     }
-    Fl_Button {} {
+    Fl_Return_Button {} {
       label Find
-      xywh {275 10 75 25}
+      xywh {275 10 95 25}
     }
     Fl_Input replace_w {
       label {Replace by:}
@@ -2383,7 +2383,11 @@ Function {make_find()} {
     }
     Fl_Button {} {
       label Replace
-      xywh {275 40 75 25}
+      xywh {275 40 95 25}
+    }
+    Fl_Button {} {
+      label {Replace All}
+      xywh {275 70 95 25}
     }
     Fl_Check_Button case_w {
       label {Match case}
@@ -2396,7 +2400,7 @@ Function {make_find()} {
     Fl_Button {} {
       label Close
       callback {find_dlg->hide();}
-      xywh {275 70 75 25}
+      xywh {275 100 95 25}
     }
   }
 } 

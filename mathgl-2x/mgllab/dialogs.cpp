@@ -1157,7 +1157,6 @@ public:
 		size_t isp = arg.find_first_of('\t');
 		val = arg.substr(isp+1);	arg = arg.substr(0,isp);
 		if(arg[0]=='@')	arg = arg.substr(3);
-		std::string question = mgl_gettext("Enter value for ")+arg+mgl_gettext(" argument");
 		if(arg[0]>='A' && arg[0]<='Z')	datsel_dlg_cb(0,0);	// this is data
 		else if(arg=="'fmt'")	style_dlg_cb(0,0);	// this is style
 		else if(arg=="'fname'")	ins_fname_cb(0,0);	// this is file name
@@ -1165,13 +1164,13 @@ public:
 		else if(arg=="'dir'")	dirsel_dlg_cb(0,0);	// this is path
 		else if(arg[0]=='\'')	// this is general string
 		{
-			const char *s = fl_input(question.c_str(),"");
+			const char *s = fl_input(mgl_gettext("Enter value for %s argument"), val.c_str(), arg.c_str());
 			if(s)
 			{	std::string ss=s;	args_set(('\''+ss+'\'').c_str());	}
 		}
 		else	// this is general constant
 		{
-			const char *s = fl_input(question.c_str(),"");
+			const char *s = fl_input(mgl_gettext("Enter value for %s argument"), val.c_str(), arg.c_str());
 			if(s)	args_set(s);
 		}
 	}
@@ -1508,8 +1507,7 @@ class InplotDlg : public GeneralDlg
 	Fl_Round_Button *k1, *k2, *k3, *k4, *k5, *k6;
 	Fl_Spinner *n1, *m1, *i1;
 	Fl_Counter *x1, *y1;
-	Fl_Spinner *n2, *m2, *i2;
-	Fl_Counter *x2, *y2;
+	Fl_Spinner *n2, *m2, *i2, *x2, *y2;
 	Fl_Spinner *n3, *m3, *i3;
 	Fl_Counter *d3;
 	Fl_Spinner *n4, *i4;
@@ -1519,7 +1517,7 @@ class InplotDlg : public GeneralDlg
 	Fl_Spinner *tet, *phi;
 	Fl_Float_Input *ax, *ay;
 	Fl_Check_Button *rl, *rb, *rt, *rr, *rw;
-	Fl_Input *title;
+	Fl_Input *text;
 	Fl_Output *res;
 	Fl_MathGL *gr;
 public:
@@ -1529,71 +1527,203 @@ public:
 		w = new Fl_Double_Window(715, 315, mgl_gettext("Add inplot"));
 		k1 = new Fl_Round_Button(5, 5, 105, 25, "SubPlot");
 		k1->callback(cb_only_inplot,k1);	k1->type(FL_RADIO_BUTTON);
-		n1 = new Fl_Spinner(145, 5, 55, 25, "nx");		n1->callback(cp_inplot_upd);
-		m1 = new Fl_Spinner(230, 5, 55, 25, "ny");		m1->callback(cp_inplot_upd);
-		i1 = new Fl_Spinner(315, 5, 55, 25, "ind");		i1->callback(cp_inplot_upd);
-		x1 = new Fl_Counter(400, 5, 95, 25, "dx");		x1->callback(cp_inplot_upd);
-		y1 = new Fl_Counter(525, 5, 95, 25, "dy");		y1->callback(cp_inplot_upd);
+		n1 = new Fl_Spinner(145, 5, 55, 25, "nx");
+		n1->callback(cp_inplot_upd);	n1->range(1,100);
+		m1 = new Fl_Spinner(230, 5, 55, 25, "ny");
+		m1->callback(cp_inplot_upd);	m1->range(1,100);
+		i1 = new Fl_Spinner(315, 5, 55, 25, "ind");
+		i1->callback(cp_inplot_upd);	i1->value(0);
+		x1 = new Fl_Counter(400, 5, 95, 25, "dx");
+		x1->callback(cp_inplot_upd);	x1->value(0);	x1->step(0.01);	x1->lstep(0.1);
+		y1 = new Fl_Counter(525, 5, 95, 25, "dy");
+		y1->callback(cp_inplot_upd);	y1->value(0);	y1->step(0.01);	y1->lstep(0.1);
 
 		k2 = new Fl_Round_Button(5, 35, 105, 25, "MultiPlot");
 		k2->callback(cb_only_inplot,k2);	k2->type(FL_RADIO_BUTTON);
-		n2 = new Fl_Spinner(145, 35, 55, 25, "nx");		n2->callback(cp_inplot_upd);
-		m2 = new Fl_Spinner(230, 35, 55, 25, "ny");		m2->callback(cp_inplot_upd);
-		i2 = new Fl_Spinner(315, 35, 55, 25, "ind");	i2->callback(cp_inplot_upd);
-		x2 = new Fl_Counter(400, 35, 95, 25, "dx");		x2->callback(cp_inplot_upd);
-		y2 = new Fl_Counter(525, 35, 95, 25, "dy");		y2->callback(cp_inplot_upd);
+		n2 = new Fl_Spinner(145, 35, 55, 25, "nx");
+		n2->callback(cp_inplot_upd);	n2->range(1,100);
+		m2 = new Fl_Spinner(230, 35, 55, 25, "ny");
+		m2->callback(cp_inplot_upd);	m2->range(1,100);
+		i2 = new Fl_Spinner(315, 35, 55, 25, "ind");
+		i2->callback(cp_inplot_upd);	i2->value(0);
+		x2 = new Fl_Spinner(425, 35, 70, 25, "x-size");
+		x2->callback(cp_inplot_upd);	x2->value(1);
+		y2 = new Fl_Spinner(550, 35, 70, 25, "y-size");
+		y2->callback(cp_inplot_upd);	y2->value(1);
 
 		k3 = new Fl_Round_Button(5, 65, 105, 25, "GridPlot");
 		k3->callback(cb_only_inplot,k3);	k3->type(FL_RADIO_BUTTON);
-		n3 = new Fl_Spinner(145, 65, 55, 25, "nx");		n3->callback(cp_inplot_upd);
-		m3 = new Fl_Spinner(230, 65, 55, 25, "ny");		m3->callback(cp_inplot_upd);
-		i3 = new Fl_Spinner(315, 65, 55, 25, "ind");	i3->callback(cp_inplot_upd);
-		d3 = new Fl_Counter(400, 65, 95, 25, "d");		d3->callback(cp_inplot_upd);
+		n3 = new Fl_Spinner(145, 65, 55, 25, "nx");
+		n3->callback(cp_inplot_upd);	n3->range(1,100);
+		m3 = new Fl_Spinner(230, 65, 55, 25, "ny");
+		m3->callback(cp_inplot_upd);	m3->range(1,100);
+		i3 = new Fl_Spinner(315, 65, 55, 25, "ind");
+		i3->callback(cp_inplot_upd);	i3->value(0);
+		d3 = new Fl_Counter(400, 65, 95, 25, "d");
+		d3->callback(cp_inplot_upd);	d3->step(0.01);	d3->lstep(0.1);
 
 		k4 = new Fl_Round_Button(5, 95, 105, 25, "ColumnPlot");
 		k4->callback(cb_only_inplot,k4);	k4->type(FL_RADIO_BUTTON);
-		n4 = new Fl_Spinner(145, 95, 55, 25, "nx");		n4->callback(cp_inplot_upd);
-		i4 = new Fl_Spinner(315, 95, 55, 25, "ind");	i4->callback(cp_inplot_upd);
-		d4 = new Fl_Counter(400, 95, 95, 25, "d");		d4->callback(cp_inplot_upd);
+		n4 = new Fl_Spinner(145, 95, 55, 25, "nx");
+		n4->callback(cp_inplot_upd);	n4->range(1,100);
+		i4 = new Fl_Spinner(315, 95, 55, 25, "ind");
+		i4->callback(cp_inplot_upd);	i4->value(0);
+		d4 = new Fl_Counter(400, 95, 95, 25, "d");
+		d4->callback(cp_inplot_upd);	d4->step(0.01);	d4->lstep(0.1);
 
 		k5 = new Fl_Round_Button(5, 125, 105, 25, "StickPlot");
 		k5->callback(cb_only_inplot,k5);	k5->type(FL_RADIO_BUTTON);
-		n5 = new Fl_Spinner(145, 125, 55, 25, "nx");	n5->callback(cp_inplot_upd);
-		i5 = new Fl_Spinner(315, 125, 55, 25, "ind");	i5->callback(cp_inplot_upd);
+		n5 = new Fl_Spinner(145, 125, 55, 25, "nx");
+		n5->callback(cp_inplot_upd);	n5->range(1,100);
+		i5 = new Fl_Spinner(315, 125, 55, 25, "ind");
+		i5->callback(cp_inplot_upd);	i5->value(0);
 
 		k6 = new Fl_Round_Button(5, 155, 105, 25, "InPlot");
 		k6->callback(cb_only_inplot,k6);	k6->type(FL_RADIO_BUTTON);
-		xx1 = new Fl_Float_Input(145, 155, 60, 25, "x:");	xx1->callback(cp_inplot_upd);
-		xx2 = new Fl_Float_Input(225, 155, 60, 25, "...");	xx2->callback(cp_inplot_upd);
-		yy1 = new Fl_Float_Input(315, 155, 60, 25, "y:");	yy1->callback(cp_inplot_upd);
-		yy2 = new Fl_Float_Input(400, 155, 60, 25, "...");	yy2->callback(cp_inplot_upd);
+		xx1 = new Fl_Float_Input(145, 155, 60, 25, "x:");
+		xx1->callback(cp_inplot_upd);	xx1->value("0");
+		xx2 = new Fl_Float_Input(225, 155, 60, 25, "...");
+		xx2->callback(cp_inplot_upd);	xx2->value("1");
+		yy1 = new Fl_Float_Input(315, 155, 60, 25, "y:");
+		yy1->callback(cp_inplot_upd);	yy1->value("0");
+		yy2 = new Fl_Float_Input(400, 155, 60, 25, "...");
+		yy2->callback(cp_inplot_upd);	yy2->value("1");
 
-		tet = new Fl_Spinner(75, 190, 60, 25, mgl_gettext("Rotate on"));	tet->callback(cp_inplot_upd);
-		phi = new Fl_Spinner(170, 190, 60, 25, mgl_gettext("and"));			phi->callback(cp_inplot_upd);
-		ax = new Fl_Float_Input(315, 190, 60, 25, mgl_gettext("Aspect x/z"));ax->callback(cp_inplot_upd);
-		ay = new Fl_Float_Input(400, 190, 60, 25, mgl_gettext("y/z"));		ay->callback(cp_inplot_upd);
+		tet = new Fl_Spinner(75, 190, 60, 25, mgl_gettext("Rotate on"));
+		tet->callback(cp_inplot_upd);	tet->value(0);	tet->step(5);	tet->range( -90, 90);
+		phi = new Fl_Spinner(170, 190, 60, 25, mgl_gettext("and"));
+		phi->callback(cp_inplot_upd);	phi->value(0);	phi->step(5);	phi->range(-180,180);
+		ax = new Fl_Float_Input(315, 190, 60, 25, mgl_gettext("Aspect x/z"));
+		ax->callback(cp_inplot_upd);	ax->value("1");
+		ay = new Fl_Float_Input(400, 190, 60, 25, mgl_gettext("y/z"));
+		ay->callback(cp_inplot_upd);	ay->value("1");
 
 		new Fl_Box(0, 225, 90, 25, mgl_gettext("Reserve at:"));
-		rl = new Fl_Check_Button(90, 225, 75, 25, mgl_gettext("left"));		rl->callback(cp_inplot_upd);
-		rb = new Fl_Check_Button(145, 225, 75, 25, mgl_gettext("bottom"));	rb->callback(cp_inplot_upd);
-		rt = new Fl_Check_Button(225, 225, 75, 25, mgl_gettext("top"));		rt->callback(cp_inplot_upd);
-		rr = new Fl_Check_Button(285, 225, 75, 25, mgl_gettext("right"));	rr->callback(cp_inplot_upd);
+		rl = new Fl_Check_Button(90, 225, 75, 25, mgl_gettext("left"));
+		rl->callback(cp_inplot_upd);	rl->value(1);
+		rb = new Fl_Check_Button(145, 225, 75, 25, mgl_gettext("bottom"));
+		rb->callback(cp_inplot_upd);	rb->value(1);
+		rt = new Fl_Check_Button(225, 225, 75, 25, mgl_gettext("top"));
+		rt->callback(cp_inplot_upd);	rt->value(1);
+		rr = new Fl_Check_Button(285, 225, 75, 25, mgl_gettext("right"));
+		rr->callback(cp_inplot_upd);	rr->value(1);
 		rw = new Fl_Check_Button(360, 225, 100, 25, mgl_gettext("whole area"));	rw->callback(cp_inplot_upd);
-		title = new Fl_Input(50, 255, 350, 25, mgl_gettext("Title"));	title->callback(cp_inplot_upd);
-		o = new Fl_Button(400, 255, 60, 25, mgl_gettext("Style"));	// TODO
+		text = new Fl_Input(50, 255, 350, 25, mgl_gettext("Title"));	text->callback(cp_inplot_upd);
+		o = new Fl_Button(400, 255, 60, 25, mgl_gettext("Style"));	o->callback(style_dlg_cb,0);
 		res = new Fl_Output(50, 285, 410, 25, mgl_gettext("Result"));
 		gr = new Fl_MathGL(470, 130, 240, 180);	gr->box(FL_ENGRAVED_BOX);
+		mgl_set_size(gr->get_graph(),240,180);	gr->align(FL_ALIGN_LEFT);
 		o = new Fl_Button(545, 95, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(630, 95, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
 		o = new Fl_Button(630, 60, 75, 25, mgl_gettext("Refresh"));	o->callback(cp_inplot_upd);
 		w->set_modal();	w->end();
 	}
+	void init()	{	style_dlg.result.clear();	}
 	void update()
-	{}
+	{
+		std::string how, title, script;
+		if(rw->value())	// prepare space reservation
+			how="#";
+		else
+		{
+			if(rl->value())	how+='<';
+			if(rb->value())	how+='_';
+			if(rt->value())	how+='^';
+			if(rr->value())	how+='>';
+		}
+		char buf[128];	result.clear();
+		const char *s=text->value();
+		if(s && *s)	// prepare title
+		{
+			std::string fmt = style_dlg.result;
+			snprintf(buf,127,"title '%s'",s);	title = buf;
+			if(fmt.empty())	title += ':';
+			else	title += ' '+fmt+':';
+		}
+		if(k1->value())	// subplot
+		{
+			long n=mgl_int(n1->value()), m=mgl_int(m1->value()), k=mgl_int(i1->value());
+			i1->range(0, m*n-1);	// set to be sure if n or m are changed
+			snprintf(buf,127,"subplot %ld %ld %ld '%s' %g %g:", n,m,k, how.c_str(), x1->value(), y1->value());
+			result = buf+title;
+			double t=tet->value(), p=phi->value();
+			if(t!=0 || p!=0)
+			{	snprintf(buf,127,"rotate %g %g:", t,p);	result += buf;	}
+			for(long i=0;i<m*n;i++)	if(i!=k)
+			{	snprintf(buf,127,"subplot %ld %ld %ld:box 'c'\n", n,m,i);	script += buf;	}
+		}
+		else if(k2->value())	// multiplot
+		{
+			long n=mgl_int(n2->value()), m=mgl_int(m2->value()), k=mgl_int(i2->value());
+			long x=mgl_int(x2->value()), y=mgl_int(y2->value());
+			i2->range(0, m*n-1);	x2->range(0, n-1);	y2->range(0, m-1);	// set to be sure if n or m are changed
+			snprintf(buf,127,"multiplot %ld %ld %ld %ld %ld '%s':", n,m,k,x,y, how.c_str());
+			result = buf+title;
+			double t=tet->value(), p=phi->value();
+			if(t!=0 || p!=0)
+			{	snprintf(buf,127,"rotate %g %g:", t,p);	result += buf;	}
+			for(long i=0;i<m*n;i++)	if(i!=k)
+			{	snprintf(buf,127,"subplot %ld %ld %ld:box 'c'\n", n,m,i);	script += buf;	}
+		}
+		else if(k3->value())	// gridplot
+		{
+			long n=mgl_int(n3->value()), m=mgl_int(m3->value()), k=mgl_int(i3->value());
+			double d=d3->value();
+			i3->range(0, m*n-1);	// set to be sure if n or m are changed
+			snprintf(buf,127,"gridplot %ld %ld %ld %g:", n,m,k,d);
+			result = buf;
+			for(long i=0;i<m*n;i++)	if(i!=k)
+			{	snprintf(buf,127,"gridplot %ld %ld %ld %g:box 'c'\n", n,m,k,d);	script += buf;	}
+		}
+		else if(k4->value())	// columnplot
+		{
+			long n=mgl_int(n4->value()), k=mgl_int(i4->value());
+			double d=d4->value();
+			i4->range(0, n-1);	// set to be sure if n or m are changed
+			snprintf(buf,127,"columnplot %ld %ld %g:", n,k,d);	result = buf;
+			double t=tet->value(), p=phi->value();
+			std::string rot="";
+			if(t!=0 || p!=0)
+			{	snprintf(buf,127,"rotate %g %g:", t,p);	result += buf;	rot = buf;	}
+			for(long i=0;i<n;i++)	if(i!=k)
+			{	snprintf(buf,127,"columnplot %ld %ld %g:%sbox 'c'\n", n,k,d,rot.c_str());	script += buf;	}
+		}
+		else if(k5->value())	// stickplot
+		{
+			long n=mgl_int(n5->value()), k=mgl_int(i5->value());
+			i5->range(0, n-1);	// set to be sure if n or m are changed
+			double t=tet->value(), p=phi->value();
+			snprintf(buf,127,"stickplot %ld %ld %g %g:", n,k,t,p);	result = buf;
+			for(long i=0;i<n;i++)	if(i!=k)
+			{	snprintf(buf,127,"stickplot %ld %ld %g %g:box 'c'\n", n,k,t,p);	script += buf;	}
+		}
+		else if(k6->value())	// inplot
+		{
+			std::string sx1=xx1->value(), sx2=xx2->value(), sy1=yy1->value(), sy2=yy2->value();
+			if(!sx1.empty() && !sy1.empty() && !sx2.empty() && !sy2.empty())
+			{
+				snprintf(buf,127,"inplot %s %s %s %s:", sx1.c_str(), sx2.c_str(), sy1.c_str(), sy2.c_str());
+				result = buf;
+				double t=tet->value(), p=phi->value();
+				if(t!=0 || p!=0)	{	snprintf(buf,127,"rotate %g %g:", t,p);	result += buf;	}
+			}
+			script = "subplot 1 1 0:box 'c'\n";
+		}
+		double aspx = atof(ax->value()), aspy = atof(ay->value());
+		snprintf(buf,127,"aspect %g %g 1",aspx,aspy);
+		if(aspx!=0 && aspy!=0 && (aspx!=1 || aspy!=1))	result += buf;
+		script = "clf\n"+script+result+"\nbox\n";
+		res->value(result.c_str());
+
+		mglParse pr;
+		mgl_parse_text(gr->get_graph(), pr.Self(), script.c_str());
+		gr->update();
+	}
 	void cb_ok()
 	{
 		update();
 		if(e)	e->editor->insert(result.c_str());
+		hide();
 	}
 } inplot_dlg;
 //-----------------------------------------------------------------------------
@@ -1603,6 +1733,4 @@ void cb_only_inplot(Fl_Widget*,void *v)
 //-----------------------------------------------------------------------------
 void inplot_dlg_cb(Fl_Widget*,void *v)
 {	inplot_dlg.e = (ScriptWindow*)v;	inplot_dlg.show();	}
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

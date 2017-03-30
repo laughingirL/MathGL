@@ -185,14 +185,8 @@ class ScriptWindow : public Fl_Double_Window
 {
 public:
 	ScriptWindow(int w, int h, const char* t);
-	~ScriptWindow();
+	~ScriptWindow()	{}
 
-	Fl_Window	*replace_dlg;
-	Fl_Input	*replace_find;
-	Fl_Input	*replace_with;
-	Fl_Button	*replace_all;
-	Fl_Return_Button	*replace_next;
-	Fl_Button	*replace_cancel;
 	Fl_Text_Editor		*editor;
 	Fl_Menu_Bar	*menu;
 	Fl_Tabs *ltab, *rtab;
@@ -204,7 +198,6 @@ public:
 
 	void mem_init();
 	void mem_pressed(int n);
-	char		search[256];
 	Fl_MGLView	*graph;
 	Fl_MGL		*draw;
 };
@@ -226,12 +219,6 @@ void cb_dlg_cancel(Fl_Widget*, void*);
 void cb_dlg_ok(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
 // Editor window functions
-void find2_cb(Fl_Widget *, void *);
-void replall_cb(Fl_Widget *, void *);
-void replace2_cb(Fl_Widget *, void *);
-void replcan_cb(Fl_Widget *, void *);
-void replace_cb(Fl_Widget *, void *);
-void find_cb(Fl_Widget *, void *);
 void insert_cb(Fl_Widget *, void *);
 //-----------------------------------------------------------------------------
 void paste_cb(Fl_Widget *, void *);
@@ -294,6 +281,8 @@ void style_dlg_cb(Fl_Widget*, void*);
 void newcmd_dlg_cb(Fl_Widget*,void*);
 void setup_dlg_cb(Fl_Widget*,void *);
 void inplot_dlg_cb(Fl_Widget*,void*);
+void find_dlg_cb(Fl_Widget*,void*);
+void find_next_cb(Fl_Widget*,void*);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;
