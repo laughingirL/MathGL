@@ -19,6 +19,9 @@
 #include <locale.h>
 #include <getopt.h>
 #include "mgllab.h"
+#include <Fl/Fl_Spinner.H>
+#include <Fl/Fl_Output.H>
+#include <Fl/Fl_Select_Browser.H>
 //-----------------------------------------------------------------------------
 #ifndef MGL_DOC_DIR
 #ifdef WIN32
@@ -35,6 +38,7 @@ int exec_save;
 int highlight;
 int mouse_zoom;
 std::string docdir;
+std::string helpname;
 std::string fontname;
 int lang;
 int scheme;
@@ -51,7 +55,13 @@ void set_scheme_lang(int s, int l)
 	Fl::scheme(sch[s]);
 	scheme = s;	lang = l;
 	// TODO reload help file!!!
-	static const char *hlp[3]={"doc_en.html","doc_ru.html",	"doc_ru.html"};
+	static const char *hlp[3]={"mgl_en.html#","mgl_ru.html#", "mgl_ru.html#"};
+#ifdef WIN32
+	char sep = '\\';
+#else
+	char sep = '/';
+#endif
+	helpname = docdir+sep+hlp[l];
 }
 //-----------------------------------------------------------------------------
 void save_pref()
@@ -75,11 +85,9 @@ void save_pref()
 //-----------------------------------------------------------------------------
 void load_pref(ScriptWindow *w)
 {
-	static char *s;
+	static char *s=0;
 	pref.get("locale",lang,1);
 	pref.get("scheme",scheme,2);
-	set_scheme_lang(scheme,lang);
-	// doc should be freed before next call
 	pref.get("help_dir",s,MGL_DOC_DIR);
 	if(s)	{	docdir=s;	free(s);	}
 	pref.get("auto_exec",auto_exec,1);
@@ -98,6 +106,7 @@ void load_pref(ScriptWindow *w)
 	pref.get("fname3",s,"");	if(s)	{	lastfiles[2]=s;	free(s);	}
 	pref.get("fname4",s,"");	if(s)	{	lastfiles[3]=s;	free(s);	}
 	pref.get("fname5",s,"");	if(s)	{	lastfiles[4]=s;	free(s);	}
+	set_scheme_lang(scheme,lang);	// NOTE: must be after setting docdir
 	example_cb(NULL, w);	w->graph->parent()->show();
 }
 //-----------------------------------------------------------------------------
@@ -119,6 +128,8 @@ void set_title(Fl_Window* w)
 	title = title + " - mgllab";
 	w->label(title.c_str());
 }
+//-----------------------------------------------------------------------------
+void close_dlg_cb(Fl_Widget *, void *v)	{	((Fl_Window *)v)->hide();	}
 //-----------------------------------------------------------------------------
 void fname_cb(Fl_Widget*, void *v)
 {
@@ -260,13 +271,14 @@ Fl_Menu_Item menuitems[] = {
 	{"Setup", 0, 0, 0, FL_SUBMENU},
 		{"Properties", 0, prop_dlg_cb},
 		{"Set arguments", 0, args_dlg_cb},
+		{"Set animation", 0, animate_dlg_cb},
 		{"Plot setup", FL_META+'g', setup_dlg_cb, 0, FL_MENU_DIVIDER},
 		{"Calculator", FL_F+4, calc_dlg_cb},
 		// TODO{"Messages", FL_F+2, 0, 0, FL_MENU_TOGGLE},
 		{0},
 	{"Help", 0, 0, 0, FL_SUBMENU},
 		{"Help", FL_F+1, help_cb},
-		// TODO{"Hints", 0, 0},
+		{"Hints", 0, hint_dlg_cb},
 		{"About", 0, about_cb},
 		{0},
 	{0}
@@ -325,12 +337,6 @@ int main(int argc, char **argv)
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
 
-#ifdef USE_GETTEXT
-//	setlocale (LC_NUMERIC, "");
-//	bindtextdomain (PACKAGE, LOCALEDIR);
-//	textdomain (PACKAGE);
-#endif
-
 	textbuf = new Fl_Text_Buffer;
 	style_init();
 	ScriptWindow *w = new_view();
@@ -342,6 +348,8 @@ int main(int argc, char **argv)
 	w->menu->replace(ir+3, lastfiles[2].c_str());
 	w->menu->replace(ir+4, lastfiles[3].c_str());
 	w->menu->replace(ir+5, lastfiles[4].c_str());
+	int sh;	pref.get("show_hint",sh,1);
+	if(sh)	hint_dlg_cb(0,0);
 
 	char *buf = 0;
 	while(1)
@@ -374,4 +382,236 @@ int main(int argc, char **argv)
 	}
 	return Fl::run();
 }
+//-----------------------------------------------------------------------------
+void cb_filech(Fl_Widget*, void *v);
+class PropDlg : public GeneralDlg
+{
+	friend void cb_filech(Fl_Widget*, void *v);
+	Fl_Choice *fkind;
+	Fl_Spinner *fsize;
+	Fl_File_Input *help_path;
+	Fl_File_Input *font_path;
+	Fl_Check_Button *auto_exec_w;
+	Fl_Check_Button *exec_save_w;
+	Fl_Check_Button *complete_w;
+	Fl_Check_Button *highlight_w;
+	Fl_Check_Button *mouse_zoom_w;
+	Fl_Choice *lang_w;
+	Fl_Choice *scheme_w;
+public:
+	HMGL gr;
+	PropDlg()
+	{
+		Fl_Button *o;
+		w = new Fl_Double_Window(340, 365, mgl_gettext("Properties"));
+		w->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
+		fkind = new Fl_Choice(75, 10, 90, 25, mgl_gettext("Font kind"));
+		fkind->add("Helvetica");	fkind->add("Courier");	fkind->add("Times");
+		fsize = new Fl_Spinner(245, 10, 90, 25, mgl_gettext("Font size"));
+		help_path = new Fl_File_Input(5, 55, 305, 35, mgl_gettext("Path for help files"));
+		help_path->align(FL_ALIGN_TOP_LEFT);
+		o = new Fl_Button(310, 65, 25, 25, mgl_gettext("..."));	o->callback(cb_filech, 0);
+		font_path = new Fl_File_Input(5, 110, 305, 35, mgl_gettext("Path for MathGL font (without extension)"));
+		font_path->align(FL_ALIGN_TOP_LEFT);
+		o = new Fl_Button(310, 120, 25, 25, mgl_gettext("..."));	o->callback(cb_filech, (void *)1);
+		auto_exec_w = new Fl_Check_Button(5, 145, 330, 25, mgl_gettext("Execute script after loading"));
+		exec_save_w = new Fl_Check_Button(5, 170, 330, 25, mgl_gettext("Save file before redrawing"));
+		complete_w = new Fl_Check_Button(5, 195, 330, 25, mgl_gettext("Enable keywords completion"));
+		complete_w->deactivate();	// TODO
+		highlight_w = new Fl_Check_Button(5, 220, 330, 25, mgl_gettext("Highlight current object(s)"));
+		mouse_zoom_w = new Fl_Check_Button(5, 245, 330, 25, mgl_gettext("Enable mouse wheel for zooming"));
+		lang_w = new Fl_Choice(160, 275, 175, 25, mgl_gettext("Language for mgllab"));
+		lang_w->add("C.UTF8");	lang_w->add("ru_RU.utf8");	lang_w->add("ru_RU.cp1251");
+		scheme_w = new Fl_Choice(160, 305, 175, 25, mgl_gettext("Widget scheme"));
+		scheme_w->add("base");	scheme_w->add("gtk+");	scheme_w->add("plastic");	scheme_w->add("gleam");
+		o = new Fl_Button(85, 340, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(180, 340, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
+		w->set_modal();	w->end();
+	}
+	void init()
+	{
+		fkind->value(styletable[0].font/4);
+		fsize->value(styletable[0].size);
+		font_path->value(fontname.c_str());
+		help_path->value(docdir.c_str());
+		auto_exec_w->value(auto_exec);
+		exec_save_w->value(exec_save);
+		//		complete_w->value(complete_word);
+		highlight_w->value(highlight);
+		mouse_zoom_w->value(mouse_zoom);
+		lang_w->value(lang);
+		scheme_w->value(scheme);
+	}
+	void cb_ok()
+	{
+		set_style(fkind->value(),fsize->value());
+		auto_exec = auto_exec_w->value();
+		exec_save = exec_save_w->value();
+		highlight = highlight_w->value();
+		mouse_zoom = mouse_zoom_w->value();
+		docdir = help_path->value();
+		fontname = font_path->value();
+		if(e->graph->get_graph())
+			mgl_load_font(e->graph->get_graph(),fontname.c_str(),NULL);
+		set_scheme_lang(scheme_w->value(),lang_w->value());	// NOTE: must be after setting docdir
+		example_cb(NULL, e);	e->graph->parent()->show();
+		save_pref();	hide();
+	}
+} prop_dlg;
+//-----------------------------------------------------------------------------
+void cb_filech(Fl_Widget*, void *v)
+{
+	if(v)
+	{
+		char *s = fl_file_chooser(mgl_gettext("Font file name"), "MGL font files (*.vfm*)", prop_dlg.font_path->value(), 0);
+		if(s)
+		{	char *e = strstr(s,".vfm");	if(e)	*e=0;
+			prop_dlg.font_path->value(s);	}
+	}
+	else
+	{
+		char *s = fl_dir_chooser(mgl_gettext("Folder for help files"), prop_dlg.help_path->value(), 0);
+		if(s)	prop_dlg.help_path->value(s);
+	}
+}
+void prop_dlg_cb(Fl_Widget *, void *v)
+{	prop_dlg.e = (ScriptWindow *)v;	prop_dlg.show();	}
+//-----------------------------------------------------------------------------
+void cb_calc_key(Fl_Widget *, void *v);
+void cb_calc_ins(Fl_Widget *, void *);
+void cb_calc_prev(Fl_Widget *, void *);
+void cb_calc_edit(Fl_Widget *, void *);
+void cb_calc_kind(Fl_Widget *, void *);
+void cb_calc_func(Fl_Widget *, void *);
+class CalcDlg : public GeneralDlg
+{
+public:
+	Fl_Input *edit;
+	Fl_Output *output;
+	Fl_Browser *prev;
+	Fl_Choice *kind;
+	Fl_Choice *func;
+	CalcDlg()
+	{
+		Fl_Button *o;	Fl_Group* g, *gg;
+		w = new Fl_Double_Window(275, 275, mgl_gettext("Calculator"));
+		g = new Fl_Group(5, 5, 265, 25);
+		edit = new Fl_Input(5, 5, 240, 25);	//edit->callback(cb_calc_edit);
+		o = new Fl_Return_Button(245, 5, 25, 25, "@>");
+		o->callback(cb_calc_edit);	g->end();	g->resizable(edit);
+		g = new Fl_Group(5, 35, 265, 25);
+		output = new Fl_Output(55, 35, 120, 25, mgl_gettext("Result"));
+		o = new Fl_Button(180, 35, 90, 25, mgl_gettext("@-> to script"));
+		o->callback(cb_calc_ins);	g->end();	g->resizable(output);
+		prev = new Fl_Select_Browser(5, 80, 265, 70, mgl_gettext("Previous expressions"));
+		prev->align(FL_ALIGN_TOP_LEFT);	prev->callback(cb_calc_prev);
+		static int widths[] = { 200, 65, 0 };  // widths for each column
+		prev->column_widths(widths);	prev->column_char('\t');
+		gg = new Fl_Group(5, 155, 265, 115);
+			o = new Fl_Button(5, 155, 25, 25, mgl_gettext("7"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 155, 25, 25, mgl_gettext("8"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 155, 25, 25, mgl_gettext("9"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 155, 25, 25, mgl_gettext("+"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 155, 25, 25, mgl_gettext("pi"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 185, 25, 25, mgl_gettext("4"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 185, 25, 25, mgl_gettext("5"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 185, 25, 25, mgl_gettext("6"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 185, 25, 25, mgl_gettext("-"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 185, 25, 25, mgl_gettext("^"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 215, 25, 25, mgl_gettext("1"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 215, 25, 25, mgl_gettext("2"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 215, 25, 25, mgl_gettext("3"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 215, 25, 25, mgl_gettext("*"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 215, 25, 25, mgl_gettext("("));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 245, 25, 25, mgl_gettext("0"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 245, 25, 25, mgl_gettext("."));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 245, 25, 25, mgl_gettext("E"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 245, 25, 25, mgl_gettext("/"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 245, 25, 25, mgl_gettext(")"));	o->callback(cb_calc_key,o);
+
+			g = new Fl_Group(155, 175, 115, 95, mgl_gettext("Function"));
+			kind = new Fl_Choice(160, 179, 105, 25);	kind->callback(cb_calc_kind);
+			kind->add("Basic");	kind->add("Exp and log");	kind->add("Trigonometric");
+			kind->add("Hyperbolic");	kind->add("Bessel");	kind->add("Elliptic");
+			kind->add("Jacobi");	 kind->add("Airy and Gamma");
+			kind->add("Exp-integrals"); kind->add("Special");	kind->value(0);
+
+			func = new Fl_Choice(160, 209, 105, 25);
+			o = new Fl_Button(160, 239, 105, 25, mgl_gettext("Put function"));	o->callback(cb_calc_func);
+			g->end();	g->box(FL_DOWN_BOX);
+		gg->end();	gg->resizable(g);
+
+		w->end();	w->resizable(prev);
+	}
+	void eval()
+	{
+		const char *eq = edit->value();
+		mglData d = Parse->Calc(eq);
+		char res[64];	snprintf(res,63,"%g",d.a[0]);
+		output->value(res);	result = res;
+		char *buf = new char[strlen(res)+strlen(eq)+3];
+		sprintf(buf,"%s\t%s",eq,res);
+		prev->insert(0,buf);	delete []buf;
+	}
+	void set_kind()
+	{
+		int val = kind->value();	func->clear();
+		switch(val)
+		{
+		case 0:	// basic
+			func->add("abs()");		func->add("sign()");	func->add("step()");	func->add("sqrt()");
+			func->add("mod(,)");	func->add("arg(,)");	break;
+		case 1:	// exp and logarithms
+			func->add("exp()");		func->add("pow(,)");	func->add("ln()");		func->add("lg()");
+			func->add("log(,)");	break;
+		case 2:	// trigonometric
+			func->add("sin()");		func->add("cos()");		func->add("tan()");		func->add("sinc()");
+			func->add("asin()");	func->add("acos()");	func->add("atan()");	break;
+		case 3:	// hyperbolic
+			func->add("sinh()");	func->add("cosh()");	func->add("tanh()");	func->add("asinh()");
+			func->add("acosh()");	func->add("atanh()");	break;
+		case 4:	// bessel
+			func->add("bessel_j(,)");	func->add("bessel_y(,)");	func->add("bessel_i(,)");	func->add("bessel_k(,)");	break;
+		case 5:	// elliptic
+			func->add("elliptic_e(,)");	func->add("elliptic_f(,)");	func->add("elliptic_ec()");	func->add("elliptic_kc()");	break;
+		case 6:	// jacobi
+			func->add("sn(,)");		func->add("cn(,)");		func->add("dn(,)");		func->add("sc(,)");
+			func->add("dc(,)");		func->add("nc(,)");		func->add("cs(,)");		func->add("ds(,)");
+			func->add("ns(,)");		func->add("sd(,)");		func->add("cd(,)");		func->add("nd(,)");	break;
+		case 7:	// airy and gamma
+			func->add("airy_ai()");	func->add("airy_bi()");	func->add("airy_dai()");func->add("airy_dbi()");
+			func->add("gamma()");	func->add("psi()");		func->add("beta(,)");	break;
+		case 8:	// exp integrals
+			func->add("ci()");		func->add("si()");		func->add("ei()");		func->add("e1()");
+			func->add("e2()");		func->add("ei3()");	break;
+		case 9:	// special
+			func->add("erf()");		func->add("z()");		func->add("legendre(,)");	func->add("dilog()");
+			func->add("eta()");		func->add("zeta()");	func->add("w0()");		func->add("w1()");	break;
+		}
+//		func->value(0);
+	}
+} calc_dlg;
+//-----------------------------------------------------------------------------
+void cb_calc_key(Fl_Widget *, void *v)
+{	Fl_Button *o=(Fl_Button *)v;	calc_dlg.edit->insert(o->label());	}
+void cb_calc_ins(Fl_Widget *, void *)
+{	if(calc_dlg.e)	calc_dlg.e->editor->insert(calc_dlg.output->value());	}
+void cb_calc_prev(Fl_Widget *, void *)
+{
+	const char *s = calc_dlg.prev->text(calc_dlg.prev->value());
+	if(s && *s)
+	{
+		std::string ss(s);	size_t l=ss.length();
+		for(size_t i=0;i<l;i++)	if(ss[i]=='\t')	ss[i]=0;
+		calc_dlg.edit->value(ss.c_str());
+	}
+}
+void cb_calc_edit(Fl_Widget *, void *)	{	calc_dlg.eval();	}
+void cb_calc_kind(Fl_Widget *, void *)	{	calc_dlg.set_kind();	}
+void cb_calc_func(Fl_Widget *, void *)
+{	const char *s = calc_dlg.func->text();
+	if(s && *s)	calc_dlg.edit->insert(s);	}
+//-----------------------------------------------------------------------------
+void calc_dlg_cb(Fl_Widget *, void *v)
+{	calc_dlg.e = (ScriptWindow *)v;	calc_dlg.show();	}
 //-----------------------------------------------------------------------------

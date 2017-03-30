@@ -28,11 +28,7 @@ void help_cb(Fl_Widget*, void*v)
 	for(j=j0;!isspace(buf[j]) && buf[j]!='#' && buf[j]!=';' && j<31+j0;j++)
 		s[j-j0] = buf[j];
 	free(buf);
-#ifdef WIN32
-	static std::string str = docdir+"\\mgl_en.html#"+s;
-#else
-	static std::string str = docdir+"/mgl_en.html#"+s;
-#endif
+	static std::string str = helpname+s;
 	e->hd->load(str.c_str());
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
@@ -40,11 +36,7 @@ void help_cb(Fl_Widget*, void*v)
 void link_cb(Fl_Widget*, void*v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-#ifdef WIN32
-	static std::string str = docdir+"\\mgl_en.html#"+e->link_cmd->value();
-#else
-	static std::string str = docdir+"/mgl_en.html#"+e->link_cmd->value();
-#endif
+	static std::string str = helpname+e->link_cmd->value();
 	e->hd->load(str.c_str());
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
@@ -52,11 +44,7 @@ void link_cb(Fl_Widget*, void*v)
 void example_cb(Fl_Widget*, void*v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-#ifdef WIN32
-	static std::string str = docdir+"\\mgl_en.html#Examples";
-#else
-	static std::string str = docdir+"/mgl_en.html#Examples";
-#endif
+	static std::string str = helpname+"Examples";
 	e->hd->load(str.c_str());	e->rtab->value(e->ghelp);
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
@@ -102,13 +90,10 @@ Fl_Widget *add_help(ScriptWindow *w)
 
 	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(mgl_gettext("MGL samples and hints"));
 	o->image(new Fl_Pixmap(help_faq_xpm));	o->callback(example_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(180, 1, 25, 25);	o->tooltip(mgl_gettext("Increase font size"));
 	o->image(new Fl_Pixmap(zoom_in_xpm));	o->callback(help_in_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(205, 1, 25, 25);	o->tooltip(mgl_gettext("Decrease font size"));
 	o->image(new Fl_Pixmap(zoom_out_xpm));	o->callback(help_out_cb,w);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	g->end();	g->resizable(0);
 
@@ -137,10 +122,8 @@ Fl_Widget *add_mem(ScriptWindow *w)
 	static int widths[] = {220,205,0};
 	Fl_Button *o;
 	Fl_Box *b;
-//	wnd = new Fl_Double_Window(335, 405, mgl_gettext("Data browser"));
 	Fl_Window *wnd = new Fl_Window(300,30,630,430,0);
 
-//	Fl_Group *g = new Fl_Group(10,10,610,395);
 	b = new Fl_Box(0, 10, 630, 25, mgl_gettext("Existed data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
 	b = new Fl_Box(0, 35, 220, 25, mgl_gettext("name"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
@@ -152,7 +135,6 @@ Fl_Widget *add_mem(ScriptWindow *w)
 	w->var = new Fl_Select_Browser(0, 60, 630, 335);	w->var->column_char('\t');
 	w->var->align(FL_ALIGN_TOP);	w->var->column_widths(widths);
 	w->var->tooltip(mgl_gettext("List of available data."));
-//	g->end();
 
 	o = new Fl_Button(10, 400, 95, 25, mgl_gettext("Edit"));	o->callback(mem_dlg_cb0,w);
 	o->tooltip(mgl_gettext("Open table with selected data for editing."));
@@ -208,9 +190,10 @@ void ScriptWindow::mem_pressed(int kind)
 	}
 	else if(kind==1)
 	{
-		if(v->GetNz()>1)		snprintf(res,128,"box\nsurf3 %ls\n",v->s.c_str());
-		else if(v->GetNy()>1)	snprintf(res,128,"box\nsurf %ls\n",v->s.c_str());
-		else				snprintf(res,128,"box\nplot %ls\n",v->s.c_str());
+		const wchar_t *s=v->s.c_str();
+		if(v->GetNz()>1)		snprintf(res,128,"crange %ls:rotate 40 60:box:surf3 %ls\n", s,s);
+		else if(v->GetNy()>1)	snprintf(res,128,"zrange %ls:rotate 40 60:box:surf %ls\n", s,s);
+		else				snprintf(res,128,"yrange %ls:box:plot %ls\n", s,s);
 		textbuf->text(res);
 	}
 	else if(kind==2)
@@ -219,7 +202,7 @@ void ScriptWindow::mem_pressed(int kind)
 	{
 		const char *name = fl_input(mgl_gettext("Enter name for new variable"),"dat");
 		if(!name)	return;
-		v = Parse->AddVar(name);	
+		v = Parse->AddVar(name);
 
 		ltab->begin();
 		Fl_Group *gg = new Fl_Group(0,30,300,430);
@@ -230,12 +213,72 @@ void ScriptWindow::mem_pressed(int kind)
 	mem_init();
 }
 //-----------------------------------------------------------------------------
-void variables_cb(Fl_Widget *, void *v)
+const char *hints[] = {
+	mgl_gettext("You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."),
+	mgl_gettext("You can rotate/shift/zoom whole plot by mouse. Just press 'Rotate' toolbutton, click image and hold a mouse button: left button for rotation, right button for zoom/perspective, middle button for shift."),
+	mgl_gettext("You may quickly draw the data from file. Just use: udav 'filename.dat' in command line."),
+	mgl_gettext("You can copy the current image to clipboard by pressing Ctrl-Shift-C. Later you can paste it directly into yours document or presentation."),
+	mgl_gettext("You can export image into a set of format (EPS, SVG, PNG, JPEG) by pressing right mouse button inside image and selecting 'Export as ...'."),
+	mgl_gettext("You can setup colors for script highlighting in Property dialog. Just select menu item 'Settings/Properties'."),
+	mgl_gettext("You can save the parameter of animation inside MGL script by using comment started from '##a ' or '##c ' for loops."),
+	mgl_gettext("New drawing never clears things drawn already. For example, you can make a surface with contour lines by calling commands 'surf' and 'cont' one after another (in any order). "),
+	mgl_gettext("You can put several plots in the same image by help of commands 'subplot' or 'inplot'."),
+	mgl_gettext("All indexes (of data arrays, subplots and so on) are always start from 0."),
+	mgl_gettext("You can edit MGL file in any text editor. Also you can run it in console by help of commands: mglconv, mglview."),
+	mgl_gettext("You can use command 'once on|off' for marking the block which should be executed only once. For example, this can be the block of large data reading/creating/handling. Press F9 (or menu item 'Graphics/Reload') to re-execute this block."),
+	mgl_gettext("You can use command 'stop' for terminating script parsing. It is useful if you don't want to execute a part of script."),
+	mgl_gettext("You can type arbitrary expression as input argument for data or number. In last case (for numbers), the first value of data array is used."),
+	mgl_gettext("There is powerful calculator with a lot of special functions. You can use buttons or keyboard to type the expression. Also you can use existed variables in the expression."),
+	mgl_gettext("The calculator can help you to put complex expression in the script. Just type the expression (which may depend on coordinates x,y,z and so on) and put it into the script."),
+	mgl_gettext("You can easily insert file or folder names, last fitted formula or numerical value of selection by using menu Edit|Insert."),
+	mgl_gettext("The special dialog (Edit|Insert|New Command) help you select the command, fill its arguments and put it into the script."),
+	mgl_gettext("You can put several plotting commands in the same line or in separate function, for highlighting all of them simultaneously."),
+	NULL
+};
+//-----------------------------------------------------------------------------
+void cb_hint_prev(Fl_Widget*,void*);
+void cb_hint_next(Fl_Widget*,void*);
+class HintDlg : public GeneralDlg
 {
-/*	MemDlg *s = &mem_dlg;
-	s->wnd->set_modal();
-	s->init();
-	s->wnd->show();
-	while(s->wnd->shown())	Fl::wait();*/
-}
+	Fl_Help_View *hint;
+	Fl_Check_Button *start;
+	int cur;
+public:
+	HintDlg()
+	{
+		Fl_Button *o;
+		w = new Fl_Double_Window(280, 265);	cur=0;
+		hint = new Fl_Help_View(10, 10, 260, 185);
+		hint->value(hints[0]);
+		start = new Fl_Check_Button(10, 200, 260, 25, mgl_gettext("Show hint on startup"));
+		o = new Fl_Button(10, 230, 80, 25, mgl_gettext("@<-  Prev"));
+		o->callback(cb_hint_prev);
+		o = new Fl_Button(100, 230, 80, 25, mgl_gettext("Next @->"));
+		o->callback(cb_hint_next);
+		o = new Fl_Return_Button(190, 230, 80, 25, mgl_gettext("Close"));
+		o->callback(cb_dlg_ok,this);
+		w->end();
+	}
+	void init()
+	{	int sh;	pref.get("show_hint",sh,1);	start->value(sh);	}
+	void cb_ok()
+	{	pref.set("show_hint",start->value());	hide();	}
+	void prev()
+	{
+		int n=0;	while(hints[n])	n++;
+		cur = cur>0?cur-1:n-1;
+		hint->value(hints[cur]);
+	}
+	void next()
+	{
+		int n=0;	while(hints[n])	n++;
+		cur = cur<n-1?cur+1:0;
+		hint->value(hints[cur]);
+	}
+} hint_dlg;
+//-----------------------------------------------------------------------------
+void cb_hint_prev(Fl_Widget*,void*)	{	hint_dlg.prev();	}
+void cb_hint_next(Fl_Widget*,void*)	{	hint_dlg.next();	}
+//-----------------------------------------------------------------------------
+void hint_dlg_cb(Fl_Widget*,void *)	{	hint_dlg.show();	}
 //-----------------------------------------------------------------------------

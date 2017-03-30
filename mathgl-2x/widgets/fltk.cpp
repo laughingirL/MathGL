@@ -114,7 +114,7 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widge
 	gr = new mglCanvas;
 	tet=phi=x1=y1=0;	x2=y2=1;
 	zoom = rotate = handle_keys = false;
-	flag=x0=y0=xe=ye=0;
+	flag=x0=y0=xe=ye=0;	show_warn=true;
 	tet_val = phi_val = 0;
 	draw_par = 0;	draw_func = 0;	draw_cl = 0;
 }
@@ -160,7 +160,7 @@ void Fl_MathGL::update()
 	Fl::lock();
 	if(draw_func || draw_cl)
 	{
-		mgl_reset_frames(gr);
+		mgl_reset_frames(gr);	mgl_set_warn(gr,0,"");
 		if(mgl_get_flag(gr,MGL_CLF_ON_UPD))	mgl_set_def_param(gr);
 		mgl_set_alpha(gr,flag&1);	mgl_set_light(gr,flag&2);
 		if(tet_val)	tet = tet_val->value();
@@ -174,7 +174,7 @@ void Fl_MathGL::update()
 		if(mgl_is_frames(gr))	mgl_end_frame(gr);
 		setlocale(LC_NUMERIC, "");
 		const char *buf = mgl_get_mess(gr);
-		if(*buf)	fl_message("%s",buf);
+		if(show_warn && *buf)	fl_message("%s",buf);
 	}
 	else if(mgl_get_num_frame(gr)>0)
 	{
@@ -836,9 +836,7 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	if(Wnd)	{	Wnd->label(title);	Wnd->show();	return;	}
 
 	Wnd = new Fl_Double_Window(830,660,title);
-
 	mgl = new Fl_MGLView(0,30,830,630);		mgl->par = this;
-
 	mgl->menu = new Fl_Menu_Bar(0, 0, 830, 30);
 	mgl_makemenu_fltk(mgl->menu, mgl);
 

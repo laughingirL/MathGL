@@ -55,7 +55,7 @@ class Fl_MGL;
 //-----------------------------------------------------------------------------
 extern Fl_Preferences pref;
 extern Fl_Text_Display::Style_Table_Entry styletable[9];
-extern int changed;	///< flag of script is changed or not
+extern int changed;		///< flag of script is changed or not
 extern std::string filename;	///< Current filename
 extern std::string lastfiles[5];///< Last opened files
 extern std::string search;		///< Text to search
@@ -65,18 +65,18 @@ extern int auto_exec;	///< Enable auto execution
 extern int exec_save;	///< Save before running
 extern int highlight;	///< Highlight current line
 extern int mouse_zoom;	///< Use mouse wheel for zooming
-extern std::string docdir;	///< Path to help files
-extern std::string	fontname;	///< Path to font files
-extern int lang;	///< Locale for script and help files
-extern int scheme;	///< FLTK scheme
+extern std::string helpname;	///< Path to help files
+extern std::string fontname;	///< Path to font files
+extern int lang;		///< Locale for script and help files
+extern int scheme;		///< FLTK scheme
 extern int font_kind;	///< Editor font kind
 extern int font_size;	///< Editor font size
 //-----------------------------------------------------------------------------
 void set_scheme_lang(int s, int l);		///< Set FLTK scheme and locale
 void set_style(int fkind, int fsize);	///< Change the style of highlight
-void style_init();	///< Initialize the style buffer
-void save_pref();	///< Apply and save preferences
-void load_pref();	///< Load preferences
+void style_init();		///< Initialize the style buffer
+void save_pref();		///< Apply and save preferences
+void load_pref();		///< Load preferences
 void add_filename(const char *fname);	///< Add filename to lastfiles
 //-----------------------------------------------------------------------------
 class Fl_Data_Table : public Fl_Table
@@ -104,57 +104,25 @@ public:
     inline int cols() { return Fl_Table::cols(); }
 };
 //-----------------------------------------------------------------------------
-struct AnimateDlg
+struct Fl_MGL : public mglDraw
 {
-	friend void animate_dlg_cb(Fl_Widget *, void *v);
-	friend void animate_rad_cb(Fl_Widget *, void *v);
-	friend void fill_animate(const char *text);
-	friend void animate_put_cb(Fl_Widget *, void *);
-public:
-	Fl_Window* wnd;
-	int OK;
-	AnimateDlg()	{	memset(this,0,sizeof(AnimateDlg));	create_dlg();	}
-	~AnimateDlg()	{	delete wnd;	}
-	void FillResult(Fl_MGL* e);
-protected:
-	bool swap;
-	Fl_Round_Button *rt, *rv;
-	Fl_Multiline_Input *txt;
-	Fl_Float_Input *x0, *x1, *dx, *dt;
-	Fl_Check_Button *save;
-	void create_dlg();
-};
-//-----------------------------------------------------------------------------
-class Fl_MGL : public mglDraw
-{
-friend class AnimateDlg;
-public:
 	Fl_MGLView *gr;
 	Fl_Widget *status;		///< StatusBar for mouse coordinates
-	const char *AnimBuf;		///< buffer for animation
-	const char **AnimS0;
-	int AnimNum;
-	mreal AnimDelay;
+	std::vector<std::string> anim;
+	mreal delay;
 	std::string script;		///< script with settings
+	size_t cur;				///< current frame
+	double a1, a2, da;		///< animation loop parameters
 
 	Fl_MGL(Fl_MGLView *GR);
 	~Fl_MGL();
 
-	/// Drawing itself
-	int Draw(mglGraph *);
-	/// Update (redraw) plot
-	void update();
-	/// Show next frame
-	void next_frame();
-	/// Show prev frame
-	void prev_frame();
-	/// Get pointer to grapher
-	HMGL get_graph()	{	return gr->FMGL->get_graph();	}
-
-protected:
-	char *Args[1000], *ArgBuf;
-	int NArgs, ArgCur;
-
+	int Draw(mglGraph *);	///< Drawing itself
+	void update();			///< Update (redraw) plot
+	void next_frame();		///< Show next frame
+	void prev_frame();		///< Show prev frame
+	HMGL get_graph()		///< Get pointer to grapher
+	{	return gr->FMGL->get_graph();	}
 };
 //-----------------------------------------------------------------------------
 struct TableWindow : public Fl_Window
@@ -214,9 +182,11 @@ public:
 	virtual void init()	{	result.clear();	}
 	void show()	{	init();	w->show();	}
 	void hide()	{	w->hide();	}
+	bool wait()	{	while(w->shown())	Fl::wait();	return result.empty();	}
 };
 void cb_dlg_cancel(Fl_Widget*, void*);
 void cb_dlg_ok(Fl_Widget*, void*);
+void cb_dlg_only(Fl_Widget*,void *v);
 //-----------------------------------------------------------------------------
 // Editor window functions
 void insert_cb(Fl_Widget *, void *);
@@ -239,13 +209,6 @@ void save_cb(Fl_Widget*, void*);
 void saveas_cb(Fl_Widget*, void*);
 void help_cb(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
-// Graphical callback functions
-void setup_cb(Fl_Widget *, void *);
-void style_cb(Fl_Widget *, void *);
-void argument_cb(Fl_Widget *, void *);
-void variables_cb(Fl_Widget *, void *);
-void settings_cb(Fl_Widget *, void *);
-//-----------------------------------------------------------------------------
 // Dialogs callback functions
 void close_dlg_cb(Fl_Widget *w, void *);
 void font_cb(Fl_Widget *, void *v);
@@ -262,8 +225,10 @@ Fl_Widget *add_mem(ScriptWindow *w);
 void set_title(Fl_Window* w);
 //-----------------------------------------------------------------------------
 // Animation
-void animate_cb(Fl_Widget *, void *v);
-void fill_animate(const char *text);
+bool animate_cb(Fl_MGL *dr);
+void animate_dlg_cb(Fl_Widget *, void *v);
+void fill_animate(const char *text, Fl_MGL *dr);
+void argument_set(int id, const char *val);
 //-----------------------------------------------------------------------------
 Fl_Widget *add_help(ScriptWindow *w);
 void help_cb(Fl_Widget*, void*v);
@@ -283,6 +248,7 @@ void setup_dlg_cb(Fl_Widget*,void *);
 void inplot_dlg_cb(Fl_Widget*,void*);
 void find_dlg_cb(Fl_Widget*,void*);
 void find_next_cb(Fl_Widget*,void*);
+void hint_dlg_cb(Fl_Widget*,void*);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

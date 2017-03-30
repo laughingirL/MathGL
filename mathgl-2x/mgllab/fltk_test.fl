@@ -2170,11 +2170,10 @@ Function {make_setup()} {} {
   }
 } 
 
-Function {make_inplot()} {open
-} {
+Function {make_inplot()} {} {
   Fl_Window {} {
-    label {Add inplot} open
-    xywh {378 759 715 315} type Double modal visible
+    label {Add inplot}
+    xywh {378 449 715 315} type Double hide modal
   } {
     Fl_Round_Button k1 {
       label SubPlot
@@ -2356,18 +2355,18 @@ Function {make_inplot()} {open
       xywh {425 35 70 25}
     }
     Fl_Spinner {} {
-      label {y-size} selected
+      label {y-size}
       xywh {550 35 70 25}
     }
   }
 } 
 
 Function {make_find()} {
-  comment {Dialog to Find/Replace text} open
+  comment {Dialog to Find/Replace text}
 } {
   Fl_Window find_dlg {
-    label {Find/Replace} open
-    xywh {88 605 375 130} type Double modal visible
+    label {Find/Replace}
+    xywh {88 605 375 130} type Double hide modal
   } {
     Fl_Input find_w {
       label {Find what:}
@@ -2403,4 +2402,11 @@ Function {make_find()} {
       xywh {275 100 95 25}
     }
   }
+} 
+
+Function {make_animate()} {open
+} {
+  Fl_Window {} {open selected
+    xywh {360 218 405 405} type Double hide
+  } {}
 } 

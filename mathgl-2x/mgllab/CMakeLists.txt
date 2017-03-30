@@ -21,7 +21,7 @@
 # endif(OPENMP_FOUND)
 #
 # include_directories(${FLTK_INCLUDE_DIR})
-# set(mgl_lab_src animate.cpp editor.cpp help.cpp mathgl.cpp data.cpp grid.cpp dialogs.cpp mgllab.cpp option.cpp table.cpp image.cpp)
+# set(mgl_lab_src editor.cpp help.cpp mathgl.cpp grid.cpp dialogs.cpp mgllab.cpp option.cpp table.cpp image.cpp)
 # set(mgl_lab_hdr mgllab.h image.h)
 # add_executable(mgllab ${mgl_lab_src} ${mgl_lab_hdr})
 # target_link_libraries(mgllab ${MATHGL2_FLTK_LIBRARY} ${MATHGL2_LIBRARY} ${FLTK_LIBRARIES})
@@ -32,7 +32,7 @@
 if(MGL_HAVE_FLTK)
 	configure_file(${MathGL2_SOURCE_DIR}/mgllab/mgl.xml.in ${MathGL2_BINARY_DIR}/mgllab/mgl.xml)
 	include_directories(${FLTK_INCLUDE_DIR})
-	set(mgllab_src animate.cpp editor.cpp help.cpp mathgl.cpp data.cpp grid.cpp dialogs.cpp mgllab.cpp table.cpp image.cpp)
+	set(mgllab_src editor.cpp help.cpp mathgl.cpp grid.cpp dialogs.cpp mgllab.cpp table.cpp image.cpp)
 	set(mgllab_hdr mgllab.h image.h)
 	if(WIN32)
 		set(mgllab_src ${udav_src} mgllab.rc)

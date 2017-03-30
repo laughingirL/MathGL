@@ -24,7 +24,6 @@
 int changed = 0;
 std::string filename;
 Fl_Text_Buffer *textbuf = 0;
-void data_file(const char *v);
 //-----------------------------------------------------------------------------
 // Syntax highlighting
 Fl_Text_Buffer	 *stylebuf = 0;
@@ -272,6 +271,38 @@ int check_save(void)
   return (r==2) ? 1 : 0;
 }
 //-----------------------------------------------------------------------------
+void data_file(const char *fn)
+{
+	static int num=0;
+	static char name[32], res[256];
+	snprintf(name,32,"mgl_%d",num);	num++;
+	mglDataA *v = Parse->AddVar(name);
+	mglData *d = dynamic_cast<mglData*>(v);
+	mglDataC *c = dynamic_cast<mglDataC*>(v);
+	if(d)
+	{
+		d->Read(fn);
+		if(d->nz>1)
+			snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nbox\nsurf3 %s\n", name, fn, name, name);
+		else if(d->ny>1)
+			snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nzrange %s\nbox\nsurf %s\n", name, fn, name, name, name);
+		else
+			snprintf(res,256,"#read %s '%s'\nyrange %s\nbox\nplot %s\n", name, fn, name, name);
+		textbuf->text(res);
+	}
+	else if(c)
+	{
+		c->Read(fn);
+		if(c->nz>1)
+			snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nbox\nsurf3 %s\n", name, fn, name, name);
+		else if(c->ny>1)
+			snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nzrange %s\nbox\nsurf %s\n", name, fn, name, name, name);
+		else
+			snprintf(res,256,"#read %s '%s'\nyrange %s\nbox\nplot %s\n", name, fn, name, name);
+		textbuf->text(res);
+	}
+}
+//-----------------------------------------------------------------------------
 int loading = 0;
 void load_file(const char *newfile, int ipos, ScriptWindow *e)
 {
@@ -298,7 +329,7 @@ void load_file(const char *newfile, int ipos, ScriptWindow *e)
 		for(i=0;i<l;i++)	if(t[i]=='\r')	t[i]=' ';
 		textbuf->text(t);
 #endif
-		fill_animate(t);	free(t);
+		fill_animate(t, e->draw);	free(t);
 
 		if (r)
 			fl_alert(mgl_gettext("Error reading from file \'%s\':\n%s."), newfile, strerror(errno));
@@ -506,5 +537,40 @@ void find_next_cb(Fl_Widget*,void *v)
 	const char *s = find_dlg.to_find();
 	if(s && *s)	find_dlg.find_next();
 	else	find_dlg.show();
+}
+//-----------------------------------------------------------------------------
+void ins_fname_cb(Fl_Widget *, void *v)
+{
+	static std::string prev;
+	ScriptWindow* e = (ScriptWindow*)v;
+	char *s = fl_file_chooser(mgl_gettext("Select file name"), "DAT files (*.{dat,csv})\tHDF files (*.{hdf,h5})\tAll files (*.*)", prev.c_str(), 0);
+	if(s)
+	{
+		std::string ss=prev=s;	ss = '\''+ss+'\'';
+		if(e)	e->editor->insert(ss.c_str());
+		else	cb_args_set(ss.c_str());
+	}
+}
+//-----------------------------------------------------------------------------
+void ins_path_cb(Fl_Widget *, void *v)
+{
+	static std::string prev;
+	ScriptWindow* e = (ScriptWindow*)v;
+	char *s = fl_dir_chooser(mgl_gettext("Select folder name"), prev.c_str(), 0);
+	if(s)
+	{
+		std::string ss=prev=s;	ss = '\''+ss+'\'';
+		if(e)	e->editor->insert(ss.c_str());
+		else	cb_args_set(ss.c_str());
+	}
+}
+//-----------------------------------------------------------------------------
+void ins_fits_cb(Fl_Widget *, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	HMGL gr = e->graph->get_graph();
+	std::string ss=mgl_get_fit(gr);
+	if(ss.empty())	fl_alert(mgl_gettext("There is no fitted formula!"));
+	else	{	ss = '\''+ss+'\'';	e->editor->insert(ss.c_str());	}
 }
 //-----------------------------------------------------------------------------
