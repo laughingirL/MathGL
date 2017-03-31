@@ -274,7 +274,7 @@ Fl_Menu_Item menuitems[] = {
 		{"Set animation", 0, animate_dlg_cb},
 		{"Plot setup", FL_META+'g', setup_dlg_cb, 0, FL_MENU_DIVIDER},
 		{"Calculator", FL_F+4, calc_dlg_cb},
-		// TODO{"Messages", FL_F+2, 0, 0, FL_MENU_TOGGLE},
+		{"Messages", FL_F+2, message_cb, 0, FL_MENU_TOGGLE},
 		{0},
 	{"Help", 0, 0, 0, FL_SUBMENU},
 		{"Help", FL_F+1, help_cb},
@@ -314,12 +314,11 @@ ScriptWindow *new_view()
 	add_mem(w);		gg->end();
 	tt->end();
 
-	w->status = new Fl_Box(0,485,930,25,"Ready");
+	w->status = new Fl_Box(0,485,930,25,mgl_gettext("Ready"));
 	w->status->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 	w->status->color(FL_BACKGROUND_COLOR);
 	w->status->box(FL_DOWN_BOX);
 	w->draw = new Fl_MGL(w->graph);
-	w->draw->status = w->status;
 	mgl_makemenu_fltk(w->menu, w->graph);
 
 	t->end();	w->end();	w->resizable(t);

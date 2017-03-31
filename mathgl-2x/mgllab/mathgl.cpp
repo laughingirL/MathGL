@@ -19,8 +19,6 @@
 //-----------------------------------------------------------------------------
 mglParse *Parse=0;
 //-----------------------------------------------------------------------------
-void udav_error(const char *Message, void *v)
-{	((Fl_MGL*)v)->status->label(Message);	}
 mreal udav_delay(void *v)
 {	return ((Fl_MGL*)v)->delay;	}
 void udav_reload(void *v)
@@ -69,7 +67,8 @@ int Fl_MGL::Draw(mglGraph *gr)
 		Parse->Execute(gr,text);
 		free(text);
 	}
-	status->label(gr->Message());
+	const char *s = gr->Message();
+	if(s)	message_set(s);
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -94,7 +93,6 @@ void add_suffix(char *fname, const char *ext)
 	if(n>4 && fname[n-4]=='.')
 	{	fname[n-3]=ext[0];	fname[n-2]=ext[1];	fname[n-1]=ext[2];	}
 	else	{	strcat(fname,".");	strcat(fname,ext);	}
-
 }
 //-----------------------------------------------------------------------------
 class ArgsDlg : public GeneralDlg
@@ -166,14 +164,14 @@ public:
 		x0 = new Fl_Float_Input(220, 80, 105, 25, mgl_gettext("from"));			x0->align(FL_ALIGN_TOP_LEFT);
 		x1 = new Fl_Float_Input(220, 130, 105, 25, mgl_gettext("to"));			x1->align(FL_ALIGN_TOP_LEFT);
 		dx = new Fl_Float_Input(220, 180, 105, 25, mgl_gettext("with step"));	dx->align(FL_ALIGN_TOP_LEFT);
-		
+
 		Fl_Button *o;
 		o = new Fl_Button(230, 215, 80, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel, this);
 		o = new Fl_Return_Button(230, 250, 80, 25, mgl_gettext("OK"));o->callback(cb_dlg_ok, this);
 		save = new Fl_Check_Button(220, 285, 105, 25, mgl_gettext("save slides"));
 		save->tooltip(mgl_gettext("Keep slides in memory (faster animation but require more memory)"));
 		save->down_box(FL_DOWN_BOX);	save->deactivate();
-		
+
 		o = new Fl_Button(10, 315, 100, 25, mgl_gettext("Put to script"));	o->callback(cb_anim_put,w);
 		dt = new Fl_Float_Input(220, 315, 105, 25, mgl_gettext("Delay (in sec)"));//	dx->align(FL_ALIGN_TOP_LEFT);
 		w->end();
@@ -234,7 +232,7 @@ public:
 			}
 		}
 		else	fl_message(mgl_gettext("No selection. So nothing to do"));
-		
+
 	}
 	void into_script()
 	{
@@ -320,4 +318,85 @@ void fill_animate(const char *text, Fl_MGL *dr)
 		str = strstr(str, "##a");
 	}
 }
+//-----------------------------------------------------------------------------
+Fl_Text_Buffer *sbuf = 0;
+Fl_Text_Display::Style_Table_Entry stylemess[2] = {	// Style table
+	{ FL_BLACK,		FL_COURIER,		14, 0 },		// A - Plain
+	{ FL_RED,		FL_COURIER,		14, 0 } };		// B - Strings
+void mess_parse(const char *text, char *style, int /*length*/)
+{
+	size_t n=strlen(text);
+	// Style letters: A - Plain; B - Error
+	for(size_t i=0;i<n;i++)	style[i] = 'A';
+	const char *l1=text, *l2=strchr(l1, '\n');
+	while(l1)
+	{
+		const char *p = strstr(l1,"in line");
+		if(p && (p-l1)<(l2-l1))
+			for(size_t i=(l1-text);i<(l2-text);i++)	style[i]='B';
+		l1=l2;	l2=strchr(l1, '\n');
+	}
+}
+//-----------------------------------------------------------------------------
+void mess_update(int pos, int nInserted, int nDeleted, int, const char *, void *cbArg)
+{
+	long	start, end;	// Start and end of text
+	char last, *style, *text;		// Text data
+	if (nInserted == 0 && nDeleted == 0) {	sbuf->unselect();	return;  }
+	if (nInserted > 0)
+	{
+		style = new char[nInserted + 1];
+		memset(style, 'A', nInserted);
+		style[nInserted] = '\0';
+		sbuf->replace(pos, pos + nDeleted, style);
+		delete[] style;
+	}
+	else	sbuf->remove(pos, pos + nDeleted);
+	sbuf->select(pos, pos + nInserted - nDeleted);
+	start = textbuf->line_start(pos);
+	end   = textbuf->line_end(pos + nInserted);
+	text  = textbuf->text_range(start, end);
+	style = sbuf->text_range(start, end);
+	if (start==end)	last = 0;
+	else	last = style[end-start-1];
+	mess_parse(text, style, end - start);
+	sbuf->replace(start, end, style);
+	((Fl_Text_Editor *)cbArg)->redisplay_range(start, end);
+
+	if (start==end || last != style[end-start-1])
+	{
+		// Either the user deleted some text, or the last character on
+		// the line changed styles, so reparse the remainder of the buffer...
+		free(text);	free(style);
+		end   = textbuf->length();
+		text  = textbuf->text_range(start, end);
+		style = sbuf->text_range(start, end);
+		mess_parse(text, style, end - start);
+		sbuf->replace(start, end, style);
+		((Fl_Text_Editor *)cbArg)->redisplay_range(start, end);
+	}
+	free(text);	free(style);
+}
+//-----------------------------------------------------------------------------
+class MessDlg : public GeneralDlg
+{
+	Fl_Text_Display *mess;
+	Fl_Text_Buffer *buf;
+public:
+	MessDlg()
+	{
+		buf = new Fl_Text_Buffer;
+		sbuf = new Fl_Text_Buffer;
+		w = new Fl_Double_Window(485, 195, mgl_gettext("MGL messages"));
+		mess = new Fl_Text_Display(0, 5, 485, 190);	mess->buffer(buf);
+		w->end();
+		buf->add_modify_callback(mess_update, mess);
+		buf->add_modify_callback(changed_cb, w);
+		buf->call_modify_callbacks();
+	}
+	void set(const char *s)	{	buf->text(s);	show();	}
+} mess_wnd;
+//-----------------------------------------------------------------------------
+void message_cb(Fl_Widget*,void*)	{	mess_wnd.show();	}
+void message_set(const char *s)		{	/*mess_wnd.set(s);*/	}
 //-----------------------------------------------------------------------------

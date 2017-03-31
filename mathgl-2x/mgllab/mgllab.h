@@ -46,6 +46,7 @@
 #include <Fl/Fl_Round_Button.H>
 #include <Fl/Fl_Float_Input.H>
 #include <Fl/Fl_Multiline_Input.H>
+#include <Fl/Fl_Multiline_Output.H>
 //-----------------------------------------------------------------------------
 #include "mgl2/Fl_MathGL.h"
 //-----------------------------------------------------------------------------
@@ -54,7 +55,7 @@ extern Fl_Menu_Item colors[];
 class Fl_MGL;
 //-----------------------------------------------------------------------------
 extern Fl_Preferences pref;
-extern Fl_Text_Display::Style_Table_Entry styletable[9];
+extern Fl_Text_Display::Style_Table_Entry styletable[10];
 extern int changed;		///< flag of script is changed or not
 extern std::string filename;	///< Current filename
 extern std::string lastfiles[5];///< Last opened files
@@ -107,7 +108,6 @@ public:
 struct Fl_MGL : public mglDraw
 {
 	Fl_MGLView *gr;
-	Fl_Widget *status;		///< StatusBar for mouse coordinates
 	std::vector<std::string> anim;
 	mreal delay;
 	std::string script;		///< script with settings
@@ -164,6 +164,7 @@ public:
 	Fl_Browser *var;
 	Fl_Box *status;
 
+	void set_status(const char *txt)	{	if(txt)	status->label(txt);	}
 	void mem_init();
 	void mem_pressed(int n);
 	Fl_MGLView	*graph;
@@ -216,7 +217,6 @@ void line_cb(Fl_Widget *, void *v);
 void face_cb(Fl_Widget *, void *v);
 void data_cb(Fl_Widget *, void *v);
 //-----------------------------------------------------------------------------
-void style_init(void);
 int check_save(void);
 void load_file(const char *newfile, int ipos, ScriptWindow *e);
 void save_file(const char *newfile, ScriptWindow *e);
@@ -249,6 +249,8 @@ void inplot_dlg_cb(Fl_Widget*,void*);
 void find_dlg_cb(Fl_Widget*,void*);
 void find_next_cb(Fl_Widget*,void*);
 void hint_dlg_cb(Fl_Widget*,void*);
+void message_cb(Fl_Widget*,void*);
+void message_set(const char *s);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

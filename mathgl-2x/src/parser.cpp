@@ -1005,12 +1005,12 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 		gr->SetObjId(i+1);
 		long r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
-		if(r==1)		snprintf(buf,64,"\nWrong argument(s) in line %ld\n", i+1);
-		else if(r==2)	snprintf(buf,64,"\nWrong command in line %ld\n", i+1);
-		else if(r==3)	snprintf(buf,64,"\nString too long in line %ld\n", i+1);
-		else if(r==4)	snprintf(buf,64,"\nUnbalanced ' in line %ld\n", i+1);
-		else if(r==5)	snprintf(buf,64,"\nChange temporary data in line %ld\n", i+1);
-		else if(gr->GetWarn()>0)	snprintf(buf,64," in line %ld\n", i+1);
+		if(r==1)		snprintf(buf,64,"\nWrong argument(s) in line %ld", i+1);
+		else if(r==2)	snprintf(buf,64,"\nWrong command in line %ld", i+1);
+		else if(r==3)	snprintf(buf,64,"\nString too long in line %ld", i+1);
+		else if(r==4)	snprintf(buf,64,"\nUnbalanced ' in line %ld", i+1);
+		else if(r==5)	snprintf(buf,64,"\nChange temporary data in line %ld", i+1);
+		else if(gr->GetWarn()>0)	snprintf(buf,64,"in line %ld", i+1);
 		else *buf=0;
 		buf[63] = 0;
 		if(*buf)	gr->SetWarn(-2,buf);

@@ -21,7 +21,24 @@
 void help_cb(Fl_Widget*, void*v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-	long i=e->editor->insert_position(), j0=textbuf->line_start(i),j;	// TODO closest ':' should be
+	int cur = e->editor->insert_position(), br=0;
+	int beg = textbuf->line_start(cur);
+	const char *s = textbuf->text();
+	for(int i=beg;i<cur;i++)
+	{
+		if(strchr("({[",s[i]))	br++;
+		if(strchr(")}]",s[i]))	br--;
+		if(br==0 && s[i]==':' && i+1<cur)	beg=i+1;
+	}
+	for(br=beg;s[br]>' ' && s[br]!=':';br++);
+	std::string cmd(s+beg,br-beg);
+	e->link_cmd->value(cmd.c_str());
+	static std::string str;
+	str = helpname+cmd;
+	e->hd->load(str.c_str());
+	if(e->rtab)	e->rtab->value(e->ghelp);
+
+/*	long i=e->editor->insert_position(), j0=textbuf->line_start(i),j;	// TODO closest ':' should be
 
 	char s[32]="", *buf = textbuf->text();
 	memset(s,0,32*sizeof(char));
@@ -30,13 +47,16 @@ void help_cb(Fl_Widget*, void*v)
 	free(buf);
 	static std::string str = helpname+s;
 	e->hd->load(str.c_str());
-	if(e->rtab)	e->rtab->value(e->ghelp);
+	if(e->rtab)	e->rtab->value(e->ghelp);*/
 }
 //-----------------------------------------------------------------------------
 void link_cb(Fl_Widget*, void*v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-	static std::string str = helpname+e->link_cmd->value();
+	const char *s = e->link_cmd->value();
+	if(!s)	s="Examples";
+	static std::string str;
+	str = helpname+s;
 	e->hd->load(str.c_str());
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }

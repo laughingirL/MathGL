@@ -19,6 +19,11 @@
 #ifdef __MWERKS__
 # define FL_DLL
 #endif
+#ifdef WIN32
+#include <direct.h>
+#else
+#include <unistd.h>
+#endif
 #include "mgllab.h"
 //-----------------------------------------------------------------------------
 int changed = 0;
@@ -27,16 +32,18 @@ Fl_Text_Buffer *textbuf = 0;
 //-----------------------------------------------------------------------------
 // Syntax highlighting
 Fl_Text_Buffer	 *stylebuf = 0;
-Fl_Text_Display::Style_Table_Entry styletable[9] = {	// Style table
+Fl_Text_Display::Style_Table_Entry styletable[10] = {	// Style table
 		{ FL_BLACK,		FL_COURIER,		14, 0 },		// A - Plain
 		{ FL_DARK_GREEN,FL_COURIER_ITALIC,	14, 0 },	// B - Line comments
-		{ FL_BLUE,	FL_COURIER,			14, 0 },		// C - Number
+		{ FL_BLUE,		FL_COURIER,		14, 0 },		// C - Number
 		{ FL_RED,		FL_COURIER,		14, 0 },		// D - Strings
-		{ FL_DARK_BLUE,	FL_COURIER,		14, 0 },		// E - Usual ommand
+		{ FL_DARK_BLUE,	FL_COURIER,		14, 0 },		// E - Usual command
 		{ FL_DARK_CYAN,	FL_COURIER,		14, 0 },		// F - Flow command
 		{ FL_DARK_MAGENTA,	FL_COURIER,	14, 0 },		// G - New-data command
 		{ FL_DARK_RED,	FL_COURIER,		14, 0 },		// H - Option
-		{ FL_DARK_GREEN,FL_COURIER,		14, 0 }};		// I - Inactive command
+		{ FL_DARK_GREEN,FL_COURIER,		14, 0 },		// I - Inactive command
+		{ FL_MAGENTA,	FL_COURIER,		14, 0 }			// J - Error line ???
+	};
 int font_kind;	///< Editor font kind
 int font_size;	///< Editor font size
 //-----------------------------------------------------------------------------
@@ -44,7 +51,7 @@ void set_style(int kind, int size)
 {
 	if(kind<0 || kind>2)	kind = 1;
 	if(size<1)	size = 14;
-	for(int i=0;i<9;i++)	// set font for styles
+	for(int i=0;i<10;i++)	// set font for styles
 	{	styletable[i].size = size;	styletable[i].font = 4*kind;	}
 	styletable[1].font = 4*kind+2;
 	font_kind = kind;	font_size = size;
@@ -114,8 +121,7 @@ char is_cmd(const char *s)	// command
 // Parse text and produce style data.
 void style_parse(const char *text, char *style, int /*length*/)
 {
-	register long i;
-	long n=strlen(text);
+	size_t n=strlen(text);
 	bool nl=true, arg=true;
 	// Style letters:
 	// A - Plain
@@ -127,7 +133,7 @@ void style_parse(const char *text, char *style, int /*length*/)
 	// G - New data command
 	// H - Option
 
-	for(i=0;i<n;i++)
+	for(size_t i=0;i<n;i++)
 	{
 		style[i] = 'A';
 		if(text[i]=='#')	// comment
@@ -242,9 +248,25 @@ void style_update(int pos,		// Position of update
 ScriptWindow::ScriptWindow(int w, int h, const char* t) : Fl_Double_Window(w, h, t)
 {	editor = 0;	}
 //-----------------------------------------------------------------------------
+void set_path(char *buf)
+{
+#ifdef WIN32
+	char sep='\\';
+#else
+	char sep='/';
+#endif
+	for(long i=strlen(buf)-1;i>=0;i--)	if(buf[i]==sep)
+	{	buf[i]=0;	break;	}
+	printf("chdir to '%s'\n",buf);
+	chdir(buf);
+}
+//-----------------------------------------------------------------------------
 void add_filename(const char *fname, ScriptWindow *e)
 {
-	if(!fname || !fname[0] || lastfiles[0]==fname)	return;
+	static char buf[FL_PATH_MAX];
+	fl_filename_absolute(buf, FL_PATH_MAX, fname);	fname=buf;
+	if(!fname || !fname[0] || lastfiles[0]==fname)
+	{	set_path(buf);	return;	}
 	pref.set("last_file",fname);
 	int ii=4;
 	for(int i=1;i<5;i++)
@@ -257,8 +279,7 @@ void add_filename(const char *fname, ScriptWindow *e)
 	e->menu->replace(ir+3, lastfiles[2].c_str());
 	e->menu->replace(ir+4, lastfiles[3].c_str());
 	e->menu->replace(ir+5, lastfiles[4].c_str());
-	// TODO change menu
-	save_pref();
+	set_path(buf);	save_pref();
 }
 //-----------------------------------------------------------------------------
 int check_save(void)
@@ -397,6 +418,26 @@ void paste_cb(Fl_Widget*, void* v)
 	Fl_Text_Editor::kf_paste(0, e->editor);
 }
 //-----------------------------------------------------------------------------
+void cb_descr(Fl_Widget*,void *v)
+{
+	ScriptWindow *w = (ScriptWindow*)v;
+	int cur = w->editor->insert_position(), br=0;
+	int beg = textbuf->line_start(cur);
+	const char *s = textbuf->text();
+	for(int i=beg;i<cur;i++)
+	{
+		if(strchr("({[",s[i]))	br++;
+		if(strchr(")}]",s[i]))	br--;
+		if(br==0 && s[i]==':' && i+1<cur)	beg=i+1;
+	}
+	for(br=beg;s[br]>' ' && s[br]!=':';br++);
+	std::string cmd(s+beg,br-beg);
+	const char *desc = Parse->CmdDesc(cmd.c_str());
+	const char *form = Parse->CmdFormat(cmd.c_str());
+	std::string txt = desc?std::string(desc)+":  "+form : mgl_gettext("Not recognized!");
+	w->set_status(txt.c_str());
+}
+//-----------------------------------------------------------------------------
 #include "image.h"
 Fl_Widget *add_editor(ScriptWindow *w)
 {
@@ -421,10 +462,12 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	g->end();	g->resizable(0);
 
 	w->editor = new Fl_Text_Editor(0, 28, 300, 400);
+	w->editor->textfont(FL_COURIER);
 	w->editor->buffer(textbuf);
 	w->editor->highlight_data(stylebuf, styletable, sizeof(styletable) / sizeof(styletable[0]), 'A', style_unfinished_cb, 0);
-	w->editor->textfont(FL_COURIER);
 	w->editor->linenumber_width(30);
+	w->editor->when(FL_WHEN_RELEASE_ALWAYS);
+	w->editor->callback(cb_descr,w);
 
 	textbuf->add_modify_callback(style_update, w->editor);
 	textbuf->add_modify_callback(changed_cb, w);
