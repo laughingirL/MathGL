@@ -54,7 +54,6 @@ void set_scheme_lang(int s, int l)
 	setlocale(LC_CTYPE, loc[l]);
 	Fl::scheme(sch[s]);
 	scheme = s;	lang = l;
-	// TODO reload help file!!!
 	static const char *hlp[3]={"mgl_en.html#","mgl_ru.html#", "mgl_ru.html#"};
 #ifdef WIN32
 	char sep = '\\';
@@ -117,10 +116,10 @@ void set_title(Fl_Window* w)
 	else
 	{
 		size_t sep = filename.find_last_of('/');
-		#ifdef WIN32
+#ifdef WIN32
 		if(sep==std::string::npos)
 			sep = filename.find_last_of('\\');
-		#endif
+#endif
 		if(sep!=std::string::npos)	title = filename.substr(sep+1);
 		else	title = filename;
 	}
@@ -274,7 +273,7 @@ Fl_Menu_Item menuitems[] = {
 		{"Set animation", 0, animate_dlg_cb},
 		{"Plot setup", FL_META+'g', setup_dlg_cb, 0, FL_MENU_DIVIDER},
 		{"Calculator", FL_F+4, calc_dlg_cb},
-		{"Messages", FL_F+2, message_cb, 0, FL_MENU_TOGGLE},
+		{"Messages", FL_F+2, message_cb},
 		{0},
 	{"Help", 0, 0, 0, FL_SUBMENU},
 		{"Help", FL_F+1, help_cb},
@@ -290,7 +289,6 @@ void mem_upd_cb(Fl_Widget *, void *v)
 extern Fl_RGB_Image image_udav;
 ScriptWindow *new_view()
 {
-	Fl_Tabs* tt;
 	Fl_Group *gg;
 	ScriptWindow *w = new ScriptWindow(930, 510, mgl_gettext("Untitled - mgllab"));
 	w->begin();
@@ -299,35 +297,26 @@ ScriptWindow *new_view()
 	w->label(mgl_gettext("Untitled - mgllab"));
 
 	Fl_Tile *t = new Fl_Tile(0,30,930,455);
-	tt = new Fl_Tabs(0,30,300,455,0);	w->ltab = tt;
-	gg = new Fl_Group(0,30,300,430);	gg->label(mgl_gettext("Script"));
-	add_editor(w);	gg->end();
-	tt->end();
+	add_editor(w);
 
-	tt = new Fl_Tabs(300,30,630,455,0);	w->rtab = tt;
-	gg = new Fl_Group(300,30,630,430,mgl_gettext("Canvas"));
+	w->rtab = new Fl_Tabs(300,30,630,455,0);
+	w->gplot = new Fl_Group(300,30,630,430,mgl_gettext("Canvas"));
 	w->graph = new Fl_MGLView(300,30,630,430,mgl_gettext("Canvas"));
-	gg->resizable(w->graph);	gg->end();
-	gg = new Fl_Group(300,30,630,430,mgl_gettext("Help"));		gg->hide();
-	w->ghelp = gg;	add_help(w);	gg->end();
+	w->gplot->resizable(w->graph);	w->gplot->end();
+	w->ghelp = new Fl_Group(300,30,630,430,mgl_gettext("Help"));
+	add_help(w);	w->ghelp->end();	w->ghelp->hide();
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Memory"));	gg->hide();
 	add_mem(w);		gg->end();
-	tt->end();
+	w->rtab->end();
 
-	w->status = new Fl_Box(0,485,930,25,mgl_gettext("Ready"));
-	w->status->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	w->status->color(FL_BACKGROUND_COLOR);
-	w->status->box(FL_DOWN_BOX);
-	w->draw = new Fl_MGL(w->graph);
+	w->status = new Fl_Output(0,485,930,25);	w->status->value(mgl_gettext("Ready"));
+	w->draw = new Fl_MGL(w->graph);	w->draw->e = w;	
 	mgl_makemenu_fltk(w->menu, w->graph);
 
 	t->end();	w->end();	w->resizable(t);
-	tt->callback(mem_upd_cb, w);
-	w->callback(close_cb, w);
-	w->icon(&image_udav);
-
-	num_windows++;
-	return w;
+	w->rtab->callback(mem_upd_cb, w);
+	w->callback(close_cb, w);	w->icon(&image_udav);
+	num_windows++;	return w;
 }
 //-----------------------------------------------------------------------------
 void argument_set(int n, const char *s);

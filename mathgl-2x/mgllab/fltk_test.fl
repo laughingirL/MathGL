@@ -2406,7 +2406,46 @@ Function {make_find()} {
 
 Function {make_animate()} {open
 } {
-  Fl_Window {} {open selected
+  Fl_Window {} {open
     xywh {360 218 405 405} type Double hide
   } {}
+} 
+
+Function {make_datinfo()} {open
+} {
+  Fl_Window {} {open
+    xywh {304 146 420 530} type Double visible
+  } {
+    Fl_Output out {
+      label Information
+      xywh {10 26 400 150} align 5
+    }
+    Fl_Box gr {
+      xywh {10 221 400 300} box ENGRAVED_BOX
+    }
+    Fl_Button {} {
+      label {@<-}
+      xywh {10 186 25 25}
+    }
+    Fl_Button {} {
+      label {as 1D}
+      xywh {40 186 75 25}
+    }
+    Fl_Button {} {
+      label {2D view} selected
+      xywh {120 186 75 25}
+    }
+    Fl_Button {} {
+      label {as 3D}
+      xywh {200 186 75 25}
+    }
+    Fl_Button {} {
+      label {@->}
+      xywh {280 186 25 25}
+    }
+    Fl_Return_Button {} {
+      label Close
+      xywh {335 186 75 25}
+    }
+  }
 } 

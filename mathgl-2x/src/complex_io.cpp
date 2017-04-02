@@ -51,6 +51,39 @@ uintptr_t MGL_EXPORT mgl_create_datac_file_(const char *fname,int l)
 void MGL_EXPORT mgl_delete_datac_(uintptr_t *d)
 {	if(_DC_)	delete _DC_;	}
 //-----------------------------------------------------------------------------
+dual MGL_EXPORT mgl_atoc(const char *s, int adv)
+{
+	double re=0,im=0;	size_t ll=strlen(s);
+	while(s[ll]<=' ')	ll--;
+	if(adv && *s=='(')		sscanf(s,"(%lg,%lg)",&re,&im);
+	else if(*s=='i')		{	re=0;	im=atof(s+1);	}
+	else if(adv && *s=='[')	sscanf(s,"[%lg,%lg]",&re,&im);
+	else if(adv && *s=='{')	sscanf(s,"{%lg,%lg}",&re,&im);
+	else if(s[ll]=='i')
+	{
+		double a,b;	//s[ll] = 0;
+		int s1=sscanf(s,"%lg+%lg",&re,&im);
+		int s2=sscanf(s,"%lg-%lg",&a,&b);
+		if(s1<2)
+		{
+			if(s2==2)	{	re=a;	im=-b;	}
+			else	{	im=atof(s);	re=0;	}
+		}
+	}
+	else
+	{
+		double a,b;
+		int s1=sscanf(s,"%lg+i%lg",&re,&im);
+		int s2=sscanf(s,"%lg-i%lg",&a,&b);
+		if(s1<2)
+		{
+			if(s2==2)	{	re=a;	im=-b;	}
+			else	{	re=atof(s);	im=0;	}
+		}
+	}
+	return dual(re,im);
+}
+//-----------------------------------------------------------------------------
 void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithreading read
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
@@ -87,35 +120,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 				j++;
 			}
 			b[j]=0;
-			double re=0,im=0;	size_t ll=strlen(s);
-			while(s[ll]<=' ')	ll--;
-			if(*s=='(')		sscanf(s,"(%lg,%lg)",&re,&im);
-			else if(*s=='i')	{	re=0;	im=atof(s+1);	}
-			else if(*s=='[')	sscanf(s,"[%lg,%lg]",&re,&im);
-			else if(*s=='{')	sscanf(s,"{%lg,%lg}",&re,&im);
-			else if(s[ll]=='i')
-			{
-				double a,b;	s[ll] = 0;
-				int s1=sscanf(s,"%lg+%lg",&re,&im);
-				int s2=sscanf(s,"%lg-%lg",&a,&b);
-				if(s1<2)
-				{
-					if(s2==2)	{	re=a;	im=-b;	}
-					else	{	im=atof(s);	re=0;	}
-				}
-			}
-			else
-			{
-				double a,b;
-				int s1=sscanf(s,"%lg+i%lg",&re,&im);
-				int s2=sscanf(s,"%lg-i%lg",&a,&b);
-				if(s1<2)
-				{
-					if(s2==2)	{	re=a;	im=-b;	}
-					else	{	re=atof(s);	im=0;	}
-				}
-			}
-			numbs[k].push_back(dual(re,im));
+			numbs[k].push_back(mgl_atoc(s,true));
 		}
 	}
 	long i=0, n=NX*NY*NZ;

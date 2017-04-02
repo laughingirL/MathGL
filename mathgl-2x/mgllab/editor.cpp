@@ -397,11 +397,39 @@ void cut_cb(Fl_Widget*, void* v)
 //-----------------------------------------------------------------------------
 void delete_cb(Fl_Widget*, void*) {	textbuf->remove_selection();	}
 //-----------------------------------------------------------------------------
+void cb_descr(Fl_Widget*,void *v)
+{
+	ScriptWindow *w = (ScriptWindow*)v;
+	if(!textbuf || !Parse || !w)	return;
+	int cur = w->editor->insert_position(), br=0;
+	int beg = textbuf->line_start(cur);
+	const char *s = textbuf->text();
+	for(int i=beg;i<cur;i++)
+	{
+		if(strchr("({[",s[i]))	br++;
+		if(strchr(")}]",s[i]))	br--;
+		if(br==0 && s[i]==':' && i+1<cur)	beg=i+1;
+	}
+	for(br=beg;s[br]>' ' && s[br]!=':';br++);
+	std::string cmd(s+beg,br-beg);
+	const char *desc = Parse->CmdDesc(cmd.c_str());
+	const char *form = Parse->CmdFormat(cmd.c_str());
+	static std::string txt;
+	txt = desc?std::string(desc)+":  "+form : "";
+	if(!txt.empty())
+	{
+		w->status->value(txt.c_str());
+		printf("Status: %s\n",txt.c_str());	fflush(stdout);
+		//{	if(!txt.empty())	{	w->editor->tooltip(txt.c_str());	}	}
+	}
+}
+//-----------------------------------------------------------------------------
 void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
 {
 	if ((nInserted || nDeleted) && !loading) changed = 1;
 	ScriptWindow *w = (ScriptWindow *)v;
 	set_title(w);
+	cb_descr(0,w);
 	if (loading) w->editor->show_insert_position();
 }
 //-----------------------------------------------------------------------------
@@ -418,30 +446,10 @@ void paste_cb(Fl_Widget*, void* v)
 	Fl_Text_Editor::kf_paste(0, e->editor);
 }
 //-----------------------------------------------------------------------------
-void cb_descr(Fl_Widget*,void *v)
-{
-	ScriptWindow *w = (ScriptWindow*)v;
-	int cur = w->editor->insert_position(), br=0;
-	int beg = textbuf->line_start(cur);
-	const char *s = textbuf->text();
-	for(int i=beg;i<cur;i++)
-	{
-		if(strchr("({[",s[i]))	br++;
-		if(strchr(")}]",s[i]))	br--;
-		if(br==0 && s[i]==':' && i+1<cur)	beg=i+1;
-	}
-	for(br=beg;s[br]>' ' && s[br]!=':';br++);
-	std::string cmd(s+beg,br-beg);
-	const char *desc = Parse->CmdDesc(cmd.c_str());
-	const char *form = Parse->CmdFormat(cmd.c_str());
-	std::string txt = desc?std::string(desc)+":  "+form : mgl_gettext("Not recognized!");
-	w->set_status(txt.c_str());
-}
-//-----------------------------------------------------------------------------
 #include "image.h"
 Fl_Widget *add_editor(ScriptWindow *w)
 {
-	Fl_Window *w1=new Fl_Window(0,30,300,430,0);
+	Fl_Window *w1=new Fl_Window(0,30,300,455,0);
 	Fl_Group *g = new Fl_Group(0,0,290,30);
 	Fl_Button *o;
 
@@ -461,13 +469,12 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	o->tooltip(mgl_gettext("Show calculator window"));
 	g->end();	g->resizable(0);
 
-	w->editor = new Fl_Text_Editor(0, 28, 300, 400);
+	w->editor = new Fl_Text_Editor(0, 28, 300, 425);
 	w->editor->textfont(FL_COURIER);
 	w->editor->buffer(textbuf);
 	w->editor->highlight_data(stylebuf, styletable, sizeof(styletable) / sizeof(styletable[0]), 'A', style_unfinished_cb, 0);
 	w->editor->linenumber_width(30);
-	w->editor->when(FL_WHEN_RELEASE_ALWAYS);
-	w->editor->callback(cb_descr,w);
+//	w->editor->when(FL_WHEN_RELEASE_ALWAYS);	w->editor->callback(cb_descr,w);
 
 	textbuf->add_modify_callback(style_update, w->editor);
 	textbuf->add_modify_callback(changed_cb, w);

@@ -93,7 +93,7 @@ using mglCanvasWnd::Window;
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res)
 {
-	static char buf[1024];	*res=0;
+	static char buf[1024];	*res=0;	// TODO
 #if FL_MINOR_VERSION>=3
 	fl_utf8fromwc(buf, 1024, quest, mgl_wcslen(quest)+1);
 	const char *str = fl_input("%s",buf,"");

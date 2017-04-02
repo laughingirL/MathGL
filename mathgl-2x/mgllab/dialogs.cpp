@@ -59,6 +59,14 @@ Fl_Menu_Item colors[] = {
 //-----------------------------------------------------------------------------
 void cb_dlg_cancel(Fl_Widget*, void *v)	{	if(v)	((GeneralDlg*)v)->hide();	}
 void cb_dlg_ok(Fl_Widget*, void *v)		{	if(v)	((GeneralDlg*)v)->cb_ok();	}
+std::string wcstombs(std::wstring wcs)
+{
+	std::string str;
+	const wchar_t *ss = wcs.c_str();
+	size_t s=wcstombs(0,ss,0);	char *buf=new char[s+1];
+	wcstombs(buf,ss,s); buf[s]=0;
+	str = buf;	delete []buf;	return str;
+}
 //-----------------------------------------------------------------------------
 void cb_option_change(Fl_Widget *, void *);
 class OptionDlg : public GeneralDlg
@@ -622,13 +630,7 @@ public:
 		for(long i=0;i<n;i++)
 		{
 			HCDT d = Parse->GetVar(i);
-			if(!d->temp)
-			{
-				const wchar_t *ss = d->s.c_str();
-				size_t s=wcstombs(0,ss,0);	char *buf=new char[s+1];
-				wcstombs(buf,ss,s); buf[s]=0;
-				name->add(buf);	delete []buf;
-			}
+			if(!d->temp)	name->add(wcstombs(d->s).c_str());
 		}
 		x1->value(0);	x2->value(0);
 		y1->value(0);	y2->value(0);

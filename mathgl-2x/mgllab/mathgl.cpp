@@ -48,7 +48,7 @@ Fl_MGL::Fl_MGL(Fl_MGLView *GR)
 {
 	if(!Parse)	Parse = new mglParse;
 	Parse->AllowSetSize(true);
-	gr = GR;	gr->par = this;
+	gr = GR;	gr->par = this;	e = 0;
 	gr->next = udav_next;	gr->delay = udav_delay;
 	gr->prev = udav_prev;	gr->reload = udav_reload;
 	gr->FMGL->set_draw(this);
@@ -67,8 +67,8 @@ int Fl_MGL::Draw(mglGraph *gr)
 		Parse->Execute(gr,text);
 		free(text);
 	}
-	const char *s = gr->Message();
-	if(s)	message_set(s);
+	message_set(gr->Message());
+	if(e && e->rtab)	e->rtab->value(e->gplot);
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -319,10 +319,9 @@ void fill_animate(const char *text, Fl_MGL *dr)
 	}
 }
 //-----------------------------------------------------------------------------
-Fl_Text_Buffer *sbuf = 0;
 Fl_Text_Display::Style_Table_Entry stylemess[2] = {	// Style table
-	{ FL_BLACK,		FL_COURIER,		14, 0 },		// A - Plain
-	{ FL_RED,		FL_COURIER,		14, 0 } };		// B - Strings
+	{ FL_BLACK,		FL_COURIER,		12, 0 },		// A - Plain
+	{ FL_RED,		FL_COURIER,		12, 0 } };		// B - Strings
 void mess_parse(const char *text, char *style, int /*length*/)
 {
 	size_t n=strlen(text);
@@ -331,15 +330,18 @@ void mess_parse(const char *text, char *style, int /*length*/)
 	const char *l1=text, *l2=strchr(l1, '\n');
 	while(l1)
 	{
+		size_t len = l2?l2-l1:strlen(l1), st=l1-text;
 		const char *p = strstr(l1,"in line");
-		if(p && (p-l1)<(l2-l1))
-			for(size_t i=(l1-text);i<(l2-text);i++)	style[i]='B';
-		l1=l2;	l2=strchr(l1, '\n');
+		if(p && size_t(p-l1)<len)
+			for(size_t i=0;i<len;i++)	style[i+st]='B';
+		l1=l2?l2+1:NULL;	l2=l1?strchr(l1, '\n'):NULL;
 	}
 }
 //-----------------------------------------------------------------------------
+static Fl_Text_Buffer *sbuf=0;
 void mess_update(int pos, int nInserted, int nDeleted, int, const char *, void *cbArg)
 {
+	Fl_Text_Buffer *mbuf=((Fl_Text_Editor *)cbArg)->buffer();
 	long	start, end;	// Start and end of text
 	char last, *style, *text;		// Text data
 	if (nInserted == 0 && nDeleted == 0) {	sbuf->unselect();	return;  }
@@ -353,9 +355,9 @@ void mess_update(int pos, int nInserted, int nDeleted, int, const char *, void *
 	}
 	else	sbuf->remove(pos, pos + nDeleted);
 	sbuf->select(pos, pos + nInserted - nDeleted);
-	start = textbuf->line_start(pos);
-	end   = textbuf->line_end(pos + nInserted);
-	text  = textbuf->text_range(start, end);
+	start = mbuf->line_start(pos);
+	end   = mbuf->line_end(pos + nInserted);
+	text  = mbuf->text_range(start, end);
 	style = sbuf->text_range(start, end);
 	if (start==end)	last = 0;
 	else	last = style[end-start-1];
@@ -368,8 +370,8 @@ void mess_update(int pos, int nInserted, int nDeleted, int, const char *, void *
 		// Either the user deleted some text, or the last character on
 		// the line changed styles, so reparse the remainder of the buffer...
 		free(text);	free(style);
-		end   = textbuf->length();
-		text  = textbuf->text_range(start, end);
+		end   = mbuf->length();
+		text  = mbuf->text_range(start, end);
 		style = sbuf->text_range(start, end);
 		mess_parse(text, style, end - start);
 		sbuf->replace(start, end, style);
@@ -378,25 +380,29 @@ void mess_update(int pos, int nInserted, int nDeleted, int, const char *, void *
 	free(text);	free(style);
 }
 //-----------------------------------------------------------------------------
+void style_unfinished_cb(int, void*);
 class MessDlg : public GeneralDlg
 {
 	Fl_Text_Display *mess;
-	Fl_Text_Buffer *buf;
+	Fl_Text_Buffer *mbuf;
 public:
 	MessDlg()
 	{
-		buf = new Fl_Text_Buffer;
-		sbuf = new Fl_Text_Buffer;
 		w = new Fl_Double_Window(485, 195, mgl_gettext("MGL messages"));
-		mess = new Fl_Text_Display(0, 5, 485, 190);	mess->buffer(buf);
+		mess = new Fl_Text_Display(0, 5, 485, 190);
 		w->end();
-		buf->add_modify_callback(mess_update, mess);
-		buf->add_modify_callback(changed_cb, w);
-		buf->call_modify_callbacks();
+		mbuf = new Fl_Text_Buffer;
+		sbuf = new Fl_Text_Buffer;
+		mess->buffer(mbuf);
+		mess->highlight_data(sbuf, stylemess, sizeof(stylemess) / sizeof(stylemess[0]), 'A', style_unfinished_cb, 0);
+		mbuf->add_modify_callback(mess_update, mess);
+		mbuf->call_modify_callbacks();
 	}
-	void set(const char *s)	{	buf->text(s);	show();	}
+	void set(const char *s)
+	{	mbuf->text(s);	show();	}
 } mess_wnd;
 //-----------------------------------------------------------------------------
 void message_cb(Fl_Widget*,void*)	{	mess_wnd.show();	}
-void message_set(const char *s)		{	/*mess_wnd.set(s);*/	}
+void message_set(const char *s)
+{	if(s && *s)	mess_wnd.set(s);	else	mess_wnd.hide();	}
 //-----------------------------------------------------------------------------

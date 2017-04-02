@@ -33,7 +33,7 @@ Fl_Data_Table::Fl_Data_Table(int x, int y, int w, int h, const char *l) : Fl_Tab
 	input->callback(input_cb, (void*)this);
 	input->when(FL_WHEN_ENTER_KEY_ALWAYS);
 	input->maximum_size(16);
-	sl = 0;
+	sl = 0;	row=col=-1;
 //	(new Fl_Box(9999,9999,0,0))->hide();  // HACK: prevent flickering in Fl_Scroll
 	end();
 }
@@ -41,7 +41,7 @@ Fl_Data_Table::Fl_Data_Table(int x, int y, int w, int h, const char *l) : Fl_Tab
 // Handle drawing all cells in table
 void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, int W, int H)
 {
-	static char s[32];
+	static char s[64];
 	fl_push_clip(X, Y, W, H);
 	switch ( context )
 	{
@@ -64,9 +64,17 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_push_clip(X+3, Y+3, W-6, H-6);
 		fl_font(FL_HELVETICA, 14);
 		fl_color(FL_BLACK);
-		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");	// TODO complex numbers
+		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
 		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
-		else	snprintf(s,32,"%g",data->v(C,R,sl));
+		else
+		{
+			dual v=data->vc(C,R,sl);
+			if(real(v)==0 && imag(v)>0)	snprintf(s,64,"i%g",imag(v));
+			else if(real(v)==0 && imag(v)<0)	snprintf(s,64,"-i%g",-imag(v));
+			else if(imag(v)>0)	snprintf(s,64,"%g+i%g",real(v),imag(v));
+			else if(imag(v)<0)	snprintf(s,64,"%g-i%g",real(v),-imag(v));
+			else	snprintf(s,64,"%g",real(v));
+		}
 		fl_draw(s, X+3, Y+3, W-6, H-6, FL_ALIGN_RIGHT);
 		break;
 	case CONTEXT_RC_RESIZE:
@@ -88,14 +96,22 @@ void Fl_Data_Table::cell_click()
     if(context==CONTEXT_CELL)
 	{
 		if (input->visible())	set_value();
-		row = R;		col = C;
+		row = R;	col = C;
 		int XX,YY,WW,HH;
 		find_cell(CONTEXT_CELL, R, C, XX, YY, WW, HH);
 		input->resize(XX,YY,WW,HH);
-		char s[32];
+		char s[64];
 		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
 		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
-		else	snprintf(s,32,"%g",data->v(C,R,sl));
+		else
+		{
+			dual v=data->vc(C,R,sl);
+			if(real(v)==0 && imag(v)>0)	snprintf(s,64,"i%g",imag(v));
+			else if(real(v)==0 && imag(v)<0)	snprintf(s,64,"-i%g",-imag(v));
+			else if(imag(v)>0)	snprintf(s,64,"%g+i%g",real(v),imag(v));
+			else if(imag(v)<0)	snprintf(s,64,"%g-i%g",real(v),-imag(v));
+			else	snprintf(s,64,"%g",real(v));
+		}
 		input->value(s);	input->show();
 		input->take_focus();
 	}
@@ -107,6 +123,16 @@ void Fl_Data_Table::set_value()
 	if(s[0]==0 || !strcmp(s,"nan"))	data->set_v(NAN, col,row,sl);
 	else if(!strcmp(s,"inf"))	data->set_v(INFINITY, col,row,sl);
 	else if(!strcmp(s,"-inf"))	data->set_v(-INFINITY, col,row,sl);
-	else	data->set_v(atof(s), col,row,sl);
+	else
+	{
+		dual v = mgl_atoc(s,true);
+		if(imag(v)==0)	data->set_v(real(v), col,row,sl);
+		else
+		{
+			HADT c = dynamic_cast<HADT>(data);
+			if(c)	c->a[col+c->nx*(row+c->ny*sl)] = v;
+			else	data->set_v(abs(v),col,row,sl);
+		}
+	}
 }
 //-----------------------------------------------------------------------------

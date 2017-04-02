@@ -79,6 +79,7 @@ void style_init();		///< Initialize the style buffer
 void save_pref();		///< Apply and save preferences
 void load_pref();		///< Load preferences
 void add_filename(const char *fname);	///< Add filename to lastfiles
+std::string wcstombs(std::wstring wcs);	///< Convert std::wstring to std::string
 //-----------------------------------------------------------------------------
 class Fl_Data_Table : public Fl_Table
 {
@@ -105,8 +106,10 @@ public:
     inline int cols() { return Fl_Table::cols(); }
 };
 //-----------------------------------------------------------------------------
+class ScriptWindow;
 struct Fl_MGL : public mglDraw
 {
+	ScriptWindow *e;
 	Fl_MGLView *gr;
 	std::vector<std::string> anim;
 	mreal delay;
@@ -125,24 +128,26 @@ struct Fl_MGL : public mglDraw
 	{	return gr->FMGL->get_graph();	}
 };
 //-----------------------------------------------------------------------------
-struct TableWindow : public Fl_Window
+struct TableWindow
 {
 public:
-	TableWindow(int x, int y, int w, int h, const char* t=0);
+	TableWindow(ScriptWindow *e);
 	~TableWindow();
 	void update(mglDataA *v);
 	void refresh();
 	void set_slice(long s);
-	inline long get_slice() { return sl; }
+	inline long get_slice() {	return sl;	}
 	inline long num_slice()	{	return nz;	}
 	void go_home();
+	void show()	{	w->show();	}
 
-	Fl_Data_Table *data;
-	Fl_Menu_Bar	*menu;
-//	Fl_Output *main;
+	ScriptWindow *main;
 	Fl_Counter *slice;
 	mglDataA *var;
 protected:
+	Fl_Data_Table *data;
+	Fl_Menu_Bar	*menu;
+	Fl_Double_Window *w;
 //	long nx,ny,nz;
 	long nz;
 	long sl;		// current slice
@@ -155,20 +160,19 @@ public:
 	ScriptWindow(int w, int h, const char* t);
 	~ScriptWindow()	{}
 
-	Fl_Text_Editor		*editor;
-	Fl_Menu_Bar	*menu;
-	Fl_Tabs *ltab, *rtab;
+	Fl_Text_Editor *editor;
+	Fl_Menu_Bar *menu;
+	Fl_Tabs  *rtab;
 	Fl_Help_View *hd;
 	Fl_Input *link_cmd;
-	Fl_Group *ghelp;
+	Fl_Group *ghelp, *gplot;
 	Fl_Browser *var;
-	Fl_Box *status;
+	Fl_Output *status;
 
-	void set_status(const char *txt)	{	if(txt)	status->label(txt);	}
 	void mem_init();
 	void mem_pressed(int n);
-	Fl_MGLView	*graph;
-	Fl_MGL		*draw;
+	Fl_MGLView *graph;
+	Fl_MGL *draw;
 };
 //-----------------------------------------------------------------------------
 class GeneralDlg
@@ -251,6 +255,7 @@ void find_next_cb(Fl_Widget*,void*);
 void hint_dlg_cb(Fl_Widget*,void*);
 void message_cb(Fl_Widget*,void*);
 void message_set(const char *s);
+void info_dlg_cb(mglDataA *d);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

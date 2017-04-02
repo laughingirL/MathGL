@@ -40,6 +40,8 @@ typedef void *HADT;
 /// Get integer power of x
 mdual MGL_EXPORT_CONST mgl_ipowc(dual x,int n);
 mdual MGL_EXPORT mgl_ipowc_(dual *x,int *n);
+/// Get complex number from string. Parse (%g,%g), {%g,%g} and [%g,%g] if adv!=0.
+dual MGL_EXPORT mgl_atoc(const char *s, int adv);
 /// Get exp(i*a)
 mdual MGL_EXPORT_CONST mgl_expi(dual a);
 

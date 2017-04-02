@@ -37,17 +37,6 @@ void help_cb(Fl_Widget*, void*v)
 	str = helpname+cmd;
 	e->hd->load(str.c_str());
 	if(e->rtab)	e->rtab->value(e->ghelp);
-
-/*	long i=e->editor->insert_position(), j0=textbuf->line_start(i),j;	// TODO closest ':' should be
-
-	char s[32]="", *buf = textbuf->text();
-	memset(s,0,32*sizeof(char));
-	for(j=j0;!isspace(buf[j]) && buf[j]!='#' && buf[j]!=';' && j<31+j0;j++)
-		s[j-j0] = buf[j];
-	free(buf);
-	static std::string str = helpname+s;
-	e->hd->load(str.c_str());
-	if(e->rtab)	e->rtab->value(e->ghelp);*/
 }
 //-----------------------------------------------------------------------------
 void link_cb(Fl_Widget*, void*v)
@@ -158,8 +147,8 @@ Fl_Widget *add_mem(ScriptWindow *w)
 
 	o = new Fl_Button(10, 400, 95, 25, mgl_gettext("Edit"));	o->callback(mem_dlg_cb0,w);
 	o->tooltip(mgl_gettext("Open table with selected data for editing."));
-	o = new Fl_Button(120, 400, 95, 25, mgl_gettext("Plot"));	o->callback(mem_dlg_cb1,w);
-	o->tooltip(mgl_gettext("Plot selected data."));
+	o = new Fl_Button(120, 400, 95, 25, mgl_gettext("Info"));	o->callback(mem_dlg_cb1,w);
+	o->tooltip(mgl_gettext("Data information and preview."));
 	o = new Fl_Button(230, 400, 95, 25, mgl_gettext("Delete"));	o->callback(mem_dlg_cb2,w);
 	o->tooltip(mgl_gettext("Delete selected data."));
 	o = new Fl_Button(340, 400, 95, 25, mgl_gettext("New"));	o->callback(mem_dlg_cb3,w);
@@ -192,29 +181,22 @@ void ScriptWindow::mem_pressed(int kind)
 	TableWindow *w;
 	int ind = var->value();
 	mglDataA *v = (mglDataA *)var->data(ind);
-	static char res[128];
 	if(!v && kind!=3)	return;
 	if(kind==0)
 	{
 		w = (TableWindow *)v->o;
-		if(!w)
-		{
-			char ss[1024];
-			wcstombs(ss,v->s.c_str(),1024);	ss[v->s.length()]=0;
-			ltab->begin();
-			Fl_Group *gg = new Fl_Group(0,30,300,430);
-			w = new TableWindow(0,30,300,430);
-			gg->label(ss);	gg->end();	ltab->end();
-		}
-		w->update(v);	ltab->value(w->parent());	w->show();
+		if(!w)	w = new TableWindow(this);
+		w->update(v);	w->show();
 	}
 	else if(kind==1)
 	{
-		const wchar_t *s=v->s.c_str();
-		if(v->GetNz()>1)		snprintf(res,128,"crange %ls:rotate 40 60:box:surf3 %ls\n", s,s);
-		else if(v->GetNy()>1)	snprintf(res,128,"zrange %ls:rotate 40 60:box:surf %ls\n", s,s);
-		else				snprintf(res,128,"yrange %ls:box:plot %ls\n", s,s);
-		textbuf->text(res);
+		info_dlg_cb(v);
+// 	static char res[128];
+// 		const wchar_t *s=v->s.c_str();
+// 		if(v->GetNz()>1)		snprintf(res,128,"crange %ls:rotate 40 60:box:surf3 %ls\n", s,s);
+// 		else if(v->GetNy()>1)	snprintf(res,128,"zrange %ls:rotate 40 60:box:surf %ls\n", s,s);
+// 		else				snprintf(res,128,"yrange %ls:box:plot %ls\n", s,s);
+// 		textbuf->text(res);
 	}
 	else if(kind==2)
 		Parse->DeleteVar(v->s.c_str());
@@ -223,12 +205,8 @@ void ScriptWindow::mem_pressed(int kind)
 		const char *name = fl_input(mgl_gettext("Enter name for new variable"),"dat");
 		if(!name)	return;
 		v = Parse->AddVar(name);
-
-		ltab->begin();
-		Fl_Group *gg = new Fl_Group(0,30,300,430);
-		w = new TableWindow(0,30,300,430);
-		gg->label(name);	gg->end();	ltab->end();
-		w->update(v);	ltab->value(w->parent());	w->show();
+		w = v->o? (TableWindow*)v->o:new TableWindow(this);
+		w->update(v);	w->show();
 	}
 	mem_init();
 }
@@ -301,4 +279,99 @@ void cb_hint_prev(Fl_Widget*,void*)	{	hint_dlg.prev();	}
 void cb_hint_next(Fl_Widget*,void*)	{	hint_dlg.next();	}
 //-----------------------------------------------------------------------------
 void hint_dlg_cb(Fl_Widget*,void *)	{	hint_dlg.show();	}
+//-----------------------------------------------------------------------------
+void cb_info_prev(Fl_Widget*,void*);
+void cb_info_next(Fl_Widget*,void*);
+void cb_info_1d(Fl_Widget*,void*);
+void cb_info_2d(Fl_Widget*,void*);
+void cb_info_3d(Fl_Widget*,void*);
+class InfoDlg : public GeneralDlg
+{
+	Fl_Multiline_Output *out;
+	Fl_MathGL *gr;
+	long nx, ny, nz;
+	long sl;
+	int plot=0;
+	std::string name;
+public:
+	InfoDlg()
+	{
+		Fl_Button *o;
+		w = new Fl_Double_Window(420, 530);
+		out = new Fl_Multiline_Output(10, 25, 400, 150, mgl_gettext("Information"));
+		out->align(FL_ALIGN_TOP_LEFT);
+		gr = new Fl_MathGL(10, 220, 400, 300);	gr->box(FL_ENGRAVED_BOX);
+		mgl_set_size(gr->get_graph(),400,300);
+		o = new Fl_Button(10, 185, 25, 25, "@<-");
+		o->callback(cb_info_prev,this);
+		o = new Fl_Button(40, 185, 75, 25, mgl_gettext("1D view"));
+		o->callback(cb_info_1d,this);
+		o = new Fl_Button(120, 185, 75, 25, mgl_gettext("2D view"));
+		o->callback(cb_info_2d,this);
+		o = new Fl_Button(200, 185, 75, 25, mgl_gettext("3D view"));
+		o->callback(cb_info_3d,this);
+		o = new Fl_Button(280, 185, 25, 25, "@->");
+		o->callback(cb_info_next,this);
+		o = new Fl_Return_Button(335, 185, 75, 25, mgl_gettext("Close"));
+		o->callback(cb_dlg_cancel,this);
+		w->set_modal();	w->end();
+	}
+	void update()
+	{
+		if(!dat)	return;
+		std::string script;
+		char buf[32];
+printf("sl = %ld -> ",sl);
+		switch(plot)
+		{
+		case 0:
+			if(sl<0)	sl=ny-1;
+			if(sl>=ny)	sl=0;
+			snprintf(buf,31,"%ld",sl);
+			script = "subplot 1 1 0 '<_':xrange 0 1:yrange " + name + ":plot " + name + "(:," + buf + "):axis:box:text 1 1 'sl=" + buf + "' 'r:aR'";
+			break;
+		case 1:
+			if(sl<0)	sl=nz-1;
+			if(sl>=nz)	sl=0;
+			snprintf(buf,31,"%ld",sl);
+			script = "subplot 1 1 0 '':crange " + name + ":dens " + name + "(:,:," + buf + "):box:text 1 1 'sl=" + buf + "' 'r:aR'";
+			break;
+		case 2:
+			script = "rotate 40 60:light on:crange " + name + ":surf3 " + name + ":box";
+			break;
+		}
+printf("sl = %ld, scr='%s'\n",sl,script.c_str());	fflush(stdout);
+		script = "clf:"+script;
+		mgl_set_def_param(gr->get_graph());
+		mgl_parse_text(gr->get_graph(), Parse->Self(), script.c_str());
+		gr->update();
+	}
+	void prev()		{	sl--;	update();	}
+	void next()		{	sl++;	update();	}
+	void plot_1d()	{	plot=0;	update();	}
+	void plot_2d()	{	if(ny>1)	{	plot=1;	update();	}	}
+	void plot_3d()	{	if(nz>1)	{	plot=2;	update();	}	}
+	void init()
+	{
+		nx=ny=nz=sl=plot=0;
+		if(dat)
+		{
+			nx=dat->GetNx();	ny=dat->GetNy();	nz=dat->GetNz();
+			result = dat->PrintInfo();	out->value(result.c_str());
+			name = wcstombs(dat->s);
+			if(nz>1)		plot_3d();
+			else if(ny>1)	plot_2d();
+			else			plot_1d();
+		}
+	}
+} info_dlg;
+//-----------------------------------------------------------------------------
+void info_dlg_cb(mglDataA *d)
+{	if(d)	{	info_dlg.dat=d;	info_dlg.show();	}	}
+//-----------------------------------------------------------------------------
+void cb_info_prev(Fl_Widget*,void*)	{	info_dlg.prev();	}
+void cb_info_next(Fl_Widget*,void*)	{	info_dlg.next();	}
+void cb_info_1d(Fl_Widget*,void*)	{	info_dlg.plot_1d();	}
+void cb_info_2d(Fl_Widget*,void*)	{	info_dlg.plot_2d();	}
+void cb_info_3d(Fl_Widget*,void*)	{	info_dlg.plot_3d();	}
 //-----------------------------------------------------------------------------
