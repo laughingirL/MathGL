@@ -166,9 +166,9 @@ void QMathGL::paintEvent(QPaintEvent *)
 		paint.drawText(0,12,mousePos);
 	if(grid)
 	{
-		long i, d, h=pic.height(), w=pic.width();
+		long d, h=pic.height(), w=pic.width();
 		paint.setPen(QColor(192,192,192));
-		for(i=1;i<10;i++)
+		for(long i=1;i<10;i++)
 		{
 			paint.drawText(0,i*h/10,QString::number(1-i*0.1));
 			paint.drawLine(0,i*h/10,w,i*h/10);
@@ -178,7 +178,7 @@ void QMathGL::paintEvent(QPaintEvent *)
 		paint.setPen(QColor(0,0,0));
 		d = (h>w?w:h)/100;
 		if(mgl_is_frames(gr))
-			for(i=0;i<(long)gr->Act.size();i++)
+			for(size_t i=0;i<gr->Act.size();i++)
 			{
 				const mglActivePos &p=gr->Act[i];
 				QRect rf(p.x-d/2,p.y-d/2-1,d,d);

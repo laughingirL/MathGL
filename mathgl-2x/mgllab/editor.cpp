@@ -257,8 +257,7 @@ void set_path(char *buf)
 #endif
 	for(long i=strlen(buf)-1;i>=0;i--)	if(buf[i]==sep)
 	{	buf[i]=0;	break;	}
-	printf("chdir to '%s'\n",buf);
-	chdir(buf);
+	if(!chdir(buf))	printf("chdir to '%s'\n",buf);
 }
 //-----------------------------------------------------------------------------
 void add_filename(const char *fname, ScriptWindow *e)

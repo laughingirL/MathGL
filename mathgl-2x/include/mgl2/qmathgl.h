@@ -229,7 +229,7 @@ class MGL_EXPORT mglDrawScript : public mglDraw
 public:
 	HMPR par;		///< Parser to be used
 	QString text;	///< Script to be drawn
-	long line;		///< Line which will be highlited
+	long line;		///< Line which will be highlighted
 	mglDrawScript(HMPR p):mglDraw()	{	par=p;	line=-1;	}
 	virtual ~mglDrawScript() {}
 	int Draw(mglGraph *gr)

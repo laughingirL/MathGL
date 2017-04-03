@@ -117,6 +117,7 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widge
 	flag=x0=y0=xe=ye=0;	show_warn=true;
 	tet_val = phi_val = 0;
 	draw_par = 0;	draw_func = 0;	draw_cl = 0;
+	last_id = -1;
 }
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
@@ -151,8 +152,16 @@ void Fl_MathGL::draw()
 			str[2] = '0'+i;	fl_draw(str,30+i*ww/10,30+hh);
 			fl_line(30+i*ww/10,30,30+i*ww/10,30+hh);
 		}
-//		if(*MouseBuf)	fl_draw(MouseBuf,30,50);
+		int d = (hh>ww?ww:hh)/100;
+		for(size_t i=0;i<gr->Act.size();i++)
+		{
+			const mglActivePos &p=gr->Act[i];
+			fl_rectf(p.x-d/2,p.y-d/2-1,d,d, fl_rgb_color(127,255,63));
+			fl_rect(p.x-d/2,p.y-d/2-1,d,d, FL_BLACK);
+		}
+		mgl_set_flag(gr,1,MGL_SHOW_POS);
 	}
+	else	mgl_set_flag(gr,0,MGL_SHOW_POS);
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::update()
@@ -202,6 +211,7 @@ int Fl_MathGL::handle(int code)
 	}
 	else if(!zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
 	{
+		last_id = mgl_get_obj_id(gr,Fl::event_x()-x(), Fl::event_y()-y());
 		mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
 		if(g && g->ClickFunc)	g->ClickFunc(draw_par);
 		if(mgl_get_flag(gr,MGL_SHOW_POS))
@@ -212,6 +222,8 @@ int Fl_MathGL::handle(int code)
 			snprintf(s,128,"x=%g, y=%g, z=%g",p.x,p.y,p.z);	s[127]=0;
 			draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
 		}
+		if(Fl::event_clicks())
+		{	if(draw_cl)	draw_cl->Click();	else	update();	}
 	}
 	else if((!rotate && !zoom) || Fl::event_button()!=FL_LEFT_MOUSE)
 	{
@@ -808,7 +820,7 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 	// TODO{"Rotate down", FL_CTRL+FL_Down,  0},
 	// TODO{"Rotate left", FL_CTRL+FL_Left,  0},
 	// TODO{"Rotate right", FL_CTRL+FL_Right,  0},
-	
+
 	// TODO{"Add objects", 0,  0, 0, FL_SUBMENU},
 		// TODO{"Line", 0,  0},
 		// TODO{"Arc", 0,  0},

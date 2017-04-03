@@ -69,13 +69,13 @@ ZZ. Update time.texi {before release!!!}
 
 ============= mgllab ===========
 
-1. Start/Stop on single button
+1. Start/Stop on single button + pthread
 2. Update FLTK icons
-3. Flat toolbuttons ???
 4. Extend number of data operation (in table_window)
-5. Menu items to show/hide extra toolbars
-6. Data info && preview (into table_wnd & mem_panel)
 9. Window with Zoom/Hidden ?!?
+
+Y. Menu items to show/hide extra toolbars in Fl_MathGL ???
+Z. Flat toolbuttons ???
 
 ============= UDAV =============
 

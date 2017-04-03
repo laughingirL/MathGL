@@ -85,12 +85,14 @@ public:
 	void stop(bool stop=true);
 	/// Enable/disable key handling (default is false)
 	inline void set_handle_key(bool val)	{	handle_keys=true;	}
+	inline int get_last_id()	{	return last_id;	}
 
 protected:
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
 	mglDraw *draw_cl;
+	int last_id;					///< last selected object id
 
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu
@@ -137,7 +139,7 @@ public:
 	void adjust()
 	{	mgl_set_size(FMGL->get_graph(),scroll->w(),scroll->h());	FMGL->size(scroll->w(),scroll->h());	update();	}
 	HMGL get_graph()	{	return FMGL->get_graph();	}
-	
+
 	Fl_MGLView(int x, int y, int w, int h, const char *label=0);
 	virtual ~Fl_MGLView();
 	void update();			///< Update picture by calling user drawing function

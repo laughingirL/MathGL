@@ -58,15 +58,38 @@ Fl_MGL::Fl_MGL(Fl_MGLView *GR)
 //-----------------------------------------------------------------------------
 Fl_MGL::~Fl_MGL()	{}
 //-----------------------------------------------------------------------------
+void Fl_MGL::Reload()
+{
+	Parse->RestoreOnce();
+	e->graph->update();
+}
+//-----------------------------------------------------------------------------
+void Fl_MGL::Click()
+{
+	int id = e->graph->FMGL->get_last_id();
+	if(id>0)
+	{
+		Fl_Text_Editor::kf_ctrl_move(FL_Home, e->editor);
+		for(int i=0;i<id;i++)	Fl_Text_Editor::kf_down(0, e->editor);
+		Fl_Text_Editor::kf_up(0, e->editor);
+		Fl::focus(e->editor);
+	}
+	e->graph->update();
+}
+//-----------------------------------------------------------------------------
 int Fl_MGL::Draw(mglGraph *gr)
 {
+	if(exec_save)	save_cb(0,e);
 	Parse->Execute(gr,script.c_str());
 	if(textbuf)
 	{
 		char *text = textbuf->text();
+		if(highlight)	gr->Highlight(e->graph->FMGL->get_last_id());		// TODO check highlight
 		Parse->Execute(gr,text);
+//		gr->Highlight(-1);
 		free(text);
 	}
+	// TODO go to line with warning?!!
 	message_set(gr->Message());
 	if(e && e->rtab)	e->rtab->value(e->gplot);
 	return 0;
