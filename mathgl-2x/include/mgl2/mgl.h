@@ -2267,7 +2267,10 @@ public:
 	/// Set variant of argument(s) separated by '?' to be used in further commands
 	inline void SetVariant(int var=0)
 	{	mgl_parser_variant(pr, var);	}
-
+	/// Set starting object ID
+	inline void	StartID(int id=0)
+	{	mgl_parser_start_id(pr, id);	}
+	
 	/// Return result of formula evaluation
 	inline mglData Calc(const char *formula)
 	{	return mglData(true,mgl_parser_calc(pr,formula)); 	}

@@ -22,6 +22,7 @@
 #include <Fl/Fl_Spinner.H>
 #include <Fl/Fl_Output.H>
 #include <Fl/Fl_Select_Browser.H>
+#include <Fl/Fl_Printer.H>
 //-----------------------------------------------------------------------------
 #ifndef MGL_DOC_DIR
 #ifdef WIN32
@@ -231,13 +232,30 @@ void lastfile3_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[2].c_str(),-1,(Scri
 void lastfile4_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[3].c_str(),-1,(ScriptWindow*)v);	}
 void lastfile5_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[4].c_str(),-1,(ScriptWindow*)v);	}
 //-----------------------------------------------------------------------------
+void print_plot_cb(Fl_Widget*,void *v)
+{
+	ScriptWindow *w = (ScriptWindow*)v;
+	Fl_Printer *p = new Fl_Printer;
+	p->start_job(1);	p->start_page();
+	int wp,hp, ww=w->graph->FMGL->w(), hh=w->graph->FMGL->h();
+	p->printable_rect(&wp,&hp);
+	double s=1, sw=double(wp)/ww, sh=double(hp)/hh;
+	if(sw<s)	s=sw;
+	if(sh<s)	s=sh;
+//	if(sw<sh)	p->rotate(90);	// TODO add rotation ???
+	p->scale(s,s);	
+	p->print_widget(w->graph->FMGL);
+	p->end_page();		p->end_job();
+	delete p;
+}
+//-----------------------------------------------------------------------------
 Fl_Menu_Item menuitems[] = {
 	{"File", 0, 0, 0, FL_SUBMENU},
 		{"New script", 0, new_cb},
 		{"Open file ...", FL_CTRL+'o', open_cb},
 		{"Save file", FL_CTRL+'s', save_cb},
 		{"Save as ...", 0, saveas_cb, 0, FL_MENU_DIVIDER},
-		// TODO{"Print plot", 0, 0, 0, FL_MENU_DIVIDER},
+		{"Print plot", 0, print_plot_cb, 0, FL_MENU_DIVIDER},
 		{"Recent files", 0, 0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
 			{"1.", 0, lastfile1_cb},
 			{"2.", 0, lastfile2_cb},
@@ -264,6 +282,12 @@ Fl_Menu_Item menuitems[] = {
 			{"Plot style", 0, style_dlg_cb},
 			{"Option(s)", FL_META+'o', option_dlg_cb},
 			{0},
+	// TODO{"Selection", 0,  0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
+		// TODO{"Hide", 0,  0},
+		// TODO{"Delete", 0,  0},
+		// TODO{"Move up", 0,  0},
+		// TODO{"Move down", 0,  0},
+		// TODO{"Show hidden", FL_F+8,  0, 0, FL_MENU_TOGGLE},
 		{0},
 	{"Graphics", 0, 0, 0, FL_SUBMENU},
 		{0},
@@ -405,7 +429,7 @@ public:
 		auto_exec_w = new Fl_Check_Button(5, 145, 330, 25, mgl_gettext("Execute script after loading"));
 		exec_save_w = new Fl_Check_Button(5, 170, 330, 25, mgl_gettext("Save file before redrawing"));
 		complete_w = new Fl_Check_Button(5, 195, 330, 25, mgl_gettext("Enable keywords completion"));
-		complete_w->deactivate();	// TODO
+		complete_w->deactivate();	// TODO	add completion
 		highlight_w = new Fl_Check_Button(5, 220, 330, 25, mgl_gettext("Highlight current object(s)"));
 		mouse_zoom_w = new Fl_Check_Button(5, 245, 330, 25, mgl_gettext("Enable mouse wheel for zooming"));
 		lang_w = new Fl_Choice(160, 275, 175, 25, mgl_gettext("Language for mgllab"));

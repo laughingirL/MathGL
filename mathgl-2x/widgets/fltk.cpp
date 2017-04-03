@@ -36,6 +36,8 @@
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/Fl_MathGL.h"
 //-----------------------------------------------------------------------------
+#define MGL_MAX_LINES	(INT_MAX-1000)
+//-----------------------------------------------------------------------------
 #include "xpm/show_sl.xpm"
 #include "xpm/next_sl.xpm"
 #include "xpm/prev_sl.xpm"
@@ -137,7 +139,6 @@ void Fl_MathGL::set_graph(HMGL GR)
 //-----------------------------------------------------------------------------
 void Fl_MathGL::draw()
 {
-	// TODO: add active points drawing here (from Qt)
 	const unsigned char *g = mgl_get_rgb(gr);
 	int i, ww=mgl_get_width(gr), hh=mgl_get_height(gr);
 	if(g)	fl_draw_image(g, x(), y(), ww, hh, 3);
@@ -184,6 +185,15 @@ void Fl_MathGL::update()
 		setlocale(LC_NUMERIC, "");
 		const char *buf = mgl_get_mess(gr);
 		if(show_warn && *buf)	fl_message("%s",buf);
+		if(!prim.empty())	// manual primitives
+		{
+			setlocale(LC_NUMERIC, "C");
+			mgl_subplot(gr,1,1,0,"#");
+			mgl_set_ranges(gr, -1,1, -1,1, -1,1);
+			mglParse pr;	pr.StartID(MGL_MAX_LINES);
+			pr.Execute(gr, prim.c_str());
+			setlocale(LC_NUMERIC, "");
+		}
 	}
 	else if(mgl_get_num_frame(gr)>0)
 	{
@@ -831,12 +841,6 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 		// TODO{"Polygon", 0,  0},
 		// TODO{"Marker", 0,  0},
 		// TODO{"Text", 0,  0},
-	// TODO{"Selection", 0,  0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
-		// TODO{"Hide", 0,  0},
-		// TODO{"Delete", 0,  0},
-		// TODO{"Move up", 0,  0},
-		// TODO{"Move down", 0,  0},
-		// TODO{"Show hidden", FL_F+8,  0, 0, FL_MENU_TOGGLE},
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)

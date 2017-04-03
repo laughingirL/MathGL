@@ -205,7 +205,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 mglParser::mglParser(bool setsize)
 {
 	InUse = 1;	curGr = 0;	Variant = 0;
-	Skip=Stop=for_br=false;
+	Skip=Stop=for_br=false;	StarObhID = 0;
 	memset(for_stack,0,40*sizeof(int));
 	memset(if_stack,0,40*sizeof(int));
 	memset(if_for,0,40*sizeof(int));
@@ -1002,7 +1002,7 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 	for(long i=0;i<n;i++)
 	{
 		gr->SetWarn(-1, "");
-		gr->SetObjId(i+1);
+		gr->SetObjId(i+1+StarObhID);
 		long r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
 		if(r==1)		snprintf(buf,64,"\nWrong argument(s) in line %ld", i+1);
@@ -1405,6 +1405,12 @@ void MGL_EXPORT mgl_parser_openhdf(HMPR p, const char *fname)
 void MGL_EXPORT mgl_parser_openhdf_(uintptr_t *p, const char *fname,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	mgl_parser_openhdf(_PR_,s);	delete []s;	}
+//---------------------------------------------------------------------------
+void MGL_EXPORT mgl_parser_start_id(HMPR pr, int id)
+{	pr->StarObhID = id;	}
+void MGL_EXPORT mgl_parser_start_id_(uintptr_t* p, int *id)
+{	mgl_parser_start_id(_PR_, *id);	}
+
 //---------------------------------------------------------------------------
 mglCommand mgls_prg_cmd[] = {
 	{"ask","Define parameter from user input","ask $N 'question'", 0, 6},

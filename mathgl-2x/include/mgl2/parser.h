@@ -107,6 +107,7 @@ public:
 	mglCommand *Cmd;	///< Table of MGL commands (can be changed by user). It MUST be sorted by 'name'!!!
 	long InUse;			///< Smart pointer (number of users)
 	const mglBase *curGr;	///< Current grapher
+	int StarObhID;		///< staring object id
 
 	mglParser(bool setsize=false);
 	virtual ~mglParser();

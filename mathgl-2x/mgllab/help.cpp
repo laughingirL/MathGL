@@ -321,7 +321,6 @@ public:
 		if(!dat)	return;
 		std::string script;
 		char buf[32];
-printf("sl = %ld -> ",sl);
 		switch(plot)
 		{
 		case 0:
@@ -340,7 +339,6 @@ printf("sl = %ld -> ",sl);
 			script = "rotate 40 60:light on:crange " + name + ":surf3 " + name + ":box";
 			break;
 		}
-printf("sl = %ld, scr='%s'\n",sl,script.c_str());	fflush(stdout);
 		script = "clf:"+script;
 		mgl_set_def_param(gr->get_graph());
 		mgl_parse_text(gr->get_graph(), Parse->Self(), script.c_str());

@@ -47,7 +47,7 @@ D. Docs about JS interface
 
 2. Sample about PDE -- add 'tridmat' + 'diffract'
 3. Sample about complex 'ode' (like Raman scattering)
-
+4. Docs about mglParse::StartID
 6. Sample about 'flame2d'
 9. Sample about 'detect'
 10. Docs about 'apde'

@@ -1440,3 +1440,104 @@ void cb_only_inplot(Fl_Widget*,void *v)
 void inplot_dlg_cb(Fl_Widget*,void *v)
 {	inplot_dlg.e = (ScriptWindow*)v;	inplot_dlg.show();	}
 //-----------------------------------------------------------------------------
+class PrimDlg : public GeneralDlg
+{
+	Fl_Choice *kind, *col, *arr1, *arr2, *dash, *mark;
+	Fl_Check_Button *fill;
+	Fl_Input *text;
+	Fl_Spinner *num;
+public:	
+	PrimDlg()
+	{
+		Fl_Button *o;
+		w = new Fl_Double_Window(295, 200, mgl_gettext("Add primitive"));
+		Fl_Menu_Item k[]={{mgl_gettext("marker")}, {mgl_gettext("line")}, { mgl_gettext("rectangle")},
+			{mgl_gettext("curve")}, {mgl_gettext("rhomb")}, { mgl_gettext("ellipse")},
+			{mgl_gettext("arc")}, {mgl_gettext("polygon")}, { mgl_gettext("text")}, {0}};
+		kind = new Fl_Choice(65, 10, 75, 25, mgl_gettext("Kind"));
+		kind->copy(k);		kind->value(0);
+		col = new Fl_Choice(205, 10, 75, 25, mgl_gettext("Color"));
+		col->copy(colors);	col->value(0);
+		arr1 = new Fl_Choice(65, 40, 75, 25, mgl_gettext("Arrow1"));
+		arr1->copy(arrows);	arr1->value(0);
+		arr2 = new Fl_Choice(205, 40, 75, 25, mgl_gettext("Arrow2"));
+		arr2->copy(arrows);	arr2->value(0);
+		dash = new Fl_Choice(65, 70, 75, 25, mgl_gettext("Dash"));
+		dash->copy(dashing);	dash->value(0);
+		mark = new Fl_Choice(205, 70, 75, 25, mgl_gettext("Mark"));
+		mark->copy(markers);	mark->value(0);
+		num = new Fl_Spinner(205, 100, 75, 25, mgl_gettext("Edges"));
+		num->range(1,100);	num->value(5);
+		fill = new Fl_Check_Button(205, 100, 75, 25, mgl_gettext("wire"));	fill->value(1);
+		text = new Fl_Input(65, 130, 215, 25, mgl_gettext("Text"));
+		o = new Fl_Button(120, 165, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(205, 165, 75, 25, mgl_gettext("Add"));	o->callback(cb_dlg_ok,this);
+		w->set_modal();	w->end();
+	}
+	cb_ok()
+	{
+		result.clear();
+		int k = kind->value();
+		char c = cols[col->value()];	if(c==' ')	c='w';
+		char dsh = dash->text()[1];
+		char a1 = arr1->text()[1], a2 = arr2->text()[1];
+		const char *s = mark->text();
+		char mrk = (s && *s=='\'')? s[1]:0;
+		switch(k)
+		{
+		case 0:
+			if(!mrk)	{	fl_alert(mgl_gettext("You need to select marker!"));	return;	}
+			result = "ball 0 0 '";
+			if(!fill->value())	result += '&';
+			result = result+mrk+c+"'\n";	break;
+		case 1:
+			result = "line -0.2 0 0.2 0 '2";
+			if(dsh!=' ' && dsh!='-')	result += dsh;
+			if(a1!='_')	result = result+a2+a1;
+			else if(a2!='_')	result += a2;
+			result = result+c+"'\n";	break;
+		case 2:
+			result = "rect -0.2 -0.2 0.2 0.2 '2";
+			if(!fill->value())	result += '#';
+			result = result+c+"'\n";	break;
+		case 3:
+			result = "curve -0.2 0 0 0.5 0.2 0 0 0.5 '2";
+			if(dsh!=' ' && dsh!='-')	result += dsh;
+			if(a1!='_')	result = result+a2+a1;
+			else if(a2!='_')	result += a2;
+			result = result+c+"'\n";	break;
+		case 4:
+			result = "rhomb -0.2 0 0.2 0 0.1 '2";
+			if(!fill->value())	result += '#';
+			result = result+c+"'\n";	break;
+		case 5:
+			result = "ellipse -0.2 0 0.2 0 0.1 '2";
+			if(!fill->value())	result += '#';
+			result = result+c+"'\n";	break;
+		case 6:
+			result = "arc 0 0 0.2 0 60 '2";
+			if(dsh!=' ' && dsh!='-')	result += dsh;
+			if(a1!='_')	result = result+a2+a1;
+			else if(a2!='_')	result += a2;
+			result = result+c+"'\n";	break;
+		case 7:
+			result = "polygon 0 0 0 0.2 ";
+			{char buf[32];	snprintf(buf,31,"%ld",mgl_int(num->value()));
+				result = result+buf+" '2";	}
+			if(!fill->value())	result += '#';
+			result = result+c+"'\n";	break;
+		case 8:
+			s = text->value();
+			if(!s || *s==0)	{	fl_alert(mgl_gettext("You need to enter text!"));	return;	}
+			result = result+"text 0 0 0.1 0 '"+s+"' '"+c;
+			if(fill->value())	result += ":w";
+			result = result+"'\n";	break;
+		}
+		if(e)	e->graph->FMGL->prim += result;
+		hide();
+	}
+} prim_dlg;
+//-----------------------------------------------------------------------------
+void prim_dlg_cb(Fl_Widget*, void* v)
+{	prim_dlg.e=(ScriptWindow*)v;	prim_dlg.show();	}
+//-----------------------------------------------------------------------------

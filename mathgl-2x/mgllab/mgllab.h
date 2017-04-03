@@ -258,6 +258,7 @@ void hint_dlg_cb(Fl_Widget*,void*);
 void message_cb(Fl_Widget*,void*);
 void message_set(const char *s);
 void info_dlg_cb(mglDataA *d);
+void prim_dlg_cb(Fl_Widget*, void* v);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg
 //-----------------------------------------------------------------------------
 extern Fl_Text_Buffer *textbuf;

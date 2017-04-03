@@ -2411,10 +2411,9 @@ Function {make_animate()} {open
   } {}
 } 
 
-Function {make_datinfo()} {open
-} {
+Function {make_datinfo()} {} {
   Fl_Window {} {open
-    xywh {304 146 420 530} type Double visible
+    xywh {304 146 420 530} type Double hide
   } {
     Fl_Output out {
       label Information
@@ -2432,7 +2431,7 @@ Function {make_datinfo()} {open
       xywh {40 186 75 25}
     }
     Fl_Button {} {
-      label {2D view} selected
+      label {2D view}
       xywh {120 186 75 25}
     }
     Fl_Button {} {
@@ -2446,6 +2445,59 @@ Function {make_datinfo()} {open
     Fl_Return_Button {} {
       label Close
       xywh {335 186 75 25}
+    }
+  }
+} 
+
+Function {make_prim()} {open
+} {
+  Fl_Window {} {
+    label {Add primitive} open
+    xywh {333 270 295 195} type Double visible
+  } {
+    Fl_Choice kind {
+      label Kind open
+      xywh {65 10 75 25} down_box BORDER_BOX
+    } {}
+    Fl_Choice col {
+      label Color open
+      xywh {205 10 75 25} down_box BORDER_BOX
+    } {}
+    Fl_Choice arr1 {
+      label Arrow1 open
+      xywh {65 40 75 25} down_box BORDER_BOX
+    } {}
+    Fl_Choice arr2 {
+      label Arrow2 open
+      xywh {205 40 75 25} down_box BORDER_BOX
+    } {}
+    Fl_Choice dash {
+      label Dash open
+      xywh {65 70 75 25} down_box BORDER_BOX
+    } {}
+    Fl_Choice mark {
+      label Mark open
+      xywh {205 70 75 25} down_box BORDER_BOX
+    } {}
+    Fl_Button {} {
+      label Cancel
+      xywh {120 160 75 25}
+    }
+    Fl_Return_Button {} {
+      label Add
+      xywh {205 160 75 25}
+    }
+    Fl_Check_Button fill {
+      label solid
+      xywh {205 95 75 25} down_box DOWN_BOX
+    }
+    Fl_Input text {
+      label Text
+      xywh {65 125 215 25}
+    }
+    Fl_Spinner {} {
+      label Edges selected
+      xywh {65 100 75 25}
     }
   }
 } 
