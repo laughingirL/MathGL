@@ -87,6 +87,8 @@ public:
 	/// Enable/disable key handling (default is false)
 	inline void set_handle_key(bool val)	{	handle_keys=true;	}
 	inline int get_last_id()	{	return last_id;	}
+	void draw_plot();	// drawing itself
+	inline bool running()	{	return run;	}
 
 protected:
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
@@ -108,6 +110,7 @@ protected:
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
 	char pos[128];
+	bool run;					///< flag that drawing in progress
 
 	virtual void draw();		///< quick drawing function
 	int handle(int code);		///< handle mouse events

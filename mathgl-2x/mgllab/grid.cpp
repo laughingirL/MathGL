@@ -66,15 +66,7 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_color(FL_BLACK);
 		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
 		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
-		else
-		{
-			dual v=data->vc(C,R,sl);
-			if(real(v)==0 && imag(v)>0)	snprintf(s,64,"i%g",imag(v));
-			else if(real(v)==0 && imag(v)<0)	snprintf(s,64,"-i%g",-imag(v));
-			else if(imag(v)>0)	snprintf(s,64,"%g+i%g",real(v),imag(v));
-			else if(imag(v)<0)	snprintf(s,64,"%g-i%g",real(v),-imag(v));
-			else	snprintf(s,64,"%g",real(v));
-		}
+		else	strncpy(s,mgl_str_num(data->vc(C,R,sl)).c_str(),64);
 		fl_draw(s, X+3, Y+3, W-6, H-6, FL_ALIGN_RIGHT);
 		break;
 	case CONTEXT_RC_RESIZE:
@@ -100,19 +92,11 @@ void Fl_Data_Table::cell_click()
 		int XX,YY,WW,HH;
 		find_cell(CONTEXT_CELL, R, C, XX, YY, WW, HH);
 		input->resize(XX,YY,WW,HH);
-		char s[64];
-		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
-		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
-		else
-		{
-			dual v=data->vc(C,R,sl);
-			if(real(v)==0 && imag(v)>0)	snprintf(s,64,"i%g",imag(v));
-			else if(real(v)==0 && imag(v)<0)	snprintf(s,64,"-i%g",-imag(v));
-			else if(imag(v)>0)	snprintf(s,64,"%g+i%g",real(v),imag(v));
-			else if(imag(v)<0)	snprintf(s,64,"%g-i%g",real(v),-imag(v));
-			else	snprintf(s,64,"%g",real(v));
-		}
-		input->value(s);	input->show();
+		std::string s;
+		if(mgl_isnan(data->v(C,R,sl)))	s = "nan";
+		else if(mgl_isbad(data->v(C,R,sl)))	s = data->v(C,R,sl)>0?"inf":"-inf";
+		else	s = mgl_str_num(data->vc(C,R,sl));
+		input->value(s.c_str());	input->show();
 		input->take_focus();
 	}
 }

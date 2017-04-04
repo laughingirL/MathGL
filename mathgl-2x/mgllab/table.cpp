@@ -422,15 +422,13 @@ void list_dat_cb(Fl_Widget*, void*v)
 	if(e->var->GetNz()>1)	fl_message(mgl_gettext("Only current slice will be inserted"));
 	
 	std::string list = "list " + wcstombs(e->var->s);
-	char num[64];
 	long k=e->get_slice(), nx=e->var->GetNx(), ny=e->var->GetNy();
 	for(long j=0;j<ny;j++)
 	{
 		for(long i=0;i<nx;i++)
 		{
-			if(d)	snprintf(num, 63, "\t%g", d->a[i+nx*(j+k*ny)] );
-			if(c)	snprintf(num, 63, "\t%g+i%g", real(c->a[i+nx*(j+k*ny)]), imag(c->a[i+nx*(j+k*ny)]) );
-			list += num;
+			if(d)	list += '\t'+mgl_str_num(d->a[i+nx*(j+k*ny)]);
+			if(c)	list += '\t'+mgl_str_num(c->a[i+nx*(j+k*ny)]);
 		}
 		if(j<ny-1)	list += "\t|";
 	}

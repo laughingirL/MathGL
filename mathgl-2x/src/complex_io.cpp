@@ -229,14 +229,6 @@ void MGL_EXPORT mgl_datac_set_id_(uintptr_t *d, const char *eq,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_set_id(_DC_, s);	delete []s;	}
 //-----------------------------------------------------------------------------
-std::string MGL_NO_EXPORT mgl_cprint(mreal re, mreal im, char ch)
-{
-	char buf[128];
-	if(im>0)	snprintf(buf,128,"%g+i%g%c",re,im,ch);
-	else if(im<0)	snprintf(buf,128,"%g-i%g%c",re,-im,ch);
-	else	snprintf(buf,128,"%g%c",re,ch);
-	return std::string(buf);
-}
 std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns)
 {
 	std::string out;
@@ -251,8 +243,8 @@ std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns)
 		for(long i=0;i<ny;i++)
 		{
 			for(long j=0;j<nx-1;j++)
-				out+=mgl_cprint(real(dd->a[j+nx*(i+ny*k)]), imag(dd->a[j+nx*(i+ny*k)]),'\t');
-			out+=mgl_cprint(real(dd->a[nx-1+nx*(i+ny*k)]), imag(dd->a[nx-1+nx*(i+ny*k)]),'\n');
+				out+=mgl_str_num(dd->a[j+nx*(i+ny*k)])+'\t';
+			out+=mgl_str_num(dd->a[nx-1+nx*(i+ny*k)])+'\n';
 		}
 		out += "\n";
 	}
@@ -261,11 +253,11 @@ std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns)
 		if(nz>1)	for(long i=0;i<ny;i++)
 		{
 			for(long j=0;j<nx-1;j++)
-				out+=mgl_cprint(real(dd->a[j+nx*(i+ny*ns)]), imag(dd->a[j+nx*(i+ny*ns)]),'\t');
-			out+=mgl_cprint(real(dd->a[nx-1+nx*(i+ny*ns)]), imag(dd->a[nx-1+nx*(i+ny*ns)]),'\n');
+				out+=mgl_str_num(dd->a[j+nx*(i+ny*ns)])+'\t';
+			out+=mgl_str_num(dd->a[nx-1+nx*(i+ny*ns)])+'\n';
 		}
 		else if(ns<ny)	for(long j=0;j<nx;j++)
-			out+=mgl_cprint(real(dd->a[j+nx*ns]), imag(dd->a[j+nx*ns]),'\t');
+			out+=mgl_str_num(dd->a[j+nx*ns])+'\t';
 	}
 	setlocale(LC_NUMERIC, loc.c_str());
 	return out;

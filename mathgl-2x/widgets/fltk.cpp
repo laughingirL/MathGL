@@ -116,11 +116,11 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widge
 {
 	gr = new mglCanvas;
 	tet=phi=x1=y1=0;	x2=y2=1;
-	zoom = rotate = handle_keys = false;
+	zoom = rotate = handle_keys = grid = false;
 	flag=x0=y0=xe=ye=0;	show_warn=true;
 	tet_val = phi_val = 0;
 	draw_par = 0;	draw_func = 0;	draw_cl = 0;
-	last_id = -1;
+	last_id = -1;	run = false;
 }
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
@@ -141,13 +141,13 @@ void Fl_MathGL::set_graph(HMGL GR)
 void Fl_MathGL::draw()
 {
 	const unsigned char *g = mgl_get_rgb(gr);
-	int i, ww=mgl_get_width(gr), hh=mgl_get_height(gr);
+	int ww=mgl_get_width(gr), hh=mgl_get_height(gr);
 	if(g)	fl_draw_image(g, x(), y(), ww, hh, 3);
 	if(grid)
 	{
 		char str[5]="0.0";
 		fl_color(192,192,192);
-		for(i=1;i<10;i++)
+		for(int i=1;i<10;i++)
 		{
 			str[2] = '0'+10-i;	fl_draw(str, x(), y()+i*hh/10);
 			fl_line(x(), y()+i*hh/10, x()+ww, y()+i*hh/10);
@@ -166,9 +166,8 @@ void Fl_MathGL::draw()
 	else	mgl_set_flag(gr,0,MGL_SHOW_POS);
 }
 //-----------------------------------------------------------------------------
-void Fl_MathGL::update()
+inline void Fl_MathGL::draw_plot()	// drawing itself
 {
-	Fl::lock();
 	if(draw_func || draw_cl)
 	{
 		mgl_reset_frames(gr);	mgl_set_warn(gr,0,"");
@@ -180,8 +179,10 @@ void Fl_MathGL::update()
 		setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
 		if(mgl_is_frames(gr))	mgl_new_frame(gr);
-		if(draw_func)	draw_func(gr, draw_par);	// drawing itself
+
+		if(draw_func)	draw_func(gr, draw_par);
 		else	if(draw_cl)	{	mglGraph g(gr);	draw_cl->Draw(&g);	}
+
 		if(mgl_is_frames(gr))	mgl_end_frame(gr);
 		setlocale(LC_NUMERIC, "");
 		const char *buf = mgl_get_mess(gr);
@@ -204,10 +205,25 @@ void Fl_MathGL::update()
 		mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,-phi,-tet,0);
 		mgl_get_frame(gr,0);
 	}
+	mgl_finish(gr);	run = false;	Fl::awake();
+}
+//-----------------------------------------------------------------------------
+MGL_NO_EXPORT void *draw_plot_thr(void *v)
+{	((Fl_MathGL*)v)->draw_plot();	return 0;	}
+//-----------------------------------------------------------------------------
+void Fl_MathGL::update()
+{
+	Fl::lock();
+	static pthread_t thr;
+	pthread_create(&thr,0,draw_plot_thr,this);
+	run = true;
+	while(run)	Fl::wait();
+	pthread_join(thr,0);
+	Fl::unlock();
+	
 	if(mgl_get_width(gr)!=w() || mgl_get_height(gr)!=h())
 		size(mgl_get_width(gr), mgl_get_height(gr));
-	gr->AskStop(false);	redraw();
-	Fl::flush();	Fl::unlock();
+	gr->AskStop(false);	redraw();	Fl::flush();
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::resize(int xx, int yy, int ww, int hh)
@@ -734,7 +750,15 @@ void mglCanvasFL::Animation()	{	mgl_sshow_cb(0,mgl);	}
 void MGL_LOCAL_CONST mgl_no_cb(Fl_Widget *, void *)	{}
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_stop_cb(Fl_Widget*, void* v)
-{	Fl_MGLView *e = (Fl_MGLView*)v;	if(e)	e->FMGL->stop();	}
+{
+	Fl_MGLView *e = (Fl_MGLView*)v;
+	if(e)
+	{
+		e->FMGL->stop();
+//		while(e->FMGL->running())	Fl::wait();
+//		e->FMGL->redraw();
+	}
+}
 //-----------------------------------------------------------------------------
 Fl_Menu_Item pop_graph[] = {
 	{ mgl_gettext("Export"), 0, mgl_no_cb, 0, FL_SUBMENU},

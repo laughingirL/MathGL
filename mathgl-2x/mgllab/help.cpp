@@ -15,6 +15,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "mgllab.h"
+#include "image.h"
 #include <ctype.h>
 #include <FL/Fl_Select_Browser.H>
 //-----------------------------------------------------------------------------
@@ -126,6 +127,12 @@ void mem_dlg_cb3(Fl_Widget *, void *v)
 void mem_update_cb(Fl_Widget *, void *v)
 {	((ScriptWindow*)v)->mem_init();	}
 //-----------------------------------------------------------------------------
+void delete_all_cb(Fl_Widget *, void *v)
+{
+	if(fl_choice(mgl_gettext("Are you sure that you want to delete ALL data arrays?"), mgl_gettext("Yes"), mgl_gettext("No"), NULL) == 0)
+	{	Parse->DeleteAll();	((ScriptWindow*)v)->mem_init();	}
+}
+//-----------------------------------------------------------------------------
 Fl_Widget *add_mem(ScriptWindow *w)
 {
 	static int widths[] = {220,205,0};
@@ -145,16 +152,24 @@ Fl_Widget *add_mem(ScriptWindow *w)
 	w->var->align(FL_ALIGN_TOP);	w->var->column_widths(widths);
 	w->var->tooltip(mgl_gettext("List of available data."));
 
-	o = new Fl_Button(10, 400, 95, 25, mgl_gettext("Edit"));	o->callback(mem_dlg_cb0,w);
+	o = new Fl_Button(20, 400, 90, 25, mgl_gettext(" Edit"));	o->callback(mem_dlg_cb0,w);
+	o->image(img_grid);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(mgl_gettext("Open table with selected data for editing."));
-	o = new Fl_Button(120, 400, 95, 25, mgl_gettext("Info"));	o->callback(mem_dlg_cb1,w);
+	o = new Fl_Button(120, 400, 90, 25, mgl_gettext(" Info"));	o->callback(mem_dlg_cb1,w);
+	o->image(img_info);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(mgl_gettext("Data information and preview."));
-	o = new Fl_Button(230, 400, 95, 25, mgl_gettext("Delete"));	o->callback(mem_dlg_cb2,w);
+	o = new Fl_Button(220, 400, 90, 25, mgl_gettext(" Delete"));	o->callback(mem_dlg_cb2,w);
+	o->image(img_delete);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(mgl_gettext("Delete selected data."));
-	o = new Fl_Button(340, 400, 95, 25, mgl_gettext("New"));	o->callback(mem_dlg_cb3,w);
+	o = new Fl_Button(320, 400, 90, 25, mgl_gettext(" New"));	o->callback(mem_dlg_cb3,w);
+	o->image(img_new);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(mgl_gettext("Open dialog for new data creation."));
-	o = new Fl_Button(450, 400, 95, 25, mgl_gettext("Refresh"));	o->callback(mem_update_cb,w);
+	o = new Fl_Button(420, 400, 90, 25, mgl_gettext(" Refresh"));	o->callback(mem_update_cb,w);
+	o->image(img_update);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(mgl_gettext("Refresh list of variables."));
+	o = new Fl_Button(520, 400, 90, 25, mgl_gettext(" Del.all"));	o->callback(delete_all_cb,w);
+	o->image(img_clear);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
+	o->tooltip(mgl_gettext("Delete @b all@. data arrays."));
 //	o = new Fl_Button(120, 335, 95, 25, mgl_gettext("Load"));	o->callback(mem_dlg_cb,(void *)4);
 //	o = new Fl_Button(230, 335, 95, 25, mgl_gettext("Save"));	o->callback(mem_dlg_cb,(void *)5);
 //	o = new Fl_Button(10, 370, 95, 25, mgl_gettext("Update"));	o->callback(mem_upd_cb,0);
@@ -198,7 +213,7 @@ void ScriptWindow::mem_init()
 	for(long i=0;i<Parse->GetNumConst();i++)
 	{
 		mglNum *v = Parse->GetConst(i);
-		snprintf(str,128,"%ls\t%s\t%lu b", v->s.c_str(), (mgl_gettext("const=")+mgl_str_num(v->c)).c_str(), sizeof(mglNum));
+		snprintf(str,128,"%ls\t%s\t%lu b", v->s.c_str(), ("const="+mgl_str_num(v->c)).c_str(), sizeof(mglNum));
 		var->add(str,v);
 	}
 }
@@ -208,6 +223,8 @@ void ScriptWindow::mem_pressed(int kind)
 	TableWindow *w;
 	int ind = var->value();
 	mglDataA *v = (mglDataA *)var->data(ind);
+	const char *s = var->text(ind);
+	if(!s || strstr(s,"\tconst"))	return;
 	if(!v && kind!=3)	return;
 	if(kind==0)
 	{
@@ -216,15 +233,7 @@ void ScriptWindow::mem_pressed(int kind)
 		w->update(v);	w->show();
 	}
 	else if(kind==1)
-	{
 		info_dlg_cb(v);
-// 	static char res[128];
-// 		const wchar_t *s=v->s.c_str();
-// 		if(v->GetNz()>1)		snprintf(res,128,"crange %ls:rotate 40 60:box:surf3 %ls\n", s,s);
-// 		else if(v->GetNy()>1)	snprintf(res,128,"zrange %ls:rotate 40 60:box:surf %ls\n", s,s);
-// 		else				snprintf(res,128,"yrange %ls:box:plot %ls\n", s,s);
-// 		textbuf->text(res);
-	}
 	else if(kind==2)
 		Parse->DeleteVar(v->s.c_str());
 	else if(kind==3)

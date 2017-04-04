@@ -1521,9 +1521,7 @@ public:
 			else if(a2!='_')	result += a2;
 			result = result+c+"'\n";	break;
 		case 7:
-			result = "polygon 0 0 0 0.2 ";
-			{	char buf[32];	snprintf(buf,31,"%ld",mgl_int(num->value()));
-				result = result+buf+" '2";	}
+			result = "polygon 0 0 0 0.2 "+mgl_str_num(num->value())+" '2";
 			if(!fill->value())	result += '#';
 			result = result+c+"'\n";	break;
 		case 8:

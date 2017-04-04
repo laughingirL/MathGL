@@ -630,8 +630,7 @@ int mglParser::ParseDef(std::wstring &str)
 				res = 0;
 				HMDT dd = mglFormulaCalc(mgl_trim_ws(s.substr(2)), this, DataList);
 				d = dd->a[0];	delete dd;
-				char buf[32];	snprintf(buf,32,"%g",d);
-				buf[31] = 0;	AddParam(nn, buf);
+				AddParam(nn, mgl_str_num(d).c_str());
 			}
 			return res+1;
 		}

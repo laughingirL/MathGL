@@ -30,7 +30,6 @@ void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
 {
-	static char b[32];
 	static std::string s;
 	if(d==0xffff)	return "";
 	int f=0, p=d&1, n=p?0:1;
@@ -41,12 +40,11 @@ MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
 		if(((d>>j)&1) == p)	f++;
 		else
 		{
-			snprintf(b,32," %g%c",f*w,dlm);	b[31]=0;	s += b;
+			s += mgl_str_num(f*w)+dlm;
 			p = (d>>j)&1;	f = 1;	n++;
 		}
 	}
-	snprintf(b,32,"%g",f*w);	b[31]=0;	s += b;
-	s += (n%2) ? "" : " 0";
+	s += mgl_str_num(f*w) + ((n%2) ? "" : " 0");
 	return s.c_str();
 }
 //-----------------------------------------------------------------------------

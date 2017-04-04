@@ -69,19 +69,20 @@ ZZ. Update time.texi {before release!!!}
 
 ============= mgllab ===========
 
-*. Start/Stop on single button + pthread
 *. Update FLTK icons
-*. Icons on mem_panel
 *. Extend number of data operation (in table_window)
 *. Window with Zoom/Hidden ?!?
+*. Manual data changing should be written into script
+*. Ctrl-D && Ctrl-Shift-D to comment/uncomment line (+hide plot :) -- "#h " )
+*. toolbuttons for stop+reload+copy_graph+primitives+hide --> Fl_MathGL
+*. toolbuttons for fname + inplot in editor
+*. ask to save from recent files
 
 Z. Flat toolbuttons ???
 
 ============= UDAV =============
 
 1. Zoom rectangle after mouse selection
-
-2. Create default plot depending on selected row/column/range in data table ?!?
 
 3. Manual data changing should be written into script
 	a. Suggest to save into HDF5 if data changed manually

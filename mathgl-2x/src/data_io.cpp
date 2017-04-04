@@ -322,16 +322,15 @@ std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns)
 {
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
-	std::string out;	char buf[512];
+	std::string out;
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data
 		const mglData *dr = dynamic_cast<const mglData *>(d);
 		if(dr && !dr->id.empty())	out += "## "+dr->id+'\n';
 		for(long i=0;i<ny;i++)
 		{
-			for(long j=0;j<nx-1;j++)
-			{	snprintf(buf,512,"%g\t",d->v(j,i,k));	out += buf;	}
-			snprintf(buf,512,"%g\n",d->v(nx-1,i,k));	out += buf;
+			for(long j=0;j<nx-1;j++)	out += mgl_str_num(d->v(j,i,k))+'\t';
+			out += mgl_str_num(d->v(nx-1,i,k))+'\n';
 		}
 		out += "\n";
 	}
@@ -339,12 +338,10 @@ std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns)
 	{	// save selected slice
 		if(nz>1)	for(long i=0;i<ny;i++)
 		{
-			for(long j=0;j<nx-1;j++)
-			{	snprintf(buf,512,"%g\t",d->v(j,i,ns));	out += buf;	}
-			snprintf(buf,512,"%g\n",d->v(nx-1,i,ns));	out += buf;
+			for(long j=0;j<nx-1;j++)	out += mgl_str_num(d->v(j,i,ns))+'\t';
+			out += mgl_str_num(d->v(nx-1,i,ns))+'\n';
 		}
-		else if(ns<ny)	for(long j=0;j<nx;j++)
-		{	snprintf(buf,512,"%g\t",d->v(j,ns));	out += buf;	}
+		else if(ns<ny)	for(long j=0;j<nx;j++)	out += mgl_str_num(d->v(j,ns))+'\t';
 	}
 	setlocale(LC_NUMERIC, loc.c_str());
 	return out;

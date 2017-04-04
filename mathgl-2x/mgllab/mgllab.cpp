@@ -561,11 +561,10 @@ public:
 	{
 		const char *eq = edit->value();
 		mglData d = Parse->Calc(eq);
-		char res[64];	snprintf(res,63,"%g",d.a[0]);
-		output->value(res);	result = res;
-		char *buf = new char[strlen(res)+strlen(eq)+3];
-		sprintf(buf,"%s\t%s",eq,res);
-		prev->insert(0,buf);	delete []buf;
+		result = mgl_str_num(d.a[0]);
+		output->value(result.c_str());
+		std::string buf = eq+('\t'+result);
+		prev->insert(0,buf.c_str());
 	}
 	void set_kind()
 	{

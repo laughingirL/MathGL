@@ -264,8 +264,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		memset(buf,0,4096);
 		if(!fgets(buf,4096,fp))
 		{
-			char b[32];	snprintf(b,32,"%d",n);	b[31]=0;
-			gr->SetWarn(mglWarnOpen,(a[2].s+" - line "+b).c_str());
+			gr->SetWarn(mglWarnOpen,(a[2].s+" - line "+mgl_str_num(n)).c_str());
 			fclose(fp);	delete []buf;	return res;
 		}
 		fclose(fp);
@@ -284,8 +283,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		memset(buf,0,4096);
 		if(!fgets(buf,4096,fp))
 		{
-			char b[32];	snprintf(b,32,"%d",n);	b[31]=0;
-			gr->SetWarn(mglWarnOpen,(a[3].s+" - line "+b).c_str());
+			gr->SetWarn(mglWarnOpen,(a[3].s+" - line "+mgl_str_num(n)).c_str());
 			fclose(fp);	delete []buf;	return res;
 		}
 		fclose(fp);

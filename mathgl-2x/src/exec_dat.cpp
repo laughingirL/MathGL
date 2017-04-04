@@ -568,8 +568,7 @@ int MGL_NO_EXPORT mgls_info(mglGraph *gr, long , mglArg *a, const char *k, const
 	int res=0;
 	if(!strcmp(k,"d"))	gr->SetWarn(-1,a[0].d->PrintInfo());
 	else if(!strcmp(k,"s"))	gr->SetWarn(-1,a[0].s.c_str());
-	else if(!strcmp(k,"n"))
-	{	char buf[128];	snprintf(buf,128,"value = %g",a[0].v);	buf[127]=0;	gr->SetWarn(-1,buf);	}
+	else if(!strcmp(k,"n"))	gr->SetWarn(-1,("value = "+mgl_str_num(a[0].v)).c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
