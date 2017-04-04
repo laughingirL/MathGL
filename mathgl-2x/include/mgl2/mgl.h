@@ -142,7 +142,7 @@ public:
 	/// Add user-defined glyph for symbol and set its optional id
 	inline void DefineSymbol(char id, const mglDataA &x, const mglDataA &y)
 	{	mgl_define_symbol(gr, id, &x, &y);	}
-	
+
 	/// Set default palette
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
 	/// Set default color scheme
@@ -686,7 +686,7 @@ public:
 	/// Draw user-defined symbol in position p along direction d
 	inline void Symbol(mglPoint p, mglPoint d, char id, const char *how="", double size=-1)
 	{	mgl_symbol_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, id, how, size);	}
-	
+
 	/// Print text in position p with specified font
 	inline void Putsw(mglPoint p,const wchar_t *text,const char *font=":C",double size=-1)
 	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
@@ -1340,7 +1340,7 @@ public:
 	inline void ContP(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
 	{	mgl_contp(gr, &x, &y, &z, &a, sch, opt);	}
 
-	
+
 	/// Draw contour lines at manual levels for 2d data specified parametrically
 	/** Style ‘_’ to draw contours at bottom of axis box.
 	 * Style 't'/'T' draw contour labels below/above contours.*/
@@ -2270,7 +2270,7 @@ public:
 	/// Set starting object ID
 	inline void	StartID(int id=0)
 	{	mgl_parser_start_id(pr, id);	}
-	
+
 	/// Return result of formula evaluation
 	inline mglData Calc(const char *formula)
 	{	return mglData(true,mgl_parser_calc(pr,formula)); 	}
@@ -2307,6 +2307,14 @@ public:
 	inline void DeleteVar(const wchar_t *name)	{	mgl_parser_del_varw(pr, name);		}
 	/// Delete all data variables
 	void DeleteAll()	{	mgl_parser_del_all(pr);	}
+
+	/// Get constant with given id. Can be NULL if not found.
+	/// NOTE !!! You must not delete obtained data arrays !!!
+	inline mglNum *GetConst(unsigned long id)
+	{	return mgl_parser_get_const(pr,id);	}
+	/// Get number of constants
+	inline long GetNumConst()
+	{	return mgl_parser_num_const(pr);	}
 };
 //-----------------------------------------------------------------------------
 #endif

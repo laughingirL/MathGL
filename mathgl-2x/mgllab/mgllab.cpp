@@ -243,7 +243,7 @@ void print_plot_cb(Fl_Widget*,void *v)
 	if(sw<s)	s=sw;
 	if(sh<s)	s=sh;
 //	if(sw<sh)	p->rotate(90);	// TODO add rotation ???
-	p->scale(s,s);	
+	p->scale(s,s);
 	p->print_widget(w->graph->FMGL);
 	p->end_page();		p->end_job();
 	delete p;
@@ -333,9 +333,11 @@ ScriptWindow *new_view()
 	add_mem(w);		gg->end();
 	w->rtab->end();
 
+
 	w->status = new Fl_Output(0,485,930,25);	w->status->value(mgl_gettext("Ready"));
-	w->draw = new Fl_MGL(w->graph);	w->draw->e = w;	
+	w->draw = new Fl_MGL(w->graph);	w->draw->e = w;
 	mgl_makemenu_fltk(w->menu, w->graph);
+	w->menu->add("Graphics/Primitive", FL_CTRL+'m', prim_dlg_cb, w);
 
 	t->end();	w->end();	w->resizable(t);
 	w->rtab->callback(mem_upd_cb, w);

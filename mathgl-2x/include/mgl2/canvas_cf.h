@@ -621,6 +621,14 @@ uintptr_t MGL_EXPORT mgl_parser_get_var_(uintptr_t* p, unsigned long *id);
 long MGL_EXPORT mgl_parser_num_var(HMPR p);
 long MGL_EXPORT mgl_parser_num_var_(uintptr_t* p);
 
+/// Get constant with given id
+/// NOTE !!! You must not delete obtained data arrays !!!
+MGL_EXPORT mglNum *mgl_parser_get_const(HMPR p, unsigned long id);
+uintptr_t MGL_EXPORT mgl_parser_get_const_(uintptr_t* p, unsigned long *id);
+/// Get number of constants
+long MGL_EXPORT mgl_parser_num_const(HMPR p);
+long MGL_EXPORT mgl_parser_num_const_(uintptr_t* p);
+
 /// Delete variable with name
 void MGL_EXPORT mgl_parser_del_var(HMPR p, const char *name);
 void MGL_EXPORT mgl_parser_del_var_(uintptr_t* p, const char *name, int);

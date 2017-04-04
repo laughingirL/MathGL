@@ -1446,7 +1446,7 @@ class PrimDlg : public GeneralDlg
 	Fl_Check_Button *fill;
 	Fl_Input *text;
 	Fl_Spinner *num;
-public:	
+public:
 	PrimDlg()
 	{
 		Fl_Button *o;
@@ -1457,7 +1457,7 @@ public:
 		kind = new Fl_Choice(65, 10, 75, 25, mgl_gettext("Kind"));
 		kind->copy(k);		kind->value(0);
 		col = new Fl_Choice(205, 10, 75, 25, mgl_gettext("Color"));
-		col->copy(colors);	col->value(0);
+		col->copy(colors);	col->value(4);
 		arr1 = new Fl_Choice(65, 40, 75, 25, mgl_gettext("Arrow1"));
 		arr1->copy(arrows);	arr1->value(0);
 		arr2 = new Fl_Choice(205, 40, 75, 25, mgl_gettext("Arrow2"));
@@ -1465,8 +1465,8 @@ public:
 		dash = new Fl_Choice(65, 70, 75, 25, mgl_gettext("Dash"));
 		dash->copy(dashing);	dash->value(0);
 		mark = new Fl_Choice(205, 70, 75, 25, mgl_gettext("Mark"));
-		mark->copy(markers);	mark->value(0);
-		num = new Fl_Spinner(205, 100, 75, 25, mgl_gettext("Edges"));
+		mark->copy(markers);	mark->value(0);	mark->value(2);
+		num = new Fl_Spinner(65, 100, 75, 25, mgl_gettext("Edges"));
 		num->range(1,100);	num->value(5);
 		fill = new Fl_Check_Button(205, 100, 75, 25, mgl_gettext("wire"));	fill->value(1);
 		text = new Fl_Input(65, 130, 215, 25, mgl_gettext("Text"));
@@ -1522,7 +1522,7 @@ public:
 			result = result+c+"'\n";	break;
 		case 7:
 			result = "polygon 0 0 0 0.2 ";
-			{char buf[32];	snprintf(buf,31,"%ld",mgl_int(num->value()));
+			{	char buf[32];	snprintf(buf,31,"%ld",mgl_int(num->value()));
 				result = result+buf+" '2";	}
 			if(!fill->value())	result += '#';
 			result = result+c+"'\n";	break;
@@ -1533,7 +1533,7 @@ public:
 			if(fill->value())	result += ":w";
 			result = result+"'\n";	break;
 		}
-		if(e)	e->graph->FMGL->prim += result;
+		if(e)	{	e->graph->FMGL->prim += result;	e->graph->update();	}
 		hide();
 	}
 } prim_dlg;

@@ -42,7 +42,7 @@ public:
 	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
 	mglCanvas *gr;			///< Built-in mglCanvas instance (mglCanvasFLTK is used by default)
 	std::string prim;		///< manual primitives
-	
+
 	Fl_MathGL(int x, int y, int w, int h, const char *label=0);
 	virtual ~Fl_MathGL();
 
@@ -70,7 +70,7 @@ public:
 	inline void set_draw(mglDraw *dr)	{	if(draw_cl)	delete draw_cl;	draw_cl=dr;	draw_func=0;	}
 	inline void set_draw(int (*dr)(mglGraph *gr))
 	{	set_draw(dr?mgl_draw_graph:0,(void*)dr);	}
-	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	}
+	void set_state(bool z, bool r, bool g=false)	{	zoom = z;	rotate = r;	grid = g;	}
 	/// Set zoom in/out region
 	inline void set_zoom(mreal X1, mreal Y1, mreal X2, mreal Y2)
 	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	update();	}
@@ -101,7 +101,7 @@ protected:
 	mreal tet,phi;				///< rotation angles
 	bool rotate;				///< flag for handle mouse
 	bool zoom;					///< flag for zoom by mouse
-	bool wire;
+	bool grid;					///< flag to draw grid and edit prim
 	bool show_warn;				///< show window with warnings
 	bool handle_keys;
 	mreal x1,x2,y1,y2;			///< zoom region

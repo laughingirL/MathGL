@@ -143,23 +143,23 @@ void Fl_MathGL::draw()
 	const unsigned char *g = mgl_get_rgb(gr);
 	int i, ww=mgl_get_width(gr), hh=mgl_get_height(gr);
 	if(g)	fl_draw_image(g, x(), y(), ww, hh, 3);
-	if(flag&4)
+	if(grid)
 	{
 		char str[5]="0.0";
 		fl_color(192,192,192);
 		for(i=1;i<10;i++)
 		{
-			str[2] = '0'+10-i;	fl_draw(str,30,30+i*hh/10);
-			fl_line(30,30+i*hh/10,30+ww,30+i*hh/10);
-			str[2] = '0'+i;	fl_draw(str,30+i*ww/10,30+hh);
-			fl_line(30+i*ww/10,30,30+i*ww/10,30+hh);
+			str[2] = '0'+10-i;	fl_draw(str, x(), y()+i*hh/10);
+			fl_line(x(), y()+i*hh/10, x()+ww, y()+i*hh/10);
+			str[2] = '0'+i;	fl_draw(str, x()+i*ww/10, y()+hh);
+			fl_line(x()+i*ww/10, y(), x()+i*ww/10, y()+hh);
 		}
 		int d = (hh>ww?ww:hh)/100;
 		for(size_t i=0;i<gr->Act.size();i++)
 		{
 			const mglActivePos &p=gr->Act[i];
-			fl_rectf(p.x-d/2,p.y-d/2-1,d,d, fl_rgb_color(127,255,63));
-			fl_rect(p.x-d/2,p.y-d/2-1,d,d, FL_BLACK);
+			fl_rectf(x()+p.x-d/2, y()+p.y-d/2-1, d,d, fl_rgb_color(127,255,63));
+			fl_rect(x()+p.x-d/2, y()+p.y-d/2-1, d,d, FL_BLACK);
 		}
 		mgl_set_flag(gr,1,MGL_SHOW_POS);
 	}
@@ -215,94 +215,204 @@ void Fl_MathGL::resize(int xx, int yy, int ww, int hh)
 //-----------------------------------------------------------------------------
 int Fl_MathGL::handle(int code)
 {
-	if(popup && code==FL_PUSH && Fl::event_button()==FL_RIGHT_MOUSE)
+	if(handle_keys && code==FL_KEYUP && Fl::event_button()!=FL_LEFT_MOUSE)
 	{
-		const Fl_Menu_Item *m = popup->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
-		if(m)	m->do_callback(wpar, vpar);
-	}
-	else if(!zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
-	{
-		last_id = mgl_get_obj_id(gr,Fl::event_x()-x(), Fl::event_y()-y());
-		mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
-		if(g && g->ClickFunc)	g->ClickFunc(draw_par);
-		if(mgl_get_flag(gr,MGL_SHOW_POS))
+		int key=Fl::event_key();
+		if(!strchr(" .,wasdrfx",key))	return 0;
+		if(key==' ')	{	update();	return 1;	}
+		if(key=='w')
 		{
-			mglPoint p = gr->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
-			if(g)	g->LastMousePos = p;
-			char s[128];
-			snprintf(s,128,"x=%g, y=%g, z=%g",p.x,p.y,p.z);	s[127]=0;
-			draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
+			tet += 10;
+			if(tet_val)	tet_val->value(tet);
+			update();	return 1;
 		}
-		if(Fl::event_clicks())
-		{	if(draw_cl)	draw_cl->Click();	else	update();	}
-	}
-	else if((!rotate && !zoom) || Fl::event_button()!=FL_LEFT_MOUSE)
-	{
-		if(code==FL_FOCUS || code==FL_UNFOCUS)	return 1;
-		if(handle_keys && code==FL_KEYUP)
+		if(key=='s')
 		{
-			int key=Fl::event_key();
-			if(!strchr(" .,wasdrfx",key))	return 0;
-			if(key==' ')	{	update();	return 1;	}
-			if(key=='w')
-			{
-				tet += 10;
-				if(tet_val)	tet_val->value(tet);
-				update();	return 1;
-			}
-			if(key=='s')
-			{
-				tet -= 10;
-				if(tet_val)	tet_val->value(tet);
-				update();	return 1;
-			}
-			if(key=='a')
-			{
-				phi += 10;
-				if(phi_val)	phi_val->value(phi);
-				update();	return 1;
-			}
-			if(key=='d')
-			{
-				phi -= 10;
-				if(phi_val)	phi_val->value(phi);
-				update();	return 1;
-			}
-			if(key=='x')
-			{
-				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
-				if(g && g->mgl->FMGL==this)
-				{	g->Wnd->hide();	return 1;	}
-				else	return 0;
-//				exit(0);
-			}
-			if(key==',')
-			{
-				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
-				if(g && g->mgl->FMGL==this)
-				{	g->PrevFrame();	return 1;	}
-				else	return 0;
-			}
-			if(key=='.')
-			{
-				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
-				if(g && g->mgl->FMGL==this)
-				{	g->NextFrame();	return 1;	}
-				else	return 0;
-			}
-			if(key=='r')
-			{	flag = (flag&2) + ((~(flag&1))&1);	update();	return 1;	}
-			if(key=='f')
-			{	flag = (flag&1) + ((~(flag&2))&2);	update();	return 1;	}
+			tet -= 10;
+			if(tet_val)	tet_val->value(tet);
+			update();	return 1;
 		}
-		return 0;
+		if(key=='a')
+		{
+			phi += 10;
+			if(phi_val)	phi_val->value(phi);
+			update();	return 1;
+		}
+		if(key=='d')
+		{
+			phi -= 10;
+			if(phi_val)	phi_val->value(phi);
+			update();	return 1;
+		}
+		if(key=='x')
+		{
+			mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
+			if(g && g->mgl->FMGL==this)
+			{	g->Wnd->hide();	return 1;	}
+			else	return 0;
+			//				exit(0);
+		}
+		if(key==',')
+		{
+			mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
+			if(g && g->mgl->FMGL==this)
+			{	g->PrevFrame();	return 1;	}
+			else	return 0;
+		}
+		if(key=='.')
+		{
+			mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
+			if(g && g->mgl->FMGL==this)
+			{	g->NextFrame();	return 1;	}
+			else	return 0;
+		}
+		if(key=='r')
+		{	flag = (flag&2) + ((~(flag&1))&1);	update();	return 1;	}
+		if(key=='f')
+		{	flag = (flag&1) + ((~(flag&2))&2);	update();	return 1;	}
 	}
-	else if(code==FL_PUSH)	{	xe=x0=Fl::event_x();	ye=y0=Fl::event_y();	}
+	else if(code==FL_PUSH)
+	{
+		xe=x0=Fl::event_x();	ye=y0=Fl::event_y();
+		if(popup && Fl::event_button()==FL_RIGHT_MOUSE)
+		{
+			const Fl_Menu_Item *m = popup->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
+			if(m)	m->do_callback(wpar, vpar);
+		}
+		else if(!zoom && !rotate && Fl::event_button()==FL_LEFT_MOUSE)
+		{
+			int xx = x0-x(), yy = y0-y();
+			last_id = mgl_get_obj_id(gr,xx, yy);
+			if(last_id>=MGL_MAX_LINES)	last_id=-1;
+			mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
+			if(g && g->ClickFunc)	g->ClickFunc(draw_par);
+			if(mgl_get_flag(gr,MGL_SHOW_POS))
+			{
+				mglPoint p = gr->CalcXYZ(xx, yy);
+				if(g)	g->LastMousePos = p;
+				char s[128];
+				snprintf(s,128,"x=%g, y=%g, z=%g",p.x,p.y,p.z);	s[127]=0;
+				draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
+			}
+			if(Fl::event_clicks())
+			{
+				int id = mgl_get_obj_id(gr,x0-x(), y0-y()) - MGL_MAX_LINES-1;
+				if(grid && id>=0)	// delete manual primitive
+				{
+					prim = (id>0?mgl_str_arg(prim, '\n', 0,id-1)+'\n':"") + mgl_str_arg(prim, '\n', id+1,INT_MAX);
+					update();
+				}
+				else if(draw_cl)	draw_cl->Click();
+				else	update();
+			}
+		}
+		return 1;
+	}
 	else if(code==FL_DRAG)
 	{
 		xe=Fl::event_x();	ye=Fl::event_y();
 		mreal ff = 240./sqrt(mreal(w()*h()));
-		if(rotate)
+		// handle primitives
+		int id = mgl_get_obj_id(gr,x0-x(), y0-y()) - MGL_MAX_LINES-1;
+		int ww=mgl_get_width(gr), hh=mgl_get_height(gr), d=(hh>ww?ww:hh)/100;
+		long pos = mgl_is_active(gr,x0-x(),y0-y(),d);
+		if(grid && pos>=0)
+		{
+			Fl::lock();
+			const mglActivePos &p = gr->Act[pos];
+			id = long(p.id)-MGL_MAX_LINES-1;
+			if(id<0)	return 0;
+			std::string line = mgl_str_arg(prim, '\n', id), res;
+			if(line.empty())	return 0;	// NOTE stupid check (never should be here)
+			std::vector<std::string> arg = mgl_str_args(line,' ');
+			// try "attract" mouse
+			for(size_t i=0;i<=10;i++)
+			{
+				int tt = i*(w()/10);	if(abs(xe-tt)<2*d)	xe = tt;
+				tt = i*(h()/10);	if(abs(ye-tt)<2*d)	ye = tt;
+			}
+			for(size_t i=0;i<gr->Act.size();i++)
+			{
+				const mglActivePos &q = gr->Act[i];
+				if(abs(xe-q.x)<2*d && abs(ye-q.y)<2*d)	{	xe=q.x;	ye=q.y;	}
+			}
+			// now move point
+			float dx = 2*(xe-x0)/float(w()), dy = 2*(y0-ye)/float(h());
+			float xx=atof(arg[1].c_str()), yy=atof(arg[2].c_str());
+			if(p.n==0)	{	arg[1]=mgl_str_num(xx+dx);	arg[2]=mgl_str_num(yy+dy);	}
+			else if(arg[0]=="rect")
+			{
+				float x_=atof(arg[3].c_str()), y_=atof(arg[4].c_str());
+				if(p.n==1)	{	xx+=dx;	y_+=dy;	}
+				if(p.n==2)	{	x_+=dx;	yy+=dy;	}
+				if(p.n==3)	{	x_+=dx;	y_+=dy;	}
+				arg[1]=mgl_str_num(xx);	arg[2]=mgl_str_num(yy);
+				arg[3]=mgl_str_num(x_);	arg[4]=mgl_str_num(y_);
+			}
+			else if(p.n==1)
+			{
+				float xx=atof(arg[3].c_str()), yy=atof(arg[4].c_str());
+				arg[3]=mgl_str_num(xx+dx);	arg[4]=mgl_str_num(yy+dy);
+			}
+			else if(arg[0]=="rhomb" || arg[0]=="ellipse")
+			{
+				float x_=atof(arg[3].c_str())-xx, y_=atof(arg[4].c_str())-yy;
+				float r_=atof(arg[5].c_str()), dr=0;
+				if(x_*x_+y_*y_>0)
+				{	dr = (dx*x_+dy*y_)/(x_*x_+y_*y_);	dr = hypot(dx-dr*x_,dy-dr*y_);	}
+				else	dr = hypot(dx,dy);
+				arg[5]=mgl_str_num(r_+dr);
+			}
+			else if(arg[0]=="arc")
+			{
+				float x_=atof(arg[3].c_str())-xx, y_=atof(arg[4].c_str())-yy;
+				float a_=atof(arg[5].c_str());
+				double c=cos(M_PI*a_/180), s=sin(M_PI*a_/180);
+				double a = atan2(x_,y_) - atan2(x_*c-y_*s+dx,x_*s+y_*c+dy);
+				arg[5]=mgl_str_num(a*180/M_PI);
+			}
+			else if(p.n==2)
+			{
+				float xx=atof(arg[5].c_str()), yy=atof(arg[6].c_str());
+				arg[5]=mgl_str_num(xx+dx);	arg[6]=mgl_str_num(yy+dy);
+			}
+			else if(p.n==3)
+			{
+				float xx=atof(arg[7].c_str()), yy=atof(arg[8].c_str());
+				if(arg[0]=="curve")	{	dx*=-1;	dy*=-1;	}
+				arg[7]=mgl_str_num(xx+dx);	arg[8]=mgl_str_num(yy+dy);
+			}
+			res = arg[0];	for(size_t i=1;i<arg.size();i++)	res += ' '+arg[i];
+			prim = (id>0?mgl_str_arg(prim, '\n', 0,id-1)+'\n':"") + res+'\n' + mgl_str_arg(prim, '\n', id+1,INT_MAX);
+			Fl::unlock();
+			x0 = xe;	y0 = ye;	update();
+		}
+		else if(grid && id>=0)
+		{
+			Fl::lock();
+			std::string line = mgl_str_arg(prim, '\n', id), res;
+			if(line.empty())	return 0;	// NOTE stupid check (never should be here)
+			std::vector<std::string> arg = mgl_str_args(line,' ');
+
+			float dx = 2*(xe-x0)/float(w()), dy = 2*(y0-ye)/float(h());
+			float x1=atof(arg[1].c_str()), y1=atof(arg[2].c_str());
+			arg[1] = mgl_str_num(x1+dx);	arg[2] = mgl_str_num(y1+dy);
+			if(arg[0]=="curve")
+			{
+				float x2=atof(arg[5].c_str()), y2=atof(arg[6].c_str());
+				arg[5]=mgl_str_num(x2+dx);	arg[6]=mgl_str_num(y2+dy);
+			}
+			else if(arg[0]!="ball")
+			{
+				float x2=atof(mgl_str_arg(line,' ',3).c_str()), y2=atof(mgl_str_arg(line,' ',4).c_str());
+				arg[3]=mgl_str_num(x2+dx);	arg[4]=mgl_str_num(y2+dy);
+			}
+			res = arg[0];	for(size_t i=1;i<arg.size();i++)	res += ' '+arg[i];
+			prim = (id>0?mgl_str_arg(prim, '\n', 0,id-1)+'\n':"") + res+'\n' + mgl_str_arg(prim, '\n', id+1,INT_MAX);
+			Fl::unlock();
+			x0 = xe;	y0 = ye;	update();
+		}
+		else if(rotate)
 		{
 			phi += (x0-xe)*ff;
 			tet += (y0-ye)*ff;
@@ -312,10 +422,9 @@ int Fl_MathGL::handle(int code)
 			if(tet<-180)	tet+=360;
 			if(tet_val)	tet_val->value(tet);
 			if(phi_val)	phi_val->value(phi);
-			x0 = xe;	y0 = ye;
-			update();
+			x0 = xe;	y0 = ye;	update();
 		}
-		redraw();
+		redraw();	return 1;
 	}
 	else if(code==FL_RELEASE)
 	{
@@ -332,14 +441,14 @@ int Fl_MathGL::handle(int code)
 			if(y1>y2)	{	_x1=y1;	y1=y2;	y2=_x1;	}
 			update();
 		}
-		else
+		else if(rotate)
 		{
 			if(tet_val)	tet_val->value(tet);
 			if(phi_val)	phi_val->value(phi);
 		}
-		redraw();
+		redraw();	return 1;
 	}
-	return 1;
+	return 0;
 }
 //-----------------------------------------------------------------------------
 //
@@ -429,8 +538,8 @@ void mglCanvasFL::ToggleRotate()	{	mgl_rotate_cb(0,mgl);	}
 //-----------------------------------------------------------------------------
 void Fl_MGLView::update()
 {
-	FMGL->set_state(zoom_bt->value(), rotate_bt->value());
-	FMGL->set_flag(alpha + 2*light + 4*grid);
+	FMGL->set_state(zoom_bt->value(), rotate_bt->value(), grid_bt->value());
+	FMGL->set_flag(alpha + 2*light);
 	FMGL->update();
 }
 void MGL_NO_EXPORT mgl_draw_cb(Fl_Widget*, void* v)

@@ -170,9 +170,36 @@ void ScriptWindow::mem_init()
 		mglDataA *v = Parse->GetVar(i);
 		if(v && !v->temp)
 		{
-			snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->GetNx(), v->GetNy(), v->GetNz(), sizeof(mreal)*v->GetNN());
+			long sv = 0;
+			if(dynamic_cast<mglData*>(v))	sv = v->GetNN()*sizeof(mreal)+sizeof(mglData);
+			else if(dynamic_cast<mglDataC*>(v))	sv = v->GetNN()*sizeof(dual)+sizeof(mglDataC);
+			else if(dynamic_cast<mglDataV*>(v))	sv = sizeof(mglDataV);
+			else if(dynamic_cast<mglDataW*>(v))	sv = sizeof(mglDataW);
+			else if(dynamic_cast<mglDataF*>(v))	sv = sizeof(mglDataF);
+			else if(dynamic_cast<mglDataR*>(v))	sv = sizeof(mglDataR);
+			else if(dynamic_cast<mglDataT*>(v))	sv = sizeof(mglDataT);
+			const char *ext[]={mgl_gettext("unknown"),"b","Kb","Mb","Gb","Tb","Pb","Eb","Zb","Yb"}, *e;
+			if(sv==0)	e = ext[0];
+#if MGL_SIZEOF_LONG>4
+//			else if((sv>>80L)>0)	{	e=ext[9];	sv = sv>>80L;	}
+//			else if((sv>>70L)>0)	{	e=ext[8];	sv = sv>>70L;	}
+			else if((sv>>60L)>0)	{	e=ext[7];	sv = sv>>60L;	}
+			else if((sv>>50L)>0)	{	e=ext[6];	sv = sv>>50L;	}
+			else if((sv>>40L)>0)	{	e=ext[5];	sv = sv>>40L;	}
+#endif
+			else if((sv>>30L)>0)	{	e=ext[4];	sv = sv>>30L;	}
+			else if((sv>>20L)>0)	{	e=ext[3];	sv = sv>>20L;	}
+			else if((sv>>10L)>0)	{	e=ext[2];	sv = sv>>10L;	}
+			else	e=ext[1];
+			snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld %s", v->s.c_str(), v->GetNx(), v->GetNy(), v->GetNz(), sv, e);
 			var->add(str,v);
 		}
+	}
+	for(long i=0;i<Parse->GetNumConst();i++)
+	{
+		mglNum *v = Parse->GetConst(i);
+		snprintf(str,128,"%ls\t%s\t%lu b", v->s.c_str(), (mgl_gettext("const=")+mgl_str_num(v->c)).c_str(), sizeof(mglNum));
+		var->add(str,v);
 	}
 }
 //-----------------------------------------------------------------------------

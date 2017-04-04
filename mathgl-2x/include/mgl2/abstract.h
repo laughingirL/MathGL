@@ -44,6 +44,15 @@ typedef const mglDataA* HCDT;
 
 std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns);
 std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns);
+/// Get section separated by symbol ch. This is analog of QString::section().
+std::string MGL_EXPORT mgl_str_arg(const std::string &str, char ch, int n1, int n2=-1);
+/// Get sections separated by symbol ch
+std::vector<std::string> MGL_EXPORT mgl_str_args(const std::string &str, char ch);
+/// Get string from real number
+std::string MGL_EXPORT mgl_str_num(double val);
+/// Get string from complex number
+std::string MGL_EXPORT mgl_str_num(dual val);
+
 extern "C" {
 
 #else
@@ -149,6 +158,19 @@ extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
+//-----------------------------------------------------------------------------
+/// Structure for the number handling (see mglParse class).
+struct mglNum
+{
+	mreal d;		///< Number itself
+	dual c;
+	std::wstring s;	///< Number name
+	mglNum(mreal val=0):d(val),c(val)	{}
+	mglNum(const mglNum &n):d(n.d),c(n.c),s(n.s) {}
+	const mglNum &operator=(const mglNum &n)
+	{	d=n.d;	c=n.c;	s=n.s;	return n;	}
+};
+//-----------------------------------------------------------------------------
 /// Abstract class for data array
 class MGL_EXPORT mglDataA
 {

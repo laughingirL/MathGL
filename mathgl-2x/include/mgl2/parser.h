@@ -54,18 +54,6 @@ struct mglCommand
 };
 extern mglCommand mgls_prg_cmd[], mgls_dat_cmd[], mgls_grf_cmd[], mgls_set_cmd[], mgls_prm_cmd[];
 //-----------------------------------------------------------------------------
-/// Structure for the number handling (see mglParse class).
-struct mglNum
-{
-	mreal d;		///< Number itself
-	dual c;
-	std::wstring s;	///< Number name
-	mglNum(mreal val=0):d(val),c(val)	{}
-	mglNum(const mglNum &n):d(n.d),c(n.c),s(n.s) {}
-	const mglNum &operator=(const mglNum &n)
-	{	d=n.d;	c=n.c;	s=n.s;	return n;	}
-};
-//-----------------------------------------------------------------------------
 /// Structure for function name and position.
 struct mglFunc
 {

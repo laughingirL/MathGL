@@ -1147,6 +1147,14 @@ long MGL_EXPORT mgl_parser_num_var(HMPR p)
 {	return p->DataList.size();	}
 long MGL_EXPORT mgl_parser_num_var_(uintptr_t* p)
 {	return mgl_parser_num_var(_PR_);	}
+long MGL_EXPORT mgl_parser_num_const(HMPR p)
+{	return p->NumList.size();	}
+long MGL_EXPORT mgl_parser_num_const_(uintptr_t* p)
+{	return mgl_parser_num_const(_PR_);	}
+MGL_EXPORT mglNum *mgl_parser_get_const(HMPR p, unsigned long id)
+{	return id<p->NumList.size()?p->NumList[id]:0;	}
+uintptr_t MGL_EXPORT mgl_parser_get_const_(uintptr_t* p, unsigned long *id)
+{	return uintptr_t(mgl_parser_get_const(_PR_,*id));	}
 //---------------------------------------------------------------------------
 int MGL_EXPORT mgl_parser_cmd_type(HMPR pr, const char *name)
 {

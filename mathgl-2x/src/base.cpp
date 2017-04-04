@@ -1223,7 +1223,7 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 	}
 	if(pal)
 	{
-		if((s=strstr(p,"{&"))!=0)
+		if(p && (s=strstr(p,"{&"))!=0)
 		{
 			CDef = atof(s+2);
 //			if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
@@ -1231,7 +1231,7 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		else
 		{
 			long tt, n;
-			tt = AddTexture(p,-1);	n=Txt[tt].n;
+			tt = AddTexture(p?p:MGL_DEF_PAL,-1);	n=Txt[tt].n;
 			CDef = tt+((n+CurrPal-1)%n+0.5)/n;
 			if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
 			sprintf(last_style+11,"{&%g}",CDef);
