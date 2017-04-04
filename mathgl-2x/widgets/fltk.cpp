@@ -35,6 +35,7 @@
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/Fl_MathGL.h"
+#include <limits.h>
 //-----------------------------------------------------------------------------
 #define MGL_MAX_LINES	(INT_MAX-1000)
 //-----------------------------------------------------------------------------
@@ -191,7 +192,7 @@ void Fl_MathGL::update()
 			mgl_subplot(gr,1,1,0,"#");
 			mgl_set_ranges(gr, -1,1, -1,1, -1,1);
 			mglParse pr;	pr.StartID(MGL_MAX_LINES);
-			pr.Execute(gr, prim.c_str());
+			mgl_parse_text(gr,pr.Self(),prim.c_str());
 			setlocale(LC_NUMERIC, "");
 		}
 	}

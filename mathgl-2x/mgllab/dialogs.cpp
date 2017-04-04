@@ -1474,7 +1474,7 @@ public:
 		o = new Fl_Return_Button(205, 165, 75, 25, mgl_gettext("Add"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
-	cb_ok()
+	void cb_ok()
 	{
 		result.clear();
 		int k = kind->value();
