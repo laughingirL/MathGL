@@ -124,6 +124,9 @@ void mem_dlg_cb2(Fl_Widget *, void *v)
 void mem_dlg_cb3(Fl_Widget *, void *v)
 {	((ScriptWindow*)v)->mem_pressed(3);	}
 //-----------------------------------------------------------------------------
+void mem_dlg_cb4(Fl_Widget *, void *v)
+{	((ScriptWindow*)v)->mem_pressed(4);	}
+//-----------------------------------------------------------------------------
 void mem_update_cb(Fl_Widget *, void *v)
 {	((ScriptWindow*)v)->mem_init();	}
 //-----------------------------------------------------------------------------
@@ -164,15 +167,15 @@ Fl_Widget *add_mem(ScriptWindow *w)
 	o = new Fl_Button(320, 400, 90, 25, mgl_gettext(" New"));	o->callback(mem_dlg_cb3,w);
 	o->image(img_new);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(mgl_gettext("Open dialog for new data creation."));
-	o = new Fl_Button(420, 400, 90, 25, mgl_gettext(" Refresh"));	o->callback(mem_update_cb,w);
-	o->image(img_update);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-	o->tooltip(mgl_gettext("Refresh list of variables."));
+	o = new Fl_Button(420, 400, 90, 25, mgl_gettext(" Save"));	o->callback(mem_dlg_cb4,w);
+	o->image(img_save);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
+	o->tooltip(mgl_gettext("Save selected data to file."));
+// 	o = new Fl_Button(420, 400, 90, 25, mgl_gettext(" Refresh"));	o->callback(mem_update_cb,w);
+// 	o->image(img_update);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
+// 	o->tooltip(mgl_gettext("Refresh list of variables."));
 	o = new Fl_Button(520, 400, 90, 25, mgl_gettext(" Del.all"));	o->callback(delete_all_cb,w);
 	o->image(img_clear);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(mgl_gettext("Delete @b all@. data arrays."));
-//	o = new Fl_Button(120, 335, 95, 25, mgl_gettext("Load"));	o->callback(mem_dlg_cb,(void *)4);
-//	o = new Fl_Button(230, 335, 95, 25, mgl_gettext("Save"));	o->callback(mem_dlg_cb,(void *)5);
-//	o = new Fl_Button(10, 370, 95, 25, mgl_gettext("Update"));	o->callback(mem_upd_cb,0);
 	wnd->end();	wnd->resizable(w->var);	return wnd;
 }
 //-----------------------------------------------------------------------------
@@ -232,10 +235,8 @@ void ScriptWindow::mem_pressed(int kind)
 		if(!w)	w = new TableWindow(this);
 		w->update(v);	w->show();
 	}
-	else if(kind==1)
-		info_dlg_cb(v);
-	else if(kind==2)
-		Parse->DeleteVar(v->s.c_str());
+	else if(kind==1)	info_dlg_cb(v);
+	else if(kind==2)	Parse->DeleteVar(v->s.c_str());
 	else if(kind==3)
 	{
 		const char *name = fl_input(mgl_gettext("Enter name for new variable"),"dat");
@@ -243,6 +244,21 @@ void ScriptWindow::mem_pressed(int kind)
 		v = Parse->AddVar(name);
 		w = v->o? (TableWindow*)v->o:new TableWindow(this);
 		w->update(v);	w->show();
+	}
+	else if(kind==4)
+	{
+		char *newfile = fl_file_chooser(mgl_gettext("Save Data?"),
+				mgl_gettext("DAT Files (*.{dat,csv})\tHDF Files (*.{h5,hdf})\tAll Files (*)"), 0);
+		if(newfile)
+		{
+			const char *ext = fl_filename_ext(newfile);
+			if(!strcmp(ext,"h5") || !strcmp(ext,"hdf"))	// this is HDF file
+			{
+				std::string name = wcstombs(v->s);
+				v->SaveHDF(newfile, name.c_str());
+			}
+			else	v->Save(newfile);
+		}
 	}
 	mem_init();
 }
@@ -450,21 +466,20 @@ public:
 		o = new Fl_Button(180, 80, 25, 25);	o->image(img_delete);	o->tooltip("img_delete");
 		o = new Fl_Button(5, 105, 25, 25);	o->image(img_objectU);	o->tooltip("img_objectU");
 		o = new Fl_Button(30, 105, 25, 25);	o->image(img_objectD);	o->tooltip("img_objectD");
-		o = new Fl_Button(55, 105, 25, 25);	o->image(img_layer);	o->tooltip("img_layer");
+		o = new Fl_Button(55, 105, 25, 25);	o->image(img_layer);o->tooltip("img_layer");
 		o = new Fl_Button(80, 105, 25, 25);	o->image(img_new);	o->tooltip("img_new");
-		o = new Fl_Button(105, 105, 25, 25);o->image(img_clear);	o->tooltip("img_clear");
+		o = new Fl_Button(105, 105, 25, 25);o->image(img_clear);o->tooltip("img_clear");
 		o = new Fl_Button(130, 105, 25, 25);o->image(img_plus);	o->tooltip("img_plus");
-		o = new Fl_Button(155, 105, 25, 25);o->image(img_minus);	o->tooltip("img_minus");
-		o = new Fl_Button(180, 105, 25, 25);o->image(img_fname);	o->tooltip("img_fname");
-		o = new Fl_Button(5, 130, 25, 25);	o->image(img_curve);	o->tooltip("img_curve");
+		o = new Fl_Button(155, 105, 25, 25);o->image(img_minus);o->tooltip("img_minus");
+		o = new Fl_Button(180, 105, 25, 25);o->image(img_fname);o->tooltip("img_fname");
+		o = new Fl_Button(5, 130, 25, 25);	o->image(img_curve);o->tooltip("img_curve");
 		o = new Fl_Button(30, 130, 25, 25);	o->image(img_svn);	o->tooltip("img_svn");
 		o = new Fl_Button(55, 130, 25, 25);	o->image(img_adjust);	o->tooltip("img_adjust");
 		o = new Fl_Button(80, 130, 25, 25);	o->image(img_reload);	o->tooltip("img_reload");
 		o = new Fl_Button(105, 130, 25, 25);o->image(img_zoom12);	o->tooltip("img_zoom12");
 		o = new Fl_Button(130, 130, 25, 25);o->image(img_zoom21);	o->tooltip("img_zoom21");
-//		o = new Fl_Button(155, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
+		o = new Fl_Button(155, 130, 25, 25);o->image(img_pause);	o->tooltip("img_pause");
 //		o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
-		//out = new Fl_Output(50, 160, 75, 25, mgl_gettext("Name"));
 		o = new Fl_Button(130, 160, 75, 25, mgl_gettext("Close"));
 		o->callback(cb_dlg_cancel,this);
 		w->end();
