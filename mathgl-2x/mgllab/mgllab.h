@@ -205,6 +205,7 @@ void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v);
 void ins_fname_cb(Fl_Widget *, void *);
 void ins_path_cb(Fl_Widget *, void *);
 void ins_fits_cb(Fl_Widget *, void *);
+void ins_prim_cb(Fl_Widget *, void *);
 void hide_cb(Fl_Widget*, void *);
 void unhide_cb(Fl_Widget*, void *);
 //-----------------------------------------------------------------------------

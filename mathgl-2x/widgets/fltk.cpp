@@ -205,6 +205,7 @@ void Fl_MathGL::resize(int xx, int yy, int ww, int hh)
 //-----------------------------------------------------------------------------
 int Fl_MathGL::handle(int code)
 {
+	static bool busy=false;
 	static int last_pos=-1;
 	if(handle_keys && code==FL_KEYUP && Fl::event_button()!=FL_LEFT_MOUSE)
 	{
@@ -301,7 +302,8 @@ int Fl_MathGL::handle(int code)
 	}
 	else if(code==FL_DRAG)
 	{
-		xe=Fl::event_x();	ye=Fl::event_y();
+		if(busy)	return 1;	// remove possible conflicts of too often events
+		busy = true;	xe=Fl::event_x();	ye=Fl::event_y();
 		mreal ff = 240./sqrt(mreal(w()*h()));
 		// handle primitives
 		int id = mgl_get_obj_id(gr,x0-x(), y0-y()) - MGL_MAX_LINES-1;
@@ -310,7 +312,8 @@ int Fl_MathGL::handle(int code)
 		if(grid && pos<0)	pos=last_pos;
 		if(grid && pos>=0)
 		{
-			Fl::lock();	last_pos=pos;
+//			Fl::lock();
+			last_pos=pos;
 			const mglActivePos &p = gr->Act[pos];
 			id = long(p.id)-MGL_MAX_LINES-1;
 			if(id<0)	return 0;
@@ -376,12 +379,12 @@ int Fl_MathGL::handle(int code)
 			}
 			res = arg[0];	for(size_t i=1;i<arg.size();i++)	res += ' '+arg[i];
 			prim = (id>0?mgl_str_arg(prim, '\n', 0,id-1)+'\n':"") + res+'\n' + mgl_str_arg(prim, '\n', id+1,INT_MAX);
-			Fl::unlock();
+//			Fl::unlock();
 			x0 = xe;	y0 = ye;	update();
 		}
 		else if(grid && id>=0)
 		{
-			Fl::lock();
+//			Fl::lock();
 			std::string line = mgl_str_arg(prim, '\n', id), res;
 			if(line.empty())	return 0;	// NOTE stupid check (never should be here)
 			std::vector<std::string> arg = mgl_str_args(line,' ');
@@ -401,7 +404,7 @@ int Fl_MathGL::handle(int code)
 			}
 			res = arg[0];	for(size_t i=1;i<arg.size();i++)	res += ' '+arg[i];
 			prim = (id>0?mgl_str_arg(prim, '\n', 0,id-1)+'\n':"") + res+'\n' + mgl_str_arg(prim, '\n', id+1,INT_MAX);
-			Fl::unlock();
+//			Fl::unlock();
 			x0 = xe;	y0 = ye;	update();
 		}
 		else if(rotate)
@@ -416,7 +419,7 @@ int Fl_MathGL::handle(int code)
 			if(phi_val)	phi_val->value(phi);
 			x0 = xe;	y0 = ye;	update();
 		}
-		redraw();	return 1;
+		busy = false;	redraw();	return 1;
 	}
 	else if(code==FL_RELEASE)
 	{

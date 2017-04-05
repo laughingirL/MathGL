@@ -291,6 +291,7 @@ Fl_Menu_Item menuitems[] = {
 			{mgl_gettext("Command"), FL_META+'c', newcmd_dlg_cb},
 			{mgl_gettext("Inplot"), FL_META+'i', inplot_dlg_cb},
 			{mgl_gettext("Fitted formula"), FL_META+'f', ins_fits_cb},
+			{mgl_gettext("Manual primitives"), 0, ins_prim_cb},
 			{mgl_gettext("Plot style"), 0, style_dlg_cb},
 			{mgl_gettext("Option(s)"), FL_META+'o', option_dlg_cb},
 			{0},

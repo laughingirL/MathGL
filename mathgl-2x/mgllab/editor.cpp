@@ -661,3 +661,11 @@ void ins_fits_cb(Fl_Widget *, void *v)
 	else	{	ss = '\''+ss+'\'';	e->editor->insert(ss.c_str());	}
 }
 //-----------------------------------------------------------------------------
+void ins_prim_cb(Fl_Widget *, void *v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	std::string ss = "subplot 1 1 0 '#'\n"+e->graph->FMGL->prim+"subplot 1 1 0\n###### end of primitives\n";
+	e->editor->insert(ss.c_str());
+	e->graph->FMGL->prim.clear();
+}
+//-----------------------------------------------------------------------------
