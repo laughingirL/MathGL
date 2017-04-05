@@ -16,7 +16,7 @@
  */
 #include "mgl2/mgl.h"
 #include "mgllab.h"
-#include "image.h"
+#include "../widgets/image.h"
 //-----------------------------------------------------------------------------
 mglParse *Parse=0;
 //-----------------------------------------------------------------------------
@@ -30,6 +30,7 @@ void Fl_MGL::next_frame()
 {
 	size_t n=anim.size();
 	if(n==0 && animate_cb(this))	{	gr->toggle_sshow();	return;	}
+	n=anim.size();
 	cur = (cur+1)%n;
 	Parse->AddParam(0,anim[cur].c_str());
 	update();
@@ -40,6 +41,7 @@ void Fl_MGL::prev_frame()
 {
 	size_t n=anim.size();
 	if(n==0 && animate_cb(this))	{	gr->toggle_sshow();	return;	}
+	n=anim.size();
 	cur = (cur+n-1)%n;
 	Parse->AddParam(0,anim[cur].c_str());
 	update();

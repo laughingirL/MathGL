@@ -226,11 +226,21 @@ void view_cb(Fl_Widget*, void*)
 {	Fl_Window* w = new_view();	w->show();	}
 //-----------------------------------------------------------------------------
 void hint_cb(Fl_Widget*, void*)	{}
-void lastfile1_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[0].c_str(),-1,(ScriptWindow*)v);	}
-void lastfile2_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[1].c_str(),-1,(ScriptWindow*)v);	}
-void lastfile3_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[2].c_str(),-1,(ScriptWindow*)v);	}
-void lastfile4_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[3].c_str(),-1,(ScriptWindow*)v);	}
-void lastfile5_cb(Fl_Widget*, void *v)	{	load_file(lastfiles[4].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile1_cb(Fl_Widget*, void *v)
+{	if (!check_save()) return;
+	load_file(lastfiles[0].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile2_cb(Fl_Widget*, void *v)
+{	if (!check_save()) return;
+	load_file(lastfiles[1].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile3_cb(Fl_Widget*, void *v)
+{	if (!check_save()) return;
+	load_file(lastfiles[2].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile4_cb(Fl_Widget*, void *v)
+{	if (!check_save()) return;
+	load_file(lastfiles[3].c_str(),-1,(ScriptWindow*)v);	}
+void lastfile5_cb(Fl_Widget*, void *v)
+{	if (!check_save()) return;
+	load_file(lastfiles[4].c_str(),-1,(ScriptWindow*)v);	}
 //-----------------------------------------------------------------------------
 void print_plot_cb(Fl_Widget*,void *v)
 {
@@ -250,59 +260,62 @@ void print_plot_cb(Fl_Widget*,void *v)
 }
 //-----------------------------------------------------------------------------
 Fl_Menu_Item menuitems[] = {
-	{"File", 0, 0, 0, FL_SUBMENU},
-		{"New script", 0, new_cb},
-		{"Open file ...", FL_CTRL+'o', open_cb},
-		{"Save file", FL_CTRL+'s', save_cb},
-		{"Save as ...", 0, saveas_cb, 0, FL_MENU_DIVIDER},
-		{"Print plot", 0, print_plot_cb, 0, FL_MENU_DIVIDER},
-		{"Recent files", 0, 0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
-			{"1.", 0, lastfile1_cb},
-			{"2.", 0, lastfile2_cb},
-			{"3.", 0, lastfile3_cb},
-			{"4.", 0, lastfile4_cb},
-			{"5.", 0, lastfile5_cb},
+	{mgl_gettext("File"), 0, 0, 0, FL_SUBMENU},
+		{mgl_gettext("New script"), 0, new_cb},
+		{mgl_gettext("Open file ..."), FL_CTRL+'o', open_cb},
+		{mgl_gettext("Save file"), FL_CTRL+'s', save_cb},
+		{mgl_gettext("Save as ..."), 0, saveas_cb, 0, FL_MENU_DIVIDER},
+		{mgl_gettext("Print plot"), 0, print_plot_cb, 0, FL_MENU_DIVIDER},
+		{mgl_gettext("Recent files"), 0, 0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
+			{mgl_gettext("1."), 0, lastfile1_cb},
+			{mgl_gettext("2."), 0, lastfile2_cb},
+			{mgl_gettext("3."), 0, lastfile3_cb},
+			{mgl_gettext("4."), 0, lastfile4_cb},
+			{mgl_gettext("5."), 0, lastfile5_cb},
 			{0},
-		{"Exit", 0, quit_cb},
+		{mgl_gettext("Exit"), 0, quit_cb},
 		{0},
-	{"Edit", 0, 0, 0, FL_SUBMENU},
-		{"Undo", FL_CTRL+'z', undo_cb},
-		{"Cut text", FL_CTRL+'x', cut_cb},
-		{"Copy text", FL_CTRL+'c', copy_cb},
-		{"Paste text", FL_CTRL+'v', paste_cb},
-		{"Select all", FL_CTRL+'a', select_all_cb, 0, FL_MENU_DIVIDER},
-		{"Find|Replace", FL_CTRL+'f', find_dlg_cb},
-		{"Find next", FL_F+3, find_next_cb, 0, FL_MENU_DIVIDER},
-		{"Insert", 0, 0, 0, FL_SUBMENU},
-			{"File path", FL_META+'p', ins_path_cb},
-			{"Folder path", 0, ins_fname_cb},
-			{"Command", FL_META+'c', newcmd_dlg_cb},
-			{"Inplot", FL_META+'i', inplot_dlg_cb},
-			{"Fitted formula", FL_META+'f', ins_fits_cb},
-			{"Plot style", 0, style_dlg_cb},
-			{"Option(s)", FL_META+'o', option_dlg_cb},
+	{mgl_gettext("Edit"), 0, 0, 0, FL_SUBMENU},
+		{mgl_gettext("Undo"), FL_CTRL+'z', undo_cb},
+		{mgl_gettext("Cut text"), FL_CTRL+'x', cut_cb},
+		{mgl_gettext("Copy text"), FL_CTRL+'c', copy_cb},
+		{mgl_gettext("Paste text"), FL_CTRL+'v', paste_cb},
+		{mgl_gettext("Select all"), FL_CTRL+'a', select_all_cb, 0, FL_MENU_DIVIDER},
+		{mgl_gettext("Hide lines"), FL_CTRL+'d', hide_cb},
+		{mgl_gettext("Show lines"), FL_CTRL+FL_SHIFT+'d', unhide_cb, 0, FL_MENU_DIVIDER},
+		{mgl_gettext("Find|Replace"), FL_CTRL+'f', find_dlg_cb},
+		{mgl_gettext("Find next"), FL_F+3, find_next_cb, 0, FL_MENU_DIVIDER},
+		{mgl_gettext("Insert"), 0, 0, 0, FL_SUBMENU},
+			{mgl_gettext("File path"), FL_META+'p', ins_path_cb},
+			{mgl_gettext("Folder path"), 0, ins_fname_cb},
+			{mgl_gettext("Command"), FL_META+'c', newcmd_dlg_cb},
+			{mgl_gettext("Inplot"), FL_META+'i', inplot_dlg_cb},
+			{mgl_gettext("Fitted formula"), FL_META+'f', ins_fits_cb},
+			{mgl_gettext("Plot style"), 0, style_dlg_cb},
+			{mgl_gettext("Option(s)"), FL_META+'o', option_dlg_cb},
 			{0},
-	// TODO{"Selection", 0,  0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
-		// TODO{"Hide", 0,  0},
-		// TODO{"Delete", 0,  0},
-		// TODO{"Move up", 0,  0},
-		// TODO{"Move down", 0,  0},
-		// TODO{"Show hidden", FL_F+8,  0, 0, FL_MENU_TOGGLE},
+	// TODO{mgl_gettext("Selection"), 0,  0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
+		// TODO{mgl_gettext("Hide"), 0,  0},
+		// TODO{mgl_gettext("Delete"), 0,  0},
+		// TODO{mgl_gettext("Move up"), 0,  0},
+		// TODO{mgl_gettext("Move down"), 0,  0},
+		// TODO{mgl_gettext("Show hidden"), FL_F+8,  0, 0, FL_MENU_TOGGLE},
 		{0},
-	{"Graphics", 0, 0, 0, FL_SUBMENU},
+	{mgl_gettext("Graphics"), 0, 0, 0, FL_SUBMENU},
 		{0},
-	{"Setup", 0, 0, 0, FL_SUBMENU},
-		{"Properties", 0, prop_dlg_cb},
-		{"Set arguments", 0, args_dlg_cb},
-		{"Set animation", 0, animate_dlg_cb},
-		{"Plot setup", FL_META+'g', setup_dlg_cb, 0, FL_MENU_DIVIDER},
-		{"Calculator", FL_F+4, calc_dlg_cb},
-		{"Messages", FL_F+2, message_cb},
+	{mgl_gettext("Setup"), 0, 0, 0, FL_SUBMENU},
+		{mgl_gettext("Properties"), 0, prop_dlg_cb},
+		{mgl_gettext("Set arguments"), 0, args_dlg_cb},
+		{mgl_gettext("Setup animation"), 0, animate_dlg_cb},
+		{mgl_gettext("Plot setup"), FL_META+'g', setup_dlg_cb, 0, FL_MENU_DIVIDER},
+		{mgl_gettext("Calculator"), FL_F+4, calc_dlg_cb},
+		{mgl_gettext("Messages"), FL_F+2, message_cb},
 		{0},
-	{"Help", 0, 0, 0, FL_SUBMENU},
-		{"Help", FL_F+1, help_cb},
-		{"Hints", 0, hint_dlg_cb},
-		{"About", 0, about_cb},
+	{mgl_gettext("Help"), 0, 0, 0, FL_SUBMENU},
+		{mgl_gettext("Help"), FL_F+1, help_cb},
+		{mgl_gettext("Hints"), 0, hint_dlg_cb},
+		{mgl_gettext("About"), 0, about_cb},
+		{mgl_gettext("Icon list"), 0, iconlist_cb},	// TODO remove before release
 		{0},
 	{0}
 };
@@ -310,7 +323,7 @@ Fl_Menu_Item menuitems[] = {
 void mem_upd_cb(Fl_Widget *, void *v)
 {	((ScriptWindow*)v)->mem_init();	}
 //-----------------------------------------------------------------------------
-extern Fl_RGB_Image image_udav;
+extern Fl_RGB_Image img_udav;
 ScriptWindow *new_view()
 {
 	Fl_Group *gg;
@@ -326,22 +339,26 @@ ScriptWindow *new_view()
 	w->rtab = new Fl_Tabs(300,30,630,455,0);
 	w->gplot = new Fl_Group(300,30,630,430,mgl_gettext("Canvas"));
 	w->graph = new Fl_MGLView(300,30,630,430,mgl_gettext("Canvas"));
-	w->gplot->resizable(w->graph);	w->gplot->end();
+	w->gplot->resizable(w->graph);	w->gplot->end();	w->graph->adjust();
 	w->ghelp = new Fl_Group(300,30,630,430,mgl_gettext("Help"));
 	add_help(w);	w->ghelp->end();	w->ghelp->hide();
 	gg = new Fl_Group(300,30,630,430,mgl_gettext("Memory"));	gg->hide();
 	add_mem(w);		gg->end();
 	w->rtab->end();
 
-
 	w->status = new Fl_Output(0,485,930,25);	w->status->value(mgl_gettext("Ready"));
 	w->draw = new Fl_MGL(w->graph);	w->draw->e = w;
 	mgl_makemenu_fltk(w->menu, w->graph);
-	w->menu->add("Graphics/Primitive", FL_CTRL+'m', prim_dlg_cb, w);
+	w->menu->add(mgl_gettext("Graphics/Primitive"), FL_CTRL+'m', prim_dlg_cb, w);
+	w->menu->add(mgl_gettext("Graphics/Animation/Setup animation"), 0, animate_dlg_cb, w);
+	int index = w->menu->find_index(mgl_gettext("Graphics/Pause calc"));
+	if(index>=0)	w->menu->remove(index);
+//	m->add(mgl_gettext("Graphics/Pause calc"), "^t", mgl_pause_cb, w, FL_MENU_TOGGLE);
+
 
 	t->end();	w->end();	w->resizable(t);
 	w->rtab->callback(mem_upd_cb, w);
-	w->callback(close_cb, w);	w->icon(&image_udav);
+	w->callback(close_cb, w);	w->icon(&img_udav);
 	num_windows++;	return w;
 }
 //-----------------------------------------------------------------------------

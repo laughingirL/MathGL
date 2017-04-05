@@ -251,7 +251,7 @@ struct MGL_EXPORT mglGlyph
 	inline bool operator!=(const mglGlyph &g) const MGL_FUNC_PURE
 	{	return !(*this==g);	}
 	inline const mglGlyph &operator=(const mglGlyph &a)
-	{	Create(a.nt, a.nl);	
+	{	Create(a.nt, a.nl);
 		if(a.trig)	memcpy(trig, a.trig, 6*nt*sizeof(short));
 		if(a.line)	memcpy(line, a.line, 2*nl*sizeof(short));
 		return a;	}
@@ -339,7 +339,7 @@ public:
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 	int BBoxX1, BBoxY1, BBoxX2, BBoxY2;	///< BBox region for exporting 2d graphics
 	std::vector<mglGlyph> UserGlf;	///< User-defined glyphs data
-	
+
 	mreal CDef;			///< Default (current) color in texture
 	mreal AlphaDef;		///< Default value of alpha channel (transparency)
 	mreal BarWidth;		///< Relative width of rectangles in Bars().
@@ -583,7 +583,7 @@ public:
 	inline mreal mark_size()	{	return MarkSize*font_factor;	}
 //	inline char last_color()	{	return last_style[1];	}
 	inline const char *last_line()	{	return last_style;	}
-	int PrmCmp(long i, long j) const MGL_FUNC_PURE;	// compare 2 primitives with indexes i,j
+	int PrmCmp(size_t i, size_t j) const MGL_FUNC_PURE;	// compare 2 primitives with indexes i,j
 	/// Check if plot termination is asked
 	bool NeedStop()	{	if(event_cb)	event_cb(event_par);	return Stop;	}
 	/// Ask to stop drawing
@@ -604,7 +604,7 @@ protected:
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
-	long *PrmInd;		///< Indexes of sorted primitives
+	size_t *PrmInd;		///< Indexes of sorted primitives
 	mglStack<mglPnt> Pnt; 	///< Internal points
 	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
 	std::vector<mglBlock> Sub;	///< InPlot regions

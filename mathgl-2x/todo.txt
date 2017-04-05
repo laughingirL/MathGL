@@ -69,16 +69,11 @@ ZZ. Update time.texi {before release!!!}
 
 ============= mgllab ===========
 
-*. Update FLTK icons
 *. Extend number of data operation (in table_window)
-*. Window with Zoom/Hidden ?!?
-*. Manual data changing should be written into script
-*. Ctrl-D && Ctrl-Shift-D to comment/uncomment line (+hide plot :) -- "#h " )
-*. toolbuttons for stop+reload+copy_graph+primitives+hide --> Fl_MathGL
-*. toolbuttons for fname + inplot in editor
-*. ask to save from recent files
-*. fix number highlight ?!?
+*. Manual data changing should be written into script ?!?
 
+
+Y. Window with Zoom/Hidden ???
 Z. Flat toolbuttons ???
 
 ============= UDAV =============

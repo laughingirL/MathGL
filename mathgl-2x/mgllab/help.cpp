@@ -15,7 +15,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "mgllab.h"
-#include "image.h"
+#include "../widgets/image.h"
 #include <ctype.h>
 #include <FL/Fl_Select_Browser.H>
 //-----------------------------------------------------------------------------
@@ -408,4 +408,67 @@ void cb_info_next(Fl_Widget*,void*)	{	info_dlg.next();	}
 void cb_info_1d(Fl_Widget*,void*)	{	info_dlg.plot_1d();	}
 void cb_info_2d(Fl_Widget*,void*)	{	info_dlg.plot_2d();	}
 void cb_info_3d(Fl_Widget*,void*)	{	info_dlg.plot_3d();	}
+//-----------------------------------------------------------------------------
+class IconListDlg : public GeneralDlg
+{
+public:
+	IconListDlg()
+	{
+		Fl_Button* o;
+		w = new Fl_Double_Window(210, 190, "mgllab icons");
+		o = new Fl_Button(5, 5, 25, 25);	o->image(img_load);	o->tooltip("img_load");
+		o = new Fl_Button(30, 5, 25, 25);	o->image(img_save);	o->tooltip("img_save");
+		o = new Fl_Button(55, 5, 25, 25);	o->image(img_calc);	o->tooltip("img_calc");
+		o = new Fl_Button(80, 5, 25, 25);	o->image(img_undo);	o->tooltip("img_undo");
+		o = new Fl_Button(105, 5, 25, 25);	o->image(img_redo);	o->tooltip("img_redo");
+		o = new Fl_Button(130, 5, 25, 25);	o->image(img_copy);	o->tooltip("img_copy");
+		o = new Fl_Button(155, 5, 25, 25);	o->image(img_paste);o->tooltip("img_paste");
+		o = new Fl_Button(180, 5, 25, 25);	o->image(img_find);	o->tooltip("img_find");
+		o = new Fl_Button(5, 30, 25, 25);	o->image(img_prop);	o->tooltip("img_prop");
+		o = new Fl_Button(30, 30, 25, 25);	o->image(img_alpha);o->tooltip("img_alpha");
+		o = new Fl_Button(55, 30, 25, 25);	o->image(img_light);o->tooltip("img_light");
+		o = new Fl_Button(80, 30, 25, 25);	o->image(img_grid);	o->tooltip("img_grid");
+		o = new Fl_Button(105, 30, 25, 25);	o->image(img_move);	o->tooltip("img_move");
+		o = new Fl_Button(130, 30, 25, 25);	o->image(img_orig);	o->tooltip("img_orig");
+		o = new Fl_Button(155, 30, 25, 25);	o->image(img_update);	o->tooltip("img_update");
+		o = new Fl_Button(180, 30, 25, 25);	o->image(img_stop);	o->tooltip("img_stop");
+		o = new Fl_Button(5, 55, 25, 25);	o->image(img_insert);	o->tooltip("img_insert");
+		o = new Fl_Button(30, 55, 25, 25);	o->image(img_print);o->tooltip("img_print");
+		o = new Fl_Button(55, 55, 25, 25);	o->image(img_goL);	o->tooltip("img_goL");
+		o = new Fl_Button(80, 55, 25, 25);	o->image(img_goU);	o->tooltip("img_goU");
+		o = new Fl_Button(105, 55, 25, 25);	o->image(img_zoomIn);	o->tooltip("img_zoomIn");
+		o = new Fl_Button(130, 55, 25, 25);	o->image(img_zoomOut);	o->tooltip("img_zoomOut");
+		o = new Fl_Button(155, 55, 25, 25);	o->image(img_goD);	o->tooltip("img_goD");
+		o = new Fl_Button(180, 55, 25, 25);	o->image(img_goR);	o->tooltip("img_goR");
+		o = new Fl_Button(5, 80, 25, 25);	o->image(img_next);	o->tooltip("img_next");
+		o = new Fl_Button(30, 80, 25, 25);	o->image(img_play);	o->tooltip("img_play");
+		o = new Fl_Button(55, 80, 25, 25);	o->image(img_prev);	o->tooltip("img_prev");
+		o = new Fl_Button(80, 80, 25, 25);	o->image(img_plot);	o->tooltip("img_plot");
+		o = new Fl_Button(105, 80, 25, 25);	o->image(img_system);	o->tooltip("img_system");
+		o = new Fl_Button(130, 80, 25, 25);	o->image(img_info);	o->tooltip("img_info");
+		o = new Fl_Button(155, 80, 25, 25);	o->image(img_help);	o->tooltip("img_help");
+		o = new Fl_Button(180, 80, 25, 25);	o->image(img_delete);	o->tooltip("img_delete");
+		o = new Fl_Button(5, 105, 25, 25);	o->image(img_objectU);	o->tooltip("img_objectU");
+		o = new Fl_Button(30, 105, 25, 25);	o->image(img_objectD);	o->tooltip("img_objectD");
+		o = new Fl_Button(55, 105, 25, 25);	o->image(img_layer);	o->tooltip("img_layer");
+		o = new Fl_Button(80, 105, 25, 25);	o->image(img_new);	o->tooltip("img_new");
+		o = new Fl_Button(105, 105, 25, 25);o->image(img_clear);	o->tooltip("img_clear");
+		o = new Fl_Button(130, 105, 25, 25);o->image(img_plus);	o->tooltip("img_plus");
+		o = new Fl_Button(155, 105, 25, 25);o->image(img_minus);	o->tooltip("img_minus");
+		o = new Fl_Button(180, 105, 25, 25);o->image(img_fname);	o->tooltip("img_fname");
+		o = new Fl_Button(5, 130, 25, 25);	o->image(img_curve);	o->tooltip("img_curve");
+		o = new Fl_Button(30, 130, 25, 25);	o->image(img_svn);	o->tooltip("img_svn");
+		o = new Fl_Button(55, 130, 25, 25);	o->image(img_adjust);	o->tooltip("img_adjust");
+		o = new Fl_Button(80, 130, 25, 25);	o->image(img_reload);	o->tooltip("img_reload");
+		o = new Fl_Button(105, 130, 25, 25);o->image(img_zoom12);	o->tooltip("img_zoom12");
+		o = new Fl_Button(130, 130, 25, 25);o->image(img_zoom21);	o->tooltip("img_zoom21");
+//		o = new Fl_Button(155, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
+//		o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
+		//out = new Fl_Output(50, 160, 75, 25, mgl_gettext("Name"));
+		o = new Fl_Button(130, 160, 75, 25, mgl_gettext("Close"));
+		o->callback(cb_dlg_cancel,this);
+		w->end();
+	}
+} iconlist;
+void iconlist_cb(Fl_Widget*,void*)	{	iconlist.show();	}
 //-----------------------------------------------------------------------------

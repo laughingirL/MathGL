@@ -2449,11 +2449,10 @@ Function {make_datinfo()} {} {
   }
 } 
 
-Function {make_prim()} {open
-} {
+Function {make_prim()} {} {
   Fl_Window {} {
     label {Add primitive} open
-    xywh {333 270 295 195} type Double visible
+    xywh {333 270 295 195} type Double hide
   } {
     Fl_Choice kind {
       label Kind open
@@ -2496,8 +2495,168 @@ Function {make_prim()} {open
       xywh {65 125 215 25}
     }
     Fl_Spinner {} {
-      label Edges selected
+      label Edges
       xywh {65 100 75 25}
+    }
+  }
+} 
+
+Function {make_images()} {open
+} {
+  Fl_Window {} {open
+    xywh {507 371 210 190} type Double visible
+  } {
+    Fl_Button {} {selected
+      image {new_icon/media-playback-pause.png} xywh {5 5 25 25}
+    }
+    Fl_Button {} {
+      xywh {30 5 25 25}
+    }
+    Fl_Button {} {
+      xywh {55 5 25 25}
+    }
+    Fl_Button {} {
+      xywh {80 5 25 25}
+    }
+    Fl_Button {} {
+      xywh {105 5 25 25}
+    }
+    Fl_Button {} {
+      xywh {130 5 25 25}
+    }
+    Fl_Button {} {
+      xywh {155 5 25 25}
+    }
+    Fl_Button {} {
+      xywh {180 5 25 25}
+    }
+    Fl_Button {} {
+      xywh {5 30 25 25}
+    }
+    Fl_Button {} {
+      xywh {30 30 25 25}
+    }
+    Fl_Button {} {
+      xywh {55 30 25 25}
+    }
+    Fl_Button {} {
+      xywh {80 30 25 25}
+    }
+    Fl_Button {} {
+      xywh {105 30 25 25}
+    }
+    Fl_Button {} {
+      xywh {130 30 25 25}
+    }
+    Fl_Button {} {
+      xywh {155 30 25 25}
+    }
+    Fl_Button {} {
+      xywh {180 30 25 25}
+    }
+    Fl_Button {} {
+      xywh {5 55 25 25}
+    }
+    Fl_Button {} {
+      xywh {30 55 25 25}
+    }
+    Fl_Button {} {
+      xywh {55 55 25 25}
+    }
+    Fl_Button {} {
+      xywh {80 55 25 25}
+    }
+    Fl_Button {} {
+      xywh {105 55 25 25}
+    }
+    Fl_Button {} {
+      xywh {130 55 25 25}
+    }
+    Fl_Button {} {
+      xywh {155 55 25 25}
+    }
+    Fl_Button {} {
+      xywh {180 55 25 25}
+    }
+    Fl_Button {} {
+      xywh {5 80 25 25}
+    }
+    Fl_Button {} {
+      xywh {30 80 25 25}
+    }
+    Fl_Button {} {
+      xywh {55 80 25 25}
+    }
+    Fl_Button {} {
+      xywh {80 80 25 25}
+    }
+    Fl_Button {} {
+      xywh {105 80 25 25}
+    }
+    Fl_Button {} {
+      xywh {130 80 25 25}
+    }
+    Fl_Button {} {
+      xywh {155 80 25 25}
+    }
+    Fl_Button {} {
+      xywh {180 80 25 25}
+    }
+    Fl_Button {} {
+      xywh {5 105 25 25}
+    }
+    Fl_Button {} {
+      xywh {30 105 25 25}
+    }
+    Fl_Button {} {
+      xywh {55 105 25 25}
+    }
+    Fl_Button {} {
+      xywh {80 105 25 25}
+    }
+    Fl_Button {} {
+      xywh {105 105 25 25}
+    }
+    Fl_Button {} {
+      xywh {130 105 25 25}
+    }
+    Fl_Button {} {
+      xywh {155 105 25 25}
+    }
+    Fl_Button {} {
+      xywh {180 105 25 25}
+    }
+    Fl_Button {} {
+      xywh {5 130 25 25}
+    }
+    Fl_Button {} {
+      xywh {30 130 25 25}
+    }
+    Fl_Button {} {
+      xywh {55 130 25 25}
+    }
+    Fl_Button {} {
+      xywh {80 130 25 25}
+    }
+    Fl_Button {} {
+      xywh {105 130 25 25}
+    }
+    Fl_Button {} {
+      xywh {130 130 25 25}
+    }
+    Fl_Button {} {
+      xywh {155 130 25 25}
+    }
+    Fl_Button {} {
+      xywh {180 130 25 25}
+    }
+    Fl_Output {} {
+      label Name
+      xywh {50 160 75 25}
+    }
+    Fl_Button {} {
+      label Close
+      xywh {130 160 75 25}
     }
   }
 } 

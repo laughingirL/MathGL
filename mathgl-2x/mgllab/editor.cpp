@@ -85,6 +85,7 @@ bool is_num(const char *s)	// number
 {
 	size_t n=strlen(s);
 //	if(s[0]==':' && (s[1]<=' ' || s[1]==';'))	return true;
+	if(s[0]<=' ' || s[0]==';' || s[0]==':')	return false;
 	if(n>=2 && (s[2]<=' ' || s[2]==';' || s[2]==':'))
 	{
 		if(!strncmp("pi",s,2))	return true;
@@ -99,7 +100,7 @@ bool is_num(const char *s)	// number
 	}
 	for(size_t i=0;i<n;i++)
 	{
-		if(s[i]<=' ' || s[i]==';')	break;
+		if(s[i]<=' ' || s[i]==';' || s[i]==':')	break;
 		if(!strchr("+-.eE0123456789",s[i]))	return false;
 	}
 	return true;
@@ -122,7 +123,7 @@ char is_cmd(const char *s)	// command
 void style_parse(const char *text, char *style, int /*length*/)
 {
 	size_t n=strlen(text);
-	bool nl=true, arg=true;
+	bool nl=true;
 	// Style letters:
 	// A - Plain
 	// B - Line comments
@@ -135,36 +136,33 @@ void style_parse(const char *text, char *style, int /*length*/)
 
 	for(size_t i=0;i<n;i++)
 	{
-		style[i] = 'A';
-		if(text[i]=='#')	// comment
+		char ch = text[i], r;	style[i] = 'A';
+		if(ch=='#')	// comment
 			for(;i<n && text[i]!='\n';i++)	style[i]='B';
-		if(text[i]=='\'')	// string
+		else if(ch=='\'')	// string
 		{
-			arg = false;	style[i]='D';	i++;
+			style[i]='D';	i++;
 			for(;i<n && text[i]!='\n' && text[i]!='\'';i++)	style[i]='D';
 			style[i]='D';
 		}
-		if(text[i]=='\n' || text[i]==':')	{	nl=true;	style[i]='A';	continue;	}
-		char r = is_cmd(text+i);
-		if(nl && r)	// command name
-		{	for(;i<n && isalnum(text[i]);i++)	style[i]=r;		i--;	}
-		if(text[i]<=' ' || text[i]==';')	{	arg = true;	continue;	}
-		if(arg && is_opt(text+i))	// option
+		else if(ch=='\n' || ch==':')	{	nl=true;	continue;	}
+		else if(nl && (r=is_cmd(text+i)) )	// command name
+		{	for(;i<n && isalnum(text[i]);i++)	style[i]=r;	i--;	}
+		else if(!nl && is_opt(text+i))	// option
 		{	for(;i<n && isalpha(text[i]);i++)	style[i]='H';	i--;	}
-		if(arg && is_num(text+i))	// number
+		else if(!nl && is_num(text+i))	// number
 		{
-			if(text[i]==':' && (isspace(text[i+1]) || text[i+1]==':'))
-				style[i]='C';
-			else for(;i<n && strchr("+-.eE0123456789pionaf",text[i]) ;i++)
-				style[i]='C';
+			for(;i<n && strchr("+-.eE0123456789pionaf",text[i]);i++)	style[i]='C';
 			i--;
 		}
-		if(text[i]=='.' && is_sfx(text+i+1))	// option (suffix)
+		else if(ch=='.' && is_sfx(text+i+1))	// option (suffix)
 		{
 			style[i]='H';	i++;
 			for(;i<n && isalpha(text[i]);i++)	style[i]='H';
 		}
-		nl = arg = false;
+		else if(ch=='.' || (ch>='0' && ch<='9'))
+		{	style[i]='C';	if(text[i+1]=='e' || text[i+1]=='E')	style[i+1]='C';	}
+		nl = false;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -394,6 +392,41 @@ void cut_cb(Fl_Widget*, void* v)
 	Fl_Text_Editor::kf_cut(0, e->editor);
 }
 //-----------------------------------------------------------------------------
+void hide_cb(Fl_Widget*, void* v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	int p1,p2;
+	textbuf->selection_position(&p1, &p2);
+	if(!textbuf->selected())	p2=p1=e->editor->insert_position();
+	p1 = textbuf->line_start(p1);
+	while(p1<p2)
+	{
+		textbuf->insert(p1,"#h ");
+		int p = textbuf->line_start(textbuf->line_end(p1)+1);
+		if(p!=p1)	p1=p;	else	return;
+	}
+}
+//-----------------------------------------------------------------------------
+void unhide_cb(Fl_Widget*, void* v)
+{
+	ScriptWindow* e = (ScriptWindow*)v;
+	int p1,p2;
+	textbuf->selection_position(&p1, &p2);
+	if(!textbuf->selected())	p2=p1=e->editor->insert_position();
+	p1 = textbuf->line_start(p1);
+	while(p1<p2)
+	{
+		if(textbuf->char_at(p1)=='#')
+		{
+			if(textbuf->char_at(p1+1)=='h' && textbuf->char_at(p1+2)==' ')
+				textbuf->remove(p1,p1+3);
+			else	textbuf->remove(p1,p1+1);
+		}
+		int p = textbuf->line_start(textbuf->line_end(p1)+1);
+		if(p!=p1)	p1=p;	else	return;
+	}
+}
+//-----------------------------------------------------------------------------
 void delete_cb(Fl_Widget*, void*) {	textbuf->remove_selection();	}
 //-----------------------------------------------------------------------------
 void cb_descr(Fl_Widget*,void *v)
@@ -440,7 +473,8 @@ void paste_cb(Fl_Widget*, void* v)
 	Fl_Text_Editor::kf_paste(0, e->editor);
 }
 //-----------------------------------------------------------------------------
-#include "image.h"
+#include "../widgets/image.h"
+#include "xpm/box.xpm"
 Fl_Widget *add_editor(ScriptWindow *w)
 {
 	Fl_Window *w1=new Fl_Window(0,30,300,455,0);
@@ -451,15 +485,24 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	o->tooltip(mgl_gettext("Open script or data file"));
 	o = new Fl_Button(25, 1, 25, 25);	o->image(img_save);	o->callback(save_cb,w);
 	o->tooltip(mgl_gettext("Save script to file"));
-	o = new Fl_Button(50, 1, 25, 25);	o->image(img_copy);	o->callback(copy_cb,w);
+
+	o = new Fl_Button(55, 1, 25, 25);	o->image(img_copy);	o->callback(copy_cb,w);
 	o->tooltip(mgl_gettext("Copy selection to clipboard"));
-	o = new Fl_Button(75, 1, 25, 25);	o->image(img_paste);o->callback(paste_cb,w);
+	o = new Fl_Button(80, 1, 25, 25);	o->image(img_paste);o->callback(paste_cb,w);
 	o->tooltip(mgl_gettext("Paste text from clipboard"));
-	o = new Fl_Button(100, 1, 25, 25);	o->image(img_find);	o->callback(find_dlg_cb,w);
+	o = new Fl_Button(105, 1, 25, 25);	o->image(img_find);	o->callback(find_dlg_cb,w);
 	o->tooltip(mgl_gettext("Find or replace text"));
-	o = new Fl_Button(125, 1, 25, 25);	o->image(img_insert);	o->callback(newcmd_dlg_cb,w);
+
+	o = new Fl_Button(135, 1, 25, 25);	o->image(img_insert);	o->callback(newcmd_dlg_cb,w);
 	o->tooltip(mgl_gettext("Insert MGL command"));
-	o = new Fl_Button(150, 1, 25, 25);	o->image(img_calc);	o->callback(calc_dlg_cb,w);
+	o = new Fl_Button(160, 1, 25, 25);	o->image(img_fname);	o->callback(ins_fname_cb,w);
+	o->tooltip(mgl_gettext("Insert filename"));
+	o = new Fl_Button(185, 1, 25, 25);	o->image(new Fl_Pixmap(box_xpm));	o->callback(inplot_dlg_cb,w);
+	o->tooltip(mgl_gettext("Insert inplot command"));
+
+	o = new Fl_Button(210, 1, 25, 25);	o->image(img_calc);	o->callback(calc_dlg_cb,w);
+	o->tooltip(mgl_gettext("Show calculator window"));
+	o = new Fl_Button(240, 1, 25, 25);	o->image(img_curve);o->callback(prim_dlg_cb,w);
 	o->tooltip(mgl_gettext("Show calculator window"));
 	g->end();	g->resizable(0);
 
@@ -587,7 +630,7 @@ void ins_fname_cb(Fl_Widget *, void *v)
 {
 	static std::string prev;
 	ScriptWindow* e = (ScriptWindow*)v;
-	char *s = fl_file_chooser(mgl_gettext("Select file name"), "DAT files (*.{dat,csv})\tHDF files (*.{hdf,h5})\tAll files (*.*)", prev.c_str(), 0);
+	char *s = fl_file_chooser(mgl_gettext("Select file name"), "DAT files (*.{dat,csv})\tHDF files (*.{hdf,h5})\tAll files (*.*)", prev.c_str());
 	if(s)
 	{
 		std::string ss=prev=s;	ss = '\''+ss+'\'';

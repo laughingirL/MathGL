@@ -24,6 +24,13 @@
 # define FL_DLL
 #endif
 
+#ifdef USE_GETTEXT
+	#include <libintl.h>
+	#define mgl_gettext(x)	gettext(x)
+#else
+	#define mgl_gettext(x)	(x)
+#endif
+
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Scroll.H>
@@ -111,6 +118,8 @@ protected:
 	int x0,y0,xe,ye;			///< mouse position
 	char pos[128];
 	bool run;					///< flag that drawing in progress
+	const unsigned char *img;	///< image for drawing
+	pthread_t thr;				///< main thread for drawing
 
 	virtual void draw();		///< quick drawing function
 	int handle(int code);		///< handle mouse events

@@ -1,7 +1,7 @@
 include(GenerateExportHeader)
 
 if(MGL_HAVE_FLTK)
-	mgl_add_lib(fltk fltk.cpp ../include/mgl2/fltk.h)
+	mgl_add_lib(fltk fltk.cpp  image.cpp  image.h ../include/mgl2/fltk.h)
 	target_include_directories(mgl-fltk SYSTEM PUBLIC ${FLTK_INCLUDE_DIR})
 	target_include_directories(mgl-fltk-static SYSTEM PUBLIC ${FLTK_INCLUDE_DIR})
 	target_link_libraries(mgl-fltk mgl ${FLTK_LIBRARIES})

@@ -21,11 +21,6 @@
 #ifdef __MWERKS__
 # define FL_DLL
 #endif
-#ifdef USE_GETTEXT
-	#include <libintl.h>
-#else
-	#define mgl_gettext(x)	(x)
-#endif
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Double_Window.H>
@@ -210,6 +205,8 @@ void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v);
 void ins_fname_cb(Fl_Widget *, void *);
 void ins_path_cb(Fl_Widget *, void *);
 void ins_fits_cb(Fl_Widget *, void *);
+void hide_cb(Fl_Widget*, void *);
+void unhide_cb(Fl_Widget*, void *);
 //-----------------------------------------------------------------------------
 // General callback functions
 void new_cb(Fl_Widget *, void *);
@@ -257,6 +254,7 @@ void inplot_dlg_cb(Fl_Widget*,void*);
 void find_dlg_cb(Fl_Widget*,void*);
 void find_next_cb(Fl_Widget*,void*);
 void hint_dlg_cb(Fl_Widget*,void*);
+void iconlist_cb(Fl_Widget*,void*);
 void message_cb(Fl_Widget*,void*);
 void message_set(const char *s, ScriptWindow *e);
 void info_dlg_cb(mglDataA *d);

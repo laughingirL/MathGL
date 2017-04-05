@@ -30,7 +30,7 @@ MGL_NO_EXPORT void *mgl_canvas_thr(void *par)
 void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglCanvas *gr, long n, const void *p=NULL)
 {
 	if(!func || !gr)	return;
-	#if MGL_HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	if(mglNumThr<1)	mgl_set_num_thr(0);
 	if(mglNumThr>1)
 	{
@@ -43,7 +43,7 @@ void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglC
 		delete []tmp;	delete []par;
 	}
 	else
-		#endif
+#endif
 	{	mglNumThr = 1;	(gr->*func)(0,n,p);	}
 }
 //-----------------------------------------------------------------------------
@@ -392,8 +392,10 @@ uint32_t mglCanvas::GetColor(const mglPrim &p) const
 //-----------------------------------------------------------------------------
 HMGL mgl_qsort_gr=0;
 MGL_NO_EXPORT int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
-int mglBase::PrmCmp(long i, long j) const
+int mglBase::PrmCmp(size_t i, size_t j) const
 {
+	if(i>=Prm.size() || j>=Prm.size())
+		return 0;
 	const mglPrim &a = Prm[i];
 	const mglPrim &b = Prm[j];
 	if(a.z!=b.z) 	return int(100*(a.z - b.z));
@@ -404,7 +406,7 @@ int mglBase::PrmCmp(long i, long j) const
 }
 int MGL_LOCAL_PURE mgl_prm_cmp(const void *i,const void *j)
 {
-	return mgl_qsort_gr->PrmCmp(*(const long *)i, *(const long *)j);
+	return mgl_qsort_gr->PrmCmp(*((const size_t *)i), *((const size_t *)j));
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::PreparePrim(int fast)
@@ -414,19 +416,19 @@ void mglCanvas::PreparePrim(int fast)
 		mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
 		if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
 		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
-		#pragma omp critical
+#pragma omp critical
 		{
 			ClearPrmInd();	mgl_qsort_gr = this;
 			size_t n = Prm.size();
-			PrmInd = new long[n];
+			PrmInd = new size_t[n];
 			for(size_t i=0;i<n;i++)	PrmInd[i]=i;
-			qsort(PrmInd,n,sizeof(long),mgl_prm_cmp);
+			qsort(PrmInd,n,sizeof(size_t),mgl_prm_cmp);
 			clr(MGL_FINISHED);
 		}
 	}
 	if(fast>0)
 	{
-		#pragma omp critical
+#pragma omp critical
 		{	if(pnt_col)	delete []pnt_col;	pnt_col = new uint32_t[Pnt.size()];	}
 		mglStartThread(&mglCanvas::pxl_pntcol,this,Pnt.size());
 	}

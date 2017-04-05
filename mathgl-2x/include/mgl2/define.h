@@ -237,7 +237,7 @@ enum{	// Codes for warnings/messages
 #define MGL_COLORS	"kwrgbcymhWRGBCYMHlenpquLENPQU"
 //-----------------------------------------------------------------------------
 /// Brushes for mask with symbol "-+=;oOsS~<>jdD*^" correspondingly
-extern uint64_t mgl_mask_val[16];
+extern MGL_EXPORT uint64_t mgl_mask_val[16];
 #define MGL_MASK_ID		"-+=;oOsS~<>jdD*^"
 #define MGL_SOLID_MASK	0xffffffffffffffff
 //-----------------------------------------------------------------------------

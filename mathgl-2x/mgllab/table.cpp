@@ -275,7 +275,7 @@ public:
 		dz = new Fl_Check_Button(10, 105, 140, 25, mgl_gettext("apply in z direction"));
 		name = new Fl_Input(10, 145, 145, 25, mgl_gettext("Name for output"));
 		name->align(FL_ALIGN_TOP_LEFT);
-		
+
 		Fl_Button *o;
 		o = new Fl_Button(10, 180, 65, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(90, 180, 65, 25, mgl_gettext("Do"));	o->callback(cb_dlg_ok,this);
@@ -420,7 +420,7 @@ void list_dat_cb(Fl_Widget*, void*v)
 	if(!d && !c)
 	{	fl_message(mgl_gettext("Incorrect type of base data"));	return;	}
 	if(e->var->GetNz()>1)	fl_message(mgl_gettext("Only current slice will be inserted"));
-	
+
 	std::string list = "list " + wcstombs(e->var->s);
 	long k=e->get_slice(), nx=e->var->GetNx(), ny=e->var->GetNy();
 	for(long j=0;j<ny;j++)
@@ -469,7 +469,7 @@ public:
 		dir->tooltip(mgl_gettext("Direction along which data will be filled"));
 		wsym = new Fl_Check_Button(10, 115, 115, 25, mgl_gettext("Symmetrical range"));
 		wsym->tooltip(mgl_gettext("Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"));
-		
+
 		Fl_Button *o;
 		o = new Fl_Button(25, 150, 85, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o->tooltip(mgl_gettext("Do nothing and close this window"));
@@ -529,7 +529,7 @@ struct CropDlg : public GeneralDlg
 		y2 = new Fl_Spinner(140, 55, 80, 25);
 		z1 = new Fl_Spinner(45, 85, 80, 25);
 		z2 = new Fl_Spinner(140, 85, 80, 25);
-		
+
 		new Fl_Box(15, 25, 25, 25, "X");
 		new Fl_Box(15, 55, 25, 25, "Y");
 		new Fl_Box(15, 85, 25, 25, "Z");
@@ -723,8 +723,7 @@ void plot_dat_cb(Fl_Widget*,void *v)
 	info_dlg_cb(e->var);
 }
 //-----------------------------------------------------------------------------
-#include "image.h"
-
+#include "../widgets/image.h"
 #include "xpm/document-import.xpm"
 #include "xpm/document-export.xpm"
 #include "xpm/diff.xpm"
@@ -795,7 +794,7 @@ TableWindow::~TableWindow()	{	if(var)	var->o=NULL;	Fl::delete_widget(w);	}
 void delete_cb(void *v)
 {
 	if(v)
-	{	
+	{
 		TableWindow *w = (TableWindow *)v;
 		w->var->o=NULL;		delete w;
 	}

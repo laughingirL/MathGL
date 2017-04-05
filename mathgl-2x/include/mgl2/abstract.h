@@ -160,7 +160,7 @@ extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 }
 //-----------------------------------------------------------------------------
 /// Structure for the number handling (see mglParse class).
-struct mglNum
+struct MGL_EXPORT mglNum
 {
 	mreal d;		///< Number itself
 	dual c;
