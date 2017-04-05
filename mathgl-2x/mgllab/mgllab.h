@@ -171,6 +171,8 @@ public:
 	Fl_Browser *var;
 	Fl_Output *status;
 
+	void set_status(const char *txt)
+	{	if(txt)	{	status->value(txt);	Fl::redraw();	}	}
 	void mem_init();
 	void mem_pressed(int n);
 	Fl_MGLView *graph;
@@ -256,7 +258,7 @@ void find_dlg_cb(Fl_Widget*,void*);
 void find_next_cb(Fl_Widget*,void*);
 void hint_dlg_cb(Fl_Widget*,void*);
 void message_cb(Fl_Widget*,void*);
-void message_set(const char *s);
+void message_set(const char *s, ScriptWindow *e);
 void info_dlg_cb(mglDataA *d);
 void prim_dlg_cb(Fl_Widget*, void* v);
 void cb_args_set(const char *val);	///< set value for argument in newcmd_dlg

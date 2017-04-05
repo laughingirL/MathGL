@@ -16,6 +16,7 @@
  */
 #include "mgl2/mgl.h"
 #include "mgllab.h"
+#include "image.h"
 //-----------------------------------------------------------------------------
 mglParse *Parse=0;
 //-----------------------------------------------------------------------------
@@ -90,7 +91,7 @@ int Fl_MGL::Draw(mglGraph *gr)
 		free(text);
 	}
 	// TODO go to line with warning?!!
-	message_set(gr->Message());
+	message_set(gr->Message(), e);
 	if(e && e->rtab)	e->rtab->value(e->gplot);
 	return 0;
 }
@@ -404,28 +405,72 @@ void mess_update(int pos, int nInserted, int nDeleted, int, const char *, void *
 }
 //-----------------------------------------------------------------------------
 void style_unfinished_cb(int, void*);
+void cb_mess_copy(Fl_Widget*,void *v);
+void cb_mess_jump(Fl_Widget*,void *v);
 class MessDlg : public GeneralDlg
 {
 	Fl_Text_Display *mess;
 	Fl_Text_Buffer *mbuf;
+	int pos, last;
 public:
 	MessDlg()
 	{
-		w = new Fl_Double_Window(485, 195, mgl_gettext("MGL messages"));
-		mess = new Fl_Text_Display(0, 5, 485, 190);
-		w->end();
-		mbuf = new Fl_Text_Buffer;
-		sbuf = new Fl_Text_Buffer;
-		mess->buffer(mbuf);
+		Fl_Button *o;
+		w = new Fl_Double_Window(500, 195, mgl_gettext("MGL messages"));
+		mess = new Fl_Text_Display(30, 5, 460, 190);
+		o = new Fl_Return_Button(5,5,25,25);	o->callback(cb_mess_jump,e);
+		o = new Fl_Button(5,35,25,25);	o->callback(cb_mess_copy,e);	o->image(img_copy);
+		w->end();	w->resizable(mess);
+		mbuf = new Fl_Text_Buffer;	sbuf = new Fl_Text_Buffer;
+		mess->buffer(mbuf);	pos=last=0;
 		mess->highlight_data(sbuf, stylemess, sizeof(stylemess) / sizeof(stylemess[0]), 'A', style_unfinished_cb, 0);
 		mbuf->add_modify_callback(mess_update, mess);
 		mbuf->call_modify_callbacks();
+	}
+	void copy()
+	{
+		char *s = mbuf->selection_text();
+		if(s && *s==0)	{	free(s);	s=0;	}
+		if(!s)	s = mbuf->text();
+		Fl::copy(s,strlen(s),1);	free(s);
+	}
+	void jump()
+	{
+		if(!e)	return;
+		char *s = mbuf->text();
+		if(*s==0)	{	free(s);	return;	}
+		int ipos = mess->line_start(mess->insert_position());
+		if(ipos!=last)	last=pos=ipos;
+
+		int id=-1;
+		const char *p = strstr(s+pos,"in line");
+		if(p)	{	pos = p-s+7;	id = atoi(p+8);	}
+		else	// try from beginning
+		{
+			p = strstr(s,"in line");
+			if(p)	{	pos = p-s+7;	id = atoi(p+8);	}
+		}
+		free(s);
+
+		if(id>=0)
+		{
+			Fl_Text_Editor::kf_ctrl_move(FL_Home, e->editor);
+			for(int i=0;i<id;i++)	Fl_Text_Editor::kf_down(0, e->editor);
+			Fl_Text_Editor::kf_up(0, e->editor);
+			Fl::focus(e->editor);
+		}
 	}
 	void set(const char *s)
 	{	mbuf->text(s);	show();	}
 } mess_wnd;
 //-----------------------------------------------------------------------------
-void message_cb(Fl_Widget*,void*)	{	mess_wnd.show();	}
-void message_set(const char *s)
-{	if(s && *s)	mess_wnd.set(s);	else	mess_wnd.hide();	}
+void message_cb(Fl_Widget*,void *v)
+{	animate_dlg.e = (ScriptWindow*)v;	mess_wnd.show();	}
+//-----------------------------------------------------------------------------
+void message_set(const char *s, ScriptWindow *e)
+{	mess_wnd.e = e;	if(s && *s)	mess_wnd.set(s);	else	mess_wnd.hide();	}
+//-----------------------------------------------------------------------------
+void cb_mess_copy(Fl_Widget*,void *v)	{	mess_wnd.copy();	}
+//-----------------------------------------------------------------------------
+void cb_mess_jump(Fl_Widget*,void *v)	{	mess_wnd.jump();	}
 //-----------------------------------------------------------------------------

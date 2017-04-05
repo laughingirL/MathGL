@@ -415,12 +415,7 @@ void cb_descr(Fl_Widget*,void *v)
 	const char *form = Parse->CmdFormat(cmd.c_str());
 	static std::string txt;
 	txt = desc?std::string(desc)+":  "+form : "";
-	if(!txt.empty())
-	{
-		w->status->value(txt.c_str());	Fl::redraw();
-		printf("Status: %s\n",txt.c_str());	fflush(stdout);
-		//{	if(!txt.empty())	{	w->editor->tooltip(txt.c_str());	}	}
-	}
+	w->set_status(txt.c_str());
 }
 //-----------------------------------------------------------------------------
 void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
