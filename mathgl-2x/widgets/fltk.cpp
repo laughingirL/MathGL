@@ -190,6 +190,7 @@ void Fl_MathGL::update()
 	if(run)	return;
 //	Fl::lock();
 	run = true;
+	top_window()->cursor(FL_CURSOR_WAIT);
 	pthread_create(&thr,0,draw_plot_thr,this);
 	while(run)	Fl::wait();
 	pthread_join(thr,0);
@@ -197,7 +198,8 @@ void Fl_MathGL::update()
 
 	if(mgl_get_width(gr)!=w() || mgl_get_height(gr)!=h())
 		size(mgl_get_width(gr), mgl_get_height(gr));
-	gr->AskStop(false);	redraw();	Fl::flush();
+	gr->AskStop(false);	redraw();
+	top_window()->cursor(FL_CURSOR_DEFAULT);	Fl::flush();
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::resize(int xx, int yy, int ww, int hh)

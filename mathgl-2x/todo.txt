@@ -30,8 +30,14 @@
 1. Centered curved text (see text2)
 2. Read MAT files ?!!
 3. Read WFM files ?!!
-
 4. "latex on" option ?!?
+
+5. Add 'goto' or 'do|while' command
+6. Extend 'ask' as:
+	ask $N1 'text|kind:arg1:arg2:...' $N2 'text|kind:arg1:arg2:...' ...
+	where kind={default=edit,spin,choice,check,slider,float?}
+7. Add ##d comment(s) -- analogue of 'ask' but update figure after each change ???
+8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -71,8 +77,9 @@ ZZ. Update time.texi {before release!!!}
 
 *. Extend number of data operation (in table_window)
 *. Manual data changing should be written into script ?!?
+*. word completion by adding "selected" end of words if it is uniq
 
-
+X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???
 Z. Flat toolbuttons ???
 

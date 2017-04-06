@@ -668,8 +668,7 @@ int mglParser::ParseDef(std::wstring &str)
 	}
 	if(!skip() && !str.compare(0,3,L"for") && (str[3]==' ' || str[3]=='\t'))
 	{
-		size_t i;
-		for(i=4;str[i]<=' ';i++);
+		size_t i;	for(i=4;str[i]<=' ';i++);
 		// if command have format 'for $N ...' then change it to 'for N ...'
 		if(str[i]=='$' && str[i+1]>='0' && str[i+1]<='9')	str[i] = ' ';
 		if(str[i]=='$' && str[i+1]>='a' && str[i+1]<='z')	str[i] = ' ';

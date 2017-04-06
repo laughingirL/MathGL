@@ -383,7 +383,7 @@ int main(int argc, char **argv)
 	int sh;	pref.get("show_hint",sh,1);
 	if(sh)	hint_dlg_cb(0,0);
 
-	char *buf = 0;
+	std::string fname;
 	while(1)
 	{
 		char ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:");
@@ -391,7 +391,7 @@ int main(int argc, char **argv)
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
 		else if(ch=='h')
 		{
-			printf("mglconv convert mgl script to bitmap png file.\nCurrent version is 2.%g\n",MGL_VER2);
+			printf("mgllab draw mgl script interactively.\nCurrent version is 2.%g\n",MGL_VER2);
 			printf("Usage:\tmgllab [parameter(s)] scriptfile\n");
 			printf(	"\t-1 str       set str as argument $1 for script\n"
 					"\t...          ...\n"
@@ -402,14 +402,15 @@ int main(int argc, char **argv)
 			return 0;
 		}
 		// NOTE: I will not parse stdin here
-		else if(ch==-1 && optind<argc)	buf = argv[optind];
-		else if(ch==-1 && optind>=argc)	break;
+		else if(ch==-1)
+		{	if(optind<argc)	fname = argv[optind];
+			break;	}
 	}
 
 	w->show(1, argv);
-	if(buf && *buf && *buf!='-')
+	if(!fname.empty() && fname[0]!='-')
 	{
-		load_file(buf, -1,w);
+		load_file(fname.c_str(), -1,w);
 		if(auto_exec)	w->graph->update();
 	}
 	return Fl::run();
