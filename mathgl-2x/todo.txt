@@ -75,9 +75,7 @@ ZZ. Update time.texi {before release!!!}
 
 ============= mgllab ===========
 
-*. Extend number of data operation (in table_window)
 *. Manual data changing should be written into script ?!?
-*. word completion by adding "selected" end of words if it is uniq
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???

@@ -155,7 +155,9 @@ int MGL_NO_EXPORT mgls_cosfft(mglGraph *, long , mglArg *a, const char *k, const
 	int res=0;
 	if(k[0]=='d' && a[0].d->temp)	return 5;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"ds") && d)	d->CosFFT(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->CosFFT(a[1].s.c_str());
+	else if(c && !strcmp(k,"ds"))	d->CosFFT(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -305,9 +307,11 @@ int MGL_NO_EXPORT mgls_envelop(mglGraph *, long , mglArg *a, const char *k, cons
 	int res=0;
 	if(k[0]=='d' && a[0].d->temp)	return 5;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"d"))	d->Envelop();
-	else if(!strcmp(k,"ds"))	d->Envelop(a[1].s.c_str()[0]);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"d"))	d->Envelop();
+	else if(d && !strcmp(k,"ds"))	d->Envelop(a[1].s.c_str()[0]);
+	else if(c && !strcmp(k,"d"))	c->Envelop();
+	else if(c && !strcmp(k,"ds"))	c->Envelop(a[1].s.c_str()[0]);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1288,7 +1292,9 @@ int MGL_NO_EXPORT mgls_sinfft(mglGraph *, long , mglArg *a, const char *k, const
 	int res=0;
 	if(k[0]=='d' && a[0].d->temp)	return 5;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"ds") && d)	d->SinFFT(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->SinFFT(a[1].s.c_str());
+	else if(d && !strcmp(k,"ds"))	c->SinFFT(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1503,7 +1509,9 @@ int MGL_NO_EXPORT mgls_wavelet(mglGraph *, long , mglArg *a, const char *k, cons
 	int res=0;
 	if(k[0]=='d' && a[0].d->temp)	return 5;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
 	if(!strcmp(k,"dsn") && d)	d->Wavelet(a[1].s.c_str(), mgl_int(a[2].v));
+	else if(!strcmp(k,"dsn") && c)	c->Wavelet(a[1].s.c_str(), mgl_int(a[2].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------

@@ -431,6 +431,7 @@ void delete_cb(Fl_Widget*, void*) {	textbuf->remove_selection();	}
 //-----------------------------------------------------------------------------
 void cb_descr(Fl_Widget*,void *v)
 {
+	static size_t len=0;
 	ScriptWindow *w = (ScriptWindow*)v;
 	if(!textbuf || !Parse || !w)	return;
 	int cur = w->editor->insert_position(), br=0;
@@ -449,6 +450,27 @@ void cb_descr(Fl_Widget*,void *v)
 	static std::string txt;
 	txt = desc?std::string(desc)+":  "+form : "";
 	w->set_status(txt.c_str());
+
+	size_t ll = strlen(s);
+	if(complete_word && br==cur+1 && br-beg>2 && len<ll)	// try complete word
+	{
+		long n = Parse->GetCmdNum();
+		std::vector<std::string> vars;
+		for(long i=0;i<n;i++)
+		{
+			const char *c = Parse->GetCmdName(i);
+			if(!strncmp(c,cmd.c_str(),cmd.length()))	vars.push_back(c);
+		}
+		for(size_t i=0;i<vars.size();i++)
+			if(vars[i].length()>cmd.length())
+			{
+				std::string suggest = vars[i].substr(cmd.length());
+				textbuf->insert(cur+1, suggest.c_str());
+				textbuf->select(cur+1, cur+suggest.length()+1);
+				break;
+			}
+	}
+	len = ll;
 }
 //-----------------------------------------------------------------------------
 void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
@@ -462,7 +484,7 @@ void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
 //-----------------------------------------------------------------------------
 void insert_cb(Fl_Widget*, void *v)
 {
-	char *newfile = fl_file_chooser(mgl_gettext("Insert File?"), "*", filename.c_str());
+	const char *newfile = mgl_file_chooser(mgl_gettext("Insert File?"));
 	ScriptWindow *w = (ScriptWindow *)v;
 	if (newfile != NULL) load_file(newfile, w->editor->insert_position(),w);
 }
@@ -630,7 +652,7 @@ void ins_fname_cb(Fl_Widget *, void *v)
 {
 	static std::string prev;
 	ScriptWindow* e = (ScriptWindow*)v;
-	char *s = fl_file_chooser(mgl_gettext("Select file name"), "DAT files (*.{dat,csv})\tHDF files (*.{hdf,h5})\tAll files (*.*)", prev.c_str());
+	const char *s = mgl_file_chooser(mgl_gettext("Select file name"), "DAT files \t*.{dat,csv}\nHDF files \t*.{hdf,h5}");
 	if(s)
 	{
 		std::string ss=prev=s;	ss = '\''+ss+'\'';
@@ -643,7 +665,7 @@ void ins_path_cb(Fl_Widget *, void *v)
 {
 	static std::string prev;
 	ScriptWindow* e = (ScriptWindow*)v;
-	char *s = fl_dir_chooser(mgl_gettext("Select folder name"), prev.c_str(), 0);
+	const char *s = mgl_dir_chooser(mgl_gettext("Select folder name"), prev.c_str());
 	if(s)
 	{
 		std::string ss=prev=s;	ss = '\''+ss+'\'';

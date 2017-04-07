@@ -227,16 +227,16 @@ void ScriptWindow::mem_pressed(int kind)
 	int ind = var->value();
 	mglDataA *v = (mglDataA *)var->data(ind);
 	const char *s = var->text(ind);
-	if(!s || strstr(s,"\tconst"))	return;
+	bool dat = s && !strstr(s,"\tconst");
 	if(!v && kind!=3)	return;
-	if(kind==0)
+	if(dat && kind==0)
 	{
 		w = (TableWindow *)v->o;
 		if(!w)	w = new TableWindow(this);
 		w->update(v);	w->show();
 	}
-	else if(kind==1)	info_dlg_cb(v);
-	else if(kind==2)	Parse->DeleteVar(v->s.c_str());
+	else if(dat && kind==1)	info_dlg_cb(v);
+	else if(dat && kind==2)	Parse->DeleteVar(v->s.c_str());
 	else if(kind==3)
 	{
 		const char *name = fl_input(mgl_gettext("Enter name for new variable"),"dat");
@@ -245,10 +245,10 @@ void ScriptWindow::mem_pressed(int kind)
 		w = v->o? (TableWindow*)v->o:new TableWindow(this);
 		w->update(v);	w->show();
 	}
-	else if(kind==4)
+	else if(dat && kind==4)
 	{
-		char *newfile = fl_file_chooser(mgl_gettext("Save Data?"),
-				mgl_gettext("DAT Files (*.{dat,csv})\tHDF Files (*.{h5,hdf})\tAll Files (*)"), 0);
+		const char *newfile = mgl_file_chooser(mgl_gettext("Save Data?"),
+				mgl_gettext("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"));
 		if(newfile)
 		{
 			const char *ext = fl_filename_ext(newfile);

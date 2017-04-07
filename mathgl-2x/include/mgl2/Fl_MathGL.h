@@ -170,5 +170,7 @@ protected:
 };
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w);
+MGL_EXPORT const char *mgl_file_chooser(const char *mess, const char *filter="");
+MGL_EXPORT const char *mgl_dir_chooser(const char *mess, const char *path);
 //-----------------------------------------------------------------------------
 #endif

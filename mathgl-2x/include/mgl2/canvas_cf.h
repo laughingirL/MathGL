@@ -694,7 +694,7 @@ int MGL_EXPORT mgl_parser_cmd_type_(uintptr_t* p, const char *name, int);
 MGL_EXPORT const char *mgl_parser_cmd_desc(HMPR pr, const char *name);
 /// Return string of command format (command name and its argument[s])
 MGL_EXPORT const char *mgl_parser_cmd_frmt(HMPR pr, const char *name);
-/// Get name of command with nmber n
+/// Get name of command with number n
 MGL_EXPORT const char *mgl_parser_cmd_name(HMPR pr, long id);
 /// Get number of defined commands
 long MGL_EXPORT mgl_parser_cmd_num(HMPR pr);

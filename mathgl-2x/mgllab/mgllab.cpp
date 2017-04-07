@@ -38,6 +38,7 @@ int auto_exec;
 int exec_save;
 int highlight;
 int mouse_zoom;
+int complete_word;
 std::string docdir;
 std::string helpname;
 std::string fontname;
@@ -75,6 +76,7 @@ void save_pref()
 	pref.set("mouse_zoom",mouse_zoom);
 	pref.set("font_kind",font_kind);
 	pref.set("font_size",font_size);
+	pref.set("complete_word",complete_word);
 	pref.set("font_name",fontname.c_str());
 	pref.set("fname1",lastfiles[0].c_str());
 	pref.set("fname2",lastfiles[1].c_str());
@@ -94,6 +96,7 @@ void load_pref(ScriptWindow *w)
 	pref.get("exec_save",exec_save,1);
 	pref.get("highlight",highlight,1);
 	pref.get("mouse_zoom",mouse_zoom,0);
+	pref.get("complete_word",complete_word,1);
 	pref.get("font_kind",font_kind,1);
 	pref.get("font_size",font_size,14);
 	set_style(font_kind, font_size);
@@ -134,7 +137,7 @@ void close_dlg_cb(Fl_Widget *, void *v)	{	((Fl_Window *)v)->hide();	}
 void fname_cb(Fl_Widget*, void *v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-	char *file = fl_file_chooser(mgl_gettext("Insert File Name?"), mgl_gettext("All Files (*)"), 0);
+	const char *file = mgl_file_chooser(mgl_gettext("Insert File Name?"));
 	if(file)
 	{
 		char *str = new char[strlen(file)+4];
@@ -158,8 +161,8 @@ void open_cb(Fl_Widget*, void *v)
 {
 	if (!check_save()) return;
 	char *lastname=0;
-	char *newfile = fl_file_chooser(mgl_gettext("Open File?"),
-		mgl_gettext("MGL files (*.mgl)\tDAT files (*.{dat,csv})\tAll files (*)"), filename.c_str());
+	const char *newfile = mgl_file_chooser(mgl_gettext("Open File?"),
+		mgl_gettext("MGL files \t*.mgl\nDAT files \t*.{dat,csv}"));
 	if(lastname)	free(lastname);
 	if(newfile != NULL)
 	{
@@ -195,11 +198,12 @@ void save_cb(Fl_Widget*w, void*v)
 //-----------------------------------------------------------------------------
 void saveas_cb(Fl_Widget*, void *v)
 {
-	char *newfile, *fname=0;
+	const char *newfile;
+	char *fname=0;
 	FILE *fp=0;
 	while(1)
 	{
-		newfile = fl_file_chooser(mgl_gettext("Save File As?"), "*.mgl", filename.c_str());
+		newfile = mgl_file_chooser(mgl_gettext("Save File As?"), mgl_gettext("MGL files \t*.mgl"));
 		if(!newfile || !newfile[0])	break;
 		if(!strchr(newfile,'.'))
 		{
@@ -450,7 +454,6 @@ public:
 		auto_exec_w = new Fl_Check_Button(5, 145, 330, 25, mgl_gettext("Execute script after loading"));
 		exec_save_w = new Fl_Check_Button(5, 170, 330, 25, mgl_gettext("Save file before redrawing"));
 		complete_w = new Fl_Check_Button(5, 195, 330, 25, mgl_gettext("Enable keywords completion"));
-		complete_w->deactivate();	// TODO	add completion
 		highlight_w = new Fl_Check_Button(5, 220, 330, 25, mgl_gettext("Highlight current object(s)"));
 		mouse_zoom_w = new Fl_Check_Button(5, 245, 330, 25, mgl_gettext("Enable mouse wheel for zooming"));
 		lang_w = new Fl_Choice(160, 275, 175, 25, mgl_gettext("Language for mgllab"));
@@ -469,7 +472,7 @@ public:
 		help_path->value(docdir.c_str());
 		auto_exec_w->value(auto_exec);
 		exec_save_w->value(exec_save);
-		//		complete_w->value(complete_word);
+		complete_w->value(complete_word);
 		highlight_w->value(highlight);
 		mouse_zoom_w->value(mouse_zoom);
 		lang_w->value(lang);
@@ -482,6 +485,7 @@ public:
 		exec_save = exec_save_w->value();
 		highlight = highlight_w->value();
 		mouse_zoom = mouse_zoom_w->value();
+		complete_word = complete_w->value();
 		docdir = help_path->value();
 		fontname = font_path->value();
 		if(e->graph->get_graph())
@@ -496,14 +500,16 @@ void cb_filech(Fl_Widget*, void *v)
 {
 	if(v)
 	{
-		char *s = fl_file_chooser(mgl_gettext("Font file name"), "MGL font files (*.vfm*)", prop_dlg.font_path->value(), 0);
+		const char *s = mgl_file_chooser(mgl_gettext("Font file name"), "MGL font files \t*.vfm*");
 		if(s)
-		{	char *e = strstr(s,".vfm");	if(e)	*e=0;
-			prop_dlg.font_path->value(s);	}
+		{	std::string ss = s;
+			size_t pos = ss.find(".vfm");
+			if(pos!=std::string::npos)	ss = ss.substr(0,pos);
+			prop_dlg.font_path->value(ss.c_str());	}
 	}
 	else
 	{
-		char *s = fl_dir_chooser(mgl_gettext("Folder for help files"), prop_dlg.help_path->value(), 0);
+		const char *s = mgl_dir_chooser(mgl_gettext("Folder for help files"), prop_dlg.help_path->value());
 		if(s)	prop_dlg.help_path->value(s);
 	}
 }

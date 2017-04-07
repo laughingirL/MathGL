@@ -308,6 +308,12 @@ void MGL_EXPORT mgl_datac_sub_num_(uintptr_t *dat, dual *d);
 /// Apply Hankel transform
 void MGL_EXPORT mgl_datac_hankel(HADT dat, const char *dir);
 void MGL_EXPORT mgl_datac_hankel_(uintptr_t *dat, const char *dir,int);
+/// Apply Sin-Fourier transform
+void MGL_EXPORT mgl_datac_sinfft(HADT dat, const char *dir);
+void MGL_EXPORT mgl_datac_sinfft_(uintptr_t *dat, const char *dir,int);
+/// Apply Cos-Fourier transform
+void MGL_EXPORT mgl_datac_cosfft(HADT dat, const char *dir);
+void MGL_EXPORT mgl_datac_cosfft_(uintptr_t *dat, const char *dir,int);
 /// Apply Fourier transform
 void MGL_EXPORT mgl_datac_fft(HADT dat, const char *dir);
 void MGL_EXPORT mgl_datac_fft_(uintptr_t *dat, const char *dir,int);
@@ -317,6 +323,18 @@ uintptr_t MGL_EXPORT mgl_datac_correl_(uintptr_t *dat1, uintptr_t *dat2, const c
 /// Calculate one step of diffraction by finite-difference method with parameter q
 void MGL_EXPORT mgl_datac_diffr(HADT dat, const char *how, mreal q);
 void MGL_EXPORT mgl_datac_diffr_(uintptr_t *d, const char *how, double q,int l);
+/// Apply wavelet transform
+/** Parameter \a dir may contain:
+ * ‘x‘,‘y‘,‘z‘ for directions,
+ * ‘d‘ for daubechies, ‘D‘ for centered daubechies,
+ * ‘h‘ for haar, ‘H‘ for centered haar,
+ * ‘b‘ for bspline, ‘B‘ for centered bspline,
+ * ‘i‘ for applying inverse transform. */
+void MGL_EXPORT mgl_datac_wavelet(HADT dat, const char *how, int k);
+void MGL_EXPORT mgl_datac_wavelet_(uintptr_t *d, const char *dir, int *k,int);
+/// Set as the data envelop
+void MGL_EXPORT mgl_datac_envelop(HADT dat, char dir);
+void MGL_EXPORT mgl_datac_envelop_(uintptr_t *dat, const char *dir, int);
 
 /// Get real part of data values
 HMDT MGL_EXPORT mgl_datac_real(HCDT dat);

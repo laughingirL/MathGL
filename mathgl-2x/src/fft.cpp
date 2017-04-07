@@ -386,6 +386,18 @@ void MGL_EXPORT mgl_data_envelop(HMDT d, char dir)
 	if(clear)	mgl_fft_free(wt,0,0);
 }
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_envelop(HADT c, char dir)
+{
+	mglData re(c->nx, c->ny, c->nz), im(c->nx, c->ny, c->nz);
+	long n = c->GetNN();
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	{	re.a[i]=real(c->a[i]);	im.a[i]=imag(c->a[i]);	}
+	mgl_data_envelop(&re, dir);
+	mgl_data_envelop(&im, dir);
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	c->a[i] = dual(re.a[i], im.a[i]);
+}
+//-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_stfa1(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
@@ -609,6 +621,19 @@ void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir)	// use DST-1
 	if(clear)	mgl_fft_free(wt,0,0);
 }
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_sinfft(HADT c, const char *dir)
+{
+	if(!dir || *dir==0)	return;
+	mglData re(c->nx, c->ny, c->nz), im(c->nx, c->ny, c->nz);
+	long n = c->GetNN();
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	{	re.a[i]=real(c->a[i]);	im.a[i]=imag(c->a[i]);	}
+	mgl_data_sinfft(&re, dir);
+	mgl_data_sinfft(&im, dir);
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	c->a[i] = dual(re.a[i], im.a[i]);
+}
+//-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_cosx(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
@@ -753,6 +778,19 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 	if(clear)	mgl_fft_free(wt,0,0);
 }
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_cosfft(HADT c, const char *dir)
+{
+	if(!dir || *dir==0)	return;
+	mglData re(c->nx, c->ny, c->nz), im(c->nx, c->ny, c->nz);
+	long n = c->GetNN();
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	{	re.a[i]=real(c->a[i]);	im.a[i]=imag(c->a[i]);	}
+	mgl_data_cosfft(&re, dir);
+	mgl_data_cosfft(&im, dir);
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	c->a[i] = dual(re.a[i], im.a[i]);
+}
+//-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
 {
 	long nx = am->GetNx(), ny = am->GetNy(), nz = am->GetNz();
@@ -833,6 +871,8 @@ uintptr_t MGL_EXPORT mgl_transform_(uintptr_t *re, uintptr_t *im, const char *tr
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_envelop_(uintptr_t *d, const char *dir, int)
 {	mgl_data_envelop(_DT_,*dir);	}
+void MGL_EXPORT mgl_datac_envelop_(uintptr_t *d, const char *dir, int)
+{	mgl_datac_envelop(_DC_,*dir);	}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_GSL
 MGL_NO_EXPORT void* mgl_chnkx(void *par)
@@ -1112,6 +1152,12 @@ void MGL_EXPORT mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)
 void MGL_EXPORT mgl_data_sinfft_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	mgl_data_sinfft(_DT_,s);	delete []s;	}
+void MGL_EXPORT mgl_datac_cosfft_(uintptr_t *d, const char *dir,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	mgl_datac_cosfft(_DC_,s);	delete []s;	}
+void MGL_EXPORT mgl_datac_sinfft_(uintptr_t *d, const char *dir,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	mgl_datac_sinfft(_DC_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_corx(void *par)
 {
@@ -1369,4 +1415,19 @@ void MGL_EXPORT mgl_data_wavelet(HMDT dat, const char *how, int k)
 void MGL_EXPORT mgl_data_wavelet_(uintptr_t *d, const char *dir, int *k,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	mgl_data_wavelet(_DT_,s,*k);	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_wavelet(HADT c, const char *how, int k)
+{
+	mglData re(c->nx, c->ny, c->nz), im(c->nx, c->ny, c->nz);
+	long n = c->GetNN();
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	{	re.a[i]=real(c->a[i]);	im.a[i]=imag(c->a[i]);	}
+	mgl_data_wavelet(&re, how, k);
+	mgl_data_wavelet(&im, how, k);
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	c->a[i] = dual(re.a[i], im.a[i]);
+}
+void MGL_EXPORT mgl_datac_wavelet_(uintptr_t *d, const char *dir, int *k,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	mgl_datac_wavelet(_DC_,s,*k);	delete []s;	}
 //-----------------------------------------------------------------------------

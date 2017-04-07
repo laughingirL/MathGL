@@ -2231,7 +2231,7 @@ public:
 	/// Return description of MGL command
 	inline const char *CmdDesc(const char *name)
 	{	return mgl_parser_cmd_desc(pr, name);	}
-	/// Get name of command with nmber n
+	/// Get name of command with number n
 	inline const char *GetCmdName(long n)
 	{	return mgl_parser_cmd_name(pr,n);	}
 	/// Get number of defined commands

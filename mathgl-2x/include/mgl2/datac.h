@@ -374,12 +374,26 @@ using mglDataA::Momentum;
 	inline void Limit(mreal v)
 	{	mgl_datac_limit(this, v);	}
 
+	/// Set as the data envelop
+	inline void Envelop(char dir='x')	{	mgl_datac_envelop(this,dir);	}
 	/// Hankel transform
 	inline void Hankel(const char *dir)	{	mgl_datac_hankel(this,dir);	}
+	/// Apply Sin-Fourier transform
+	inline void SinFFT(const char *dir)	{	mgl_datac_sinfft(this,dir);	}
+	/// Apply Cos-Fourier transform
+	inline void CosFFT(const char *dir)	{	mgl_datac_cosfft(this,dir);	}
 	/// Fourier transform
 	inline void FFT(const char *dir)	{	mgl_datac_fft(this,dir);	}
 	/// Calculate one step of diffraction by finite-difference method with parameter q
 	inline void Diffraction(const char *how, mreal q)	{	mgl_datac_diffr(this,how,q);	}
+	/// Apply wavelet transform
+	/** Parameter \a dir may contain:
+	 * ‘x‘,‘y‘,‘z‘ for directions,
+	 * ‘d‘ for daubechies, ‘D‘ for centered daubechies,
+	 * ‘h‘ for haar, ‘H‘ for centered haar,
+	 * ‘b‘ for bspline, ‘B‘ for centered bspline,
+	 * ‘i‘ for applying inverse transform. */
+	inline void Wavelet(const char *how, int k)	{	mgl_datac_wavelet(this, how, k);	}
 
 	/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline dual Spline(mreal x,mreal y=0,mreal z=0) const

@@ -67,6 +67,7 @@ extern int lang;		///< Locale for script and help files
 extern int scheme;		///< FLTK scheme
 extern int font_kind;	///< Editor font kind
 extern int font_size;	///< Editor font size
+extern int complete_word;	///< enable word completion
 //-----------------------------------------------------------------------------
 void set_scheme_lang(int s, int l);		///< Set FLTK scheme and locale
 void set_style(int fkind, int fsize);	///< Change the style of highlight

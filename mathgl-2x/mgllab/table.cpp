@@ -156,11 +156,14 @@ class ChngDlg : public GeneralDlg
 {
 	Fl_Check_Button *dx, *dy, *dz;
 	Fl_Choice *kind, *type;
+	Fl_Float_Input *val;
 public:
 	ChngDlg()
 	{
 		Fl_Menu_Item k[]={{mgl_gettext("Smooth")}, {mgl_gettext("CumSum")}, { mgl_gettext("Integrate")},
-		{ mgl_gettext("Difference")}, { mgl_gettext("Double diff.")}, { mgl_gettext("Swap parts")}, {0}};
+		{ mgl_gettext("Difference")}, { mgl_gettext("Double diff.")}, { mgl_gettext("Swap parts")},
+		{ mgl_gettext("Sinus FFT")}, { mgl_gettext("Cosine FFT")}, { mgl_gettext("Hankel")},
+		{ mgl_gettext("Mirror")}, { mgl_gettext("Roll")}, { mgl_gettext("Sew phase")}, { mgl_gettext("Envelop")}, {0}};
 		Fl_Menu_Item t[]={{mgl_gettext("Linear *3")}, {mgl_gettext("Linear *5")}, {mgl_gettext("Parabolic *5")},{0}};
 		w = new Fl_Double_Window(165, 215, mgl_gettext("Change data"));
 		kind = new Fl_Choice(10, 25, 145, 25, mgl_gettext("Type of operation"));
@@ -170,6 +173,8 @@ public:
 		dz = new Fl_Check_Button(10, 105, 140, 25, mgl_gettext("apply in z direction"));
 		type = new Fl_Choice(10, 145, 145, 25, mgl_gettext("Type of smoothing"));
 		type->align(FL_ALIGN_TOP_LEFT);	type->copy(t);
+		val = new Fl_Float_Input(10, 145, 145, 25, mgl_gettext("Numeric parameter"));
+		val->align(FL_ALIGN_TOP_LEFT);
 		Fl_Button *o;
 		o = new Fl_Button(10, 180, 65, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(90, 180, 65, 25, mgl_gettext("Do"));	o->callback(cb_dlg_ok,this);
@@ -188,6 +193,8 @@ public:
 		HMDT d = dynamic_cast<HMDT>(dat);
 		HADT c = dynamic_cast<HADT>(dat);
 		const char *r = result.c_str();
+		bool err = false;
+		double v = val->value() ? atof(val->value()) : 0;
 		if(d)	switch(kind->value())
 		{
 		case 0:	d->Smooth(r);	break;
@@ -196,8 +203,15 @@ public:
 		case 3:	d->Diff(r);		break;
 		case 4:	d->Diff2(r);	break;
 		case 5:	d->Swap(r);		break;
+		case 6:	d->SinFFT(r);	break;
+		case 7:	d->CosFFT(r);	break;
+		case 8:	d->Hankel(r);	break;
+		case 9:	d->Mirror(r);	break;
+		case 10:d->Roll(*r ,v);	break;
+		case 11:d->Sew(r);		break;
+		case 12:d->Envelop(*r);	break;
 		}
-		if(c)	switch(kind->value())
+		else if(c)	switch(kind->value())
 		{
 		case 0:	c->Smooth(r);	break;
 		case 1:	c->CumSum(r);	break;
@@ -205,13 +219,23 @@ public:
 		case 3:	c->Diff(r);		break;
 		case 4:	c->Diff2(r);	break;
 		case 5:	c->Swap(r);		break;
+		case 6:	c->SinFFT(r);	break;
+		case 7:	c->CosFFT(r);	break;
+		case 8:	c->Hankel(r);	break;
+		case 9:	c->Mirror(r);	break;
+		case 10:c->Roll(*r, v);	break;
+		case 11:err=true;		break;
+		case 12:c->Envelop(*r);	break;
 		}
-		hide();
+		else	err=true;
+		if(err)	fl_alert(mgl_gettext("Operation is not supported for this type of data."));
+		else	hide();
 	}
 	void run(int k, mglDataA *d)
 	{
 		init();	dat=d;	kind->value(k);
-		if(k)	type->deactivate();	else	type->activate();
+		if(k)	{	type->hide();	val->show();	}
+		else	{	type->show();	val->hide();	}
 		w->show();	while(w->shown())	Fl::wait();
 	}
 } chng_dlg;
@@ -258,6 +282,55 @@ void swap_cb(Fl_Widget*, void*v)
 	if(!chng_dlg.result.empty())	e->refresh();
 }
 //-----------------------------------------------------------------------------
+void sinfft_cb(Fl_Widget*, void*v)
+{
+	TableWindow* e = (TableWindow*)v;
+	chng_dlg.run(6, e->var);
+	if(!chng_dlg.result.empty())	e->refresh();
+}
+//-----------------------------------------------------------------------------
+void cosfft_cb(Fl_Widget*, void*v)
+{
+	TableWindow* e = (TableWindow*)v;
+	chng_dlg.run(7, e->var);
+	if(!chng_dlg.result.empty())	e->refresh();
+}
+//-----------------------------------------------------------------------------
+void hankel_cb(Fl_Widget*, void*v)
+{
+	TableWindow* e = (TableWindow*)v;
+	chng_dlg.run(8, e->var);
+	if(!chng_dlg.result.empty())	e->refresh();
+}
+//-----------------------------------------------------------------------------
+void mirror_cb(Fl_Widget*, void*v)
+{
+	TableWindow* e = (TableWindow*)v;
+	chng_dlg.run(9, e->var);
+	if(!chng_dlg.result.empty())	e->refresh();
+}
+//-----------------------------------------------------------------------------
+void roll_cb(Fl_Widget*, void*v)
+{
+	TableWindow* e = (TableWindow*)v;
+	chng_dlg.run(10, e->var);
+	if(!chng_dlg.result.empty())	e->refresh();
+}
+//-----------------------------------------------------------------------------
+void sew_cb(Fl_Widget*, void*v)
+{
+	TableWindow* e = (TableWindow*)v;
+	chng_dlg.run(11, e->var);
+	if(!chng_dlg.result.empty())	e->refresh();
+}
+//-----------------------------------------------------------------------------
+void envelop_cb(Fl_Widget*, void*v)
+{
+	TableWindow* e = (TableWindow*)v;
+	chng_dlg.run(12, e->var);
+	if(!chng_dlg.result.empty())	e->refresh();
+}
+//-----------------------------------------------------------------------------
 class NwdtDlg : public GeneralDlg
 {
 	Fl_Check_Button *dx, *dy, *dz;
@@ -266,7 +339,7 @@ class NwdtDlg : public GeneralDlg
 public:
 	NwdtDlg()
 	{
-		Fl_Menu_Item k[]={{mgl_gettext("Summation of")}, {mgl_gettext("Maximum of")}, { mgl_gettext("Minimum of")}, {0}};
+		Fl_Menu_Item k[]={{mgl_gettext("Summation of")}, {mgl_gettext("Maximum of")}, { mgl_gettext("Minimum of")}, { mgl_gettext("Pulse prop.")}, {0}};
 		w = new Fl_Double_Window(165, 215, mgl_gettext("Extract data"));
 		kind = new Fl_Choice(10, 25, 145, 25, mgl_gettext("Type of operation"));
 		kind->align(FL_ALIGN_TOP_LEFT);	kind->copy(k);
@@ -302,12 +375,14 @@ public:
 			case 0:	*out = d->Sum(r);	break;
 			case 1:	*out = d->Max(r);	break;
 			case 2:	*out = d->Min(r);	break;
+			case 3:	*out = d->Pulse(*r);break;
 		}
 		if(c)	switch(kind->value())
 		{
 			case 0:	*out = c->Sum(r);	break;
 			case 1:	*out = c->Max(r);	break;
 			case 2:	*out = c->Min(r);	break;
+			case 3:	out = mgl_data_pulse(c,*r);	break;
 		}
 		hide();
 	}
@@ -339,11 +414,18 @@ void amin_cb(Fl_Widget*, void*v)
 	if(!chng_dlg.result.empty())	e->refresh();
 }
 //-----------------------------------------------------------------------------
+void pulse_cb(Fl_Widget*, void*v)
+{
+	TableWindow* e = (TableWindow*)v;
+	nwdt_dlg.run(3, e->var);
+	if(!chng_dlg.result.empty())	e->refresh();
+}
+//-----------------------------------------------------------------------------
 void load_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	char *newfile = fl_file_chooser(mgl_gettext("Load Data?"),
-		mgl_gettext("DAT Files (*.{dat,csv})\tHDF Files (*.{h5,hdf})\tAll Files (*)"), 0);
+	const char *newfile = mgl_file_chooser(mgl_gettext("Load Data?"),
+		mgl_gettext("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"));
 	if(newfile)
 	{
 		const char *ext = fl_filename_ext(newfile);
@@ -371,8 +453,8 @@ void load_dat_cb(Fl_Widget*, void*v)
 void save_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	char *newfile = fl_file_chooser(mgl_gettext("Save Data?"),
-		mgl_gettext("DAT Files (*.{dat,csv})\tHDF Files (*.{h5,hdf})\tAll Files (*)"), 0);
+	const char *newfile = mgl_file_chooser(mgl_gettext("Save Data?"),
+		mgl_gettext("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"));
 	if(newfile)
 	{
 		const char *ext = fl_filename_ext(newfile);
@@ -388,8 +470,8 @@ void save_dat_cb(Fl_Widget*, void*v)
 void exp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *scheme, *newfile = fl_file_chooser(mgl_gettext("Export Data?"),
-		mgl_gettext("PNG Files (*.png)\tAll Files (*)"), 0);
+	const char *scheme, *newfile = mgl_file_chooser(mgl_gettext("Export Data?"),
+		mgl_gettext("PNG Files \t*.png"));
 	if(newfile)
 	{	// TODO show dialog for color scheme
 		scheme = fl_input(mgl_gettext("Enter color scheme"),MGL_DEF_SCH);
@@ -400,8 +482,8 @@ void exp_dat_cb(Fl_Widget*, void*v)
 void imp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *scheme, *newfile = fl_file_chooser(mgl_gettext("Import Data?"),
-		mgl_gettext("PNG Files (*.png)\tAll Files (*)"), 0);
+	const char *scheme, *newfile = mgl_file_chooser(mgl_gettext("Import Data?"),
+		mgl_gettext("PNG Files \t*.png"));
 	HMDT d = dynamic_cast<HMDT>(e->var);
 	if(d && newfile)
 	{
@@ -664,11 +746,11 @@ void change_sl_cb(Fl_Widget*w, void*v)
 //-----------------------------------------------------------------------------
 Fl_Menu_Item tablemenu[60] = {
 	{ mgl_gettext("General"), 0, 0, 0, FL_SUBMENU },
-		{ mgl_gettext("Load from file"),	0, load_dat_cb },
+		{ mgl_gettext("Load from file"),0, load_dat_cb },
 		{ mgl_gettext("Import from PNG"),0, imp_dat_cb },
 		{ mgl_gettext("Save to file"),	0, save_dat_cb },
 		{ mgl_gettext("Export to PNG"),	0, exp_dat_cb, 0, FL_MENU_DIVIDER },
-		{ mgl_gettext("Insert as list"),	0, list_dat_cb },
+		{ mgl_gettext("Insert as list"),0, list_dat_cb },
 //		{ mgl_gettext("Plot data"),		0, plot_dat_cb },
 //		{ mgl_gettext("Info for data"),	0, info_dat_cb },
 		{ 0 },
@@ -678,7 +760,7 @@ Fl_Menu_Item tablemenu[60] = {
 		{ mgl_gettext("Squeeze"),	0, squeeze_cb },
 		{ mgl_gettext("Crop"),		0, crop_cb },
 		{ mgl_gettext("Transpose"),	0, transp_cb },
-//		{ mgl_gettext("Extend"),		0, extend_cb },
+//		{ mgl_gettext("Extend"),	0, extend_cb },
 		{ 0 },
 	{ mgl_gettext("Fill"), 0, 0, 0, FL_SUBMENU },
 		{ mgl_gettext("By formula"),	0, modify_cb },
@@ -686,18 +768,27 @@ Fl_Menu_Item tablemenu[60] = {
 		{ mgl_gettext("Normalize"),	0, normal_cb },
 		{ 0 },
 	{ mgl_gettext("Change"), 0, 0, 0, FL_SUBMENU },
-		{ mgl_gettext("Smooth"),		0, smooth_cb },
-		{ mgl_gettext("CumSum"),		0, cumsum_cb },
+		{ mgl_gettext("Smooth"),	0, smooth_cb },
+		{ mgl_gettext("CumSum"),	0, cumsum_cb },
 		{ mgl_gettext("Integrate"),	0, integr_cb },
-		{ mgl_gettext("Difference"),	0, diff_cb },
-		{ mgl_gettext("Double diff."),	0, diff2_cb },
-		{ mgl_gettext("Swap parts"),	0, swap_cb },
+		{ mgl_gettext("Difference"),0, diff_cb },
+		{ mgl_gettext("Laplacian"),	0, diff2_cb },
+		{ mgl_gettext("Swap parts"),0, swap_cb },
+		{ mgl_gettext("Sin FFT"),	0, sinfft_cb },
+		{ mgl_gettext("Cos FFT"),	0, cosfft_cb },
+		{ mgl_gettext("Hankel"),	0, hankel_cb },
+//		{ mgl_gettext("Wavelet"),	0, wavelet_cb },
+		{ mgl_gettext("Mirror"),	0, mirror_cb },
+		{ mgl_gettext("Roll"),		0, roll_cb },
+		{ mgl_gettext("Sew phase"),	0, sew_cb },
+		{ mgl_gettext("Envelop"),	0, envelop_cb },
 		{ 0 },
 	{ mgl_gettext("Another"), 0, 0, 0, FL_SUBMENU },
 //		{ mgl_gettext("Histogram of"),	0, hist_cb },
 		{ mgl_gettext("Summation of"),	0, asum_cb },
 		{ mgl_gettext("Maximum of"),	0, amax_cb },
 		{ mgl_gettext("Minimum of"),	0, amin_cb },
+		{ mgl_gettext("Pulse prop."),	0, pulse_cb },
 		{ 0 },
 	{ mgl_gettext("Operations"), 0, 0, 0, FL_SUBMENU },
 		{ mgl_gettext("Add to"),		0, addto_cb },
