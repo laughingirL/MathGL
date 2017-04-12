@@ -13,7 +13,7 @@ if(enable-qt4)
 	endif(enable-qt4asqt)
 
 	if(MGL_HAVE_FLTK AND NOT enable-qt5)
-		mgl_add_lib(wnd ${MGL_QT4_FILES} ../fltk.cpp ../../include/mgl2/fltk.h)
+		mgl_add_lib(wnd ${MGL_QT4_FILES} ../fltk.cpp ../../include/mgl2/fltk.h ../image.cpp ../image.h)
 		target_include_directories(mgl-wnd SYSTEM PUBLIC ${FLTK_INCLUDE_DIR})
 		target_include_directories(mgl-wnd-static SYSTEM PUBLIC ${FLTK_INCLUDE_DIR})
 		target_link_libraries(mgl-wnd mgl ${FLTK_LIBRARIES} ${MGL_QT4_LIBS})

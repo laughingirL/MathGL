@@ -528,7 +528,7 @@ endif(enable-glut)
 
 if(enable-fltk)
 	set(MGL_HAVE_FLTK 1)
-	include(FindFLTK)
+	FIND_PACKAGE(FLTK)
 	if(NOT FLTK_FOUND)
 		message(SEND_ERROR "Couldn't find FLTK library.")
 	endif(NOT FLTK_FOUND)
