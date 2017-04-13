@@ -212,7 +212,7 @@ void saveas_cb(Fl_Widget*, void *v)
 			strcpy(fname,newfile);	strcat(fname,".mgl");
 			newfile = fname;
 		}
-		fp = fopen(newfile,"r");
+		fp = fl_fopen(newfile,"r");
 		if(fp)
 		{
 			fclose(fp);

@@ -1185,7 +1185,7 @@ public:
 		const char *s=fname->value();
 		if(s && *s)
 		{
-			FILE *fp=fopen(s,"wt");
+			FILE *fp = fl_fopen(s,"wt");
 			if(fp)	{	fputs(result.c_str(),fp);	fclose(fp);	}
 			else	fl_alert(mgl_gettext("Couldn't open file %s"),s);
 		}

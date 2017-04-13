@@ -114,86 +114,57 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 {
 #define Q	4	// should be >= sqrt(2*num_thr) ???
 	const int nx=Q,ny=Q;	// TODO find dependence on Q for 1, 2, 4, 8 threads. Try to select optimal
-	if(!(Quality&3))
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
-		for(long i=id;i<nx*ny;i+=mglNumThr)
+	for(long i=id;i<nx*ny;i+=mglNumThr)
+	{
+		mglDrawReg d;	d.set(this,nx,ny,i);
+		if(Quality&MGL_DRAW_NORM)	for(size_t k=0;k<Prm.size();k++)
 		{
-			mglDrawReg d;	d.set(this,nx,ny,i);
-			for(size_t k=0;k<Prm.size();k++)
+			if(Stop)	break;
+			const mglPrim &p=GetPrm(k);	d.copy(p);
+			long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
+			switch(p.type)
 			{
-				if(Stop)	break;
-				const mglPrim &p=GetPrm(k);
-				d.PDef = p.n3;	d.pPos = p.s;
-				d.ObjId = p.id;	d.PenWidth=p.w;
-				d.angle = p.angl;
-				if(p.type==2 || p.type==3) d.PDef = p.m;
-				long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
-				switch(p.type)
-				{
-				case 3:	fast_draw(Pnt[n1],Pnt[n4],&d);	fast_draw(Pnt[n2],Pnt[n3],&d);	break;
-				case 1:	fast_draw(Pnt[n1],Pnt[n2],&d);	break;
+				case 3:	quad_draw(Pnt[n1],Pnt[n2],Pnt[n3],Pnt[n4],&d);	break;
+				case 1:	line_draw(Pnt[n1],Pnt[n2],&d);	break;
 				case 4:	glyph_draw(p,&d);	break;
 				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
-				case 2:	fast_draw(Pnt[n1],Pnt[n2],&d);	fast_draw(Pnt[n1],Pnt[n3],&d);
-						fast_draw(Pnt[n2],Pnt[n3],&d);	break;
-				}
+				case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,&d);	break;
 			}
 		}
-	else if(!(Quality&MGL_DRAW_NORM))
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-		for(long i=id;i<nx*ny;i+=mglNumThr)
+		else if(Quality&MGL_DRAW_FAST)	for(size_t k=0;k<Prm.size();k++)
 		{
-			mglDrawReg d;	d.set(this,nx,ny,i);
-			for(size_t k=0;k<Prm.size();k++)
+			if(Stop)	break;
+			const mglPrim &p=GetPrm(k);	d.copy(p);
+			long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
+			switch(p.type)
 			{
-				if(Stop)	break;
-				const mglPrim &p=GetPrm(k);
-				d.PDef = p.n3;	d.pPos = p.s;
-				d.ObjId = p.id;	d.PenWidth=p.w;
-				d.angle = p.angl;
-				if(p.type==2 || p.type==3) d.PDef = p.m;
-				long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
-				switch(p.type)
-				{
 				case 3:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n4],true,&d);
 						trig_draw(Pnt[n1],Pnt[n3],Pnt[n4],true,&d);	break;
 				case 1:	line_draw(Pnt[n1],Pnt[n2],&d);	break;
 				case 4:	glyph_draw(p,&d);	break;
 				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
 				case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,&d);	break;
-				}
 			}
 		}
-	else
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-		for(long i=id;i<nx*ny;i+=mglNumThr)
+		else	for(size_t k=0;k<Prm.size();k++)
 		{
-			mglDrawReg d;	d.set(this,nx,ny,i);
-			for(size_t k=0;k<Prm.size();k++)
+			if(Stop)	break;
+			const mglPrim &p=GetPrm(k);	d.copy(p);
+			long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
+			switch(p.type)
 			{
-				if(Stop)	break;
-				const mglPrim &p=GetPrm(k);
-				d.PDef = p.n3;	d.pPos = p.s;
-				d.ObjId = p.id;	d.PenWidth=p.w;
-				d.angle = p.angl;
-				if(p.type==2 || p.type==3) d.PDef = p.m;
-				long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
-				switch(p.type)
-				{
-				case 3:	quad_draw(Pnt[n1],Pnt[n2],Pnt[n3],Pnt[n4],&d);	break;
-				case 1:	line_draw(Pnt[n1],Pnt[n2],&d);	break;
+				case 3:	fast_draw(Pnt[n1],Pnt[n4],&d);	fast_draw(Pnt[n2],Pnt[n3],&d);	break;
+				case 1:	fast_draw(Pnt[n1],Pnt[n2],&d);	break;
 				case 4:	glyph_draw(p,&d);	break;
 				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
-				case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,&d);	break;
-				}
+				case 2:	fast_draw(Pnt[n1],Pnt[n2],&d);	fast_draw(Pnt[n1],Pnt[n3],&d);
+				fast_draw(Pnt[n2],Pnt[n3],&d);	break;
 			}
 		}
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_dotsdr(long id, long n, const void *)
@@ -1087,13 +1058,13 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
 	if(mgl_isnan(phi))	return;
 	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=(P.n3&4)?1:0.8;	}
-	
-	mglPnt p=Pnt[P.n1];	p.a=1;	
+
+	mglPnt p=Pnt[P.n1];	p.a=1;
 	mreal fact = get_persp(Bp.pf,p.z,Depth);
 	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2)*fact;
 	mreal size=P.s, f = P.p*pf*P.s;
 	p.u *= pf*size;	p.v *= pf*size;
-	
+
 	const mglGlyph &g = Glf[P.n4];
 	if(P.n3&8)
 	{
@@ -1124,7 +1095,7 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 {
 	if(!g.line || g.nl<=0)	return;
 	const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
-	
+
 	mreal x1 = 1e10, x2=-1e10, y1=1e10, y2=-1e10;
 	for(long i=0;i<g.nl;i++)	// find sizes of glyph
 	{
@@ -1270,13 +1241,13 @@ void mglCanvas::glyph_line(mreal phi, const mglPnt &pp, mreal f, bool solid, con
 	const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
 	mglPnt q0=pp,q1=pp,q2=pp,q3=pp;
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=q3.u=q3.v=NAN;
-	
+
 	mreal dy = 0.004,x,y;
 	x=pp.u;		y=pp.v-dy;	q0.x=pp.x+(x*co+y*si)/2;	q0.y=pp.y+(y*co-x*si)/2;
 	x=pp.u+f;	y=pp.v-dy;	q1.x=pp.x+(x*co+y*si)/2;	q1.y=pp.y+(y*co-x*si)/2;
 	x=pp.u;		y=pp.v+dy;	q2.x=pp.x+(x*co+y*si)/2;	q2.y=pp.y+(y*co-x*si)/2;
 	x=pp.u+f;	y=pp.v+dy;	q3.x=pp.x+(x*co+y*si)/2;	q3.y=pp.y+(y*co-x*si)/2;
-	
+
 	if(solid)	quad_draw(q0,q1,q3,q2,d);
 	else
 	{

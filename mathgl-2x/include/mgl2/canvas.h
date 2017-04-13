@@ -73,6 +73,9 @@ struct MGL_EXPORT mglDrawReg
 #if MGL_HAVE_RVAL
 	mglDrawReg(mglDrawReg &&aa) : PDef(aa.PDef),angle(aa.angle),ObjId(aa.ObjId),PenWidth(aa.PenWidth),pPos(aa.pPos) ,x1(aa.x1),x2(aa.x2),y1(aa.y1),y2(aa.y2)	{}
 #endif
+	inline void copy(const mglPrim &p)
+	{	PDef = p.n3;	pPos = p.s;	ObjId = p.id;	PenWidth=p.w;	angle = p.angl;
+		if(p.type==2 || p.type==3) PDef = p.m;	}
 	inline const mglDrawReg &operator=(const mglDrawReg &aa)
 	{	memcpy(this,&aa,sizeof(mglDrawReg));	return aa;	}
 	union
@@ -427,12 +430,12 @@ protected:
 	void glyph_draw(const mglPrim &P, mglDrawReg *d);
 	void glyph_draw_new(const mglPrim &P, mglDrawReg *d);
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
-	
+
 	// functions for glyph drawing
 	virtual void glyph_fill(mreal phi, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_wire(mreal phi, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_line(mreal phi, const mglPnt &p, mreal f, bool solid, const mglDrawReg *d);
-	
+
 	// restore normalized coordinates from screen ones
 	mglPoint RestorePnt(mglPoint ps, bool norm=false) const MGL_FUNC_PURE;
 
