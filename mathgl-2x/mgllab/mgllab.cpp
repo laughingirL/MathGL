@@ -203,7 +203,7 @@ void saveas_cb(Fl_Widget*, void *v)
 	FILE *fp=0;
 	while(1)
 	{
-		newfile = mgl_file_chooser(mgl_gettext("Save File As?"), mgl_gettext("MGL files \t*.mgl"));
+		newfile = mgl_file_chooser(mgl_gettext("Save File As?"), mgl_gettext("MGL files \t*.mgl"), true);
 		if(!newfile || !newfile[0])	break;
 		if(!strchr(newfile,'.'))
 		{

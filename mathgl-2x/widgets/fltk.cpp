@@ -85,11 +85,11 @@ void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res)
 //		class Fl_MathGL
 //
 //-----------------------------------------------------------------------------
-MGL_EXPORT const char *mgl_file_chooser(const char *mess, const char *filter)
+MGL_EXPORT const char *mgl_file_chooser(const char *mess, const char *filter, bool save)
 {
 	static Fl_Native_File_Chooser fnfc;
 	fnfc.title(mess);
-	fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
+	fnfc.type(save ? Fl_Native_File_Chooser::BROWSE_SAVE_FILE : Fl_Native_File_Chooser::BROWSE_FILE);
 	fnfc.filter(filter);
 //	fnfc.directory("/var/tmp");           // default directory to use
 	fnfc.show();
@@ -564,102 +564,98 @@ void MGL_NO_EXPORT mgl_draw_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->update();	}
 void mglCanvasFL::Update()		{	mgl->update();	Wnd->show();	}
 //-----------------------------------------------------------------------------
+MGL_NO_EXPORT const char *mgl_save_name(const char *ext)
+{
+	static std::string fname;
+	fname = mgl_file_chooser(mgl_gettext("Save File As?"), ext, true);
+	if(fname.empty())	return NULL;
+	if(fname.find(ext+1)==std::string::npos)	fname += ext+1;
+	return fname.c_str();
+}
+#define _FGR_	((Fl_MGLView*)v)->FMGL->get_graph()
+//-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_png_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.png");
-	if(!fname || !fname[0])	return;
-	mgl_write_png(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.png");
+	if(fname)	mgl_write_png(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_bps_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.eps");
-	if(!fname || !fname[0])	return;
-	mgl_write_bps(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.eps");
+	if(fname)	mgl_write_bps(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_pngn_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.png");
-	if(!fname || !fname[0])	return;
-	mgl_write_png_solid(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.png");
+	if(fname)	mgl_write_png_solid(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_jpeg_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.jpg");
-	if(!fname || !fname[0])	return;
-	mgl_write_jpg(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.jpg");
+	if(fname)	mgl_write_jpg(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_svg_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.svg");
-	if(!fname || !fname[0])	return;
-	mgl_write_svg(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.svg");
+	if(fname)	mgl_write_svg(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_eps_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.eps");
-	if(!fname || !fname[0])	return;
-	mgl_write_eps(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.eps");
+	if(fname)	mgl_write_eps(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_gif_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.gif");
-	if(!fname || !fname[0])	return;
-	mgl_write_gif(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.gif");
+	if(fname)	mgl_write_gif(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_bmp_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.bmp");
-	if(!fname || !fname[0])	return;
-	mgl_write_bmp(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.bmp");
+	if(fname)	mgl_write_bmp(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_prc_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.prc");
-	if(!fname || !fname[0])	return;
-	mgl_write_prc(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,1);
+	const char *fname = mgl_save_name("*.prc");
+	if(fname)	mgl_write_prc(_FGR_,fname,0,1);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_tex_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.tex");
-	if(!fname || !fname[0])	return;
-	mgl_write_tex(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.tex");
+	if(fname)	mgl_write_tex(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_obj_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.obj");
-	if(!fname || !fname[0])	return;
-	mgl_write_obj(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,1);
+	const char *fname = mgl_save_name("*.obj");
+	if(fname)	mgl_write_obj(_FGR_,fname,0,1);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_off_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.off");
-	if(!fname || !fname[0])	return;
-	mgl_write_off(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,0);
+	const char *fname = mgl_save_name("*.off");
+	if(fname)	mgl_write_off(_FGR_,fname,0,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_stl_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.stl");
-	if(!fname || !fname[0])	return;
-	mgl_write_stl(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.stl");
+	if(fname)	mgl_write_stl(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_xyz_cb(Fl_Widget*, void* v)
 {
-	const char *fname = mgl_file_chooser(mgl_gettext("Save File As?"), "*.xyz");
-	if(!fname || !fname[0])	return;
-	mgl_write_xyz(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+	const char *fname = mgl_save_name("*.xyz");
+	if(fname)	mgl_write_xyz(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_su_cb(Fl_Widget*, void* v)
@@ -805,7 +801,7 @@ Fl_Menu_Item pop_graph[] = {
 		{ mgl_gettext("... as STL"),	0, mgl_export_stl_cb},
 		{ mgl_gettext("... as XYZ"),	0, mgl_export_xyz_cb},
 		{0},
-	{ mgl_gettext("Copy graphics"),	0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
+	{ mgl_gettext("Copy graphics"),	0, mgl_copyimg_cb, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
 	{ mgl_gettext("Normal view"),	0, mgl_norm_cb},
 	{ mgl_gettext("Redraw plot"),	0, mgl_draw_cb},
 	{ mgl_gettext("Adjust size"),	0, mgl_adjust_cb},

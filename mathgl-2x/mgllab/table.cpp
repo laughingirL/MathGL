@@ -454,7 +454,7 @@ void save_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
 	const char *newfile = mgl_file_chooser(mgl_gettext("Save Data?"),
-		mgl_gettext("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"));
+		mgl_gettext("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"), true);
 	if(newfile)
 	{
 		const char *ext = fl_filename_ext(newfile);
@@ -471,7 +471,7 @@ void exp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
 	const char *scheme, *newfile = mgl_file_chooser(mgl_gettext("Export Data?"),
-		mgl_gettext("PNG Files \t*.png"));
+		mgl_gettext("PNG Files \t*.png"), true);
 	if(newfile)
 	{	// TODO show dialog for color scheme
 		scheme = fl_input(mgl_gettext("Enter color scheme"),MGL_DEF_SCH);

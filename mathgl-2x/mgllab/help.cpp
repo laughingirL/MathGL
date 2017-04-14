@@ -248,7 +248,7 @@ void ScriptWindow::mem_pressed(int kind)
 	else if(dat && kind==4)
 	{
 		const char *newfile = mgl_file_chooser(mgl_gettext("Save Data?"),
-				mgl_gettext("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"));
+				mgl_gettext("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"), true);
 		if(newfile)
 		{
 			const char *ext = fl_filename_ext(newfile);
