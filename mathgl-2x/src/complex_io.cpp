@@ -51,7 +51,7 @@ uintptr_t MGL_EXPORT mgl_create_datac_file_(const char *fname,int l)
 void MGL_EXPORT mgl_delete_datac_(uintptr_t *d)
 {	if(_DC_)	delete _DC_;	}
 //-----------------------------------------------------------------------------
-dual MGL_EXPORT mgl_atoc(const char *s, int adv)
+mdual MGL_EXPORT mgl_atoc(const char *s, int adv)
 {
 	double re=0,im=0;	size_t ll=strlen(s);
 	while(s[ll]<=' ')	ll--;
@@ -81,7 +81,7 @@ dual MGL_EXPORT mgl_atoc(const char *s, int adv)
 			else	{	re=atof(s);	im=0;	}
 		}
 	}
-	return dual(re,im);
+	return re+im*mgl_I;
 }
 //-----------------------------------------------------------------------------
 void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithreading read

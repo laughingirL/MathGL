@@ -343,7 +343,7 @@ class InfoDlg : public GeneralDlg
 	Fl_MathGL *gr;
 	long nx, ny, nz;
 	long sl;
-	int plot=0;
+	int plot;
 	std::string name;
 public:
 	InfoDlg()
