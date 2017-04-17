@@ -352,7 +352,7 @@ public:
 		w = new Fl_Double_Window(420, 530);
 		out = new Fl_Multiline_Output(10, 25, 400, 150, mgl_gettext("Information"));
 		out->align(FL_ALIGN_TOP_LEFT);
-		gr = new Fl_MathGL(10, 220, 400, 300);	gr->box(FL_ENGRAVED_BOX);
+		gr = new Fl_MathGL(10, 220, 400, 300);	gr->box(FL_ENGRAVED_BOX);	gr->use_pthr = false;
 		mgl_set_size(gr->get_graph(),400,300);
 		o = new Fl_Button(10, 185, 25, 25, "@<-");
 		o->callback(cb_info_prev,this);

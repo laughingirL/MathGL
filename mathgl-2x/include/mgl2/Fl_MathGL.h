@@ -49,6 +49,7 @@ public:
 	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
 	mglCanvas *gr;			///< Built-in mglCanvas instance (mglCanvasFLTK is used by default)
 	std::string prim;		///< manual primitives
+	bool use_pthr;			///< use pthread for update plot
 
 	Fl_MathGL(int x, int y, int w, int h, const char *label=0);
 	virtual ~Fl_MathGL();

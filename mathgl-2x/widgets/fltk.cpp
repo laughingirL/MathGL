@@ -107,7 +107,7 @@ MGL_EXPORT const char *mgl_dir_chooser(const char *mess, const char *path)
 //-----------------------------------------------------------------------------
 Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widget(xx,yy,ww,hh,lbl)
 {
-	gr = new mglCanvas;
+	gr = new mglCanvas;	use_pthr = true;
 	tet=phi=x1=y1=0;	x2=y2=1;
 	zoom = rotate = handle_keys = grid = false;
 	flag=x0=y0=xe=ye=0;	show_warn=true;
@@ -211,9 +211,13 @@ void Fl_MathGL::update()
 //	Fl::lock();
 	run = true;
 	top_window()->cursor(FL_CURSOR_WAIT);
-	pthread_create(&thr,0,draw_plot_thr,this);
-	while(run)	Fl::wait();
-	pthread_join(thr,0);
+	if(use_pthr)
+	{
+		pthread_create(&thr,0,draw_plot_thr,this);
+		while(run)	Fl::wait();
+		pthread_join(thr,0);
+	}
+	else	draw_plot();
 //	Fl::unlock();
 
 	if(mgl_get_width(gr)!=w() || mgl_get_height(gr)!=h())

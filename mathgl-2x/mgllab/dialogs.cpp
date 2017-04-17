@@ -409,7 +409,7 @@ public:
 		res->align(FL_ALIGN_TOP_LEFT);
 		o = new Fl_Button(300, 475, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(300, 505, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);
-		gr = new Fl_MathGL(5, 470, 285, 65);	gr->box(FL_ENGRAVED_BOX);
+		gr = new Fl_MathGL(5, 470, 285, 65);	gr->box(FL_ENGRAVED_BOX);	gr->use_pthr = false;
 		mgl_set_size(gr->get_graph(),285,65);	gr->align(FL_ALIGN_LEFT);
 		w->set_modal();	w->end();
 	}
@@ -1313,7 +1313,7 @@ public:
 		text = new Fl_Input(50, 255, 350, 25, mgl_gettext("Title"));	text->callback(cp_inplot_upd);
 		o = new Fl_Button(400, 255, 60, 25, mgl_gettext("Style"));	o->callback(style_dlg_cb,0);
 		res = new Fl_Output(50, 285, 410, 25, mgl_gettext("Result"));
-		gr = new Fl_MathGL(470, 130, 240, 180);	gr->box(FL_ENGRAVED_BOX);
+		gr = new Fl_MathGL(470, 130, 240, 180);	gr->box(FL_ENGRAVED_BOX);	gr->use_pthr = false;
 		mgl_set_size(gr->get_graph(),240,180);	gr->align(FL_ALIGN_LEFT);
 		o = new Fl_Button(545, 95, 75, 25, mgl_gettext("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(630, 95, 75, 25, mgl_gettext("OK"));	o->callback(cb_dlg_ok,this);

@@ -165,10 +165,9 @@ public:
 	Fl_Input *link_cmd;
 	Fl_Group *ghelp, *gplot;
 	Fl_Browser *var;
-	Fl_Output *status;
+	Fl_Box *status;
 
-	void set_status(const char *txt)
-	{	if(txt)	{	status->value(txt);	Fl::redraw();	}	}
+	void set_status(const char *txt);
 	void mem_init();
 	void mem_pressed(int n);
 	Fl_MGLView *graph;

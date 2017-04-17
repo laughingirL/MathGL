@@ -184,14 +184,9 @@ void style_init()
 void style_unfinished_cb(int, void*) {}
 //-----------------------------------------------------------------------------
 // Update the style buffer...
-void style_update(int pos,		// Position of update
-				int nInserted,	// Number of inserted chars
-				int nDeleted,	// Number of deleted chars
-				int	/*nRestyled*/,			// Number of restyled chars
-				const char */*deletedText*/,// Text that was deleted
-				void *cbArg)	// Callback data
+void style_update(int pos, int nInserted, int nDeleted, int	/*nRestyled*/, const char */*deletedText*/, void *cbArg)
 {
-	long	start, end;	// Start and end of text
+	long start, end;	// Start and end of text
 	char last,		// Last style on line
 		*style,		// Style data
 		*text;		// Text data
@@ -473,12 +468,16 @@ void cb_descr(Fl_Widget*,void *v)
 	len = ll;
 }
 //-----------------------------------------------------------------------------
-void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
+void ScriptWindow::set_status(const char *txt)
+{	if(txt && status)	{	status->label(txt);	redraw();	}	}
+//-----------------------------------------------------------------------------
+void changed_cb(int pos, int nInserted, int nDeleted, int nRestyled, const char *deletedText, void* v)
 {
 	if ((nInserted || nDeleted) && !loading) changed = 1;
 	ScriptWindow *w = (ScriptWindow *)v;
+	cb_descr(0,v);
 	set_title(w);
-	cb_descr(0,w);
+	style_update(pos, nInserted, nDeleted, nRestyled, deletedText, w->editor);
 	if (loading) w->editor->show_insert_position();
 }
 //-----------------------------------------------------------------------------
@@ -535,12 +534,10 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	w->editor->linenumber_width(30);
 //	w->editor->when(FL_WHEN_RELEASE_ALWAYS);	w->editor->callback(cb_descr,w);
 
-	textbuf->add_modify_callback(style_update, w->editor);
 	textbuf->add_modify_callback(changed_cb, w);
 	textbuf->call_modify_callbacks();
 
-	w1->end();
-	w1->resizable(w->editor);	//w->graph);
+	w1->end();	w1->resizable(w->editor);
 	return w1;
 }
 //-----------------------------------------------------------------------------

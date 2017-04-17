@@ -351,7 +351,10 @@ ScriptWindow *new_view()
 	add_mem(w);		gg->end();
 	w->rtab->end();
 
-	w->status = new Fl_Output(0,485,930,25);	w->status->value(mgl_gettext("Ready"));
+//	w->status = new Fl_Output(0,485,930,25);
+	w->status = new Fl_Box(0,485,930,25);	w->status->box(FL_ENGRAVED_BOX);
+	w->status->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
+	w->set_status(mgl_gettext("Ready"));
 	w->draw = new Fl_MGL(w->graph);	w->draw->e = w;
 	mgl_makemenu_fltk(w->menu, w->graph);
 	w->menu->add(mgl_gettext("Graphics/Primitive"), FL_CTRL+'m', prim_dlg_cb, w);
@@ -375,6 +378,7 @@ int main(int argc, char **argv)
 
 	textbuf = new Fl_Text_Buffer;
 	style_init();
+	textbuf->tab_distance(4);
 	ScriptWindow *w = new_view();
 	Fl::visual(FL_DOUBLE|FL_RGB);
 	load_pref(w);

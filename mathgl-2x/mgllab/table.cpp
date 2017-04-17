@@ -869,13 +869,13 @@ TableWindow::TableWindow(ScriptWindow *e)
 	o->callback(last_sl_cb,this);		o->tooltip(mgl_gettext("Go to last slice (Ctrl-F4)"));
 	g->end();	g->resizable(0);
 
-	data = new Fl_Data_Table(30,60,ww-30,hh-30);
-	data->row_header(1);	data->row_header_width(70);
+	data = new Fl_Data_Table(30,60,ww-30,hh-60);
+	data->row_header(1);	data->row_header_width(80);
 	data->row_resize(1);	data->rows(1);
 	data->row_height_all(25);
 	data->col_header(1);	data->col_header_height(25);
 	data->col_resize(1);	data->cols(1);
-	data->col_width_all(70);
+	data->col_width_all(80);
 
 	w->end();	w->resizable(data);
 }
