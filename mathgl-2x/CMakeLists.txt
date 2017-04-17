@@ -128,6 +128,10 @@ include(CMakeDependentOption)
 
 string(TIMESTAMP MGL_NIGHT "%d.%m.%y")
 
+if(WIN32)
+	option(enable-dep-dll "Enable copying off all dependent dll libraries to the install directory" OFF)
+endif(WIN32)
+
 option(enable-double "Enable double precision in MathGL library" ON)
 option(enable-mpi "Enable mpi")
 option(enable-opengl "Enable OpenGL support" ON)
@@ -690,3 +694,9 @@ install(FILES
   DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
 
 install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
+
+# WARNING!!! DO NOT ADD ANYTHING AFTER THIS LINE!
+
+if(enable-dep-dll)
+	add_subdirectory ( win32-install-deps )
+endif(enable-dep-dll)
