@@ -75,7 +75,7 @@ void help_out_cb(Fl_Widget*, void*v)
 void about_cb(Fl_Widget*, void*)
 {
 	static char s[128];
-	snprintf(s,128,mgl_gettext("mgllab v. 2.%g\n(c) Alexey Balakin, 2017\nhttp://mathgl.sf.net/"), MGL_VER2);
+	snprintf(s,128,_mgl("mgllab v. 2.%g\n(c) Alexey Balakin, 2017\nhttp://mathgl.sf.net/"), MGL_VER2);
 	Fl_Double_Window* w = new Fl_Double_Window(355, 130, "About UDAV");
 	Fl_Box* o = new Fl_Box(10, 15, 65, 65);
 	o->box(FL_UP_BOX);	o->color(55);	o->image(new Fl_Pixmap(udav_xpm));
@@ -98,11 +98,11 @@ Fl_Widget *add_help(ScriptWindow *w)
 	w->link_cmd->when(FL_WHEN_CHANGED);
 	w->link_cmd->callback(link_cb,w);
 
-	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(mgl_gettext("MGL samples and hints"));
+	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(_mgl("MGL samples and hints"));
 	o->image(new Fl_Pixmap(help_faq_xpm));	o->callback(example_cb,w);
-	o = new Fl_Button(180, 1, 25, 25);	o->tooltip(mgl_gettext("Increase font size"));
+	o = new Fl_Button(180, 1, 25, 25);	o->tooltip(_mgl("Increase font size"));
 	o->image(new Fl_Pixmap(zoom_in_xpm));	o->callback(help_in_cb,w);
-	o = new Fl_Button(205, 1, 25, 25);	o->tooltip(mgl_gettext("Decrease font size"));
+	o = new Fl_Button(205, 1, 25, 25);	o->tooltip(_mgl("Decrease font size"));
 	o->image(new Fl_Pixmap(zoom_out_xpm));	o->callback(help_out_cb,w);
 
 	g->end();	g->resizable(0);
@@ -132,7 +132,7 @@ void mem_update_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 void delete_all_cb(Fl_Widget *, void *v)
 {
-	if(fl_choice(mgl_gettext("Are you sure that you want to delete ALL data arrays?"), mgl_gettext("Yes"), mgl_gettext("No"), NULL) == 0)
+	if(fl_choice(_mgl("Are you sure that you want to delete ALL data arrays?"), _mgl("Yes"), _mgl("No"), NULL) == 0)
 	{	Parse->DeleteAll();	((ScriptWindow*)v)->mem_init();	}
 }
 //-----------------------------------------------------------------------------
@@ -143,39 +143,39 @@ Fl_Widget *add_mem(ScriptWindow *w)
 	Fl_Box *b;
 	Fl_Window *wnd = new Fl_Window(300,30,630,430,0);
 
-	b = new Fl_Box(0, 10, 630, 25, mgl_gettext("Existed data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
-	b = new Fl_Box(0, 35, 220, 25, mgl_gettext("name"));
+	b = new Fl_Box(0, 10, 630, 25, _mgl("Existed data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
+	b = new Fl_Box(0, 35, 220, 25, _mgl("name"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	b = new Fl_Box(220, 35, 205, 25, mgl_gettext("dimensions"));
+	b = new Fl_Box(220, 35, 205, 25, _mgl("dimensions"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	b = new Fl_Box(425, 35, 205, 25, mgl_gettext("mem. usage"));
+	b = new Fl_Box(425, 35, 205, 25, _mgl("mem. usage"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 
 	w->var = new Fl_Select_Browser(0, 60, 630, 335);	w->var->column_char('\t');
 	w->var->align(FL_ALIGN_TOP);	w->var->column_widths(widths);
-	w->var->tooltip(mgl_gettext("List of available data."));
+	w->var->tooltip(_mgl("List of available data."));
 
-	o = new Fl_Button(20, 400, 90, 25, mgl_gettext(" Edit"));	o->callback(mem_dlg_cb0,w);
+	o = new Fl_Button(20, 400, 90, 25, _mgl(" Edit"));	o->callback(mem_dlg_cb0,w);
 	o->image(img_grid);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-	o->tooltip(mgl_gettext("Open table with selected data for editing."));
-	o = new Fl_Button(120, 400, 90, 25, mgl_gettext(" Info"));	o->callback(mem_dlg_cb1,w);
+	o->tooltip(_mgl("Open table with selected data for editing."));
+	o = new Fl_Button(120, 400, 90, 25, _mgl(" Info"));	o->callback(mem_dlg_cb1,w);
 	o->image(img_info);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-	o->tooltip(mgl_gettext("Data information and preview."));
-	o = new Fl_Button(220, 400, 90, 25, mgl_gettext(" Delete"));	o->callback(mem_dlg_cb2,w);
+	o->tooltip(_mgl("Data information and preview."));
+	o = new Fl_Button(220, 400, 90, 25, _mgl(" Delete"));	o->callback(mem_dlg_cb2,w);
 	o->image(img_delete);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-	o->tooltip(mgl_gettext("Delete selected data."));
-	o = new Fl_Button(320, 400, 90, 25, mgl_gettext(" New"));	o->callback(mem_dlg_cb3,w);
+	o->tooltip(_mgl("Delete selected data."));
+	o = new Fl_Button(320, 400, 90, 25, _mgl(" New"));	o->callback(mem_dlg_cb3,w);
 	o->image(img_new);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-	o->tooltip(mgl_gettext("Open dialog for new data creation."));
-	o = new Fl_Button(420, 400, 90, 25, mgl_gettext(" Save"));	o->callback(mem_dlg_cb4,w);
+	o->tooltip(_mgl("Open dialog for new data creation."));
+	o = new Fl_Button(420, 400, 90, 25, _mgl(" Save"));	o->callback(mem_dlg_cb4,w);
 	o->image(img_save);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-	o->tooltip(mgl_gettext("Save selected data to file."));
-// 	o = new Fl_Button(420, 400, 90, 25, mgl_gettext(" Refresh"));	o->callback(mem_update_cb,w);
+	o->tooltip(_mgl("Save selected data to file."));
+// 	o = new Fl_Button(420, 400, 90, 25, _mgl(" Refresh"));	o->callback(mem_update_cb,w);
 // 	o->image(img_update);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-// 	o->tooltip(mgl_gettext("Refresh list of variables."));
-	o = new Fl_Button(520, 400, 90, 25, mgl_gettext(" Del.all"));	o->callback(delete_all_cb,w);
+// 	o->tooltip(_mgl("Refresh list of variables."));
+	o = new Fl_Button(520, 400, 90, 25, _mgl(" Del.all"));	o->callback(delete_all_cb,w);
 	o->image(img_clear);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-	o->tooltip(mgl_gettext("Delete @b all@. data arrays."));
+	o->tooltip(_mgl("Delete @b all@. data arrays."));
 	wnd->end();	wnd->resizable(w->var);	return wnd;
 }
 //-----------------------------------------------------------------------------
@@ -196,7 +196,7 @@ void ScriptWindow::mem_init()
 			else if(dynamic_cast<mglDataF*>(v))	sv = sizeof(mglDataF);
 			else if(dynamic_cast<mglDataR*>(v))	sv = sizeof(mglDataR);
 			else if(dynamic_cast<mglDataT*>(v))	sv = sizeof(mglDataT);
-			const char *ext[]={mgl_gettext("unknown"),"b","Kb","Mb","Gb","Tb","Pb","Eb","Zb","Yb"}, *e;
+			const char *ext[]={_mgl("unknown"),"b","Kb","Mb","Gb","Tb","Pb","Eb","Zb","Yb"}, *e;
 			if(sv==0)	e = ext[0];
 #if MGL_SIZEOF_LONG>4
 //			else if((sv>>80L)>0)	{	e=ext[9];	sv = sv>>80L;	}
@@ -239,7 +239,7 @@ void ScriptWindow::mem_pressed(int kind)
 	else if(dat && kind==2)	Parse->DeleteVar(v->s.c_str());
 	else if(kind==3)
 	{
-		const char *name = fl_input(mgl_gettext("Enter name for new variable"),"dat");
+		const char *name = fl_input(_mgl("Enter name for new variable"),"dat");
 		if(!name)	return;
 		v = Parse->AddVar(name);
 		w = v->o? (TableWindow*)v->o:new TableWindow(this);
@@ -247,8 +247,8 @@ void ScriptWindow::mem_pressed(int kind)
 	}
 	else if(dat && kind==4)
 	{
-		const char *newfile = mgl_file_chooser(mgl_gettext("Save Data?"),
-				mgl_gettext("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"), true);
+		const char *newfile = mgl_file_chooser(_mgl("Save Data?"),
+				_mgl("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"), true);
 		if(newfile)
 		{
 			const char *ext = fl_filename_ext(newfile);
@@ -264,25 +264,25 @@ void ScriptWindow::mem_pressed(int kind)
 }
 //-----------------------------------------------------------------------------
 const char *hints[] = {
-	mgl_gettext("You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."),
-	mgl_gettext("You can rotate/shift/zoom whole plot by mouse. Just press 'Rotate' toolbutton, click image and hold a mouse button: left button for rotation, right button for zoom/perspective, middle button for shift."),
-	mgl_gettext("You may quickly draw the data from file. Just use: udav 'filename.dat' in command line."),
-	mgl_gettext("You can copy the current image to clipboard by pressing Ctrl-Shift-C. Later you can paste it directly into yours document or presentation."),
-	mgl_gettext("You can export image into a set of format (EPS, SVG, PNG, JPEG) by pressing right mouse button inside image and selecting 'Export as ...'."),
-	mgl_gettext("You can setup colors for script highlighting in Property dialog. Just select menu item 'Settings/Properties'."),
-	mgl_gettext("You can save the parameter of animation inside MGL script by using comment started from '##a ' or '##c ' for loops."),
-	mgl_gettext("New drawing never clears things drawn already. For example, you can make a surface with contour lines by calling commands 'surf' and 'cont' one after another (in any order). "),
-	mgl_gettext("You can put several plots in the same image by help of commands 'subplot' or 'inplot'."),
-	mgl_gettext("All indexes (of data arrays, subplots and so on) are always start from 0."),
-	mgl_gettext("You can edit MGL file in any text editor. Also you can run it in console by help of commands: mglconv, mglview."),
-	mgl_gettext("You can use command 'once on|off' for marking the block which should be executed only once. For example, this can be the block of large data reading/creating/handling. Press F9 (or menu item 'Graphics/Reload') to re-execute this block."),
-	mgl_gettext("You can use command 'stop' for terminating script parsing. It is useful if you don't want to execute a part of script."),
-	mgl_gettext("You can type arbitrary expression as input argument for data or number. In last case (for numbers), the first value of data array is used."),
-	mgl_gettext("There is powerful calculator with a lot of special functions. You can use buttons or keyboard to type the expression. Also you can use existed variables in the expression."),
-	mgl_gettext("The calculator can help you to put complex expression in the script. Just type the expression (which may depend on coordinates x,y,z and so on) and put it into the script."),
-	mgl_gettext("You can easily insert file or folder names, last fitted formula or numerical value of selection by using menu Edit|Insert."),
-	mgl_gettext("The special dialog (Edit|Insert|New Command) help you select the command, fill its arguments and put it into the script."),
-	mgl_gettext("You can put several plotting commands in the same line or in separate function, for highlighting all of them simultaneously."),
+	_mgl("You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."),
+	_mgl("You can rotate/shift/zoom whole plot by mouse. Just press 'Rotate' toolbutton, click image and hold a mouse button: left button for rotation, right button for zoom/perspective, middle button for shift."),
+	_mgl("You may quickly draw the data from file. Just use: udav 'filename.dat' in command line."),
+	_mgl("You can copy the current image to clipboard by pressing Ctrl-Shift-C. Later you can paste it directly into yours document or presentation."),
+	_mgl("You can export image into a set of format (EPS, SVG, PNG, JPEG) by pressing right mouse button inside image and selecting 'Export as ...'."),
+	_mgl("You can setup colors for script highlighting in Property dialog. Just select menu item 'Settings/Properties'."),
+	_mgl("You can save the parameter of animation inside MGL script by using comment started from '##a ' or '##c ' for loops."),
+	_mgl("New drawing never clears things drawn already. For example, you can make a surface with contour lines by calling commands 'surf' and 'cont' one after another (in any order). "),
+	_mgl("You can put several plots in the same image by help of commands 'subplot' or 'inplot'."),
+	_mgl("All indexes (of data arrays, subplots and so on) are always start from 0."),
+	_mgl("You can edit MGL file in any text editor. Also you can run it in console by help of commands: mglconv, mglview."),
+	_mgl("You can use command 'once on|off' for marking the block which should be executed only once. For example, this can be the block of large data reading/creating/handling. Press F9 (or menu item 'Graphics/Reload') to re-execute this block."),
+	_mgl("You can use command 'stop' for terminating script parsing. It is useful if you don't want to execute a part of script."),
+	_mgl("You can type arbitrary expression as input argument for data or number. In last case (for numbers), the first value of data array is used."),
+	_mgl("There is powerful calculator with a lot of special functions. You can use buttons or keyboard to type the expression. Also you can use existed variables in the expression."),
+	_mgl("The calculator can help you to put complex expression in the script. Just type the expression (which may depend on coordinates x,y,z and so on) and put it into the script."),
+	_mgl("You can easily insert file or folder names, last fitted formula or numerical value of selection by using menu Edit|Insert."),
+	_mgl("The special dialog (Edit|Insert|New Command) help you select the command, fill its arguments and put it into the script."),
+	_mgl("You can put several plotting commands in the same line or in separate function, for highlighting all of them simultaneously."),
 	NULL
 };
 //-----------------------------------------------------------------------------
@@ -300,12 +300,12 @@ public:
 		w = new Fl_Double_Window(280, 265);	cur=0;
 		hint = new Fl_Help_View(10, 10, 260, 185);
 		hint->value(hints[0]);
-		start = new Fl_Check_Button(10, 200, 260, 25, mgl_gettext("Show hint on startup"));
-		o = new Fl_Button(10, 230, 80, 25, mgl_gettext("@<-  Prev"));
+		start = new Fl_Check_Button(10, 200, 260, 25, _mgl("Show hint on startup"));
+		o = new Fl_Button(10, 230, 80, 25, _mgl("@<-  Prev"));
 		o->callback(cb_hint_prev);
-		o = new Fl_Button(100, 230, 80, 25, mgl_gettext("Next @->"));
+		o = new Fl_Button(100, 230, 80, 25, _mgl("Next @->"));
 		o->callback(cb_hint_next);
-		o = new Fl_Return_Button(190, 230, 80, 25, mgl_gettext("Close"));
+		o = new Fl_Return_Button(190, 230, 80, 25, _mgl("Close"));
 		o->callback(cb_dlg_ok,this);
 		w->end();
 	}
@@ -350,21 +350,21 @@ public:
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(420, 530);
-		out = new Fl_Multiline_Output(10, 25, 400, 150, mgl_gettext("Information"));
+		out = new Fl_Multiline_Output(10, 25, 400, 150, _mgl("Information"));
 		out->align(FL_ALIGN_TOP_LEFT);
 		gr = new Fl_MathGL(10, 220, 400, 300);	gr->box(FL_ENGRAVED_BOX);	gr->use_pthr = false;
 		mgl_set_size(gr->get_graph(),400,300);
 		o = new Fl_Button(10, 185, 25, 25, "@<-");
 		o->callback(cb_info_prev,this);
-		o = new Fl_Button(40, 185, 75, 25, mgl_gettext("1D view"));
+		o = new Fl_Button(40, 185, 75, 25, _mgl("1D view"));
 		o->callback(cb_info_1d,this);
-		o = new Fl_Button(120, 185, 75, 25, mgl_gettext("2D view"));
+		o = new Fl_Button(120, 185, 75, 25, _mgl("2D view"));
 		o->callback(cb_info_2d,this);
-		o = new Fl_Button(200, 185, 75, 25, mgl_gettext("3D view"));
+		o = new Fl_Button(200, 185, 75, 25, _mgl("3D view"));
 		o->callback(cb_info_3d,this);
 		o = new Fl_Button(280, 185, 25, 25, "@->");
 		o->callback(cb_info_next,this);
-		o = new Fl_Return_Button(335, 185, 75, 25, mgl_gettext("Close"));
+		o = new Fl_Return_Button(335, 185, 75, 25, _mgl("Close"));
 		o->callback(cb_dlg_cancel,this);
 		w->set_modal();	w->end();
 	}
@@ -480,7 +480,7 @@ public:
 		o = new Fl_Button(130, 130, 25, 25);o->image(img_zoom21);	o->tooltip("img_zoom21");
 		o = new Fl_Button(155, 130, 25, 25);o->image(img_pause);	o->tooltip("img_pause");
 //		o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
-		o = new Fl_Button(130, 160, 75, 25, mgl_gettext("Close"));
+		o = new Fl_Button(130, 160, 75, 25, _mgl("Close"));
 		o->callback(cb_dlg_cancel,this);
 		w->end();
 	}

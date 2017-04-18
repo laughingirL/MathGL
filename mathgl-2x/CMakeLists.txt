@@ -550,6 +550,18 @@ else(enable-wx)
 	set(MGL_HAVE_WX 0)
 endif(enable-wx)
 
+
+find_program(findxgettext xgettext)
+find_program(findmsgmerge msgmerge)
+find_program(findmsgfmt msgfmt)
+if(NOT findmsgfmt OR NOT findxgettext OR NOT findmsgmerge )
+	message("Gettext is disabled, since xgettext or msgmerge or msgfmt are not found.")
+	set(USE_GETTEXT 0)
+else(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge )
+	set(USE_GETTEXT 1)
+	set(po_files )
+endif(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge )
+
 if(enable-doc-info)
 	set(MGL_HAVE_DOC_INFO 1)
 	find_program(findmi makeinfo)
@@ -689,11 +701,20 @@ configure_file(MathGLConfig.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfig.cmake" 
 configure_file(MathGLConfigVersion.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake" @ONLY)
 
 install(FILES
-  "${MathGL2_BINARY_DIR}/MathGLConfig.cmake"
-  "${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake"
-  DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
+	"${MathGL2_BINARY_DIR}/MathGLConfig.cmake"
+	"${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake"
+	DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
 
 install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
+
+if(USE_GETTEXT)
+#	set(po_files udav/strings_ru.po utils/strings_ru.po mgllab/strings_ru.po widgets/strings_ru.po src/strings_ru.po )
+	add_custom_target(mathgl_ru.mo ALL
+		COMMAND ${findmsgfmt} -o mathgl_ru.mo ${po_files}
+		DEPENDS ${po_files})
+	install( FILES mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
+endif(USE_GETTEXT)
+
 
 # WARNING!!! DO NOT ADD ANYTHING AFTER THIS LINE!
 

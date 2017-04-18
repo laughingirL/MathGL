@@ -277,9 +277,9 @@ void add_filename(const char *fname, ScriptWindow *e)
 int check_save(void)
 {
   if (!changed) return 1;
-  int r = fl_choice(mgl_gettext("The current file has not been saved.\n"
+  int r = fl_choice(_mgl("The current file has not been saved.\n"
 					"Would you like to save it now?"),
-					mgl_gettext("Cancel"), mgl_gettext("Save"), mgl_gettext("Don't Save"));
+					_mgl("Cancel"), _mgl("Save"), _mgl("Don't Save"));
   if(r==1)	{	save_cb(0,0);	return !changed;	} // Save the file...
   return (r==2) ? 1 : 0;
 }
@@ -345,7 +345,7 @@ void load_file(const char *newfile, int ipos, ScriptWindow *e)
 		fill_animate(t, e->draw);	free(t);
 
 		if (r)
-			fl_alert(mgl_gettext("Error reading from file \'%s\':\n%s."), newfile, strerror(errno));
+			fl_alert(_mgl("Error reading from file \'%s\':\n%s."), newfile, strerror(errno));
 		else	if(!insert)
 		{	filename = newfile;	add_filename(filename.c_str(),e);	}
 		loading = 0;
@@ -356,7 +356,7 @@ void load_file(const char *newfile, int ipos, ScriptWindow *e)
 void save_file(const char *newfile, ScriptWindow *e)
 {
 	if (textbuf->savefile(newfile))
-		fl_alert(mgl_gettext("Error writing to file \'%s\':\n%s."), newfile, strerror(errno));
+		fl_alert(_mgl("Error writing to file \'%s\':\n%s."), newfile, strerror(errno));
 	else
 	{	filename = newfile;	add_filename(filename.c_str(),e);	}
 	changed = 0;
@@ -483,7 +483,7 @@ void changed_cb(int pos, int nInserted, int nDeleted, int nRestyled, const char 
 //-----------------------------------------------------------------------------
 void insert_cb(Fl_Widget*, void *v)
 {
-	const char *newfile = mgl_file_chooser(mgl_gettext("Insert File?"));
+	const char *newfile = mgl_file_chooser(_mgl("Insert File?"));
 	ScriptWindow *w = (ScriptWindow *)v;
 	if (newfile != NULL) load_file(newfile, w->editor->insert_position(),w);
 }
@@ -503,28 +503,28 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	Fl_Button *o;
 
 	o = new Fl_Button(0, 1, 25, 25);	o->image(img_load);	o->callback(open_cb,w);
-	o->tooltip(mgl_gettext("Open script or data file"));
+	o->tooltip(_mgl("Open script or data file"));
 	o = new Fl_Button(25, 1, 25, 25);	o->image(img_save);	o->callback(save_cb,w);
-	o->tooltip(mgl_gettext("Save script to file"));
+	o->tooltip(_mgl("Save script to file"));
 
 	o = new Fl_Button(55, 1, 25, 25);	o->image(img_copy);	o->callback(copy_cb,w);
-	o->tooltip(mgl_gettext("Copy selection to clipboard"));
+	o->tooltip(_mgl("Copy selection to clipboard"));
 	o = new Fl_Button(80, 1, 25, 25);	o->image(img_paste);o->callback(paste_cb,w);
-	o->tooltip(mgl_gettext("Paste text from clipboard"));
+	o->tooltip(_mgl("Paste text from clipboard"));
 	o = new Fl_Button(105, 1, 25, 25);	o->image(img_find);	o->callback(find_dlg_cb,w);
-	o->tooltip(mgl_gettext("Find or replace text"));
+	o->tooltip(_mgl("Find or replace text"));
 
 	o = new Fl_Button(135, 1, 25, 25);	o->image(img_insert);	o->callback(newcmd_dlg_cb,w);
-	o->tooltip(mgl_gettext("Insert MGL command"));
+	o->tooltip(_mgl("Insert MGL command"));
 	o = new Fl_Button(160, 1, 25, 25);	o->image(img_fname);	o->callback(ins_fname_cb,w);
-	o->tooltip(mgl_gettext("Insert filename"));
+	o->tooltip(_mgl("Insert filename"));
 	o = new Fl_Button(185, 1, 25, 25);	o->image(new Fl_Pixmap(box_xpm));	o->callback(inplot_dlg_cb,w);
-	o->tooltip(mgl_gettext("Insert inplot command"));
+	o->tooltip(_mgl("Insert inplot command"));
 
 	o = new Fl_Button(210, 1, 25, 25);	o->image(img_calc);	o->callback(calc_dlg_cb,w);
-	o->tooltip(mgl_gettext("Show calculator window"));
+	o->tooltip(_mgl("Show calculator window"));
 	o = new Fl_Button(240, 1, 25, 25);	o->image(img_curve);o->callback(prim_dlg_cb,w);
-	o->tooltip(mgl_gettext("Show calculator window"));
+	o->tooltip(_mgl("Show calculator window"));
 	g->end();	g->resizable(0);
 
 	w->editor = new Fl_Text_Editor(0, 28, 300, 425);
@@ -552,15 +552,15 @@ public:
 	FindDlg()
 	{
 		Fl_Button* o;
-		w = new Fl_Double_Window(375, 130, mgl_gettext("Find/Replace"));
-		find = new Fl_Input(90, 10, 180, 25, mgl_gettext("Find what:"));
-		o = new Fl_Return_Button(275, 10, 95, 25, mgl_gettext("Find"));	o->callback(cp_find_next);
-		replace = new Fl_Input(90, 40, 180, 25, mgl_gettext("Replace by:"));
-		o = new Fl_Button(275, 40, 95, 25, mgl_gettext("Replace"));		o->callback(cp_repl_next);
-		mcase = new Fl_Check_Button(5, 70, 265, 25, mgl_gettext("Match case"));
-		sback = new Fl_Check_Button(5, 95, 265, 25, mgl_gettext("Search backward"));
-		o = new Fl_Button(275, 70, 95, 25, mgl_gettext("Replace all"));	o->callback(cp_repl_all);
-		o = new Fl_Button(275, 100, 95, 25, mgl_gettext("Close"));	o->callback(cb_dlg_cancel,this);
+		w = new Fl_Double_Window(375, 130, _mgl("Find/Replace"));
+		find = new Fl_Input(90, 10, 180, 25, _mgl("Find what:"));
+		o = new Fl_Return_Button(275, 10, 95, 25, _mgl("Find"));	o->callback(cp_find_next);
+		replace = new Fl_Input(90, 40, 180, 25, _mgl("Replace by:"));
+		o = new Fl_Button(275, 40, 95, 25, _mgl("Replace"));		o->callback(cp_repl_next);
+		mcase = new Fl_Check_Button(5, 70, 265, 25, _mgl("Match case"));
+		sback = new Fl_Check_Button(5, 95, 265, 25, _mgl("Search backward"));
+		o = new Fl_Button(275, 70, 95, 25, _mgl("Replace all"));	o->callback(cp_repl_all);
+		o = new Fl_Button(275, 100, 95, 25, _mgl("Close"));	o->callback(cb_dlg_cancel,this);
 		w->end();
 	}
 	const char *to_find()	{	return find->value();	}
@@ -579,7 +579,7 @@ public:
 				e->editor->insert_position(pos+len);
 				e->editor->show_insert_position();
 			}
-			else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), s);
+			else fl_alert(_mgl("No occurrences of \'%s\' found!"), s);
 		}
 	}
 	void repl_next()
@@ -601,7 +601,7 @@ public:
 				e->editor->insert_position(pos+len);
 				e->editor->show_insert_position();
 			}
-			else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), s);
+			else fl_alert(_mgl("No occurrences of \'%s\' found!"), s);
 		}
 	}
 	void repl_all()
@@ -625,8 +625,8 @@ public:
 			e->editor->show_insert_position();
 			num++;
 		}
-		if(num) fl_message(mgl_gettext("Replaced %ld occurrences."), num);
-		else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), s);
+		if(num) fl_message(_mgl("Replaced %ld occurrences."), num);
+		else fl_alert(_mgl("No occurrences of \'%s\' found!"), s);
 	}
 } find_dlg;
 //-----------------------------------------------------------------------------
@@ -649,7 +649,7 @@ void ins_fname_cb(Fl_Widget *, void *v)
 {
 	static std::string prev;
 	ScriptWindow* e = (ScriptWindow*)v;
-	const char *s = mgl_file_chooser(mgl_gettext("Select file name"), "DAT files \t*.{dat,csv}\nHDF files \t*.{hdf,h5}");
+	const char *s = mgl_file_chooser(_mgl("Select file name"), "DAT files \t*.{dat,csv}\nHDF files \t*.{hdf,h5}");
 	if(s)
 	{
 		std::string ss=prev=s;	ss = '\''+ss+'\'';
@@ -662,7 +662,7 @@ void ins_path_cb(Fl_Widget *, void *v)
 {
 	static std::string prev;
 	ScriptWindow* e = (ScriptWindow*)v;
-	const char *s = mgl_dir_chooser(mgl_gettext("Select folder name"), prev.c_str());
+	const char *s = mgl_dir_chooser(_mgl("Select folder name"), prev.c_str());
 	if(s)
 	{
 		std::string ss=prev=s;	ss = '\''+ss+'\'';
@@ -676,7 +676,7 @@ void ins_fits_cb(Fl_Widget *, void *v)
 	ScriptWindow* e = (ScriptWindow*)v;
 	HMGL gr = e->graph->get_graph();
 	std::string ss=mgl_get_fit(gr);
-	if(ss.empty())	fl_alert(mgl_gettext("There is no fitted formula!"));
+	if(ss.empty())	fl_alert(_mgl("There is no fitted formula!"));
 	else	{	ss = '\''+ss+'\'';	e->editor->insert(ss.c_str());	}
 }
 //-----------------------------------------------------------------------------

@@ -22,6 +22,17 @@ install(
 	RUNTIME DESTINATION ${MGL_CGI_PATH}
 )
 
+if(USE_GETTEXT)
+	set(src mglconv.cpp mglview.cpp)
+	set(dir utils)
+	add_custom_target(${dir}_po ALL
+		COMMAND ${findxgettext} -s --keyword=_mgl -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${dir}.pot ${src}
+		COMMAND ${findmsgmerge} -o strings_ru.po strings_ru.po ${dir}.pot
+		WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/${dir}/
+		DEPENDS ${src})
+	set(po_files ${po_files} ${MathGL2_SOURCE_DIR}/${dir}/strings_ru.po PARENT_SCOPE)
+endif(USE_GETTEXT)
+
 if(QT_ENABLED)
 	add_executable(mglview mglview.cpp)
 	if(enable-qt5)

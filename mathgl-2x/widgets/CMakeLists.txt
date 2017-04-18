@@ -1,7 +1,7 @@
 include(GenerateExportHeader)
 
 if(MGL_HAVE_FLTK)
-	mgl_add_lib(fltk fltk.cpp  image.cpp  image.h ../include/mgl2/fltk.h)
+	mgl_add_lib(fltk fltk.cpp  image.cpp  image.h ../include/mgl2/fltk.h ../include/mgl2/Fl_MathGL.h)
 	target_include_directories(mgl-fltk SYSTEM PUBLIC ${FLTK_INCLUDE_DIR})
 	target_include_directories(mgl-fltk-static SYSTEM PUBLIC ${FLTK_INCLUDE_DIR})
 	target_link_libraries(mgl-fltk mgl ${FLTK_LIBRARIES})
@@ -25,3 +25,14 @@ endif(MGL_HAVE_WX)
 
 add_subdirectory( qt4 )
 add_subdirectory( qt5 )
+
+if(USE_GETTEXT)
+	set(dir widgets)
+	set(src fltk.cpp ../include/mgl2/fltk.h ../include/mgl2/Fl_MathGL.h glut.cpp ../include/mgl2/glut.h wx.cpp ../include/mgl2/wx.h qt.cpp qt.h wnd.h  ../include/mgl2/qmathgl.h )
+	add_custom_target(${dir}_po ALL
+		COMMAND ${findxgettext} -s --keyword=_mgl -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${dir}.pot ${src}
+		COMMAND ${findmsgmerge} -o strings_ru.po strings_ru.po ${dir}.pot
+		WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/${dir}/
+		DEPENDS ${src})
+	set(po_files ${po_files} ${MathGL2_SOURCE_DIR}/${dir}/strings_ru.po PARENT_SCOPE)
+endif(USE_GETTEXT)
