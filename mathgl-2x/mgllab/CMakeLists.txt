@@ -60,7 +60,7 @@ if(MGL_HAVE_FLTK)
 			COMMAND ${findxgettext} -s --keyword=_mgl -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/${dir}/${dir}.pot ${mgllab_src} ${mgllab_hdr}
 			COMMAND ${findmsgmerge} -o strings_ru.po strings_ru.po ${MathGL2_BINARY_DIR}/${dir}/${dir}.pot
 			WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/${dir}/
-			DEPENDS ${mgllab_src} ${mgllab_hdr})
+			DEPENDS ${mgllab_src} ${mgllab_hdr} strings_ru.po)
 		set(po_targets ${po_targets} ${dir}_po PARENT_SCOPE)
 		set(po_files ${po_files} ${MathGL2_SOURCE_DIR}/${dir}/strings_ru.po PARENT_SCOPE)
 	endif(USE_GETTEXT)
