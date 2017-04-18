@@ -560,6 +560,7 @@ if(NOT findmsgfmt OR NOT findxgettext OR NOT findmsgmerge )
 else(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge )
 	set(USE_GETTEXT 1)
 	set(po_files )
+	set(po_targets )
 endif(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge )
 
 if(enable-doc-info)
@@ -711,7 +712,7 @@ if(USE_GETTEXT)
 #	set(po_files udav/strings_ru.po utils/strings_ru.po mgllab/strings_ru.po widgets/strings_ru.po src/strings_ru.po )
 	add_custom_target(mathgl_ru.mo ALL
 		COMMAND ${findmsgfmt} -o mathgl_ru.mo ${po_files}
-		DEPENDS ${po_files})
+		DEPENDS ${po_targets})
 	install( FILES mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
 endif(USE_GETTEXT)
 

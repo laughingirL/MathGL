@@ -1,0 +1,316 @@
+#: fltk.cpp:797
+msgid "... as BMP"
+msgstr ""
+
+#: fltk.cpp:795
+msgid "... as GIF"
+msgstr ""
+
+#: fltk.cpp:792
+msgid "... as JPEG"
+msgstr ""
+
+#: fltk.cpp:802
+msgid "... as OBJ"
+msgstr ""
+
+#: fltk.cpp:804
+msgid "... as OFF"
+msgstr ""
+
+#: fltk.cpp:788
+msgid "... as PNG"
+msgstr ""
+
+#: fltk.cpp:789
+msgid "... as PNG (solid)"
+msgstr ""
+
+#: fltk.cpp:803
+msgid "... as PRC"
+msgstr ""
+
+#: fltk.cpp:805
+msgid "... as STL"
+msgstr ""
+
+#: fltk.cpp:798
+msgid "... as SVG"
+msgstr ""
+
+#: fltk.cpp:801
+msgid "... as TeX"
+msgstr ""
+
+#: fltk.cpp:806
+msgid "... as XYZ"
+msgstr ""
+
+#: fltk.cpp:800
+msgid "... as bitmap EPS"
+msgstr ""
+
+#: fltk.cpp:799
+msgid "... as vector EPS"
+msgstr ""
+
+#: fltk.cpp:848
+msgid "Adjust picture size to fill drawing area"
+msgstr ""
+
+#: fltk.cpp:811
+msgid "Adjust size"
+msgstr ""
+
+#: fltk.cpp:808
+msgid "Copy graphics"
+msgstr ""
+
+#: fltk.cpp:852
+msgid "Copy image to clipboard"
+msgstr ""
+
+#: fltk.cpp:786
+msgid "Export"
+msgstr ""
+
+#: fltk.cpp:924
+msgid "Graphics/Adjust size"
+msgstr ""
+
+#: fltk.cpp:918
+msgid "Graphics/Alpha"
+msgstr ""
+
+#: fltk.cpp:953
+msgid "Graphics/Animation/Next frame"
+msgstr ""
+
+#: fltk.cpp:954
+msgid "Graphics/Animation/Prev frame"
+msgstr ""
+
+#: fltk.cpp:952
+msgid "Graphics/Animation/Slideshow"
+msgstr ""
+
+#: fltk.cpp:928
+msgid "Graphics/Copy click coor."
+msgstr ""
+
+#: fltk.cpp:927
+msgid "Graphics/Copy graphics"
+msgstr ""
+
+#: fltk.cpp:941
+msgid "Graphics/Export/as BMP"
+msgstr ""
+
+#: fltk.cpp:939
+msgid "Graphics/Export/as GIF"
+msgstr ""
+
+#: fltk.cpp:936
+msgid "Graphics/Export/as JPEG"
+msgstr ""
+
+#: fltk.cpp:947
+msgid "Graphics/Export/as OBJ"
+msgstr ""
+
+#: fltk.cpp:948
+msgid "Graphics/Export/as OFF"
+msgstr ""
+
+#: fltk.cpp:932
+msgid "Graphics/Export/as PNG"
+msgstr ""
+
+#: fltk.cpp:946
+msgid "Graphics/Export/as PRC"
+msgstr ""
+
+#: fltk.cpp:949
+msgid "Graphics/Export/as STL"
+msgstr ""
+
+#: fltk.cpp:942
+msgid "Graphics/Export/as SVG"
+msgstr ""
+
+#: fltk.cpp:945
+msgid "Graphics/Export/as TeX"
+msgstr ""
+
+#: fltk.cpp:950
+msgid "Graphics/Export/as XYZ"
+msgstr ""
+
+#: fltk.cpp:944
+msgid "Graphics/Export/as bitmap EPS"
+msgstr ""
+
+#: fltk.cpp:933
+msgid "Graphics/Export/as solid PNG"
+msgstr ""
+
+#: fltk.cpp:943
+msgid "Graphics/Export/as vector EPS"
+msgstr ""
+
+#: fltk.cpp:920
+msgid "Graphics/Grid"
+msgstr ""
+
+#: fltk.cpp:919
+msgid "Graphics/Light"
+msgstr ""
+
+#: fltk.cpp:929
+msgid "Graphics/Pause calc"
+msgstr ""
+
+#: fltk.cpp:923
+msgid "Graphics/Redraw"
+msgstr ""
+
+#: fltk.cpp:925
+msgid "Graphics/Reload data"
+msgstr ""
+
+#: fltk.cpp:922
+msgid "Graphics/Restore"
+msgstr ""
+
+#: fltk.cpp:926
+msgid "Graphics/Stop"
+msgstr ""
+
+#: fltk.cpp:960
+msgid "Graphics/Transform/Move down"
+msgstr ""
+
+#: fltk.cpp:956
+msgid "Graphics/Transform/Move left"
+msgstr ""
+
+#: fltk.cpp:961
+msgid "Graphics/Transform/Move right"
+msgstr ""
+
+#: fltk.cpp:957
+msgid "Graphics/Transform/Move up"
+msgstr ""
+
+#: fltk.cpp:958
+msgid "Graphics/Transform/Zoom in"
+msgstr ""
+
+#: fltk.cpp:959
+msgid "Graphics/Transform/Zoom out"
+msgstr ""
+
+#: fltk.cpp:809
+msgid "Normal view"
+msgstr ""
+
+#: fltk.cpp:888
+msgid "Pause on/off external calculations"
+msgstr ""
+
+#: fltk.cpp:861
+msgid "Phi angle (rotate in x*y plane)"
+msgstr ""
+
+#: fltk.cpp:810
+msgid "Redraw plot"
+msgstr ""
+
+#: fltk.cpp:844
+msgid "Refresh the picture"
+msgstr ""
+
+#: fltk.cpp:812
+msgid "Reload data"
+msgstr ""
+
+#: fltk.cpp:850
+msgid "Reload data and refresh the picture"
+msgstr ""
+
+#: fltk.cpp:841
+msgid "Return picture to normal zoom"
+msgstr ""
+
+#: fltk.cpp:837
+msgid "Rotate picture by holding left mouse button"
+msgstr ""
+
+#: fltk.cpp:882
+msgid "Run/Stop slideshow (graphics animation)"
+msgstr ""
+
+#: fltk.cpp:574
+msgid "Save File As?"
+msgstr ""
+
+#: fltk.cpp:875
+msgid "Shift the picture down"
+msgstr ""
+
+#: fltk.cpp:867
+msgid "Shift the picture left"
+msgstr ""
+
+#: fltk.cpp:873
+msgid "Shift the picture right"
+msgstr ""
+
+#: fltk.cpp:865
+msgid "Shift the picture up"
+msgstr ""
+
+#: fltk.cpp:883
+msgid "Show next frame in slideshow"
+msgstr ""
+
+#: fltk.cpp:878
+msgid "Show previous frame in slideshow"
+msgstr ""
+
+#: fltk.cpp:846
+msgid "Stop drawing"
+msgstr ""
+
+#: fltk.cpp:833
+msgid "Switch on/off grid drawing"
+msgstr ""
+
+#: fltk.cpp:830
+msgid "Switch on/off lightning in the picture"
+msgstr ""
+
+#: fltk.cpp:827
+msgid "Switch on/off transparency in the picture"
+msgstr ""
+
+#: fltk.cpp:859
+msgid "Theta angle (tilt z-axis)"
+msgstr ""
+
+#: fltk.cpp:840
+msgid "Zoom in selected region of the picture"
+msgstr ""
+
+#: fltk.cpp:869
+msgid "Zoom in the picture"
+msgstr ""
+
+#: fltk.cpp:871
+msgid "Zoom out the picture"
+msgstr ""
+
+#: fltk.cpp:770
+#, c-format
+msgid "click at %g, %g, %g"
+msgstr ""
