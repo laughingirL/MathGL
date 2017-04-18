@@ -6,6 +6,7 @@ endif()
 project( MathGL2 )
 
 set(MGL_DEP_LIBS)
+add_definitions(-DMGL_SRC)
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are:
@@ -554,14 +555,14 @@ endif(enable-wx)
 find_program(findxgettext xgettext)
 find_program(findmsgmerge msgmerge)
 find_program(findmsgfmt msgfmt)
-if(NOT findmsgfmt OR NOT findxgettext OR NOT findmsgmerge )
-	message("Gettext is disabled, since xgettext or msgmerge or msgfmt are not found.")
+find_program(findmsgcat msgcat)
+if(NOT findmsgfmt OR NOT findxgettext OR NOT findmsgmerge OR NOT findmsgcat )
+	message("Gettext is disabled, because xgettext, msgmerge, msgcat or msgfmt are not found.")
 	set(USE_GETTEXT 0)
-else(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge )
+else(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge OR NOT findmsgcat )
 	set(USE_GETTEXT 1)
-	set(po_files )
-	set(po_targets )
-endif(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge )
+endif(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge OR NOT findmsgcat )
+set(po_files )
 
 if(enable-doc-info)
 	set(MGL_HAVE_DOC_INFO 1)
@@ -709,10 +710,16 @@ install(FILES
 install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
 
 if(USE_GETTEXT)
-#	set(po_files udav/strings_ru.po utils/strings_ru.po mgllab/strings_ru.po widgets/strings_ru.po src/strings_ru.po )
+	# VERY BAD THING
+	file(GLOB po_files [sumw]*/*.cpp )
+	add_custom_target(mathgl_ru.po ALL
+		COMMAND ${findxgettext} -s --keyword=_ -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/mathgl.pot ${po_files} 
+		COMMAND ${findmsgmerge} -o mathgl_ru.po mathgl_ru.po ${MathGL2_BINARY_DIR}/mathgl.pot
+		WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/
+		DEPENDS ${po_files} )
 	add_custom_target(mathgl_ru.mo ALL
-		COMMAND ${findmsgfmt} -o mathgl_ru.mo ${po_files}
-		DEPENDS ${po_targets})
+		COMMAND ${findmsgfmt} -o mathgl_ru.mo ${MathGL2_SOURCE_DIR}/mathgl_ru.po
+		DEPENDS mathgl_ru.po)
 	install( FILES mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
 endif(USE_GETTEXT)
 

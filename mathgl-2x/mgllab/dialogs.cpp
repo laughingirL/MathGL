@@ -25,36 +25,36 @@
 const char *cols = " wbgrcmylenuqphkWBGRCMYLENUQPH";
 Fl_Menu_Item colors[] = {
 	{"-----", 0,0,0,0,0,0,0, 0},	//
-	{_mgl("white"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//w
-	{_mgl("blue"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,255)},		//b
-	{_mgl("lime"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,0)},		//g
-	{_mgl("red"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,0)},			//r
-	{_mgl("cyan"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,255)},		//c
-	{_mgl("magenta"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,255)},	//m
-	{_mgl("yellow"), 0,0,0,0,0,0,0, fl_rgb_color(255,255,0)},	//y
-	{_mgl("springgreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,127)},//l
-	{_mgl("lawngreen"), 0,0,0,0,0,0,0, fl_rgb_color(127,255,0)},	//e
-	{_mgl("skyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,255)},	//n
-	{_mgl("blueviolet"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,255)},//u
-	{_mgl("orange"), 0,0,0,0,0,0,0, fl_rgb_color(255,127,0)},	//q
-	{_mgl("deeppink"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,127)},	//p
-	{_mgl("gray"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,127)},	//h
+	{_("white"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//w
+	{_("blue"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,255)},		//b
+	{_("lime"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,0)},		//g
+	{_("red"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,0)},			//r
+	{_("cyan"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,255)},		//c
+	{_("magenta"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,255)},	//m
+	{_("yellow"), 0,0,0,0,0,0,0, fl_rgb_color(255,255,0)},	//y
+	{_("springgreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,127)},//l
+	{_("lawngreen"), 0,0,0,0,0,0,0, fl_rgb_color(127,255,0)},	//e
+	{_("skyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,255)},	//n
+	{_("blueviolet"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,255)},//u
+	{_("orange"), 0,0,0,0,0,0,0, fl_rgb_color(255,127,0)},	//q
+	{_("deeppink"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,127)},	//p
+	{_("gray"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,127)},	//h
 
-	{_mgl("black"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//k
-	{_mgl("lightgray"), 0,0,0,0,0,0,0, fl_rgb_color(179,179,179)},//W
-	{_mgl("navy"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,127)},		//B
-	{_mgl("green"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,0)},		//G
-	{_mgl("maroon"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,0)},		//R
-	{_mgl("teal"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,127)},		//C
-	{_mgl("purple"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,127)},	//M
-	{_mgl("olive"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,0)},		//Y
-	{_mgl("seagreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,77)},	//L
-	{_mgl("darklawn"), 0,0,0,0,0,0,0, fl_rgb_color(77,127,0)},	//E
-	{_mgl("darkskyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,77,127)},//N
-	{_mgl("indigo"), 0,0,0,0,0,0,0, fl_rgb_color(77,0,127)},		//U
-	{_mgl("brown"), 0,0,0,0,0,0,0, fl_rgb_color(127,77,0)},		//Q
-	{_mgl("darkpink"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,77)},	//P
-	{_mgl("darkgray"), 0,0,0,0,0,0,0, fl_rgb_color(77,77,77)},	//H
+	{_("black"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//k
+	{_("lightgray"), 0,0,0,0,0,0,0, fl_rgb_color(179,179,179)},//W
+	{_("navy"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,127)},		//B
+	{_("green"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,0)},		//G
+	{_("maroon"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,0)},		//R
+	{_("teal"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,127)},		//C
+	{_("purple"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,127)},	//M
+	{_("olive"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,0)},		//Y
+	{_("seagreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,77)},	//L
+	{_("darklawn"), 0,0,0,0,0,0,0, fl_rgb_color(77,127,0)},	//E
+	{_("darkskyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,77,127)},//N
+	{_("indigo"), 0,0,0,0,0,0,0, fl_rgb_color(77,0,127)},		//U
+	{_("brown"), 0,0,0,0,0,0,0, fl_rgb_color(127,77,0)},		//Q
+	{_("darkpink"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,77)},	//P
+	{_("darkgray"), 0,0,0,0,0,0,0, fl_rgb_color(77,77,77)},	//H
 {0}};
 //-----------------------------------------------------------------------------
 void cb_dlg_cancel(Fl_Widget*, void *v)	{	if(v)	((GeneralDlg*)v)->hide();	}
@@ -81,44 +81,44 @@ public:
 	{
 		e=NULL;	ext=NULL;
 		Fl_Button *o;
-		w = new Fl_Double_Window(570, 185, _mgl("Add command option(s)"));
-		x1 = new Fl_Input(65, 5, 85, 25, _mgl("X-range"));
-		x1->tooltip(_mgl("Minimal value of X for cutting or for coordinate filling"));
-		x2 = new Fl_Input(160, 5, 85, 25, _mgl("-"));
-		x2->tooltip(_mgl("Maximal value of X for cutting or for coordinate filling"));
-		y1 = new Fl_Input(65, 35, 85, 25, _mgl("Y-range"));
-		y1->tooltip(_mgl("Minimal value of Y for cutting or for coordinate filling"));
-		y2 = new Fl_Input(160, 35, 85, 25, _mgl("-"));
-		y2->tooltip(_mgl("Maximal value of Y for cutting or for coordinate filling"));
-		z1 = new Fl_Input(65, 65, 85, 25, _mgl("Z-range"));
-		z1->tooltip(_mgl("Minimal value of Z for cutting or for coordinate filling"));
-		z2 = new Fl_Input(160, 65, 85, 25, _mgl("-"));
-		z2->tooltip(_mgl("Maximal value of Z for cutting or for coordinate filling"));
-		c1 = new Fl_Input(65, 95, 85, 25, _mgl("C-range"));	c1->deactivate();
-		c1->tooltip(_mgl("Low border for determining color or alpha"));
-		c2 = new Fl_Input(160, 95, 85, 25, _mgl("-"));		c2->deactivate();
-		c2->tooltip(_mgl("Upper border for determining color or alpha"));
-		val = new Fl_Input(325, 5, 85, 25, _mgl("Value"));	val->labelfont(1);
-		meshnum = new Fl_Input(325, 35, 85, 25, _mgl("MeshNum"));
-		meshnum->tooltip(_mgl("Approximate number of mesh lines in plot"));
-		size = new Fl_Input(325, 65, 85, 25, _mgl("Size"));
-		size->tooltip(_mgl("Set size for text, marks and others"));
-		cut = new Fl_Choice(325, 95, 85, 25, _mgl("Cutting"));
-		cut->add(_mgl("default"));	cut->add("on");	cut->add("off");
-		cut->tooltip(_mgl("Set cutting off/on for particular plot"));
-		alpha = new Fl_Input(480, 5, 85, 25, _mgl("Alpha"));
-		alpha->tooltip(_mgl("Alpha value (transparency) of surface or cloud"));
-		amb = new Fl_Input(480, 35, 85, 25, _mgl("Ambient"));
-		amb->tooltip(_mgl("Own brightness of the surface"));
-		dif = new Fl_Input(480, 65, 85, 25, _mgl("Diffuse"));
-		dif->tooltip(_mgl("Intensity of diffuse light"));
-		light = new Fl_Choice(480, 95, 85, 25, _mgl("Light"));
-		light->add(_mgl("default"));	light->add("on");	light->add("off");
-		cut->tooltip(_mgl("Set lighting off/on for particular plot"));
-		legend = new Fl_Input(65, 125, 500, 25, _mgl("Legend"));
-		cut->tooltip(_mgl("Add legend entry for the plot"));
-		o = new Fl_Button(385, 155, 85, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(480, 155, 85, 25, _mgl("OK"));	o->callback(cb_dlg_ok,this);
+		w = new Fl_Double_Window(570, 185, _("Add command option(s)"));
+		x1 = new Fl_Input(65, 5, 85, 25, _("X-range"));
+		x1->tooltip(_("Minimal value of X for cutting or for coordinate filling"));
+		x2 = new Fl_Input(160, 5, 85, 25, _("-"));
+		x2->tooltip(_("Maximal value of X for cutting or for coordinate filling"));
+		y1 = new Fl_Input(65, 35, 85, 25, _("Y-range"));
+		y1->tooltip(_("Minimal value of Y for cutting or for coordinate filling"));
+		y2 = new Fl_Input(160, 35, 85, 25, _("-"));
+		y2->tooltip(_("Maximal value of Y for cutting or for coordinate filling"));
+		z1 = new Fl_Input(65, 65, 85, 25, _("Z-range"));
+		z1->tooltip(_("Minimal value of Z for cutting or for coordinate filling"));
+		z2 = new Fl_Input(160, 65, 85, 25, _("-"));
+		z2->tooltip(_("Maximal value of Z for cutting or for coordinate filling"));
+		c1 = new Fl_Input(65, 95, 85, 25, _("C-range"));	c1->deactivate();
+		c1->tooltip(_("Low border for determining color or alpha"));
+		c2 = new Fl_Input(160, 95, 85, 25, _("-"));		c2->deactivate();
+		c2->tooltip(_("Upper border for determining color or alpha"));
+		val = new Fl_Input(325, 5, 85, 25, _("Value"));	val->labelfont(1);
+		meshnum = new Fl_Input(325, 35, 85, 25, _("MeshNum"));
+		meshnum->tooltip(_("Approximate number of mesh lines in plot"));
+		size = new Fl_Input(325, 65, 85, 25, _("Size"));
+		size->tooltip(_("Set size for text, marks and others"));
+		cut = new Fl_Choice(325, 95, 85, 25, _("Cutting"));
+		cut->add(_("default"));	cut->add("on");	cut->add("off");
+		cut->tooltip(_("Set cutting off/on for particular plot"));
+		alpha = new Fl_Input(480, 5, 85, 25, _("Alpha"));
+		alpha->tooltip(_("Alpha value (transparency) of surface or cloud"));
+		amb = new Fl_Input(480, 35, 85, 25, _("Ambient"));
+		amb->tooltip(_("Own brightness of the surface"));
+		dif = new Fl_Input(480, 65, 85, 25, _("Diffuse"));
+		dif->tooltip(_("Intensity of diffuse light"));
+		light = new Fl_Choice(480, 95, 85, 25, _("Light"));
+		light->add(_("default"));	light->add("on");	light->add("off");
+		cut->tooltip(_("Set lighting off/on for particular plot"));
+		legend = new Fl_Input(65, 125, 500, 25, _("Legend"));
+		cut->tooltip(_("Add legend entry for the plot"));
+		o = new Fl_Button(385, 155, 85, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(480, 155, 85, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
@@ -157,12 +157,12 @@ public:
 	DirSelDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(220, 85, _mgl("Select direction"));
-		dir = new Fl_Choice(80, 10, 135, 25, _mgl("Direction"));
+		w = new Fl_Double_Window(220, 85, _("Select direction"));
+		dir = new Fl_Choice(80, 10, 135, 25, _("Direction"));
 		dir->add("xyz");	dir->add("x");	dir->add("y");	dir->add("z");
 		dir->add("xy");	dir->add("xz");	dir->add("yz");
-		o = new Fl_Button(55, 50, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(140, 50, 75, 25, _mgl("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(55, 50, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(140, 50, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
@@ -309,54 +309,54 @@ public:
 	StyleDlg()
 	{
 		Fl_Group *g;	Fl_Button *o;
-		w = new Fl_Double_Window(380, 540, _mgl("Plot style"));
+		w = new Fl_Double_Window(380, 540, _("Plot style"));
 		Fl_Tabs* tt = new Fl_Tabs(0, 5, 375, 235);
-		gline = new Fl_Group(0, 30, 375, 210, _mgl("Line style"));
-			arr1 = new Fl_Choice(5, 50, 110, 25, _mgl("Arrow at start"));
+		gline = new Fl_Group(0, 30, 375, 210, _("Line style"));
+			arr1 = new Fl_Choice(5, 50, 110, 25, _("Arrow at start"));
 			arr1->align(FL_ALIGN_TOP_LEFT);	arr1->copy(arrows);
 			arr1->callback(cb_style_upd);
-			dash = new Fl_Choice(125, 50, 110, 25, _mgl("Dashing"));
+			dash = new Fl_Choice(125, 50, 110, 25, _("Dashing"));
 			dash->align(FL_ALIGN_TOP_LEFT);	dash->copy(dashing);
 			dash->callback(cb_style_upd);
-			arr2 = new Fl_Choice(245, 50, 110, 25, _mgl("Arrow at end"));
+			arr2 = new Fl_Choice(245, 50, 110, 25, _("Arrow at end"));
 			arr2->align(FL_ALIGN_TOP_LEFT);	arr2->copy(arrows);
 			arr2->callback(cb_style_upd);
-			mark = new Fl_Choice(125, 80, 110, 25, _mgl("Marks"));
+			mark = new Fl_Choice(125, 80, 110, 25, _("Marks"));
 			mark->copy(markers);	mark->callback(cb_style_upd);
-			solid = new Fl_Check_Button(240, 80, 55, 25, _mgl("solid"));
-			user = new Fl_Check_Button(300, 80, 55, 25, _mgl("user"));
+			solid = new Fl_Check_Button(240, 80, 55, 25, _("solid"));
+			user = new Fl_Check_Button(300, 80, 55, 25, _("user"));
 			solid->callback(cb_style_upd);	user->callback(cb_style_upd);
-			width = new Fl_Spinner(125, 110, 110, 25, _mgl("Width"));
+			width = new Fl_Spinner(125, 110, 110, 25, _("Width"));
 			width->range(1,9);	width->value(1);	width->callback(cb_style_upd);
 			for(int i=0;i<16;i++)
 			{
 				dash_m[i] = new Fl_Toggle_Button(10+20*i, 210, 20, 20);
 				dash_m[i]->callback(cb_style_upd);
 			}
-			dash_m[0]->label(_mgl("Manual dashing"));
+			dash_m[0]->label(_("Manual dashing"));
 			dash_m[0]->align(FL_ALIGN_TOP_LEFT);
 			gline->end();
-		gsurf = new Fl_Group(0, 30, 375, 210, _mgl("Color scheme"));	gsurf->hide();
-			axial = new Fl_Choice(5, 50, 110, 25, _mgl("Axial direction"));
+		gsurf = new Fl_Group(0, 30, 375, 210, _("Color scheme"));	gsurf->hide();
+			axial = new Fl_Choice(5, 50, 110, 25, _("Axial direction"));
 			axial->align(FL_ALIGN_TOP_LEFT);	axial->callback(cb_style_upd);
 			axial->add("none");	axial->add("x");	axial->add("y");	axial->add("z");
-			contt = new Fl_Choice(125, 50, 110, 25, _mgl("Text on contours"));
+			contt = new Fl_Choice(125, 50, 110, 25, _("Text on contours"));
 			contt->add("none");	contt->add("under");	contt->add("above");
 			contt->align(FL_ALIGN_TOP_LEFT);	contt->callback(cb_style_upd);
-			alpha = new Fl_Input(255, 50, 110, 25, _mgl("Transparency"));
+			alpha = new Fl_Input(255, 50, 110, 25, _("Transparency"));
 			alpha->align(FL_ALIGN_TOP_LEFT);	alpha->callback(cb_style_upd);
-			wire = new Fl_Check_Button(125, 80, 115, 25, _mgl("Wire or mesh"));
+			wire = new Fl_Check_Button(125, 80, 115, 25, _("Wire or mesh"));
 			wire->callback(cb_style_upd);
-			sharp = new Fl_Check_Button(250, 80, 110, 25, _mgl("Sharp colors"));
+			sharp = new Fl_Check_Button(250, 80, 110, 25, _("Sharp colors"));
 			sharp->callback(cb_style_upd);
-			g = new Fl_Group(10, 105, 360, 130, _mgl("Mask"));
+			g = new Fl_Group(10, 105, 360, 130, _("Mask"));
 				g->box(FL_ENGRAVED_BOX);	g->align(FL_ALIGN_TOP_LEFT);
-				mask = new Fl_Choice(80, 110, 95, 25, _mgl("Kind"));
+				mask = new Fl_Choice(80, 110, 95, 25, _("Kind"));
 				mask->copy(masks);	mask->callback(cb_style_upd);
-				angle = new Fl_Choice(80, 140, 95, 25, _mgl("Rotation"));
+				angle = new Fl_Choice(80, 140, 95, 25, _("Rotation"));
 				angle->add("none");	angle->add("+45");	angle->add("perp");	angle->add("-45");
 				angle->callback(cb_style_upd);
-				msize = new Fl_Spinner(80, 170, 95, 25, _mgl("Size"));
+				msize = new Fl_Spinner(80, 170, 95, 25, _("Size"));
 				msize->range(1,9);	msize->value(1);	msize->callback(cb_style_upd);
 				for(int i=0;i<8;i++)	for(int j=0;j<8;j++)
 				{
@@ -364,51 +364,51 @@ public:
 					mask_m[i+8*j]->callback(cb_style_upd);
 				}
 			g->end();	gsurf->end();
-		gfont = new Fl_Group(0, 30, 375, 210, _mgl("Text style"));	gfont->hide();
-			bold = new Fl_Check_Button(5, 40, 150, 25, _mgl("Bold style"));
-			ital = new Fl_Check_Button(5, 65, 150, 25, _mgl("Italic style"));
-			twire = new Fl_Check_Button(5, 90, 150, 25, _mgl("Wire style"));
-			uline = new Fl_Check_Button(5, 115, 150, 25, _mgl("Underline"));
-			oline = new Fl_Check_Button(5, 140, 150, 25, _mgl("Overline"));
+		gfont = new Fl_Group(0, 30, 375, 210, _("Text style"));	gfont->hide();
+			bold = new Fl_Check_Button(5, 40, 150, 25, _("Bold style"));
+			ital = new Fl_Check_Button(5, 65, 150, 25, _("Italic style"));
+			twire = new Fl_Check_Button(5, 90, 150, 25, _("Wire style"));
+			uline = new Fl_Check_Button(5, 115, 150, 25, _("Underline"));
+			oline = new Fl_Check_Button(5, 140, 150, 25, _("Overline"));
 			bold->callback(cb_style_upd);	ital->callback(cb_style_upd);
 			twire->callback(cb_style_upd);	uline->callback(cb_style_upd);
 			oline->callback(cb_style_upd);
-			align = new Fl_Choice(270, 40, 95, 25, _mgl("Text align"));
+			align = new Fl_Choice(270, 40, 95, 25, _("Text align"));
 			align->add("left");	align->add("center");	align->add("right");
 			align->value(1);	align->callback(cb_style_upd);
-			vert = new Fl_Choice(270, 75, 95, 25, _mgl("Vertical align"));
+			vert = new Fl_Choice(270, 75, 95, 25, _("Vertical align"));
 			vert->add("default");	vert->add("center");	vert->add("under");
 			vert->value(0);	vert->callback(cb_style_upd);
 		gfont->end();	tt->end();	tt->callback(cb_style_upd);
 
-		g = new Fl_Group(0, 265, 375, 155, _mgl("Color(s) or color scheme"));
+		g = new Fl_Group(0, 265, 375, 155, _("Color(s) or color scheme"));
 		g->box(FL_ENGRAVED_BOX);	g->align(FL_ALIGN_TOP_LEFT);
-			sch = new Fl_Choice(170, 270, 115, 25, _mgl("Popular color schemes"));
+			sch = new Fl_Choice(170, 270, 115, 25, _("Popular color schemes"));
 			sch->add("BbcyrR");	sch->add("kw");		sch->add("wk");		sch->add("bwr");
 			sch->add("kHCcw");	sch->add("kBbcw");	sch->add("kRryw");	sch->add("kGgew");
 			sch->add("BbwrR");	sch->add("BbwgG");	sch->add("GgwmM");	sch->add("UuwqR");
 			sch->add("QqwcC");	sch->add("CcwyY");	sch->add("bcwyr");	sch->add("wUrqy");
 			sch->add("UbcyqR");	sch->add("bgr");	sch->callback(cb_style_sch);
-			plain = new Fl_Check_Button(290, 270, 80, 25, _mgl("plain"));
+			plain = new Fl_Check_Button(290, 270, 80, 25, _("plain"));
 			plain->callback(cb_style_upd);
 			for(int i=0;i<8;i++)
 			{
 				c[i] = new Fl_Choice(5+185*(i/4), 300+30*(i%4), 95, 25);
 				c[i]->copy(colors);	c[i]->callback(cb_style_upd);
-				c[i]->tooltip(_mgl("Value for i-th color"));
+				c[i]->tooltip(_("Value for i-th color"));
 				s[i] = new Fl_Spinner(105+185*(i/4), 300+30*(i%4), 40, 25);
 				s[i]->range(1,9);	s[i]->value(5);
-				c[i]->tooltip(_mgl("Brightness of i-th color"));
+				c[i]->tooltip(_("Brightness of i-th color"));
 				s[i]->callback(cb_style_upd);
 				p[i] = new Fl_Input(145+185*(i/4), 300+30*(i%4), 40, 25);
-				p[i]->tooltip(_mgl("Relative position of i-th color"));
+				p[i]->tooltip(_("Relative position of i-th color"));
 				p[i]->callback(cb_style_upd);
 			}
 			g->end();
-		res = new Fl_Output(5, 440, 370, 25, _mgl("Resulting string"));
+		res = new Fl_Output(5, 440, 370, 25, _("Resulting string"));
 		res->align(FL_ALIGN_TOP_LEFT);
-		o = new Fl_Button(300, 475, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(300, 505, 75, 25, _mgl("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(300, 475, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(300, 505, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		gr = new Fl_MathGL(5, 470, 285, 65);	gr->box(FL_ENGRAVED_BOX);	gr->use_pthr = false;
 		mgl_set_size(gr->get_graph(),285,65);	gr->align(FL_ALIGN_LEFT);
 		w->set_modal();	w->end();
@@ -562,34 +562,34 @@ public:
 	DatSelDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(355, 255, _mgl("Select data argument"));
-		name = new Fl_Choice(105, 5, 145, 25, _mgl("Data name"));
+		w = new Fl_Double_Window(355, 255, _("Select data argument"));
+		name = new Fl_Choice(105, 5, 145, 25, _("Data name"));
 		name->callback(cb_datsel_upd);
-		x1 = new Fl_Spinner(105, 35, 60, 25, _mgl("X-slice from"));
-		x2 = new Fl_Spinner(190, 35, 60, 25, _mgl("to"));
-		ax = new Fl_Check_Button(260, 35, 90, 25, _mgl("all"));	ax->callback(cb_datsel_act);
-		y1 = new Fl_Spinner(105, 65, 60, 25, _mgl("Y-slice from"));
-		y2 = new Fl_Spinner(190, 65, 60, 25, _mgl("to"));
-		ay = new Fl_Check_Button(260, 65, 90, 25, _mgl("all"));	ay->callback(cb_datsel_act);
-		z1 = new Fl_Spinner(105, 95, 60, 25, _mgl("Z-slice from"));
-		z2 = new Fl_Spinner(190, 95, 60, 25, _mgl("to"));
-		az = new Fl_Check_Button(260, 95, 90, 25, _mgl("all"));	az->callback(cb_datsel_act);
-		clmn = new Fl_Input(105, 125, 245, 25, _mgl("Column expr"));
-		oper = new Fl_Choice(105, 155, 130, 25, _mgl("Operation"));
+		x1 = new Fl_Spinner(105, 35, 60, 25, _("X-slice from"));
+		x2 = new Fl_Spinner(190, 35, 60, 25, _("to"));
+		ax = new Fl_Check_Button(260, 35, 90, 25, _("all"));	ax->callback(cb_datsel_act);
+		y1 = new Fl_Spinner(105, 65, 60, 25, _("Y-slice from"));
+		y2 = new Fl_Spinner(190, 65, 60, 25, _("to"));
+		ay = new Fl_Check_Button(260, 65, 90, 25, _("all"));	ay->callback(cb_datsel_act);
+		z1 = new Fl_Spinner(105, 95, 60, 25, _("Z-slice from"));
+		z2 = new Fl_Spinner(190, 95, 60, 25, _("to"));
+		az = new Fl_Check_Button(260, 95, 90, 25, _("all"));	az->callback(cb_datsel_act);
+		clmn = new Fl_Input(105, 125, 245, 25, _("Column expr"));
+		oper = new Fl_Choice(105, 155, 130, 25, _("Operation"));
 		oper->add("none");	oper->add("max");	oper->add("min");	oper->add("sum");
 		oper->add("trace");	oper->add("pulse");	oper->value(0);
-		dir = new Fl_Choice(285, 155, 65, 25, _mgl("along"));
+		dir = new Fl_Choice(285, 155, 65, 25, _("along"));
 		dir->add("none");	dir->add("x");	dir->add("y");	dir->add("z");
 		dir->add("xy");		dir->add("xz");	dir->add("yz");
-		o = new Fl_Button(190, 190, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(275, 190, 75, 25, _mgl("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(190, 190, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(275, 190, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
 	{
 		result.clear();
 		if(name->value()<0)
-		{	fl_alert(_mgl("You need to select data array"));	return;	}
+		{	fl_alert(_("You need to select data array"));	return;	}
 		std::string data = name->text();
 		const char *eq = clmn->value();
 		int rx=ax->value(), ry=ay->value(), rz=az->value();
@@ -699,55 +699,55 @@ public:
 	NewCmdDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(780, 300, _mgl("New command"));
+		w = new Fl_Double_Window(780, 300, _("New command"));
 		Fl_Group *g = new Fl_Group(5,5,315,320);
-		type = new Fl_Choice(80, 5, 270, 25, _mgl("Type"));
-		type->tooltip(_mgl("Groups of MGL commands"));
+		type = new Fl_Choice(80, 5, 270, 25, _("Type"));
+		type->tooltip(_("Groups of MGL commands"));
 		type->callback(cb_cmd_type);
-		type->add(_mgl("1D plots"));
-		type->add(_mgl("2D plots"));
-		type->add(_mgl("3D plots"));
-		type->add(_mgl("Dual plots"));
-		type->add(_mgl("Vector plots"));
-		type->add(_mgl("Other plots"));
-		type->add(_mgl("Text and legend"));
-		type->add(_mgl("Create data and IO"));
-		type->add(_mgl("Data transform"));
-		type->add(_mgl("Data handling"));
-		type->add(_mgl("Axis and colorbar"));
-		type->add(_mgl("Axis setup"));
-		type->add(_mgl("General setup"));
-		type->add(_mgl("Scale and rotate"));
-		type->add(_mgl("Program flow"));
-		type->add(_mgl("Primitives"));
+		type->add(_("1D plots"));
+		type->add(_("2D plots"));
+		type->add(_("3D plots"));
+		type->add(_("Dual plots"));
+		type->add(_("Vector plots"));
+		type->add(_("Other plots"));
+		type->add(_("Text and legend"));
+		type->add(_("Create data and IO"));
+		type->add(_("Data transform"));
+		type->add(_("Data handling"));
+		type->add(_("Axis and colorbar"));
+		type->add(_("Axis setup"));
+		type->add(_("General setup"));
+		type->add(_("Scale and rotate"));
+		type->add(_("Program flow"));
+		type->add(_("Primitives"));
 
-		cmd = new Fl_Choice(80, 35, 270, 25, _mgl("Command"));
-		cmd->tooltip(_mgl("MGL commands for selected group"));
+		cmd = new Fl_Choice(80, 35, 270, 25, _("Command"));
+		cmd->tooltip(_("MGL commands for selected group"));
 		cmd->callback(cb_cmd_cmd);
-		var = new Fl_Choice(80, 95, 270, 25, _mgl("Variant"));
-		var->tooltip(_mgl("Variant of command argument order. The notation is:\n"
+		var = new Fl_Choice(80, 95, 270, 25, _("Variant"));
+		var->tooltip(_("Variant of command argument order. The notation is:\n"
 								" * Capital arguments are data (like, Ydat);\n"
 								" * Argument in '' are strings (like, 'fmt');\n"
 								" * Other arguments are numbers (like, zval);\n"
 								" * Arguments in [] are optional arguments."));
 		var->callback(cb_cmd_var);
-		desc = new Fl_Group(0, 65, 350, 25, _mgl("Description"));
+		desc = new Fl_Group(0, 65, 350, 25, _("Description"));
 		desc->box(FL_ENGRAVED_BOX);	desc->labelsize(12);
 		desc->align(FL_ALIGN_CENTER);	desc->end();
-		desc->tooltip(_mgl("Short description of selected command"));
-		args = new Fl_Select_Browser(5, 140, 345, 95, _mgl("Arguments"));
+		desc->tooltip(_("Short description of selected command"));
+		args = new Fl_Select_Browser(5, 140, 345, 95, _("Arguments"));
 		args->align(FL_ALIGN_TOP_LEFT);	args->callback(cb_cmd_args);
-		args->tooltip(_mgl("Command arguments. Bold ones are required arguments.\n"
+		args->tooltip(_("Command arguments. Bold ones are required arguments.\n"
 			"Other are optional arguments but its order is required.\n"
 			"You can use '' for default format. See help at right\nfor default values."));
 		static int widths[] = { 95, 250, 0 };  // widths for each column
 		args->column_widths(widths);	args->column_char('\t');
 
-		opt = new Fl_Input(60, 240, 265, 25, _mgl("Options"));
+		opt = new Fl_Input(60, 240, 265, 25, _("Options"));
 		o = new Fl_Button(325, 240, 25, 25, "...");	o->callback(option_in_cb,opt);
 
-		o = new Fl_Button(190, 270, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(275, 270, 75, 25, _mgl("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(190, 270, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(275, 270, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		g->end();	g->resizable(args);
 
 		help = new Fl_Help_View(360, 5, 415, 290);	help->labelsize(12);
@@ -857,13 +857,13 @@ public:
 		else if(arg=="'dir'")	dirsel_dlg_cb(0,0);	// this is path
 		else if(arg[0]=='\'')	// this is general string
 		{
-			const char *s = fl_input(_mgl("Enter value for %s argument"), val.c_str(), arg.c_str());
+			const char *s = fl_input(_("Enter value for %s argument"), val.c_str(), arg.c_str());
 			if(s)
 			{	std::string ss=s;	args_set(('\''+ss+'\'').c_str());	}
 		}
 		else	// this is general constant
 		{
-			const char *s = fl_input(_mgl("Enter value for %s argument"), val.c_str(), arg.c_str());
+			const char *s = fl_input(_("Enter value for %s argument"), val.c_str(), arg.c_str());
 			if(s)	args_set(s);
 		}
 	}
@@ -888,7 +888,7 @@ public:
 			const char *p = strchr(s,'\t');
 			if(s[0]=='@' && !p)
 			{
-				fl_alert(_mgl("Required argument %s is not specified!"),s+3);	return;
+				fl_alert(_("Required argument %s is not specified!"),s+3);	return;
 			}
 			if(p)	result = result+' '+(p+1);
 		}
@@ -944,113 +944,113 @@ public:
 	SetupDlg()
 	{
 		Fl_Button *o;	Fl_Group *g, *gg;
-		w = new Fl_Double_Window(525, 395, _mgl("Setup script"));
+		w = new Fl_Double_Window(525, 395, _("Setup script"));
 		Fl_Tabs* tt = new Fl_Tabs(0, 0, 525, 355);
-		gg = new Fl_Group(0, 25, 525, 330, _mgl("Axis settings"));
-			new Fl_Box(85, 30, 100, 25, _mgl("X axis"));
-			x1 = new Fl_Float_Input(85, 55, 100, 25, _mgl("Minimal"));
-			x2 = new Fl_Float_Input(85, 85, 100, 25, _mgl("Maximal"));
-			x0 = new Fl_Float_Input(85, 115, 100, 25, _mgl("Origin"));
-			xlabel = new Fl_Input(85, 145, 100, 25, _mgl("Label"));
-			xtick = new Fl_Float_Input(85, 205, 100, 25, _mgl("Ticks"));
-			xlpos = new Fl_Choice(85, 175, 100, 25, _mgl("at position"));
-			xlpos->add(_mgl("left"));	xlpos->add(_mgl("center"));
-			xlpos->add(_mgl("right"));	xlpos->value(1);
-			xstick = new Fl_Float_Input(85, 235, 100, 25, _mgl("Subticks"));
-			xotick = new Fl_Float_Input(85, 265, 100, 25, _mgl("Ticks start"));
-			xtmpl = new Fl_Input(85, 295, 100, 25, _mgl("Template"));
-			xfact = new Fl_Input(85, 325, 100, 25, _mgl("Factor"));
-			new Fl_Box(195, 30, 100, 25, _mgl("Y axis"));
+		gg = new Fl_Group(0, 25, 525, 330, _("Axis settings"));
+			new Fl_Box(85, 30, 100, 25, _("X axis"));
+			x1 = new Fl_Float_Input(85, 55, 100, 25, _("Minimal"));
+			x2 = new Fl_Float_Input(85, 85, 100, 25, _("Maximal"));
+			x0 = new Fl_Float_Input(85, 115, 100, 25, _("Origin"));
+			xlabel = new Fl_Input(85, 145, 100, 25, _("Label"));
+			xtick = new Fl_Float_Input(85, 205, 100, 25, _("Ticks"));
+			xlpos = new Fl_Choice(85, 175, 100, 25, _("at position"));
+			xlpos->add(_("left"));	xlpos->add(_("center"));
+			xlpos->add(_("right"));	xlpos->value(1);
+			xstick = new Fl_Float_Input(85, 235, 100, 25, _("Subticks"));
+			xotick = new Fl_Float_Input(85, 265, 100, 25, _("Ticks start"));
+			xtmpl = new Fl_Input(85, 295, 100, 25, _("Template"));
+			xfact = new Fl_Input(85, 325, 100, 25, _("Factor"));
+			new Fl_Box(195, 30, 100, 25, _("Y axis"));
 			y1 = new Fl_Float_Input(195, 55, 100, 25);
 			y2 = new Fl_Float_Input(195, 85, 100, 25);
 			y0 = new Fl_Float_Input(195, 115, 100, 25);
 			ylabel = new Fl_Input(195, 145, 100, 25);
 			ytick = new Fl_Float_Input(195, 205, 100, 25);
 			ylpos = new Fl_Choice(195, 175, 100, 25);
-			ylpos->add(_mgl("left"));	ylpos->add(_mgl("center"));
-			ylpos->add(_mgl("right"));	ylpos->value(1);
+			ylpos->add(_("left"));	ylpos->add(_("center"));
+			ylpos->add(_("right"));	ylpos->value(1);
 			ystick = new Fl_Float_Input(195, 235, 100, 25);
 			yotick = new Fl_Float_Input(195, 265, 100, 25);
 			ytmpl = new Fl_Input(195, 295, 100, 25);
 			yfact = new Fl_Input(195, 325, 100, 25);
-			new Fl_Box(305, 30, 100, 25, _mgl("Z axis"));
+			new Fl_Box(305, 30, 100, 25, _("Z axis"));
 			z1 = new Fl_Float_Input(305, 55, 100, 25);
 			z2 = new Fl_Float_Input(305, 85, 100, 25);
 			z0 = new Fl_Float_Input(305, 115, 100, 25);
 			zlabel = new Fl_Input(305, 145, 100, 25);
 			ztick = new Fl_Float_Input(305, 205, 100, 25);
 			zlpos = new Fl_Choice(305, 175, 100, 25);
-			zlpos->add(_mgl("left"));	zlpos->add(_mgl("center"));
-			zlpos->add(_mgl("right"));	zlpos->value(1);
+			zlpos->add(_("left"));	zlpos->add(_("center"));
+			zlpos->add(_("right"));	zlpos->value(1);
 			zstick = new Fl_Float_Input(305, 235, 100, 25);
 			zotick = new Fl_Float_Input(305, 265, 100, 25);
 			ztmpl = new Fl_Input(305, 295, 100, 25);
 			zfact = new Fl_Input(305, 325, 100, 25);
-			new Fl_Box(415, 30, 100, 25, _mgl("C axis"));
+			new Fl_Box(415, 30, 100, 25, _("C axis"));
 			c1 = new Fl_Float_Input(415, 55, 100, 25);
 			c2 = new Fl_Float_Input(415, 85, 100, 25);
 			c0 = new Fl_Float_Input(415, 115, 100, 25);
 			clabel = new Fl_Input(415, 145, 100, 25);
 			ctick = new Fl_Float_Input(415, 205, 100, 25);
 			clpos = new Fl_Choice(415, 175, 100, 25);
-			clpos->add(_mgl("left"));	clpos->add(_mgl("center"));
-			clpos->add(_mgl("right"));	clpos->value(1);
+			clpos->add(_("left"));	clpos->add(_("center"));
+			clpos->add(_("right"));	clpos->value(1);
 			ctmpl = new Fl_Input(415, 295, 100, 25);
 			cfact = new Fl_Input(415, 325, 100, 25);
 			gg->end();
-		gg = new Fl_Group(0, 25, 525, 330, _mgl("General settings"));	gg->hide();
-			g = new Fl_Group(5, 45, 180, 305, _mgl("Colors"));	g->box(FL_ENGRAVED_BOX);
-			alphadef = new Fl_Float_Input(80, 55, 100, 25, _mgl("AlphaDef"));
-			ambient = new Fl_Float_Input(80, 85, 100, 25, _mgl("Ambient"));
-			diffuse = new Fl_Float_Input(80, 115, 100, 25, _mgl("Diffuse"));
-			palette = new Fl_Input(80, 145, 100, 25, _mgl("Palette"));
-			font_stl = new Fl_Input(80, 175, 100, 25, _mgl("Font"));
-			axis_stl = new Fl_Input(80, 205, 100, 25, _mgl("Axis"));
-			fog = new Fl_Float_Input(80, 235, 100, 25, _mgl("Fog"));
-			fog_dz = new Fl_Float_Input(80, 265, 100, 25, _mgl("Fog dist."));
-			gray = new Fl_Check_Button(80, 290, 100, 25, _mgl("grayscale"));
-			alpha = new Fl_Check_Button(10, 315, 65, 25, _mgl("alpha"));
-			light = new Fl_Check_Button(80, 315, 100, 25, _mgl("lighting"));
+		gg = new Fl_Group(0, 25, 525, 330, _("General settings"));	gg->hide();
+			g = new Fl_Group(5, 45, 180, 305, _("Colors"));	g->box(FL_ENGRAVED_BOX);
+			alphadef = new Fl_Float_Input(80, 55, 100, 25, _("AlphaDef"));
+			ambient = new Fl_Float_Input(80, 85, 100, 25, _("Ambient"));
+			diffuse = new Fl_Float_Input(80, 115, 100, 25, _("Diffuse"));
+			palette = new Fl_Input(80, 145, 100, 25, _("Palette"));
+			font_stl = new Fl_Input(80, 175, 100, 25, _("Font"));
+			axis_stl = new Fl_Input(80, 205, 100, 25, _("Axis"));
+			fog = new Fl_Float_Input(80, 235, 100, 25, _("Fog"));
+			fog_dz = new Fl_Float_Input(80, 265, 100, 25, _("Fog dist."));
+			gray = new Fl_Check_Button(80, 290, 100, 25, _("grayscale"));
+			alpha = new Fl_Check_Button(10, 315, 65, 25, _("alpha"));
+			light = new Fl_Check_Button(80, 315, 100, 25, _("lighting"));
 			g->end();
-			g = new Fl_Group(185, 45, 180, 250, _mgl("Sizes"));	g->box(FL_ENGRAVED_BOX);
-			meshnum = new Fl_Float_Input(260, 55, 100, 25, _mgl("meshnum"));
-			facenum = new Fl_Float_Input(260, 85, 100, 25, _mgl("facenum"));
-			arr_size = new Fl_Float_Input(260, 115, 100, 25, _mgl("arrows"));
-			bar_size = new Fl_Float_Input(260, 145, 100, 25, _mgl("bars"));
-			mrk_size = new Fl_Float_Input(260, 175, 100, 25, _mgl("markers"));
-			txt_size = new Fl_Float_Input(260, 205, 100, 25, _mgl("text"));
-			tick_size = new Fl_Float_Input(260, 235, 100, 25, _mgl("ticks"));
-			pendelta = new Fl_Float_Input(260, 265, 100, 25, _mgl("pen blur"));
+			g = new Fl_Group(185, 45, 180, 250, _("Sizes"));	g->box(FL_ENGRAVED_BOX);
+			meshnum = new Fl_Float_Input(260, 55, 100, 25, _("meshnum"));
+			facenum = new Fl_Float_Input(260, 85, 100, 25, _("facenum"));
+			arr_size = new Fl_Float_Input(260, 115, 100, 25, _("arrows"));
+			bar_size = new Fl_Float_Input(260, 145, 100, 25, _("bars"));
+			mrk_size = new Fl_Float_Input(260, 175, 100, 25, _("markers"));
+			txt_size = new Fl_Float_Input(260, 205, 100, 25, _("text"));
+			tick_size = new Fl_Float_Input(260, 235, 100, 25, _("ticks"));
+			pendelta = new Fl_Float_Input(260, 265, 100, 25, _("pen blur"));
 			g->end();
-			g = new Fl_Group(365, 45, 155, 305, _mgl("Others"));	g->box(FL_ENGRAVED_BOX);
-			cut = new Fl_Check_Button(370, 50, 115, 25, _mgl("cutting"));
-			attach = new Fl_Check_Button(370, 70, 115, 25, _mgl("attach light"));
-			origintick = new Fl_Check_Button(370, 90, 115, 25, _mgl("no origin tick"));
-			rotatetext = new Fl_Check_Button(370, 110, 115, 25, _mgl("rotate text"));
+			g = new Fl_Group(365, 45, 155, 305, _("Others"));	g->box(FL_ENGRAVED_BOX);
+			cut = new Fl_Check_Button(370, 50, 115, 25, _("cutting"));
+			attach = new Fl_Check_Button(370, 70, 115, 25, _("attach light"));
+			origintick = new Fl_Check_Button(370, 90, 115, 25, _("no origin tick"));
+			rotatetext = new Fl_Check_Button(370, 110, 115, 25, _("rotate text"));
 
-			time = new Fl_Choice(370, 150, 145, 25, _mgl("Time ticks"));
+			time = new Fl_Choice(370, 150, 145, 25, _("Time ticks"));
 			time->add("none");	time->add("x");	time->add("y");	time->add("z");
 			time->align(FL_ALIGN_TOP_LEFT);	time->value(0);
-			tunetick = new Fl_Choice(370, 195, 145, 25, _mgl("Tune ticks"));
-			tunetick->add(_mgl("none"));	tunetick->add(_mgl("factor"));
-			tunetick->add(_mgl("increment"));	tunetick->add(_mgl("both"));
+			tunetick = new Fl_Choice(370, 195, 145, 25, _("Tune ticks"));
+			tunetick->add(_("none"));	tunetick->add(_("factor"));
+			tunetick->add(_("increment"));	tunetick->add(_("both"));
 			tunetick->align(FL_ALIGN_TOP_LEFT);	tunetick->value(0);
-			ternary = new Fl_Choice(370, 235, 145, 25, _mgl("Ternary"));
-			ternary->add(_mgl("none"));	ternary->add(_mgl("ternary"));
-			ternary->add(_mgl("quaternary"));	ternary->add(_mgl("projection"));
-			ternary->add(_mgl("ternary proj"));	ternary->add(_mgl("quaternary proj"));
+			ternary = new Fl_Choice(370, 235, 145, 25, _("Ternary"));
+			ternary->add(_("none"));	ternary->add(_("ternary"));
+			ternary->add(_("quaternary"));	ternary->add(_("projection"));
+			ternary->add(_("ternary proj"));	ternary->add(_("quaternary proj"));
 			ternary->align(FL_ALIGN_TOP_LEFT);	ternary->value(0);
-			transptype = new Fl_Choice(370, 275, 145, 25, _mgl("Transparency type"));
-			transptype->add(_mgl("default"));	ternary->add(_mgl("glass-like"));
-			transptype->add(_mgl("lamp-like"));
+			transptype = new Fl_Choice(370, 275, 145, 25, _("Transparency type"));
+			transptype->add(_("default"));	ternary->add(_("glass-like"));
+			transptype->add(_("lamp-like"));
 			transptype->align(FL_ALIGN_TOP_LEFT);	transptype->value(0);
-			variant = new Fl_Spinner(370, 315, 145, 25, _mgl("Variant"));
+			variant = new Fl_Spinner(370, 315, 145, 25, _("Variant"));
 			variant->align(FL_ALIGN_TOP_LEFT);	variant->range(0,100);	variant->value(0);
 			g->end();
-		plotid = new Fl_Input(190, 321, 172, 25, _mgl("Plot ID"));
+		plotid = new Fl_Input(190, 321, 172, 25, _("Plot ID"));
 		plotid->align(FL_ALIGN_TOP_LEFT);
 		gg->end();
-		gg = new Fl_Group(0, 25, 525, 330, _mgl("Light settings"));	gg->hide();
+		gg = new Fl_Group(0, 25, 525, 330, _("Light settings"));	gg->hide();
 			static const char *id[10]={"0:","1:","2:","3:""4:","5:","6:","7:","8:","9:"};
 			for(int i=0;i<10;i++)
 			{
@@ -1062,17 +1062,17 @@ public:
 				lbr[i]= new Fl_Float_Input(425, 50+30*i, 90, 25);
 				lc[i]->copy(colors);	lc[i]->value(0);
 			}
-			lx[0]->label(_mgl("X position"));	lx[0]->align(FL_ALIGN_TOP_LEFT);
-			ly[0]->label(_mgl("Y position"));	ly[0]->align(FL_ALIGN_TOP_LEFT);
-			lz[0]->label(_mgl("Z position"));	lz[0]->align(FL_ALIGN_TOP_LEFT);
-			lc[0]->label(_mgl("Color"));			lc[0]->align(FL_ALIGN_TOP_LEFT);
-			lbr[0]->label(_mgl("Brightness"));	lbr[0]->align(FL_ALIGN_TOP_LEFT);
+			lx[0]->label(_("X position"));	lx[0]->align(FL_ALIGN_TOP_LEFT);
+			ly[0]->label(_("Y position"));	ly[0]->align(FL_ALIGN_TOP_LEFT);
+			lz[0]->label(_("Z position"));	lz[0]->align(FL_ALIGN_TOP_LEFT);
+			lc[0]->label(_("Color"));			lc[0]->align(FL_ALIGN_TOP_LEFT);
+			lbr[0]->label(_("Brightness"));	lbr[0]->align(FL_ALIGN_TOP_LEFT);
 			gg->end();	tt->end();
-		o = new Fl_Button(365, 365, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(445, 365, 75, 25, _mgl("OK"));	o->callback(cb_dlg_ok,this);
-		fname = new Fl_Input(100, 365, 175, 25, _mgl("File to export"));
-		o = new Fl_Button(275, 365, 25, 25, _mgl("@->"));	o->callback(cb_setup_save);
-		o->tooltip(_mgl("Keep empty to put at beginning of main script."));
+		o = new Fl_Button(365, 365, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(445, 365, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
+		fname = new Fl_Input(100, 365, 175, 25, _("File to export"));
+		o = new Fl_Button(275, 365, 25, 25, _("@->"));	o->callback(cb_setup_save);
+		o->tooltip(_("Keep empty to put at beginning of main script."));
 		w->end();
 	}
 	void prepare()
@@ -1187,11 +1187,11 @@ public:
 		{
 			FILE *fp = fl_fopen(s,"wt");
 			if(fp)	{	fputs(result.c_str(),fp);	fclose(fp);	}
-			else	fl_alert(_mgl("Couldn't open file %s"),s);
+			else	fl_alert(_("Couldn't open file %s"),s);
 		}
 		else
 		{
-			textbuf->insert(0, (_mgl("##### setup start #####\n") + result + _mgl("##### setup end #####\n")).c_str());
+			textbuf->insert(0, (_("##### setup start #####\n") + result + _("##### setup end #####\n")).c_str());
 //			if(e)	e->draw->script="";
 		}
 	}
@@ -1226,7 +1226,7 @@ public:
 	InplotDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(715, 315, _mgl("Add inplot"));
+		w = new Fl_Double_Window(715, 315, _("Add inplot"));
 		k1 = new Fl_Round_Button(5, 5, 105, 25, "SubPlot");
 		k1->callback(cb_only_inplot,k1);	k1->type(FL_RADIO_BUTTON);
 		n1 = new Fl_Spinner(145, 5, 55, 25, "nx");
@@ -1291,33 +1291,33 @@ public:
 		yy2 = new Fl_Float_Input(400, 155, 60, 25, "...");
 		yy2->callback(cp_inplot_upd);	yy2->value("1");
 
-		tet = new Fl_Spinner(75, 190, 60, 25, _mgl("Rotate on"));
+		tet = new Fl_Spinner(75, 190, 60, 25, _("Rotate on"));
 		tet->callback(cp_inplot_upd);	tet->value(0);	tet->step(5);	tet->range( -90, 90);
-		phi = new Fl_Spinner(170, 190, 60, 25, _mgl("and"));
+		phi = new Fl_Spinner(170, 190, 60, 25, _("and"));
 		phi->callback(cp_inplot_upd);	phi->value(0);	phi->step(5);	phi->range(-180,180);
-		ax = new Fl_Float_Input(315, 190, 60, 25, _mgl("Aspect x/z"));
+		ax = new Fl_Float_Input(315, 190, 60, 25, _("Aspect x/z"));
 		ax->callback(cp_inplot_upd);	ax->value("1");
-		ay = new Fl_Float_Input(400, 190, 60, 25, _mgl("y/z"));
+		ay = new Fl_Float_Input(400, 190, 60, 25, _("y/z"));
 		ay->callback(cp_inplot_upd);	ay->value("1");
 
-		new Fl_Box(0, 225, 90, 25, _mgl("Reserve at:"));
-		rl = new Fl_Check_Button(90, 225, 75, 25, _mgl("left"));
+		new Fl_Box(0, 225, 90, 25, _("Reserve at:"));
+		rl = new Fl_Check_Button(90, 225, 75, 25, _("left"));
 		rl->callback(cp_inplot_upd);	rl->value(1);
-		rb = new Fl_Check_Button(145, 225, 75, 25, _mgl("bottom"));
+		rb = new Fl_Check_Button(145, 225, 75, 25, _("bottom"));
 		rb->callback(cp_inplot_upd);	rb->value(1);
-		rt = new Fl_Check_Button(225, 225, 75, 25, _mgl("top"));
+		rt = new Fl_Check_Button(225, 225, 75, 25, _("top"));
 		rt->callback(cp_inplot_upd);	rt->value(1);
-		rr = new Fl_Check_Button(285, 225, 75, 25, _mgl("right"));
+		rr = new Fl_Check_Button(285, 225, 75, 25, _("right"));
 		rr->callback(cp_inplot_upd);	rr->value(1);
-		rw = new Fl_Check_Button(360, 225, 100, 25, _mgl("whole area"));	rw->callback(cp_inplot_upd);
-		text = new Fl_Input(50, 255, 350, 25, _mgl("Title"));	text->callback(cp_inplot_upd);
-		o = new Fl_Button(400, 255, 60, 25, _mgl("Style"));	o->callback(style_dlg_cb,0);
-		res = new Fl_Output(50, 285, 410, 25, _mgl("Result"));
+		rw = new Fl_Check_Button(360, 225, 100, 25, _("whole area"));	rw->callback(cp_inplot_upd);
+		text = new Fl_Input(50, 255, 350, 25, _("Title"));	text->callback(cp_inplot_upd);
+		o = new Fl_Button(400, 255, 60, 25, _("Style"));	o->callback(style_dlg_cb,0);
+		res = new Fl_Output(50, 285, 410, 25, _("Result"));
 		gr = new Fl_MathGL(470, 130, 240, 180);	gr->box(FL_ENGRAVED_BOX);	gr->use_pthr = false;
 		mgl_set_size(gr->get_graph(),240,180);	gr->align(FL_ALIGN_LEFT);
-		o = new Fl_Button(545, 95, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(630, 95, 75, 25, _mgl("OK"));	o->callback(cb_dlg_ok,this);
-		o = new Fl_Button(630, 60, 75, 25, _mgl("Refresh"));	o->callback(cp_inplot_upd);
+		o = new Fl_Button(545, 95, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(630, 95, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(630, 60, 75, 25, _("Refresh"));	o->callback(cp_inplot_upd);
 		w->set_modal();	w->end();
 	}
 	void init()	{	style_dlg.result.clear();	}
@@ -1450,28 +1450,28 @@ public:
 	PrimDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(295, 200, _mgl("Add primitive"));
-		Fl_Menu_Item k[]={{_mgl("marker")}, {_mgl("line")}, { _mgl("rectangle")},
-			{_mgl("curve")}, {_mgl("rhomb")}, { _mgl("ellipse")},
-			{_mgl("arc")}, {_mgl("polygon")}, { _mgl("text")}, {0}};
-		kind = new Fl_Choice(65, 10, 75, 25, _mgl("Kind"));
+		w = new Fl_Double_Window(295, 200, _("Add primitive"));
+		Fl_Menu_Item k[]={{_("marker")}, {_("line")}, { _("rectangle")},
+			{_("curve")}, {_("rhomb")}, { _("ellipse")},
+			{_("arc")}, {_("polygon")}, { _("text")}, {0}};
+		kind = new Fl_Choice(65, 10, 75, 25, _("Kind"));
 		kind->copy(k);		kind->value(0);
-		col = new Fl_Choice(205, 10, 75, 25, _mgl("Color"));
+		col = new Fl_Choice(205, 10, 75, 25, _("Color"));
 		col->copy(colors);	col->value(4);
-		arr1 = new Fl_Choice(65, 40, 75, 25, _mgl("Arrow1"));
+		arr1 = new Fl_Choice(65, 40, 75, 25, _("Arrow1"));
 		arr1->copy(arrows);	arr1->value(0);
-		arr2 = new Fl_Choice(205, 40, 75, 25, _mgl("Arrow2"));
+		arr2 = new Fl_Choice(205, 40, 75, 25, _("Arrow2"));
 		arr2->copy(arrows);	arr2->value(0);
-		dash = new Fl_Choice(65, 70, 75, 25, _mgl("Dash"));
+		dash = new Fl_Choice(65, 70, 75, 25, _("Dash"));
 		dash->copy(dashing);	dash->value(0);
-		mark = new Fl_Choice(205, 70, 75, 25, _mgl("Mark"));
+		mark = new Fl_Choice(205, 70, 75, 25, _("Mark"));
 		mark->copy(markers);	mark->value(0);	mark->value(2);
-		num = new Fl_Spinner(65, 100, 75, 25, _mgl("Edges"));
+		num = new Fl_Spinner(65, 100, 75, 25, _("Edges"));
 		num->range(1,100);	num->value(5);
-		fill = new Fl_Check_Button(205, 100, 75, 25, _mgl("wire"));	fill->value(1);
-		text = new Fl_Input(65, 130, 215, 25, _mgl("Text"));
-		o = new Fl_Button(120, 165, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(205, 165, 75, 25, _mgl("Add"));	o->callback(cb_dlg_ok,this);
+		fill = new Fl_Check_Button(205, 100, 75, 25, _("wire"));	fill->value(1);
+		text = new Fl_Input(65, 130, 215, 25, _("Text"));
+		o = new Fl_Button(120, 165, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(205, 165, 75, 25, _("Add"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
@@ -1486,7 +1486,7 @@ public:
 		switch(k)
 		{
 		case 0:
-			if(!mrk)	{	fl_alert(_mgl("You need to select marker!"));	return;	}
+			if(!mrk)	{	fl_alert(_("You need to select marker!"));	return;	}
 			result = "ball 0 0 '";
 			if(!fill->value())	result += '&';
 			result = result+mrk+c+"'\n";	break;
@@ -1526,7 +1526,7 @@ public:
 			result = result+c+"'\n";	break;
 		case 8:
 			s = text->value();
-			if(!s || *s==0)	{	fl_alert(_mgl("You need to enter text!"));	return;	}
+			if(!s || *s==0)	{	fl_alert(_("You need to enter text!"));	return;	}
 			result = result+"text 0 0 0.1 0 '"+s+"' '"+c;
 			if(fill->value())	result += ":w";
 			result = result+"'\n";	break;

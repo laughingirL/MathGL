@@ -212,27 +212,27 @@ void mglBase::StartGroup(const char *name, int id)
 	StartAutoGroup(buf);
 }
 //-----------------------------------------------------------------------------
-const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",	//mglWarnDim
-								"data dimension(s) is too small",		//mglWarnLow
-								"minimal data value is negative",		//mglWarnNeg
-								"no file or wrong data dimensions",		//mglWarnFile
-								"not enough memory", 					//mglWarnMem
-								"data values are zero",					//mglWarnZero
-								"no legend entries",					//mglWarnLeg
-								"slice value is out of range",			//mglWarnSlc
-								"number of contours is zero or negative",//mglWarnCnt
-								"couldn't open file",					//mglWarnOpen
-								"light: ID is out of range",			//mglWarnLId
-								"size(s) is zero or negative",			//mglWarnSize
-								"format is not supported for that build",//mglWarnFmt
-								"axis ranges are incompatible",			//mglWarnTern
-								"pointer is NULL",						//mglWarnNull
-								"not enough space for plot",			//mglWarnSpc
-								"There is wrong argument(s) in script",	//mglScrArg
-								"There is wrong command(s) in script",	//mglScrCmd
-								"There is too long string(s) in script",	//mglScrLong
-								"There is unbalanced ' in script",		//mglScrStr
-								"There is changing temporary data in script"};	//mglScrTemp
+const char *mglWarn[mglWarnEnd] = {_("data dimension(s) is incompatible"),	//mglWarnDim
+								_("data dimension(s) is too small"),		//mglWarnLow
+								_("minimal data value is negative"),		//mglWarnNeg
+								_("no file or wrong data dimensions"),		//mglWarnFile
+								_("not enough memory"), 					//mglWarnMem
+								_("data values are zero"),					//mglWarnZero
+								_("no legend entries"),					//mglWarnLeg
+								_("slice value is out of range"),			//mglWarnSlc
+								_("number of contours is zero or negative"),//mglWarnCnt
+								_("couldn't open file"),					//mglWarnOpen
+								_("light: ID is out of range"),			//mglWarnLId
+								_("size(s) is zero or negative"),			//mglWarnSize
+								_("format is not supported for that build"),//mglWarnFmt
+								_("axis ranges are incompatible"),			//mglWarnTern
+								_("pointer is NULL"),						//mglWarnNull
+								_("not enough space for plot"),			//mglWarnSpc
+								_("There is wrong argument(s) in script"),	//mglScrArg
+								_("There is wrong command(s) in script"),	//mglScrCmd
+								_("There is too long string(s) in script"),	//mglScrLong
+								_("There is unbalanced ' in script"),		//mglScrStr
+								_("There is changing temporary data in script")};	//mglScrTemp
 //-----------------------------------------------------------------------------
 extern bool mglPrintWarn;
 void mglBase::SetWarn(int code, const char *who)

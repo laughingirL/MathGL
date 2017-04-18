@@ -24,15 +24,6 @@
 #include <FL/Fl_Copy_Surface.H>
 #include <FL/Fl_Native_File_Chooser.H>
 //-----------------------------------------------------------------------------
-#ifdef USE_GETTEXT
-#include <libintl.h>
-#endif
-#ifndef _LIBINTL_H	// Workaround for gcc 4.2
-#define _mgl(x)	(x)
-#else
-#define _mgl(x)	gettext(x)
-#endif
-//-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/Fl_MathGL.h"
 #include <limits.h>
@@ -482,7 +473,7 @@ void Fl_MGLView::toggle(int &val, Fl_Button *b, const char *txt)
 	val = 1-val;	b->value(val);
 	if(menu && txt && *txt)
 	{
-		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(_mgl(txt));
+		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(_(txt));
 		if(m && val)	m->set();
 		if(m && !val)	m->clear();
 	}
@@ -494,7 +485,7 @@ void Fl_MGLView::setoff(int &val, Fl_Button *b, const char *txt)
 	val = 0;	b->value(val);
 	if(menu && txt && *txt)
 	{
-		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(_mgl(txt));
+		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(_(txt));
 		if(m && val)	m->set();
 		if(m && !val)	m->clear();
 	}
@@ -571,7 +562,7 @@ void mglCanvasFL::Update()		{	mgl->update();	Wnd->show();	}
 MGL_NO_EXPORT const char *mgl_save_name(const char *ext)
 {
 	static std::string fname;
-	fname = mgl_file_chooser(_mgl("Save File As?"), ext, true);
+	fname = mgl_file_chooser(_("Save File As?"), ext, true);
 	if(fname.empty())	return NULL;
 	if(fname.find(ext+1)==std::string::npos)	fname += ext+1;
 	return fname.c_str();
@@ -767,7 +758,7 @@ void copy_coor_cb(Fl_Widget *,void *v)
 	HMGL gr = ((Fl_MGLView*)v)->get_graph();
 	mreal x,y,z;	mgl_get_last_mouse_pos(gr,&x,&y,&z);
 	static char buf[256];
-	snprintf(buf,255,_mgl("click at %g, %g, %g"),x,y,z);
+	snprintf(buf,255,_("click at %g, %g, %g"),x,y,z);
 	Fl::copy(buf,strlen(buf),1);
 }
 //-----------------------------------------------------------------------------
@@ -783,33 +774,33 @@ void mgl_copyimg_cb(Fl_Widget *,void *v)
 }
 //-----------------------------------------------------------------------------
 Fl_Menu_Item pop_graph[] = {
-	{ _mgl("Export"), 0, mgl_no_cb, 0, FL_SUBMENU},
+	{ _("Export as ..."), 0, mgl_no_cb, 0, FL_SUBMENU},
 #if MGL_HAVE_PNG
-		{ _mgl("... as PNG"),	0, mgl_export_png_cb},
-		{ _mgl("... as PNG (solid)"),	0, mgl_export_pngn_cb},
+		{ "PNG",	0, mgl_export_png_cb},
+		{ "PNG (solid)",	0, mgl_export_pngn_cb},
 #endif
 #if MGL_HAVE_JPEG
-		{ _mgl("... as JPEG"),	0, mgl_export_jpeg_cb},
+		{ "JPEG",	0, mgl_export_jpeg_cb},
 #endif
 #if MGL_HAVE_GIF
-		{ _mgl("... as GIF"),	0, mgl_export_gif_cb},
+		{ "GIF",	0, mgl_export_gif_cb},
 #endif
-		{ _mgl("... as BMP"),	0, mgl_export_bmp_cb},
-		{ _mgl("... as SVG"),	0, mgl_export_svg_cb},
-		{ _mgl("... as vector EPS"),	0, mgl_export_eps_cb},
-		{ _mgl("... as bitmap EPS"),	0, mgl_export_bps_cb},
-		{ _mgl("... as TeX"),	0, mgl_export_tex_cb,0, FL_MENU_DIVIDER},
-		{ _mgl("... as OBJ"),	0, mgl_export_obj_cb},
-		{ _mgl("... as PRC"),	0, mgl_export_prc_cb},
-		{ _mgl("... as OFF"),	0, mgl_export_off_cb},
-		{ _mgl("... as STL"),	0, mgl_export_stl_cb},
-		{ _mgl("... as XYZ"),	0, mgl_export_xyz_cb},
+		{ "BMP",	0, mgl_export_bmp_cb},
+		{ "SVG",	0, mgl_export_svg_cb},
+		{ "vector EPS",	0, mgl_export_eps_cb},
+		{ "bitmap EPS",	0, mgl_export_bps_cb},
+		{ "TeX",	0, mgl_export_tex_cb,0, FL_MENU_DIVIDER},
+		{ "OBJ",	0, mgl_export_obj_cb},
+		{ "PRC",	0, mgl_export_prc_cb},
+		{ "OFF",	0, mgl_export_off_cb},
+		{ "STL",	0, mgl_export_stl_cb},
+		{ "XYZ",	0, mgl_export_xyz_cb},
 		{0},
-	{ _mgl("Copy graphics"),	0, mgl_copyimg_cb, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
-	{ _mgl("Normal view"),	0, mgl_norm_cb},
-	{ _mgl("Redraw plot"),	0, mgl_draw_cb},
-	{ _mgl("Adjust size"),	0, mgl_adjust_cb},
-	{ _mgl("Reload data"),	0, mgl_oncemore_cb},
+	{ _("Copy graphics"),	0, mgl_copyimg_cb, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
+	{ _("Normal view"),	0, mgl_norm_cb},
+	{ _("Redraw plot"),	0, mgl_draw_cb},
+	{ _("Adjust size"),	0, mgl_adjust_cb},
+	{ _("Reload data"),	0, mgl_oncemore_cb},
 	{0}
 };
 //-----------------------------------------------------------------------------
@@ -824,68 +815,68 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	Fl_Group *g = new Fl_Group(0,0,480,30);
 	alpha_bt = new Fl_Button(0, 1, 25, 25);	alpha_bt->type(FL_TOGGLE_BUTTON);
 	alpha_bt->image(img_alpha);	alpha_bt->callback(mgl_alpha_cb,this);
-	alpha_bt->tooltip(_mgl("Switch on/off transparency in the picture"));
+	alpha_bt->tooltip(_("Switch on/off transparency in the picture"));
 	light_bt = new Fl_Button(25, 1, 25, 25);	light_bt->type(FL_TOGGLE_BUTTON);
 	light_bt->image(img_light);	light_bt->callback(mgl_light_cb,this);
-	light_bt->tooltip(_mgl("Switch on/off lightning in the picture"));
+	light_bt->tooltip(_("Switch on/off lightning in the picture"));
 	grid_bt = new Fl_Button(50, 1, 25, 25);	grid_bt->type(FL_TOGGLE_BUTTON);
 	grid_bt->image(new Fl_Pixmap(wire_xpm));	grid_bt->callback(mgl_grid_cb,this);
-	grid_bt->tooltip(_mgl("Switch on/off grid drawing"));
+	grid_bt->tooltip(_("Switch on/off grid drawing"));
 
 	rotate_bt = new Fl_Button(80, 1, 25, 25);rotate_bt->type(FL_TOGGLE_BUTTON);
 	rotate_bt->image(img_move);	rotate_bt->callback(mgl_rotate_cb,this);
-	rotate_bt->tooltip(_mgl("Rotate picture by holding left mouse button"));
+	rotate_bt->tooltip(_("Rotate picture by holding left mouse button"));
 	zoom_bt = new Fl_Button(105, 1, 25, 25);	zoom_bt->type(FL_TOGGLE_BUTTON);
 	zoom_bt->image(img_zoomIn);	zoom_bt->callback(mgl_zoom_cb,this);
-	zoom_bt->tooltip(_mgl("Zoom in selected region of the picture"));
-	o = new Fl_Button(130, 1, 25, 25);		o->tooltip(_mgl("Return picture to normal zoom"));
+	zoom_bt->tooltip(_("Zoom in selected region of the picture"));
+	o = new Fl_Button(130, 1, 25, 25);		o->tooltip(_("Return picture to normal zoom"));
 	o->image(img_orig);	o->callback(mgl_norm_cb,this);
 
-	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(_mgl("Refresh the picture"));
+	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(_("Refresh the picture"));
 	o->image(img_update);	o->callback(mgl_draw_cb,this);
-	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(_mgl("Stop drawing"));
+	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(_("Stop drawing"));
 	o->image(img_stop);	o->callback(mgl_stop_cb,this);
-	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(_mgl("Adjust picture size to fill drawing area"));
+	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(_("Adjust picture size to fill drawing area"));
 	o->image(img_adjust);	o->callback(mgl_adjust_cb,this);
-	o = new Fl_Button(235, 1, 25, 25);	o->tooltip(_mgl("Reload data and refresh the picture"));
+	o = new Fl_Button(235, 1, 25, 25);	o->tooltip(_("Reload data and refresh the picture"));
 	o->image(img_reload);	o->callback(mgl_oncemore_cb,this);
-	o = new Fl_Button(265, 1, 25, 25);	o->tooltip(_mgl("Copy image to clipboard"));
+	o = new Fl_Button(265, 1, 25, 25);	o->tooltip(_("Copy image to clipboard"));
 	o->image(img_copy);	o->callback(mgl_copyimg_cb,this);
 
 	Fl_Counter *tet, *phi;
 	tet = new Fl_Counter(295, 1, 90, 25, 0);	tet->callback(mgl_draw_cb,this);
 	phi = new Fl_Counter(390, 1, 90, 25, 0);	phi->callback(mgl_draw_cb,this);
 	tet->lstep(10);	tet->step(1);	tet->range(-180,180);
-	tet->tooltip(_mgl("Theta angle (tilt z-axis)"));
+	tet->tooltip(_("Theta angle (tilt z-axis)"));
 	phi->lstep(10);	phi->step(1);	phi->range(-180,180);
-	phi->tooltip(_mgl("Phi angle (rotate in x*y plane)"));
+	phi->tooltip(_("Phi angle (rotate in x*y plane)"));
 	g->end();	g->resizable(0);
 
 	g = new Fl_Group(0,0,30,285);
-	o = new Fl_Button(1, 30, 25, 25);		o->tooltip(_mgl("Shift the picture up"));
+	o = new Fl_Button(1, 30, 25, 25);		o->tooltip(_("Shift the picture up"));
 	o->image(img_goU);		o->callback(mgl_su_cb,this);
-	o = new Fl_Button(1, 55, 25, 25);		o->tooltip(_mgl("Shift the picture left"));
+	o = new Fl_Button(1, 55, 25, 25);		o->tooltip(_("Shift the picture left"));
 	o->image(img_goL);	o->callback(mgl_sl_cb,this);
-	o = new Fl_Button(1, 80, 25, 25);		o->tooltip(_mgl("Zoom in the picture"));
+	o = new Fl_Button(1, 80, 25, 25);		o->tooltip(_("Zoom in the picture"));
 	o->image(img_plus);	o->callback(mgl_sz_cb,this);
-	o = new Fl_Button(1, 105, 25, 25);		o->tooltip(_mgl("Zoom out the picture"));
+	o = new Fl_Button(1, 105, 25, 25);		o->tooltip(_("Zoom out the picture"));
 	o->image(img_minus);	o->callback(mgl_so_cb,this);
-	o = new Fl_Button(1, 130, 25, 25);		o->tooltip(_mgl("Shift the picture right"));
+	o = new Fl_Button(1, 130, 25, 25);		o->tooltip(_("Shift the picture right"));
 	o->image(img_goR);	o->callback(mgl_sr_cb,this);
-	o = new Fl_Button(1, 155, 25, 25);		o->tooltip(_mgl("Shift the picture down"));
+	o = new Fl_Button(1, 155, 25, 25);		o->tooltip(_("Shift the picture down"));
 	o->image(img_goD);	o->callback(mgl_sd_cb,this);
 
-	o = new Fl_Button(1, 185, 25, 25);		o->tooltip(_mgl("Show previous frame in slideshow"));
+	o = new Fl_Button(1, 185, 25, 25);		o->tooltip(_("Show previous frame in slideshow"));
 	o->image(img_prev);	o->callback(mgl_sprev_cb,this);
 	anim_bt = new Fl_Button(1, 210, 25, 25);	anim_bt->type(FL_TOGGLE_BUTTON);
 	anim_bt->image(img_play);	anim_bt->callback(mgl_sshow_cb,this);
-	anim_bt->tooltip(_mgl("Run/Stop slideshow (graphics animation)"));
-	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(_mgl("Show next frame in slideshow"));
+	anim_bt->tooltip(_("Run/Stop slideshow (graphics animation)"));
+	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(_("Show next frame in slideshow"));
 	o->image(img_next);	o->callback(mgl_snext_cb,this);
 #if MGL_HAVE_PTHR_WIDGET
 	pause_bt = new Fl_Button(1, 260, 25, 25);	pause_bt->type(FL_TOGGLE_BUTTON);
 	pause_bt->image(img_pause);	pause_bt->callback(mgl_pause_cb,this);
-	pause_bt->tooltip(_mgl("Pause on/off external calculations"));
+	pause_bt->tooltip(_("Pause on/off external calculations"));
 #endif
 	g->end();	g->resizable(0);
 
@@ -915,50 +906,50 @@ void mglCanvasFL::GotoFrame(int d)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 {
-	m->add(_mgl("Graphics/Alpha"), "^t", mgl_alpha_cb, w, FL_MENU_TOGGLE);
-	m->add(_mgl("Graphics/Light"), "^l", mgl_light_cb, w, FL_MENU_TOGGLE);
-	m->add(_mgl("Graphics/Grid"), "^g", mgl_grid_cb, w, FL_MENU_TOGGLE|FL_MENU_DIVIDER);
+	m->add(_("Graphics/Alpha"), "^t", mgl_alpha_cb, w, FL_MENU_TOGGLE);
+	m->add(_("Graphics/Light"), "^l", mgl_light_cb, w, FL_MENU_TOGGLE);
+	m->add(_("Graphics/Grid"), "^g", mgl_grid_cb, w, FL_MENU_TOGGLE|FL_MENU_DIVIDER);
 
-	m->add(_mgl("Graphics/Restore"), "^ ", mgl_norm_cb, w);
-	m->add(_mgl("Graphics/Redraw"), FL_F+5, mgl_draw_cb, w);
-	m->add(_mgl("Graphics/Adjust size"), FL_F+6, mgl_adjust_cb, w);
-	m->add(_mgl("Graphics/Reload data"), FL_F+9, mgl_oncemore_cb, w);
-	m->add(_mgl("Graphics/Stop"), FL_F+7, mgl_stop_cb, w);
-	m->add(_mgl("Graphics/Copy graphics"), "+^c", mgl_copyimg_cb, w);
-	m->add(_mgl("Graphics/Copy click coor."), 0, copy_coor_cb, w);
-	m->add(_mgl("Graphics/Pause calc"), "^t", mgl_pause_cb, w, FL_MENU_TOGGLE);
+	m->add(_("Graphics/Restore"), "^ ", mgl_norm_cb, w);
+	m->add(_("Graphics/Redraw"), FL_F+5, mgl_draw_cb, w);
+	m->add(_("Graphics/Adjust size"), FL_F+6, mgl_adjust_cb, w);
+	m->add(_("Graphics/Reload data"), FL_F+9, mgl_oncemore_cb, w);
+	m->add(_("Graphics/Stop"), FL_F+7, mgl_stop_cb, w);
+	m->add(_("Graphics/Copy graphics"), "+^c", mgl_copyimg_cb, w);
+	m->add(_("Graphics/Copy click coor."), 0, copy_coor_cb, w);
+	m->add(_("Graphics/Pause calc"), "^t", mgl_pause_cb, w, FL_MENU_TOGGLE);
 
 #if MGL_HAVE_PNG
-	m->add(_mgl("Graphics/Export/as PNG"), "#p", mgl_export_png_cb, w);
-	m->add(_mgl("Graphics/Export/as solid PNG"), "#f", mgl_export_pngn_cb, w);
+	m->add(_("Graphics/Export/as PNG"), "#p", mgl_export_png_cb, w);
+	m->add(_("Graphics/Export/as solid PNG"), "#f", mgl_export_pngn_cb, w);
 #endif
 #if MGL_HAVE_JPEG
-	m->add(_mgl("Graphics/Export/as JPEG"), "#j", mgl_export_jpeg_cb, w);
+	m->add(_("Graphics/Export/as JPEG"), "#j", mgl_export_jpeg_cb, w);
 #endif
 #if MGL_HAVE_GIF
-	m->add(_mgl("Graphics/Export/as GIF"), "#g", mgl_export_gif_cb, w);
+	m->add(_("Graphics/Export/as GIF"), "#g", mgl_export_gif_cb, w);
 #endif
-	m->add(_mgl("Graphics/Export/as BMP"), 0, mgl_export_bmp_cb, w);
-	m->add(_mgl("Graphics/Export/as SVG"), "#s", mgl_export_svg_cb, w);
-	m->add(_mgl("Graphics/Export/as vector EPS"), "#e", mgl_export_eps_cb, w);
-	m->add(_mgl("Graphics/Export/as bitmap EPS"), 0, mgl_export_bps_cb, w);
-	m->add(_mgl("Graphics/Export/as TeX"), "#l", mgl_export_tex_cb, w, FL_MENU_DIVIDER);
-	m->add(_mgl("Graphics/Export/as PRC"), "#d", mgl_export_prc_cb, w);
-	m->add(_mgl("Graphics/Export/as OBJ"), "#o", mgl_export_obj_cb, w);
-	m->add(_mgl("Graphics/Export/as OFF"), 0, mgl_export_off_cb, w);
-	m->add(_mgl("Graphics/Export/as STL"), 0, mgl_export_stl_cb, w);
-	m->add(_mgl("Graphics/Export/as XYZ"), 0, mgl_export_xyz_cb, w);
+	m->add(_("Graphics/Export/as BMP"), 0, mgl_export_bmp_cb, w);
+	m->add(_("Graphics/Export/as SVG"), "#s", mgl_export_svg_cb, w);
+	m->add(_("Graphics/Export/as vector EPS"), "#e", mgl_export_eps_cb, w);
+	m->add(_("Graphics/Export/as bitmap EPS"), 0, mgl_export_bps_cb, w);
+	m->add(_("Graphics/Export/as TeX"), "#l", mgl_export_tex_cb, w, FL_MENU_DIVIDER);
+	m->add(_("Graphics/Export/as PRC"), "#d", mgl_export_prc_cb, w);
+	m->add(_("Graphics/Export/as OBJ"), "#o", mgl_export_obj_cb, w);
+	m->add(_("Graphics/Export/as OFF"), 0, mgl_export_off_cb, w);
+	m->add(_("Graphics/Export/as STL"), 0, mgl_export_stl_cb, w);
+	m->add(_("Graphics/Export/as XYZ"), 0, mgl_export_xyz_cb, w);
 
-	m->add(_mgl("Graphics/Animation/Slideshow"), FL_CTRL+FL_F+5, mgl_sshow_cb, w, FL_MENU_TOGGLE);
-	m->add(_mgl("Graphics/Animation/Next frame"), "#<", mgl_snext_cb, w);
-	m->add(_mgl("Graphics/Animation/Prev frame"), "#>", mgl_sprev_cb, w);
+	m->add(_("Graphics/Animation/Slideshow"), FL_CTRL+FL_F+5, mgl_sshow_cb, w, FL_MENU_TOGGLE);
+	m->add(_("Graphics/Animation/Next frame"), "#<", mgl_snext_cb, w);
+	m->add(_("Graphics/Animation/Prev frame"), "#>", mgl_sprev_cb, w);
 
-	m->add(_mgl("Graphics/Transform/Move left"), FL_ALT+FL_Left, mgl_sl_cb, w);
-	m->add(_mgl("Graphics/Transform/Move up"), FL_ALT+FL_Up, mgl_su_cb, w);
-	m->add(_mgl("Graphics/Transform/Zoom in"), "#=", mgl_sz_cb, w);
-	m->add(_mgl("Graphics/Transform/Zoom out"), "#-", mgl_so_cb, w);
-	m->add(_mgl("Graphics/Transform/Move down"), FL_ALT+FL_Down, mgl_sd_cb, w);
-	m->add(_mgl("Graphics/Transform/Move right"), FL_ALT+FL_Right, mgl_sr_cb, w);
+	m->add(_("Graphics/Transform/Move left"), FL_ALT+FL_Left, mgl_sl_cb, w);
+	m->add(_("Graphics/Transform/Move up"), FL_ALT+FL_Up, mgl_su_cb, w);
+	m->add(_("Graphics/Transform/Zoom in"), "#=", mgl_sz_cb, w);
+	m->add(_("Graphics/Transform/Zoom out"), "#-", mgl_so_cb, w);
+	m->add(_("Graphics/Transform/Move down"), FL_ALT+FL_Down, mgl_sd_cb, w);
+	m->add(_("Graphics/Transform/Move right"), FL_ALT+FL_Right, mgl_sr_cb, w);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)

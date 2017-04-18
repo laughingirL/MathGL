@@ -25,7 +25,7 @@
 void addto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *s = fl_input(_mgl("Enter number for addition to data values"),0);
+	const char *s = fl_input(_("Enter number for addition to data values"),0);
 	HMDT d = dynamic_cast<HMDT>(e->var);
 	if(d && s)	{	mgl_data_add_num(d, atof(s));	e->refresh();	}
 	HADT c = dynamic_cast<HADT>(e->var);
@@ -35,7 +35,7 @@ void addto_cb(Fl_Widget*, void*v)
 void subto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *s = fl_input(_mgl("Enter number for subtraction from data values"),0);
+	const char *s = fl_input(_("Enter number for subtraction from data values"),0);
 	HMDT d = dynamic_cast<HMDT>(e->var);
 	if(d && s)	{	mgl_data_sub_num(d, atof(s));	e->refresh();	}
 	HADT c = dynamic_cast<HADT>(e->var);
@@ -45,7 +45,7 @@ void subto_cb(Fl_Widget*, void*v)
 void multo_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *s = fl_input(_mgl("Enter number for multiplication of data values"),0);
+	const char *s = fl_input(_("Enter number for multiplication of data values"),0);
 	HMDT d = dynamic_cast<HMDT>(e->var);
 	if(d && s)	{	mgl_data_mul_num(d, atof(s));	e->refresh();	}
 	HADT c = dynamic_cast<HADT>(e->var);
@@ -55,7 +55,7 @@ void multo_cb(Fl_Widget*, void*v)
 void divto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *s = fl_input(_mgl("Enter number for division of data values"),0);
+	const char *s = fl_input(_("Enter number for division of data values"),0);
 	HMDT d = dynamic_cast<HMDT>(e->var);
 	if(d && s)	{	mgl_data_div_num(d, atof(s));	e->refresh();	}
 	HADT c = dynamic_cast<HADT>(e->var);
@@ -82,26 +82,26 @@ public:
 		if(ch && *ch)
 		{	wch->label(ch);	wch->activate();	}
 		else
-		{	wch->label(_mgl("not used"));
+		{	wch->label(_("not used"));
 			wch->deactivate();	}
 	}
 	void init()	{	OK=false;	}
 	XYZDlg()
 	{
-		w = new Fl_Double_Window(325, 125, _mgl("Change data sizes"));
+		w = new Fl_Double_Window(325, 125, _("Change data sizes"));
 		box = new Fl_Box(10, 10, 305, 40);
 		box->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 		wmx = new Fl_Spinner(30, 55, 75, 25, "mx");
-		wmx->tooltip(_mgl("New size of data on 1st dimension (x-direction)"));
+		wmx->tooltip(_("New size of data on 1st dimension (x-direction)"));
 		wmy = new Fl_Spinner(135, 55, 75, 25, "my");
-		wmy->tooltip(_mgl("New size of data on 2nd dimension (y-direction)"));
+		wmy->tooltip(_("New size of data on 2nd dimension (y-direction)"));
 		wmz = new Fl_Spinner(240, 55, 75, 25, "mz");
-		wmz->tooltip(_mgl("New size of data on 3d dimension (z-direction)"));
+		wmz->tooltip(_("New size of data on 3d dimension (z-direction)"));
 		wch = new Fl_Check_Button(15, 90, 95, 25);
-		Fl_Button *o = new Fl_Button(125, 90, 85, 25, _mgl("Cancel"));
-		o->tooltip(_mgl("Do nothing and close window"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(230, 90, 85, 25, _mgl("Change"));
-		o->tooltip(_mgl("Change (resize) data"));	o->callback(cb_dlg_ok,this);
+		Fl_Button *o = new Fl_Button(125, 90, 85, 25, _("Cancel"));
+		o->tooltip(_("Do nothing and close window"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(230, 90, 85, 25, _("Change"));
+		o->tooltip(_("Change (resize) data"));	o->callback(cb_dlg_ok,this);
 		w->end();	w->set_modal();
 	}
 	void cb_ok()	{	OK=true;	hide();	}
@@ -111,7 +111,7 @@ public:
 void new_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	xyz_dlg.setup(_mgl("Specify new data size\nData will be zero filled"));
+	xyz_dlg.setup(_("Specify new data size\nData will be zero filled"));
 	if(xyz_dlg.run())
 	{
 		HMDT d = dynamic_cast<HMDT>(e->var);
@@ -126,7 +126,7 @@ void new_dat_cb(Fl_Widget*, void*v)
 void resize_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	xyz_dlg.setup(_mgl("Specify new data size\nData will be interpolated"));
+	xyz_dlg.setup(_("Specify new data size\nData will be interpolated"));
 	if(xyz_dlg.run())
 	{
 		HMDT d = dynamic_cast<HMDT>(e->var);
@@ -141,7 +141,7 @@ void resize_cb(Fl_Widget*, void*v)
 void squeeze_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	xyz_dlg.setup(_mgl("Specify the skiping step\nEach m-th point will be skiped"), _mgl("smoothed"));	if(xyz_dlg.run())
+	xyz_dlg.setup(_("Specify the skiping step\nEach m-th point will be skiped"), _("smoothed"));	if(xyz_dlg.run())
 	{
 		HMDT d = dynamic_cast<HMDT>(e->var);
 		if(d)
@@ -160,24 +160,24 @@ class ChngDlg : public GeneralDlg
 public:
 	ChngDlg()
 	{
-		Fl_Menu_Item k[]={{_mgl("Smooth")}, {_mgl("CumSum")}, { _mgl("Integrate")},
-		{ _mgl("Difference")}, { _mgl("Double diff.")}, { _mgl("Swap parts")},
-		{ _mgl("Sinus FFT")}, { _mgl("Cosine FFT")}, { _mgl("Hankel")},
-		{ _mgl("Mirror")}, { _mgl("Roll")}, { _mgl("Sew phase")}, { _mgl("Envelop")}, {0}};
-		Fl_Menu_Item t[]={{_mgl("Linear *3")}, {_mgl("Linear *5")}, {_mgl("Parabolic *5")},{0}};
-		w = new Fl_Double_Window(165, 215, _mgl("Change data"));
-		kind = new Fl_Choice(10, 25, 145, 25, _mgl("Type of operation"));
+		Fl_Menu_Item k[]={{_("Smooth")}, {_("CumSum")}, { _("Integrate")},
+		{ _("Difference")}, { _("Double diff.")}, { _("Swap parts")},
+		{ _("Sinus FFT")}, { _("Cosine FFT")}, { _("Hankel")},
+		{ _("Mirror")}, { _("Roll")}, { _("Sew phase")}, { _("Envelop")}, {0}};
+		Fl_Menu_Item t[]={{_("Linear *3")}, {_("Linear *5")}, {_("Parabolic *5")},{0}};
+		w = new Fl_Double_Window(165, 215, _("Change data"));
+		kind = new Fl_Choice(10, 25, 145, 25, _("Type of operation"));
 		kind->align(FL_ALIGN_TOP_LEFT);	kind->copy(k);
-		dx = new Fl_Check_Button(10, 55, 140, 25, _mgl("apply in x direction"));
-		dy = new Fl_Check_Button(10, 80, 140, 25, _mgl("apply in y direction"));
-		dz = new Fl_Check_Button(10, 105, 140, 25, _mgl("apply in z direction"));
-		type = new Fl_Choice(10, 145, 145, 25, _mgl("Type of smoothing"));
+		dx = new Fl_Check_Button(10, 55, 140, 25, _("apply in x direction"));
+		dy = new Fl_Check_Button(10, 80, 140, 25, _("apply in y direction"));
+		dz = new Fl_Check_Button(10, 105, 140, 25, _("apply in z direction"));
+		type = new Fl_Choice(10, 145, 145, 25, _("Type of smoothing"));
 		type->align(FL_ALIGN_TOP_LEFT);	type->copy(t);
-		val = new Fl_Float_Input(10, 145, 145, 25, _mgl("Numeric parameter"));
+		val = new Fl_Float_Input(10, 145, 145, 25, _("Numeric parameter"));
 		val->align(FL_ALIGN_TOP_LEFT);
 		Fl_Button *o;
-		o = new Fl_Button(10, 180, 65, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(90, 180, 65, 25, _mgl("Do"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(10, 180, 65, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(90, 180, 65, 25, _("Do"));	o->callback(cb_dlg_ok,this);
 		w->end();	w->set_modal();
 	}
 	void cb_ok()
@@ -187,7 +187,7 @@ public:
 		if(dy->value())	result += 'y';
 		if(dz->value())	result += 'z';
 		if(result.empty())
-		{	fl_alert(_mgl("You need to specify direction(s)"));	return;	}
+		{	fl_alert(_("You need to specify direction(s)"));	return;	}
 		if(type->value()==0)	result += '3';
 		if(type->value()==1)	result += '5';
 		HMDT d = dynamic_cast<HMDT>(dat);
@@ -228,7 +228,7 @@ public:
 		case 12:c->Envelop(*r);	break;
 		}
 		else	err=true;
-		if(err)	fl_alert(_mgl("Operation is not supported for this type of data."));
+		if(err)	fl_alert(_("Operation is not supported for this type of data."));
 		else	hide();
 	}
 	void run(int k, mglDataA *d)
@@ -339,19 +339,19 @@ class NwdtDlg : public GeneralDlg
 public:
 	NwdtDlg()
 	{
-		Fl_Menu_Item k[]={{_mgl("Summation of")}, {_mgl("Maximum of")}, { _mgl("Minimum of")}, { _mgl("Pulse prop.")}, {0}};
-		w = new Fl_Double_Window(165, 215, _mgl("Extract data"));
-		kind = new Fl_Choice(10, 25, 145, 25, _mgl("Type of operation"));
+		Fl_Menu_Item k[]={{_("Summation of")}, {_("Maximum of")}, { _("Minimum of")}, { _("Pulse prop.")}, {0}};
+		w = new Fl_Double_Window(165, 215, _("Extract data"));
+		kind = new Fl_Choice(10, 25, 145, 25, _("Type of operation"));
 		kind->align(FL_ALIGN_TOP_LEFT);	kind->copy(k);
-		dx = new Fl_Check_Button(10, 55, 140, 25, _mgl("apply in x direction"));
-		dy = new Fl_Check_Button(10, 80, 140, 25, _mgl("apply in y direction"));
-		dz = new Fl_Check_Button(10, 105, 140, 25, _mgl("apply in z direction"));
-		name = new Fl_Input(10, 145, 145, 25, _mgl("Name for output"));
+		dx = new Fl_Check_Button(10, 55, 140, 25, _("apply in x direction"));
+		dy = new Fl_Check_Button(10, 80, 140, 25, _("apply in y direction"));
+		dz = new Fl_Check_Button(10, 105, 140, 25, _("apply in z direction"));
+		name = new Fl_Input(10, 145, 145, 25, _("Name for output"));
 		name->align(FL_ALIGN_TOP_LEFT);
 
 		Fl_Button *o;
-		o = new Fl_Button(10, 180, 65, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(90, 180, 65, 25, _mgl("Do"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(10, 180, 65, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(90, 180, 65, 25, _("Do"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
@@ -361,10 +361,10 @@ public:
 		if(dy->value())	result += 'y';
 		if(dz->value())	result += 'z';
 		if(result.empty())
-		{	fl_alert(_mgl("You need to specify direction(s)"));	return;	}
+		{	fl_alert(_("You need to specify direction(s)"));	return;	}
 		const char *s = name->value();
 		if(!s || !s[0])
-		{	fl_alert(_mgl("You need to provide output name"));	return;	}
+		{	fl_alert(_("You need to provide output name"));	return;	}
 		mglDataA *out = Parse->AddVar(s);
 
 		HMDT d = dynamic_cast<HMDT>(dat);
@@ -424,8 +424,8 @@ void pulse_cb(Fl_Widget*, void*v)
 void load_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *newfile = mgl_file_chooser(_mgl("Load Data?"),
-		_mgl("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"));
+	const char *newfile = mgl_file_chooser(_("Load Data?"),
+		_("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"));
 	if(newfile)
 	{
 		const char *ext = fl_filename_ext(newfile);
@@ -433,7 +433,7 @@ void load_dat_cb(Fl_Widget*, void*v)
 		HADT c = dynamic_cast<HADT>(e->var);
 		if(!strcmp(ext,"h5") || !strcmp(ext,"hdf"))	// this is HDF file
 		{	// TODO add dialog with choice of HDF names
-			const char *name = fl_input(_mgl("Enter name of data"),"");
+			const char *name = fl_input(_("Enter name of data"),"");
 			if(name)
 			{
 				if(d)	d->ReadHDF(newfile,name);
@@ -453,8 +453,8 @@ void load_dat_cb(Fl_Widget*, void*v)
 void save_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *newfile = mgl_file_chooser(_mgl("Save Data?"),
-		_mgl("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"), true);
+	const char *newfile = mgl_file_chooser(_("Save Data?"),
+		_("DAT Files \t*.{dat,csv}\nHDF Files \t*.{h5,hdf}"), true);
 	if(newfile)
 	{
 		const char *ext = fl_filename_ext(newfile);
@@ -470,11 +470,11 @@ void save_dat_cb(Fl_Widget*, void*v)
 void exp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *scheme, *newfile = mgl_file_chooser(_mgl("Export Data?"),
-		_mgl("PNG Files \t*.png"), true);
+	const char *scheme, *newfile = mgl_file_chooser(_("Export Data?"),
+		_("PNG Files \t*.png"), true);
 	if(newfile)
 	{	// TODO show dialog for color scheme
-		scheme = fl_input(_mgl("Enter color scheme"),MGL_DEF_SCH);
+		scheme = fl_input(_("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)	e->var->Export(newfile,scheme);
 	}
 }
@@ -482,16 +482,16 @@ void exp_dat_cb(Fl_Widget*, void*v)
 void imp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *scheme, *newfile = mgl_file_chooser(_mgl("Import Data?"),
-		_mgl("PNG Files \t*.png"));
+	const char *scheme, *newfile = mgl_file_chooser(_("Import Data?"),
+		_("PNG Files \t*.png"));
 	HMDT d = dynamic_cast<HMDT>(e->var);
 	if(d && newfile)
 	{
-		scheme = fl_input(_mgl("Enter color scheme"),MGL_DEF_SCH);
+		scheme = fl_input(_("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)
 		{	d->Import(newfile,scheme);	e->refresh();	}
 	}
-	if(!d)	fl_alert(_mgl("This operation is not supported for this kind of data."));
+	if(!d)	fl_alert(_("This operation is not supported for this kind of data."));
 }
 //-----------------------------------------------------------------------------
 void list_dat_cb(Fl_Widget*, void*v)
@@ -500,8 +500,8 @@ void list_dat_cb(Fl_Widget*, void*v)
 	HMDT d = dynamic_cast<HMDT>(e->var);
 	HADT c = dynamic_cast<HADT>(e->var);
 	if(!d && !c)
-	{	fl_message(_mgl("Incorrect type of base data"));	return;	}
-	if(e->var->GetNz()>1)	fl_message(_mgl("Only current slice will be inserted"));
+	{	fl_message(_("Incorrect type of base data"));	return;	}
+	if(e->var->GetNz()>1)	fl_message(_("Only current slice will be inserted"));
 
 	std::string list = "list " + wcstombs(e->var->s);
 	long k=e->get_slice(), nx=e->var->GetNx(), ny=e->var->GetNy();
@@ -520,7 +520,7 @@ void list_dat_cb(Fl_Widget*, void*v)
 void modify_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *eq=fl_input(_mgl("Enter formula for data modification\nHere x, y, z in range [0,1], u is data value"),0);
+	const char *eq=fl_input(_("Enter formula for data modification\nHere x, y, z in range [0,1], u is data value"),0);
 	if(eq)
 	{
 		HMDT d = dynamic_cast<HMDT>(e->var);
@@ -540,23 +540,23 @@ public:
 	{
 		Fl_Menu_Item k[]={{"x"}, {"y"}, { "z"}, {0}};
 		w = new Fl_Double_Window(135, 215);
-		wmin = new Fl_Value_Input(10, 25, 115, 25, _mgl("Minimal value (v1)"));
+		wmin = new Fl_Value_Input(10, 25, 115, 25, _("Minimal value (v1)"));
 		wmin->align(FL_ALIGN_TOP_LEFT);
-		wmin->tooltip(_mgl("Minimal value for resulting data values"));
-		wmax = new Fl_Value_Input(10, 70, 115, 25, _mgl("Maximal value (v2)"));
+		wmin->tooltip(_("Minimal value for resulting data values"));
+		wmax = new Fl_Value_Input(10, 70, 115, 25, _("Maximal value (v2)"));
 		wmax->align(FL_ALIGN_TOP_LEFT);
-		wmax->tooltip(_mgl("Maximal value for resulting data values"));
-		dir = new Fl_Choice(10, 115, 115, 25, _mgl("Direction"));
+		wmax->tooltip(_("Maximal value for resulting data values"));
+		dir = new Fl_Choice(10, 115, 115, 25, _("Direction"));
 		dir->align(FL_ALIGN_TOP_LEFT);	dir->copy(k);	dir->value(0);
-		dir->tooltip(_mgl("Direction along which data will be filled"));
-		wsym = new Fl_Check_Button(10, 115, 115, 25, _mgl("Symmetrical range"));
-		wsym->tooltip(_mgl("Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"));
+		dir->tooltip(_("Direction along which data will be filled"));
+		wsym = new Fl_Check_Button(10, 115, 115, 25, _("Symmetrical range"));
+		wsym->tooltip(_("Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"));
 
 		Fl_Button *o;
-		o = new Fl_Button(25, 150, 85, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o->tooltip(_mgl("Do nothing and close this window"));
-		o = new Fl_Return_Button(25, 180, 85, 25, _mgl("Change"));	o->callback(cb_dlg_ok,this);
-		o->tooltip(_mgl("Change data values and close this window"));
+		o = new Fl_Button(25, 150, 85, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o->tooltip(_("Do nothing and close this window"));
+		o = new Fl_Return_Button(25, 180, 85, 25, _("Change"));	o->callback(cb_dlg_ok,this);
+		o->tooltip(_("Change data values and close this window"));
 		w->set_modal();	w->end();
 	}
 	double min()	{	return wmin->value();	}
@@ -575,7 +575,7 @@ public:
 void fill_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	nrm_dlg.run(_mgl("Fill in range"));
+	nrm_dlg.run(_("Fill in range"));
 	if(nrm_dlg.ok())
 	{
 		HMDT d = dynamic_cast<HMDT>(e->var);
@@ -589,7 +589,7 @@ void fill_cb(Fl_Widget*, void*v)
 void normal_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	nrm_dlg.run(_mgl("Fill in range"));
+	nrm_dlg.run(_("Fill in range"));
 	if(nrm_dlg.ok())
 	{
 		HMDT d = dynamic_cast<HMDT>(e->var);
@@ -604,9 +604,9 @@ struct CropDlg : public GeneralDlg
 	Fl_Spinner *x1,*x2, *y1,*y2, *z1,*z2;
 	CropDlg()
 	{
-		w = new Fl_Double_Window(230, 155, _mgl("Crop data"));
-		x1 = new Fl_Spinner(45, 25, 80, 25, _mgl("Lower bound"));	x1->align(FL_ALIGN_TOP);
-		x2 = new Fl_Spinner(140, 25, 80, 25, _mgl("Upper bound"));	x2->align(FL_ALIGN_TOP);
+		w = new Fl_Double_Window(230, 155, _("Crop data"));
+		x1 = new Fl_Spinner(45, 25, 80, 25, _("Lower bound"));	x1->align(FL_ALIGN_TOP);
+		x2 = new Fl_Spinner(140, 25, 80, 25, _("Upper bound"));	x2->align(FL_ALIGN_TOP);
 		y1 = new Fl_Spinner(45, 55, 80, 25);
 		y2 = new Fl_Spinner(140, 55, 80, 25);
 		z1 = new Fl_Spinner(45, 85, 80, 25);
@@ -616,10 +616,10 @@ struct CropDlg : public GeneralDlg
 		new Fl_Box(15, 55, 25, 25, "Y");
 		new Fl_Box(15, 85, 25, 25, "Z");
 		Fl_Button *o;
-		o = new Fl_Button(45, 120, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o->tooltip(_mgl("Do nothing and close this window"));
-		o = new Fl_Return_Button(145, 120, 75, 25, _mgl("Crop"));	o->callback(cb_dlg_ok,this);
-		o->tooltip(_mgl("Change data values and close this window"));
+		o = new Fl_Button(45, 120, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o->tooltip(_("Do nothing and close this window"));
+		o = new Fl_Return_Button(145, 120, 75, 25, _("Crop"));	o->callback(cb_dlg_ok,this);
+		o->tooltip(_("Change data values and close this window"));
 		w->set_modal();	w->end();
 	}
 	void init()
@@ -667,14 +667,14 @@ public:
 	TrspDlg()
 	{
 		Fl_Menu_Item k[]={{"yxz"}, {"zxy"}, {"zyx"}, {"yzx"}, {"xzy"}, {0}};
-		w = new Fl_Double_Window(200, 90, _mgl("Transpose data"));
-		how = new Fl_Choice(10, 20, 180, 25, _mgl("New order of dimensions"));
+		w = new Fl_Double_Window(200, 90, _("Transpose data"));
+		how = new Fl_Choice(10, 20, 180, 25, _("New order of dimensions"));
 		how->align(FL_ALIGN_TOP_LEFT);	how->copy(k);	how->value(0);
 		Fl_Button *o;
-		o = new Fl_Button(30, 55, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o->tooltip(_mgl("Do nothing and close this window"));
-		o = new Fl_Return_Button(115, 55, 75, 25, _mgl("Do"));	o->callback(cb_dlg_ok,this);
-		o->tooltip(_mgl("Change data values and close this window"));
+		o = new Fl_Button(30, 55, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o->tooltip(_("Do nothing and close this window"));
+		o = new Fl_Return_Button(115, 55, 75, 25, _("Do"));	o->callback(cb_dlg_ok,this);
+		o->tooltip(_("Change data values and close this window"));
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
@@ -745,65 +745,65 @@ void change_sl_cb(Fl_Widget*w, void*v)
 }
 //-----------------------------------------------------------------------------
 Fl_Menu_Item tablemenu[60] = {
-	{ _mgl("General"), 0, 0, 0, FL_SUBMENU },
-		{ _mgl("Load from file"),0, load_dat_cb },
-		{ _mgl("Import from PNG"),0, imp_dat_cb },
-		{ _mgl("Save to file"),	0, save_dat_cb },
-		{ _mgl("Export to PNG"),	0, exp_dat_cb, 0, FL_MENU_DIVIDER },
-		{ _mgl("Insert as list"),0, list_dat_cb },
-//		{ _mgl("Plot data"),		0, plot_dat_cb },
-//		{ _mgl("Info for data"),	0, info_dat_cb },
+	{ _("General"), 0, 0, 0, FL_SUBMENU },
+		{ _("Load from file"),0, load_dat_cb },
+		{ _("Import from PNG"),0, imp_dat_cb },
+		{ _("Save to file"),	0, save_dat_cb },
+		{ _("Export to PNG"),	0, exp_dat_cb, 0, FL_MENU_DIVIDER },
+		{ _("Insert as list"),0, list_dat_cb },
+//		{ _("Plot data"),		0, plot_dat_cb },
+//		{ _("Info for data"),	0, info_dat_cb },
 		{ 0 },
-	{ _mgl("Sizes"), 0, 0, 0, FL_SUBMENU },
-		{ _mgl("Create new"),	0, new_dat_cb },
-		{ _mgl("Resize"),		0, resize_cb },
-		{ _mgl("Squeeze"),	0, squeeze_cb },
-		{ _mgl("Crop"),		0, crop_cb },
-		{ _mgl("Transpose"),	0, transp_cb },
-//		{ _mgl("Extend"),	0, extend_cb },
+	{ _("Sizes"), 0, 0, 0, FL_SUBMENU },
+		{ _("Create new"),	0, new_dat_cb },
+		{ _("Resize"),		0, resize_cb },
+		{ _("Squeeze"),	0, squeeze_cb },
+		{ _("Crop"),		0, crop_cb },
+		{ _("Transpose"),	0, transp_cb },
+//		{ _("Extend"),	0, extend_cb },
 		{ 0 },
-	{ _mgl("Fill"), 0, 0, 0, FL_SUBMENU },
-		{ _mgl("By formula"),	0, modify_cb },
-		{ _mgl("In range"),	0, fill_cb },
-		{ _mgl("Normalize"),	0, normal_cb },
+	{ _("Fill"), 0, 0, 0, FL_SUBMENU },
+		{ _("By formula"),	0, modify_cb },
+		{ _("In range"),	0, fill_cb },
+		{ _("Normalize"),	0, normal_cb },
 		{ 0 },
-	{ _mgl("Change"), 0, 0, 0, FL_SUBMENU },
-		{ _mgl("Smooth"),	0, smooth_cb },
-		{ _mgl("CumSum"),	0, cumsum_cb },
-		{ _mgl("Integrate"),	0, integr_cb },
-		{ _mgl("Difference"),0, diff_cb },
-		{ _mgl("Laplacian"),	0, diff2_cb },
-		{ _mgl("Swap parts"),0, swap_cb },
-		{ _mgl("Sin FFT"),	0, sinfft_cb },
-		{ _mgl("Cos FFT"),	0, cosfft_cb },
-		{ _mgl("Hankel"),	0, hankel_cb },
-//		{ _mgl("Wavelet"),	0, wavelet_cb },
-		{ _mgl("Mirror"),	0, mirror_cb },
-		{ _mgl("Roll"),		0, roll_cb },
-		{ _mgl("Sew phase"),	0, sew_cb },
-		{ _mgl("Envelop"),	0, envelop_cb },
+	{ _("Change"), 0, 0, 0, FL_SUBMENU },
+		{ _("Smooth"),	0, smooth_cb },
+		{ _("CumSum"),	0, cumsum_cb },
+		{ _("Integrate"),	0, integr_cb },
+		{ _("Difference"),0, diff_cb },
+		{ _("Laplacian"),	0, diff2_cb },
+		{ _("Swap parts"),0, swap_cb },
+		{ _("Sin FFT"),	0, sinfft_cb },
+		{ _("Cos FFT"),	0, cosfft_cb },
+		{ _("Hankel"),	0, hankel_cb },
+//		{ _("Wavelet"),	0, wavelet_cb },
+		{ _("Mirror"),	0, mirror_cb },
+		{ _("Roll"),		0, roll_cb },
+		{ _("Sew phase"),	0, sew_cb },
+		{ _("Envelop"),	0, envelop_cb },
 		{ 0 },
-	{ _mgl("Another"), 0, 0, 0, FL_SUBMENU },
-//		{ _mgl("Histogram of"),	0, hist_cb },
-		{ _mgl("Summation of"),	0, asum_cb },
-		{ _mgl("Maximum of"),	0, amax_cb },
-		{ _mgl("Minimum of"),	0, amin_cb },
-		{ _mgl("Pulse prop."),	0, pulse_cb },
+	{ _("Another"), 0, 0, 0, FL_SUBMENU },
+//		{ _("Histogram of"),	0, hist_cb },
+		{ _("Summation of"),	0, asum_cb },
+		{ _("Maximum of"),	0, amax_cb },
+		{ _("Minimum of"),	0, amin_cb },
+		{ _("Pulse prop."),	0, pulse_cb },
 		{ 0 },
-	{ _mgl("Operations"), 0, 0, 0, FL_SUBMENU },
-		{ _mgl("Add to"),		0, addto_cb },
-		{ _mgl("Subtract to"),0, subto_cb },
-		{ _mgl("Multiply by"),0, multo_cb },
-		{ _mgl("Divide by"),	0, divto_cb },
+	{ _("Operations"), 0, 0, 0, FL_SUBMENU },
+		{ _("Add to"),		0, addto_cb },
+		{ _("Subtract to"),0, subto_cb },
+		{ _("Multiply by"),0, multo_cb },
+		{ _("Divide by"),	0, divto_cb },
 		{ 0 },
-	{ _mgl("Navigation"), 0, 0, 0, FL_SUBMENU },
-		{ _mgl("First slice"), FL_CTRL + FL_F + 1, first_sl_cb },
-		{ _mgl("Prev slice"), FL_CTRL + FL_F + 2, prev_sl_cb },
-		{ _mgl("Next slice"), FL_CTRL + FL_F + 3, next_sl_cb },
-		{ _mgl("Last slice"),	FL_CTRL + FL_F + 4, last_sl_cb, 0, FL_MENU_DIVIDER },
-		{ _mgl("First cell"), FL_ALT + FL_F + 1, first_cl_cb },
-//		{ _mgl("Last cell"), FL_ALT + FL_F + 2, last_cl_cb },
-//		{ _mgl("Center grid"), FL_ALT + FL_F + 3, center_cl_cb },
+	{ _("Navigation"), 0, 0, 0, FL_SUBMENU },
+		{ _("First slice"), FL_CTRL + FL_F + 1, first_sl_cb },
+		{ _("Prev slice"), FL_CTRL + FL_F + 2, prev_sl_cb },
+		{ _("Next slice"), FL_CTRL + FL_F + 3, next_sl_cb },
+		{ _("Last slice"),	FL_CTRL + FL_F + 4, last_sl_cb, 0, FL_MENU_DIVIDER },
+		{ _("First cell"), FL_ALT + FL_F + 1, first_cl_cb },
+//		{ _("Last cell"), FL_ALT + FL_F + 2, last_cl_cb },
+//		{ _("Center grid"), FL_ALT + FL_F + 3, center_cl_cb },
 		{ 0 },
 	{ 0 }
 };
@@ -833,40 +833,40 @@ TableWindow::TableWindow(ScriptWindow *e)
 	Fl_Button *o;
 	Fl_Group *g = new Fl_Group(0,0,30,350);
 	o = new Fl_Button(0, 30, 25, 25);	o->image(img_new);
-	o->callback(new_dat_cb,this);		o->tooltip(_mgl("Create new data with zero filling"));
+	o->callback(new_dat_cb,this);		o->tooltip(_("Create new data with zero filling"));
 	o = new Fl_Button(0, 55, 25, 25);	o->image(img_load);
-	o->callback(load_dat_cb,this);		o->tooltip(_mgl("Load data from file"));
+	o->callback(load_dat_cb,this);		o->tooltip(_("Load data from file"));
 	o = new Fl_Button(0, 80, 25, 25);	o->image(new Fl_Pixmap(document_import_xpm));
-	o->callback(imp_dat_cb,this);		o->tooltip(_mgl("Import data from PNG file"));
+	o->callback(imp_dat_cb,this);		o->tooltip(_("Import data from PNG file"));
 	o = new Fl_Button(0, 105, 25, 25);	o->image(img_save);
-	o->callback(save_dat_cb,this);		o->tooltip(_mgl("Save data to file"));
+	o->callback(save_dat_cb,this);		o->tooltip(_("Save data to file"));
 	o = new Fl_Button(0, 130, 25, 25);	o->image(new Fl_Pixmap(document_export_xpm));
-	o->callback(exp_dat_cb,this);		o->tooltip(_mgl("Export data to PNG file"));
+	o->callback(exp_dat_cb,this);		o->tooltip(_("Export data to PNG file"));
 
 	o = new Fl_Button(0, 160, 25, 25);	o->image(img_insert);
-	o->callback(list_dat_cb,this);		o->tooltip(_mgl("Insert to script as 'list' command"));
+	o->callback(list_dat_cb,this);		o->tooltip(_("Insert to script as 'list' command"));
 	o = new Fl_Button(0, 185, 25, 25);	o->image(img_plot);
-	o->callback(plot_dat_cb,this);		o->tooltip(_mgl("Data info and preview"));
+	o->callback(plot_dat_cb,this);		o->tooltip(_("Data info and preview"));
 
 	o = new Fl_Button(0, 215, 25, 25);	o->image(new Fl_Pixmap(diff_xpm));
-	o->callback(smooth_cb,this);		o->tooltip(_mgl("Apply operator (smoothing, integration, difference ...) to data"));
+	o->callback(smooth_cb,this);		o->tooltip(_("Apply operator (smoothing, integration, difference ...) to data"));
 	o = new Fl_Button(0, 240, 25, 25);	o->image(new Fl_Pixmap(func_xpm));
-	o->callback(modify_cb,this);		o->tooltip(_mgl("Fill data by formula"));
+	o->callback(modify_cb,this);		o->tooltip(_("Fill data by formula"));
 	o = new Fl_Button(0, 265, 25, 25);	o->image(new Fl_Pixmap(size_xpm));
-	o->callback(resize_cb,this);		o->tooltip(_mgl("Resize data with smoothing"));
+	o->callback(resize_cb,this);		o->tooltip(_("Resize data with smoothing"));
 	o = new Fl_Button(0, 290, 25, 25);	o->image(new Fl_Pixmap(crop_xpm));
-	o->callback(crop_cb,this);		o->tooltip(_mgl("Crop (cut off edges) data"));
+	o->callback(crop_cb,this);		o->tooltip(_("Crop (cut off edges) data"));
 	o = new Fl_Button(0, 315, 25, 25);	o->image(new Fl_Pixmap(tran_xpm));
-	o->callback(transp_cb,this);		o->tooltip(_mgl("Transpose data dimensions"));
+	o->callback(transp_cb,this);		o->tooltip(_("Transpose data dimensions"));
 	g->end();	g->resizable(0);
 
 	g = new Fl_Group(30, 30, 200, 30);
 	o = new Fl_Button(30, 30, 25, 25);	o->image(new Fl_Pixmap(go_first_xpm));
-	o->callback(first_sl_cb,this);		o->tooltip(_mgl("Go to first slice (Ctrl-F1)"));
+	o->callback(first_sl_cb,this);		o->tooltip(_("Go to first slice (Ctrl-F1)"));
 	slice = new Fl_Counter(55, 30, 90, 25, 0);	slice->callback(change_sl_cb,this);
-	slice->lstep(10);	slice->step(1);	slice->tooltip(_mgl("Id of slice on third (z-) dimension"));
+	slice->lstep(10);	slice->step(1);	slice->tooltip(_("Id of slice on third (z-) dimension"));
 	o = new Fl_Button(147, 30, 25, 25);	o->image(new Fl_Pixmap(go_last_xpm));
-	o->callback(last_sl_cb,this);		o->tooltip(_mgl("Go to last slice (Ctrl-F4)"));
+	o->callback(last_sl_cb,this);		o->tooltip(_("Go to last slice (Ctrl-F4)"));
 	g->end();	g->resizable(0);
 
 	data = new Fl_Data_Table(30,60,ww-30,hh-60);

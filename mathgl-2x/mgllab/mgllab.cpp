@@ -116,7 +116,7 @@ void load_pref(ScriptWindow *w)
 void set_title(Fl_Window* w)
 {
 	static std::string title;
-	if (filename.empty()) title=_mgl("Untitled");
+	if (filename.empty()) title=_("Untitled");
 	else
 	{
 		size_t sep = filename.find_last_of('/');
@@ -137,7 +137,7 @@ void close_dlg_cb(Fl_Widget *, void *v)	{	((Fl_Window *)v)->hide();	}
 void fname_cb(Fl_Widget*, void *v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-	const char *file = mgl_file_chooser(_mgl("Insert File Name?"));
+	const char *file = mgl_file_chooser(_("Insert File Name?"));
 	if(file)
 	{
 		char *str = new char[strlen(file)+4];
@@ -161,8 +161,8 @@ void open_cb(Fl_Widget*, void *v)
 {
 	if (!check_save()) return;
 	char *lastname=0;
-	const char *newfile = mgl_file_chooser(_mgl("Open File?"),
-		_mgl("MGL files \t*.mgl\nDAT files \t*.{dat,csv}"));
+	const char *newfile = mgl_file_chooser(_("Open File?"),
+		_("MGL files \t*.mgl\nDAT files \t*.{dat,csv}"));
 	if(lastname)	free(lastname);
 	if(newfile != NULL)
 	{
@@ -203,7 +203,7 @@ void saveas_cb(Fl_Widget*, void *v)
 	FILE *fp=0;
 	while(1)
 	{
-		newfile = mgl_file_chooser(_mgl("Save File As?"), _mgl("MGL files \t*.mgl"), true);
+		newfile = mgl_file_chooser(_("Save File As?"), _("MGL files \t*.mgl"), true);
 		if(!newfile || !newfile[0])	break;
 		if(!strchr(newfile,'.'))
 		{
@@ -216,7 +216,7 @@ void saveas_cb(Fl_Widget*, void *v)
 		if(fp)
 		{
 			fclose(fp);
-			if(fl_choice(_mgl("File is exesist. Overwrite it?"),0,_mgl("No"),_mgl(" Yes "))==2)
+			if(fl_choice(_("File is exesist. Overwrite it?"),0,_("No"),_(" Yes "))==2)
 				break;
 		}
 		else	break;
@@ -264,63 +264,63 @@ void print_plot_cb(Fl_Widget*,void *v)
 }
 //-----------------------------------------------------------------------------
 Fl_Menu_Item menuitems[] = {
-	{_mgl("File"), 0, 0, 0, FL_SUBMENU},
-		{_mgl("New script"), 0, new_cb},
-		{_mgl("Open file ..."), FL_CTRL+'o', open_cb},
-		{_mgl("Save file"), FL_CTRL+'s', save_cb},
-		{_mgl("Save as ..."), 0, saveas_cb, 0, FL_MENU_DIVIDER},
-		{_mgl("Print plot"), 0, print_plot_cb, 0, FL_MENU_DIVIDER},
-		{_mgl("Recent files"), 0, 0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
-			{_mgl("1."), 0, lastfile1_cb},
-			{_mgl("2."), 0, lastfile2_cb},
-			{_mgl("3."), 0, lastfile3_cb},
-			{_mgl("4."), 0, lastfile4_cb},
-			{_mgl("5."), 0, lastfile5_cb},
+	{_("File"), 0, 0, 0, FL_SUBMENU},
+		{_("New script"), 0, new_cb},
+		{_("Open file ..."), FL_CTRL+'o', open_cb},
+		{_("Save file"), FL_CTRL+'s', save_cb},
+		{_("Save as ..."), 0, saveas_cb, 0, FL_MENU_DIVIDER},
+		{_("Print plot"), 0, print_plot_cb, 0, FL_MENU_DIVIDER},
+		{_("Recent files"), 0, 0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
+			{_("1."), 0, lastfile1_cb},
+			{_("2."), 0, lastfile2_cb},
+			{_("3."), 0, lastfile3_cb},
+			{_("4."), 0, lastfile4_cb},
+			{_("5."), 0, lastfile5_cb},
 			{0},
-		{_mgl("Exit"), 0, quit_cb},
+		{_("Exit"), 0, quit_cb},
 		{0},
-	{_mgl("Edit"), 0, 0, 0, FL_SUBMENU},
-		{_mgl("Undo"), FL_CTRL+'z', undo_cb},
-		{_mgl("Cut text"), FL_CTRL+'x', cut_cb},
-		{_mgl("Copy text"), FL_CTRL+'c', copy_cb},
-		{_mgl("Paste text"), FL_CTRL+'v', paste_cb},
-		{_mgl("Select all"), FL_CTRL+'a', select_all_cb, 0, FL_MENU_DIVIDER},
-		{_mgl("Hide lines"), FL_CTRL+'d', hide_cb},
-		{_mgl("Show lines"), FL_CTRL+FL_SHIFT+'d', unhide_cb, 0, FL_MENU_DIVIDER},
-		{_mgl("Find|Replace"), FL_CTRL+'f', find_dlg_cb},
-		{_mgl("Find next"), FL_F+3, find_next_cb, 0, FL_MENU_DIVIDER},
-		{_mgl("Insert"), 0, 0, 0, FL_SUBMENU},
-			{_mgl("File path"), FL_META+'p', ins_path_cb},
-			{_mgl("Folder path"), 0, ins_fname_cb},
-			{_mgl("Command"), FL_META+'c', newcmd_dlg_cb},
-			{_mgl("Inplot"), FL_META+'i', inplot_dlg_cb},
-			{_mgl("Fitted formula"), FL_META+'f', ins_fits_cb},
-			{_mgl("Manual primitives"), 0, ins_prim_cb},
-			{_mgl("Plot style"), 0, style_dlg_cb},
-			{_mgl("Option(s)"), FL_META+'o', option_dlg_cb},
+	{_("Edit"), 0, 0, 0, FL_SUBMENU},
+		{_("Undo"), FL_CTRL+'z', undo_cb},
+		{_("Cut text"), FL_CTRL+'x', cut_cb},
+		{_("Copy text"), FL_CTRL+'c', copy_cb},
+		{_("Paste text"), FL_CTRL+'v', paste_cb},
+		{_("Select all"), FL_CTRL+'a', select_all_cb, 0, FL_MENU_DIVIDER},
+		{_("Hide lines"), FL_CTRL+'d', hide_cb},
+		{_("Show lines"), FL_CTRL+FL_SHIFT+'d', unhide_cb, 0, FL_MENU_DIVIDER},
+		{_("Find|Replace"), FL_CTRL+'f', find_dlg_cb},
+		{_("Find next"), FL_F+3, find_next_cb, 0, FL_MENU_DIVIDER},
+		{_("Insert"), 0, 0, 0, FL_SUBMENU},
+			{_("File path"), FL_META+'p', ins_path_cb},
+			{_("Folder path"), 0, ins_fname_cb},
+			{_("Command"), FL_META+'c', newcmd_dlg_cb},
+			{_("Inplot"), FL_META+'i', inplot_dlg_cb},
+			{_("Fitted formula"), FL_META+'f', ins_fits_cb},
+			{_("Manual primitives"), 0, ins_prim_cb},
+			{_("Plot style"), 0, style_dlg_cb},
+			{_("Option(s)"), FL_META+'o', option_dlg_cb},
 			{0},
-	// TODO{_mgl("Selection"), 0,  0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
-		// TODO{_mgl("Hide"), 0,  0},
-		// TODO{_mgl("Delete"), 0,  0},
-		// TODO{_mgl("Move up"), 0,  0},
-		// TODO{_mgl("Move down"), 0,  0},
-		// TODO{_mgl("Show hidden"), FL_F+8,  0, 0, FL_MENU_TOGGLE},
+	// TODO{_("Selection"), 0,  0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
+		// TODO{_("Hide"), 0,  0},
+		// TODO{_("Delete"), 0,  0},
+		// TODO{_("Move up"), 0,  0},
+		// TODO{_("Move down"), 0,  0},
+		// TODO{_("Show hidden"), FL_F+8,  0, 0, FL_MENU_TOGGLE},
 		{0},
-	{_mgl("Graphics"), 0, 0, 0, FL_SUBMENU},
+	{_("Graphics"), 0, 0, 0, FL_SUBMENU},
 		{0},
-	{_mgl("Setup"), 0, 0, 0, FL_SUBMENU},
-		{_mgl("Properties"), 0, prop_dlg_cb},
-		{_mgl("Set arguments"), 0, args_dlg_cb},
-		{_mgl("Setup animation"), 0, animate_dlg_cb},
-		{_mgl("Plot setup"), FL_META+'g', setup_dlg_cb, 0, FL_MENU_DIVIDER},
-		{_mgl("Calculator"), FL_F+4, calc_dlg_cb},
-		{_mgl("Messages"), FL_F+2, message_cb},
+	{_("Setup"), 0, 0, 0, FL_SUBMENU},
+		{_("Properties"), 0, prop_dlg_cb},
+		{_("Set arguments"), 0, args_dlg_cb},
+		{_("Setup animation"), 0, animate_dlg_cb},
+		{_("Plot setup"), FL_META+'g', setup_dlg_cb, 0, FL_MENU_DIVIDER},
+		{_("Calculator"), FL_F+4, calc_dlg_cb},
+		{_("Messages"), FL_F+2, message_cb},
 		{0},
-	{_mgl("Help"), 0, 0, 0, FL_SUBMENU},
-		{_mgl("Help"), FL_F+1, help_cb},
-		{_mgl("Hints"), 0, hint_dlg_cb},
-		{_mgl("About"), 0, about_cb},
-		{_mgl("Icon list"), 0, iconlist_cb},	// TODO remove before release
+	{_("Help"), 0, 0, 0, FL_SUBMENU},
+		{_("Help"), FL_F+1, help_cb},
+		{_("Hints"), 0, hint_dlg_cb},
+		{_("About"), 0, about_cb},
+		{_("Icon list"), 0, iconlist_cb},	// TODO remove before release
 		{0},
 	{0}
 };
@@ -332,36 +332,36 @@ extern Fl_RGB_Image img_udav;
 ScriptWindow *new_view()
 {
 	Fl_Group *gg;
-	ScriptWindow *w = new ScriptWindow(930, 510, _mgl("Untitled - mgllab"));
+	ScriptWindow *w = new ScriptWindow(930, 510, _("Untitled - mgllab"));
 	w->begin();
 	w->menu = new Fl_Menu_Bar(0, 0, 930, 30);
 	w->menu->copy(menuitems, w);
-	w->label(_mgl("Untitled - mgllab"));
+	w->label(_("Untitled - mgllab"));
 
 	Fl_Tile *t = new Fl_Tile(0,30,930,455);
 	add_editor(w);
 
 	w->rtab = new Fl_Tabs(300,30,630,455,0);
-	w->gplot = new Fl_Group(300,30,630,430,_mgl("Canvas"));
-	w->graph = new Fl_MGLView(300,30,630,430,_mgl("Canvas"));
+	w->gplot = new Fl_Group(300,30,630,430,_("Canvas"));
+	w->graph = new Fl_MGLView(300,30,630,430,_("Canvas"));
 	w->gplot->resizable(w->graph);	w->gplot->end();	w->graph->adjust();
-	w->ghelp = new Fl_Group(300,30,630,430,_mgl("Help"));
+	w->ghelp = new Fl_Group(300,30,630,430,_("Help"));
 	add_help(w);	w->ghelp->end();	w->ghelp->hide();
-	gg = new Fl_Group(300,30,630,430,_mgl("Memory"));	gg->hide();
+	gg = new Fl_Group(300,30,630,430,_("Memory"));	gg->hide();
 	add_mem(w);		gg->end();
 	w->rtab->end();
 
 //	w->status = new Fl_Output(0,485,930,25);
 	w->status = new Fl_Box(0,485,930,25);	w->status->box(FL_ENGRAVED_BOX);
 	w->status->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	w->set_status(_mgl("Ready"));
+	w->set_status(_("Ready"));
 	w->draw = new Fl_MGL(w->graph);	w->draw->e = w;
 	mgl_makemenu_fltk(w->menu, w->graph);
-	w->menu->add(_mgl("Graphics/Primitive"), FL_CTRL+'m', prim_dlg_cb, w);
-	w->menu->add(_mgl("Graphics/Animation/Setup animation"), 0, animate_dlg_cb, w);
-	int index = w->menu->find_index(_mgl("Graphics/Pause calc"));
+	w->menu->add(_("Graphics/Primitive"), FL_CTRL+'m', prim_dlg_cb, w);
+	w->menu->add(_("Graphics/Animation/Setup animation"), 0, animate_dlg_cb, w);
+	int index = w->menu->find_index(_("Graphics/Pause calc"));
 	if(index>=0)	w->menu->remove(index);
-//	m->add(_mgl("Graphics/Pause calc"), "^t", mgl_pause_cb, w, FL_MENU_TOGGLE);
+//	m->add(_("Graphics/Pause calc"), "^t", mgl_pause_cb, w, FL_MENU_TOGGLE);
 
 
 	t->end();	w->end();	w->resizable(t);
@@ -444,28 +444,28 @@ public:
 	PropDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(340, 365, _mgl("Properties"));
+		w = new Fl_Double_Window(340, 365, _("Properties"));
 		w->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
-		fkind = new Fl_Choice(75, 10, 90, 25, _mgl("Font kind"));
+		fkind = new Fl_Choice(75, 10, 90, 25, _("Font kind"));
 		fkind->add("Helvetica");	fkind->add("Courier");	fkind->add("Times");
-		fsize = new Fl_Spinner(245, 10, 90, 25, _mgl("Font size"));
-		help_path = new Fl_File_Input(5, 55, 305, 35, _mgl("Path for help files"));
+		fsize = new Fl_Spinner(245, 10, 90, 25, _("Font size"));
+		help_path = new Fl_File_Input(5, 55, 305, 35, _("Path for help files"));
 		help_path->align(FL_ALIGN_TOP_LEFT);
-		o = new Fl_Button(310, 65, 25, 25, _mgl("..."));	o->callback(cb_filech, 0);
-		font_path = new Fl_File_Input(5, 110, 305, 35, _mgl("Path for MathGL font (without extension)"));
+		o = new Fl_Button(310, 65, 25, 25, _("..."));	o->callback(cb_filech, 0);
+		font_path = new Fl_File_Input(5, 110, 305, 35, _("Path for MathGL font (without extension)"));
 		font_path->align(FL_ALIGN_TOP_LEFT);
-		o = new Fl_Button(310, 120, 25, 25, _mgl("..."));	o->callback(cb_filech, (void *)1);
-		auto_exec_w = new Fl_Check_Button(5, 145, 330, 25, _mgl("Execute script after loading"));
-		exec_save_w = new Fl_Check_Button(5, 170, 330, 25, _mgl("Save file before redrawing"));
-		complete_w = new Fl_Check_Button(5, 195, 330, 25, _mgl("Enable keywords completion"));
-		highlight_w = new Fl_Check_Button(5, 220, 330, 25, _mgl("Highlight current object(s)"));
-		mouse_zoom_w = new Fl_Check_Button(5, 245, 330, 25, _mgl("Enable mouse wheel for zooming"));
-		lang_w = new Fl_Choice(160, 275, 175, 25, _mgl("Language for mgllab"));
+		o = new Fl_Button(310, 120, 25, 25, _("..."));	o->callback(cb_filech, (void *)1);
+		auto_exec_w = new Fl_Check_Button(5, 145, 330, 25, _("Execute script after loading"));
+		exec_save_w = new Fl_Check_Button(5, 170, 330, 25, _("Save file before redrawing"));
+		complete_w = new Fl_Check_Button(5, 195, 330, 25, _("Enable keywords completion"));
+		highlight_w = new Fl_Check_Button(5, 220, 330, 25, _("Highlight current object(s)"));
+		mouse_zoom_w = new Fl_Check_Button(5, 245, 330, 25, _("Enable mouse wheel for zooming"));
+		lang_w = new Fl_Choice(160, 275, 175, 25, _("Language for mgllab"));
 		lang_w->add("C.UTF8");	lang_w->add("ru_RU.utf8");	lang_w->add("ru_RU.cp1251");
-		scheme_w = new Fl_Choice(160, 305, 175, 25, _mgl("Widget scheme"));
+		scheme_w = new Fl_Choice(160, 305, 175, 25, _("Widget scheme"));
 		scheme_w->add("base");	scheme_w->add("gtk+");	scheme_w->add("plastic");	scheme_w->add("gleam");
-		o = new Fl_Button(85, 340, 75, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(180, 340, 75, 25, _mgl("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(85, 340, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(180, 340, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void init()
@@ -504,7 +504,7 @@ void cb_filech(Fl_Widget*, void *v)
 {
 	if(v)
 	{
-		const char *s = mgl_file_chooser(_mgl("Font file name"), "MGL font files \t*.vfm*");
+		const char *s = mgl_file_chooser(_("Font file name"), "MGL font files \t*.vfm*");
 		if(s)
 		{	std::string ss = s;
 			size_t pos = ss.find(".vfm");
@@ -513,7 +513,7 @@ void cb_filech(Fl_Widget*, void *v)
 	}
 	else
 	{
-		const char *s = mgl_dir_chooser(_mgl("Folder for help files"), prop_dlg.help_path->value());
+		const char *s = mgl_dir_chooser(_("Folder for help files"), prop_dlg.help_path->value());
 		if(s)	prop_dlg.help_path->value(s);
 	}
 }
@@ -537,42 +537,42 @@ public:
 	CalcDlg()
 	{
 		Fl_Button *o;	Fl_Group* g, *gg;
-		w = new Fl_Double_Window(275, 275, _mgl("Calculator"));
+		w = new Fl_Double_Window(275, 275, _("Calculator"));
 		g = new Fl_Group(5, 5, 265, 25);
 		edit = new Fl_Input(5, 5, 240, 25);	//edit->callback(cb_calc_edit);
 		o = new Fl_Return_Button(245, 5, 25, 25, "@>");
 		o->callback(cb_calc_edit);	g->end();	g->resizable(edit);
 		g = new Fl_Group(5, 35, 265, 25);
-		output = new Fl_Output(55, 35, 120, 25, _mgl("Result"));
-		o = new Fl_Button(180, 35, 90, 25, _mgl("@-> to script"));
+		output = new Fl_Output(55, 35, 120, 25, _("Result"));
+		o = new Fl_Button(180, 35, 90, 25, _("@-> to script"));
 		o->callback(cb_calc_ins);	g->end();	g->resizable(output);
-		prev = new Fl_Select_Browser(5, 80, 265, 70, _mgl("Previous expressions"));
+		prev = new Fl_Select_Browser(5, 80, 265, 70, _("Previous expressions"));
 		prev->align(FL_ALIGN_TOP_LEFT);	prev->callback(cb_calc_prev);
 		static int widths[] = { 200, 65, 0 };  // widths for each column
 		prev->column_widths(widths);	prev->column_char('\t');
 		gg = new Fl_Group(5, 155, 265, 115);
-			o = new Fl_Button(5, 155, 25, 25, _mgl("7"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(35, 155, 25, 25, _mgl("8"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(65, 155, 25, 25, _mgl("9"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(95, 155, 25, 25, _mgl("+"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(125, 155, 25, 25, _mgl("pi"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(5, 185, 25, 25, _mgl("4"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(35, 185, 25, 25, _mgl("5"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(65, 185, 25, 25, _mgl("6"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(95, 185, 25, 25, _mgl("-"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(125, 185, 25, 25, _mgl("^"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(5, 215, 25, 25, _mgl("1"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(35, 215, 25, 25, _mgl("2"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(65, 215, 25, 25, _mgl("3"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(95, 215, 25, 25, _mgl("*"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(125, 215, 25, 25, _mgl("("));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(5, 245, 25, 25, _mgl("0"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(35, 245, 25, 25, _mgl("."));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(65, 245, 25, 25, _mgl("E"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(95, 245, 25, 25, _mgl("/"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(125, 245, 25, 25, _mgl(")"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 155, 25, 25, _("7"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 155, 25, 25, _("8"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 155, 25, 25, _("9"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 155, 25, 25, _("+"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 155, 25, 25, _("pi"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 185, 25, 25, _("4"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 185, 25, 25, _("5"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 185, 25, 25, _("6"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 185, 25, 25, _("-"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 185, 25, 25, _("^"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 215, 25, 25, _("1"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 215, 25, 25, _("2"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 215, 25, 25, _("3"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 215, 25, 25, _("*"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 215, 25, 25, _("("));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 245, 25, 25, _("0"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 245, 25, 25, _("."));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 245, 25, 25, _("E"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 245, 25, 25, _("/"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 245, 25, 25, _(")"));	o->callback(cb_calc_key,o);
 
-			g = new Fl_Group(155, 175, 115, 95, _mgl("Function"));
+			g = new Fl_Group(155, 175, 115, 95, _("Function"));
 			kind = new Fl_Choice(160, 179, 105, 25);	kind->callback(cb_calc_kind);
 			kind->add("Basic");	kind->add("Exp and log");	kind->add("Trigonometric");
 			kind->add("Hyperbolic");	kind->add("Bessel");	kind->add("Elliptic");
@@ -580,7 +580,7 @@ public:
 			kind->add("Exp-integrals"); kind->add("Special");	kind->value(0);
 
 			func = new Fl_Choice(160, 209, 105, 25);
-			o = new Fl_Button(160, 239, 105, 25, _mgl("Put function"));	o->callback(cb_calc_func);
+			o = new Fl_Button(160, 239, 105, 25, _("Put function"));	o->callback(cb_calc_func);
 			g->end();	g->box(FL_DOWN_BOX);
 		gg->end();	gg->resizable(g);
 

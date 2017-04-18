@@ -1,4 +1,3 @@
-add_definitions(-DMGL_SRC)
 include_directories( ${MathGL2_SOURCE_DIR}/include ${MathGL2_BINARY_DIR}/include)
 set(hdrF ../include/mgl2/font.h ../include/mgl2/define.h ${MathGL2_BINARY_DIR}/include/mgl2/config.h)
 add_executable(make_bin make_bin.cpp ../src/font.cpp ${hdrF})

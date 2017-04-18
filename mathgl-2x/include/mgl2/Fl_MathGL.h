@@ -24,13 +24,6 @@
 # define FL_DLL
 #endif
 
-#ifdef USE_GETTEXT
-	#include <libintl.h>
-	#define _mgl(x)	gettext(x)
-#else
-	#define _mgl(x)	(x)
-#endif
-
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Scroll.H>

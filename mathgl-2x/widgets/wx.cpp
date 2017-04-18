@@ -25,6 +25,8 @@
 #include <wx/menu.h>
 #include <wx/scrolwin.h>
 
+#undef _
+
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/wx.h"
 //-----------------------------------------------------------------------------

@@ -59,10 +59,10 @@ int main(int argc, char **argv)
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
 		else if(ch=='h' || (ch==-1 && optind>=argc))
 		{
-			printf("mglview show plot from MGL script or MGLD file.\nCurrent version is 2.%g\n",MGL_VER2);
-			printf("Usage:\tmglview [parameter(s)] scriptfile\n");
+			printf(_("mglview show plot from MGL script or MGLD file.\nCurrent version is 2.%g\n"),MGL_VER2);
+			printf(_("Usage:\tmglview [parameter(s)] scriptfile\n"));
 			printf(
-				"\t-1 str       set str as argument $1 for script\n"
+				_("\t-1 str       set str as argument $1 for script\n"
 				"\t...          ...\n"
 				"\t-9 str       set str as argument $9 for script\n"
 				"\t-g val       set gray-scale mode (val=0|1)\n"
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 				"\t-s opt       set MGL script for setting up the plot\n"
 				"\t-L loc       set locale to loc\n"
 				"\t-            get script from standard input\n"
-				"\t-h           print this message\n" );
+				"\t-h           print this message\n") );
 			return 0;
 		}
 		else if(ch==-1 && optind<argc)

@@ -72,6 +72,15 @@
 #endif
 
 #ifdef MGL_SRC
+
+#ifdef _MSC_VER
+	#define _(x)	(x)
+#else
+	#include <libintl.h>
+	#define _(x)	gettext(x)
+#endif
+
+
 #if MGL_HAVE_ZLIB
 #include <zlib.h>
 #ifndef Z_BEST_COMPRESSION

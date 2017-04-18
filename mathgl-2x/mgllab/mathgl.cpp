@@ -140,30 +140,30 @@ public:
 	}
 	ArgsDlg()
 	{
-		w = new Fl_Double_Window(290, 320, _mgl("Set script arguments"));
-		arg[1] = new Fl_Input(5, 20, 135, 30, _mgl("String for $1"));
+		w = new Fl_Double_Window(290, 320, _("Set script arguments"));
+		arg[1] = new Fl_Input(5, 20, 135, 30, _("String for $1"));
 		arg[1]->align(FL_ALIGN_TOP_LEFT);
-		arg[2] = new Fl_Input(150, 20, 135, 30, _mgl("String for $2"));
+		arg[2] = new Fl_Input(150, 20, 135, 30, _("String for $2"));
 		arg[2]->align(FL_ALIGN_TOP_LEFT);
-		arg[3] = new Fl_Input(5, 75, 135, 30, _mgl("String for $3"));
+		arg[3] = new Fl_Input(5, 75, 135, 30, _("String for $3"));
 		arg[3]->align(FL_ALIGN_TOP_LEFT);
-		arg[4] = new Fl_Input(150, 75, 135, 30, _mgl("String for $4"));
+		arg[4] = new Fl_Input(150, 75, 135, 30, _("String for $4"));
 		arg[4]->align(FL_ALIGN_TOP_LEFT);
-		arg[5] = new Fl_Input(5, 130, 135, 30, _mgl("String for $5"));
+		arg[5] = new Fl_Input(5, 130, 135, 30, _("String for $5"));
 		arg[5]->align(FL_ALIGN_TOP_LEFT);
-		arg[6] = new Fl_Input(150, 130, 135, 30, _mgl("String for $6"));
+		arg[6] = new Fl_Input(150, 130, 135, 30, _("String for $6"));
 		arg[6]->align(FL_ALIGN_TOP_LEFT);
-		arg[7] = new Fl_Input(5, 185, 135, 30, _mgl("String for $7"));
+		arg[7] = new Fl_Input(5, 185, 135, 30, _("String for $7"));
 		arg[7]->align(FL_ALIGN_TOP_LEFT);
-		arg[8] = new Fl_Input(150, 185, 135, 30, _mgl("String for $8"));
+		arg[8] = new Fl_Input(150, 185, 135, 30, _("String for $8"));
 		arg[8]->align(FL_ALIGN_TOP_LEFT);
-		arg[9] = new Fl_Input(5, 240, 135, 30, _mgl("String for $9"));
+		arg[9] = new Fl_Input(5, 240, 135, 30, _("String for $9"));
 		arg[9]->align(FL_ALIGN_TOP_LEFT);
-		arg[0] = new Fl_Input(150, 240, 135, 30, _mgl("String for $0"));
+		arg[0] = new Fl_Input(150, 240, 135, 30, _("String for $0"));
 		arg[0]->align(FL_ALIGN_TOP_LEFT);
-		Fl_Button* o = new Fl_Button(60, 290, 75, 25, _mgl("Cancel"));
+		Fl_Button* o = new Fl_Button(60, 290, 75, 25, _("Cancel"));
 		o->callback(cb_dlg_cancel, this);
-		o = new Fl_Return_Button(155, 290, 75, 25, _mgl("Set"));
+		o = new Fl_Return_Button(155, 290, 75, 25, _("Set"));
 		o->callback(cb_dlg_ok, this);
 		w->set_modal();	w->end();
 	}
@@ -180,26 +180,26 @@ public:
 	Fl_MGL* dr;
 	AnimateDlg()
 	{
-		w = new Fl_Double_Window(335, 350, _mgl("Animation"));
-		new Fl_Box(10, 5, 315, 25, _mgl("Redraw picture for $0 equal to:"));
-		rt = new Fl_Round_Button(10, 30, 200, 25, _mgl("strings in lines below"));
+		w = new Fl_Double_Window(335, 350, _("Animation"));
+		new Fl_Box(10, 5, 315, 25, _("Redraw picture for $0 equal to:"));
+		rt = new Fl_Round_Button(10, 30, 200, 25, _("strings in lines below"));
 		rt->callback(cb_dlg_only, rt);
-		rv = new Fl_Round_Button(220, 30, 105, 25, _mgl("values"));
+		rv = new Fl_Round_Button(220, 30, 105, 25, _("values"));
 		rv->callback(cb_dlg_only, rv);
 		txt = new Fl_Multiline_Input(10, 60, 200, 250);
-		x0 = new Fl_Float_Input(220, 80, 105, 25, _mgl("from"));			x0->align(FL_ALIGN_TOP_LEFT);
-		x1 = new Fl_Float_Input(220, 130, 105, 25, _mgl("to"));			x1->align(FL_ALIGN_TOP_LEFT);
-		dx = new Fl_Float_Input(220, 180, 105, 25, _mgl("with step"));	dx->align(FL_ALIGN_TOP_LEFT);
+		x0 = new Fl_Float_Input(220, 80, 105, 25, _("from"));			x0->align(FL_ALIGN_TOP_LEFT);
+		x1 = new Fl_Float_Input(220, 130, 105, 25, _("to"));			x1->align(FL_ALIGN_TOP_LEFT);
+		dx = new Fl_Float_Input(220, 180, 105, 25, _("with step"));	dx->align(FL_ALIGN_TOP_LEFT);
 
 		Fl_Button *o;
-		o = new Fl_Button(230, 215, 80, 25, _mgl("Cancel"));	o->callback(cb_dlg_cancel, this);
-		o = new Fl_Return_Button(230, 250, 80, 25, _mgl("OK"));o->callback(cb_dlg_ok, this);
-		save = new Fl_Check_Button(220, 285, 105, 25, _mgl("save slides"));
-		save->tooltip(_mgl("Keep slides in memory (faster animation but require more memory)"));
+		o = new Fl_Button(230, 215, 80, 25, _("Cancel"));	o->callback(cb_dlg_cancel, this);
+		o = new Fl_Return_Button(230, 250, 80, 25, _("OK"));o->callback(cb_dlg_ok, this);
+		save = new Fl_Check_Button(220, 285, 105, 25, _("save slides"));
+		save->tooltip(_("Keep slides in memory (faster animation but require more memory)"));
 		save->down_box(FL_DOWN_BOX);	save->deactivate();
 
-		o = new Fl_Button(10, 315, 100, 25, _mgl("Put to script"));	o->callback(cb_anim_put,w);
-		dt = new Fl_Float_Input(220, 315, 105, 25, _mgl("Delay (in sec)"));//	dx->align(FL_ALIGN_TOP_LEFT);
+		o = new Fl_Button(10, 315, 100, 25, _("Put to script"));	o->callback(cb_anim_put,w);
+		dt = new Fl_Float_Input(220, 315, 105, 25, _("Delay (in sec)"));//	dx->align(FL_ALIGN_TOP_LEFT);
 		w->end();
 	}
 	void init()
@@ -242,7 +242,7 @@ public:
 					}
 				}
 			}
-			else	fl_alert(_mgl("Incompatible loop parameters!"));
+			else	fl_alert(_("Incompatible loop parameters!"));
 		}
 		else if(rt->value())
 		{
@@ -257,7 +257,7 @@ public:
 				s=j?j+1:NULL;
 			}
 		}
-		else	fl_message(_mgl("No selection. So nothing to do"));
+		else	fl_message(_("No selection. So nothing to do"));
 
 	}
 	void into_script()
@@ -418,7 +418,7 @@ public:
 	MessDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(500, 195, _mgl("MGL messages"));
+		w = new Fl_Double_Window(500, 195, _("MGL messages"));
 		mess = new Fl_Text_Display(30, 5, 460, 190);
 		o = new Fl_Return_Button(5,5,25,25);	o->callback(cb_mess_jump,e);
 		o = new Fl_Button(5,35,25,25);	o->callback(cb_mess_copy,e);	o->image(img_copy);

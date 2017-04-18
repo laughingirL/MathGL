@@ -46,29 +46,29 @@ QString getOpenDataFile(QWidget *w, QString filename)
 //-----------------------------------------------------------------------------
 DataOpenDialog::DataOpenDialog(QWidget *parent) : QDialog(parent)
 {
-	setWindowTitle(tr("UDAV - Open data file"));
+	setWindowTitle(_("UDAV - Open data file"));
 	QHBoxLayout *a;
 	QLabel *l;
 	QPushButton *b;
 	QVBoxLayout *o=new QVBoxLayout(this);
 
 	a = new QHBoxLayout;	o->addLayout(a);
-	l = new QLabel(tr("Data name"));	a->addWidget(l);
+	l = new QLabel(_("Data name"));	a->addWidget(l);
 	char buf[32];	snprintf(buf,32,"mgl_%d",numDataOpened);	buf[31]=0;
 	name = new QLineEdit(buf,this);		a->addWidget(name);
 
-	rA = new QRadioButton(tr("Auto detect data sizes"), this);
+	rA = new QRadioButton(_("Auto detect data sizes"), this);
 	rA->setChecked(true);	o->addWidget(rA);
-	rM = new QRadioButton(tr("Set data sizes manually"), this);
+	rM = new QRadioButton(_("Set data sizes manually"), this);
 	o->addWidget(rM);	a = new QHBoxLayout;	o->addLayout(a);
-	l = new QLabel(tr("Nx"));	a->addWidget(l);
+	l = new QLabel(_("Nx"));	a->addWidget(l);
 	nx = new QLineEdit("1",this);	a->addWidget(nx);
-	l = new QLabel(tr("Ny"));	a->addWidget(l);
+	l = new QLabel(_("Ny"));	a->addWidget(l);
 	ny = new QLineEdit("1",this);	a->addWidget(ny);
-	l = new QLabel(tr("Nz"));	a->addWidget(l);
+	l = new QLabel(_("Nz"));	a->addWidget(l);
 	nz = new QLineEdit("1",this);	a->addWidget(nz);
-	r2 = new QRadioButton(tr("Matrix with sizes from file"), this);	o->addWidget(r2);
-	r3 = new QRadioButton(tr("3D data with sizes from file"), this);o->addWidget(r3);
+	r2 = new QRadioButton(_("Matrix with sizes from file"), this);	o->addWidget(r2);
+	r3 = new QRadioButton(_("3D data with sizes from file"), this);o->addWidget(r3);
 
 
 	QSettings settings("udav","UDAV");
@@ -79,17 +79,17 @@ DataOpenDialog::DataOpenDialog(QWidget *parent) : QDialog(parent)
 	settings.endGroup();
 
 	a = new QHBoxLayout;		o->addLayout(a);
-	l = new QLabel(tr("Template"));	a->addWidget(l,0);
+	l = new QLabel(_("Template"));	a->addWidget(l,0);
 	scr = new QComboBox(this);		a->addWidget(scr,1);
 	scr->setEditable(true);			scr->lineEdit()->setText("");
-	scr->addItem(tr("default"));	scr->addItems(dataScr);
+	scr->addItem(_("default"));	scr->addItems(dataScr);
 	b = new QPushButton("...", this);	a->addWidget(b,0);
 	connect(b, SIGNAL(clicked()),this, SLOT(selectScr()));
 
 	a = new QHBoxLayout;	o->addLayout(a);	a->addStretch(1);
-	b = new QPushButton(tr("Cancel"),this);	a->addWidget(b);
+	b = new QPushButton(_("Cancel"),this);	a->addWidget(b);
 	connect(b,SIGNAL(clicked()),this,SLOT(reject()));
-	b = new QPushButton(tr("OK"), this);	a->addWidget(b);
+	b = new QPushButton(_("OK"), this);	a->addWidget(b);
 	connect(b, SIGNAL(clicked()),this, SLOT(prepareResult()));
 	b->setDefault(true);
 }
@@ -98,8 +98,8 @@ DataOpenDialog::~DataOpenDialog(){}
 //-----------------------------------------------------------------------------
 void DataOpenDialog::selectScr()
 {
-	QString str = QFileDialog::getOpenFileName(this, tr("UDAV - Insert filename"),
-					scr->lineEdit()->text(), tr("MGL files (*.mgl)"));
+	QString str = QFileDialog::getOpenFileName(this, _("UDAV - Insert filename"),
+					scr->lineEdit()->text(), _("MGL files (*.mgl)"));
 	if(!str.isEmpty())
 	{
 		scr->lineEdit()->setText(str);
@@ -141,7 +141,7 @@ void DataOpenDialog::prepareResult()
 		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toLocal8Bit().constData(),3);	setlocale(LC_NUMERIC, "");
 		code=QString("#readmat %1 '%2' 3\n").arg(data).arg(file);	dd=2;
 	}
-	if(scr->lineEdit()->text().isEmpty() || scr->lineEdit()->text()==tr("default"))
+	if(scr->lineEdit()->text().isEmpty() || scr->lineEdit()->text()==_("default"))
 	{
 		if(v->nz>1 || dd==2)
 			code+=QString("rotate 40 60\ncrange %1:box\nsurf3 %1\n").arg(data);
@@ -174,6 +174,6 @@ void DataOpenDialog::setFile(const QString &fname)
 {
 	file=fname;
 	mglData d(file.toLocal8Bit().constData());
-	rA->setText(tr("Auto detect data sizes (%1 x %2 x %3)").arg(d.nx).arg(d.ny).arg(d.nz));
+	rA->setText(QString(_("Auto detect data sizes (%1 x %2 x %3)")).arg(d.nx).arg(d.ny).arg(d.nz));
 }
 //-----------------------------------------------------------------------------

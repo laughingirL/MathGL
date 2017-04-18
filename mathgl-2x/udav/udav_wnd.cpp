@@ -152,7 +152,7 @@ void udavLoadDefCommands()	{}	//{	udavAddCommands(udav_base_cmd);	}
 MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 {
 	QAction *a;
-	setWindowTitle(tr("untitled - UDAV"));
+	setWindowTitle(_("untitled - UDAV"));
 	setAttribute(Qt::WA_DeleteOnClose);
 
 	split = new QSplitter(this);
@@ -162,7 +162,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	rtab = new QTabWidget(split);
 	rtab->setMovable(true);	rtab->setTabPosition(QTabWidget::South);
 
-	messWnd = new QDockWidget(tr("Messages and warnings"),this);
+	messWnd = new QDockWidget(_("Messages and warnings"),this);
 	mess = new QTextEdit(this);	messWnd->setWidget(mess);
 	messWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
 	addDockWidget(Qt::BottomDockWidgetArea, messWnd);
@@ -170,7 +170,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 //	connect(mess,SIGNAL(cursorPositionChanged()),this,SLOT(messClicked()));
 	connect(mess,SIGNAL(selectionChanged()),this,SLOT(messClicked()));
 
-	hideWnd = new QDockWidget(tr("Hidden plots"),this);
+	hideWnd = new QDockWidget(_("Hidden plots"),this);
 	hidden = new TextEdit(this);	hideWnd->setWidget(hidden);
 	hideWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
 	addDockWidget(Qt::BottomDockWidgetArea, hideWnd);
@@ -178,50 +178,50 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(hidden,SIGNAL(selectionChanged()),this,SLOT(hiddenClicked()));	// TODO
 //	connect(hidden,SIGNAL(cursorPositionChanged()),this,SLOT(hiddenClicked()));
 
-	calcWnd = new QDockWidget(tr("Calculator"),this);
+	calcWnd = new QDockWidget(_("Calculator"),this);
 
-	aload = a = new QAction(QPixmap(":/png/document-open.png"), tr("Open file"), this);
+	aload = a = new QAction(QPixmap(":/png/document-open.png"), _("Open file"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(choose()));
-	a->setToolTip(tr("Open and execute/show script or data from file (Ctrl+O).\nYou may switch off automatic exection in UDAV properties."));
+	a->setToolTip(_("Open and execute/show script or data from file (Ctrl+O).\nYou may switch off automatic exection in UDAV properties."));
 	a->setShortcut(Qt::CTRL+Qt::Key_O);
 
-	asave = a = new QAction(QPixmap(":/png/document-save.png"), tr("Save script"), this);
+	asave = a = new QAction(QPixmap(":/png/document-save.png"), _("Save script"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(save()));
-	a->setToolTip(tr("Save script to a file (Ctrl+S)"));
+	a->setToolTip(_("Save script to a file (Ctrl+S)"));
 	a->setShortcut(Qt::CTRL+Qt::Key_S);
 
-	acalc = a = new QAction(QPixmap(":/png/accessories-calculator.png"), tr("Calculator"), this);
+	acalc = a = new QAction(QPixmap(":/png/accessories-calculator.png"), _("Calculator"), this);
 	a->setShortcut(Qt::Key_F4);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), calcWnd, SLOT(setVisible(bool)));
 	connect(calcWnd, SIGNAL(visibilityChanged(bool)), a, SLOT(setChecked(bool)));
-	a->setToolTip(tr("Show calculator which evaluate and help to type textual formulas.\nTextual formulas may contain data variables too."));
+	a->setToolTip(_("Show calculator which evaluate and help to type textual formulas.\nTextual formulas may contain data variables too."));
 	a->setChecked(false);	calcWnd->setVisible(false);
 
-	ainfo = a = new QAction(tr("Show info"), this);
+	ainfo = a = new QAction(_("Show info"), this);
 	a->setShortcut(Qt::Key_F2);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), messWnd, SLOT(setVisible(bool)));
 	connect(messWnd, SIGNAL(visibilityChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setChecked(false);	messWnd->setVisible(false);
 
-	ahide = a = new QAction(QPixmap(":/png/layer-visible-on.png"), tr("Show hidden plots"), this);
+	ahide = a = new QAction(QPixmap(":/png/layer-visible-on.png"), _("Show hidden plots"), this);
 	a->setShortcut(Qt::Key_F8);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), hideWnd, SLOT(setVisible(bool)));
 	connect(hideWnd, SIGNAL(visibilityChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setChecked(false);	hideWnd->setVisible(false);
 
 	graph = new PlotPanel(this);
-	rtab->addTab(graph,QPixmap(":/png/office-chart-line.png"),tr("Canvas"));
+	rtab->addTab(graph,QPixmap(":/png/office-chart-line.png"),_("Canvas"));
 	//	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
 	info = createMemPanel(this);
-	rtab->addTab(info,QPixmap(":/png/system-file-manager.png"),tr("Info"));
+	rtab->addTab(info,QPixmap(":/png/system-file-manager.png"),_("Info"));
 	hlp = createHlpPanel(this);
-	rtab->addTab(hlp,QPixmap(":/png/help-contents.png"),tr("Help"));
+	rtab->addTab(hlp,QPixmap(":/png/help-contents.png"),_("Help"));
 	edit = new TextPanel(this);	edit->graph = graph;
 	graph->textMGL = edit->edit;
 	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
 	connect(graph->mgl,SIGNAL(showWarn(QString)),edit->edit,SLOT(setErrMessage(QString)));
 	connect(graph,SIGNAL(clearWarn()),mess,SLOT(clear()));
-	ltab->addTab(edit,QPixmap(":/png/text-plain.png"),tr("Script"));
+	ltab->addTab(edit,QPixmap(":/png/text-plain.png"),_("Script"));
 
 	calcWnd->setWidget(createCalcDlg(this, edit->edit));
 	calcWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
@@ -252,7 +252,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(edit,SIGNAL(setCurrentFile(QString)),this,SLOT(setCurrentFile(QString)));
 	connect(edit,SIGNAL(setStatus(QString)),this,SLOT(setStatus(QString)));
 
-	setStatus(tr("Ready"));
+	setStatus(_("Ready"));
 	num_wnd++;
 	edit->setAcceptDrops(false);	// for disabling default action by 'edit'
 	setAcceptDrops(true);
@@ -265,29 +265,29 @@ void MainWindow::makeMenu()
 
 	// file menu
 	{
-	o = menuBar()->addMenu(tr("File"));
-	a = new QAction(QPixmap(":/png/document-new.png"), tr("New script"), this);
+	o = menuBar()->addMenu(_("File"));
+	a = new QAction(QPixmap(":/png/document-new.png"), _("New script"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(newDoc()));
-	a->setToolTip(tr("Create new empty script window (Ctrl+N)."));
+	a->setToolTip(_("Create new empty script window (Ctrl+N)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_N);	o->addAction(a);
 
 	o->addAction(aload);
 	o->addAction(asave);
 
-	a = new QAction(tr("Save as ..."), this);
+	a = new QAction(_("Save as ..."), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(saveAs()));
 	o->addAction(a);
 
 	o->addSeparator();
-	o->addAction(tr("Print script"), edit, SLOT(printText()));
-	a = new QAction(QPixmap(":/png/document-print.png"), tr("Print graphics"), this);
+	o->addAction(_("Print script"), edit, SLOT(printText()));
+	a = new QAction(QPixmap(":/png/document-print.png"), _("Print graphics"), this);
 	connect(a, SIGNAL(triggered()), graph->mgl, SLOT(print()));
-	a->setToolTip(tr("Open printer dialog and print graphics (Ctrl+P)"));
+	a->setToolTip(_("Open printer dialog and print graphics (Ctrl+P)"));
 	a->setShortcut(Qt::CTRL+Qt::Key_P);	o->addAction(a);
 	o->addSeparator();
-	fileMenu = o->addMenu(tr("Recent files"));
+	fileMenu = o->addMenu(_("Recent files"));
 	o->addSeparator();
-	o->addAction(tr("Quit"), qApp, SLOT(closeAllWindows()));
+	o->addAction(_("Quit"), qApp, SLOT(closeAllWindows()));
 	}
 
 	menuBar()->addMenu(edit->menu);
@@ -295,11 +295,11 @@ void MainWindow::makeMenu()
 
 	// settings menu
 	{
-	o = menuBar()->addMenu(tr("Settings"));
-	a = new QAction(QPixmap(":/png/preferences-system.png"), tr("Properties"), this);
+	o = menuBar()->addMenu(_("Settings"));
+	a = new QAction(QPixmap(":/png/preferences-system.png"), _("Properties"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(properties()));
-	a->setToolTip(tr("Show dialog for UDAV properties."));	o->addAction(a);
-	o->addAction(tr("Set arguments"), createArgsDlg(this), SLOT(exec()));
+	a->setToolTip(_("Show dialog for UDAV properties."));	o->addAction(a);
+	o->addAction(_("Set arguments"), createArgsDlg(this), SLOT(exec()));
 
 	o->addAction(acalc);
 	o->addAction(ainfo);
@@ -307,16 +307,16 @@ void MainWindow::makeMenu()
 	}
 
 	menuBar()->addSeparator();
-	o = menuBar()->addMenu(tr("Help"));
-	a = new QAction(QPixmap(":/png/help-contents.png"), tr("MGL help"), this);
+	o = menuBar()->addMenu(_("Help"));
+	a = new QAction(QPixmap(":/png/help-contents.png"), _("MGL help"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(showHelp()));
-	a->setToolTip(tr("Show help on MGL commands (F1)."));
+	a->setToolTip(_("Show help on MGL commands (F1)."));
 	a->setShortcut(Qt::Key_F1);	o->addAction(a);
-	a = new QAction(QPixmap(":/png/help-faq.png"), tr("Hints"), this);
+	a = new QAction(QPixmap(":/png/help-faq.png"), _("Hints"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(showHint()));
-	a->setToolTip(tr("Show hints of MGL usage."));	o->addAction(a);
-	o->addAction(tr("About"), this, SLOT(about()));
-	o->addAction(tr("About Qt"), this, SLOT(aboutQt()));
+	a->setToolTip(_("Show hints of MGL usage."));	o->addAction(a);
+	o->addAction(_("About"), this, SLOT(about()));
+	o->addAction(_("About Qt"), this, SLOT(aboutQt()));
 }
 //-----------------------------------------------------------------------------
 void MainWindow::closeEvent(QCloseEvent* ce)
@@ -324,8 +324,8 @@ void MainWindow::closeEvent(QCloseEvent* ce)
 	bool ok=true;
 	writeSettings();
 	if(edit->isModified())
-		switch(QMessageBox::information(this, tr("UDAV"),
-				tr("Do you want to save the changes to the document?"),
+		switch(QMessageBox::information(this, _("UDAV"),
+				_("Do you want to save the changes to the document?"),
 				QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel))
 		{
 			case QMessageBox::Yes:	save();	break;
@@ -428,7 +428,7 @@ void MainWindow::editPosChanged()
 	const char *desc = parser.CmdDesc(ctext);
 	const char *form = parser.CmdFormat(ctext);
 	if(form)	setStatus(QString(desc)+": "+QString(form));
-	else	setStatus(tr("Not recognized"));
+	else	setStatus(_("Not recognized"));
 }
 //-----------------------------------------------------------------------------
 void MainWindow::setEditPos(bool bottom)
@@ -438,13 +438,13 @@ void MainWindow::properties()	{	propDlg->exec();	}
 //-----------------------------------------------------------------------------
 void MainWindow::about()
 {
-	QString s = tr("<a href='http://mathgl.sourceforge.net/doc_en/UDAV-overview.html'>UDAV</a> v. 2.")+QString::number(MGL_VER2)+
-	tr("<br>(c) Alexey Balakin, 2007-2014<br><br><a href='http://www.gnu.org/copyleft/gpl.html'>License is GPL v.2 or later.</a>");
-	QMessageBox::about(this, tr("UDAV - about"), s);
+	QString s = _("<a href='http://mathgl.sourceforge.net/doc_en/UDAV-overview.html'>UDAV</a> v. 2.")+QString::number(MGL_VER2)+
+	_("<br>(c) Alexey Balakin, 2007-2014<br><br><a href='http://www.gnu.org/copyleft/gpl.html'>License is GPL v.2 or later.</a>");
+	QMessageBox::about(this, _("UDAV - about"), s);
 }
 //-----------------------------------------------------------------------------
 void MainWindow::aboutQt()
-{	QMessageBox::aboutQt(this, tr("About Qt"));	}
+{	QMessageBox::aboutQt(this, _("About Qt"));	}
 //-----------------------------------------------------------------------------
 void MainWindow::writeSettings()
 {
@@ -544,17 +544,17 @@ void MainWindow::setCurrentFile(const QString &fileName)
 	mgl_set_plotid(graph->mgl->getGraph(), fileName.toLocal8Bit().constData());
 	edit->setModified(false);
 	if(filename.isEmpty())
-		setWindowTitle(tr("untitled - UDAV"));
+		setWindowTitle(_("untitled - UDAV"));
 	else
 	{
-		setWindowTitle(QFileInfo(filename).fileName()+tr(" - UDAV"));
+		setWindowTitle(QFileInfo(filename).fileName()+_(" - UDAV"));
 		int i = recentFiles.indexOf(filename);
 		if(i>=0)	recentFiles.removeAt(i);
 		recentFiles.push_front(filename);
 		updateRecentFileItems();
 		if(chdir(qPrintable(QFileInfo(filename).path())))
-			QMessageBox::warning(this, tr("UDAV - save current"),
-				tr("Couldn't change to folder ")+QFileInfo(filename).path());
+			QMessageBox::warning(this, _("UDAV - save current"),
+				_("Couldn't change to folder ")+QFileInfo(filename).path());
 	}
 }
 //-----------------------------------------------------------------------------
@@ -563,8 +563,8 @@ void MainWindow::openRecentFile()
 	QAction *a = qobject_cast<QAction *>(sender());
 	if(!a)	return;
 	if(edit->isModified())
-		switch(QMessageBox::information(this, tr("UDAV - save current"),
-				tr("Do you want to save the changes to the document?"),
+		switch(QMessageBox::information(this, _("UDAV - save current"),
+				_("Do you want to save the changes to the document?"),
 				QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel))
 		{
 			case QMessageBox::Yes:	save();	break;
@@ -605,8 +605,8 @@ void MainWindow::newDoc()
 void MainWindow::choose()
 {
 	if(edit->isModified())
-		switch(QMessageBox::information(this, tr("UDAV - save current"),
-				tr("Do you want to save the changes to the document?"),
+		switch(QMessageBox::information(this, _("UDAV - save current"),
+				_("Do you want to save the changes to the document?"),
 				QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel))
 		{
 			case QMessageBox::Yes:	save();	break;
@@ -617,12 +617,12 @@ void MainWindow::choose()
 	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
 	settings.beginGroup("/UDAV");
 	QString fn = QFileDialog::getOpenFileName(this,
-			tr("UDAV - Open file"),
+			_("UDAV - Open file"),
 			settings.value("/filePath", MGL_DOC_DIR).toString(),
-			tr("MGL scripts (*.mgl)\nHDF5 files (*.hdf *.h5)\nText files (*.txt)\nData files (*.dat)\nAll files (*.*)"));
+			_("MGL scripts (*.mgl)\nHDF5 files (*.hdf *.h5)\nText files (*.txt)\nData files (*.dat)\nAll files (*.*)"));
 	settings.endGroup();
 	if(!fn.isEmpty())	load(fn);
-	else	setStatus(tr("Loading aborted"));
+	else	setStatus(_("Loading aborted"));
 }
 //-----------------------------------------------------------------------------
 void MainWindow::load(const QString &fileName, bool noNewWnd)
@@ -653,10 +653,10 @@ void MainWindow::save()
 void MainWindow::saveAs()
 {
 	QString fn;
-	fn = QFileDialog::getSaveFileName(this, tr("UDAV - save file"), "",
-			tr("MGL scripts (*.mgl)\nHDF5 files (*.hdf *.h5)\nAll files (*.*)"));
+	fn = QFileDialog::getSaveFileName(this, _("UDAV - save file"), "",
+			_("MGL scripts (*.mgl)\nHDF5 files (*.hdf *.h5)\nAll files (*.*)"));
 	if(fn.isEmpty())
-	{	setStatus(tr("Saving aborted"));	return;	}
+	{	setStatus(_("Saving aborted"));	return;	}
 	else
 	{
 		int nn=fn.length();
@@ -670,16 +670,16 @@ void MainWindow::setAsterix()
 	if(edit->isModified())
 	{
 		if(filename.isEmpty())
-			setWindowTitle(tr("untitled* - UDAV"));
+			setWindowTitle(_("untitled* - UDAV"));
 		else
-			setWindowTitle(QFileInfo(filename).fileName()+tr("* - UDAV"));
+			setWindowTitle(QFileInfo(filename).fileName()+_("* - UDAV"));
 	}
 	else
 	{
 		if(filename.isEmpty())
-			setWindowTitle(tr("untitled - UDAV"));
+			setWindowTitle(_("untitled - UDAV"));
 		else
-			setWindowTitle(QFileInfo(filename).fileName()+tr(" - UDAV"));
+			setWindowTitle(QFileInfo(filename).fileName()+_(" - UDAV"));
 	}
 }
 //-----------------------------------------------------------------------------

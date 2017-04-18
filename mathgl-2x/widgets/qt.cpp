@@ -676,7 +676,7 @@ QString setExtension(const QString &fname, const char *ext)
 void QMathGL::exportGIF(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 #if MGL_HAVE_GIF
 		mgl_write_gif(gr,setExtension(fname,"png").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
@@ -688,7 +688,7 @@ void QMathGL::exportGIF(QString fname)
 void QMathGL::exportPNG(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 #if MGL_HAVE_PNG
 		mgl_write_png(gr,setExtension(fname,"png").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
@@ -700,7 +700,7 @@ void QMathGL::exportPNG(QString fname)
 void QMathGL::exportPNGs(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 #if MGL_HAVE_PNG
 		mgl_write_png_solid(gr,setExtension(fname,"png").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
@@ -712,7 +712,7 @@ void QMathGL::exportPNGs(QString fname)
 void QMathGL::exportJPG(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 #if MGL_HAVE_JPEG
 		mgl_write_jpg(gr,setExtension(fname,"jpg").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
@@ -724,7 +724,7 @@ void QMathGL::exportJPG(QString fname)
 void QMathGL::exportBPS(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -736,7 +736,7 @@ void QMathGL::exportBPS(QString fname)
 void QMathGL::exportEPS(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -748,7 +748,7 @@ void QMathGL::exportEPS(QString fname)
 void QMathGL::exportSVG(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -760,7 +760,7 @@ void QMathGL::exportSVG(QString fname)
 void QMathGL::exportXYZ(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -772,7 +772,7 @@ void QMathGL::exportXYZ(QString fname)
 void QMathGL::exportTEX(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -784,7 +784,7 @@ void QMathGL::exportTEX(QString fname)
 void QMathGL::exportOFF(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -796,7 +796,7 @@ void QMathGL::exportOFF(QString fname)
 void QMathGL::exportOBJ(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -808,7 +808,7 @@ void QMathGL::exportOBJ(QString fname)
 void QMathGL::exportSTL(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -820,7 +820,7 @@ void QMathGL::exportSTL(QString fname)
 /*void QMathGL::exportX3D(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -832,7 +832,7 @@ void QMathGL::exportSTL(QString fname)
 void QMathGL::exportTGA(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -844,7 +844,7 @@ void QMathGL::exportTGA(QString fname)
 void QMathGL::exportPRC(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -856,7 +856,7 @@ void QMathGL::exportPRC(QString fname)
 void QMathGL::exportMGLD(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
@@ -903,11 +903,11 @@ void QMathGL::setSize(int w, int h)
 //-----------------------------------------------------------------------------
 void QMathGL::about()
 {
-	QString s = tr("MathGL v. 2.") + QString::number(MGL_VER2) + tr("\n(c) Alexey Balakin, 2007\nhttp://mathgl.sourceforge.net/");
-	QMessageBox::about(this, tr("MathGL - about"), s);
+	QString s = _("MathGL v. 2.") + QString::number(MGL_VER2) + _("\n(c) Alexey Balakin, 2007\nhttp://mathgl.sourceforge.net/");
+	QMessageBox::about(this, _("MathGL - about"), s);
 }
 //-----------------------------------------------------------------------------
-void QMathGL::aboutQt()	{	QMessageBox::aboutQt(this, tr("About Qt"));	}
+void QMathGL::aboutQt()	{	QMessageBox::aboutQt(this, _("About Qt"));	}
 //-----------------------------------------------------------------------------
 void QMathGL::print()
 {
@@ -980,7 +980,7 @@ void QMathGL::addArc()
 void QMathGL::addPolygon(int n)
 {
 	if(n<3)
-		n = QInputDialog::getText(QApplication::activeWindow(), "MathGL", tr("Enter number of vertexes")).toInt();
+		n = QInputDialog::getText(QApplication::activeWindow(), "MathGL", _("Enter number of vertexes")).toInt();
 	if(n>=3)
 	{	primitives += "polygon 0 0 0 0.2 "+QString::number(n)+" 'r'\n";	refresh();	}
 }
@@ -989,7 +989,7 @@ void QMathGL::addPolygon(int n)
 void QMathGL::addText(QString txt)
 {
 	if(txt.isEmpty())
-		txt = QInputDialog::getText(QApplication::activeWindow(), "MathGL", tr("Enter text"));
+		txt = QInputDialog::getText(QApplication::activeWindow(), "MathGL", _("Enter text"));
 	if(!txt.isEmpty())
 	{	primitives += "text 0 0 0.1 0 '"+txt+"' ''\n";	refresh();	}
 }
@@ -1101,7 +1101,6 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 #include "xpm/stop.xpm"
 #include "xpm/pause.xpm"
 //-----------------------------------------------------------------------------
-#define TR	QObject::tr
 MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&phi)
 {
 	QAction *a;
@@ -1111,135 +1110,135 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 	QMenu *popup = new QMenu(Wnd);
 	// file menu
 	{
-		f = o = Wnd->menuBar()->addMenu(TR("&File"));
-		oo = new QMenu(TR("&Export as 2D ..."),Wnd);
-		oo->addAction(TR("PNG"), QMGL, SLOT(exportPNG()),Qt::ALT+Qt::Key_P);
-		oo->addAction(TR("solid PNG"), QMGL, SLOT(exportPNGs()),Qt::ALT+Qt::Key_F);
-		oo->addAction(TR("JPEG"), QMGL, SLOT(exportJPG()),Qt::ALT+Qt::Key_J);
-		oo->addAction(TR("bitmap EPS"), QMGL, SLOT(exportBPS()));
-		oo->addAction(TR("vector EPS"), QMGL, SLOT(exportEPS()),Qt::ALT+Qt::Key_E);
-		oo->addAction(TR("SVG"), QMGL, SLOT(exportSVG()),Qt::ALT+Qt::Key_S);
-		oo->addAction(TR("LaTeX"), QMGL, SLOT(exportTEX()),Qt::ALT+Qt::Key_L);
+		f = o = Wnd->menuBar()->addMenu(_("File"));
+		oo = new QMenu(_("Export as 2D ..."),Wnd);
+		oo->addAction(_("PNG"), QMGL, SLOT(exportPNG()),Qt::ALT+Qt::Key_P);
+		oo->addAction(_("solid PNG"), QMGL, SLOT(exportPNGs()),Qt::ALT+Qt::Key_F);
+		oo->addAction(_("JPEG"), QMGL, SLOT(exportJPG()),Qt::ALT+Qt::Key_J);
+		oo->addAction(_("bitmap EPS"), QMGL, SLOT(exportBPS()));
+		oo->addAction(_("vector EPS"), QMGL, SLOT(exportEPS()),Qt::ALT+Qt::Key_E);
+		oo->addAction(_("SVG"), QMGL, SLOT(exportSVG()),Qt::ALT+Qt::Key_S);
+		oo->addAction(_("LaTeX"), QMGL, SLOT(exportTEX()),Qt::ALT+Qt::Key_L);
 		o->addMenu(oo);		popup->addMenu(oo);
-		oo = new QMenu(TR("&Export as 3D ..."),Wnd);
-		oo->addAction(TR("MGLD"), QMGL, SLOT(exportMGLD()),Qt::ALT+Qt::Key_M);
-		oo->addAction(TR("PRC"), QMGL, SLOT(exportPRC()),Qt::ALT+Qt::Key_D);
-		oo->addAction(TR("OBJ"), QMGL, SLOT(exportOBJ()),Qt::ALT+Qt::Key_O);
-		oo->addAction(TR("STL"), QMGL, SLOT(exportSTL()));
-		oo->addAction(TR("XYZ"), QMGL, SLOT(exportXYZ()));
-//		oo->addAction(TR("X3D"), QMGL, SLOT(exportX3D()),Qt::ALT+Qt::Key_X);
+		oo = new QMenu(_("Export as 3D ..."),Wnd);
+		oo->addAction(_("MGLD"), QMGL, SLOT(exportMGLD()),Qt::ALT+Qt::Key_M);
+		oo->addAction(_("PRC"), QMGL, SLOT(exportPRC()),Qt::ALT+Qt::Key_D);
+		oo->addAction(_("OBJ"), QMGL, SLOT(exportOBJ()),Qt::ALT+Qt::Key_O);
+		oo->addAction(_("STL"), QMGL, SLOT(exportSTL()));
+		oo->addAction(_("XYZ"), QMGL, SLOT(exportXYZ()));
+//		oo->addAction(_("X3D"), QMGL, SLOT(exportX3D()),Qt::ALT+Qt::Key_X);
 		o->addMenu(oo);		popup->addMenu(oo);
 
 		o->addSeparator();
-		a = new QAction(QPixmap(fileprint), TR("Print &graphics"), Wnd);
+		a = new QAction(QPixmap(fileprint), _("Print &graphics"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(print()));
-		a->setToolTip(TR("Open printer dialog and print graphics\t(CTRl+P)"));
+		a->setToolTip(_("Open printer dialog and print graphics\t(CTRl+P)"));
 		a->setShortcut(Qt::CTRL+Qt::Key_P);	o->addAction(a);
 		o->addSeparator();
-		o->addAction(TR("&Close"), Wnd, SLOT(close()), Qt::CTRL+Qt::Key_W);
+		o->addAction(_("Close"), Wnd, SLOT(close()), Qt::CTRL+Qt::Key_W);
 	}
 	// graphics menu
 	{
-		bb = new QToolBar(TR("Graphics"),Wnd);
+		bb = new QToolBar(_("Graphics"),Wnd);
 		Wnd->addToolBar(Qt::TopToolBarArea, bb);
-		o = Wnd->menuBar()->addMenu(TR("&Graphics"));
-		a = new QAction(QPixmap(alpha_xpm), TR("&Alpha"), Wnd);
+		o = Wnd->menuBar()->addMenu(_("Graphics"));
+		a = new QAction(QPixmap(alpha_xpm), _("Alpha"), Wnd);
 		a->setShortcut(Qt::ALT+Qt::Key_T);	a->setCheckable(true);
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(setAlpha(bool)));
 		Wnd->connect(QMGL, SIGNAL(alphaChanged(bool)), a, SLOT(setChecked(bool)));
-		a->setToolTip(TR("Switch on/off TRansparency for the graphics (Alt+T)."));
+		a->setToolTip(_("Switch on/off TRansparency for the graphics (Alt+T)."));
 		o->addAction(a);		bb->addAction(a);
-		a = new QAction(QPixmap(light_xpm), TR("&Light"), Wnd);
+		a = new QAction(QPixmap(light_xpm), _("Light"), Wnd);
 		a->setShortcut(Qt::ALT+Qt::Key_L);	a->setCheckable(true);
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(setLight(bool)));
 		Wnd->connect(QMGL, SIGNAL(lightChanged(bool)), a, SLOT(setChecked(bool)));
-		a->setToolTip(TR("Switch on/off lightning for the graphics (Alt+L)."));
+		a->setToolTip(_("Switch on/off lightning for the graphics (Alt+L)."));
 		o->addAction(a);		bb->addAction(a);
-		a = new QAction(QPixmap(rotate_xpm), TR("&Rotate by mouse"), Wnd);
+		a = new QAction(QPixmap(rotate_xpm), _("Rotate by mouse"), Wnd);
 		a->setCheckable(true);
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(setRotate(bool)));
 		Wnd->connect(QMGL, SIGNAL(rotateChanged(bool)), a, SLOT(setChecked(bool)));
-		a->setToolTip(TR("Switch on/off mouse handling of the graphics\n(rotation, shifting, zooming and perspective)."));
+		a->setToolTip(_("Switch on/off mouse handling of the graphics\n(rotation, shifting, zooming and perspective)."));
 		bb->addAction(a);
-		a = new QAction(QPixmap(zoom_in_xpm), TR("&Zoom by mouse"), Wnd);
+		a = new QAction(QPixmap(zoom_in_xpm), _("Zoom by mouse"), Wnd);
 		a->setCheckable(true);
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(setZoom(bool)));
 		Wnd->connect(QMGL, SIGNAL(zoomChanged(bool)), a, SLOT(setChecked(bool)));
-		a->setToolTip(TR("Switch on/off mouse zoom of selected region."));
+		a->setToolTip(_("Switch on/off mouse zoom of selected region."));
 		bb->addAction(a);
 		o->addSeparator();
-		a = new QAction(QPixmap(zoom_out_xpm), TR("Res&tore"), Wnd);
+		a = new QAction(QPixmap(zoom_out_xpm), _("Res&tore"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(restore()));
-		a->setToolTip(TR("Restore default graphics rotation, zoom and perspective (Alt+Space)."));
+		a->setToolTip(_("Restore default graphics rotation, zoom and perspective (Alt+Space)."));
 		a->setShortcut(Qt::ALT+Qt::Key_Space);
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
 		bb->addSeparator();
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
-		a = new QAction(QPixmap(ok_xpm), TR("Re&draw"), Wnd);
+		a = new QAction(QPixmap(ok_xpm), _("Re&draw"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(update()));
-		a->setToolTip(TR("Execute script and redraw graphics (F5)."));
+		a->setToolTip(_("Execute script and redraw graphics (F5)."));
 		a->setShortcut(Qt::Key_F5);
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
-		a = new QAction(QPixmap(stop_xpm), TR("Stop"), Wnd);
+		a = new QAction(QPixmap(stop_xpm), _("Stop"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(stop()));
-		a->setToolTip(TR("Ask to stop plot drawing (F7)."));
+		a->setToolTip(_("Ask to stop plot drawing (F7)."));
 		a->setShortcut(Qt::Key_F7);
-		a = new QAction(TR("&Adjust size"), Wnd);
+		a = new QAction(_("Adjust size"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(adjust()));
-		a->setToolTip(TR("Change canvas size to fill whole region (F6)."));
+		a->setToolTip(_("Change canvas size to fill whole region (F6)."));
 		a->setShortcut(Qt::Key_F6);		o->addAction(a);
-		a = new QAction(QPixmap(copy_xpm), TR("&Copy plot"), Wnd);
+		a = new QAction(QPixmap(copy_xpm), _("Copy plot"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(copy()));
-		a->setToolTip(TR("Copy graphics to clipboard (CTRl+Shift+G)."));
+		a->setToolTip(_("Copy graphics to clipboard (CTRl+Shift+G)."));
 		a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_G);
 		o->addAction(a);		bb->addAction(a);	popup->addAction(a);
 
 		bb->addSeparator();
-		oo = new QMenu(TR("Primitives ..."),Wnd);
-		a = new QAction(QPixmap(line_xpm), TR("Add line"), Wnd);
+		oo = new QMenu(_("Primitives ..."),Wnd);
+		a = new QAction(QPixmap(line_xpm), _("Add line"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addLine()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add line which properties can be changed later by mouse."));
+		a->setToolTip(_("Add line which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
-		a = new QAction(QPixmap(arc_xpm), TR("Add arc"), Wnd);
+		a = new QAction(QPixmap(arc_xpm), _("Add arc"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addArc()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add arc which properties can be changed later by mouse."));
+		a->setToolTip(_("Add arc which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
-		a = new QAction(QPixmap(curve_xpm), TR("Add curve"), Wnd);
+		a = new QAction(QPixmap(curve_xpm), _("Add curve"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addCurve()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add curve which properties can be changed later by mouse."));
+		a->setToolTip(_("Add curve which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
-		a = new QAction(QPixmap(mark_s_xpm), TR("Add rect"), Wnd);
+		a = new QAction(QPixmap(mark_s_xpm), _("Add rect"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addRect()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add rectangle which properties can be changed later by mouse."));
+		a->setToolTip(_("Add rectangle which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
-		a = new QAction(QPixmap(mark_d_xpm), TR("Add rhombus"), Wnd);
+		a = new QAction(QPixmap(mark_d_xpm), _("Add rhombus"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addRhomb()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add rhombus which properties can be changed later by mouse."));
+		a->setToolTip(_("Add rhombus which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
-		a = new QAction(QPixmap(mark_o_xpm), TR("Add ellipse"), Wnd);
+		a = new QAction(QPixmap(mark_o_xpm), _("Add ellipse"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addEllipse()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add ellipse which properties can be changed later by mouse."));
+		a->setToolTip(_("Add ellipse which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
-		a = new QAction(QPixmap(polygon_xpm), TR("Add polygon"), Wnd);
+		a = new QAction(QPixmap(polygon_xpm), _("Add polygon"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addPolygon()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add polygon which properties can be changed later by mouse."));
+		a->setToolTip(_("Add polygon which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
-		a = new QAction(QPixmap(mark_a_xpm), TR("Add mark"), Wnd);
+		a = new QAction(QPixmap(mark_a_xpm), _("Add mark"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addMark()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add marker which properties can be changed later by mouse."));
+		a->setToolTip(_("Add marker which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
-		a = new QAction(QPixmap(text_xpm), TR("Add text"), Wnd);
+		a = new QAction(QPixmap(text_xpm), _("Add text"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addText()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-		a->setToolTip(TR("Add text which properties can be changed later by mouse."));
+		a->setToolTip(_("Add text which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		o->addMenu(oo);
 
@@ -1248,82 +1247,82 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		bb->addWidget(tet);	tet->setRange(-180, 180);	tet->setSingleStep(10);
 		Wnd->connect(tet, SIGNAL(valueChanged(int)), QMGL, SLOT(setTet(int)));
 		Wnd->connect(QMGL, SIGNAL(tetChanged(int)), tet, SLOT(setValue(int)));
-		tet->setToolTip(TR("Set value of \\theta angle."));
+		tet->setToolTip(_("Set value of \\theta angle."));
 		bb->addSeparator();
 		phi = new QSpinBox(Wnd);	phi->setWrapping(true);
 		bb->addWidget(phi);	phi->setRange(-180, 180);	phi->setSingleStep(10);
 		Wnd->connect(phi, SIGNAL(valueChanged(int)), QMGL, SLOT(setPhi(int)));
 		Wnd->connect(QMGL, SIGNAL(phiChanged(int)), phi, SLOT(setValue(int)));
-		phi->setToolTip(TR("Set value of \\phi angle."));
+		phi->setToolTip(_("Set value of \\phi angle."));
 //	bb->addSeparator();
 	}
 	// zooming menu
 	{
-		oo = o->addMenu(TR("Zoom/move"));
-		bb = new QToolBar(TR("Zoom graphics"),Wnd);
+		oo = o->addMenu(_("Zoom/move"));
+		bb = new QToolBar(_("Zoom graphics"),Wnd);
 		Wnd->addToolBar(Qt::LeftToolBarArea, bb);
-		a = new QAction(QPixmap(left_1_xpm), TR("Move &left"), Wnd);
+		a = new QAction(QPixmap(left_1_xpm), _("Move &left"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftLeft()));
-		a->setToolTip(TR("Move graphics left by 1/3 of its width."));
+		a->setToolTip(_("Move graphics left by 1/3 of its width."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(up_1_xpm), TR("Move &up"), Wnd);
+		a = new QAction(QPixmap(up_1_xpm), _("Move &up"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftUp()));
-		a->setToolTip(TR("Move graphics up by 1/3 of its height."));
+		a->setToolTip(_("Move graphics up by 1/3 of its height."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(zoom_1_xpm), TR("Zoom &in"), Wnd);
+		a = new QAction(QPixmap(zoom_1_xpm), _("Zoom &in"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(zoomIn()));
-		a->setToolTip(TR("Zoom in graphics."));
+		a->setToolTip(_("Zoom in graphics."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(norm_1_xpm), TR("Zoom &out"), Wnd);
+		a = new QAction(QPixmap(norm_1_xpm), _("Zoom &out"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(zoomOut()));
-		a->setToolTip(TR("Zoom out graphics."));
+		a->setToolTip(_("Zoom out graphics."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(down_1_xpm), TR("Move &down"), Wnd);
+		a = new QAction(QPixmap(down_1_xpm), _("Move &down"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftDown()));
-		a->setToolTip(TR("Move graphics up down 1/3 of its height."));
+		a->setToolTip(_("Move graphics up down 1/3 of its height."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(right_1_xpm), TR("Move &right"), Wnd);
+		a = new QAction(QPixmap(right_1_xpm), _("Move &right"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftRight()));
-		a->setToolTip(TR("Move graphics right by 1/3 of its width."));
+		a->setToolTip(_("Move graphics right by 1/3 of its width."));
 		bb->addAction(a);		oo->addAction(a);
 	}
 	// animation menu
 	{
-		o = Wnd->menuBar()->addMenu(TR("&Animation"));
-		bb = new QToolBar(TR("Animation"),Wnd);
+		o = Wnd->menuBar()->addMenu(_("Animation"));
+		bb = new QToolBar(_("Animation"),Wnd);
 		Wnd->addToolBar(Qt::LeftToolBarArea, bb);
-		a = new QAction(QPixmap(next_sl_xpm), TR("&Next slide"), Wnd);
+		a = new QAction(QPixmap(next_sl_xpm), _("Next slide"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(nextSlide()));
-		a->setToolTip(TR("Show next slide (Ctrl+.)."));
+		a->setToolTip(_("Show next slide (Ctrl+.)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_Period);	o->addAction(a);		bb->addAction(a);
-		a = new QAction(QPixmap(show_sl_xpm), TR("&Slideshow"), Wnd);
+		a = new QAction(QPixmap(show_sl_xpm), _("Slideshow"), Wnd);
 		a->setCheckable(true);
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(animation(bool)));
-		a->setToolTip(TR("Run slideshow (CTRl+F5)."));
+		a->setToolTip(_("Run slideshow (CTRl+F5)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_F5);	o->addAction(a);		bb->addAction(a);
-		a = new QAction(QPixmap(prev_sl_xpm), TR("&Prev slide"), Wnd);
+		a = new QAction(QPixmap(prev_sl_xpm), _("Prev slide"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(prevSlide()));
-		a->setToolTip(TR("Show previous slide (Ctrl+,)."));
+		a->setToolTip(_("Show previous slide (Ctrl+,)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_Comma);	o->addAction(a);		bb->addAction(a);
 	}
 #if MGL_HAVE_PTHR_WIDGET
 	{
-		bb = new QToolBar(TR("Calculations"),Wnd);
+		bb = new QToolBar(_("Calculations"),Wnd);
 		Wnd->addToolBar(Qt::LeftToolBarArea, bb);
-		a = new QAction(QPixmap(pause_xpm), TR("Pause calculation"), Wnd);
+		a = new QAction(QPixmap(pause_xpm), _("Pause calculation"), Wnd);
 		a->setCheckable(true);
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(setPause(bool)));
 		Wnd->connect(QMGL, SIGNAL(pauseChanged(bool)), a, SLOT(setChecked(bool)));
 //		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
-		a->setToolTip(TR("Pause on/off calculations."));
+		a->setToolTip(_("Pause on/off calculations."));
 		f->addSeparator();	f->addAction(a);	bb->addAction(a);
 	}
 #endif
 
 	Wnd->menuBar()->addSeparator();
-	o = Wnd->menuBar()->addMenu(TR("&Help"));
-	o->addAction(TR("About"), QMGL, SLOT(about()));
-	o->addAction(TR("About &Qt"), QMGL, SLOT(aboutQt()));
+	o = Wnd->menuBar()->addMenu(_("Help"));
+	o->addAction(_("About"), QMGL, SLOT(about()));
+	o->addAction(_("About Qt"), QMGL, SLOT(aboutQt()));
 	return popup;
 }
 //-----------------------------------------------------------------------------

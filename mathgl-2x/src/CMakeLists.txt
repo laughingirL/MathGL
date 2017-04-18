@@ -24,7 +24,6 @@ ${MathGL2_BINARY_DIR}/include/mgl2/dllexport.h	cont.hpp
 #	tex_table.cc	 def_font.cc
 )
 
-add_definitions(-DMGL_SRC)
 if(MGL_HAVE_GSL2)
 	add_definitions(-DMGL_HAVE_GSL2)
 endif(MGL_HAVE_GSL2)
@@ -50,16 +49,7 @@ generate_export_header(mgl EXPORT_FILE_NAME ../include/mgl2/dllexport.h)
 target_link_libraries(mgl ${MGL_DEP_LIBS})
 target_link_libraries(mgl-static ${MGL_DEP_LIBS})
 
-if(USE_GETTEXT)
-	set(dir src)
-	add_custom_target(${dir}_po
-		COMMAND ${findxgettext} -s --keyword=_mgl -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/${dir}/${dir}.pot ${mgl_src} ${mgl_hdr}
-		COMMAND ${findmsgmerge} -o strings_ru.po strings_ru.po ${MathGL2_BINARY_DIR}/${dir}/${dir}.pot
-		WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/${dir}/
-		DEPENDS ${mgl_src} ${mgl_hdr} strings_ru.po)
-	set(po_targets ${po_targets} ${dir}_po PARENT_SCOPE)
-	set(po_files ${po_files} ${MathGL2_SOURCE_DIR}/${dir}/strings_ru.po PARENT_SCOPE)
-endif(USE_GETTEXT)
+set(po_files ${po_files} ${mgl_src} ${mgl_hdr} PARENT_SCOPE)
 
 if(MGL_HAVE_MPI)
 	mgl_add_lib(mpi mpi.cpp ../include/mgl2/mpi.h)

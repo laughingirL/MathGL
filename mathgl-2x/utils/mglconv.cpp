@@ -80,10 +80,10 @@ int main(int argc, char *argv[])
 		}
 		else if(ch=='h' || (ch==-1 && optind>=argc))
 		{
-			printf("mglconv convert mgl script to image file (default PNG).\nCurrent version is 2.%g\n",MGL_VER2);
-			printf("Usage:\tmglconv [parameter(s)] scriptfile\n");
+			printf(_("mglconv convert mgl script to image file (default PNG).\nCurrent version is 2.%g\n"),MGL_VER2);
+			printf(_("Usage:\tmglconv [parameter(s)] scriptfile\n"));
 			printf(
-				"\t-1 str       set str as argument $1 for script\n"
+				_("\t-1 str       set str as argument $1 for script\n"
 				"\t...          ...\n"
 				"\t-9 str       set str as argument $9 for script\n"
 				"\t-L loc       set locale to loc\n"
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 				"\t-C n1:n2:dn  add animation value in range [n1,n2] with step dn\n"
 				"\t-C n1:n2     add animation value in range [n1,n2] with step 1\n"
 				"\t-            get script from standard input\n"
-				"\t-h           print this message\n" );
+				"\t-h           print this message\n") );
 			return 0;
 		}
 		else if(ch=='o')	strncpy(oname, optarg,256);
