@@ -22,7 +22,8 @@ install(
 	RUNTIME DESTINATION ${MGL_CGI_PATH}
 )
 
-set(po_files ${po_files} mglconv.cpp mglview.cpp PARENT_SCOPE)
+mgl_po_src(lpo_files mglconv.cpp mglview.cpp mglcgi.cpp)
+set(po_files ${po_files} ${lpo_files} PARENT_SCOPE)
 
 if(QT_ENABLED)
 	add_executable(mglview mglview.cpp)

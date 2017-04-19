@@ -49,7 +49,8 @@ generate_export_header(mgl EXPORT_FILE_NAME ../include/mgl2/dllexport.h)
 target_link_libraries(mgl ${MGL_DEP_LIBS})
 target_link_libraries(mgl-static ${MGL_DEP_LIBS})
 
-set(po_files ${po_files} ${mgl_src} ${mgl_hdr} PARENT_SCOPE)
+mgl_po_src(lpo_files ${mgl_src} ${mgl_hdr})
+set(po_files ${po_files} ${lpo_files} PARENT_SCOPE)
 
 if(MGL_HAVE_MPI)
 	mgl_add_lib(mpi mpi.cpp ../include/mgl2/mpi.h)

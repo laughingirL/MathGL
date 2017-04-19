@@ -37,6 +37,17 @@ foreach(p LIB BIN INCLUDE CMAKE)
   endif()
 endforeach()
 
+macro(mgl_po_src l_files)
+    if(NOT DEFINED ${l_files})
+	set(${l_files} )
+    endif(NOT DEFINED ${l_files})
+    foreach(src_file ${ARGN})
+        get_filename_component(fp ${src_file} ABSOLUTE)
+        file(RELATIVE_PATH rel ${CMAKE_SOURCE_DIR} ${fp})
+        list(APPEND ${l_files} "${rel}")
+    endforeach(src_file ${ARGN})
+endmacro(mgl_po_src)
+
 function(mgl_add_lib mgl_tmp_lib)
        if(${mgl_tmp_lib} MATCHES mgl)
                set(mgllib mgl)
@@ -710,8 +721,6 @@ install(FILES
 install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
 
 if(USE_GETTEXT)
-	# VERY BAD THING
-	file(GLOB po_files [sumw]*/*.cpp )
 	add_custom_target(mathgl_ru.po ALL
 		COMMAND ${findxgettext} -s --keyword=_ -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/mathgl.pot ${po_files}
 		COMMAND ${findmsgmerge} -U mathgl_ru.po ${MathGL2_BINARY_DIR}/mathgl.pot

@@ -33,7 +33,8 @@ else(enable-qt5)
 	target_link_libraries(udav mgl-qt4 ${MGL_QT4_LIBS})
 endif(enable-qt5)
 
-set(po_files ${po_files} ${udav_src} ${udav_hdr} PARENT_SCOPE)
+mgl_po_src(lpo_files ${udav_src} ${udav_hdr})
+set(po_files ${po_files} ${lpo_files} PARENT_SCOPE)
 
 if(MGL_HAVE_PTHREAD)
 	target_link_libraries(udav ${CMAKE_THREAD_LIBS_INIT})

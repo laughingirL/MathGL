@@ -54,6 +54,7 @@ if(MGL_HAVE_FLTK)
 		install(CODE "execute_process(COMMAND \"${findupmdb}\" \"${CMAKE_INSTALL_PREFIX}/share/mime\")")
 	endif(findupmdb)
 
-	set(po_files ${po_files} ${mgllab_src} ${mgllab_hdr} PARENT_SCOPE)
+	mgl_po_src(lpo_files ${mgllab_src} ${mgllab_hdr})
+	set(po_files ${po_files} ${lpo_files} PARENT_SCOPE)
 
 endif(MGL_HAVE_FLTK)
