@@ -82,7 +82,7 @@ void MGL_EXPORT mgl_set_global_warn(const char *txt)
 	if(txt && *txt)
 	{
 		mglGlobalMess += txt;	mglGlobalMess += '\n';
-		if(mglPrintWarn)	fprintf(stderr,"Global message - %s\n",txt);
+		if(mglPrintWarn)	fprintf(stderr,_("Global message - %s\n"),txt);
 	}
 }
 void MGL_EXPORT mgl_set_global_warn_(const char *txt, int l)
@@ -263,7 +263,7 @@ void MGL_EXPORT mgl_test_txt(const char *str, ...)
 		va_start(lst,str);
 		vsnprintf(buf,256,str,lst);	buf[255]=0;
 		va_end(lst);
-		printf("TEST: %s\n",buf);
+		printf(_("TEST: %s\n"),buf);
 		fflush(stdout);
 	}
 }

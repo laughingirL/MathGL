@@ -399,14 +399,14 @@ int main(int argc, char **argv)
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
 		else if(ch=='h')
 		{
-			printf("mgllab draw mgl script interactively.\nCurrent version is 2.%g\n",MGL_VER2);
-			printf("Usage:\tmgllab [parameter(s)] scriptfile\n");
-			printf(	"\t-1 str       set str as argument $1 for script\n"
+			printf(_("mgllab draw mgl script interactively.\nCurrent version is 2.%g\n"),MGL_VER2);
+			printf(_("Usage:\tmgllab [parameter(s)] scriptfile\n"));
+			printf(_("\t-1 str       set str as argument $1 for script\n"
 					"\t...          ...\n"
 					"\t-9 str       set str as argument $9 for script\n"
 					"\t-L loc       set locale to loc\n"
 //					"\t-            get script from standard input\n"
-					"\t-h           print this message\n" );
+					"\t-h           print this message\n") );
 			return 0;
 		}
 		// NOTE: I will not parse stdin here

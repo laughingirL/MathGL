@@ -119,7 +119,7 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char **g, int &w, int &h, const char 
 		png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 		fclose(fp);
 #else
-		mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");
+		mgl_set_global_warn(_("PNG support was disabled. Please, enable it and rebuild MathGL."));
 #endif
 	}
 	else if(!strcmp(ext,".jpg") || !strcmp(ext,".jpeg"))
@@ -159,7 +159,7 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char **g, int &w, int &h, const char 
 		}
 		delete []buf;
 #else
-		mgl_set_global_warn("JPEG support was disabled. Please, enable it and rebuild MathGL.");
+		mgl_set_global_warn(_("JPEG support was disabled. Please, enable it and rebuild MathGL."));
 #endif
 	}
 	return true;

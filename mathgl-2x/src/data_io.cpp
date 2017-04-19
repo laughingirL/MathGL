@@ -1082,7 +1082,7 @@ int MGL_EXPORT mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 }
 #else
 int MGL_EXPORT mgl_data_read_hdf4(HMDT ,const char *,const char *)
-{	mgl_set_global_warn("HDF4 support was disabled. Please, enable it and rebuild MathGL.");	return 0;	}
+{	mgl_set_global_warn(_("HDF4 support was disabled. Please, enable it and rebuild MathGL."));	return 0;	}
 #endif
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_HDF5
@@ -1181,13 +1181,13 @@ long MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size)
 }
 #else
 void MGL_EXPORT mgl_data_save_hdf(HCDT ,const char *,const char *,int )
-{	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	}
+{	mgl_set_global_warn(_("HDF5 support was disabled. Please, enable it and rebuild MathGL."));	}
 MGL_EXPORT const char * const * mgl_datas_hdf_str(const char *fname)
-{	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	return 0;}
+{	mgl_set_global_warn(_("HDF5 support was disabled. Please, enable it and rebuild MathGL."));	return 0;}
 long MGL_EXPORT mgl_datas_hdf(const char *, char *, long )
-{	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	return 0;}
+{	mgl_set_global_warn(_("HDF5 support was disabled. Please, enable it and rebuild MathGL."));	return 0;}
 int MGL_EXPORT mgl_data_read_hdf(HMDT ,const char *,const char *)
-{	mgl_set_global_warn("HDF5 support was disabled. Please, enable it and rebuild MathGL.");	return 0;}
+{	mgl_set_global_warn(_("HDF5 support was disabled. Please, enable it and rebuild MathGL."));	return 0;}
 #endif
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n)

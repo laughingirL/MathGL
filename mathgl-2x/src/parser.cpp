@@ -763,7 +763,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				if(n && k!=na+2)
 				{
 					char buf[64];
-					snprintf(buf,64,"Bad arguments for %ls: %ld instead of %d\n", a[0].w.c_str(),k-2,na);
+					snprintf(buf,64,_("Bad arguments for %ls: %ld instead of %d\n"), a[0].w.c_str(),k-2,na);
 					buf[63]=0;	gr->SetWarn(-1,buf);	n = 1;
 				}
 				else if(n)
@@ -1003,19 +1003,19 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 		gr->SetObjId(i+1+StarObhID);
 		long r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
-		if(r==1)		snprintf(buf,64,"\nWrong argument(s) in line %ld", i+1);
-		else if(r==2)	snprintf(buf,64,"\nWrong command in line %ld", i+1);
-		else if(r==3)	snprintf(buf,64,"\nString too long in line %ld", i+1);
-		else if(r==4)	snprintf(buf,64,"\nUnbalanced ' in line %ld", i+1);
-		else if(r==5)	snprintf(buf,64,"\nChange temporary data in line %ld", i+1);
-		else if(gr->GetWarn()>0)	snprintf(buf,64,"in line %ld", i+1);
+		if(r==1)		snprintf(buf,64,_("\nWrong argument(s) in line %ld"), i+1);
+		else if(r==2)	snprintf(buf,64,_("\nWrong command in line %ld"), i+1);
+		else if(r==3)	snprintf(buf,64,_("\nString too long in line %ld"), i+1);
+		else if(r==4)	snprintf(buf,64,_("\nUnbalanced ' in line %ld"), i+1);
+		else if(r==5)	snprintf(buf,64,_("\nChange temporary data in line %ld"), i+1);
+		else if(gr->GetWarn()>0)	snprintf(buf,64,_("in line %ld"), i+1);
 		else *buf=0;
 		buf[63] = 0;
 		if(*buf)	gr->SetWarn(-2,buf);
 		if(r>0 && r<5)	res=r;
 	}
 	int code[]={mglScrArg,	mglScrCmd,	mglScrLong,	mglScrStr, mglScrTemp};
-	if(res>0)	gr->SetWarn(code[res-1],"MGL Parser");
+	if(res>0)	gr->SetWarn(code[res-1],_("MGL Parser"));
 }
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const wchar_t *text)
@@ -1419,24 +1419,24 @@ void MGL_EXPORT mgl_parser_start_id_(uintptr_t* p, int *id)
 
 //---------------------------------------------------------------------------
 mglCommand mgls_prg_cmd[] = {
-	{"ask","Define parameter from user input","ask $N 'question'", 0, 6},
-	{"break","Break for-cycle","break", 0, 6},
-	{"call","Execute script in external file","call 'name' [args]", 0, 6},
-	{"continue","Skip commands and iterate for-cycle again","continue", 0, 6},
-	{"defchr","Define parameter as character","defchr $N val", 0, 6},
-	{"define","Define constant or parameter","define $N sth | Var val", 0, 6},
-	{"defnum","Define parameter as numerical value","defnum $N val", 0, 6},
-//	{"defpal","Define parameter as palette color","defpal $N val", 0, 6},
-	{"else","Execute if condition is false","else", 0, 6},
-	{"elseif","Conditional operator","elseif val|Dat ['cond']", 0, 6},
-	{"endif","Finish if/else block","endif", 0, 6},
-	{"for","For cycle","for $N v1 v2 [dv] | $N Dat", 0, 6},
-	{"func","Start function definition and stop execution of main script","func 'name' [narg]", 0, 6},
-	{"if","Conditional operator","if val|Dat ['cond']", 0, 6},
-	{"list","Creates new variable from list of numbers or data","list Var v1 ...|Var D1 ...", 0, 4},
-	{"next","Start next for-cycle iteration","next", 0, 6},
-	{"once","Start/close commands which should executed only once","once val", 0, 6},
-	{"return","Return from function","return", 0, 6},
-	{"stop","Stop execution","stop", 0, 6},
+	{"ask",_("Define parameter from user input"),"ask $N 'question'", 0, 6},
+	{"break",_("Break for-cycle"),"break", 0, 6},
+	{"call",_("Execute script in external file"),"call 'name' [args]", 0, 6},
+	{"continue",_("Skip commands and iterate for-cycle again"),"continue", 0, 6},
+	{"defchr",_("Define parameter as character"),"defchr $N val", 0, 6},
+	{"define",_("Define constant or parameter"),"define $N sth | Var val", 0, 6},
+	{"defnum",_("Define parameter as numerical value"),"defnum $N val", 0, 6},
+//	{"defpal",_("Define parameter as palette color"),"defpal $N val", 0, 6},
+	{"else",_("Execute if condition is false"),"else", 0, 6},
+	{"elseif",_("Conditional operator"),"elseif val|Dat ['cond']", 0, 6},
+	{"endif",_("Finish if/else block"),"endif", 0, 6},
+	{"for",_("For loop"),"for $N v1 v2 [dv] | $N Dat", 0, 6},
+	{"func",_("Start function definition and stop execution of main script"),"func 'name' [narg]", 0, 6},
+	{"if",_("Conditional operator"),"if val|Dat ['cond']", 0, 6},
+	{"list",_("Creates new variable from list of numbers or data"),"list Var v1 ...|Var D1 ...", 0, 4},
+	{"next",_("Start next for-cycle iteration"),"next", 0, 6},
+	{"once",_("Start/close commands which should executed only once"),"once val", 0, 6},
+	{"return",_("Return from function"),"return", 0, 6},
+	{"stop",_("Stop execution"),"stop", 0, 6},
 {"","","",NULL,0}};
 //-----------------------------------------------------------------------------

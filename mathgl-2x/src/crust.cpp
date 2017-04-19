@@ -554,9 +554,9 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	}
 
 	if (triads.empty()) {
-		mgl_set_global_warn("Cannot triangulate this set!");
+		mgl_set_global_warn(_("Cannot triangulate this set!"));
 	} else if(original_size > pts.size()) {
-		mgl_set_global_warn("There are duplicated or indistinguishably adjacent points for triangulation.");
+		mgl_set_global_warn(_("There are duplicated or indistinguishably adjacent points for triangulation."));
 	}
 
 	long m = triads.size();

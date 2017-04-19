@@ -107,7 +107,7 @@ void MGL_EXPORT mgl_test(const char *str, ...)
 	va_start(lst,str);
 	vsnprintf(buf,256,str,lst);	buf[255]=0;
 	va_end(lst);
-	printf("TEST: %s\n",buf);
+	printf(_("TEST: %s\n"),buf);
 	fflush(stdout);
 }
 //-----------------------------------------------------------------------------

@@ -188,7 +188,7 @@ void PlotPanel::next()
 	{
 		gr.NewFrame();	execute();	gr.EndFrame();
 		if(jpgOn)	gr.WriteFrame();
-		QString s;	s.sprintf("%d - %d of %d",gr.GetNumFrame(),animPos,n);
+		QString s;	s.sprintf(_("%d - %d of %d"),gr.GetNumFrame(),animPos,n);
 		setStatus(QString(_("Frame %1 of %2")).arg(animPos).arg(n));
 	}
 }

@@ -30,7 +30,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	Z=0;	C=G=G4=GB=0;	OI=0;	gif=0;
 	CurFrameId=0;	Delay=0.5;
 	Width=Height=Depth=0;	ObjId=-1;
-	fscl=ftet=0;		PlotId = "frame";
+	fscl=ftet=0;		PlotId = _("frame");
 	pnt_col = 0;
 
 	ac.ch='c';

@@ -499,9 +499,9 @@ void MGL_EXPORT mgl_set_tick_shift_(uintptr_t *gr, mreal *sx, mreal *sy, mreal *
 //-----------------------------------------------------------------------------
 #if !MGL_HAVE_PNG
 void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
-{	mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");	}
+{	mgl_set_global_warn(_("PNG support was disabled. Please, enable it and rebuild MathGL."));	}
 void MGL_EXPORT mgl_write_prc_(uintptr_t *graph, const char *fname,const char *descr, int *make_pdf,int lf,int ld)
-{	mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");	}
+{	mgl_set_global_warn(_("PNG support was disabled. Please, enable it and rebuild MathGL."));	}
 #endif
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_finish(HMGL gr)

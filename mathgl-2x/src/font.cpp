@@ -942,7 +942,7 @@ long MGL_EXPORT mgl_check_tex_table()
 		mglTeXsymb tst, *rts;	tst.tex = mgl_tex_symb[i].tex;
 		rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, mgl_tex_num, sizeof(mglTeXsymb), mgl_tex_symb_cmp);
 		if(!rts)
-		{	printf("Bad '%ls' at %zu\n",mgl_tex_symb[i].tex,i);	res = 1+i;	}
+		{	printf(_("Bad '%ls' at %zu\n"),mgl_tex_symb[i].tex,i);	res = 1+i;	}
 	}
 	return res;
 }

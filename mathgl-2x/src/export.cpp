@@ -72,7 +72,7 @@ int MGL_NO_EXPORT mgl_pnga_save(const char *fname, int w, int h, unsigned char *
 	if(fl)	fclose(fp);
 	return 0;
 #else
-	mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");
+	mgl_set_global_warn(_("PNG support was disabled. Please, enable it and rebuild MathGL."));
 	return 1;
 #endif
 }
@@ -106,7 +106,7 @@ int MGL_NO_EXPORT mgl_png_save(const char *fname, int w, int h, unsigned char **
 	if(fl)	fclose(fp);
 	return 0;
 #else
-	mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");
+	mgl_set_global_warn(_("PNG support was disabled. Please, enable it and rebuild MathGL."));
 	return 1;
 #endif
 }
@@ -189,7 +189,7 @@ int MGL_NO_EXPORT mgl_jpeg_save(const char *fname, int w, int h, unsigned char *
 	if(fl)	fclose(fp);
 	return 0;
 #else
-	mgl_set_global_warn("JPEG support was disabled. Please, enable it and rebuild MathGL.");
+	mgl_set_global_warn(_("JPEG support was disabled. Please, enable it and rebuild MathGL."));
 	return 1;
 #endif
 }
@@ -303,7 +303,7 @@ int MGL_NO_EXPORT mgl_gif_save(const char *fname, int w, int h, unsigned char **
 #endif
 	delete []line;	return 0;
 #else
-	mgl_set_global_warn("GIF support was disabled. Please, enable it and rebuild MathGL.");
+	mgl_set_global_warn(_("GIF support was disabled. Please, enable it and rebuild MathGL."));
 	return 1;
 #endif
 }
@@ -372,7 +372,7 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 	EGifPutExtension(gif,0xf9,4,ext2);
 #endif
 #else
-	mgl_set_global_warn("GIF support was disabled. Please, enable it and rebuild MathGL.");
+	mgl_set_global_warn(_("GIF support was disabled. Please, enable it and rebuild MathGL."));
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -385,7 +385,7 @@ void mglCanvas::CloseGIF()
 	if(gif)	EGifCloseFile(gif);
 #endif
 #else
-	mgl_set_global_warn("GIF support was disabled. Please, enable it and rebuild MathGL.");
+	mgl_set_global_warn(_("GIF support was disabled. Please, enable it and rebuild MathGL."));
 #endif
 	gif = 0;
 }
