@@ -121,24 +121,24 @@ void DataOpenDialog::prepareResult()
 	int dd=0;
 	if(rA->isChecked())	//	auto sizes
 	{
-		setlocale(LC_NUMERIC, "C");	v->Read(file.toLocal8Bit().constData());	setlocale(LC_NUMERIC, "");
+		v->Read(file.toLocal8Bit().constData());
 		if(v->nx==1)	{	v->nx = v->ny;	v->ny = v->nz;	}
 		code=QString("#read %1 '%2'\n").arg(data).arg(file);
 	}
 	else if(rM->isChecked())	//	manual sizes
 	{
 		int x=nx->text().toInt(), y=ny->text().toInt(), z=nz->text().toInt();
-		setlocale(LC_NUMERIC, "C");	v->Read(file.toLocal8Bit().constData(),x,y,z);	setlocale(LC_NUMERIC, "");
+		v->Read(file.toLocal8Bit().constData(),x,y,z);
 		code=QString("#read %1 '%2' %3 %4 %5\n").arg(data).arg(file).arg(x).arg(y).arg(z);
 	}
 	else if(r2->isChecked())	//	matrix
 	{
-		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toLocal8Bit().constData());	setlocale(LC_NUMERIC, "");
+		v->ReadMat(file.toLocal8Bit().constData());
 		code=QString("#readmat %1 '%2'\n").arg(data).arg(file);		dd=1;
 	}
 	else if(r3->isChecked())	//	3d-data
 	{
-		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toLocal8Bit().constData(),3);	setlocale(LC_NUMERIC, "");
+		v->ReadMat(file.toLocal8Bit().constData(),3);
 		code=QString("#readmat %1 '%2' 3\n").arg(data).arg(file);	dd=2;
 	}
 	if(scr->lineEdit()->text().isEmpty() || scr->lineEdit()->text()==_("default"))

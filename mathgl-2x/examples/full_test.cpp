@@ -407,6 +407,10 @@ void smgl_fexport(mglGraph *gr)	// test file export
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	mgl_suppress_warn(true);
 	const char *suf = "";
 	char name[256]="", *tmp;
@@ -469,7 +473,7 @@ int main(int argc,char **argv)
 		int qual[7]={0,1,2,4,5,6,8};
 		size_t ll=strlen(mmgl_dat_prepare)+1;
 		mglParse par;
-		par.AllowSetSize(true);	setlocale(LC_CTYPE, "");
+		par.AllowSetSize(true);
 		FILE *fp = fopen(big?"time_big.texi":"time.texi","w");
 		fprintf(fp,"@multitable @columnfractions .16 .12 .12 .12 .12 .12 .12 .12\n");
 		fprintf(fp,"@headitem Name");
@@ -520,7 +524,6 @@ int main(int argc,char **argv)
 			{
 				mglParse par;
 				par.AllowSetSize(true);
-				setlocale(LC_CTYPE, "");
 				char *buf = new char[strlen(s->mgl)+strlen(mmgl_dat_prepare)+1];
 				strcpy(buf,s->mgl);		strcat(buf,mmgl_dat_prepare);
 				if(type!=7)	printf("\n-------\n%s\n-------\n",verbose?buf:s->mgl);
@@ -547,7 +550,6 @@ int main(int argc,char **argv)
 			{
 				mglParse par;
 				par.AllowSetSize(true);
-				setlocale(LC_CTYPE, "");
 				char *buf = new char[strlen(s->mgl)+strlen(mmgl_dat_prepare)+1];
 				strcpy(buf,s->mgl);		strcat(buf,mmgl_dat_prepare);
 				if(type!=7)	printf("\n-------\n%s\n-------\n",verbose?buf:s->mgl);

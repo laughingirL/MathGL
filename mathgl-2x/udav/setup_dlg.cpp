@@ -105,8 +105,8 @@ SetupDialog::SetupDialog(QWidget *parent) : QDialog(parent)
 	font = new QLineEdit(p);	g->addWidget(font,13,0);
 	l = new QLabel(_("FontSize"), p);	g->addWidget(l,12,1);
 	fsize = new QLineEdit(p);	g->addWidget(fsize,13,1);
-	alpha = new QCheckBox(_("Alpha on"),p);	g->addWidget(alpha, 13,2);
-	light = new QCheckBox(_("Light on"),p);	g->addWidget(light, 13,3);
+	alpha = new QCheckBox(_("Alpha"),p);	g->addWidget(alpha, 13,2);
+	light = new QCheckBox(_("Light"),p);	g->addWidget(light, 13,3);
 	rotate = new QCheckBox(_("No text rotation"),p);	g->addWidget(rotate, 13,4);
 	tab->addTab(p, _("General settings"));
 

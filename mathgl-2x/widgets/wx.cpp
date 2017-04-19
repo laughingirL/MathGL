@@ -356,11 +356,7 @@ void wxMathGL::ExportBPS(wxString fname)
 	if(fname.IsEmpty())	fname = ScriptName;
 	if(fname.IsEmpty())	wxMessageBox(appName, wxT("No filename."),wxOK|wxICON_ERROR ,this);
 	else
-	{
-		setlocale(LC_ALL, "C");
 		mgl_write_bps(gr,mglw_str(mglSetExtension(fname,"eps")), mglw_str(appName));
-		setlocale(LC_ALL, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::ExportEPS(wxString fname)
@@ -368,11 +364,7 @@ void wxMathGL::ExportEPS(wxString fname)
 	if(fname.IsEmpty())	fname = ScriptName;
 	if(fname.IsEmpty())	wxMessageBox(appName, wxT("No filename."),wxOK|wxICON_ERROR ,this);
 	else
-	{
-		setlocale(LC_ALL, "C");
 		mgl_write_eps(gr,mglw_str(mglSetExtension(fname,"eps")), mglw_str(appName));
-		setlocale(LC_ALL, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::ExportSVG(wxString fname)
@@ -380,11 +372,7 @@ void wxMathGL::ExportSVG(wxString fname)
 	if(fname.IsEmpty())	fname = ScriptName;
 	if(fname.IsEmpty())	wxMessageBox(appName, wxT("No filename."),wxOK|wxICON_ERROR ,this);
 	else
-	{
-		setlocale(LC_ALL, "C");
 		mgl_write_svg(gr,mglw_str(mglSetExtension(fname,"eps")), mglw_str(appName));
-		setlocale(LC_ALL, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::Copy()

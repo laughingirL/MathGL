@@ -55,6 +55,10 @@ void *calc(void *)
 }
 int main(int argc,char **argv)
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	static pthread_t thr;
 	pthread_create(&thr,0,calc,0);
 	pthread_detach(thr);
@@ -65,6 +69,10 @@ int main(int argc,char **argv)
 mglPoint pnt;	// some global variable for changeable data
 int main(int argc,char **argv)
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	mglFLTK gr("test");
 	gr.RunThr();	// <-- need MathGL version which use pthread
 	for(int i=0;i<10;i++)	// do calculation
@@ -119,6 +127,10 @@ public:
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	mglFLTK *gr;
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];

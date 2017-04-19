@@ -302,7 +302,7 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	// vertices definition
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
 	for(long i=0;i<gr->GetPntNum();i++)
 	{
@@ -363,7 +363,7 @@ void MGL_EXPORT mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	FILE *fp = fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	fprintf(fp,"solid %s\n",(descr && *descr)?descr:"mathgl");
 	mglPnt pp;
 	for(long i=0;i<gr->GetPrmNum();i++)
@@ -416,7 +416,7 @@ void MGL_EXPORT mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 
 	FILE *fp=fopen(fname,"wt"), *ff;	// vertices definition
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
 	fprintf(fp,"# List of Vertices, with (x,y,z) coordinates.\n");
 	for(long i=0;i<gr->GetPntNum();i++)
@@ -462,7 +462,7 @@ void MGL_EXPORT mgl_write_off(HMGL gr, const char *fname,const char *descr, int 
 
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	// vertices definition
 	if(colored)
 		fprintf(fp,"COFF\n# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
@@ -542,7 +542,7 @@ std::string mglCanvas::GetJSON()
 	std::string res, buf;
 	long ll=0,l=(long)Pnt.size();
 	long factor = Width>1?10:10000;
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%ld,\t\"pnts\":[\n",
 			factor*Width, factor*Height, factor*Depth, PlotId.c_str(), l);
 	for(long i=0;i<l;i++)
@@ -634,7 +634,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	if(Pnt.size()<1 || Prm.size()<1)	return true;
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
 	fprintf(fp,"MGLD %lu %lu %lu %lu %d %d\n# %s\n", (unsigned long)Pnt.size(), (unsigned long)Prm.size(), (unsigned long)Txt.size(), (unsigned long)Glf.size(), Width, Height, (descr && *descr) ? descr : fname);
 	fprintf(fp,"# Vertexes: x y z c t ta u v w r g b a\n");
@@ -697,7 +697,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(w<=0 || h<=0)	{	w=Width;	h=Height;	}
 	d = long(sqrt(double(w*h)));
 	if(n==0 || m==0 || l==0)	{	delete []buf;	fclose(fp);	return true;	}
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	if(!add)	{	Clf();	Txt.clear();	}
 	else	{	ClfZB();	npnt=Pnt.size();	nglf=Glf.size();	}
 	LightScale(&B);
@@ -1166,7 +1166,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	bool gz = fname[strlen(fname)-1]=='z';
 	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	mgl_printf(fp, gz, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 	mgl_printf(fp, gz, "<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 3.0//EN\" \"http://www.web3d.org/specifications/x3d-3.0.dtd\">\n");
 	mgl_printf(fp, gz, "<X3D profile='Immersive'>\n<head>\n<meta name='filename' content='%s'/>\n",fname);

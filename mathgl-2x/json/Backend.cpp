@@ -16,8 +16,7 @@ QString Backend::show(const QString& text) const
 	gr.SetFaceNum(200);
 	mglParse pr;
 	pr.AllowSetSize(true);
-	setlocale(LC_CTYPE, "");
-	setlocale(LC_NUMERIC, "C");
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
 	wtext = new wchar_t[text.size()+1];
 	text.toWCharArray(wtext);
 	wtext[text.size()] = 0;
@@ -42,8 +41,7 @@ QString Backend::coor(const QString& xy, const QString& text) const
 	mglGraph gr;
 	mglParse pr;
 	pr.AllowSetSize(true);
-	setlocale(LC_CTYPE, "");
-	setlocale(LC_NUMERIC, "C");
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
 	wtext = new wchar_t[text.size()+1];
 	text.toWCharArray(wtext);
 	wtext[text.size()] = 0;
@@ -71,8 +69,7 @@ QString Backend::geometry(const QString& mgl) const
 #endif
 	mglParse pr;
 	pr.AllowSetSize(true);
-	setlocale(LC_CTYPE, "");
-	setlocale(LC_NUMERIC, "C");
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
 	wmgl = new wchar_t[mgl.size()+1];
 	mgl.toWCharArray(wmgl);
 	wmgl[mgl.size()] = 0;

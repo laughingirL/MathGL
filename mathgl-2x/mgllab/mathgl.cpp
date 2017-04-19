@@ -182,7 +182,7 @@ public:
 	{
 		w = new Fl_Double_Window(335, 350, _("Animation"));
 		new Fl_Box(10, 5, 315, 25, _("Redraw picture for $0 equal to:"));
-		rt = new Fl_Round_Button(10, 30, 200, 25, _("strings in lines below"));
+		rt = new Fl_Round_Button(10, 30, 200, 25, _("strings"));
 		rt->callback(cb_dlg_only, rt);
 		rv = new Fl_Round_Button(220, 30, 105, 25, _("values"));
 		rv->callback(cb_dlg_only, rv);

@@ -61,7 +61,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_data_create(d, NX,NY,NZ);
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	std::vector<char *> lines;
 	std::vector<std::vector<mreal> > numbs;
 	lines.push_back(buf);
@@ -321,7 +321,7 @@ std::string MGL_EXPORT mgl_str_num(dual val)
 std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns)
 {
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	std::string out;
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data

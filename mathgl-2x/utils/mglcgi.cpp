@@ -53,14 +53,16 @@ void mgl_get_value(const char *buf, const char *name, char *val)
 //-----------------------------------------------------------------------------
 int main()
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	mgl_suppress_warn(true);
 	mglGraph gr;
 	mglParse p(true);
 
 	mgl_ask_func = 0;
 	// read script
-	setlocale(LC_CTYPE, "");
-
 	char *str, *buf;
 	const char *method = getenv("REQUEST_METHOD");
 	bool alloc=false;

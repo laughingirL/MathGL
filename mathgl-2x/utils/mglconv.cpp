@@ -31,6 +31,10 @@ void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	mgl_suppress_warn(true);
 	mglGraph gr;
 	mglParse p(true);
@@ -45,7 +49,6 @@ int main(int argc, char *argv[])
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
 		else if(ch=='s')
 		{
-			setlocale(LC_CTYPE, "");
 			FILE *fp = fopen(optarg,"r");
 			if(fp)
 			{
@@ -55,7 +58,8 @@ int main(int argc, char *argv[])
 			}
 		}
 		else if(ch=='n')	none = true;
-		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
+		else if(ch=='L')
+		{	setlocale(LC_ALL, optarg);	setlocale(LC_NUMERIC, "C");	}
 		else if(ch=='S')	mgl_set_size_scl(atof(optarg));
 		else if(ch=='q')	gr.SetQuality(atoi(optarg));
 		else if(ch=='v')	p.SetVariant(atoi(optarg));
@@ -110,7 +114,6 @@ int main(int argc, char *argv[])
 
 	mgl_ask_func = mgl_ask_gets;
 	// prepare for animation
-	setlocale(LC_CTYPE, "");
 	FILE *fp = *iname?fopen(iname,"r"):stdin;
 	if(!fp)	{	printf("No file for MGL script\n");	return 0;	}
 	wchar_t cw;

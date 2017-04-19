@@ -91,6 +91,10 @@ void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	mgl_suppress_warn(true);
 	QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
 #ifdef WIN32
@@ -438,8 +442,8 @@ void MainWindow::properties()	{	propDlg->exec();	}
 //-----------------------------------------------------------------------------
 void MainWindow::about()
 {
-	QString s = _("<a href='http://mathgl.sourceforge.net/doc_en/UDAV-overview.html'>UDAV</a> v. 2.")+QString::number(MGL_VER2)+
-	_("<br>(c) Alexey Balakin, 2007-2014<br><br><a href='http://www.gnu.org/copyleft/gpl.html'>License is GPL v.2 or later.</a>");
+	QString s = "<a href='http://mathgl.sourceforge.net/doc_en/UDAV-overview.html'>UDAV</a> v. 2."+QString::number(MGL_VER2)+
+	_("<br>(c) Alexey Balakin, 2007-present<br><br><a href='http://www.gnu.org/copyleft/gpl.html'>License is GPL v.2 or later.</a>");
 	QMessageBox::about(this, _("UDAV - about"), s);
 }
 //-----------------------------------------------------------------------------
@@ -547,7 +551,7 @@ void MainWindow::setCurrentFile(const QString &fileName)
 		setWindowTitle(_("untitled - UDAV"));
 	else
 	{
-		setWindowTitle(QFileInfo(filename).fileName()+_(" - UDAV"));
+		setWindowTitle(QFileInfo(filename).fileName()+" - UDAV");
 		int i = recentFiles.indexOf(filename);
 		if(i>=0)	recentFiles.removeAt(i);
 		recentFiles.push_front(filename);
@@ -672,14 +676,14 @@ void MainWindow::setAsterix()
 		if(filename.isEmpty())
 			setWindowTitle(_("untitled* - UDAV"));
 		else
-			setWindowTitle(QFileInfo(filename).fileName()+_("* - UDAV"));
+			setWindowTitle(QFileInfo(filename).fileName()+"* - UDAV");
 	}
 	else
 	{
 		if(filename.isEmpty())
 			setWindowTitle(_("untitled - UDAV"));
 		else
-			setWindowTitle(QFileInfo(filename).fileName()+_(" - UDAV"));
+			setWindowTitle(QFileInfo(filename).fileName()+" - UDAV");
 	}
 }
 //-----------------------------------------------------------------------------

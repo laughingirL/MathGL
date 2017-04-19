@@ -160,7 +160,7 @@ inline void Fl_MathGL::draw_plot()	// drawing itself
 		if(tet_val)	tet = tet_val->value();
 		if(phi_val)	phi = phi_val->value();
 		mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,-phi,-tet,0);
-		setlocale(LC_NUMERIC, "C");
+		const std::string loc = setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
 		if(mgl_is_frames(gr))	mgl_new_frame(gr);
 
@@ -168,17 +168,17 @@ inline void Fl_MathGL::draw_plot()	// drawing itself
 		else	if(draw_cl)	{	mglGraph g(gr);	draw_cl->Draw(&g);	}
 
 		if(mgl_is_frames(gr))	mgl_end_frame(gr);
-		setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, loc.c_str());
 		const char *buf = mgl_get_mess(gr);
 		if(show_warn && *buf)	fl_message("%s",buf);
 		if(!prim.empty())	// manual primitives
 		{
-			setlocale(LC_NUMERIC, "C");
+			const std::string loc = setlocale(LC_NUMERIC, "C");
 			mgl_subplot(gr,1,1,0,"#");
 			mgl_set_ranges(gr, -1,1, -1,1, -1,1);
 			mglParse pr;	pr.StartID(MGL_MAX_LINES);
 			mgl_parse_text(gr,pr.Self(),prim.c_str());
-			setlocale(LC_NUMERIC, "");
+			setlocale(LC_NUMERIC, loc.c_str());
 		}
 	}
 	else if(mgl_get_num_frame(gr)>0)

@@ -1583,7 +1583,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"rearrange",_("Rearrange data dimensions"),"rearrange Dat mx [my mz]", mgls_rearrange ,3},
 	{"refill",_("Fill data by interpolation of Vdat"),"refill Dat Xdat Vdat [sl]|Dat Xdat Ydat Vdat [sl]|Dat Xdat Ydat Zdat Vdat", mgls_refill ,3},
 	{"resize",_("Resize data"),"resize Res Dat mx [my mz]", mgls_resize ,4},
-	{"rkstep",_("Apply Runge-Kutta"),"rkstep 'Diff1;Diff2;...' 'Var1;Var2;...' [dt]", mgls_rkstep, 6},
+	{"rkstep",_("Perform Runge-Kutta step"),"rkstep 'Diff1;Diff2;...' 'Var1;Var2;...' [dt]", mgls_rkstep, 6},
 	{"roll",_("Roll data along direction"),"roll Dat 'dir' num", mgls_roll ,16},
 	{"roots",_("Find roots using data as initial values"), "roots Res 'func' Ini ['var']|Res 'func' ini ['var']", mgls_roots ,4},
 	{"save",_("Save data to file"),"save Dat 'file'|'str' 'file' ['how']", mgls_save ,3},

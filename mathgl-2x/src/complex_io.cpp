@@ -88,7 +88,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_datac_create(d, NX,NY,NZ);
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	std::vector<char *> lines;
 	std::vector<std::vector<dual> > numbs;
 	lines.push_back(buf);
@@ -235,7 +235,7 @@ std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns)
 	const mglDataC *dd = dynamic_cast<const mglDataC*>(d);
 	if(!dd)	{	return	mgl_data_to_string(d,ns);	}
 	long nx=dd->nx, ny=dd->ny, nz=dd->nz;
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data
 		const mglDataC *dc = dynamic_cast<const mglDataC *>(d);

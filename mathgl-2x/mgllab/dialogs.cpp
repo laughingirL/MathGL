@@ -25,36 +25,36 @@
 const char *cols = " wbgrcmylenuqphkWBGRCMYLENUQPH";
 Fl_Menu_Item colors[] = {
 	{"-----", 0,0,0,0,0,0,0, 0},	//
-	{_("white"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//w
-	{_("blue"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,255)},		//b
-	{_("lime"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,0)},		//g
-	{_("red"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,0)},			//r
-	{_("cyan"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,255)},		//c
-	{_("magenta"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,255)},	//m
-	{_("yellow"), 0,0,0,0,0,0,0, fl_rgb_color(255,255,0)},	//y
-	{_("springgreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,127)},//l
-	{_("lawngreen"), 0,0,0,0,0,0,0, fl_rgb_color(127,255,0)},	//e
-	{_("skyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,255)},	//n
-	{_("blueviolet"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,255)},//u
-	{_("orange"), 0,0,0,0,0,0,0, fl_rgb_color(255,127,0)},	//q
-	{_("deeppink"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,127)},	//p
-	{_("gray"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,127)},	//h
+	{_("w - white"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//w
+	{_("b - blue"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,255)},		//b
+	{_("g - lime"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,0)},		//g
+	{_("r - red"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,0)},			//r
+	{_("c - cyan"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,255)},		//c
+	{_("m - magenta"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,255)},	//m
+	{_("y - yellow"), 0,0,0,0,0,0,0, fl_rgb_color(255,255,0)},	//y
+	{_("l - springgreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,255,127)},//l
+	{_("e - lawngreen"), 0,0,0,0,0,0,0, fl_rgb_color(127,255,0)},	//e
+	{_("n - skyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,255)},	//n
+	{_("u - blueviolet"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,255)},//u
+	{_("q - orange"), 0,0,0,0,0,0,0, fl_rgb_color(255,127,0)},	//q
+	{_("p - deeppink"), 0,0,0,0,0,0,0, fl_rgb_color(255,0,127)},	//p
+	{_("h - gray"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,127)},	//h
 
-	{_("black"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//k
-	{_("lightgray"), 0,0,0,0,0,0,0, fl_rgb_color(179,179,179)},//W
-	{_("navy"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,127)},		//B
-	{_("green"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,0)},		//G
-	{_("maroon"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,0)},		//R
-	{_("teal"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,127)},		//C
-	{_("purple"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,127)},	//M
-	{_("olive"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,0)},		//Y
-	{_("seagreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,77)},	//L
-	{_("darklawn"), 0,0,0,0,0,0,0, fl_rgb_color(77,127,0)},	//E
-	{_("darkskyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,77,127)},//N
-	{_("indigo"), 0,0,0,0,0,0,0, fl_rgb_color(77,0,127)},		//U
-	{_("brown"), 0,0,0,0,0,0,0, fl_rgb_color(127,77,0)},		//Q
-	{_("darkpink"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,77)},	//P
-	{_("darkgray"), 0,0,0,0,0,0,0, fl_rgb_color(77,77,77)},	//H
+	{_("k - black"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,0)},			//k
+	{_("W - lightgray"), 0,0,0,0,0,0,0, fl_rgb_color(179,179,179)},//W
+	{_("B - navy"), 0,0,0,0,0,0,0, fl_rgb_color(0,0,127)},		//B
+	{_("G - green"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,0)},		//G
+	{_("R - maroon"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,0)},		//R
+	{_("C - teal"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,127)},		//C
+	{_("M - purple"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,127)},	//M
+	{_("Y - olive"), 0,0,0,0,0,0,0, fl_rgb_color(127,127,0)},		//Y
+	{_("L - seagreen"), 0,0,0,0,0,0,0, fl_rgb_color(0,127,77)},	//L
+	{_("E - darklawn"), 0,0,0,0,0,0,0, fl_rgb_color(77,127,0)},	//E
+	{_("N - darkskyblue"), 0,0,0,0,0,0,0, fl_rgb_color(0,77,127)},//N
+	{_("U - indigo"), 0,0,0,0,0,0,0, fl_rgb_color(77,0,127)},		//U
+	{_("Q - brown"), 0,0,0,0,0,0,0, fl_rgb_color(127,77,0)},		//Q
+	{_("P - darkpink"), 0,0,0,0,0,0,0, fl_rgb_color(127,0,77)},	//P
+	{_("H - darkgray"), 0,0,0,0,0,0,0, fl_rgb_color(77,77,77)},	//H
 {0}};
 //-----------------------------------------------------------------------------
 void cb_dlg_cancel(Fl_Widget*, void *v)	{	if(v)	((GeneralDlg*)v)->hide();	}
@@ -84,19 +84,19 @@ public:
 		w = new Fl_Double_Window(570, 185, _("Add command option(s)"));
 		x1 = new Fl_Input(65, 5, 85, 25, _("X-range"));
 		x1->tooltip(_("Minimal value of X for cutting or for coordinate filling"));
-		x2 = new Fl_Input(160, 5, 85, 25, _("-"));
+		x2 = new Fl_Input(160, 5, 85, 25, "-");
 		x2->tooltip(_("Maximal value of X for cutting or for coordinate filling"));
 		y1 = new Fl_Input(65, 35, 85, 25, _("Y-range"));
 		y1->tooltip(_("Minimal value of Y for cutting or for coordinate filling"));
-		y2 = new Fl_Input(160, 35, 85, 25, _("-"));
+		y2 = new Fl_Input(160, 35, 85, 25, "-");
 		y2->tooltip(_("Maximal value of Y for cutting or for coordinate filling"));
 		z1 = new Fl_Input(65, 65, 85, 25, _("Z-range"));
 		z1->tooltip(_("Minimal value of Z for cutting or for coordinate filling"));
-		z2 = new Fl_Input(160, 65, 85, 25, _("-"));
+		z2 = new Fl_Input(160, 65, 85, 25, "-");
 		z2->tooltip(_("Maximal value of Z for cutting or for coordinate filling"));
 		c1 = new Fl_Input(65, 95, 85, 25, _("C-range"));	c1->deactivate();
 		c1->tooltip(_("Low border for determining color or alpha"));
-		c2 = new Fl_Input(160, 95, 85, 25, _("-"));		c2->deactivate();
+		c2 = new Fl_Input(160, 95, 85, 25, "-");		c2->deactivate();
 		c2->tooltip(_("Upper border for determining color or alpha"));
 		val = new Fl_Input(325, 5, 85, 25, _("Value"));	val->labelfont(1);
 		meshnum = new Fl_Input(325, 35, 85, 25, _("MeshNum"));
@@ -184,67 +184,67 @@ void dirsel_in_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 //const char *arr = "_AKVITSDOX";
 Fl_Menu_Item arrows[] = {
-	{("'_' none")},		//_
-	{("'A' arrow")},	//A
-	{("'K' size")},		//K
-	{("'V' back arrow")},//V
-	{("'I' stop")},		//I
-	{("'T' triangle")},	//T
-	{("'S' square")},	//S
-	{("'D' rhomb")},	//D
-	{("'O' circle")},	//O
-	{("'X' cross")},	//X
+	{_("'_' none")},		//_
+	{_("'A' arrow")},	//A
+	{_("'K' size")},		//K
+	{_("'V' back arrow")},//V
+	{_("'I' stop")},		//I
+	{_("'T' triangle")},	//T
+	{_("'S' square")},	//S
+	{_("'D' rhomb")},	//D
+	{_("'O' circle")},	//O
+	{_("'X' cross")},	//X
 	{0}};
 //-----------------------------------------------------------------------------
 //const char *stl = "-|j;i=: d";
 Fl_Menu_Item dashing[] = {
-	{("'-' solid")},	//-
-	{("'|' dash")},		//|
-	{("'j' dash dot")},	//j
-	{("';' small dash")},	//;
-	{("'i' small dash dot")},	//i
-	{("'=' very small dash")},	//=
-	{("':' dots")},		//:
-	{("' ' none")},		//
-	{("manual")},		// d
+	{_("'-' solid")},		//-
+	{_("'|' long dash")},	//|
+	{_("'j' dash dot")},	//j
+	{_("';' dash")},		//;
+	{_("'i' small dash dot")},	//i
+	{_("'=' small dash")},	//=
+	{_("':' dots")},		//:
+	{_("' ' none")},		//
+	{_("manual")},			// d
 	{0}};
 //-----------------------------------------------------------------------------
 //const char *mrk = "*o+xsd.^v<>";
 Fl_Menu_Item markers[] = {
-	{("none")},				//
-	{("'*' star")},			//*
-	{("'o' circle")},		//o
-	{("'+' cross")},		//+
-	{("'x' skew cross")},	//x
-	{("'s' square")},		//s
-	{("'d' rhomb")},		//d
-	{("'.' point")},		//.
-	{("'^' triangle up")},	//^
-	{("'v' triangle down")},//v
-	{("'<' triangle left")},//<
-	{("'>' triangle right")},//>
+	{_("none")},			//
+	{_("'*' star")},		//*
+	{_("'o' circle")},		//o
+	{_("'+' plus")},		//+
+	{_("'x' skew cross")},	//x
+	{_("'s' square")},		//s
+	{_("'d' rhomb")},		//d
+	{_("'.' dot")},			//.
+	{_("'^' triangle up")},	//^
+	{_("'v' triangle down")},//v
+	{_("'<' triangle left")},//<
+	{_("'>' triangle right")},//>
 	{0}};
 //-----------------------------------------------------------------------------
 //const char *msk = " -+=;joOsS~<>dD*^M";
 Fl_Menu_Item masks[] = {
-	{("none")},			//
-	{("'-' lines")},		//-
-	{("'+' cross")},		//+
-	{("'=' double lines")},	//=
-	{("';' dash")},			//;
-	{("'j' dash dot")},		//j
-	{("'o' circle")},		//o
-	{("'O' solid circle")},	//O
-	{("'s' square")},		//s
-	{("'S' solid square")},	//S
-	{("'~' tilde")},		//~
-	{("'<' triangle left")},//<
-	{("'>' triangle right")},//>
-	{("'d' rhomb")},		//d
-	{("'D' solid rhomb")},	//D
-	{("'*' stars")},		//*
-	{("'^' hats")},			//^
-	{("manual")},			//M
+	{_("none")},			//
+	{_("'-' lines")},		//-
+	{_("'+' plus")},		//+
+	{_("'=' double lines")},//=
+	{_("';' dash")},		//;
+	{_("'j' dash dot")},	//j
+	{_("'o' circle")},		//o
+	{_("'O' solid circle")},//O
+	{_("'s' square")},		//s
+	{_("'S' solid square")},//S
+	{_("'~' waves")},		//~
+	{_("'<' left sign")},	//<
+	{_("'>' right sign")},	//>
+	{_("'d' rhomb")},		//d
+	{_("'D' solid rhomb")},	//D
+	{_("'*' cross")},		//*
+	{_("'^' hats")},		//^
+	{_("manual")},			//M
 	{0}};
 //-----------------------------------------------------------------------------
 std::string get_color(Fl_Choice *c, Fl_Spinner *s, Fl_Input *p)
@@ -1071,7 +1071,7 @@ public:
 		o = new Fl_Button(365, 365, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(445, 365, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		fname = new Fl_Input(100, 365, 175, 25, _("File to export"));
-		o = new Fl_Button(275, 365, 25, 25, _("@->"));	o->callback(cb_setup_save);
+		o = new Fl_Button(275, 365, 25, 25, "@->");	o->callback(cb_setup_save);
 		o->tooltip(_("Keep empty to put at beginning of main script."));
 		w->end();
 	}
@@ -1297,7 +1297,7 @@ public:
 		phi->callback(cp_inplot_upd);	phi->value(0);	phi->step(5);	phi->range(-180,180);
 		ax = new Fl_Float_Input(315, 190, 60, 25, _("Aspect x/z"));
 		ax->callback(cp_inplot_upd);	ax->value("1");
-		ay = new Fl_Float_Input(400, 190, 60, 25, _("y/z"));
+		ay = new Fl_Float_Input(400, 190, 60, 25, "y/z");
 		ay->callback(cp_inplot_upd);	ay->value("1");
 
 		new Fl_Box(0, 225, 90, 25, _("Reserve at:"));

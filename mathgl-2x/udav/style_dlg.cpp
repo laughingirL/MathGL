@@ -261,15 +261,15 @@ void fillColors(QComboBox *cb)
 void fillArrows(QComboBox *cb)
 {
 	// "AVIKTSDO"
-	cb->addItem(QPixmap(arrow_n_xpm), _("none"));
-	cb->addItem(QPixmap(arrow_a_xpm), _("arrow"));
-	cb->addItem(QPixmap(arrow_v_xpm), _("back arrow"));
-	cb->addItem(QPixmap(arrow_i_xpm), _("stop"));
-	cb->addItem(QPixmap(arrow_k_xpm), _("size"));
-	cb->addItem(QPixmap(arrow_t_xpm), _("triangle"));
-	cb->addItem(QPixmap(arrow_s_xpm), _("square"));
-	cb->addItem(QPixmap(arrow_d_xpm), _("rhomb"));
-	cb->addItem(QPixmap(arrow_o_xpm), _("circle"));
+	cb->addItem(QPixmap(arrow_n_xpm), _("'_' none"));
+	cb->addItem(QPixmap(arrow_a_xpm), _("'A' arrow"));
+	cb->addItem(QPixmap(arrow_v_xpm), _("'V' back arrow"));
+	cb->addItem(QPixmap(arrow_i_xpm), _("'I' stop"));
+	cb->addItem(QPixmap(arrow_k_xpm), _("'K' size"));
+	cb->addItem(QPixmap(arrow_t_xpm), _("'T' triangle"));
+	cb->addItem(QPixmap(arrow_s_xpm), _("'S' square"));
+	cb->addItem(QPixmap(arrow_d_xpm), _("'D' rhomb"));
+	cb->addItem(QPixmap(arrow_o_xpm), _("'O' circle"));
 }
 //-----------------------------------------------------------------------------
 #include "xpm/barrow_n.xpm"
@@ -284,15 +284,15 @@ void fillArrows(QComboBox *cb)
 void fillBArrows(QComboBox *cb)
 {
 	// "AVIKTSDO"
-	cb->addItem(QPixmap(barrow_n_xpm), _("none"));
-	cb->addItem(QPixmap(barrow_a_xpm), _("arrow"));
-	cb->addItem(QPixmap(barrow_v_xpm), _("back arrow"));
-	cb->addItem(QPixmap(barrow_i_xpm), _("stop"));
-	cb->addItem(QPixmap(barrow_k_xpm), _("size"));
-	cb->addItem(QPixmap(barrow_t_xpm), _("triangle"));
-	cb->addItem(QPixmap(barrow_s_xpm), _("square"));
-	cb->addItem(QPixmap(barrow_d_xpm), _("rhomb"));
-	cb->addItem(QPixmap(barrow_o_xpm), _("circle"));
+	cb->addItem(QPixmap(barrow_n_xpm), _("'_' none"));
+	cb->addItem(QPixmap(barrow_a_xpm), _("'A' arrow"));
+	cb->addItem(QPixmap(barrow_v_xpm), _("'V' back arrow"));
+	cb->addItem(QPixmap(barrow_i_xpm), _("'I' stop"));
+	cb->addItem(QPixmap(barrow_k_xpm), _("'K' size"));
+	cb->addItem(QPixmap(barrow_t_xpm), _("'T' triangle"));
+	cb->addItem(QPixmap(barrow_s_xpm), _("'S' square"));
+	cb->addItem(QPixmap(barrow_d_xpm), _("'D' rhomb"));
+	cb->addItem(QPixmap(barrow_o_xpm), _("'O' circle"));
 }
 //-----------------------------------------------------------------------------
 #include "xpm/dash_e.xpm"
@@ -306,14 +306,14 @@ void fillBArrows(QComboBox *cb)
 void fillDashes(QComboBox *cb)
 {
 	// "-|;=ji: "
-	cb->addItem(QPixmap(dash_s_xpm), _("solid"));
-	cb->addItem(QPixmap(dash_l_xpm), _("long dash"));
-	cb->addItem(QPixmap(dash_m_xpm), _("dash"));
-	cb->addItem(QPixmap(dash_e_xpm), _("small dash"));
-	cb->addItem(QPixmap(dash_j_xpm), _("dash dot"));
-	cb->addItem(QPixmap(dash_i_xpm), _("small dash dot"));
-	cb->addItem(QPixmap(dash_d_xpm), _("dots"));
-	cb->addItem(QPixmap(mark_n_xpm), _("none"));
+	cb->addItem(QPixmap(dash_s_xpm), _("'-' solid"));
+	cb->addItem(QPixmap(dash_l_xpm), _("'|' long dash"));
+	cb->addItem(QPixmap(dash_m_xpm), _("';' dash"));
+	cb->addItem(QPixmap(dash_e_xpm), _("'=' small dash"));
+	cb->addItem(QPixmap(dash_j_xpm), _("'j' dash dot"));
+	cb->addItem(QPixmap(dash_i_xpm), _("'i' small dash dot"));
+	cb->addItem(QPixmap(dash_d_xpm), _("':' dots"));
+	cb->addItem(QPixmap(mark_n_xpm), _("' ' none"));
 	cb->addItem(QPixmap(":/png/tools-wizard.png"), _("manual"));
 }
 //-----------------------------------------------------------------------------
@@ -337,22 +337,22 @@ void fillMasks(QComboBox *cb)
 {
 	// "-+=;oOsS~<>jdD*^"
 	cb->addItem(QPixmap(none_xpm), _("none"));
-	cb->addItem(QPixmap(mask_m_xpm), _("line"));
-	cb->addItem(QPixmap(mask_p_xpm), _("plus"));
-	cb->addItem(QPixmap(mask_e_xpm), _("double line"));
-	cb->addItem(QPixmap(mask_i_xpm), _("dash"));
-	cb->addItem(QPixmap(mask_o_xpm), _("circle"));
-	cb->addItem(QPixmap(mask_O_xpm), _("filled circle"));
-	cb->addItem(QPixmap(mask_s_xpm), _("square"));
-	cb->addItem(QPixmap(mask_S_xpm), _("filled square"));
-	cb->addItem(QPixmap(mask_t_xpm), _("wave"));
-	cb->addItem(QPixmap(mask_l_xpm), _("left sign"));
-	cb->addItem(QPixmap(mask_r_xpm), _("right sign"));
-	cb->addItem(QPixmap(mask_j_xpm), _("dash dot"));
-	cb->addItem(QPixmap(mask_d_xpm), _("rhomb"));
-	cb->addItem(QPixmap(mask_D_xpm), _("filled rhomb"));
-	cb->addItem(QPixmap(mask_a_xpm), _("cross"));
-	cb->addItem(QPixmap(mask_u_xpm), _("up sign"));
+	cb->addItem(QPixmap(mask_m_xpm), _("'-' lines"));
+	cb->addItem(QPixmap(mask_p_xpm), _("'+' plus"));
+	cb->addItem(QPixmap(mask_e_xpm), _("'=' double lines"));
+	cb->addItem(QPixmap(mask_i_xpm), _("';' dash"));
+	cb->addItem(QPixmap(mask_o_xpm), _("'o' circle"));
+	cb->addItem(QPixmap(mask_O_xpm), _("'O' solid circle"));
+	cb->addItem(QPixmap(mask_s_xpm), _("'s' square"));
+	cb->addItem(QPixmap(mask_S_xpm), _("'S' solid square"));
+	cb->addItem(QPixmap(mask_t_xpm), _("'~' waves"));
+	cb->addItem(QPixmap(mask_l_xpm), _("'<' left sign"));
+	cb->addItem(QPixmap(mask_r_xpm), _("'>' right sign"));
+	cb->addItem(QPixmap(mask_j_xpm), _("'j' dash dot"));
+	cb->addItem(QPixmap(mask_d_xpm), _("'d' rhomb"));
+	cb->addItem(QPixmap(mask_D_xpm), _("'D' solid rhomb"));
+	cb->addItem(QPixmap(mask_a_xpm), _("'*' cross"));
+	cb->addItem(QPixmap(mask_u_xpm), _("'^' hats"));
 	cb->addItem(QPixmap(":/png/tools-wizard.png"), _("manual"));
 }
 //-----------------------------------------------------------------------------
@@ -381,30 +381,30 @@ void fillMarkers(QComboBox *cb)
 {
 	// ".+x*sdv^<>o.*+xsdv^<>o" : nf = 10
 	cb->addItem(QPixmap(mark_n_xpm), _("none"));
-	cb->addItem(QPixmap(mark__xpm), _("dot"));
-	cb->addItem(QPixmap(mark_p_xpm), _("plus"));
-	cb->addItem(QPixmap(mark_x_xpm), _("skew cross"));
-	cb->addItem(QPixmap(mark_a_xpm), _("asterix"));
-	cb->addItem(QPixmap(mark_s_xpm), _("square"));
-	cb->addItem(QPixmap(mark_d_xpm), _("rhomb"));
-	cb->addItem(QPixmap(mark_v_xpm), _("triangle down"));
-	cb->addItem(QPixmap(mark_t_xpm), _("triangle up"));
-	cb->addItem(QPixmap(mark_l_xpm), _("triangle left"));
-	cb->addItem(QPixmap(mark_r_xpm), _("triangle right"));
-	cb->addItem(QPixmap(mark_o_xpm), _("circle"));
+	cb->addItem(QPixmap(mark__xpm), _("'.' dot"));
+	cb->addItem(QPixmap(mark_p_xpm), _("'+' plus"));
+	cb->addItem(QPixmap(mark_x_xpm), _("'x' skew cross"));
+	cb->addItem(QPixmap(mark_a_xpm), _("'*' star"));
+	cb->addItem(QPixmap(mark_s_xpm), _("'s' square"));
+	cb->addItem(QPixmap(mark_d_xpm), _("'d' rhomb"));
+	cb->addItem(QPixmap(mark_v_xpm), _("'v' triangle down"));
+	cb->addItem(QPixmap(mark_t_xpm), _("'^' triangle up"));
+	cb->addItem(QPixmap(mark_l_xpm), _("'<' triangle left"));
+	cb->addItem(QPixmap(mark_r_xpm), _("'>' triangle right"));
+	cb->addItem(QPixmap(mark_o_xpm), _("'o' circle"));
 
-	cb->addItem(QPixmap(mark_cf_xpm), _("circled dot"));
-	cb->addItem(QPixmap(mark_y_xpm),  _("Y-sign"));
-	cb->addItem(QPixmap(mark_pf_xpm), _("squared plus"));
-	cb->addItem(QPixmap(none_xpm),	  _("squared cross"));
+	cb->addItem(QPixmap(mark_cf_xpm), _("'#.' circled dot"));
+	cb->addItem(QPixmap(mark_y_xpm),  _("'#*' Y-sign"));
+	cb->addItem(QPixmap(mark_pf_xpm), _("'#+' squared plus"));
+	cb->addItem(QPixmap(none_xpm),	  _("'#x' squared cross"));
 
-	cb->addItem(QPixmap(mark_sf_xpm), _("solid square"));
-	cb->addItem(QPixmap(mark_df_xpm), _("solid rhomb"));
-	cb->addItem(QPixmap(mark_vf_xpm), _("solid triangle down"));
-	cb->addItem(QPixmap(mark_tf_xpm), _("solid triangle up"));
-	cb->addItem(QPixmap(mark_lf_xpm), _("solid triangle left"));
-	cb->addItem(QPixmap(mark_rf_xpm), _("solid triangle right"));
-	cb->addItem(QPixmap(mark_of_xpm), _("solid circle"));
+	cb->addItem(QPixmap(mark_sf_xpm), _("'#s' solid square"));
+	cb->addItem(QPixmap(mark_df_xpm), _("'#d' solid rhomb"));
+	cb->addItem(QPixmap(mark_vf_xpm), _("'#v' solid triangle down"));
+	cb->addItem(QPixmap(mark_tf_xpm), _("'#^' solid triangle up"));
+	cb->addItem(QPixmap(mark_lf_xpm), _("'#<' solid triangle left"));
+	cb->addItem(QPixmap(mark_rf_xpm), _("'#>' solid triangle right"));
+	cb->addItem(QPixmap(mark_of_xpm), _("'#o' solid circle"));
 }
 //-----------------------------------------------------------------------------
 void StyleDialog::updatePic()

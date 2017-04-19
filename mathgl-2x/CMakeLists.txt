@@ -713,8 +713,8 @@ if(USE_GETTEXT)
 	# VERY BAD THING
 	file(GLOB po_files [sumw]*/*.cpp )
 	add_custom_target(mathgl_ru.po ALL
-		COMMAND ${findxgettext} -s --keyword=_ -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/mathgl.pot ${po_files} 
-		COMMAND ${findmsgmerge} -o mathgl_ru.po mathgl_ru.po ${MathGL2_BINARY_DIR}/mathgl.pot
+		COMMAND ${findxgettext} -s --keyword=_ -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/mathgl.pot ${po_files}
+		COMMAND ${findmsgmerge} -U mathgl_ru.po ${MathGL2_BINARY_DIR}/mathgl.pot
 		WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/
 		DEPENDS ${po_files} )
 	add_custom_target(mathgl_ru.mo ALL

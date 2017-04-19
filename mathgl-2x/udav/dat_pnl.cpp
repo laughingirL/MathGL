@@ -780,7 +780,7 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(crop_xpm), _("Cro&p"), this);
+	a = new QAction(QPixmap(crop_xpm), _("Crop"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(crop()));
 	a->setToolTip(_("Crop the data edges. Useful to cut off the zero-filled area."));
 	o->addAction(a);

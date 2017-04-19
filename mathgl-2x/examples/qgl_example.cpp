@@ -23,6 +23,10 @@
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	QApplication a(argc, argv);
 	MainWindow w;
 	w.show();

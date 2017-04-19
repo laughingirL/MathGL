@@ -324,12 +324,12 @@ void QMathGL::update()
 		task->draw_func = draw_func;
 		task->draw_par = draw_par;
 		thread->start();*/
-		setlocale(LC_NUMERIC, "C");
+		const std::string loc = setlocale(LC_NUMERIC, "C");
 		if(mgl_is_frames(gr))	mgl_new_frame(gr);
 		if(draw_func)	draw_func(gr, draw_par);
 		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
 		if(mgl_is_frames(gr))	mgl_end_frame(gr);
-		setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, loc.c_str());
 		gr->AskStop(false);
 	}
 	else if(mgl_get_num_frame(gr)>0)
@@ -358,7 +358,7 @@ void QMathGL::drawPrim()
 	mglParse pr;
 	long i, n=primitives.count('\n');
 	mglGraph gg(gr);
-	setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");
 	gg.Push();	gg.SubPlot(1,1,0,"#");
 	mglPoint ox1=gr->Min, ox2=gr->Max;
 	gg.SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
@@ -368,7 +368,7 @@ void QMathGL::drawPrim()
 		QString tst = primitives.section('\n',i,i);
 		pr.Parse(&gg,primitives.section('\n',i,i).toLocal8Bit().constData(),i+MGL_MAX_LINES);
 	}
-	gg.SetRanges(ox1,ox2);	gg.Pop();	setlocale(LC_NUMERIC, "");
+	gg.SetRanges(ox1,ox2);	gg.Pop();	setlocale(LC_NUMERIC, loc.c_str());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::refresh()
@@ -726,11 +726,7 @@ void QMathGL::exportBPS(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_bps(gr,setExtension(fname,"eps").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportEPS(QString fname)
@@ -738,11 +734,7 @@ void QMathGL::exportEPS(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_eps(gr,setExtension(fname,"eps").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportSVG(QString fname)
@@ -750,11 +742,7 @@ void QMathGL::exportSVG(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_svg(gr,setExtension(fname,"svg").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportXYZ(QString fname)
@@ -762,11 +750,7 @@ void QMathGL::exportXYZ(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_xyz(gr,setExtension(fname,"xyz").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportTEX(QString fname)
@@ -774,11 +758,7 @@ void QMathGL::exportTEX(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_tex(gr,setExtension(fname,"tex").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportOFF(QString fname)
@@ -786,11 +766,7 @@ void QMathGL::exportOFF(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_off(gr,setExtension(fname,"off").toLocal8Bit().constData(), appName.toLocal8Bit().constData(),0);
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportOBJ(QString fname)
@@ -798,11 +774,7 @@ void QMathGL::exportOBJ(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_obj(gr,setExtension(fname,"obj").toLocal8Bit().constData(), appName.toLocal8Bit().constData(),1);
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportSTL(QString fname)
@@ -810,11 +782,7 @@ void QMathGL::exportSTL(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_stl(gr,setExtension(fname,"stl").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 /*void QMathGL::exportX3D(QString fname)
@@ -822,11 +790,7 @@ void QMathGL::exportSTL(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_x3d(gr,setExtension(fname,"x3d").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }*/
 //-----------------------------------------------------------------------------
 void QMathGL::exportTGA(QString fname)
@@ -834,11 +798,7 @@ void QMathGL::exportTGA(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_tga(gr,setExtension(fname,"tga").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportPRC(QString fname)
@@ -846,11 +806,7 @@ void QMathGL::exportPRC(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_write_prc(gr,setExtension(fname,"prc").toLocal8Bit().constData(), appName.toLocal8Bit().constData(),1);
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportMGLD(QString fname)
@@ -858,11 +814,7 @@ void QMathGL::exportMGLD(QString fname)
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, _("No filename."),QMessageBox::Ok,0,0);
 	else
-	{
-		setlocale(LC_NUMERIC, "C");
 		mgl_export_mgld(gr,setExtension(fname,"mgld").toLocal8Bit().constData(), appName.toLocal8Bit().constData());
-		setlocale(LC_NUMERIC, "");
-	}
 }
 //-----------------------------------------------------------------------------
 void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf, QImage *out)

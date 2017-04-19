@@ -36,6 +36,10 @@ int show(mglGraph *gr)
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
+
 	char iname[256]="";
 	mgl_suppress_warn(true);
 	bool gray = false;
@@ -45,7 +49,6 @@ int main(int argc, char **argv)
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
 		else if(ch=='s')
 		{
-			setlocale(LC_CTYPE, "");
 			FILE *fp = fopen(optarg,"r");
 			if(fp)
 			{
@@ -56,7 +59,8 @@ int main(int argc, char **argv)
 		}
 		else if(ch=='v')	p.SetVariant(atoi(optarg));
 		else if(ch=='g')	gray= atoi(optarg);
-		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
+		else if(ch=='L')
+		{	setlocale(LC_ALL, optarg);	setlocale(LC_NUMERIC, "C");	}
 		else if(ch=='h' || (ch==-1 && optind>=argc))
 		{
 			printf(_("mglview show plot from MGL script or MGLD file.\nCurrent version is 2.%g\n"),MGL_VER2);
@@ -81,7 +85,6 @@ int main(int argc, char **argv)
 	if(!mgld)
 	{
 		str = opt + L"\n";
-		setlocale(LC_CTYPE, "");
 		FILE *fp = *iname?fopen(iname,"r"):stdin;
 		if(fp)
 		{
@@ -100,7 +103,8 @@ int main(int argc, char **argv)
 	if(mgld)
 	{
 		gr.Setup(false);
-		gr.NewFrame();	setlocale(LC_NUMERIC, "C");
+		gr.NewFrame();
+		const std::string loc = setlocale(LC_NUMERIC, "C");
 		if(!opt.empty())
 		{
 			p.Execute(&gr,opt.c_str());
@@ -108,8 +112,8 @@ int main(int argc, char **argv)
 			gr.ImportMGLD(iname,true);
 		}
 		else	gr.ImportMGLD(iname);
-		setlocale(LC_NUMERIC, "");	gr.EndFrame();
-		gr.Update();
+		setlocale(LC_NUMERIC, loc.c_str());
+		gr.EndFrame();	gr.Update();
 	}
 	if(!mglGlobalMess.empty())	printf("%s",mglGlobalMess.c_str());
 	return gr.Run();

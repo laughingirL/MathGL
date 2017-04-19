@@ -90,7 +90,7 @@ void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, voi
 	{
 		ResetFrames();
 		if(get(MGL_CLF_ON_UPD))	DefaultPlotParam();
-		const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+		const std::string loc = setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
 		if(mgl_is_frames(this))	NewFrame();
 
@@ -121,7 +121,7 @@ void mglCanvasWnd::ReLoad()
 		LoadFunc(FuncPar);
 		// update number of slides
 		ResetFrames();
-		const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+		const std::string loc = setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
 		if(mgl_is_frames(this))	NewFrame();
 

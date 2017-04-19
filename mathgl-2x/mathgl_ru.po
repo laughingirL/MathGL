@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-19 07:47+0300\n"
+"POT-Creation-Date: 2017-04-19 13:06+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:404
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:408
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -27,8 +27,13 @@ msgid ""
 "\t-L loc       set locale to loc\n"
 "\t-h           print this message\n"
 msgstr ""
+"\t-1 str       установить аргумент $1 равным str\n"
+"\t...          ...\n"
+"\t-9 str       установить аргумент $9 равным str\n"
+"\t-L loc       изменить локаль на loc\n"
+"\t-h           показать справку \n"
 
-#: /home/balakin/mathgl-code/mathgl-2x/utils/mglconv.cpp:86
+#: /home/balakin/mathgl-code/mathgl-2x/utils/mglconv.cpp:90
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -48,8 +53,25 @@ msgid ""
 "\t-            get script from standard input\n"
 "\t-h           print this message\n"
 msgstr ""
+"\t-1 str       установить аргумент $1 равным str\n"
+"\t...          ...\n"
+"\t-9 str       установить аргумент $9 равным str\n"
+"\t-L loc       изменить локаль на loc\n"
+"\t-s fname     дополнительный скрипт с настройками графика\n"
+"\t-S val       масштабирование для рисунка\n"
+"\t-q val       качество рисунка по умолчанию (val=0...9)\n"
+"\t-g val       режим оттенков серого (val=0|1)\n"
+"\t-v val       задать вариант аргументов\n"
+"\t-o name      имя файла для сохранения рисунка\n"
+"\t-n           нет вывода по умолчанию (скрипт должен сохранить рисунок "
+"сам)\n"
+"\t-A val       добавить значение val в анимацию\n"
+"\t-C n1:n2:dn  добавить диапазон [n1,n2] с шагом dn анимацию\n"
+"\t-C n1:n2     добавить диапазон [n1,n2] с шагом 1 анимацию\n"
+"\t-            загрузить скрипт из стандартного ввода\n"
+"\t-h           показать справку\n"
 
-#: /home/balakin/mathgl-code/mathgl-2x/utils/mglview.cpp:65
+#: /home/balakin/mathgl-code/mathgl-2x/utils/mglview.cpp:69
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -62,13 +84,25 @@ msgid ""
 "\t-            get script from standard input\n"
 "\t-h           print this message\n"
 msgstr ""
+"\t-1 str       установить аргумент $1 равным str\n"
+"\t...          ...\n"
+"\t-9 str       установить аргумент $9 равным str\n"
+"\t-g val       режим оттенков серого (val=0|1)\n"
+"\t-v val       задать вариант аргументов\n"
+"\t-s opt       дополнительный скрипт с настройками графика\n"
+"\t-L loc       изменить локаль на loc\n"
+"\t-            загрузить скрипт из стандартного ввода\n"
+"\t-h           показать справку\n"
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:906
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:858
 msgid ""
 "\n"
 "(c) Alexey Balakin, 2007\n"
 "http://mathgl.sourceforge.net/"
 msgstr ""
+"\n"
+"(c) Алексей Балакин, 2007\n"
+"http://mathgl.sourceforge.net/"
 
 #: /home/balakin/mathgl-code/mathgl-2x/src/parser.cpp:1010
 #, c-format
@@ -105,50 +139,45 @@ msgid ""
 "Wrong command in line %ld"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:550
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:682
-msgid " - UDAV"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:152
 #: /home/balakin/mathgl-code/mathgl-2x/udav/mem_pnl.cpp:135
 msgid " - UDAV preview"
-msgstr ""
+msgstr " - UDAV предпросмотр"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:151
 msgid " - UDAV variable"
-msgstr ""
+msgstr " - UDAV переменная"
 
 #. o = new Fl_Button(420, 400, 90, 25, _(" Refresh"));	o->callback(mem_update_cb,w);
 #. o->image(img_update);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 #. o->tooltip(_("Refresh list of variables."));
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:176
 msgid " Del.all"
-msgstr ""
+msgstr "Удалить все"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:164
 msgid " Delete"
-msgstr ""
+msgstr " Удалить"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:158
 msgid " Edit"
-msgstr ""
+msgstr " Редактировать"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:161
 msgid " Info"
-msgstr ""
+msgstr " Инфо"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:167
 msgid " New"
-msgstr ""
+msgstr " Новый"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:170
 msgid " Save"
-msgstr ""
+msgstr " Сохранить"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:219
 msgid " Yes "
-msgstr ""
+msgstr "Да"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1194
 msgid "##### setup end #####\n"
@@ -161,60 +190,311 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:191
 #, c-format
 msgid "%d - %d of %d"
-msgstr ""
+msgstr "%d - %d из %d"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:568
-msgid "("
-msgstr ""
+#. :
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:208
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:316
+msgid "' ' none"
+msgstr "' ' нет"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:573
-msgid ")"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:397
+msgid "'#*' Y-sign"
+msgstr "'#*' знак Y"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:567
-msgid "*"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:398
+msgid "'#+' squared plus"
+msgstr "'#+' плюс в квадрате"
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:675
-msgid "* - UDAV"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:396
+msgid "'#.' circled dot"
+msgstr "'#.' точка в круге"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:557
-msgid "+"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:405
+msgid "'#<' solid triangle left"
+msgstr "'#<' треуг.влево сплошной"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:87
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:91
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:95
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:99
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:562
-msgid "-"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:406
+msgid "'#>' solid triangle right"
+msgstr "'#>' треуг.вправо сплошной"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:570
-msgid "."
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:404
+msgid "'#^' solid triangle up"
+msgstr "'#^' треуг.вверх сплошной"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:454
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:457
-msgid "..."
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:402
+msgid "'#d' solid rhomb"
+msgstr "'#d' ромб сплошной"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:572
-msgid "/"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:407
+msgid "'#o' solid circle"
+msgstr "'#o' круг"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:569
-msgid "0"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:401
+msgid "'#s' solid square"
+msgstr "'#s' квадрат сплошной"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:564
-msgid "1"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:403
+msgid "'#v' solid triangle down"
+msgstr "'#v' треуг.вниз сплошной"
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:274
-msgid "1."
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:399
+msgid "'#x' squared cross"
+msgstr "'#x' крест в квадрате"
+
+#. D
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:245
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:354
+msgid "'*' cross"
+msgstr "'*' крест"
+
+#.
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:215
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:387
+msgid "'*' star"
+msgstr "'*' звезда"
+
+#. o
+#. -
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:217
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:232
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:341
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:385
+msgid "'+' plus"
+msgstr "'+' плюс"
+
+#.
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:231
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:340
+msgid "'-' lines"
+msgstr "'-' линии"
+
+#. "-|;=ji: "
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:201
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:309
+msgid "'-' solid"
+msgstr "'-' сплошная"
+
+#. d
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:221
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:384
+msgid "'.' dot"
+msgstr "'.' точка"
+
+#. =
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:207
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:315
+msgid "':' dots"
+msgstr "':' точками"
+
+#. j
+#. =
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:204
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:234
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:311
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:343
+msgid "';' dash"
+msgstr "';' пунктир"
+
+#. ~
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:241
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:349
+msgid "'<' left sign"
+msgstr "'<' знак влево"
+
+#. v
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:224
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:392
+msgid "'<' triangle left"
+msgstr "'<' треуг.влево"
+
+#. +
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:233
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:342
+msgid "'=' double lines"
+msgstr "'=' двойные линии"
+
+#. i
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:206
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:312
+msgid "'=' small dash"
+msgstr "'=' мелкий пунктир"
+
+#. <
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:242
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:350
+msgid "'>' right sign"
+msgstr "'>' знак вправо"
+
+#. <
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:225
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:393
+msgid "'>' triangle right"
+msgstr "'>' треуг.вправо"
+
+#. _
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:188
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:265
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:288
+msgid "'A' arrow"
+msgstr "'A' стрелка"
+
+#. S
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:194
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:271
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:294
+msgid "'D' rhomb"
+msgstr "'D' ромб"
+
+#. d
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:244
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:353
+msgid "'D' solid rhomb"
+msgstr "'D' ромб сплошной"
+
+#. V
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:191
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:267
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:290
+msgid "'I' stop"
+msgstr "'I' стоп"
+
+#. A
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:189
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:268
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:291
+msgid "'K' size"
+msgstr "'K' размер"
+
+#. D
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:195
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:272
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:295
+msgid "'O' circle"
+msgstr "'O' круг"
+
+#. o
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:237
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:345
+msgid "'O' solid circle"
+msgstr "'O' круг"
+
+#. s
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:239
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:347
+msgid "'S' solid square"
+msgstr "'S' квадрат сплошной"
+
+#. T
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:193
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:270
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:293
+msgid "'S' square"
+msgstr "'S' квадрат"
+
+#. I
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:192
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:269
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:292
+msgid "'T' triangle"
+msgstr "'T' треугольник"
+
+#. K
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:190
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:266
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:289
+msgid "'V' back arrow"
+msgstr "'V' обр.стрелка"
+
+#. O
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:196
+msgid "'X' cross"
+msgstr "'X' крест"
+
+#. *
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:246
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:355
+msgid "'^' hats"
+msgstr "'^' шляпы"
+
+#. .
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:222
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:391
+msgid "'^' triangle up"
+msgstr "'^' треуг.вверх"
+
+#. "AVIKTSDO"
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:187
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:264
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:287
+msgid "'_' none"
+msgstr "'_' нет"
+
+#. s
+#. >
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:220
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:243
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:352
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:389
+msgid "'d' rhomb"
+msgstr "'d' ромб"
+
+#. ;
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:205
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:314
+msgid "'i' small dash dot"
+msgstr "'i' точка-пунктир"
+
+#. |
+#. ;
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:203
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:235
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:313
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:351
+msgid "'j' dash dot"
+msgstr "'j' точка-штрих"
+
+#. *
+#. j
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:216
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:236
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:344
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:394
+msgid "'o' circle"
+msgstr "'o' окружность"
+
+#. x
+#. O
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:219
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:238
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:346
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:388
+msgid "'s' square"
+msgstr "'s' квадрат"
+
+#. ^
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:223
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:390
+msgid "'v' triangle down"
+msgstr "'v' треуг.вниз"
+
+#. +
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:218
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:386
+msgid "'x' skew cross"
+msgstr "'x' косой крест"
+
+#. -
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:202
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:310
+msgid "'|' long dash"
+msgstr "'|' штрихи"
+
+#. S
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:240
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:348
+msgid "'~' waves"
+msgstr "'~' волны"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/info_dlg.cpp:47
 msgid "1D plot"
@@ -227,14 +507,6 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:359
 msgid "1D view"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:565
-msgid "2"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:275
-msgid "2."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/info_dlg.cpp:47
@@ -250,14 +522,6 @@ msgstr ""
 msgid "2D view"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:566
-msgid "3"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:276
-msgid "3."
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/udav/open_dlg.cpp:71
 msgid "3D data with sizes from file"
 msgstr ""
@@ -271,55 +535,13 @@ msgstr ""
 msgid "3D view"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:559
-msgid "4"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:277
-msgid "4."
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:560
-msgid "5"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:278
-msgid "5."
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:561
-msgid "6"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:554
-msgid "7"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:555
-msgid "8"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:556
-msgid "9"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:441
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:446
 msgid ""
-"<a href='http://mathgl.sourceforge.net/doc_en/UDAV-overview.html'>UDAV</a> "
-"v. 2."
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:442
-msgid ""
-"<br>(c) Alexey Balakin, 2007-2014<br><br><a href='http://www.gnu.org/"
+"<br>(c) Alexey Balakin, 2007-present<br><br><a href='http://www.gnu.org/"
 "copyleft/gpl.html'>License is GPL v.2 or later.</a>"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1074
-msgid "@->"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:547
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:551
 msgid "@-> to script"
 msgstr ""
 
@@ -328,16 +550,16 @@ msgid "@<-  Prev"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:322
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:318
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1324
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:322
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1276
 msgid "About"
 msgstr ""
 
 #. -----------------------------------------------------------------------------
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:319
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:447
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:910
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1325
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:323
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:451
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:862
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1277
 msgid "About Qt"
 msgstr ""
 
@@ -346,12 +568,12 @@ msgid "Add"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:372
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1203
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1155
 msgid "Add arc"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:375
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1206
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1158
 msgid "Add arc which properties can be changed later by mouse."
 msgstr ""
 
@@ -360,12 +582,12 @@ msgid "Add command option(s)"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:378
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1208
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1160
 msgid "Add curve"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:381
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1211
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1163
 msgid "Add curve which properties can be changed later by mouse."
 msgstr ""
 
@@ -374,13 +596,13 @@ msgid "Add data or number"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:396
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1223
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1175
 msgid "Add ellipse"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:399
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:405
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1226
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1178
 msgid "Add ellipse which properties can be changed later by mouse."
 msgstr ""
 
@@ -388,36 +610,40 @@ msgstr ""
 msgid "Add inplot"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:690
+msgid "Add legend entry"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:119
 msgid "Add legend entry for the plot"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:366
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1198
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1150
 msgid "Add line"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:369
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1201
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1153
 msgid "Add line which properties can be changed later by mouse."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:408
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1233
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1185
 msgid "Add mark"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:411
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1236
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1188
 msgid "Add marker which properties can be changed later by mouse."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:402
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1228
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1180
 msgid "Add polygon"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1231
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1183
 msgid "Add polygon which properties can be changed later by mouse."
 msgstr ""
 
@@ -426,37 +652,45 @@ msgid "Add primitive"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:384
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1213
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1165
 msgid "Add rect"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:387
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1216
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1168
 msgid "Add rectangle which properties can be changed later by mouse."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:390
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1218
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1170
 msgid "Add rhombus"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:393
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1221
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1173
 msgid "Add rhombus which properties can be changed later by mouse."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:414
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1238
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1190
 msgid "Add text"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:417
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1241
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1193
 msgid "Add text which properties can be changed later by mouse."
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:611
+msgid "Add title for current subplot/inplot"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:794
 msgid "Add to"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:691
+msgid "Add user-defined symbol"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/fltk.cpp:839
@@ -465,8 +699,12 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:337
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/fltk.cpp:802
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1186
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1138
 msgid "Adjust size"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:692
+msgid "Adjust ticks for best view"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/calc_dlg.cpp:193
@@ -483,12 +721,9 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:109
 #: /home/balakin/mathgl-code/mathgl-2x/udav/opt_dlg.cpp:51
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:290
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1145
-msgid "Alpha"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/udav/setup_dlg.cpp:108
-msgid "Alpha on"
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1097
+msgid "Alpha"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:110
@@ -518,17 +753,13 @@ msgstr ""
 #. animation menu
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:183
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:559
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1291
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1292
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1243
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1244
 msgid "Animation"
-msgstr ""
+msgstr "Анимация"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:786
 msgid "Another"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/src/exec_dat.cpp:1586
-msgid "Apply Runge-Kutta"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:852
@@ -545,11 +776,11 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/newcmd_dlg.cpp:67
 msgid "Argument"
-msgstr ""
+msgstr "Аргумент"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:738
 msgid "Arguments"
-msgstr ""
+msgstr "Аргументы"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:321
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:63
@@ -570,7 +801,7 @@ msgstr ""
 msgid "Arrow2"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1184
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1136
 msgid "Ask to stop plot drawing (F7)."
 msgstr ""
 
@@ -588,6 +819,10 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1298
 msgid "Aspect x/z"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:698
+msgid "Attach light settings to inplot"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/open_dlg.cpp:60
@@ -644,6 +879,8 @@ msgstr ""
 msgid "Axis setup"
 msgstr ""
 
+#. W
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:45
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:237
 msgid "B - navy"
 msgstr ""
@@ -712,6 +949,8 @@ msgstr ""
 msgid "By formula"
 msgstr ""
 
+#. R
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:48
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:240
 msgid "C - teal"
 msgstr ""
@@ -726,18 +965,18 @@ msgstr ""
 msgid "C-range"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1310
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1262
 msgid "Calculations"
 msgstr ""
 
 #. TODO
 #. connect(hidden,SIGNAL(cursorPositionChanged()),this,SLOT(hiddenClicked()));
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:316
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:540
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:181
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:193
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:544
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:185
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:197
 msgid "Calculator"
-msgstr ""
+msgstr "Калькулятор"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:120
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:164
@@ -750,7 +989,7 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/editor.cpp:282
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:164
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:195
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:467
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:471
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:101
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:179
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:353
@@ -781,7 +1020,7 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:345
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:346
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:213
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:217
 msgid "Canvas"
 msgstr "График"
 
@@ -803,35 +1042,51 @@ msgid "Change (resize) data"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:339
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1188
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1140
 msgid "Change canvas size to fill whole region (F6)."
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:702
+msgid "Change current directory"
+msgstr "Сменить директорию"
+
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:168
 msgid "Change data"
-msgstr ""
+msgstr "Изменить данные"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:91
 msgid "Change data sizes"
-msgstr ""
+msgstr "Изменить размер данных"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:559
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:622
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:677
 msgid "Change data values and close this window"
-msgstr ""
+msgstr "Изменить данные и закрыть окно"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/prop_dlg.cpp:71
 msgid "Change font"
+msgstr "Изменить шрифт"
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:751
+msgid "Change view angles - use 'rotate' for plot rotation"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/calc_dlg.cpp:68
 msgid "Clear"
-msgstr ""
+msgstr "Очистить"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/text_pnl.cpp:527
 msgid "Clear all"
-msgstr ""
+msgstr "Удалить все"
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:703
+msgid "Clear legend entries"
+msgstr "Удалить записи легенды"
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:704
+msgid "Clear picture"
+msgstr "Очистить рисунок"
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/editor.cpp:563
@@ -840,42 +1095,42 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:483
 #: /home/balakin/mathgl-code/mathgl-2x/udav/find_dlg.cpp:52
 #: /home/balakin/mathgl-code/mathgl-2x/udav/hint_dlg.cpp:70
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1138
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1090
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:832
 msgid "Close tab"
-msgstr ""
+msgstr "Закрыть вкладку"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:834
 msgid "Close this data tab."
-msgstr ""
+msgstr "Закрыть вкладку с данными"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1068
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1459
 #: /home/balakin/mathgl-code/mathgl-2x/udav/setup_dlg.cpp:120
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:67
 msgid "Color"
-msgstr ""
+msgstr "Цвет"
 
 #. g->setColStretch(0, 1);			g->setColStretch(1, 1);
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:106
 msgid "Color order"
-msgstr ""
+msgstr "Порядок цветов"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:339
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:150
 msgid "Color scheme"
-msgstr ""
+msgstr "Цветовая схема"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:384
 msgid "Color(s) or color scheme"
-msgstr ""
+msgstr "Цвет(а) или цветовая схема"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1002
 msgid "Colors"
-msgstr ""
+msgstr "Цвета"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:577
 msgid "Column expr"
@@ -884,7 +1139,7 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:724
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:295
 msgid "Command"
-msgstr ""
+msgstr "Команда"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:740
 #: /home/balakin/mathgl-code/mathgl-2x/udav/newcmd_dlg.cpp:64
@@ -897,10 +1152,26 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/text_pnl.cpp:575
 msgid "Command options"
-msgstr ""
+msgstr "Опции команды"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/prop_dlg.cpp:82
 msgid "Comments"
+msgstr "Комментарий"
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:599
+msgid "Computes the attractor of an IFS"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:600
+msgid "Computes the attractor of an IFS for 3d case"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:601
+msgid "Computes the attractor of an IFS with parameters from *.ifs file"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:595
+msgid "Computes the flame fractal"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/src/parser.cpp:1431
@@ -928,7 +1199,7 @@ msgstr ""
 msgid "Copy graphics"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1192
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1144
 msgid "Copy graphics to clipboard (CTRl+Shift+G)."
 msgstr ""
 
@@ -941,7 +1212,7 @@ msgid "Copy image to clipboard"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:352
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1190
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1142
 msgid "Copy plot"
 msgstr ""
 
@@ -987,7 +1258,7 @@ msgstr ""
 msgid "Could not write to file"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:557
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:561
 msgid "Couldn't change to folder "
 msgstr ""
 
@@ -1033,7 +1304,7 @@ msgstr ""
 msgid "Create new data with zero filling"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:271
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:275
 msgid "Create new empty script window (Ctrl+N)."
 msgstr ""
 
@@ -1041,12 +1312,9 @@ msgstr ""
 msgid "Creates new variable from list of numbers or data"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:783
-msgid "Cro&p"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:621
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:761
+#: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:783
 msgid "Crop"
 msgstr ""
 
@@ -1308,9 +1576,9 @@ msgstr ""
 msgid "Do you want to delete all data?"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:328
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:567
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:609
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:332
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:571
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:613
 msgid "Do you want to save the changes to the document?"
 msgstr ""
 
@@ -1320,6 +1588,430 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:164
 msgid "Double diff."
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1032
+msgid "Draw Bifurcation diagram"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1067
+msgid "Draw Iris plots"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1069
+msgid "Draw Lamerey diagram"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1073
+msgid "Draw Open-High-Low-Close (OHLC) diagram"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1076
+msgid "Draw Poincare map"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1082
+msgid "Draw STFA diagram"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1094
+msgid "Draw TeX mark at point position"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:578
+msgid "Draw angle arc"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1026
+msgid "Draw area plot for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1029
+msgid "Draw bars for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1031
+msgid "Draw belts"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1092
+msgid "Draw binormales for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:604
+msgid "Draw bitmap (logo) along axis range"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:582
+msgid "Draw bounding box"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1034
+msgid "Draw boxes"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1033
+msgid "Draw boxplot for 2D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1035
+msgid "Draw candlestick chart"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1036
+msgid "Draw chart"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:583
+msgid "Draw circle"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1037
+msgid "Draw cloud"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:584
+msgid "Draw colorbar"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:585
+msgid "Draw cone"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1038
+msgid "Draw cones for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1039
+msgid "Draw contour lines"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1049
+msgid "Draw contour lines at x-slice (or x-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1050
+msgid "Draw contour lines at y-slice (or y-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1051
+msgid "Draw contour lines at z-slice (or z-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1040
+msgid "Draw contour lines for 3D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1099
+msgid "Draw contour lines for surface of triangles"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1047
+msgid "Draw contour lines on parametric surface"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1048
+msgid "Draw contour tubes"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1100
+msgid "Draw contour tubes for surface of triangles"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:586
+msgid "Draw curve"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1102
+msgid "Draw curve by tube"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1053
+msgid "Draw density plot"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1054
+msgid "Draw density plot at slices of 3D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1055
+msgid "Draw density plot at x-slice (or x-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1056
+msgid "Draw density plot at y-slice (or y-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1057
+msgid "Draw density plot at z-slice (or z-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1058
+msgid "Draw dew plot"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1059
+msgid "Draw dots for arbitrary data points"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:587
+msgid "Draw drop"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:588
+msgid "Draw ellipse"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:589
+msgid "Draw error box"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1060
+msgid "Draw error boxes"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:590
+msgid "Draw face (quadrangle)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:591
+msgid "Draw face perpendicular to x-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:592
+msgid "Draw face perpendicular to y-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:593
+msgid "Draw face perpendicular to z-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1079
+msgid "Draw filled region (ribbon) between 2 curves"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1074
+msgid "Draw flow pipes for vector field"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1062
+msgid "Draw flow threads for vector field"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1064
+msgid "Draw gradient lines for scalar field"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:598
+msgid "Draw grid"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1066
+msgid "Draw grid at slices of 3D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1065
+msgid "Draw grid for data array(s)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1028
+msgid "Draw horizontal bars for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1095
+msgid "Draw horizontal tiles"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1096
+msgid "Draw horizontal tiles with variable size"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1084
+msgid "Draw isosurface for 3D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1087
+msgid "Draw isosurface for 3D data colored and transpared by other data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1086
+msgid "Draw isosurface for 3D data colored by other data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1085
+msgid "Draw isosurface for 3D data transpared by other data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1068
+msgid "Draw label at arbitrary position"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:612
+msgid "Draw label for t-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:613
+msgid "Draw label for x-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:614
+msgid "Draw label for y-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:615
+msgid "Draw label for z-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:602
+msgid "Draw legend"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:603
+msgid "Draw line"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1070
+msgid "Draw mapping plot"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1071
+msgid "Draw mark plot for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1072
+msgid "Draw mesh surface"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:581
+msgid "Draw point (ball)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:605
+msgid "Draw polygon"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1030
+msgid "Draw quasi-optical beam"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1078
+msgid "Draw radar chart"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1052
+msgid "Draw reconstructed surface for arbitrary data points"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:606
+msgid "Draw rectangle"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:607
+msgid "Draw rhombus"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1044
+msgid "Draw solid contour lines at x-slice (or x-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1045
+msgid "Draw solid contour lines at y-slice (or y-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1046
+msgid "Draw solid contour lines at z-slice (or z-plane)"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1043
+msgid "Draw solid contour lines for 3D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1042
+msgid "Draw solid contours"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1041
+msgid "Draw solid contours with manual colors"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1083
+msgid "Draw solid surface"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1090
+msgid "Draw solid surface colored and transpared by other data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1089
+msgid "Draw solid surface colored by other data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1088
+msgid "Draw solid surface transpared by other data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:608
+msgid "Draw sphere"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1080
+msgid "Draw stem plot for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1081
+msgid "Draw step plot for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1097
+msgid "Draw surface of curve rotation"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1077
+msgid "Draw surface of quadrangles"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1101
+msgid "Draw surface of triangles"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1027
+msgid "Draw surfaces of contour lines rotation"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1091
+msgid "Draw table with data values"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1093
+msgid "Draw tension plot for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:610
+msgid "Draw text at some position or along curve"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:609
+msgid "Draw user-defined symbol at given position and direction"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1075
+msgid "Draw usual plot for 1D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1103
+msgid "Draw vector field"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1104
+msgid "Draw vector field at slices of 3D data"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1098
+msgid "Draw vectors along a curve"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_gr.cpp:1061
+msgid "Draw waterfalls"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:111
@@ -1332,10 +2024,8 @@ msgstr ""
 msgid "Dual plots"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:571
-msgid "E"
-msgstr ""
-
+#. L
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:52
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:244
 msgid "E - darklawn"
 msgstr ""
@@ -1357,7 +2047,7 @@ msgstr ""
 msgid "Elliptic"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:460
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:464
 msgid "Enable keywords completion"
 msgstr ""
 
@@ -1365,7 +2055,7 @@ msgstr ""
 msgid "Enable keywords completition"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:462
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:466
 msgid "Enable mouse wheel for zooming"
 msgstr ""
 
@@ -1434,7 +2124,7 @@ msgstr ""
 msgid "Enter number for subtraction from data values"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:983
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:935
 msgid "Enter number of vertexes"
 msgstr ""
 
@@ -1461,7 +2151,7 @@ msgid ""
 "point, '3' save each 3d and so on."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:992
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:944
 msgid "Enter text"
 msgstr ""
 
@@ -1504,12 +2194,12 @@ msgstr ""
 msgid "Execute if condition is false"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:458
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:462
 msgid "Execute script after loading"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:333
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1179
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1131
 msgid "Execute script and redraw graphics (F5)."
 msgstr ""
 
@@ -1542,12 +2232,12 @@ msgid "Export as ..."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:474
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1114
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1066
 msgid "Export as 2D ..."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:484
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1123
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1075
 msgid "Export as 3D ..."
 msgstr ""
 
@@ -1588,8 +2278,8 @@ msgstr ""
 #. file menu
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:267
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:680
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:268
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1113
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:272
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1065
 msgid "File"
 msgstr ""
 
@@ -1751,7 +2441,7 @@ msgstr ""
 msgid "Fog dist."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:516
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:520
 msgid "Folder for help files"
 msgstr ""
 
@@ -1765,7 +2455,7 @@ msgstr ""
 msgid "Font"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:507
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:511
 msgid "Font file name"
 msgstr ""
 
@@ -1773,11 +2463,11 @@ msgstr ""
 msgid "Font files (*.vfm)"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:449
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:453
 msgid "Font kind"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:451
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:455
 msgid "Font size"
 msgstr ""
 
@@ -1809,10 +2499,12 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:575
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:579
 msgid "Function"
 msgstr ""
 
+#. B
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:46
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:238
 msgid "G - green"
 msgstr ""
@@ -1901,8 +2593,8 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:309
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:66
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1142
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1144
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1094
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1096
 msgid "Graphics"
 msgstr ""
 
@@ -2064,6 +2756,8 @@ msgstr ""
 msgid "Groups of MGL commands"
 msgstr ""
 
+#. P
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:57
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:249
 msgid "H - darkgray"
 msgstr ""
@@ -2102,9 +2796,9 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:320
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:348
 #: /home/balakin/mathgl-code/mathgl-2x/udav/help_pnl.cpp:57
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:218
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:310
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1323
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:222
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:314
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1275
 msgid "Help"
 msgstr ""
 
@@ -2114,7 +2808,7 @@ msgid ""
 "Options are used for additional plot tunning."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:173
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:177
 msgid "Hidden plots"
 msgstr ""
 
@@ -2130,13 +2824,13 @@ msgstr ""
 msgid "Hide selected plot."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:461
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:465
 #: /home/balakin/mathgl-code/mathgl-2x/udav/prop_dlg.cpp:172
 msgid "Highlight current object(s)"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:321
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:315
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:319
 msgid "Hints"
 msgstr ""
 
@@ -2218,7 +2912,7 @@ msgstr ""
 msgid "Increase font size"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:216
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:220
 msgid "Info"
 msgstr ""
 
@@ -2296,7 +2990,7 @@ msgid "Italic style"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:477
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1117
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1069
 msgid "JPEG"
 msgstr ""
 
@@ -2347,12 +3041,14 @@ msgstr ""
 msgid "Kind of plots: lines for 1D, density for 2D."
 msgstr ""
 
+#. Y
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:51
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:243
 msgid "L - seagreen"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:481
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1121
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1073
 msgid "LaTeX"
 msgstr ""
 
@@ -2365,7 +3061,7 @@ msgstr ""
 msgid "Language for UDAV"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:463
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:467
 msgid "Language for mgllab"
 msgstr ""
 
@@ -2398,12 +3094,9 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:115
 #: /home/balakin/mathgl-code/mathgl-2x/udav/opt_dlg.cpp:64
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:297
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1151
-msgid "Light"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/udav/setup_dlg.cpp:109
-msgid "Light on"
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1103
+msgid "Light"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/setup_dlg.cpp:189
@@ -2444,6 +3137,10 @@ msgstr ""
 msgid "Load Data?"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:719
+msgid "Load commands from external DLL"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:681
 msgid "Load data"
 msgstr ""
@@ -2458,8 +3155,16 @@ msgid ""
 "at exit but UDAV will not ask to save it (Ctrl+Shift+O)."
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:720
+msgid "Load fontfaces"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:749
 msgid "Load from file"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:580
+msgid "Load image for background"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/prop_dlg.cpp:162
@@ -2474,7 +3179,7 @@ msgstr ""
 msgid "Loaded document %1"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:625
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:629
 msgid "Loading aborted"
 msgstr ""
 
@@ -2486,6 +3191,8 @@ msgstr ""
 msgid "Lower bound"
 msgstr ""
 
+#. C
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:49
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:241
 msgid "M - purple"
 msgstr ""
@@ -2513,7 +3220,7 @@ msgstr ""
 msgid "MGL files (*.mgl)"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:311
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:315
 msgid "MGL help"
 msgstr ""
 
@@ -2525,14 +3232,14 @@ msgstr ""
 msgid "MGL samples and hints"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:657
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:661
 msgid ""
 "MGL scripts (*.mgl)\n"
 "HDF5 files (*.hdf *.h5)\n"
 "All files (*.*)"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:622
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:626
 msgid ""
 "MGL scripts (*.mgl)\n"
 "HDF5 files (*.hdf *.h5)\n"
@@ -2542,7 +3249,7 @@ msgid ""
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:485
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1124
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1076
 msgid "MGLD"
 msgstr ""
 
@@ -2598,7 +3305,7 @@ msgstr ""
 msgid "Match case"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:907
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:859
 msgid "MathGL - about"
 msgstr ""
 
@@ -2607,7 +3314,7 @@ msgstr ""
 msgid "MathGL message - %s\n"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:906
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:858
 msgid "MathGL v. 2."
 msgstr ""
 
@@ -2673,7 +3380,7 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:165
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:169
 msgid "Messages and warnings"
 msgstr ""
 
@@ -2746,19 +3453,19 @@ msgstr ""
 msgid "Momentum along 'z' for function"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1280
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1232
 msgid "Move &down"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1264
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1216
 msgid "Move &left"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1284
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1236
 msgid "Move &right"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1268
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1220
 msgid "Move &up"
 msgstr ""
 
@@ -2767,22 +3474,22 @@ msgid "Move down"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:506
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1266
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1218
 msgid "Move graphics left by 1/3 of its width."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:536
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1286
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1238
 msgid "Move graphics right by 1/3 of its width."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:512
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1270
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1222
 msgid "Move graphics up by 1/3 of its height."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:530
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1282
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1234
 msgid "Move graphics up down 1/3 of its height."
 msgstr ""
 
@@ -2826,6 +3533,8 @@ msgstr ""
 msgid "Multiply by data or number"
 msgstr ""
 
+#. E
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:53
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:245
 msgid "N - darkskyblue"
 msgstr ""
@@ -2884,7 +3593,7 @@ msgid "New order of dimensions"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:268
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:269
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:273
 msgid "New script"
 msgstr ""
 
@@ -2914,7 +3623,7 @@ msgid "Next slice"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:560
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1294
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1246
 msgid "Next slide"
 msgstr ""
 
@@ -2941,16 +3650,16 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:703
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:715
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:727
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:739
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:735
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:743
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:751
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:763
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:759
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:767
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:775
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:787
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:783
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:799
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:811
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:835
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:847
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:859
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:807
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:815
 msgid "No filename."
 msgstr ""
 
@@ -2993,7 +3702,7 @@ msgstr ""
 msgid "Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:431
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:435
 msgid "Not recognized"
 msgstr ""
 
@@ -3034,7 +3743,7 @@ msgid "Nz"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:487
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1126
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1078
 msgid "OBJ"
 msgstr ""
 
@@ -3046,7 +3755,7 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1072
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1319
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:196
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:468
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:472
 #: /home/balakin/mathgl-code/mathgl-2x/udav/anim_dlg.cpp:68
 #: /home/balakin/mathgl-code/mathgl-2x/udav/args_dlg.cpp:65
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:461
@@ -3076,7 +3785,7 @@ msgstr ""
 msgid "Open all data arrays from HDF file"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:185
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:189
 msgid ""
 "Open and execute/show script or data from file (Ctrl+O).\n"
 "You may switch off automatic exection in UDAV properties."
@@ -3086,7 +3795,7 @@ msgstr ""
 msgid "Open dialog for new data creation."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:183
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:187
 msgid "Open file"
 msgstr ""
 
@@ -3094,11 +3803,11 @@ msgstr ""
 msgid "Open file ..."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1135
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1087
 msgid "Open printer dialog and print graphics\t(CTRl+P)"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:285
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:289
 msgid "Open printer dialog and print graphics (Ctrl+P)"
 msgstr ""
 
@@ -3156,6 +3865,8 @@ msgstr ""
 msgid "Own brightness of the surface"
 msgstr ""
 
+#. Q
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:56
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:248
 msgid "P - darkpink"
 msgstr ""
@@ -3165,7 +3876,7 @@ msgid "PDF support was disabled. Please, enable it and rebuild MathGL."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:475
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1115
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1067
 msgid "PNG"
 msgstr ""
 
@@ -3183,7 +3894,7 @@ msgid "PNG support was disabled. Please, enable it and rebuild MathGL."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:486
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1125
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1077
 msgid "PRC"
 msgstr ""
 
@@ -3216,11 +3927,11 @@ msgstr ""
 msgid "Paste text or data from clipboard (Ctrl+V)."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:455
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:459
 msgid "Path for MathGL font (without extension)"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:452
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:456
 #: /home/balakin/mathgl-code/mathgl-2x/udav/prop_dlg.cpp:110
 msgid "Path for help files"
 msgstr ""
@@ -3229,17 +3940,21 @@ msgstr ""
 msgid "Path for user MathGL font files"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1312
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1264
 msgid "Pause calculation"
 msgstr ""
 
 #. Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1317
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1269
 msgid "Pause on/off calculations."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/fltk.cpp:879
 msgid "Pause on/off external calculations"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_dat.cpp:1586
+msgid "Perform Runge-Kutta step"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/fltk.cpp:852
@@ -3252,6 +3967,10 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1050
 msgid "Plot ID"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:596
+msgid "Plot curve by formula"
 msgstr ""
 
 #. o->addSeparator();	bb->addSeparator();
@@ -3279,6 +3998,10 @@ msgstr ""
 msgid "Plot style"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:597
+msgid "Plot surface by formula"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:386
 msgid "Popular color schemes"
 msgstr ""
@@ -3292,7 +4015,7 @@ msgid "Prev slice"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:575
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1303
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1255
 msgid "Prev slide"
 msgstr ""
 
@@ -3304,7 +4027,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:549
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:553
 msgid "Previous expressions"
 msgstr ""
 
@@ -3314,12 +4037,16 @@ msgid "Primitives"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:365
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1197
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1149
 msgid "Primitives ..."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1133
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1085
 msgid "Print &graphics"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:750
+msgid "Print MathGL version or check if it is valid"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/src/exec_dat.cpp:1538
@@ -3330,7 +4057,7 @@ msgstr ""
 msgid "Print fitted formula"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:283
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:287
 msgid "Print graphics"
 msgstr ""
 
@@ -3346,8 +4073,12 @@ msgstr ""
 msgid "Print plot"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:282
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:286
 msgid "Print script"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:594
+msgid "Print string from file"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/text_pnl.cpp:178
@@ -3368,8 +4099,8 @@ msgid "Program flow"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:312
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:447
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:299
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:451
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:303
 msgid "Properties"
 msgstr ""
 
@@ -3382,7 +4113,7 @@ msgstr ""
 msgid "Pulse prop."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:583
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:587
 #: /home/balakin/mathgl-code/mathgl-2x/udav/calc_dlg.cpp:127
 msgid "Put function"
 msgstr ""
@@ -3404,19 +4135,27 @@ msgstr ""
 msgid "Put value (numeric or array) to given data element"
 msgstr ""
 
+#. U
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:55
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:247
 msgid "Q - brown"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:290
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:294
 msgid "Quit"
 msgstr ""
 
+#. G
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:47
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:239
 msgid "R - maroon"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1177
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:733
+msgid "Rasterize plot and save to background"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1129
 msgid "Re&draw"
 msgstr ""
 
@@ -3437,7 +4176,7 @@ msgid "Read data from file with sizes specified in first row"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:357
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:255
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:259
 msgid "Ready"
 msgstr ""
 
@@ -3446,7 +4185,7 @@ msgid "Rearrange data dimensions"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:273
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:288
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:292
 msgid "Recent files"
 msgstr ""
 
@@ -3538,7 +4277,7 @@ msgstr ""
 msgid "Required argument %s is not specified!"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1170
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1122
 msgid "Res&tore"
 msgstr ""
 
@@ -3566,6 +4305,10 @@ msgstr ""
 msgid "Reserve space for labels at top side (style '^')"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:734
+msgid "Reset settings and clear picture"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:759
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:771
 msgid "Resize"
@@ -3587,7 +4330,7 @@ msgstr ""
 msgid "Restore"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1172
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1124
 msgid "Restore default graphics rotation, zoom and perspective (Alt+Space)."
 msgstr ""
 
@@ -3600,7 +4343,7 @@ msgid "Restore status for 'once' command and reload data (F9)."
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1315
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:546
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:550
 #: /home/balakin/mathgl-code/mathgl-2x/udav/calc_dlg.cpp:63
 #: /home/balakin/mathgl-code/mathgl-2x/udav/data_dlg.cpp:85
 #: /home/balakin/mathgl-code/mathgl-2x/udav/data_dlg.cpp:143
@@ -3655,7 +4398,7 @@ msgid "Rotate"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:310
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1157
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1109
 msgid "Rotate by mouse"
 msgstr ""
 
@@ -3676,6 +4419,10 @@ msgstr ""
 msgid "Rotate picture by holding left mouse button"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:735
+msgid "Rotate plot"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:553
 msgid "Rotate right"
 msgstr ""
@@ -3688,7 +4435,7 @@ msgstr ""
 msgid "Rotation"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1301
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1253
 msgid "Run slideshow (CTRl+F5)."
 msgstr ""
 
@@ -3707,12 +4454,12 @@ msgid "Russian"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:488
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1127
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1079
 msgid "STL"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:480
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1120
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1072
 msgid "SVG"
 msgstr ""
 
@@ -3740,7 +4487,7 @@ msgid "Save JPEG frames"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:271
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:277
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:281
 msgid "Save as ..."
 msgstr ""
 
@@ -3765,15 +4512,15 @@ msgstr ""
 msgid "Save file"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:459
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:463
 msgid "Save file before redrawing"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:188
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:192
 msgid "Save script"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:190
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:194
 msgid "Save script to a file (Ctrl+S)"
 msgstr ""
 
@@ -3789,7 +4536,7 @@ msgstr ""
 msgid "Save to file"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:659
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:663
 msgid "Saving aborted"
 msgstr ""
 
@@ -3798,7 +4545,7 @@ msgstr ""
 msgid "Scale and rotate"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:224
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:228
 msgid "Script"
 msgstr ""
 
@@ -3845,13 +4592,53 @@ msgstr ""
 msgid "Select kind of plot"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:749
+msgid "Select variant of plot style(s)"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:166
 msgid "Set"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:745
+msgid "Set additional tick and axis labels shift"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:695
+msgid "Set ambient light brightness"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:313
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:302
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:306
 msgid "Set arguments"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:697
+msgid "Set aspect ration"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:699
+msgid "Set axis and tick style"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:725
+msgid "Set axis origin"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:732
+msgid "Set axis ranges"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:701
+msgid "Set bounding box for 2d export"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:722
+msgid "Set brush for given mask"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:706
+msgid "Set color range"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/src/exec_dat.cpp:1552
@@ -3864,6 +4651,26 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/open_dlg.cpp:62
 msgid "Set data sizes manually"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:700
+msgid "Set default bars width"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:730
+msgid "Set default filename"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:694
+msgid "Set default transparency"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:709
+msgid "Set diffusive light brightness"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:710
+msgid "Set draw region for quality&4"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/subplot_dlg.cpp:46
@@ -3888,6 +4695,75 @@ msgstr ""
 msgid "Set lighting off/on for particular plot"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:723
+msgid "Set number of lines in mesh/fall/vect and so on"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:717
+msgid "Set number of marks in the legend"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:711
+msgid "Set number of visible faces"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:727
+msgid "Set palette for 1D plots"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:729
+msgid "Set perspective"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:737
+msgid "Set picture size"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:731
+msgid "Set plot quality"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:724
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:742
+msgid "Set position of plot"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:716
+msgid "Set position of plot in picture"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:705
+msgid "Set position of plot inside cell of column"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:715
+msgid "Set position of plot inside cell of matrix"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:741
+msgid "Set position of plot inside cell of rotated stick"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:740
+msgid "Set position of plot inside cell of sheared stick"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:753
+msgid "Set range for x-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:755
+msgid "Set range for y-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:759
+msgid "Set range for z-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:738
+msgid "Set scaling factor for further setsize"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:143
 msgid "Set script arguments"
 msgstr ""
@@ -3896,11 +4772,63 @@ msgstr ""
 msgid "Set size for text, marks and others"
 msgstr ""
 
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:696
+msgid "Set size of arrows"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:721
+msgid "Set size of markers"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:728
+msgid "Set size of semi-transparent area"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:726
+msgid "Set tick labels drawing at origin"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:744
+msgid "Set tick length"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:707
+msgid "Set ticks for colorbar"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:754
+msgid "Set ticks for x-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:756
+msgid "Set ticks for y-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:760
+msgid "Set ticks for z-axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:746
+msgid "Set ticks in time format"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:748
+msgid "Set ticks tuning"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:736
+msgid "Set to auto rotate text or not"
+msgstr ""
+
 #: /home/balakin/mathgl-code/mathgl-2x/udav/subplot_dlg.cpp:195
 msgid "Set to use whole area (style '#')"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1256
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:747
+msgid "Set type transparency"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1208
 msgid "Set value of \\phi angle."
 msgstr ""
 
@@ -3910,7 +4838,7 @@ msgid ""
 "You can use keys (Shift+Meta+Left or Shift+Meta+Right)."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1250
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1202
 msgid "Set value of \\theta angle."
 msgstr ""
 
@@ -3920,7 +4848,7 @@ msgid ""
 "You can use keys (Shift+Meta+Up or Shift+Meta+Down)."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:298
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:302
 msgid "Settings"
 msgstr ""
 
@@ -3934,6 +4862,22 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/prop_dlg.cpp:80
 msgid "Setup colors for:"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:713
+msgid "Setup font"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:718
+msgid "Setup light"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_prm.cpp:579
+msgid "Setup or draw axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:708
+msgid "Setup plot points cutting"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:947
@@ -3955,6 +4899,10 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:350
 msgid "Sharp colors"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:739
+msgid "Shear plot"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/fltk.cpp:866
@@ -3986,7 +4934,7 @@ msgstr ""
 msgid "Show at startup"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:197
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:201
 msgid ""
 "Show calculator which evaluate and help to type textual formulas.\n"
 "Textual formulas may contain data variables too."
@@ -3997,7 +4945,7 @@ msgstr ""
 msgid "Show calculator window"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:301
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:305
 msgid "Show dialog for UDAV properties."
 msgstr ""
 
@@ -4036,11 +4984,11 @@ msgstr ""
 msgid "Show dialog for text finding (Ctrl+F)."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:313
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:317
 msgid "Show help on MGL commands (F1)."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:206
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:210
 msgid "Show hidden plots"
 msgstr ""
 
@@ -4048,11 +4996,11 @@ msgstr ""
 msgid "Show hint on startup"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:317
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:321
 msgid "Show hints of MGL usage."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:200
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:204
 msgid "Show info"
 msgstr ""
 
@@ -4065,7 +5013,7 @@ msgid "Show next frame in slideshow"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:563
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1296
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1248
 msgid "Show next slide (Ctrl+.)."
 msgstr ""
 
@@ -4074,7 +5022,7 @@ msgid "Show previous frame in slideshow"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:578
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1305
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1257
 msgid "Show previous slide (Ctrl+,)."
 msgstr ""
 
@@ -4121,7 +5069,7 @@ msgid "Skip commands and iterate for-cycle again"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:566
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1298
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1250
 msgid "Slideshow"
 msgstr ""
 
@@ -4230,7 +5178,7 @@ msgid "Step for pulse diffraction"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:347
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1182
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1134
 msgid "Stop"
 msgstr ""
 
@@ -4388,8 +5336,16 @@ msgstr ""
 msgid "Swap parts"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1149
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1101
 msgid "Switch on/off TRansparency for the graphics (Alt+T)."
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:712
+msgid "Switch on/off fog"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:714
+msgid "Switch on/off gray-scale mode"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/fltk.cpp:824
@@ -4400,7 +5356,7 @@ msgstr ""
 msgid "Switch on/off grid of absolute coordinates (Ctrl+G)."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1155
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1107
 msgid "Switch on/off lightning for the graphics (Alt+L)."
 msgstr ""
 
@@ -4413,14 +5369,22 @@ msgid "Switch on/off lightning in the picture"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:314
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1161
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1113
 msgid ""
 "Switch on/off mouse handling of the graphics\n"
 "(rotation, shifting, zooming and perspective)."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1167
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1119
 msgid "Switch on/off mouse zoom of selected region."
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:743
+msgid "Switch on/off to use ternary axis"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:693
+msgid "Switch on/off transparency"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:294
@@ -4537,7 +5501,7 @@ msgstr ""
 msgid "There is no fitted formula."
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/utils/mglcgi.cpp:75
+#: /home/balakin/mathgl-code/mathgl-2x/utils/mglcgi.cpp:77
 #, c-format
 msgid "There is no query. Exit.\n"
 msgstr ""
@@ -4674,6 +5638,8 @@ msgstr ""
 msgid "Type of smoothing"
 msgstr ""
 
+#. N
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:54
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:246
 msgid "U - indigo"
 msgstr ""
@@ -4681,7 +5647,7 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/udav/text_pnl.cpp:109
 #: /home/balakin/mathgl-code/mathgl-2x/udav/text_pnl.cpp:124
 #: /home/balakin/mathgl-code/mathgl-2x/udav/text_pnl.cpp:137
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:327
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:331
 msgid "UDAV"
 msgstr ""
 
@@ -4767,7 +5733,7 @@ msgstr ""
 msgid "UDAV - Open data file"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:620
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:624
 msgid "UDAV - Open file"
 msgstr ""
 
@@ -4822,7 +5788,7 @@ msgstr ""
 msgid "UDAV - Squeeze data"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:443
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:447
 msgid "UDAV - about"
 msgstr ""
 
@@ -4860,13 +5826,13 @@ msgstr ""
 msgid "UDAV - open file"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:556
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:566
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:608
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:560
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:570
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:612
 msgid "UDAV - save current"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:656
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:660
 msgid "UDAV - save file"
 msgstr ""
 
@@ -4906,17 +5872,17 @@ msgstr ""
 msgid "Upper bound"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/utils/mglconv.cpp:84
+#: /home/balakin/mathgl-code/mathgl-2x/utils/mglconv.cpp:88
 #, c-format
 msgid "Usage:\tmglconv [parameter(s)] scriptfile\n"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:403
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:407
 #, c-format
 msgid "Usage:\tmgllab [parameter(s)] scriptfile\n"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/utils/mglview.cpp:63
+#: /home/balakin/mathgl-code/mathgl-2x/utils/mglview.cpp:67
 #, c-format
 msgid "Usage:\tmglview [parameter(s)] scriptfile\n"
 msgstr ""
@@ -4986,6 +5952,8 @@ msgstr ""
 msgid "Vertical size"
 msgstr ""
 
+#. k
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:44
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:236
 msgid "W - lightgray"
 msgstr ""
@@ -4998,7 +5966,7 @@ msgstr ""
 msgid "Whole area"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:465
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:469
 msgid "Widget scheme"
 msgstr ""
 
@@ -5028,6 +5996,10 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:370
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:159
 msgid "Wire style"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:752
+msgid "Write current image to graphical file"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:950
@@ -5067,10 +6039,12 @@ msgid "X/Z"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:489
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1128
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1080
 msgid "XYZ"
 msgstr ""
 
+#. M
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:50
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:242
 msgid "Y - olive"
 msgstr ""
@@ -5095,10 +6069,6 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:89
 #: /home/balakin/mathgl-code/mathgl-2x/udav/opt_dlg.cpp:41
 msgid "Y-range"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:397
-msgid "Y-sign"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:387
@@ -5294,19 +6264,23 @@ msgstr ""
 msgid "Z-slice from"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1272
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1224
 msgid "Zoom &in"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1276
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1228
 msgid "Zoom &out"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1163
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:758
+msgid "Zoom axis range"
+msgstr ""
+
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1115
 msgid "Zoom by mouse"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1262
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1214
 msgid "Zoom graphics"
 msgstr ""
 
@@ -5315,7 +6289,7 @@ msgid "Zoom in"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:518
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1274
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1226
 msgid "Zoom in graphics."
 msgstr ""
 
@@ -5337,7 +6311,7 @@ msgid "Zoom out"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:524
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1278
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1230
 msgid "Zoom out graphics."
 msgstr ""
 
@@ -5349,14 +6323,14 @@ msgstr ""
 msgid "Zoom out the picture"
 msgstr ""
 
-#. zooming menu
-#: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:502
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1261
-msgid "Zoom/move"
+#: /home/balakin/mathgl-code/mathgl-2x/src/exec_set.cpp:757
+msgid "Zoom plot region"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:563
-msgid "^"
+#. zooming menu
+#: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:502
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1213
+msgid "Zoom/move"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:131
@@ -5400,17 +6374,8 @@ msgstr ""
 msgid "arc"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:265
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:288
-msgid "arrow"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1018
 msgid "arrows"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:387
-msgid "asterix"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/setup_dlg.cpp:71
@@ -5440,13 +6405,10 @@ msgstr ""
 msgid "axis ranges are incompatible"
 msgstr ""
 
+#. w
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:29
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:222
 msgid "b - blue"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:266
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:289
-msgid "back arrow"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1019
@@ -5454,23 +6416,8 @@ msgid "bars"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:478
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1118
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1070
 msgid "bitmap EPS"
-msgstr ""
-
-#. h
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:43
-msgid "black"
-msgstr ""
-
-#. w
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:29
-msgid "blue"
-msgstr ""
-
-#. n
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:38
-msgid "blueviolet"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1036
@@ -5482,11 +6429,8 @@ msgstr ""
 msgid "bottom"
 msgstr ""
 
-#. U
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:55
-msgid "brown"
-msgstr ""
-
+#. r
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:32
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:225
 msgid "c - cyan"
 msgstr ""
@@ -5496,17 +6440,6 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:983
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:996
 msgid "center"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:272
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:295
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:344
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:394
-msgid "circle"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:396
-msgid "circled dot"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/widgets/fltk.cpp:761
@@ -5519,51 +6452,12 @@ msgstr ""
 msgid "couldn't open file"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:354
-msgid "cross"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1455
 msgid "curve"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1026
 msgid "cutting"
-msgstr ""
-
-#. r
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:32
-msgid "cyan"
-msgstr ""
-
-#. P
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:57
-msgid "darkgray"
-msgstr ""
-
-#. L
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:52
-msgid "darklawn"
-msgstr ""
-
-#. Q
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:56
-msgid "darkpink"
-msgstr ""
-
-#. E
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:53
-msgid "darkskyblue"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:311
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:343
-msgid "dash"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:313
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:351
-msgid "dash dot"
 msgstr ""
 
 #. -----------------------------------------------------------------------------
@@ -5581,11 +6475,6 @@ msgstr ""
 msgid "data values are zero"
 msgstr ""
 
-#. q
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:40
-msgid "deeppink"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:107
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:116
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1044
@@ -5600,18 +6489,8 @@ msgstr ""
 msgid "dimensions"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:384
-msgid "dot"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:315
-msgid "dots"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:342
-msgid "double line"
-msgstr ""
-
+#. l
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:36
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:229
 msgid "e - lawngreen"
 msgstr ""
@@ -5628,18 +6507,6 @@ msgstr ""
 msgid "factor"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:345
-msgid "filled circle"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:353
-msgid "filled rhomb"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:347
-msgid "filled square"
-msgstr ""
-
 #. mglWarnSize
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:227
 msgid "format is not supported for that build"
@@ -5654,6 +6521,8 @@ msgstr ""
 msgid "from"
 msgstr ""
 
+#. b
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:30
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:223
 msgid "g - lime"
 msgstr ""
@@ -5662,20 +6531,12 @@ msgstr ""
 msgid "glass-like"
 msgstr ""
 
-#. p
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:41
-msgid "gray"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1011
 msgid "grayscale"
 msgstr ""
 
-#. B
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:46
-msgid "green"
-msgstr ""
-
+#. p
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:41
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:234
 msgid "h - gray"
 msgstr ""
@@ -5689,27 +6550,21 @@ msgstr ""
 msgid "increment"
 msgstr ""
 
-#. N
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:54
-msgid "indigo"
-msgstr ""
-
+#. h
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:43
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:235
 msgid "k - black"
-msgstr ""
+msgstr "k - черный"
 
+#. y
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:35
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:228
 msgid "l - springgreen"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1045
 msgid "lamp-like"
-msgstr ""
-
-#. l
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:36
-msgid "lawngreen"
-msgstr ""
+msgstr "ламповая"
 
 #. vv->addSpacing(11);
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:957
@@ -5720,65 +6575,42 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:169
 #: /home/balakin/mathgl-code/mathgl-2x/udav/subplot_dlg.cpp:186
 msgid "left"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:349
-msgid "left sign"
-msgstr ""
+msgstr "слева"
 
 #. mglWarnOpen
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:225
 msgid "light: ID is out of range"
-msgstr ""
-
-#. k
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:44
-msgid "lightgray"
-msgstr ""
+msgstr "light: ID вне диапазона"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1013
 msgid "lighting"
-msgstr ""
-
-#. b
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:30
-msgid "lime"
-msgstr ""
+msgstr "освещение"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1454
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:340
 msgid "line"
-msgstr ""
+msgstr "линия"
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:310
-msgid "long dash"
-msgstr ""
-
+#. c
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:33
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:226
 msgid "m - magenta"
 msgstr ""
 
-#. c
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:33
-msgid "magenta"
-msgstr ""
-
+#.
+#. ^
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:209
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:247
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:317
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:356
 msgid "manual"
-msgstr ""
+msgstr "вручную"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1454
 msgid "marker"
-msgstr ""
+msgstr "маркер"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1020
 msgid "markers"
-msgstr ""
-
-#. G
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:47
-msgid "maroon"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/data_dlg.cpp:68
@@ -5787,7 +6619,7 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:151
 msgid "mem. usage"
-msgstr ""
+msgstr "исп.памяти"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1016
 msgid "meshnum"
@@ -5797,16 +6629,16 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/udav/help_pnl.cpp:76
 #: /home/balakin/mathgl-code/mathgl-2x/udav/newcmd_dlg.cpp:247
 msgid "mgl_en"
-msgstr ""
+msgstr "mgl_ru"
 
-#: /home/balakin/mathgl-code/mathgl-2x/utils/mglconv.cpp:83
+#: /home/balakin/mathgl-code/mathgl-2x/utils/mglconv.cpp:87
 #, c-format
 msgid ""
 "mglconv convert mgl script to image file (default PNG).\n"
 "Current version is 2.%g\n"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:402
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:406
 #, c-format
 msgid ""
 "mgllab draw mgl script interactively.\n"
@@ -5821,7 +6653,7 @@ msgid ""
 "http://mathgl.sf.net/"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/utils/mglview.cpp:62
+#: /home/balakin/mathgl-code/mathgl-2x/utils/mglview.cpp:66
 #, c-format
 msgid ""
 "mglview show plot from MGL script or MGLD file.\n"
@@ -5837,81 +6669,71 @@ msgstr ""
 msgid "minimal data value is negative"
 msgstr ""
 
+#. e
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:37
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:230
 msgid "n - skyblue"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:147
 msgid "name"
-msgstr ""
-
-#. W
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:45
-msgid "navy"
-msgstr ""
+msgstr "имя"
 
 #. mglWarnNeg
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:218
 msgid "no file or wrong data dimensions"
-msgstr ""
+msgstr "нет файла или неверные размеры"
 
 #. mglWarnZero
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:221
 msgid "no legend entries"
-msgstr ""
+msgstr "нет записей легенды"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1028
 msgid "no origin tick"
 msgstr ""
 
-#. "AVIKTSDO"
 #. "-+=;oOsS~<>jdD*^"
 #. ".+x*sdv^<>o.*+xsdv^<>o" : nf = 10
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:214
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:230
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1035
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1039
 #: /home/balakin/mathgl-code/mathgl-2x/udav/data_dlg.cpp:67
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:128
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:131
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:134
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:264
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:287
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:316
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:339
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:383
 msgid "none"
-msgstr ""
+msgstr "нет"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:220
 msgid "none or default"
-msgstr ""
+msgstr "нет или по умолчанию"
 
 #. mglWarnFile
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:219
 msgid "not enough memory"
-msgstr ""
+msgstr "не хватает памяти"
 
 #. mglWarnNull
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:230
 msgid "not enough space for plot"
-msgstr ""
+msgstr "не достаточно места для графика"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:85
 msgid "not used"
-msgstr ""
+msgstr "не используется"
 
 #. mglWarnSlc
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:223
 msgid "number of contours is zero or negative"
-msgstr ""
+msgstr "число контуров меньше или равно нуля"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/opt_dlg.cpp:63
 #: /home/balakin/mathgl-code/mathgl-2x/udav/opt_dlg.cpp:66
 msgid "off"
-msgstr ""
-
-#. M
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:50
-msgid "olive"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/opt_dlg.cpp:63
@@ -5922,84 +6744,62 @@ msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/dat_pnl.cpp:548
 msgid "or enter name for new variable"
-msgstr ""
+msgstr "или введите имя новой переменной"
 
-#. u
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:39
-msgid "orange"
-msgstr ""
-
+#. q
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:40
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:233
 msgid "p - deeppink"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1023
 msgid "pen blur"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mgllab.cpp:558
-msgid "pi"
-msgstr ""
+msgstr "размытие линии"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:392
 msgid "plain"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:341
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:385
-msgid "plus"
-msgstr ""
-
 #. mglWarnTern
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:229
 msgid "pointer is NULL"
-msgstr ""
+msgstr "указатель равен NULL"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1456
 msgid "polygon"
-msgstr ""
+msgstr "полигон"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1040
 msgid "projection"
-msgstr ""
+msgstr "проекция"
 
-#. C
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:49
-msgid "purple"
-msgstr ""
-
+#. u
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:39
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:232
 msgid "q - orange"
-msgstr ""
+msgstr "q - оранжевый"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1040
 msgid "quaternary"
-msgstr ""
+msgstr "quaternary"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1041
 msgid "quaternary proj"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:224
-msgid "r - red"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1454
-msgid "rectangle"
-msgstr ""
+msgstr "quaternary проекция"
 
 #. g
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:31
-msgid "red"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:224
+msgid "r - red"
+msgstr "r - красный"
+
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1454
+msgid "rectangle"
+msgstr "прямоугольник"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1455
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:271
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:294
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:352
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:389
 msgid "rhomb"
-msgstr ""
+msgstr "ромб"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:958
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:971
@@ -6009,158 +6809,64 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:172
 #: /home/balakin/mathgl-code/mathgl-2x/udav/subplot_dlg.cpp:192
 msgid "right"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:350
-msgid "right sign"
-msgstr ""
+msgstr "справа"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1029
 msgid "rotate text"
-msgstr ""
+msgstr "вращать текст"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:197
 msgid "save slides"
-msgstr ""
-
-#. Y
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:51
-msgid "seagreen"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:268
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:291
-msgid "size"
-msgstr ""
+msgstr "сохранить кадры"
 
 #. mglWarnLId
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:226
 msgid "size(s) is zero or negative"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:386
-msgid "skew cross"
-msgstr ""
-
-#. e
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:37
-msgid "skyblue"
-msgstr ""
+msgstr "размер(ы) меньше или равны нулю"
 
 #. mglWarnLeg
 #: /home/balakin/mathgl-code/mathgl-2x/src/base.cpp:222
 msgid "slice value is out of range"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:312
-msgid "small dash"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:314
-msgid "small dash dot"
-msgstr ""
+msgstr "срез вне диапазона"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/table.cpp:144
 msgid "smoothed"
-msgstr ""
+msgstr "сгладить"
 
-#. "-|;=ji: "
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:326
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:309
 msgid "solid"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:476
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1116
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1068
 msgid "solid PNG"
 msgstr ""
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:407
-msgid "solid circle"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:402
-msgid "solid rhomb"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:401
-msgid "solid square"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:403
-msgid "solid triangle down"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:405
-msgid "solid triangle left"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:406
-msgid "solid triangle right"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:404
-msgid "solid triangle up"
-msgstr ""
-
-#. y
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:35
-msgid "springgreen"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:270
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:293
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:346
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:388
-msgid "square"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:399
-msgid "squared cross"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:398
-msgid "squared plus"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:267
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:290
-msgid "stop"
-msgstr ""
-
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:185
 #: /home/balakin/mathgl-code/mathgl-2x/udav/anim_dlg.cpp:44
 msgid "strings"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:185
-msgid "strings in lines below"
-msgstr ""
+msgstr "строки"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/data_dlg.cpp:67
 msgid "sum"
 msgstr ""
 
-#. R
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:48
-msgid "teal"
-msgstr ""
-
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1039
 msgid "ternary"
-msgstr ""
+msgstr "ternary"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1041
 msgid "ternary proj"
-msgstr ""
+msgstr "ternary проекция"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1021
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1456
 msgid "text"
-msgstr ""
+msgstr "текст"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1022
 msgid "ticks"
-msgstr ""
+msgstr "метки"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:569
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:572
@@ -6168,60 +6874,37 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:191
 #: /home/balakin/mathgl-code/mathgl-2x/udav/anim_dlg.cpp:58
 msgid "to"
-msgstr ""
+msgstr "до"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1308
 #: /home/balakin/mathgl-code/mathgl-2x/udav/subplot_dlg.cpp:190
 msgid "top"
-msgstr ""
+msgstr "сверху"
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:269
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:292
-msgid "triangle"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:390
-msgid "triangle down"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:392
-msgid "triangle left"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:393
-msgid "triangle right"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:391
-msgid "triangle up"
-msgstr ""
-
+#. n
+#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:38
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:231
 msgid "u - blueviolet"
 msgstr ""
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:131
 msgid "under"
-msgstr ""
+msgstr "снизу"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/help.cpp:199
 #: /home/balakin/mathgl-code/mathgl-2x/udav/mem_pnl.cpp:167
 msgid "unknown"
-msgstr ""
+msgstr "не знаю"
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:155
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:547
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:680
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:159
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:551
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:684
 msgid "untitled - UDAV"
-msgstr ""
+msgstr "без имени - UDAV"
 
-#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:673
+#: /home/balakin/mathgl-code/mathgl-2x/udav/udav_wnd.cpp:677
 msgid "untitled* - UDAV"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:355
-msgid "up sign"
-msgstr ""
+msgstr "без имени* - UDAV"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:327
 msgid "user"
@@ -6230,48 +6913,34 @@ msgstr ""
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:187
 #: /home/balakin/mathgl-code/mathgl-2x/udav/anim_dlg.cpp:51
 msgid "values"
-msgstr ""
+msgstr "значения"
 
 #: /home/balakin/mathgl-code/mathgl-2x/udav/plot_pnl.cpp:479
-#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1119
+#: /home/balakin/mathgl-code/mathgl-2x/widgets/qt.cpp:1071
 msgid "vector EPS"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:221
-msgid "w - white"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:348
-msgid "wave"
-msgstr ""
+msgstr "векторный EPS"
 
 #.
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:28
-msgid "white"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:221
+msgid "w - white"
+msgstr "w - белый"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1312
 msgid "whole area"
-msgstr ""
+msgstr "всю площадь"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1471
 msgid "wire"
-msgstr ""
+msgstr "сеткой"
 
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/mathgl.cpp:192
 #: /home/balakin/mathgl-code/mathgl-2x/udav/anim_dlg.cpp:62
 msgid "with step"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:227
-msgid "y - yellow"
-msgstr ""
-
-#: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:1300
-msgid "y/z"
-msgstr ""
+msgstr "с шагом"
 
 #. m
 #: /home/balakin/mathgl-code/mathgl-2x/mgllab/dialogs.cpp:34
-msgid "yellow"
-msgstr ""
+#: /home/balakin/mathgl-code/mathgl-2x/udav/style_dlg.cpp:227
+msgid "y - yellow"
+msgstr "y - желтый"

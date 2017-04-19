@@ -53,7 +53,7 @@ void set_scheme_lang(int s, int l)
 	static const char *loc[3]={"C.UTF8",	"ru_RU.utf8",	"ru_RU.cp1251"};
 	if(s<0 || s>3)	s=1;
 	if(l<0 || l>2)	l=1;
-	setlocale(LC_CTYPE, loc[l]);
+	setlocale(LC_ALL, loc[l]);	setlocale(LC_NUMERIC, "C");
 	Fl::scheme(sch[s]);
 	scheme = s;	lang = l;
 	static const char *hlp[3]={"mgl_en.html#","mgl_ru.html#", "mgl_ru.html#"};
@@ -271,11 +271,11 @@ Fl_Menu_Item menuitems[] = {
 		{_("Save as ..."), 0, saveas_cb, 0, FL_MENU_DIVIDER},
 		{_("Print plot"), 0, print_plot_cb, 0, FL_MENU_DIVIDER},
 		{_("Recent files"), 0, 0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
-			{_("1."), 0, lastfile1_cb},
-			{_("2."), 0, lastfile2_cb},
-			{_("3."), 0, lastfile3_cb},
-			{_("4."), 0, lastfile4_cb},
-			{_("5."), 0, lastfile5_cb},
+			{"1.", 0, lastfile1_cb},
+			{"2.", 0, lastfile2_cb},
+			{"3.", 0, lastfile3_cb},
+			{"4.", 0, lastfile4_cb},
+			{"5.", 0, lastfile5_cb},
 			{0},
 		{_("Exit"), 0, quit_cb},
 		{0},
@@ -375,6 +375,9 @@ int main(int argc, char **argv)
 {
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+//	bindtextdomain("mathgl", "/usr/share/locale/");
+	textdomain("mathgl");
 
 	textbuf = new Fl_Text_Buffer;
 	style_init();
@@ -396,7 +399,8 @@ int main(int argc, char **argv)
 	{
 		char ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:");
 		if(ch>='1' && ch<='9')	argument_set(ch-'0', optarg);
-		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
+		else if(ch=='L')
+		{	setlocale(LC_CTYPE, optarg);	setlocale(LC_NUMERIC, "C");	}
 		else if(ch=='h')
 		{
 			printf(_("mgllab draw mgl script interactively.\nCurrent version is 2.%g\n"),MGL_VER2);
@@ -451,10 +455,10 @@ public:
 		fsize = new Fl_Spinner(245, 10, 90, 25, _("Font size"));
 		help_path = new Fl_File_Input(5, 55, 305, 35, _("Path for help files"));
 		help_path->align(FL_ALIGN_TOP_LEFT);
-		o = new Fl_Button(310, 65, 25, 25, _("..."));	o->callback(cb_filech, 0);
+		o = new Fl_Button(310, 65, 25, 25, "...");	o->callback(cb_filech, 0);
 		font_path = new Fl_File_Input(5, 110, 305, 35, _("Path for MathGL font (without extension)"));
 		font_path->align(FL_ALIGN_TOP_LEFT);
-		o = new Fl_Button(310, 120, 25, 25, _("..."));	o->callback(cb_filech, (void *)1);
+		o = new Fl_Button(310, 120, 25, 25, "...");	o->callback(cb_filech, (void *)1);
 		auto_exec_w = new Fl_Check_Button(5, 145, 330, 25, _("Execute script after loading"));
 		exec_save_w = new Fl_Check_Button(5, 170, 330, 25, _("Save file before redrawing"));
 		complete_w = new Fl_Check_Button(5, 195, 330, 25, _("Enable keywords completion"));
@@ -551,26 +555,26 @@ public:
 		static int widths[] = { 200, 65, 0 };  // widths for each column
 		prev->column_widths(widths);	prev->column_char('\t');
 		gg = new Fl_Group(5, 155, 265, 115);
-			o = new Fl_Button(5, 155, 25, 25, _("7"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(35, 155, 25, 25, _("8"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(65, 155, 25, 25, _("9"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(95, 155, 25, 25, _("+"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(125, 155, 25, 25, _("pi"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(5, 185, 25, 25, _("4"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(35, 185, 25, 25, _("5"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(65, 185, 25, 25, _("6"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(95, 185, 25, 25, _("-"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(125, 185, 25, 25, _("^"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(5, 215, 25, 25, _("1"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(35, 215, 25, 25, _("2"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(65, 215, 25, 25, _("3"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(95, 215, 25, 25, _("*"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(125, 215, 25, 25, _("("));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(5, 245, 25, 25, _("0"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(35, 245, 25, 25, _("."));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(65, 245, 25, 25, _("E"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(95, 245, 25, 25, _("/"));	o->callback(cb_calc_key,o);
-			o = new Fl_Button(125, 245, 25, 25, _(")"));	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 155, 25, 25, "7");		o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 155, 25, 25, "8");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 155, 25, 25, "9");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 155, 25, 25, "+");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 155, 25, 25, "pi");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 185, 25, 25, "4");		o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 185, 25, 25, "5");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 185, 25, 25, "6");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 185, 25, 25, "-");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 185, 25, 25, "^");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 215, 25, 25, "1");		o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 215, 25, 25, "2");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 215, 25, 25, "3");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 215, 25, 25, "*");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 215, 25, 25, "(");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(5, 245, 25, 25, "0");		o->callback(cb_calc_key,o);
+			o = new Fl_Button(35, 245, 25, 25, ".");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(65, 245, 25, 25, "E");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(95, 245, 25, 25, "/");	o->callback(cb_calc_key,o);
+			o = new Fl_Button(125, 245, 25, 25, ")");	o->callback(cb_calc_key,o);
 
 			g = new Fl_Group(155, 175, 115, 95, _("Function"));
 			kind = new Fl_Choice(160, 179, 105, 25);	kind->callback(cb_calc_kind);
