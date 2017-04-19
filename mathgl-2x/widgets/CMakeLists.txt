@@ -26,5 +26,4 @@ endif(MGL_HAVE_WX)
 add_subdirectory( qt4 )
 add_subdirectory( qt5 )
 
-mgl_po_src(lpo_files fltk.cpp glut.cpp wx.cpp qt.cpp)
-set(po_files ${po_files} ${lpo_files} PARENT_SCOPE)
+mgl_po_src(fltk.cpp glut.cpp wx.cpp qt.cpp)
