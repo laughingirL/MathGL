@@ -728,7 +728,7 @@ if(USE_GETTEXT)
 	add_custom_target(mathgl_ru.mo ALL
 		COMMAND ${findmsgfmt} -o mathgl_ru.mo ${MathGL2_SOURCE_DIR}/mathgl_ru.po
 		DEPENDS mathgl_ru.po)
-	install( FILES mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
+	install( FILES ${MathGL2_BINARY_DIR}/mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
 endif(USE_GETTEXT)
 
 

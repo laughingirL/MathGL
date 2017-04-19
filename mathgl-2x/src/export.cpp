@@ -620,7 +620,7 @@ void MGL_EXPORT mgl_show_image(HMGL gr, const char *viewer, int keep)
 		if(keep)
 		{
 			snprintf(cmd,128,"%s %s &", viewer,fname);	cmd[127]=0;
-			if(system(cmd)==-1)	printf("Error to call external viewer\n");
+			if(system(cmd)==-1)	printf(_("Error to call external viewer\n"));
 			Sleep(2000);
 			snprintf(cmd,128,"del %s", fname);
 		}
@@ -629,14 +629,14 @@ void MGL_EXPORT mgl_show_image(HMGL gr, const char *viewer, int keep)
 		if(keep)
 		{
 			snprintf(cmd,128,"%s %s &", viewer,fname);	cmd[127]=0;
-			if(system(cmd)==-1)	printf("Error to call external viewer\n");
+			if(system(cmd)==-1)	printf(_("Error to call external viewer\n"));
 			sleep(2);
 			snprintf(cmd,128,"rm %s", fname);
 		}
 		else	snprintf(cmd,128,"%s %s; rm %s", viewer,fname,fname);
 #endif
 		cmd[127] = 0;
-		if(system(cmd)==-1)	printf("Error to call external viewer\n");
+		if(system(cmd)==-1)	printf(_("Error to call external viewer\n"));
 		delete []cmd;
 }
 void MGL_EXPORT mgl_show_image_(uintptr_t *gr, const char *viewer, int *keep, int l)

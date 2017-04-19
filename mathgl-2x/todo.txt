@@ -38,6 +38,7 @@
 	where kind={default=edit,spin,choice,check,slider,float?}
 7. Add ##d comment(s) -- analogue of 'ask' but update figure after each change ???
 8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
+9. MGLD and new user-defined symbols
 
 ZZ. Update *.i for new functions {before release!!!}
 

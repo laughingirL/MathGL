@@ -48,7 +48,7 @@ void mglParser::FillBaseCmd()
 	qsort(BaseCmd, nsum, sizeof(mglCommand), mgl_cmd_cmp);
 #if DEBUG
 	long stat[17];	memset(stat,0,17*sizeof(long));
-	const char *name[17] = {"0 - special plot", "1 - other plot", "2 - setup", "3 - data handle", "4 - data create", "5 - subplot", "6 - program flow", "7 - 1d plot", "8 - 2d plot", "9 - 3d plot", "10 - dd plot", "11 - vector plot", "12 - axis", "13 - primitives", "14 - axis setup", "15 - text/legend", "16 - data transform"};
+	const char *name[17] = { _("0 - special plot"), _("1 - other plot"), _("2 - setup"), _("3 - data handle"), _("4 - data create"), _("5 - subplot"), _("6 - program flow"), _("7 - 1d plot"), _("8 - 2d plot"), _("9 - 3d plot"), _("10 - dd plot"), _("11 - vector plot"), _("12 - axis"), _("13 - primitives"), _("14 - axis setup"), _("15 - text/legend"), _("16 - data transform") };
 	for(size_t i=0;BaseCmd[i].name[0];i++)	stat[BaseCmd[i].type]+=1;
 	for(size_t i=0;i<17;i++)	printf("%s: %ld\n",name[i],stat[i]);
 	printf("\n");	fflush(stdout);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-19 17:00+0300\n"
+"POT-Creation-Date: 2017-04-19 19:32+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -63,8 +63,7 @@ msgstr ""
 "\t-g val       режим оттенков серого (val=0|1)\n"
 "\t-v val       задать вариант аргументов\n"
 "\t-o name      имя файла для сохранения рисунка\n"
-"\t-n           нет вывода по умолчанию (скрипт должен сохранить рисунок "
-"сам)\n"
+"\t-n           нет вывода по умолчанию (скрипт должен сохранить рисунок сам)\n"
 "\t-A val       добавить значение val в анимацию\n"
 "\t-C n1:n2:dn  добавить диапазон [n1,n2] с шагом dn анимацию\n"
 "\t-C n1:n2     добавить диапазон [n1,n2] с шагом 1 анимацию\n"
@@ -442,6 +441,43 @@ msgstr "'|' штрихи"
 msgid "'~' waves"
 msgstr "'~' волны"
 
+#: src/parser.cpp:51
+msgid "0 - special plot"
+msgstr ""
+
+#: src/parser.cpp:51
+msgid "1 - other plot"
+msgstr ""
+
+#: src/parser.cpp:51
+#, fuzzy
+msgid "10 - dd plot"
+msgstr "1D график"
+
+#: src/parser.cpp:51
+msgid "11 - vector plot"
+msgstr ""
+
+#: src/parser.cpp:51
+msgid "12 - axis"
+msgstr ""
+
+#: src/parser.cpp:51
+msgid "13 - primitives"
+msgstr ""
+
+#: src/parser.cpp:51
+msgid "14 - axis setup"
+msgstr ""
+
+#: src/parser.cpp:51
+msgid "15 - text/legend"
+msgstr ""
+
+#: src/parser.cpp:51
+msgid "16 - data transform"
+msgstr ""
+
 #: udav/info_dlg.cpp:47
 msgid "1D plot"
 msgstr "1D график"
@@ -453,6 +489,10 @@ msgstr "1D графики"
 #: mgllab/help.cpp:359
 msgid "1D view"
 msgstr "1D вид"
+
+#: src/parser.cpp:51
+msgid "2 - setup"
+msgstr ""
 
 #: udav/info_dlg.cpp:47
 msgid "2D plot"
@@ -466,6 +506,10 @@ msgstr "2D графики"
 msgid "2D view"
 msgstr "2D вид"
 
+#: src/parser.cpp:51
+msgid "3 - data handle"
+msgstr ""
+
 #: udav/open_dlg.cpp:71
 msgid "3D data with sizes from file"
 msgstr ""
@@ -477,6 +521,33 @@ msgstr "3D графики"
 #: mgllab/help.cpp:363
 msgid "3D view"
 msgstr "3D вид"
+
+#: src/parser.cpp:51
+msgid "4 - data create"
+msgstr ""
+
+#: src/parser.cpp:51
+msgid "5 - subplot"
+msgstr ""
+
+#: src/parser.cpp:51
+msgid "6 - program flow"
+msgstr ""
+
+#: src/parser.cpp:51
+#, fuzzy
+msgid "7 - 1d plot"
+msgstr "1D график"
+
+#: src/parser.cpp:51
+#, fuzzy
+msgid "8 - 2d plot"
+msgstr "2D график"
+
+#: src/parser.cpp:51
+#, fuzzy
+msgid "9 - 3d plot"
+msgstr "3D графики"
 
 #: udav/udav_wnd.cpp:446
 msgid ""
@@ -1987,6 +2058,11 @@ msgstr ""
 msgid ""
 "Error reading from file '%s':\n"
 "%s."
+msgstr ""
+
+#: src/export.cpp:623 src/export.cpp:632 src/export.cpp:639
+#, c-format
+msgid "Error to call external viewer\n"
 msgstr ""
 
 #: mgllab/editor.cpp:359
