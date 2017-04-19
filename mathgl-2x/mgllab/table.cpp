@@ -745,7 +745,7 @@ void change_sl_cb(Fl_Widget*w, void*v)
 }
 //-----------------------------------------------------------------------------
 Fl_Menu_Item tablemenu[60] = {
-	{ _("General"), 0, 0, 0, FL_SUBMENU },
+	{ _("File"), 0, 0, 0, FL_SUBMENU },
 		{ _("Load from file"),0, load_dat_cb },
 		{ _("Import from PNG"),0, imp_dat_cb },
 		{ _("Save to file"),	0, save_dat_cb },

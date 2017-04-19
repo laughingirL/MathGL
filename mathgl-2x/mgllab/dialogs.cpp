@@ -998,7 +998,7 @@ public:
 			ctmpl = new Fl_Input(415, 295, 100, 25);
 			cfact = new Fl_Input(415, 325, 100, 25);
 			gg->end();
-		gg = new Fl_Group(0, 25, 525, 330, _("General settings"));	gg->hide();
+		gg = new Fl_Group(0, 25, 525, 330, _("General setup"));	gg->hide();
 			g = new Fl_Group(5, 45, 180, 305, _("Colors"));	g->box(FL_ENGRAVED_BOX);
 			alphadef = new Fl_Float_Input(80, 55, 100, 25, _("AlphaDef"));
 			ambient = new Fl_Float_Input(80, 85, 100, 25, _("Ambient"));

@@ -108,7 +108,7 @@ SetupDialog::SetupDialog(QWidget *parent) : QDialog(parent)
 	alpha = new QCheckBox(_("Alpha"),p);	g->addWidget(alpha, 13,2);
 	light = new QCheckBox(_("Light"),p);	g->addWidget(light, 13,3);
 	rotate = new QCheckBox(_("No text rotation"),p);	g->addWidget(rotate, 13,4);
-	tab->addTab(p, _("General settings"));
+	tab->addTab(p, _("General setup"));
 
 	p = new QWidget(this);
 	g = new QGridLayout(p);	g->setAlignment(Qt::AlignTop);
