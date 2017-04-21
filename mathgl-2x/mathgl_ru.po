@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-21 13:32+0300\n"
+"POT-Creation-Date: 2017-04-21 18:26+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: mgllab/mgllab.cpp:408
+#: mgllab/mgllab.cpp:410
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -33,7 +33,7 @@ msgstr ""
 "\t-L loc       изменить локаль на loc\n"
 "\t-h           показать справку \n"
 
-#: utils/mglconv.cpp:90
+#: utils/mglconv.cpp:92
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -71,7 +71,7 @@ msgstr ""
 "\t-            загрузить скрипт из стандартного ввода\n"
 "\t-h           показать справку\n"
 
-#: utils/mglview.cpp:69
+#: utils/mglview.cpp:71
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -560,7 +560,7 @@ msgstr "8 - 2D графики"
 msgid "9 - 3d plot"
 msgstr "9 - 3D графики"
 
-#: udav/udav_wnd.cpp:446
+#: udav/udav_wnd.cpp:448
 msgid ""
 "<br>(c) Alexey Balakin, 2007-present<br><br><a href='http://www.gnu.org/"
 "copyleft/gpl.html'>License is GPL v.2 or later.</a>"
@@ -568,7 +568,7 @@ msgstr ""
 "<br>(c) Алексей Балакин, 2007-наст.вр.<br><br><a href='http://www.gnu.org/"
 "copyleft/gpl.html'>Лицензия GPL v.2 или более поздняя.</a>"
 
-#: mgllab/mgllab.cpp:551
+#: mgllab/mgllab.cpp:553
 msgid "@-> to script"
 msgstr "@-> в скрипт"
 
@@ -576,13 +576,13 @@ msgstr "@-> в скрипт"
 msgid "@<-  Prev"
 msgstr "@<-  Пред."
 
-#: widgets/qt.cpp:1277 udav/udav_wnd.cpp:322 mgllab/mgllab.cpp:322
+#: widgets/qt.cpp:1277 udav/udav_wnd.cpp:324 mgllab/mgllab.cpp:322
 msgid "About"
 msgstr "О программе"
 
 #. -----------------------------------------------------------------------------
-#: widgets/qt.cpp:863 widgets/qt.cpp:1278 udav/udav_wnd.cpp:323
-#: udav/udav_wnd.cpp:451
+#: widgets/qt.cpp:863 widgets/qt.cpp:1278 udav/udav_wnd.cpp:325
+#: udav/udav_wnd.cpp:453
 msgid "About Qt"
 msgstr "О версии Qt"
 
@@ -738,11 +738,11 @@ msgstr ""
 msgid "Ambient"
 msgstr "Фоновое освещение"
 
-#: udav/subplot_dlg.cpp:166
+#: udav/subplot_dlg.cpp:167
 msgid "Angle around x axis (in degrees)"
 msgstr "Угол относительно оси x (в градусах)"
 
-#: udav/subplot_dlg.cpp:170
+#: udav/subplot_dlg.cpp:171
 msgid "Angle around z axis (in degrees)"
 msgstr "Угол относительно оси z (в градусах)"
 
@@ -799,15 +799,15 @@ msgstr "Стрелка2"
 msgid "Ask to stop plot drawing (F7)."
 msgstr "Запрос на остановку рисования (F7)"
 
-#: udav/subplot_dlg.cpp:174
+#: udav/subplot_dlg.cpp:175
 msgid "Aspect"
 msgstr "Соотношение размеров"
 
-#: udav/subplot_dlg.cpp:177
+#: udav/subplot_dlg.cpp:178
 msgid "Aspect ratio of x-scale to z-acale"
 msgstr "Соотношение размеров по x и z"
 
-#: udav/subplot_dlg.cpp:181
+#: udav/subplot_dlg.cpp:182
 msgid "Aspect ratio of y-scale to z-acale"
 msgstr "Соотношение размеров по y и z"
 
@@ -952,8 +952,8 @@ msgstr "Вычисления"
 
 #. TODO
 #. connect(hidden,SIGNAL(cursorPositionChanged()),this,SLOT(hiddenClicked()));
-#: udav/udav_wnd.cpp:185 udav/udav_wnd.cpp:197 mgllab/mgllab.cpp:316
-#: mgllab/mgllab.cpp:544
+#: udav/udav_wnd.cpp:187 udav/udav_wnd.cpp:199 mgllab/mgllab.cpp:316
+#: mgllab/mgllab.cpp:546
 msgid "Calculator"
 msgstr "Калькулятор"
 
@@ -961,11 +961,11 @@ msgstr "Калькулятор"
 #: udav/newcmd_dlg.cpp:78 udav/open_dlg.cpp:90 udav/dat_pnl.cpp:460
 #: udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552 udav/dat_pnl.cpp:629
 #: udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145 udav/files_dlg.cpp:58
-#: udav/style_dlg.cpp:206 udav/data_dlg.cpp:90 udav/subplot_dlg.cpp:218
+#: udav/style_dlg.cpp:206 udav/data_dlg.cpp:90 udav/subplot_dlg.cpp:219
 #: mgllab/editor.cpp:282 mgllab/mathgl.cpp:164 mgllab/mathgl.cpp:195
 #: mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164 mgllab/dialogs.cpp:410
 #: mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749 mgllab/dialogs.cpp:1071
-#: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:471
+#: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:473
 #: mgllab/table.cpp:101 mgllab/table.cpp:179 mgllab/table.cpp:353
 #: mgllab/table.cpp:556 mgllab/table.cpp:619 mgllab/table.cpp:674
 msgid "Cancel"
@@ -975,12 +975,12 @@ msgstr "Отмена"
 msgid "Cannot triangulate this set!"
 msgstr "Не могу построить триангуляцию!"
 
-#: udav/udav_wnd.cpp:217 mgllab/mgllab.cpp:345 mgllab/mgllab.cpp:346
+#: udav/udav_wnd.cpp:219 mgllab/mgllab.cpp:345 mgllab/mgllab.cpp:346
 msgid "Canvas"
 msgstr "График"
 
-#: udav/subplot_dlg.cpp:58 udav/subplot_dlg.cpp:100 udav/subplot_dlg.cpp:117
-#: udav/subplot_dlg.cpp:134
+#: udav/subplot_dlg.cpp:59 udav/subplot_dlg.cpp:101 udav/subplot_dlg.cpp:118
+#: udav/subplot_dlg.cpp:135
 msgid "Cell index"
 msgstr "Индекс ячейки"
 
@@ -1193,7 +1193,7 @@ msgstr "Не могу записать в %1"
 msgid "Could not write to file"
 msgstr "Не могу записать в файл"
 
-#: udav/udav_wnd.cpp:561
+#: udav/udav_wnd.cpp:563
 msgid "Couldn't change to folder "
 msgstr "Не могу сменить папку "
 
@@ -1238,7 +1238,7 @@ msgstr "Создать новый массив данных"
 msgid "Create new data with zero filling"
 msgstr "Создать новый массив данных, заполненный нулями"
 
-#: udav/udav_wnd.cpp:275
+#: udav/udav_wnd.cpp:277
 msgid "Create new empty script window (Ctrl+N)."
 msgstr "Создать новое окно скрипта (Ctrl+N)."
 
@@ -1452,7 +1452,7 @@ msgstr "Направление"
 msgid "Direction along which data will be filled"
 msgstr "Направление по которому данные будут заполняться"
 
-#: udav/subplot_dlg.cpp:104 udav/subplot_dlg.cpp:121
+#: udav/subplot_dlg.cpp:105 udav/subplot_dlg.cpp:122
 msgid "Distance between cells"
 msgstr "Расстояние между ячейками"
 
@@ -1485,7 +1485,7 @@ msgstr "Закрыть это окно ничего не выполняя"
 msgid "Do you want to delete all data?"
 msgstr "Вы хотите удалить все данные?"
 
-#: udav/udav_wnd.cpp:332 udav/udav_wnd.cpp:571 udav/udav_wnd.cpp:613
+#: udav/udav_wnd.cpp:334 udav/udav_wnd.cpp:573 udav/udav_wnd.cpp:615
 msgid "Do you want to save the changes to the document?"
 msgstr "Вы хотите сохранить изменения в документе?"
 
@@ -1950,7 +1950,7 @@ msgstr ""
 msgid "Elliptic"
 msgstr ""
 
-#: mgllab/mgllab.cpp:464
+#: mgllab/mgllab.cpp:466
 msgid "Enable keywords completion"
 msgstr ""
 
@@ -1958,7 +1958,7 @@ msgstr ""
 msgid "Enable keywords completition"
 msgstr ""
 
-#: mgllab/mgllab.cpp:466
+#: mgllab/mgllab.cpp:468
 msgid "Enable mouse wheel for zooming"
 msgstr ""
 
@@ -2093,7 +2093,7 @@ msgstr ""
 msgid "Execute if condition is false"
 msgstr ""
 
-#: mgllab/mgllab.cpp:462
+#: mgllab/mgllab.cpp:464
 msgid "Execute script after loading"
 msgstr ""
 
@@ -2171,7 +2171,7 @@ msgid "Factor"
 msgstr ""
 
 #. file menu
-#: widgets/qt.cpp:1066 udav/udav_wnd.cpp:272 udav/dat_pnl.cpp:681
+#: widgets/qt.cpp:1066 udav/udav_wnd.cpp:274 udav/dat_pnl.cpp:681
 #: mgllab/mgllab.cpp:267 mgllab/table.cpp:748
 msgid "File"
 msgstr ""
@@ -2324,7 +2324,7 @@ msgstr "Туман"
 msgid "Fog dist."
 msgstr "Глубина тумана"
 
-#: mgllab/mgllab.cpp:520
+#: mgllab/mgllab.cpp:522
 msgid "Folder for help files"
 msgstr "Папка для файлов справки"
 
@@ -2336,7 +2336,7 @@ msgstr "Путь к папке"
 msgid "Font"
 msgstr "Шрифт"
 
-#: mgllab/mgllab.cpp:511
+#: mgllab/mgllab.cpp:513
 msgid "Font file name"
 msgstr "Имя файла шрифта"
 
@@ -2344,11 +2344,11 @@ msgstr "Имя файла шрифта"
 msgid "Font files (*.vfm)"
 msgstr "Файлы шрифтов (*.vfm)"
 
-#: mgllab/mgllab.cpp:453
+#: mgllab/mgllab.cpp:455
 msgid "Font kind"
 msgstr "Стиль текста"
 
-#: mgllab/mgllab.cpp:455
+#: mgllab/mgllab.cpp:457
 msgid "Font size"
 msgstr "Размер текста"
 
@@ -2377,7 +2377,7 @@ msgstr "Кадр %1 из %2"
 msgid "From"
 msgstr "от"
 
-#: mgllab/mgllab.cpp:579
+#: mgllab/mgllab.cpp:581
 msgid "Function"
 msgstr "Функция"
 
@@ -2643,12 +2643,12 @@ msgstr ""
 msgid "Hankel transform at some direction"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:83
+#: udav/subplot_dlg.cpp:84
 msgid "Height of selected cells"
 msgstr ""
 
-#: widgets/qt.cpp:1276 udav/help_pnl.cpp:57 udav/udav_wnd.cpp:222
-#: udav/udav_wnd.cpp:314 mgllab/mgllab.cpp:319 mgllab/mgllab.cpp:320
+#: widgets/qt.cpp:1276 udav/help_pnl.cpp:57 udav/udav_wnd.cpp:224
+#: udav/udav_wnd.cpp:316 mgllab/mgllab.cpp:319 mgllab/mgllab.cpp:320
 #: mgllab/mgllab.cpp:348
 msgid "Help"
 msgstr ""
@@ -2659,7 +2659,7 @@ msgid ""
 "Options are used for additional plot tunning."
 msgstr ""
 
-#: udav/udav_wnd.cpp:177
+#: udav/udav_wnd.cpp:179
 msgid "Hidden plots"
 msgstr ""
 
@@ -2675,11 +2675,11 @@ msgstr ""
 msgid "Hide selected plot."
 msgstr ""
 
-#: udav/prop_dlg.cpp:172 mgllab/mgllab.cpp:465
+#: udav/prop_dlg.cpp:172 mgllab/mgllab.cpp:467
 msgid "Highlight current object(s)"
 msgstr ""
 
-#: udav/udav_wnd.cpp:319 mgllab/mgllab.cpp:321
+#: udav/udav_wnd.cpp:321 mgllab/mgllab.cpp:321
 msgid "Hints"
 msgstr ""
 
@@ -2687,7 +2687,7 @@ msgstr ""
 msgid "Histogram (Ctrl+Shift+H)"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:50 udav/subplot_dlg.cpp:67 udav/subplot_dlg.cpp:92
+#: udav/subplot_dlg.cpp:51 udav/subplot_dlg.cpp:68 udav/subplot_dlg.cpp:93
 msgid "Horizontal size"
 msgstr ""
 
@@ -2759,7 +2759,7 @@ msgstr ""
 msgid "Increase font size"
 msgstr ""
 
-#: udav/udav_wnd.cpp:220
+#: udav/udav_wnd.cpp:222
 msgid "Info"
 msgstr ""
 
@@ -2898,7 +2898,7 @@ msgstr ""
 msgid "Language for UDAV"
 msgstr ""
 
-#: mgllab/mgllab.cpp:467
+#: mgllab/mgllab.cpp:469
 msgid "Language for mgllab"
 msgstr ""
 
@@ -2914,11 +2914,11 @@ msgstr ""
 msgid "Last slice"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:143
+#: udav/subplot_dlg.cpp:144
 msgid "Left bottom edge"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:151
+#: udav/subplot_dlg.cpp:152
 msgid "Left top edge"
 msgstr ""
 
@@ -3009,7 +3009,7 @@ msgstr ""
 msgid "Loaded document %1"
 msgstr ""
 
-#: udav/udav_wnd.cpp:629
+#: udav/udav_wnd.cpp:631
 msgid "Loading aborted"
 msgstr ""
 
@@ -3048,7 +3048,7 @@ msgstr ""
 msgid "MGL files (*.mgl)"
 msgstr ""
 
-#: udav/udav_wnd.cpp:315
+#: udav/udav_wnd.cpp:317
 msgid "MGL help"
 msgstr ""
 
@@ -3060,14 +3060,14 @@ msgstr ""
 msgid "MGL samples and hints"
 msgstr ""
 
-#: udav/udav_wnd.cpp:661
+#: udav/udav_wnd.cpp:663
 msgid ""
 "MGL scripts (*.mgl)\n"
 "HDF5 files (*.hdf *.h5)\n"
 "All files (*.*)"
 msgstr ""
 
-#: udav/udav_wnd.cpp:626
+#: udav/udav_wnd.cpp:628
 msgid ""
 "MGL scripts (*.mgl)\n"
 "HDF5 files (*.hdf *.h5)\n"
@@ -3198,7 +3198,7 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: udav/udav_wnd.cpp:169
+#: udav/udav_wnd.cpp:171
 msgid "Messages and warnings"
 msgstr ""
 
@@ -3376,7 +3376,7 @@ msgstr ""
 msgid "New order of dimensions"
 msgstr ""
 
-#: udav/udav_wnd.cpp:273 mgllab/mgllab.cpp:268
+#: udav/udav_wnd.cpp:275 mgllab/mgllab.cpp:268
 msgid "New script"
 msgstr ""
 
@@ -3468,7 +3468,7 @@ msgstr ""
 msgid "Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"
 msgstr ""
 
-#: udav/udav_wnd.cpp:435
+#: udav/udav_wnd.cpp:437
 msgid "Not recognized"
 msgstr ""
 
@@ -3516,10 +3516,10 @@ msgstr ""
 #: udav/newcmd_dlg.cpp:80 udav/open_dlg.cpp:92 udav/dat_pnl.cpp:462
 #: udav/dat_pnl.cpp:512 udav/dat_pnl.cpp:554 udav/dat_pnl.cpp:631
 #: udav/opt_dlg.cpp:80 udav/files_dlg.cpp:60 udav/style_dlg.cpp:208
-#: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:220 mgllab/mathgl.cpp:196
+#: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221 mgllab/mathgl.cpp:196
 #: mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165 mgllab/dialogs.cpp:411
 #: mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750 mgllab/dialogs.cpp:1072
-#: mgllab/dialogs.cpp:1319 mgllab/mgllab.cpp:472
+#: mgllab/dialogs.cpp:1319 mgllab/mgllab.cpp:474
 msgid "OK"
 msgstr ""
 
@@ -3535,7 +3535,7 @@ msgstr ""
 msgid "Open all data arrays from HDF file"
 msgstr ""
 
-#: udav/udav_wnd.cpp:189
+#: udav/udav_wnd.cpp:191
 msgid ""
 "Open and execute/show script or data from file (Ctrl+O).\n"
 "You may switch off automatic exection in UDAV properties."
@@ -3545,7 +3545,7 @@ msgstr ""
 msgid "Open dialog for new data creation."
 msgstr ""
 
-#: udav/udav_wnd.cpp:187
+#: udav/udav_wnd.cpp:189
 msgid "Open file"
 msgstr ""
 
@@ -3557,7 +3557,7 @@ msgstr ""
 msgid "Open printer dialog and print graphics\t(CTRl+P)"
 msgstr ""
 
-#: udav/udav_wnd.cpp:289
+#: udav/udav_wnd.cpp:291
 msgid "Open printer dialog and print graphics (Ctrl+P)"
 msgstr ""
 
@@ -3663,11 +3663,11 @@ msgstr ""
 msgid "Paste text or data from clipboard (Ctrl+V)."
 msgstr ""
 
-#: mgllab/mgllab.cpp:459
+#: mgllab/mgllab.cpp:461
 msgid "Path for MathGL font (without extension)"
 msgstr ""
 
-#: udav/prop_dlg.cpp:110 mgllab/mgllab.cpp:456
+#: udav/prop_dlg.cpp:110 mgllab/mgllab.cpp:458
 msgid "Path for help files"
 msgstr ""
 
@@ -3759,7 +3759,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: mgllab/mgllab.cpp:553
+#: mgllab/mgllab.cpp:555
 msgid "Previous expressions"
 msgstr ""
 
@@ -3783,7 +3783,7 @@ msgstr ""
 msgid "Print fitted formula"
 msgstr ""
 
-#: widgets/qt.cpp:1086 udav/udav_wnd.cpp:287
+#: widgets/qt.cpp:1086 udav/udav_wnd.cpp:289
 msgid "Print graphics"
 msgstr ""
 
@@ -3799,7 +3799,7 @@ msgstr ""
 msgid "Print plot"
 msgstr ""
 
-#: udav/udav_wnd.cpp:286
+#: udav/udav_wnd.cpp:288
 msgid "Print script"
 msgstr ""
 
@@ -3823,7 +3823,7 @@ msgstr ""
 msgid "Program flow"
 msgstr ""
 
-#: udav/udav_wnd.cpp:303 mgllab/mgllab.cpp:312 mgllab/mgllab.cpp:451
+#: udav/udav_wnd.cpp:305 mgllab/mgllab.cpp:312 mgllab/mgllab.cpp:453
 msgid "Properties"
 msgstr ""
 
@@ -3835,7 +3835,7 @@ msgstr ""
 msgid "Pulse prop."
 msgstr ""
 
-#: udav/calc_dlg.cpp:127 mgllab/mgllab.cpp:587
+#: udav/calc_dlg.cpp:127 mgllab/mgllab.cpp:589
 msgid "Put function"
 msgstr ""
 
@@ -3860,7 +3860,7 @@ msgstr ""
 msgid "Q - brown"
 msgstr ""
 
-#: udav/udav_wnd.cpp:294
+#: udav/udav_wnd.cpp:296
 msgid "Quit"
 msgstr ""
 
@@ -3889,7 +3889,7 @@ msgstr ""
 msgid "Read data from file with sizes specified in first row"
 msgstr ""
 
-#: udav/udav_wnd.cpp:259 mgllab/mgllab.cpp:357
+#: udav/udav_wnd.cpp:261 mgllab/mgllab.cpp:357
 msgid "Ready"
 msgstr ""
 
@@ -3897,7 +3897,7 @@ msgstr ""
 msgid "Rearrange data dimensions"
 msgstr ""
 
-#: udav/udav_wnd.cpp:292 mgllab/mgllab.cpp:273
+#: udav/udav_wnd.cpp:294 mgllab/mgllab.cpp:273
 msgid "Recent files"
 msgstr ""
 
@@ -3987,7 +3987,7 @@ msgstr ""
 msgid "Required argument %s is not specified!"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:185
+#: udav/subplot_dlg.cpp:186
 msgid "Reserve at"
 msgstr ""
 
@@ -3995,19 +3995,19 @@ msgstr ""
 msgid "Reserve at:"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:189
+#: udav/subplot_dlg.cpp:190
 msgid "Reserve space for labels at bottom side (style '_')"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:187
+#: udav/subplot_dlg.cpp:188
 msgid "Reserve space for labels at left side (style '<')"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:193
+#: udav/subplot_dlg.cpp:194
 msgid "Reserve space for labels at right side (style '>')"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:191
+#: udav/subplot_dlg.cpp:192
 msgid "Reserve space for labels at top side (style '^')"
 msgstr ""
 
@@ -4048,7 +4048,7 @@ msgid "Restore status for 'once' command and reload data (F9)."
 msgstr ""
 
 #: udav/calc_dlg.cpp:63 udav/data_dlg.cpp:85 udav/data_dlg.cpp:143
-#: mgllab/dialogs.cpp:1315 mgllab/mgllab.cpp:550
+#: mgllab/dialogs.cpp:1315 mgllab/mgllab.cpp:552
 msgid "Result"
 msgstr ""
 
@@ -4056,7 +4056,7 @@ msgstr ""
 msgid "Result (will have sizes "
 msgstr ""
 
-#: udav/subplot_dlg.cpp:211
+#: udav/subplot_dlg.cpp:212
 msgid "Result is"
 msgstr ""
 
@@ -4064,7 +4064,7 @@ msgstr ""
 msgid "Resulting string"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:213
+#: udav/subplot_dlg.cpp:214
 msgid "Resulting string."
 msgstr ""
 
@@ -4076,11 +4076,11 @@ msgstr ""
 msgid "Return picture to normal zoom"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:147
+#: udav/subplot_dlg.cpp:148
 msgid "Right bottom edge"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:155
+#: udav/subplot_dlg.cpp:156
 msgid "Right top edge"
 msgstr ""
 
@@ -4109,7 +4109,7 @@ msgstr ""
 msgid "Rotate left"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:163 mgllab/dialogs.cpp:1294
+#: udav/subplot_dlg.cpp:164 mgllab/dialogs.cpp:1294
 msgid "Rotate on"
 msgstr ""
 
@@ -4179,7 +4179,7 @@ msgstr ""
 msgid "Save JPEG frames"
 msgstr ""
 
-#: udav/udav_wnd.cpp:281 mgllab/mgllab.cpp:271
+#: udav/udav_wnd.cpp:283 mgllab/mgllab.cpp:271
 msgid "Save as ..."
 msgstr ""
 
@@ -4203,15 +4203,15 @@ msgstr ""
 msgid "Save file"
 msgstr ""
 
-#: mgllab/mgllab.cpp:463
+#: mgllab/mgllab.cpp:465
 msgid "Save file before redrawing"
 msgstr ""
 
-#: udav/udav_wnd.cpp:192
+#: udav/udav_wnd.cpp:194
 msgid "Save script"
 msgstr ""
 
-#: udav/udav_wnd.cpp:194
+#: udav/udav_wnd.cpp:196
 msgid "Save script to a file (Ctrl+S)"
 msgstr ""
 
@@ -4227,7 +4227,7 @@ msgstr ""
 msgid "Save to file"
 msgstr ""
 
-#: udav/udav_wnd.cpp:663
+#: udav/udav_wnd.cpp:665
 msgid "Saving aborted"
 msgstr ""
 
@@ -4235,7 +4235,7 @@ msgstr ""
 msgid "Scale and rotate"
 msgstr ""
 
-#: udav/udav_wnd.cpp:228
+#: udav/udav_wnd.cpp:230
 msgid "Script"
 msgstr ""
 
@@ -4295,7 +4295,7 @@ msgstr ""
 msgid "Set ambient light brightness"
 msgstr ""
 
-#: udav/udav_wnd.cpp:306 mgllab/mgllab.cpp:313
+#: udav/udav_wnd.cpp:308 mgllab/mgllab.cpp:313
 msgid "Set arguments"
 msgstr ""
 
@@ -4359,19 +4359,19 @@ msgstr ""
 msgid "Set draw region for quality&4"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:46 udav/subplot_dlg.cpp:88
+#: udav/subplot_dlg.cpp:47 udav/subplot_dlg.cpp:89
 msgid "Set drawing area as cell of matrix nx*ny."
 msgstr ""
 
-#: udav/subplot_dlg.cpp:109
+#: udav/subplot_dlg.cpp:110
 msgid "Set drawing area as cells of column."
 msgstr ""
 
-#: udav/subplot_dlg.cpp:63 udav/subplot_dlg.cpp:139
+#: udav/subplot_dlg.cpp:64 udav/subplot_dlg.cpp:140
 msgid "Set drawing area as cells of matrix nx*ny."
 msgstr ""
 
-#: udav/subplot_dlg.cpp:126
+#: udav/subplot_dlg.cpp:127
 msgid "Set drawing area as cells of stick."
 msgstr ""
 
@@ -4503,7 +4503,7 @@ msgstr ""
 msgid "Set to auto rotate text or not"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:195
+#: udav/subplot_dlg.cpp:196
 msgid "Set to use whole area (style '#')"
 msgstr ""
 
@@ -4531,7 +4531,7 @@ msgid ""
 "You can use keys (Shift+Meta+Up or Shift+Meta+Down)."
 msgstr ""
 
-#: udav/udav_wnd.cpp:302
+#: udav/udav_wnd.cpp:304
 msgid "Settings"
 msgstr ""
 
@@ -4615,7 +4615,7 @@ msgstr ""
 msgid "Show at startup"
 msgstr ""
 
-#: udav/udav_wnd.cpp:201
+#: udav/udav_wnd.cpp:203
 msgid ""
 "Show calculator which evaluate and help to type textual formulas.\n"
 "Textual formulas may contain data variables too."
@@ -4625,7 +4625,7 @@ msgstr ""
 msgid "Show calculator window"
 msgstr ""
 
-#: udav/udav_wnd.cpp:305
+#: udav/udav_wnd.cpp:307
 msgid "Show dialog for UDAV properties."
 msgstr ""
 
@@ -4663,11 +4663,11 @@ msgstr ""
 msgid "Show dialog for text finding (Ctrl+F)."
 msgstr ""
 
-#: udav/udav_wnd.cpp:317
+#: udav/udav_wnd.cpp:319
 msgid "Show help on MGL commands (F1)."
 msgstr ""
 
-#: udav/udav_wnd.cpp:210
+#: udav/udav_wnd.cpp:212
 msgid "Show hidden plots"
 msgstr ""
 
@@ -4675,11 +4675,11 @@ msgstr ""
 msgid "Show hint on startup"
 msgstr ""
 
-#: udav/udav_wnd.cpp:321
+#: udav/udav_wnd.cpp:323
 msgid "Show hints of MGL usage."
 msgstr ""
 
-#: udav/udav_wnd.cpp:204
+#: udav/udav_wnd.cpp:206
 msgid "Show info"
 msgstr ""
 
@@ -4723,11 +4723,11 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:113
+#: udav/subplot_dlg.cpp:114
 msgid "Size of column"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:130
+#: udav/subplot_dlg.cpp:131
 msgid "Size of stick"
 msgstr ""
 
@@ -4835,7 +4835,7 @@ msgstr ""
 msgid "Start/close commands which should executed only once"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:75
+#: udav/subplot_dlg.cpp:76
 msgid "Starting cell index"
 msgstr ""
 
@@ -4943,7 +4943,7 @@ msgstr ""
 msgid "Strings"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:207 mgllab/dialogs.cpp:1314
+#: udav/subplot_dlg.cpp:208 mgllab/dialogs.cpp:1314
 msgid "Style"
 msgstr ""
 
@@ -5148,7 +5148,7 @@ msgstr ""
 msgid "There is no fitted formula."
 msgstr ""
 
-#: utils/mglcgi.cpp:77
+#: utils/mglcgi.cpp:79
 #, c-format
 msgid "There is no query. Exit.\n"
 msgstr ""
@@ -5204,11 +5204,11 @@ msgstr ""
 msgid "Time ticks"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:203 mgllab/dialogs.cpp:1313
+#: udav/subplot_dlg.cpp:204 mgllab/dialogs.cpp:1313
 msgid "Title"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:205
+#: udav/subplot_dlg.cpp:206
 msgid "Title for plot. Can be used in SubPlot or MultiPlot only."
 msgstr ""
 
@@ -5283,7 +5283,7 @@ msgid "U - indigo"
 msgstr ""
 
 #: udav/text_pnl.cpp:109 udav/text_pnl.cpp:124 udav/text_pnl.cpp:137
-#: udav/udav_wnd.cpp:331
+#: udav/udav_wnd.cpp:333
 msgid "UDAV"
 msgstr ""
 
@@ -5364,7 +5364,7 @@ msgstr ""
 msgid "UDAV - Open data file"
 msgstr ""
 
-#: udav/udav_wnd.cpp:624
+#: udav/udav_wnd.cpp:626
 msgid "UDAV - Open file"
 msgstr ""
 
@@ -5404,7 +5404,7 @@ msgstr ""
 msgid "UDAV - Set template parameters"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:36
+#: udav/subplot_dlg.cpp:37
 msgid "UDAV - Setup inplot"
 msgstr ""
 
@@ -5416,7 +5416,7 @@ msgstr ""
 msgid "UDAV - Squeeze data"
 msgstr ""
 
-#: udav/udav_wnd.cpp:447
+#: udav/udav_wnd.cpp:449
 msgid "UDAV - about"
 msgstr ""
 
@@ -5450,11 +5450,11 @@ msgstr ""
 msgid "UDAV - open file"
 msgstr ""
 
-#: udav/udav_wnd.cpp:560 udav/udav_wnd.cpp:570 udav/udav_wnd.cpp:612
+#: udav/udav_wnd.cpp:562 udav/udav_wnd.cpp:572 udav/udav_wnd.cpp:614
 msgid "UDAV - save current"
 msgstr ""
 
-#: udav/udav_wnd.cpp:660
+#: udav/udav_wnd.cpp:662
 msgid "UDAV - save file"
 msgstr ""
 
@@ -5491,17 +5491,17 @@ msgstr ""
 msgid "Upper bound"
 msgstr ""
 
-#: utils/mglconv.cpp:88
+#: utils/mglconv.cpp:90
 #, c-format
 msgid "Usage:\tmglconv [parameter(s)] scriptfile\n"
 msgstr ""
 
-#: mgllab/mgllab.cpp:407
+#: mgllab/mgllab.cpp:409
 #, c-format
 msgid "Usage:\tmgllab [parameter(s)] scriptfile\n"
 msgstr ""
 
-#: utils/mglview.cpp:67
+#: utils/mglview.cpp:69
 #, c-format
 msgid "Usage:\tmglview [parameter(s)] scriptfile\n"
 msgstr ""
@@ -5561,7 +5561,7 @@ msgstr ""
 msgid "Vertical align"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:54 udav/subplot_dlg.cpp:71 udav/subplot_dlg.cpp:96
+#: udav/subplot_dlg.cpp:55 udav/subplot_dlg.cpp:72 udav/subplot_dlg.cpp:97
 msgid "Vertical size"
 msgstr ""
 
@@ -5574,11 +5574,11 @@ msgstr ""
 msgid "Wavelet transform at some direction"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:194
+#: udav/subplot_dlg.cpp:195
 msgid "Whole area"
 msgstr ""
 
-#: mgllab/mgllab.cpp:469
+#: mgllab/mgllab.cpp:471
 msgid "Widget scheme"
 msgstr ""
 
@@ -5586,7 +5586,7 @@ msgstr ""
 msgid "Width"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:79
+#: udav/subplot_dlg.cpp:80
 msgid "Width of selected cells"
 msgstr ""
 
@@ -5641,7 +5641,7 @@ msgstr ""
 msgid "X-slice from"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:175
+#: udav/subplot_dlg.cpp:176
 msgid "X/Z"
 msgstr ""
 
@@ -5682,7 +5682,7 @@ msgstr ""
 msgid "Y-slice from"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:179
+#: udav/subplot_dlg.cpp:180
 msgid "Y/Z"
 msgstr ""
 
@@ -5985,7 +5985,7 @@ msgstr ""
 msgid "both"
 msgstr ""
 
-#: udav/subplot_dlg.cpp:188 mgllab/dialogs.cpp:1306
+#: udav/subplot_dlg.cpp:189 mgllab/dialogs.cpp:1306
 msgid "bottom"
 msgstr ""
 
@@ -6114,7 +6114,7 @@ msgid "lamp-like"
 msgstr "ламповая"
 
 #. vv->addSpacing(11);
-#: udav/style_dlg.cpp:169 udav/subplot_dlg.cpp:186 mgllab/dialogs.cpp:957
+#: udav/style_dlg.cpp:169 udav/subplot_dlg.cpp:187 mgllab/dialogs.cpp:957
 #: mgllab/dialogs.cpp:970 mgllab/dialogs.cpp:983 mgllab/dialogs.cpp:996
 #: mgllab/dialogs.cpp:1304
 msgid "left"
@@ -6169,14 +6169,14 @@ msgstr ""
 msgid "mgl_en"
 msgstr "mgl_ru"
 
-#: utils/mglconv.cpp:87
+#: utils/mglconv.cpp:89
 #, c-format
 msgid ""
 "mglconv convert mgl script to image file (default PNG).\n"
 "Current version is 2.%g\n"
 msgstr ""
 
-#: mgllab/mgllab.cpp:406
+#: mgllab/mgllab.cpp:408
 #, c-format
 msgid ""
 "mgllab draw mgl script interactively.\n"
@@ -6191,7 +6191,7 @@ msgid ""
 "http://mathgl.sf.net/"
 msgstr ""
 
-#: utils/mglview.cpp:66
+#: utils/mglview.cpp:68
 #, c-format
 msgid ""
 "mglview show plot from MGL script or MGLD file.\n"
@@ -6326,7 +6326,7 @@ msgstr "прямоугольник"
 msgid "rhomb"
 msgstr "ромб"
 
-#: udav/style_dlg.cpp:172 udav/subplot_dlg.cpp:192 mgllab/dialogs.cpp:958
+#: udav/style_dlg.cpp:172 udav/subplot_dlg.cpp:193 mgllab/dialogs.cpp:958
 #: mgllab/dialogs.cpp:971 mgllab/dialogs.cpp:984 mgllab/dialogs.cpp:997
 #: mgllab/dialogs.cpp:1310
 msgid "right"
@@ -6391,7 +6391,7 @@ msgstr "метки"
 msgid "to"
 msgstr "до"
 
-#: udav/subplot_dlg.cpp:190 mgllab/dialogs.cpp:1308
+#: udav/subplot_dlg.cpp:191 mgllab/dialogs.cpp:1308
 msgid "top"
 msgstr "сверху"
 
@@ -6408,11 +6408,11 @@ msgstr "снизу"
 msgid "unknown"
 msgstr "не знаю"
 
-#: udav/udav_wnd.cpp:159 udav/udav_wnd.cpp:551 udav/udav_wnd.cpp:684
+#: udav/udav_wnd.cpp:161 udav/udav_wnd.cpp:553 udav/udav_wnd.cpp:686
 msgid "untitled - UDAV"
 msgstr "без имени - UDAV"
 
-#: udav/udav_wnd.cpp:677
+#: udav/udav_wnd.cpp:679
 msgid "untitled* - UDAV"
 msgstr "без имени* - UDAV"
 

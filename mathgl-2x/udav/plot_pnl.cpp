@@ -41,7 +41,7 @@
 #include "style_dlg.h"
 #include "newcmd_dlg.h"
 #include "subplot_dlg.h"
-
+#undef sprintf
 extern bool mglAutoSave;
 extern bool mglHighlight;
 extern bool mglDotsRefr;

@@ -36,9 +36,11 @@ int show(mglGraph *gr)
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+#if MGL_USE_GETTEXT
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
 //	bindtextdomain("mathgl", "/usr/share/locale/");
 	textdomain("mathgl");
+#endif
 
 	char iname[256]="";
 	mgl_suppress_warn(true);

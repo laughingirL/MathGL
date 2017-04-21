@@ -25,9 +25,9 @@
 #include <QRadioButton>
 #include <QMessageBox>
 #include <QCheckBox>
-#undef sprintf	// fix libintl bug of defining sprintf
 //-----------------------------------------------------------------------------
 #include "anim_dlg.h"
+#undef sprintf	// fix libintl bug of defining sprintf
 extern int animDelay;
 //-----------------------------------------------------------------------------
 AnimParam::AnimParam(QWidget *parent) : QDialog(parent)

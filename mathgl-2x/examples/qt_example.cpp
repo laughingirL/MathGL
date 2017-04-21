@@ -55,9 +55,11 @@ void *calc(void *)
 }
 int main(int argc,char **argv)
 {
+#if MGL_USE_GETTEXT
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
 //	bindtextdomain("mathgl", "/usr/share/locale/");
 	textdomain("mathgl");
+#endif
 
 	static pthread_t thr;
 	pthread_create(&thr,0,calc,0);
@@ -141,9 +143,11 @@ public:
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
+#if MGL_USE_GETTEXT
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
 //	bindtextdomain("mathgl", "/usr/share/locale/");
 	textdomain("mathgl");
+#endif
 
 	mglQT *gr;
 	char key = 0;

@@ -27,6 +27,7 @@
 #include <mgl2/qmathgl.h>
 #include "subplot_dlg.h"
 #include "style_dlg.h"
+#undef sprintf
 //-----------------------------------------------------------------------------
 void convertFromGraph(QPixmap &pic, mglGraph *gr, uchar **buf);
 //-----------------------------------------------------------------------------

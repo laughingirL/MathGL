@@ -91,9 +91,11 @@ void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+#if MGL_USE_GETTEXT
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
 //	bindtextdomain("mathgl", "/usr/share/locale/");
 	textdomain("mathgl");
+#endif
 
 	mgl_suppress_warn(true);
 	QCoreApplication::setAttribute(Qt::AA_X11InitThreads);

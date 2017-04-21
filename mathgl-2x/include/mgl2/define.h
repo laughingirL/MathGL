@@ -73,11 +73,11 @@
 
 #ifdef MGL_SRC
 
-#ifdef _MSC_VER
-	#define _(x)	(x)
-#else
+#if MGL_USE_GETTEXT
 	#include <libintl.h>
 	#define _(x)	gettext(x)
+#else
+	#define _(x)	(x)
 #endif
 
 
