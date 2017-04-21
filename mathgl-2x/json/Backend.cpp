@@ -4,6 +4,7 @@
 #include <QDebug>
 #include "Backend.hpp"
 #include <mgl2/mgl.h>
+#undef sprintf	// fix libintl bug of defining sprintf
 //-----------------------------------------------------------------------------
 Backend::Backend(QObject *parent) : QObject(parent) { }
 //-----------------------------------------------------------------------------

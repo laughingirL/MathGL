@@ -40,6 +40,7 @@
 #include "dat_pnl.h"
 #include "info_dlg.h"
 #include "xpm/table.xpm"
+#undef sprintf	// fix libintl bug of defining sprintf
 //-----------------------------------------------------------------------------
 extern mglParse parser;
 void updateDataItems();

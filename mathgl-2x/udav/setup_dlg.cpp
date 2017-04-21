@@ -31,6 +31,7 @@
 //-----------------------------------------------------------------------------
 #include "setup_dlg.h"
 #include "mgl2/define.h"
+#undef sprintf	// fix libintl bug of defining sprintf
 void fillColors(QComboBox *cb);
 //-----------------------------------------------------------------------------
 SetupDialog::SetupDialog(QWidget *parent) : QDialog(parent)

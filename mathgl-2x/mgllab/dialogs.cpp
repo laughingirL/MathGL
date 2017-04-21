@@ -946,7 +946,7 @@ public:
 		Fl_Button *o;	Fl_Group *g, *gg;
 		w = new Fl_Double_Window(525, 395, _("Setup script"));
 		Fl_Tabs* tt = new Fl_Tabs(0, 0, 525, 355);
-		gg = new Fl_Group(0, 25, 525, 330, _("Axis settings"));
+		gg = new Fl_Group(0, 25, 525, 330, _("Axis setup"));
 			new Fl_Box(85, 30, 100, 25, _("X axis"));
 			x1 = new Fl_Float_Input(85, 55, 100, 25, _("Minimal"));
 			x2 = new Fl_Float_Input(85, 85, 100, 25, _("Maximal"));

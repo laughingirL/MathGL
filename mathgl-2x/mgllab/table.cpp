@@ -99,7 +99,7 @@ public:
 		wmz->tooltip(_("New size of data on 3d dimension (z-direction)"));
 		wch = new Fl_Check_Button(15, 90, 95, 25);
 		Fl_Button *o = new Fl_Button(125, 90, 85, 25, _("Cancel"));
-		o->tooltip(_("Do nothing and close window"));	o->callback(cb_dlg_cancel,this);
+		o->tooltip(_("Do nothing and close this window"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(230, 90, 85, 25, _("Change"));
 		o->tooltip(_("Change (resize) data"));	o->callback(cb_dlg_ok,this);
 		w->end();	w->set_modal();
@@ -846,7 +846,7 @@ TableWindow::TableWindow(ScriptWindow *e)
 	o = new Fl_Button(0, 160, 25, 25);	o->image(img_insert);
 	o->callback(list_dat_cb,this);		o->tooltip(_("Insert to script as 'list' command"));
 	o = new Fl_Button(0, 185, 25, 25);	o->image(img_plot);
-	o->callback(plot_dat_cb,this);		o->tooltip(_("Data info and preview"));
+	o->callback(plot_dat_cb,this);		o->tooltip(_("Data information and preview."));
 
 	o = new Fl_Button(0, 215, 25, 25);	o->image(new Fl_Pixmap(diff_xpm));
 	o->callback(smooth_cb,this);		o->tooltip(_("Apply operator (smoothing, integration, difference ...) to data"));

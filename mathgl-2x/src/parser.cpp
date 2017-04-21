@@ -1420,9 +1420,9 @@ void MGL_EXPORT mgl_parser_start_id_(uintptr_t* p, int *id)
 //---------------------------------------------------------------------------
 mglCommand mgls_prg_cmd[] = {
 	{"ask",_("Define parameter from user input"),"ask $N 'question'", 0, 6},
-	{"break",_("Break for-cycle"),"break", 0, 6},
+	{"break",_("Break for-loop"),"break", 0, 6},
 	{"call",_("Execute script in external file"),"call 'name' [args]", 0, 6},
-	{"continue",_("Skip commands and iterate for-cycle again"),"continue", 0, 6},
+	{"continue",_("Skip commands and iterate for-loop again"),"continue", 0, 6},
 	{"defchr",_("Define parameter as character"),"defchr $N val", 0, 6},
 	{"define",_("Define constant or parameter"),"define $N sth | Var val", 0, 6},
 	{"defnum",_("Define parameter as numerical value"),"defnum $N val", 0, 6},
@@ -1434,7 +1434,7 @@ mglCommand mgls_prg_cmd[] = {
 	{"func",_("Start function definition and stop execution of main script"),"func 'name' [narg]", 0, 6},
 	{"if",_("Conditional operator"),"if val|Dat ['cond']", 0, 6},
 	{"list",_("Creates new variable from list of numbers or data"),"list Var v1 ...|Var D1 ...", 0, 4},
-	{"next",_("Start next for-cycle iteration"),"next", 0, 6},
+	{"next",_("Start next for-loop iteration"),"next", 0, 6},
 	{"once",_("Start/close commands which should executed only once"),"once val", 0, 6},
 	{"return",_("Return from function"),"return", 0, 6},
 	{"stop",_("Stop execution"),"stop", 0, 6},

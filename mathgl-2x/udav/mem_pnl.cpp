@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #include "mem_pnl.h"
 #include "info_dlg.h"
+#undef sprintf	// fix libintl bug of defining sprintf
 //-----------------------------------------------------------------------------
 #include "xpm/table.xpm"
 #include "xpm/preview.xpm"

@@ -42,6 +42,7 @@
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/qmathgl.h"
 #include "mgl2/qt.h"
+#undef sprintf	// fix libintl bug of defining sprintf
 //-----------------------------------------------------------------------------
 #define MGL_MAX_LINES	(INT_MAX-1000)
 //-----------------------------------------------------------------------------
@@ -1082,7 +1083,7 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		o->addMenu(oo);		popup->addMenu(oo);
 
 		o->addSeparator();
-		a = new QAction(QPixmap(fileprint), _("Print &graphics"), Wnd);
+		a = new QAction(QPixmap(fileprint), _("Print graphics"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(print()));
 		a->setToolTip(_("Open printer dialog and print graphics\t(CTRl+P)"));
 		a->setShortcut(Qt::CTRL+Qt::Key_P);	o->addAction(a);
@@ -1098,7 +1099,7 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		a->setShortcut(Qt::ALT+Qt::Key_T);	a->setCheckable(true);
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(setAlpha(bool)));
 		Wnd->connect(QMGL, SIGNAL(alphaChanged(bool)), a, SLOT(setChecked(bool)));
-		a->setToolTip(_("Switch on/off TRansparency for the graphics (Alt+T)."));
+		a->setToolTip(_("Switch on/off transparency for the graphics (Alt+T)."));
 		o->addAction(a);		bb->addAction(a);
 		a = new QAction(QPixmap(light_xpm), _("Light"), Wnd);
 		a->setShortcut(Qt::ALT+Qt::Key_L);	a->setCheckable(true);
@@ -1119,14 +1120,14 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		a->setToolTip(_("Switch on/off mouse zoom of selected region."));
 		bb->addAction(a);
 		o->addSeparator();
-		a = new QAction(QPixmap(zoom_out_xpm), _("Res&tore"), Wnd);
+		a = new QAction(QPixmap(zoom_out_xpm), _("Restore"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(restore()));
 		a->setToolTip(_("Restore default graphics rotation, zoom and perspective (Alt+Space)."));
 		a->setShortcut(Qt::ALT+Qt::Key_Space);
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
 		bb->addSeparator();
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
-		a = new QAction(QPixmap(ok_xpm), _("Re&draw"), Wnd);
+		a = new QAction(QPixmap(ok_xpm), _("Redraw"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(update()));
 		a->setToolTip(_("Execute script and redraw graphics (F5)."));
 		a->setShortcut(Qt::Key_F5);
@@ -1141,7 +1142,7 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		a->setShortcut(Qt::Key_F6);		o->addAction(a);
 		a = new QAction(QPixmap(copy_xpm), _("Copy plot"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(copy()));
-		a->setToolTip(_("Copy graphics to clipboard (CTRl+Shift+G)."));
+		a->setToolTip(_("Copy graphics to clipboard (Ctrl+Shift+G)."));
 		a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_G);
 		o->addAction(a);		bb->addAction(a);	popup->addAction(a);
 
@@ -1213,27 +1214,27 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		oo = o->addMenu(_("Zoom/move"));
 		bb = new QToolBar(_("Zoom graphics"),Wnd);
 		Wnd->addToolBar(Qt::LeftToolBarArea, bb);
-		a = new QAction(QPixmap(left_1_xpm), _("Move &left"), Wnd);
+		a = new QAction(QPixmap(left_1_xpm), _("Move left"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftLeft()));
 		a->setToolTip(_("Move graphics left by 1/3 of its width."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(up_1_xpm), _("Move &up"), Wnd);
+		a = new QAction(QPixmap(up_1_xpm), _("Move up"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftUp()));
 		a->setToolTip(_("Move graphics up by 1/3 of its height."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(zoom_1_xpm), _("Zoom &in"), Wnd);
+		a = new QAction(QPixmap(zoom_1_xpm), _("Zoom in"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(zoomIn()));
 		a->setToolTip(_("Zoom in graphics."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(norm_1_xpm), _("Zoom &out"), Wnd);
+		a = new QAction(QPixmap(norm_1_xpm), _("Zoom out"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(zoomOut()));
 		a->setToolTip(_("Zoom out graphics."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(down_1_xpm), _("Move &down"), Wnd);
+		a = new QAction(QPixmap(down_1_xpm), _("Move down"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftDown()));
 		a->setToolTip(_("Move graphics up down 1/3 of its height."));
 		bb->addAction(a);		oo->addAction(a);
-		a = new QAction(QPixmap(right_1_xpm), _("Move &right"), Wnd);
+		a = new QAction(QPixmap(right_1_xpm), _("Move right"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftRight()));
 		a->setToolTip(_("Move graphics right by 1/3 of its width."));
 		bb->addAction(a);		oo->addAction(a);
