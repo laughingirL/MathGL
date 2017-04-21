@@ -108,35 +108,35 @@ msgstr ""
 msgid ""
 "\n"
 "Change temporary data in line %ld"
-msgstr ""
+msgstr "\nПопытка изменить временные данные в строке %ld"
 
 #: src/parser.cpp:1008
 #, c-format
 msgid ""
 "\n"
 "String too long in line %ld"
-msgstr ""
+msgstr "\nСтроковый аргумент слишком длинный в строке %ld"
 
 #: src/parser.cpp:1009
 #, c-format
 msgid ""
 "\n"
 "Unbalanced ' in line %ld"
-msgstr ""
+msgstr "\nЛишняя кавычка ' в строке %ld"
 
 #: src/parser.cpp:1006
 #, c-format
 msgid ""
 "\n"
 "Wrong argument(s) in line %ld"
-msgstr ""
+msgstr "\nНеправильные аргументы в строке %ld"
 
 #: src/parser.cpp:1007
 #, c-format
 msgid ""
 "\n"
 "Wrong command in line %ld"
-msgstr ""
+msgstr "\nНеправильная команда в строке %ld"
 
 #: udav/mem_pnl.cpp:135 udav/dat_pnl.cpp:152
 msgid " - UDAV preview"
@@ -151,7 +151,7 @@ msgstr " - UDAV переменная"
 #. o->tooltip(_("Refresh list of variables."));
 #: mgllab/help.cpp:176
 msgid " Del.all"
-msgstr "Удалить все"
+msgstr " Удал.все"
 
 #: mgllab/help.cpp:164
 msgid " Delete"
@@ -443,40 +443,40 @@ msgstr "'~' волны"
 
 #: src/parser.cpp:51
 msgid "0 - special plot"
-msgstr ""
+msgstr "0 - специальные графики"
 
 #: src/parser.cpp:51
 msgid "1 - other plot"
-msgstr ""
+msgstr "1 - прочие графики"
 
 #: src/parser.cpp:51
 #, fuzzy
 msgid "10 - dd plot"
-msgstr "1D график"
+msgstr "10 - двойный графики"
 
 #: src/parser.cpp:51
 msgid "11 - vector plot"
-msgstr ""
+msgstr "11 - векторные графики"
 
 #: src/parser.cpp:51
 msgid "12 - axis"
-msgstr ""
+msgstr "12 - оси координат"
 
 #: src/parser.cpp:51
 msgid "13 - primitives"
-msgstr ""
+msgstr "13 - примитивы"
 
 #: src/parser.cpp:51
 msgid "14 - axis setup"
-msgstr ""
+msgstr "14 - настройка осей"
 
 #: src/parser.cpp:51
 msgid "15 - text/legend"
-msgstr ""
+msgstr "15 - текст/легенда"
 
 #: src/parser.cpp:51
 msgid "16 - data transform"
-msgstr ""
+msgstr "16 - преобразования данных"
 
 #: udav/info_dlg.cpp:47
 msgid "1D plot"
@@ -492,7 +492,7 @@ msgstr "1D вид"
 
 #: src/parser.cpp:51
 msgid "2 - setup"
-msgstr ""
+msgstr "2 - настройки"
 
 #: udav/info_dlg.cpp:47
 msgid "2D plot"
@@ -508,11 +508,11 @@ msgstr "2D вид"
 
 #: src/parser.cpp:51
 msgid "3 - data handle"
-msgstr ""
+msgstr "3 - изменение данных"
 
 #: udav/open_dlg.cpp:71
 msgid "3D data with sizes from file"
-msgstr ""
+msgstr "3D данные с размерами из файла"
 
 #: udav/newcmd_dlg.cpp:168 mgllab/dialogs.cpp:709
 msgid "3D plots"
@@ -524,36 +524,37 @@ msgstr "3D вид"
 
 #: src/parser.cpp:51
 msgid "4 - data create"
-msgstr ""
+msgstr "4 - создание данных"
 
 #: src/parser.cpp:51
 msgid "5 - subplot"
-msgstr ""
+msgstr "5 - картинка в картинке"
 
 #: src/parser.cpp:51
 msgid "6 - program flow"
-msgstr ""
+msgstr "6 - команды управления"
 
 #: src/parser.cpp:51
 #, fuzzy
 msgid "7 - 1d plot"
-msgstr "1D график"
+msgstr "7 - 1D графики"
 
 #: src/parser.cpp:51
 #, fuzzy
 msgid "8 - 2d plot"
-msgstr "2D график"
+msgstr "8 - 2D графики"
 
 #: src/parser.cpp:51
 #, fuzzy
 msgid "9 - 3d plot"
-msgstr "3D графики"
+msgstr "9 - 3D графики"
 
 #: udav/udav_wnd.cpp:446
 msgid ""
 "<br>(c) Alexey Balakin, 2007-present<br><br><a href='http://www.gnu.org/"
 "copyleft/gpl.html'>License is GPL v.2 or later.</a>"
-msgstr ""
+msgstr "<br>(c) Алексей Балакин, 2007-наст.вр.<br><br><a href='http://www.gnu.org/"
+"copyleft/gpl.html'>Лицензия GPL v.2 или более поздняя.</a>"
 
 #: mgllab/mgllab.cpp:551
 msgid "@-> to script"
@@ -579,11 +580,11 @@ msgstr "Добавить"
 
 #: widgets/qt.cpp:1155 udav/plot_pnl.cpp:372
 msgid "Add arc"
-msgstr ""
+msgstr "Добавить дугу"
 
 #: widgets/qt.cpp:1158 udav/plot_pnl.cpp:375
 msgid "Add arc which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить дугу. Ее свойства можно изменить позже мышью."
 
 #: mgllab/dialogs.cpp:84
 msgid "Add command option(s)"
@@ -591,130 +592,130 @@ msgstr "Добавить опции команды"
 
 #: widgets/qt.cpp:1160 udav/plot_pnl.cpp:378
 msgid "Add curve"
-msgstr ""
+msgstr "Добавить кривую"
 
 #: widgets/qt.cpp:1163 udav/plot_pnl.cpp:381
 msgid "Add curve which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить кривую. Ее свойства можно изменить позже мышью."
 
 #: src/exec_dat.cpp:1519
 msgid "Add data or number"
-msgstr ""
+msgstr "Прибавить массив или число"
 
 #: widgets/qt.cpp:1175 udav/plot_pnl.cpp:396
 msgid "Add ellipse"
-msgstr ""
+msgstr "Добавить эллипс"
 
 #: widgets/qt.cpp:1178 udav/plot_pnl.cpp:399 udav/plot_pnl.cpp:405
 msgid "Add ellipse which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить эллипс. Его свойства можно изменить позже мышью."
 
 #: mgllab/dialogs.cpp:1229
 msgid "Add inplot"
-msgstr ""
+msgstr "Добавить подграфик"
 
 #: src/exec_set.cpp:690
 msgid "Add legend entry"
-msgstr ""
+msgstr "Добавить запись легенды"
 
 #: mgllab/dialogs.cpp:119
 msgid "Add legend entry for the plot"
-msgstr ""
+msgstr "Добавить запись легенды для графика"
 
 #: widgets/qt.cpp:1150 udav/plot_pnl.cpp:366
 msgid "Add line"
-msgstr ""
+msgstr "Добавить линию"
 
 #: widgets/qt.cpp:1153 udav/plot_pnl.cpp:369
 msgid "Add line which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить линию. Ее свойства можно изменить позже мышью."
 
 #: widgets/qt.cpp:1185 udav/plot_pnl.cpp:408
 msgid "Add mark"
-msgstr ""
+msgstr "Добавить маркер"
 
 #: widgets/qt.cpp:1188 udav/plot_pnl.cpp:411
 msgid "Add marker which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить маркер. Его свойства можно изменить позже мышью."
 
 #: widgets/qt.cpp:1180 udav/plot_pnl.cpp:402
 msgid "Add polygon"
-msgstr ""
+msgstr "Добавить полигон"
 
 #: widgets/qt.cpp:1183
 msgid "Add polygon which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить полигон. Его свойства можно изменить позже мышью."
 
 #: mgllab/dialogs.cpp:1453
 msgid "Add primitive"
-msgstr ""
+msgstr "Добавить примитивы"
 
 #: widgets/qt.cpp:1165 udav/plot_pnl.cpp:384
 msgid "Add rect"
-msgstr ""
+msgstr "Добавить прямоугольник"
 
 #: widgets/qt.cpp:1168 udav/plot_pnl.cpp:387
 msgid "Add rectangle which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить прямоугольник. Его свойства можно изменить позже мышью."
 
 #: widgets/qt.cpp:1170 udav/plot_pnl.cpp:390
 msgid "Add rhombus"
-msgstr ""
+msgstr "Добавить ромб"
 
 #: widgets/qt.cpp:1173 udav/plot_pnl.cpp:393
 msgid "Add rhombus which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить ромб. Его свойства можно изменить позже мышью."
 
 #: widgets/qt.cpp:1190 udav/plot_pnl.cpp:414
 msgid "Add text"
-msgstr ""
+msgstr "Добавить текст"
 
 #: widgets/qt.cpp:1193 udav/plot_pnl.cpp:417
 msgid "Add text which properties can be changed later by mouse."
-msgstr ""
+msgstr "Добавить текст. Его свойства можно изменить позже мышью."
 
 #: src/exec_prm.cpp:611
 msgid "Add title for current subplot/inplot"
-msgstr ""
+msgstr "Добавить заголовок к текущему подграфику"
 
 #: mgllab/table.cpp:794
 msgid "Add to"
-msgstr ""
+msgstr "Добавить к"
 
 #: src/exec_set.cpp:691
 msgid "Add user-defined symbol"
-msgstr ""
+msgstr "Добавить пользовательский символ"
 
 #: widgets/fltk.cpp:839
 msgid "Adjust picture size to fill drawing area"
-msgstr ""
+msgstr "Подогнать размер картинки под область окна"
 
 #: widgets/fltk.cpp:802 widgets/qt.cpp:1138 udav/plot_pnl.cpp:337
 msgid "Adjust size"
-msgstr ""
+msgstr "Подогнать размер"
 
 #: src/exec_set.cpp:692
 msgid "Adjust ticks for best view"
-msgstr ""
+msgstr "Подобрать метки осей для лучшего вида"
 
 #: udav/calc_dlg.cpp:193
 msgid "Airy and Gamma"
-msgstr ""
+msgstr "Эйри и Гамма"
 
 #: udav/hint_dlg.cpp:42 mgllab/help.cpp:276
 msgid ""
 "All indexes (of data arrays, subplots and so on) are always start from 0."
-msgstr ""
+msgstr "Все индексы (данных, подграфиков и пр.) всегда начинаются с 0."
 
 #. graphics menu
 #: widgets/qt.cpp:1097 udav/opt_dlg.cpp:51 udav/setup_dlg.cpp:108
 #: udav/plot_pnl.cpp:290 mgllab/dialogs.cpp:109
 msgid "Alpha"
-msgstr ""
+msgstr "Прозрачность"
 
 #: mgllab/dialogs.cpp:110
 msgid "Alpha value (transparency) of surface or cloud"
-msgstr ""
+msgstr "Значение прозрачности для поверхностей и облаков"
 
 #: udav/setup_dlg.cpp:92 mgllab/dialogs.cpp:1003
 msgid "AlphaDef"
@@ -723,15 +724,15 @@ msgstr ""
 #: udav/opt_dlg.cpp:56 udav/setup_dlg.cpp:94 mgllab/dialogs.cpp:111
 #: mgllab/dialogs.cpp:1004
 msgid "Ambient"
-msgstr ""
+msgstr "Фоновое освещение"
 
 #: udav/subplot_dlg.cpp:166
 msgid "Angle around x axis (in degrees)"
-msgstr ""
+msgstr "Угол относительно оси x (в градусах)"
 
 #: udav/subplot_dlg.cpp:170
 msgid "Angle around z axis (in degrees)"
-msgstr ""
+msgstr "Угол относительно оси z (в градусах)"
 
 #. animation menu
 #: widgets/qt.cpp:1243 widgets/qt.cpp:1244 udav/plot_pnl.cpp:559
@@ -745,15 +746,15 @@ msgstr ""
 
 #: mgllab/table.cpp:852
 msgid "Apply operator (smoothing, integration, difference ...) to data"
-msgstr ""
+msgstr "Применить к данным оператор (сглаживание, интегрирование, дифференцирование и пр.)"
 
 #: mgllab/dialogs.cpp:103
 msgid "Approximate number of mesh lines in plot"
-msgstr ""
+msgstr "Примерное число линий сетки на графике"
 
 #: mgllab/help.cpp:135
 msgid "Are you sure that you want to delete ALL data arrays?"
-msgstr ""
+msgstr "Вы уверены, что хотите удалит ВСЕ данные?"
 
 #: udav/newcmd_dlg.cpp:67
 msgid "Argument"
@@ -765,52 +766,52 @@ msgstr "Аргументы"
 
 #: udav/style_dlg.cpp:63 mgllab/dialogs.cpp:321
 msgid "Arrow at end"
-msgstr ""
+msgstr "Стрелка на конце"
 
 #. g->setColStretch(0, 1);	g->setColStretch(1, 1);	g->setColStretch(2, 1);
 #: udav/style_dlg.cpp:61 mgllab/dialogs.cpp:315
 msgid "Arrow at start"
-msgstr ""
+msgstr "Стрелка в начале"
 
 #: mgllab/dialogs.cpp:1461
 msgid "Arrow1"
-msgstr ""
+msgstr "Стрелка1"
 
 #: mgllab/dialogs.cpp:1463
 msgid "Arrow2"
-msgstr ""
+msgstr "Стрелка2"
 
 #: widgets/qt.cpp:1136
 msgid "Ask to stop plot drawing (F7)."
-msgstr ""
+msgstr "Запрос на остановку рисования (F7)"
 
 #: udav/subplot_dlg.cpp:174
 msgid "Aspect"
-msgstr ""
+msgstr "Соотношение размеров"
 
 #: udav/subplot_dlg.cpp:177
 msgid "Aspect ratio of x-scale to z-acale"
-msgstr ""
+msgstr "Соотношение размеров по x и z"
 
 #: udav/subplot_dlg.cpp:181
 msgid "Aspect ratio of y-scale to z-acale"
-msgstr ""
+msgstr "Соотношение размеров по y и z"
 
 #: mgllab/dialogs.cpp:1298
 msgid "Aspect x/z"
-msgstr ""
+msgstr "Соотношение размеров x/z"
 
 #: src/exec_set.cpp:698
 msgid "Attach light settings to inplot"
-msgstr ""
+msgstr "Привязать настройки света к подграфику"
 
 #: udav/open_dlg.cpp:60
 msgid "Auto detect data sizes"
-msgstr ""
+msgstr "Автоматически определят размер данных"
 
 #: udav/open_dlg.cpp:177
 msgid "Auto detect data sizes (%1 x %2 x %3)"
-msgstr ""
+msgstr "Автоматически определят размер данных (%1 x %2 x %3)"
 
 #: udav/prop_dlg.cpp:100
 msgid "AutoKey"
@@ -818,22 +819,22 @@ msgstr ""
 
 #: udav/prop_dlg.cpp:158
 msgid "Automatically execute script after loading"
-msgstr ""
+msgstr "Выполнить скрипт после загрузки"
 
 #: udav/prop_dlg.cpp:164
 msgid "Automatically save before redrawing (F5)"
-msgstr ""
+msgstr "Сохранять скрипт перед рисованием (F5)"
 
 #: src/data.cpp:1353
 #, c-format
 msgid ""
 "Averages are:\n"
 "<a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n"
-msgstr ""
+msgstr "Средние: <a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n"
 
 #: udav/style_dlg.cpp:122 mgllab/dialogs.cpp:340
 msgid "Axial direction"
-msgstr ""
+msgstr "Ось вращения"
 
 #: udav/setup_dlg.cpp:100
 msgid "AxialDir"
