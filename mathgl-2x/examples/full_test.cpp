@@ -407,8 +407,8 @@ void smgl_fexport(mglGraph *gr)	// test file export
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
-#if MGL_USE_GETTEXT
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+#if MGL_USE_GETTEXT
 //	bindtextdomain("mathgl", "/usr/share/locale/");
 	textdomain("mathgl");
 #endif

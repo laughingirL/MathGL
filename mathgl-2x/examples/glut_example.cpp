@@ -56,8 +56,8 @@ printf("i=%d, gr=%p\n",i,gr);	fflush(stdout);
 }
 int main(int argc,char **argv)
 {
-#if MGL_USE_GETTEXT
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+#if MGL_USE_GETTEXT
 //	bindtextdomain("mathgl", "/usr/share/locale/");
 	textdomain("mathgl");
 #endif
@@ -81,8 +81,8 @@ int sample_d(mglGraph *gr);
 typedef int (*draw_func)(mglGraph *gr);
 int main(int argc,char **argv)
 {
-#if MGL_USE_GETTEXT
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+#if MGL_USE_GETTEXT
 //	bindtextdomain("mathgl", "/usr/share/locale/");
 	textdomain("mathgl");
 #endif

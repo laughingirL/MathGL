@@ -375,8 +375,8 @@ int main(int argc, char **argv)
 {
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
-#if MGL_USE_GETTEXT
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+#if MGL_USE_GETTEXT
 //	bindtextdomain("mathgl", "/usr/share/locale/");
 	textdomain("mathgl");
 #endif
