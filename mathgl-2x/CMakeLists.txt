@@ -567,19 +567,20 @@ find_program(findmsgmerge msgmerge)
 find_program(findmsgfmt msgfmt)
 find_program(findmsgcat msgcat)
 if(NOT findmsgfmt OR NOT findxgettext OR NOT findmsgmerge OR NOT findmsgcat )
-	message("Gettext is disabled, because xgettext, msgmerge, msgcat or msgfmt are not found.")
+	message("Building of translation files was disabled, because xgettext, msgmerge, msgcat or msgfmt was not found. Current translations will be just coped.")
 	set(USE_GETTEXT 0)
 else(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge OR NOT findmsgcat )
-	find_package(Intl)
-	if(NOT Intl_FOUND)
-		set(USE_GETTEXT 0)
-		message("Gettext is disabled, because libintl are not found.")
-	else(NOT Intl_FOUND)
-		set(USE_GETTEXT 1)
-		set(MGL_DEP_LIBS ${Intl_LIBRARIES} ${MGL_DEP_LIBS})
-		include_directories(${Intl_INCLUDE_DIRS})
-	endif(NOT Intl_FOUND)
+	set(USE_GETTEXT 1)
 endif(NOT findmsgfmt  OR NOT findxgettext OR NOT findmsgmerge OR NOT findmsgcat )
+find_package(Intl)
+if(NOT Intl_FOUND)
+	set(MGL_USE_LIBINTL 0)
+	message("Gettext and translations was fully disabled, because libintl was not found.")
+else(NOT Intl_FOUND)
+	set(MGL_USE_LIBINTL 1)
+	set(MGL_DEP_LIBS ${Intl_LIBRARIES} ${MGL_DEP_LIBS})
+	include_directories(${Intl_INCLUDE_DIRS})
+endif(NOT Intl_FOUND)
 set(po_files )
 
 if(enable-doc-info)
@@ -727,6 +728,8 @@ install(FILES
 
 install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
 
+
+if(MGL_USE_LIBINTL)
 if(USE_GETTEXT)
 	add_custom_target(mathgl_ru.po ALL
 		COMMAND ${findxgettext} -s --keyword=_ -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/mathgl.pot ${po_files}
@@ -737,7 +740,10 @@ if(USE_GETTEXT)
 		COMMAND ${findmsgfmt} -o mathgl_ru.mo ${MathGL2_SOURCE_DIR}/mathgl_ru.po
 		DEPENDS mathgl_ru.po)
 	install( FILES ${MathGL2_BINARY_DIR}/mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
+else(USE_GETTEXT)
+	install( FILES ${MathGL2_SOURCE_DIR}/translations/mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
 endif(USE_GETTEXT)
+endif(MGL_USE_LIBINTL)
 
 
 # WARNING!!! DO NOT ADD ANYTHING AFTER THIS LINE!
