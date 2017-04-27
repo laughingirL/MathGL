@@ -154,7 +154,7 @@ inline void Fl_MathGL::draw_plot()	// drawing itself
 {
 	if(draw_func || draw_cl)
 	{
-		mgl_reset_frames(gr);	mgl_set_warn(gr,0,"");
+		mgl_set_def_param(gr);		mgl_reset_frames(gr);
 		if(mgl_get_flag(gr,MGL_CLF_ON_UPD))	mgl_set_def_param(gr);
 		mgl_set_alpha(gr,flag&1);	mgl_set_light(gr,flag&2);
 		if(tet_val)	tet = tet_val->value();

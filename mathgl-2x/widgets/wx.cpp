@@ -193,7 +193,7 @@ void wxMathGL::Update()
 	if(draw_func || draw_cl)
 	{
 		if(mgl_get_flag(gr,MGL_CLF_ON_UPD))	mgl_set_def_param(gr);
-		mgl_reset_frames(gr);
+		mgl_set_def_param(gr);		mgl_reset_frames(gr);
 		mgl_set_alpha(gr,alpha);	mgl_set_light(gr,light);
 		if(draw_func)	draw_func(gr, draw_par);	// drawing itself
 		else 	if(draw_cl)	{	mglGraph g(gr);	draw_cl->Draw(&g);	}

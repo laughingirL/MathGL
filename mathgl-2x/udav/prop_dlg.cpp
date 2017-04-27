@@ -165,9 +165,9 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 	save->setChecked(mglAutoSave);	v->addWidget(save);
 //	pure = new QCheckBox(_("Disable face drawing (faster) for mouse rotation/shift/zoom."), this);
 //	pure->setChecked(mglAutoPure);	v->addWidget(pure);	pure->setEnabled(false);
-	wheel = new QCheckBox(_("Enable mouse wheel for zooming."), this);
+	wheel = new QCheckBox(_("Enable mouse wheel for zooming"), this);
 	wheel->setChecked(mglWheelZoom);	v->addWidget(wheel);
-	cmpl = new QCheckBox(_("Enable keywords completition"), this);
+	cmpl = new QCheckBox(_("Enable keywords completion"), this);
 	cmpl->setChecked(mglCompleter);	v->addWidget(cmpl);
 	high = new QCheckBox(_("Highlight current object(s)"), this);
 	high->setChecked(mglHighlight);	v->addWidget(high);
