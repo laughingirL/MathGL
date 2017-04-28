@@ -750,7 +750,7 @@ Fl_Menu_Item tablemenu[60] = {
 		{ _("Import from PNG"),0, imp_dat_cb },
 		{ _("Save to file"),	0, save_dat_cb },
 		{ _("Export to PNG"),	0, exp_dat_cb, 0, FL_MENU_DIVIDER },
-		{ _("Insert as list"),0, list_dat_cb },
+		{ _("Insert as 'list'"),0, list_dat_cb },
 //		{ _("Plot data"),		0, plot_dat_cb },
 //		{ _("Info for data"),	0, info_dat_cb },
 		{ 0 },
@@ -862,11 +862,11 @@ TableWindow::TableWindow(ScriptWindow *e)
 
 	g = new Fl_Group(30, 30, 200, 30);
 	o = new Fl_Button(30, 30, 25, 25);	o->image(new Fl_Pixmap(go_first_xpm));
-	o->callback(first_sl_cb,this);		o->tooltip(_("Go to first slice (Ctrl-F1)"));
+	o->callback(first_sl_cb,this);		o->tooltip(_("Go to first slice for 3D data (Ctrl-F1)."));
 	slice = new Fl_Counter(55, 30, 90, 25, 0);	slice->callback(change_sl_cb,this);
 	slice->lstep(10);	slice->step(1);	slice->tooltip(_("Id of slice on third (z-) dimension"));
 	o = new Fl_Button(147, 30, 25, 25);	o->image(new Fl_Pixmap(go_last_xpm));
-	o->callback(last_sl_cb,this);		o->tooltip(_("Go to last slice (Ctrl-F4)"));
+	o->callback(last_sl_cb,this);		o->tooltip(_("Go to last slice for 3D data (Ctrl-F4)."));
 	g->end();	g->resizable(0);
 
 	data = new Fl_Data_Table(30,60,ww-30,hh-60);

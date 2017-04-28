@@ -39,6 +39,7 @@
 7. Add ##d comment(s) -- analogue of 'ask' but update figure after each change ???
 8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
 9. MGLD and new user-defined symbols
+10. 2D + 3D correlation function
 
 
 10. bindtextdomain -- check (1) "/usr/share/locale/", (2) "/usr/local/share/locale/", (3) args[0] with '/', (4) getcwd()

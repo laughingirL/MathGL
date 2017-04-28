@@ -398,7 +398,7 @@ public:
 				c[i]->tooltip(_("Value for i-th color"));
 				s[i] = new Fl_Spinner(105+185*(i/4), 300+30*(i%4), 40, 25);
 				s[i]->range(1,9);	s[i]->value(5);
-				c[i]->tooltip(_("Brightness of i-th color"));
+				s[i]->tooltip(_("Brightness of i-th color"));
 				s[i]->callback(cb_style_upd);
 				p[i] = new Fl_Input(145+185*(i/4), 300+30*(i%4), 40, 25);
 				p[i]->tooltip(_("Relative position of i-th color"));
@@ -701,7 +701,7 @@ public:
 		Fl_Button *o;
 		w = new Fl_Double_Window(780, 300, _("New command"));
 		Fl_Group *g = new Fl_Group(5,5,315,320);
-		type = new Fl_Choice(80, 5, 270, 25, _("Type"));
+		type = new Fl_Choice(80, 5, 270, 25, _("Kind"));
 		type->tooltip(_("Groups of MGL commands"));
 		type->callback(cb_cmd_type);
 		type->add(_("1D plots"));

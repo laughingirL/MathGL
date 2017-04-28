@@ -717,41 +717,41 @@ void DatPanel::toolTop(QBoxLayout *l)
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	// navigation menu
-	o = menu->addMenu(_("Navigate"));
+	o = menu->addMenu(_("Navigation"));
 	a = new QAction(QPixmap(":/png/go-first.png"), _("First slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(first()));
-	a->setToolTip(_("Go to the first data slice for 3D data."));
-	o->addAction(a);
+	a->setToolTip(_("Go to first slice for 3D data (Ctrl-F1)."));
+	a->setShortcut(Qt::CTRL+Qt::Key_F1);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/png/go-previous.png"), _("Prev. slice"), this);
+	a = new QAction(QPixmap(":/png/go-previous.png"), _("Prev slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(prev()));
-	a->setToolTip(_("Go to the previous data slice for 3D data."));
+	a->setToolTip(_("Go to the previous slice for 3D data."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	sb = new QSpinBox(this);
 	l->addWidget(sb);	sb->setRange(0,0);
-	sb->setToolTip(_("Go to the specified data slice for 3D data."));
+	sb->setToolTip(_("Go to the specified slice for 3D data."));
 	connect(sb, SIGNAL(valueChanged(int)), this, SLOT(setSlice(int)));
 	connect(this, SIGNAL(sliceChanged(int)), sb, SLOT(setValue(int)));
 	connect(this, SIGNAL(nzChanged(int)), this, SLOT(setNz(int)));
 
 	a = new QAction(_("Go to slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(gosl()));
-	a->setToolTip(_("Go to the specified data slice for 3D data."));
+	a->setToolTip(_("Go to the specified slice for 3D data."));
 	o->addAction(a);
 
 	a = new QAction(QPixmap(":/png/go-next.png"), _("Next slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(next()));
-	a->setToolTip(_("Go to the next data slice for 3D data."));
+	a->setToolTip(_("Go to the next slice for 3D data."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(QPixmap(":/png/go-last.png"), _("Last slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(last()));
-	a->setToolTip(_("Go to the last data slice for 3D data."));
-	o->addAction(a);
+	a->setToolTip(_("Go to last slice for 3D data (Ctrl-F4)."));
+	a->setShortcut(Qt::CTRL+Qt::Key_F4);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 }
 //-----------------------------------------------------------------------------

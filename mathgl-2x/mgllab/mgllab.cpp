@@ -137,7 +137,7 @@ void close_dlg_cb(Fl_Widget *, void *v)	{	((Fl_Window *)v)->hide();	}
 void fname_cb(Fl_Widget*, void *v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-	const char *file = mgl_file_chooser(_("Insert File Name?"));
+	const char *file = mgl_file_chooser(_("Insert file name?"));
 	if(file)
 	{
 		char *str = new char[strlen(file)+4];
@@ -285,7 +285,7 @@ Fl_Menu_Item menuitems[] = {
 		{_("Copy text"), FL_CTRL+'c', copy_cb},
 		{_("Paste text"), FL_CTRL+'v', paste_cb},
 		{_("Select all"), FL_CTRL+'a', select_all_cb, 0, FL_MENU_DIVIDER},
-		{_("Hide lines"), FL_CTRL+'d', hide_cb},
+		{_("Hidden plots"), FL_CTRL+'d', hide_cb},
 		{_("Show lines"), FL_CTRL+FL_SHIFT+'d', unhide_cb, 0, FL_MENU_DIVIDER},
 		{_("Find|Replace"), FL_CTRL+'f', find_dlg_cb},
 		{_("Find next"), FL_F+3, find_next_cb, 0, FL_MENU_DIVIDER},
@@ -297,7 +297,7 @@ Fl_Menu_Item menuitems[] = {
 			{_("Fitted formula"), FL_META+'f', ins_fits_cb},
 			{_("Manual primitives"), 0, ins_prim_cb},
 			{_("Plot style"), 0, style_dlg_cb},
-			{_("Option(s)"), FL_META+'o', option_dlg_cb},
+			{_("Options"), FL_META+'o', option_dlg_cb},
 			{0},
 	// TODO{_("Selection"), 0,  0, 0, FL_SUBMENU|FL_MENU_DIVIDER},
 		// TODO{_("Hide"), 0,  0},

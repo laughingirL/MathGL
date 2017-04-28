@@ -430,7 +430,7 @@ void PlotPanel::toolTop(QBoxLayout *v)
 
 	a = new QAction(QPixmap(":/png/layer-visible-off.png"), _("Hide selected"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(hideSelected()));
-	a->setToolTip(_("Hide selected plot."));
+	a->setToolTip(_("Hide selected plots."));
 	o->addAction(a);	popup->addAction(a);	t->addAction(a);
 
 	const MainWindow *mw=findMain(this);

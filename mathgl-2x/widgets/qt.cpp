@@ -1085,7 +1085,7 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		o->addSeparator();
 		a = new QAction(QPixmap(fileprint), _("Print graphics"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(print()));
-		a->setToolTip(_("Open printer dialog and print graphics\t(CTRl+P)"));
+		a->setToolTip(_("Open printer dialog and print graphics (Ctrl+P)"));
 		a->setShortcut(Qt::CTRL+Qt::Key_P);	o->addAction(a);
 		o->addSeparator();
 		o->addAction(_("Close"), Wnd, SLOT(close()), Qt::CTRL+Qt::Key_W);
@@ -1267,7 +1267,7 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(setPause(bool)));
 		Wnd->connect(QMGL, SIGNAL(pauseChanged(bool)), a, SLOT(setChecked(bool)));
 //		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
-		a->setToolTip(_("Pause on/off calculations."));
+		a->setToolTip(_("Pause on/off external calculations"));
 		f->addSeparator();	f->addAction(a);	bb->addAction(a);
 	}
 #endif

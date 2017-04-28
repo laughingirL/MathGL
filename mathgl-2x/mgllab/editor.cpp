@@ -483,7 +483,7 @@ void changed_cb(int pos, int nInserted, int nDeleted, int nRestyled, const char 
 //-----------------------------------------------------------------------------
 void insert_cb(Fl_Widget*, void *v)
 {
-	const char *newfile = mgl_file_chooser(_("Insert File?"));
+	const char *newfile = mgl_file_chooser(_("Insert file content?"));
 	ScriptWindow *w = (ScriptWindow *)v;
 	if (newfile != NULL) load_file(newfile, w->editor->insert_position(),w);
 }
@@ -676,7 +676,7 @@ void ins_fits_cb(Fl_Widget *, void *v)
 	ScriptWindow* e = (ScriptWindow*)v;
 	HMGL gr = e->graph->get_graph();
 	std::string ss=mgl_get_fit(gr);
-	if(ss.empty())	fl_alert(_("There is no fitted formula!"));
+	if(ss.empty())	fl_alert(_("There is no fitted formula."));
 	else	{	ss = '\''+ss+'\'';	e->editor->insert(ss.c_str());	}
 }
 //-----------------------------------------------------------------------------
