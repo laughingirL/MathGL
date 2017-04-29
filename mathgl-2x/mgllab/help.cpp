@@ -294,7 +294,7 @@ class HintDlg : public GeneralDlg
 	Fl_Check_Button *start;
 	int cur;
 public:
-	HintDlg()
+	HintDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(280, 265);	cur=0;
@@ -346,7 +346,7 @@ class InfoDlg : public GeneralDlg
 	int plot;
 	std::string name;
 public:
-	InfoDlg()
+	InfoDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(420, 530);
@@ -428,7 +428,7 @@ void cb_info_3d(Fl_Widget*,void*)	{	info_dlg.plot_3d();	}
 class IconListDlg : public GeneralDlg
 {
 public:
-	IconListDlg()
+	IconListDlg() : GeneralDlg()
 	{
 		Fl_Button* o;
 		w = new Fl_Double_Window(210, 190, "mgllab icons");

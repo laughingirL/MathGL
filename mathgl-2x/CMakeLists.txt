@@ -739,9 +739,9 @@ if(USE_GETTEXT)
 	add_custom_target(mathgl_ru.mo ALL
 		COMMAND ${findmsgfmt} -o mathgl_ru.mo ${MathGL2_SOURCE_DIR}/mathgl_ru.po
 		DEPENDS mathgl_ru.po)
-	install( FILES ${MathGL2_BINARY_DIR}/mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
+	install( FILES ${MathGL2_BINARY_DIR}/mathgl_ru.mo DESTINATION "${CMAKE_INSTALL_PREFIX}/share/locale/ru/LC_MESSAGES/" RENAME mathgl.mo )
 else(USE_GETTEXT)
-	install( FILES ${MathGL2_SOURCE_DIR}/translations/mathgl_ru.mo DESTINATION share/locale/ru/LC_MESSAGES/ RENAME mathgl.mo )
+	install( FILES ${MathGL2_SOURCE_DIR}/translations/mathgl_ru.mo DESTINATION "${CMAKE_INSTALL_PREFIX}/share/locale/ru/LC_MESSAGES/" RENAME mathgl.mo )
 endif(USE_GETTEXT)
 endif(MGL_USE_LIBINTL)
 

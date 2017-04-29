@@ -77,7 +77,7 @@ class OptionDlg : public GeneralDlg
 	Fl_Input *alpha, *amb, *dif, *legend;
 public:
 	Fl_Input *ext;
-	OptionDlg()
+	OptionDlg() : GeneralDlg()
 	{
 		e=NULL;	ext=NULL;
 		Fl_Button *o;
@@ -154,7 +154,7 @@ class DirSelDlg : public GeneralDlg
 	Fl_Choice *dir;
 public:
 	Fl_Input *ext;
-	DirSelDlg()
+	DirSelDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(220, 85, _("Select direction"));
@@ -306,7 +306,7 @@ class StyleDlg : public GeneralDlg
 	std::string script;
 public:
 	Fl_Input *ext;
-	StyleDlg()
+	StyleDlg() : GeneralDlg()
 	{
 		Fl_Group *g;	Fl_Button *o;
 		w = new Fl_Double_Window(380, 540, _("Plot style"));
@@ -559,7 +559,7 @@ class DatSelDlg : public GeneralDlg
 	Fl_Check_Button *ax, *ay, *az;
 public:
 	Fl_Input *ext;
-	DatSelDlg()
+	DatSelDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(355, 255, _("Select data argument"));
@@ -696,7 +696,7 @@ class NewCmdDlg : public GeneralDlg
 	Fl_Help_View *help;
 	std::vector<std::string> cmds[17];	///< commands divided by type
 public:
-	NewCmdDlg()
+	NewCmdDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(780, 300, _("New command"));
@@ -941,7 +941,7 @@ class SetupDlg : public GeneralDlg
 	Fl_Float_Input *lx[10], *ly[10], *lz[10], *lbr[10];
 	Fl_Input *fname;
 public:
-	SetupDlg()
+	SetupDlg() : GeneralDlg()
 	{
 		Fl_Button *o;	Fl_Group *g, *gg;
 		w = new Fl_Double_Window(525, 395, _("Setup script"));
@@ -1223,7 +1223,7 @@ class InplotDlg : public GeneralDlg
 	Fl_Output *res;
 	Fl_MathGL *gr;
 public:
-	InplotDlg()
+	InplotDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(715, 315, _("Add inplot"));
@@ -1447,7 +1447,7 @@ class PrimDlg : public GeneralDlg
 	Fl_Input *text;
 	Fl_Spinner *num;
 public:
-	PrimDlg()
+	PrimDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(295, 200, _("Add primitive"));

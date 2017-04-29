@@ -51,14 +51,9 @@ void mgl_get_value(const char *buf, const char *name, char *val)
 	}
 }
 //-----------------------------------------------------------------------------
-int main()
+int main(int argc, char **argv)
 {
-	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
-#if MGL_USE_GETTEXT
-//	bindtextdomain("mathgl", "/usr/share/locale/");
-	textdomain("mathgl");
-#endif
-
+	mgl_textdomain(argv?argv[0]:NULL);
 	mgl_suppress_warn(true);
 	mglGraph gr;
 	mglParse p(true);

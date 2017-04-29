@@ -887,6 +887,7 @@ pthread_mutex_t mutexRnd;
 float mgl_cos[360];
 void MGL_NO_EXPORT mgl_init()
 {
+	mgl_textdomain(NULL);
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexRnd,0);
 #endif
@@ -946,3 +947,41 @@ long MGL_EXPORT mgl_check_tex_table()
 	}
 	return res;
 }
+//---------------------------------------------------------------------------
+bool MGL_NO_EXPORT test_transl(const char *p)
+{
+	std::string f = std::string(p) + "/ru/LC_MESSAGES/mathgl.mo";
+	FILE *fp = fopen(f.c_str(),"r");
+	if(fp)
+	{
+		bindtextdomain("mathgl", p);
+		textdomain("mathgl");
+		fclose(fp);	return true;
+	}
+	return false;
+}
+void MGL_EXPORT mgl_textdomain(const char *argv0)
+{
+	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+	#if MGL_USE_GETTEXT
+	if(!test_transl(MGL_INSTALL_DIR"/share/locale/"))
+		if(!test_transl("/usr/share/locale/"))
+			if(!test_transl("/usr/local/share/locale/"))
+				if(!test_transl(getcwd(NULL,0)))
+				{
+					const char *f = argv0?strrchr(argv0,'/'):NULL;
+					#ifdef WIN32
+					if(!f)	f = argv0?strrchr(argv0,'\\'):NULL;
+					#endif
+					if(f)
+					{
+						std::string p(argv0,f-argv0);
+						if(!test_transl(p.c_str()))
+							return;
+					}
+					else	return;
+				}
+				#endif
+}
+void MGL_EXPORT mgl_textdomain_()	{	mgl_textdomain(NULL);	}
+//---------------------------------------------------------------------------

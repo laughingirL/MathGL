@@ -407,12 +407,12 @@ void smgl_fexport(mglGraph *gr)	// test file export
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
-	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
-#if MGL_USE_GETTEXT
-//	bindtextdomain("mathgl", "/usr/share/locale/");
-	textdomain("mathgl");
-#endif
+const char *f = strrchr(argv[0],'/');
+std::string p(argv[0],f-argv[0]);
+printf("getcwd = '%s', argv = '%s', path = '%s', inst = '%s'\n", getcwd(NULL,0), argv[0], p.c_str(), MGL_INSTALL_DIR);
+fflush(stdout);
 
+	mgl_textdomain(argv?argv[0]:NULL);
 	mgl_suppress_warn(true);
 	const char *suf = "";
 	char name[256]="", *tmp;

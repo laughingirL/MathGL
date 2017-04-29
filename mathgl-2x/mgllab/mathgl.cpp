@@ -138,7 +138,7 @@ public:
 	void init()
 	{	// NOTE I'm not sure that I need to get current arguments. So keep function empty.
 	}
-	ArgsDlg()
+	ArgsDlg() : GeneralDlg()
 	{
 		w = new Fl_Double_Window(290, 320, _("Set script arguments"));
 		arg[1] = new Fl_Input(5, 20, 135, 30, _("String for $1"));
@@ -178,7 +178,7 @@ class AnimateDlg : public GeneralDlg
 {
 public:
 	Fl_MGL* dr;
-	AnimateDlg()
+	AnimateDlg() : GeneralDlg()
 	{
 		w = new Fl_Double_Window(335, 350, _("Animation"));
 		new Fl_Box(10, 5, 315, 25, _("Redraw picture for $0 equal to"));
@@ -415,7 +415,7 @@ class MessDlg : public GeneralDlg
 	Fl_Text_Buffer *mbuf;
 	int pos, last;
 public:
-	MessDlg()
+	MessDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(500, 195, _("MGL messages"));

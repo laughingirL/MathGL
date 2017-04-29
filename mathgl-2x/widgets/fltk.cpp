@@ -99,7 +99,7 @@ MGL_EXPORT const char *mgl_dir_chooser(const char *mess, const char *path)
 Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widget(xx,yy,ww,hh,lbl)
 {
 	gr = new mglCanvas;	use_pthr = true;
-	tet=phi=x1=y1=0;	x2=y2=1;
+	tet=phi=x1=y1=0;	x2=y2=1;	img = 0;
 	zoom = rotate = handle_keys = grid = false;
 	flag=x0=y0=xe=ye=0;	show_warn=true;
 	tet_val = phi_val = 0;

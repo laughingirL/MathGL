@@ -55,12 +55,7 @@ void *calc(void *)
 }
 int main(int argc,char **argv)
 {
-	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
-#if MGL_USE_GETTEXT
-//	bindtextdomain("mathgl", "/usr/share/locale/");
-	textdomain("mathgl");
-#endif
-
+	mgl_textdomain(argv?argv[0]:NULL);
 	static pthread_t thr;
 	pthread_create(&thr,0,calc,0);
 	pthread_detach(thr);
@@ -93,10 +88,7 @@ int Foo::Draw(mglGraph *gr)
 }
 int main(int argc,char **argv)
 {
-	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
-//	bindtextdomain("mathgl", "/usr/share/locale/");
-	textdomain("mathgl");
-
+	mgl_textdomain(argv?argv[0]:NULL);
 	Foo *foo = new Foo;
 	mglQT gr(foo,"MathGL examples");
 	foo->Gr = &gr;
@@ -143,12 +135,7 @@ public:
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
-	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
-#if MGL_USE_GETTEXT
-//	bindtextdomain("mathgl", "/usr/share/locale/");
-	textdomain("mathgl");
-#endif
-
+	mgl_textdomain(argv?argv[0]:NULL);
 	mglQT *gr;
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];

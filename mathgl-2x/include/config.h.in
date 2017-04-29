@@ -10,6 +10,7 @@
 #else
 #define MGL_DEF_FONT_NAME	"${MGL_DEF_FONT}"
 #endif
+#define MGL_INSTALL_DIR	"${CMAKE_INSTALL_PREFIX}"
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #define MGL_SYS_NAN		0

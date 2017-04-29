@@ -179,6 +179,7 @@ class GeneralDlg
 protected:
 	Fl_Double_Window *w;
 public:
+//	GeneralDlg()	{	mgl_textdomain(NULL);	}
 	mglDataA *dat;
 	ScriptWindow *e;
 	std::string result;

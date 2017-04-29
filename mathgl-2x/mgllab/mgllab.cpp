@@ -375,19 +375,16 @@ int main(int argc, char **argv)
 {
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
-	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
-#if MGL_USE_GETTEXT
-//	bindtextdomain("mathgl", "/usr/share/locale/");
-	textdomain("mathgl");
-#endif
-
+	mgl_textdomain(argv?argv[0]:NULL);
+	
 	textbuf = new Fl_Text_Buffer;
 	style_init();
 	textbuf->tab_distance(4);
 	ScriptWindow *w = new_view();
 	Fl::visual(FL_DOUBLE|FL_RGB);
 	load_pref(w);
-	int ir = w->menu->find_index("File/Recent files");
+	int ir = w->menu->find_index(_("File/Recent files"));
+	if(ir<0)	ir = 6;
 	w->menu->replace(ir+1, lastfiles[0].c_str());
 	w->menu->replace(ir+2, lastfiles[1].c_str());
 	w->menu->replace(ir+3, lastfiles[2].c_str());
@@ -447,7 +444,7 @@ class PropDlg : public GeneralDlg
 	Fl_Choice *scheme_w;
 public:
 	HMGL gr;
-	PropDlg()
+	PropDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
 		w = new Fl_Double_Window(340, 365, _("Properties"));
@@ -540,7 +537,7 @@ public:
 	Fl_Browser *prev;
 	Fl_Choice *kind;
 	Fl_Choice *func;
-	CalcDlg()
+	CalcDlg() : GeneralDlg()
 	{
 		Fl_Button *o;	Fl_Group* g, *gg;
 		w = new Fl_Double_Window(275, 275, _("Calculator"));

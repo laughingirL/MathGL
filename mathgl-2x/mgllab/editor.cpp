@@ -265,7 +265,8 @@ void add_filename(const char *fname, ScriptWindow *e)
 		if(lastfiles[i]==fname)	{	ii=i;	break;	}
 	for(int i=ii;i>0;i--)	lastfiles[i]=lastfiles[i-1];
 	lastfiles[0]=fname;
-	int ir = e->menu->find_index("File/Recent files");
+	int ir = e->menu->find_index(_("File/Recent files"));
+	if(ir<0)	ir = 6;
 	e->menu->replace(ir+1, lastfiles[0].c_str());
 	e->menu->replace(ir+2, lastfiles[1].c_str());
 	e->menu->replace(ir+3, lastfiles[2].c_str());
@@ -549,7 +550,7 @@ class FindDlg : public GeneralDlg
 	Fl_Input *find, *replace;
 	Fl_Check_Button *mcase, *sback;
 public:
-	FindDlg()
+	FindDlg() : GeneralDlg()
 	{
 		Fl_Button* o;
 		w = new Fl_Double_Window(375, 130, _("Find/Replace"));

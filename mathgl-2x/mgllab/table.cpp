@@ -86,7 +86,7 @@ public:
 			wch->deactivate();	}
 	}
 	void init()	{	OK=false;	}
-	XYZDlg()
+	XYZDlg() : GeneralDlg()
 	{
 		w = new Fl_Double_Window(325, 125, _("Change data sizes"));
 		box = new Fl_Box(10, 10, 305, 40);
@@ -158,7 +158,7 @@ class ChngDlg : public GeneralDlg
 	Fl_Choice *kind, *type;
 	Fl_Float_Input *val;
 public:
-	ChngDlg()
+	ChngDlg() : GeneralDlg()
 	{
 		Fl_Menu_Item k[]={{_("Smooth")}, {_("CumSum")}, { _("Integrate")},
 		{ _("Difference")}, { _("Double diff.")}, { _("Swap parts")},
@@ -337,7 +337,7 @@ class NwdtDlg : public GeneralDlg
 	Fl_Choice *kind;
 	Fl_Input *name;
 public:
-	NwdtDlg()
+	NwdtDlg() : GeneralDlg()
 	{
 		Fl_Menu_Item k[]={{_("Summation of")}, {_("Maximum of")}, { _("Minimum of")}, { _("Pulse prop.")}, {0}};
 		w = new Fl_Double_Window(165, 215, _("Extract data"));
@@ -536,7 +536,7 @@ class NrmDlg : public GeneralDlg
 	Fl_Choice *dir;
 	Fl_Check_Button *wsym;
 public:
-	NrmDlg()
+	NrmDlg() : GeneralDlg()
 	{
 		Fl_Menu_Item k[]={{"x"}, {"y"}, { "z"}, {0}};
 		w = new Fl_Double_Window(135, 215);
@@ -602,7 +602,7 @@ void normal_cb(Fl_Widget*, void*v)
 struct CropDlg : public GeneralDlg
 {
 	Fl_Spinner *x1,*x2, *y1,*y2, *z1,*z2;
-	CropDlg()
+	CropDlg() : GeneralDlg()
 	{
 		w = new Fl_Double_Window(230, 155, _("Crop data"));
 		x1 = new Fl_Spinner(45, 25, 80, 25, _("Lower bound"));	x1->align(FL_ALIGN_TOP);
@@ -664,7 +664,7 @@ struct TrspDlg : public GeneralDlg
 {
 	Fl_Choice *how;
 public:
-	TrspDlg()
+	TrspDlg() : GeneralDlg()
 	{
 		Fl_Menu_Item k[]={{"yxz"}, {"zxy"}, {"zyx"}, {"yzx"}, {"xzy"}, {0}};
 		w = new Fl_Double_Window(200, 90, _("Transpose data"));
