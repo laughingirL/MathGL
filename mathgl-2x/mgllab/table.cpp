@@ -141,7 +141,7 @@ void resize_cb(Fl_Widget*, void*v)
 void squeeze_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	xyz_dlg.setup(_("Specify the skiping step\nEach m-th point will be skiped"), _("smoothed"));	if(xyz_dlg.run())
+	xyz_dlg.setup(_("Specify the skipping step\nEach m-th point will be saved only"), _("smoothed"));	if(xyz_dlg.run())
 	{
 		HMDT d = dynamic_cast<HMDT>(e->var);
 		if(d)

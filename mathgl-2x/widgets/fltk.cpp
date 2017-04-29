@@ -829,7 +829,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	zoom_bt = new Fl_Button(105, 1, 25, 25);	zoom_bt->type(FL_TOGGLE_BUTTON);
 	zoom_bt->image(img_zoomIn);	zoom_bt->callback(mgl_zoom_cb,this);
 	zoom_bt->tooltip(_("Zoom in selected region of the picture"));
-	o = new Fl_Button(130, 1, 25, 25);		o->tooltip(_("Return picture to normal zoom"));
+	o = new Fl_Button(130, 1, 25, 25);		o->tooltip(_("Restore default graphics rotation, zoom and perspective"));
 	o->image(img_orig);	o->callback(mgl_norm_cb,this);
 
 	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(_("Refresh the picture"));

@@ -275,7 +275,7 @@ void PropDialog::applyChanges()
 	if(cur>=0 && prev!=lang[cur])
 	{
 		settings.setValue("/udavLang", lang[lng->currentIndex()]);
-		QMessageBox::critical(this,_("UDAV - Properties"),_("You have to restart UDAV for applying the cahnges."));
+		QMessageBox::critical(this,_("UDAV - Properties"),_("You have to restart UDAV for applying the changes."));
 	}
 	settings.setValue("/defWidth", defWidth);
 	settings.setValue("/defHeight", defHeight);

@@ -209,9 +209,9 @@ SubplotDialog::SubplotDialog(QWidget *parent) : QDialog(parent)
 	connect(b, SIGNAL(clicked()),this, SLOT(titleStl()));
 
 	H = new QHBoxLayout;	u->addLayout(H);
-	l = new QLabel(_("Result is"),this);	H->addWidget(l);
+	l = new QLabel(_("Result"),this);	H->addWidget(l);
 	res = new QLineEdit(this);		H->addWidget(res);	res->setReadOnly(true);
-	res->setToolTip(_("Resulting string."));
+	res->setToolTip(_("Resulting string"));
 
 	pic = new QLabel(this);	h->addWidget(pic,1);
 

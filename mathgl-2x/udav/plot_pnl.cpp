@@ -438,7 +438,7 @@ void PlotPanel::toolTop(QBoxLayout *v)
 
 	a = new QAction(QPixmap(":/png/format-indent-more.png"), _("New command"), this);
 	connect(a, SIGNAL(triggered()), newCmdDlg, SLOT(show()));
-	a->setToolTip(_("Show dialog for new command and put it into the script."));
+	a->setToolTip(_("Show dialog for new command or edit arguments of existed one."));
 	o->addAction(a);	popup->addAction(a);	t->addAction(a);
 
 	a = new QAction(QPixmap(box_xpm), _("New inplot"), this);
