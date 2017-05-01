@@ -250,16 +250,18 @@ void print_plot_cb(Fl_Widget*,void *v)
 {
 	ScriptWindow *w = (ScriptWindow*)v;
 	Fl_Printer *p = new Fl_Printer;
-	p->start_job(1);	p->start_page();
-	int wp,hp, ww=w->graph->FMGL->w(), hh=w->graph->FMGL->h();
-	p->printable_rect(&wp,&hp);
-	double s=1, sw=double(wp)/ww, sh=double(hp)/hh;
-	if(sw<s)	s=sw;
-	if(sh<s)	s=sh;
-//	if(sw<sh)	p->rotate(90);	// TODO add rotation ???
-	p->scale(s,s);
-	p->print_widget(w->graph->FMGL);
-	p->end_page();		p->end_job();
+	if(!p->start_job(1) && !p->start_page())
+	{
+		int wp,hp, ww=w->graph->FMGL->w(), hh=w->graph->FMGL->h();
+		p->printable_rect(&wp,&hp);
+		double s=1, sw=double(wp)/ww, sh=double(hp)/hh;
+		if(sw<s)	s=sw;
+		if(sh<s)	s=sh;
+//		if(sw<sh)	p->rotate(90);	// TODO add rotation ???
+		p->scale(s,s);
+		p->print_widget(w->graph->FMGL);
+		p->end_page();		p->end_job();
+	}
 	delete p;
 }
 //-----------------------------------------------------------------------------
@@ -546,8 +548,8 @@ public:
 		o = new Fl_Return_Button(245, 5, 25, 25, "@>");
 		o->callback(cb_calc_edit);	g->end();	g->resizable(edit);
 		g = new Fl_Group(5, 35, 265, 25);
-		output = new Fl_Output(55, 35, 120, 25, _("Result"));
-		o = new Fl_Button(180, 35, 90, 25, _("@-> to script"));
+		output = new Fl_Output(30, 35, 145, 25, "@->");
+		o = new Fl_Button(180, 35, 90, 25, _("to script"));
 		o->callback(cb_calc_ins);	g->end();	g->resizable(output);
 		prev = new Fl_Select_Browser(5, 80, 265, 70, _("Previous expressions"));
 		prev->align(FL_ALIGN_TOP_LEFT);	prev->callback(cb_calc_prev);

@@ -168,9 +168,9 @@ public:
 		w = new Fl_Double_Window(165, 215, _("Change data"));
 		kind = new Fl_Choice(10, 25, 145, 25, _("Type of operation"));
 		kind->align(FL_ALIGN_TOP_LEFT);	kind->copy(k);
-		dx = new Fl_Check_Button(10, 55, 140, 25, _("apply in x direction"));
-		dy = new Fl_Check_Button(10, 80, 140, 25, _("apply in y direction"));
-		dz = new Fl_Check_Button(10, 105, 140, 25, _("apply in z direction"));
+		dx = new Fl_Check_Button(10, 55, 140, 25, _("along x"));
+		dy = new Fl_Check_Button(10, 80, 140, 25, _("along y"));
+		dz = new Fl_Check_Button(10, 105, 140, 25, _("along z"));
 		type = new Fl_Choice(10, 145, 145, 25, _("Type of smoothing"));
 		type->align(FL_ALIGN_TOP_LEFT);	type->copy(t);
 		val = new Fl_Float_Input(10, 145, 145, 25, _("Numeric parameter"));
@@ -343,9 +343,9 @@ public:
 		w = new Fl_Double_Window(165, 215, _("Extract data"));
 		kind = new Fl_Choice(10, 25, 145, 25, _("Type of operation"));
 		kind->align(FL_ALIGN_TOP_LEFT);	kind->copy(k);
-		dx = new Fl_Check_Button(10, 55, 140, 25, _("apply in x direction"));
-		dy = new Fl_Check_Button(10, 80, 140, 25, _("apply in y direction"));
-		dz = new Fl_Check_Button(10, 105, 140, 25, _("apply in z direction"));
+		dx = new Fl_Check_Button(10, 55, 140, 25, _("along x"));
+		dy = new Fl_Check_Button(10, 80, 140, 25, _("along y"));
+		dz = new Fl_Check_Button(10, 105, 140, 25, _("along z"));
 		name = new Fl_Input(10, 145, 145, 25, _("Name for output"));
 		name->align(FL_ALIGN_TOP_LEFT);
 
@@ -605,8 +605,8 @@ struct CropDlg : public GeneralDlg
 	CropDlg() : GeneralDlg()
 	{
 		w = new Fl_Double_Window(230, 155, _("Crop data"));
-		x1 = new Fl_Spinner(45, 25, 80, 25, _("Lower bound"));	x1->align(FL_ALIGN_TOP);
-		x2 = new Fl_Spinner(140, 25, 80, 25, _("Upper bound"));	x2->align(FL_ALIGN_TOP);
+		x1 = new Fl_Spinner(45, 25, 80, 25, _("From"));	x1->align(FL_ALIGN_TOP);
+		x2 = new Fl_Spinner(140, 25, 80, 25, _("To"));	x2->align(FL_ALIGN_TOP);
 		y1 = new Fl_Spinner(45, 55, 80, 25);
 		y2 = new Fl_Spinner(140, 55, 80, 25);
 		z1 = new Fl_Spinner(45, 85, 80, 25);
@@ -618,7 +618,7 @@ struct CropDlg : public GeneralDlg
 		Fl_Button *o;
 		o = new Fl_Button(45, 120, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
 		o->tooltip(_("Do nothing and close this window"));
-		o = new Fl_Return_Button(145, 120, 75, 25, _("Crop"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Return_Button(145, 120, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		o->tooltip(_("Change data values and close this window"));
 		w->set_modal();	w->end();
 	}

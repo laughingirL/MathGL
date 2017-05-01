@@ -81,44 +81,44 @@ public:
 	{
 		e=NULL;	ext=NULL;
 		Fl_Button *o;
-		w = new Fl_Double_Window(570, 185, _("Add command option(s)"));
-		x1 = new Fl_Input(65, 5, 85, 25, _("X-range"));
+		w = new Fl_Double_Window(640, 185, _("Add command option(s)"));
+		x1 = new Fl_Input(95, 5, 85, 25, _("X-range"));
 		x1->tooltip(_("Minimal value of X for cutting or for coordinate filling"));
-		x2 = new Fl_Input(160, 5, 85, 25, "-");
+		x2 = new Fl_Input(190, 5, 85, 25, "-");
 		x2->tooltip(_("Maximal value of X for cutting or for coordinate filling"));
-		y1 = new Fl_Input(65, 35, 85, 25, _("Y-range"));
+		y1 = new Fl_Input(95, 35, 85, 25, _("Y-range"));
 		y1->tooltip(_("Minimal value of Y for cutting or for coordinate filling"));
-		y2 = new Fl_Input(160, 35, 85, 25, "-");
+		y2 = new Fl_Input(190, 35, 85, 25, "-");
 		y2->tooltip(_("Maximal value of Y for cutting or for coordinate filling"));
-		z1 = new Fl_Input(65, 65, 85, 25, _("Z-range"));
+		z1 = new Fl_Input(95, 65, 85, 25, _("Z-range"));
 		z1->tooltip(_("Minimal value of Z for cutting or for coordinate filling"));
-		z2 = new Fl_Input(160, 65, 85, 25, "-");
+		z2 = new Fl_Input(190, 65, 85, 25, "-");
 		z2->tooltip(_("Maximal value of Z for cutting or for coordinate filling"));
-		c1 = new Fl_Input(65, 95, 85, 25, _("C-range"));	c1->deactivate();
+		c1 = new Fl_Input(95, 95, 85, 25, _("C-range"));	c1->deactivate();
 		c1->tooltip(_("Low border for determining color or alpha"));
-		c2 = new Fl_Input(160, 95, 85, 25, "-");		c2->deactivate();
+		c2 = new Fl_Input(190, 95, 85, 25, "-");		c2->deactivate();
 		c2->tooltip(_("Upper border for determining color or alpha"));
-		val = new Fl_Input(325, 5, 85, 25, _("Value"));	val->labelfont(1);
-		meshnum = new Fl_Input(325, 35, 85, 25, _("MeshNum"));
+		val = new Fl_Input(375, 5, 85, 25, _("Value"));	val->labelfont(1);
+		meshnum = new Fl_Input(375, 35, 85, 25, _("MeshNum"));
 		meshnum->tooltip(_("Approximate number of mesh lines in plot"));
-		size = new Fl_Input(325, 65, 85, 25, _("Size"));
+		size = new Fl_Input(375, 65, 85, 25, _("Size"));
 		size->tooltip(_("Set size for text, marks and others"));
-		cut = new Fl_Choice(325, 95, 85, 25, _("Cutting"));
+		cut = new Fl_Choice(375, 95, 85, 25, _("Cutting"));
 		cut->add(_("default"));	cut->add("on");	cut->add("off");
 		cut->tooltip(_("Set cutting off/on for particular plot"));
-		alpha = new Fl_Input(480, 5, 85, 25, _("Alpha"));
+		alpha = new Fl_Input(550, 5, 85, 25, _("Alpha"));
 		alpha->tooltip(_("Alpha value (transparency) of surface or cloud"));
-		amb = new Fl_Input(480, 35, 85, 25, _("Ambient"));
+		amb = new Fl_Input(550, 35, 85, 25, _("Ambient"));
 		amb->tooltip(_("Own brightness of the surface"));
-		dif = new Fl_Input(480, 65, 85, 25, _("Diffuse"));
+		dif = new Fl_Input(550, 65, 85, 25, _("Diffuse"));
 		dif->tooltip(_("Intensity of diffuse light"));
-		light = new Fl_Choice(480, 95, 85, 25, _("Light"));
+		light = new Fl_Choice(550, 95, 85, 25, _("Light"));
 		light->add(_("default"));	light->add("on");	light->add("off");
 		cut->tooltip(_("Set lighting off/on for particular plot"));
-		legend = new Fl_Input(65, 125, 500, 25, _("Legend"));
+		legend = new Fl_Input(95, 125, 540, 25, _("Legend"));
 		cut->tooltip(_("Add legend entry for the plot"));
-		o = new Fl_Button(385, 155, 85, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(480, 155, 85, 25, _("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(455, 155, 85, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(550, 155, 85, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
@@ -351,12 +351,12 @@ public:
 			sharp->callback(cb_style_upd);
 			g = new Fl_Group(10, 105, 360, 130, _("Mask"));
 				g->box(FL_ENGRAVED_BOX);	g->align(FL_ALIGN_TOP_LEFT);
-				mask = new Fl_Choice(80, 110, 95, 25, _("Kind"));
+				mask = new Fl_Choice(100, 110, 95, 25, _("Kind"));
 				mask->copy(masks);	mask->callback(cb_style_upd);
-				angle = new Fl_Choice(80, 140, 95, 25, _("Rotation"));
-				angle->add("none");	angle->add("+45");	angle->add("perp");	angle->add("-45");
+				angle = new Fl_Choice(100, 140, 95, 25, _("Rotation"));
+				angle->add("none");	angle->add("+45");	angle->add("90");	angle->add("-45");
 				angle->callback(cb_style_upd);
-				msize = new Fl_Spinner(80, 170, 95, 25, _("Size"));
+				msize = new Fl_Spinner(100, 170, 95, 25, _("Size"));
 				msize->range(1,9);	msize->value(1);	msize->callback(cb_style_upd);
 				for(int i=0;i<8;i++)	for(int j=0;j<8;j++)
 				{
@@ -1051,7 +1051,7 @@ public:
 		plotid->align(FL_ALIGN_TOP_LEFT);
 		gg->end();
 		gg = new Fl_Group(0, 25, 525, 330, _("Light settings"));	gg->hide();
-			static const char *id[10]={"0:","1:","2:","3:""4:","5:","6:","7:","8:","9:"};
+			static const char *id[10]={"0:","1:","2:","3:","4:","5:","6:","7:","8:","9:"};
 			for(int i=0;i<10;i++)
 			{
 				lb[i] = new Fl_Toggle_Button(10, 50+30*i, 25, 25, id[i]);
@@ -1233,11 +1233,11 @@ public:
 		n1->callback(cp_inplot_upd);	n1->range(1,100);
 		m1 = new Fl_Spinner(230, 5, 55, 25, "ny");
 		m1->callback(cp_inplot_upd);	m1->range(1,100);
-		i1 = new Fl_Spinner(315, 5, 55, 25, "ind");
+		i1 = new Fl_Spinner(315, 5, 55, 25, _("ind"));
 		i1->callback(cp_inplot_upd);	i1->value(0);
-		x1 = new Fl_Counter(400, 5, 95, 25, "dx");
+		x1 = new Fl_Counter(400, 5, 95, 25, "dx");		x1->align(FL_ALIGN_LEFT);
 		x1->callback(cp_inplot_upd);	x1->value(0);	x1->step(0.01);	x1->lstep(0.1);
-		y1 = new Fl_Counter(525, 5, 95, 25, "dy");
+		y1 = new Fl_Counter(525, 5, 95, 25, "dy");		y1->align(FL_ALIGN_LEFT);
 		y1->callback(cp_inplot_upd);	y1->value(0);	y1->step(0.01);	y1->lstep(0.1);
 
 		k2 = new Fl_Round_Button(5, 35, 105, 25, "MultiPlot");
@@ -1246,7 +1246,7 @@ public:
 		n2->callback(cp_inplot_upd);	n2->range(1,100);
 		m2 = new Fl_Spinner(230, 35, 55, 25, "ny");
 		m2->callback(cp_inplot_upd);	m2->range(1,100);
-		i2 = new Fl_Spinner(315, 35, 55, 25, "ind");
+		i2 = new Fl_Spinner(315, 35, 55, 25, _("ind"));
 		i2->callback(cp_inplot_upd);	i2->value(0);
 		x2 = new Fl_Spinner(425, 35, 70, 25, "x-size");
 		x2->callback(cp_inplot_upd);	x2->value(1);
@@ -1259,25 +1259,25 @@ public:
 		n3->callback(cp_inplot_upd);	n3->range(1,100);
 		m3 = new Fl_Spinner(230, 65, 55, 25, "ny");
 		m3->callback(cp_inplot_upd);	m3->range(1,100);
-		i3 = new Fl_Spinner(315, 65, 55, 25, "ind");
+		i3 = new Fl_Spinner(315, 65, 55, 25, _("ind"));
 		i3->callback(cp_inplot_upd);	i3->value(0);
-		d3 = new Fl_Counter(400, 65, 95, 25, "d");
+		d3 = new Fl_Counter(400, 65, 95, 25, "d");	d3->align(FL_ALIGN_LEFT);
 		d3->callback(cp_inplot_upd);	d3->step(0.01);	d3->lstep(0.1);
 
 		k4 = new Fl_Round_Button(5, 95, 105, 25, "ColumnPlot");
 		k4->callback(cb_only_inplot,k4);	k4->type(FL_RADIO_BUTTON);
 		n4 = new Fl_Spinner(145, 95, 55, 25, "nx");
 		n4->callback(cp_inplot_upd);	n4->range(1,100);
-		i4 = new Fl_Spinner(315, 95, 55, 25, "ind");
+		i4 = new Fl_Spinner(315, 95, 55, 25, _("ind"));
 		i4->callback(cp_inplot_upd);	i4->value(0);
-		d4 = new Fl_Counter(400, 95, 95, 25, "d");
+		d4 = new Fl_Counter(400, 95, 95, 25, "d");	d4->align(FL_ALIGN_LEFT);
 		d4->callback(cp_inplot_upd);	d4->step(0.01);	d4->lstep(0.1);
 
 		k5 = new Fl_Round_Button(5, 125, 105, 25, "StickPlot");
 		k5->callback(cb_only_inplot,k5);	k5->type(FL_RADIO_BUTTON);
 		n5 = new Fl_Spinner(145, 125, 55, 25, "nx");
 		n5->callback(cp_inplot_upd);	n5->range(1,100);
-		i5 = new Fl_Spinner(315, 125, 55, 25, "ind");
+		i5 = new Fl_Spinner(315, 125, 55, 25, _("ind"));
 		i5->callback(cp_inplot_upd);	i5->value(0);
 
 		k6 = new Fl_Round_Button(5, 155, 105, 25, "InPlot");
@@ -1301,16 +1301,16 @@ public:
 		ay->callback(cp_inplot_upd);	ay->value("1");
 
 		new Fl_Box(0, 225, 90, 25, _("Reserve at:"));
-		rl = new Fl_Check_Button(90, 225, 75, 25, _("left"));
+		rl = new Fl_Check_Button(90, 225, 70, 25, _("left"));
 		rl->callback(cp_inplot_upd);	rl->value(1);
-		rb = new Fl_Check_Button(145, 225, 75, 25, _("bottom"));
+		rb = new Fl_Check_Button(160, 225, 70, 25, _("bottom"));
 		rb->callback(cp_inplot_upd);	rb->value(1);
-		rt = new Fl_Check_Button(225, 225, 75, 25, _("top"));
+		rt = new Fl_Check_Button(230, 225, 70, 25, _("top"));
 		rt->callback(cp_inplot_upd);	rt->value(1);
-		rr = new Fl_Check_Button(285, 225, 75, 25, _("right"));
+		rr = new Fl_Check_Button(300, 225, 70, 25, _("right"));
 		rr->callback(cp_inplot_upd);	rr->value(1);
-		rw = new Fl_Check_Button(360, 225, 100, 25, _("whole area"));	rw->callback(cp_inplot_upd);
-		text = new Fl_Input(50, 255, 350, 25, _("Title"));	text->callback(cp_inplot_upd);
+		rw = new Fl_Check_Button(370, 225, 90, 25, _("whole area"));	rw->callback(cp_inplot_upd);
+		text = new Fl_Input(80, 255, 320, 25, _("Title"));	text->callback(cp_inplot_upd);
 		o = new Fl_Button(400, 255, 60, 25, _("Style"));	o->callback(style_dlg_cb,0);
 		res = new Fl_Output(50, 285, 410, 25, _("Result"));
 		gr = new Fl_MathGL(470, 130, 240, 180);	gr->box(FL_ENGRAVED_BOX);	gr->use_pthr = false;
@@ -1458,9 +1458,9 @@ public:
 		kind->copy(k);		kind->value(0);
 		col = new Fl_Choice(205, 10, 75, 25, _("Color"));
 		col->copy(colors);	col->value(4);
-		arr1 = new Fl_Choice(65, 40, 75, 25, _("Arrow1"));
+		arr1 = new Fl_Choice(65, 40, 75, 25, _("Begin"));
 		arr1->copy(arrows);	arr1->value(0);
-		arr2 = new Fl_Choice(205, 40, 75, 25, _("Arrow2"));
+		arr2 = new Fl_Choice(205, 40, 75, 25, _("End"));
 		arr2->copy(arrows);	arr2->value(0);
 		dash = new Fl_Choice(65, 70, 75, 25, _("Dash"));
 		dash->copy(dashing);	dash->value(0);
@@ -1471,7 +1471,7 @@ public:
 		fill = new Fl_Check_Button(205, 100, 75, 25, _("wire"));	fill->value(1);
 		text = new Fl_Input(65, 130, 215, 25, _("Text"));
 		o = new Fl_Button(120, 165, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(205, 165, 75, 25, _("Add"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Return_Button(205, 165, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void cb_ok()
