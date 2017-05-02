@@ -1183,20 +1183,23 @@ MGL_NO_EXPORT void* mgl_cor(void *par)
 HADT MGL_EXPORT mgl_datac_correl(HCDT d1, HCDT d2, const char *dir)
 {
 	if(!dir || *dir==0)	return 0;
-	long nx = d1->GetNx(), ny = d1->GetNy(), nz = d1->GetNz(), nn=nx*ny*nz;
+	if(d2==NULL)	d2=d1;
+	long nx = d1->GetNx(), ny = d1->GetNy(), nz = d1->GetNz();
 	if(nx*ny*nz!=d2->GetNN())	return 0;
 	std::string dirs;
 	if(strchr(dir,'x') && nx>1)	dirs += 'x';
 	if(strchr(dir,'y') && ny>1)	dirs += 'y';
 	if(strchr(dir,'z') && nz>1)	dirs += 'z';
 	if(dirs.empty())	return 0;
-	mglDataC *a = new mglDataC(d1);	a->FFT(dirs.c_str());
-	mglDataC *b = new mglDataC(d2);	b->FFT(dirs.c_str());
+	mglDataC *a = new mglDataC(d1), *b=a;	a->FFT(dirs.c_str());
+	if(d1!=d2)
+	{	b = new mglDataC(d2);	b->FFT(dirs.c_str());	}
 //	mglStartThreadC(mgl_cor,0,nx*ny*nz,a->a,b->a);	// TODO: sth strange
-#pragma omp parallel
+#pragma omp parallel for
 	for(long i=0;i<nx*ny*nz;i++)	a->a[i] *= conj(b->a[i]);
 	dirs += 'i';	a->FFT(dirs.c_str());
-	delete b;	return a;
+	if(d1!=d2)	delete b;
+	return a;
 }
 uintptr_t MGL_EXPORT mgl_datac_correl_(uintptr_t *d1, uintptr_t *d2, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;

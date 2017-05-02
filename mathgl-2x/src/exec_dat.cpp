@@ -145,7 +145,9 @@ int MGL_NO_EXPORT mgls_correl(mglGraph *, long , mglArg *a, const char *k, const
 	if(k[0]=='d' && a[0].d->temp)	return 5;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
 	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
-	if(d && !strcmp(k,"ddds"))	*d = mglData(true,mgl_data_correl(a[1].d, a[2].d, a[3].s.c_str()));
+	if(d && !strcmp(k,"dds"))	*d = mglData(true,mgl_data_correl(a[1].d, a[1].d, a[2].s.c_str()));
+	else if(d && !strcmp(k,"ddds"))	*d = mglData(true,mgl_data_correl(a[1].d, a[2].d, a[3].s.c_str()));
+	else if(c && !strcmp(k,"dds"))	*c = mglDataC(true,mgl_datac_correl(a[1].d, a[1].d, a[2].s.c_str()));
 	else if(c && !strcmp(k,"ddds"))	*c = mglDataC(true,mgl_datac_correl(a[1].d, a[2].d, a[3].s.c_str()));
 	else res = 1;	return res;
 }
@@ -1524,7 +1526,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"column",_("Get data column filled by formula on column ids"),"column Res Dat 'eq'", mgls_column ,4},
 	{"combine",_("Direct multiplication of arrays"), "combine Res Adat Bdat", mgls_combine ,4},
 	{"copy",_("Copy data from another variable"),"copy Dat1 Dat2 ['eq']|ReDat ImDat Cdat|Dat val|Dat 'name'", mgls_copy ,4},
-	{"correl",_("Find correlation between data arrays"), "correl Res Adat Bdat 'dir'", mgls_correl ,4},
+	{"correl",_("Find correlation between data arrays"), "correl Res Adat Bdat 'dir'|Res Adat 'dir'", mgls_correl ,4},
 	{"cosfft",_("Cos-Fourier transform at some direction"),"cosfft Dat 'dir'", mgls_cosfft ,16},
 	{"crop",_("Crop edge of data"),"crop Dat n1 n2 'dir'|Dat 'how'", mgls_crop ,16},
 	{"cumsum",_("Cumulative summation along direction(s)"),"cumsum Dat 'dir'", mgls_cumsum ,16},
