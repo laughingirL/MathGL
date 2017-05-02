@@ -723,6 +723,19 @@ mdual MGL_EXPORT mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
 mdual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz)
 {	return mgl_datac_linear_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
 //-----------------------------------------------------------------------------
+long MGL_NO_EXPORT mgl_powers(long N, const char *how);
+void MGL_EXPORT mgl_datac_crop_opt(HADT d, const char *how)
+{
+	const char *h = "235";
+	if(mglchr(how,'2') || mglchr(how,'3') || mglchr(how,'5'))	h = how;
+	if(mglchr(how,'x'))	mgl_datac_crop(d, 0, mgl_powers(d->nx, h), 'x');
+	if(mglchr(how,'y'))	mgl_datac_crop(d, 0, mgl_powers(d->ny, h), 'y');
+	if(mglchr(how,'z'))	mgl_datac_crop(d, 0, mgl_powers(d->nz, h), 'z');
+}
+void MGL_EXPORT mgl_datac_crop_opt_(uintptr_t *d, const char *how, int l)
+{	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
+	mgl_datac_crop_opt(_DC_,s);	delete []s;	}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_crop(HADT d, long n1, long n2, char dir)
 {
 	long nx=d->nx,ny=d->ny,nz=d->nz, nn;

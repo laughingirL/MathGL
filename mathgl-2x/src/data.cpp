@@ -1073,6 +1073,78 @@ mreal MGL_EXPORT mgl_data_solve_1d_(uintptr_t *d, mreal *val, int *spl, int *i0)
 uintptr_t MGL_EXPORT mgl_data_solve_(uintptr_t *d, mreal *val, const char *dir, uintptr_t *i0, int *norm,int)
 {	return uintptr_t(mgl_data_solve(_DA_(d),*val, *dir, _DA_(i0), *norm));	}
 //-----------------------------------------------------------------------------
+long MGL_NO_EXPORT int_pow(long x, long n)
+{
+	if(n==2)	return x*x;
+	if(n==1)	return x;
+	if(n==0)	return 1;
+	if(n<0)		return 0;
+	long t = int_pow(x,n/2);	t = t*t;
+	if(n%2==1)	t *= x;
+	return t;
+}
+long MGL_NO_EXPORT mgl_powers(long N, const char *how)
+{
+	bool k2 = mglchr(how,'2'), k3 = mglchr(how,'3'), k5 = mglchr(how,'5');
+	const double lN=log(N), l2=log(2), l3=log(3), l5=log(5);
+	if(k2 && k3 && k5)
+	{
+		double dm=lN;	long im=0, jm=0, km=0;
+		for(long i=0;i<=lN/l2;i++)	for(long j=0;j<=(lN-i*l2)/l3;j++)	for(long k=0;k<=(lN-i*l2-j*l3)/l5;k++)
+		{
+			double d = lN-i*l2-j*l3-k*l5;
+			if(d>0 && d<dm)	{	im=i;	jm=j;	km=k;	dm=d;	}
+		}
+		return int_pow(2,im)*int_pow(3,jm)*int_pow(5,km);
+	}
+	else if(k2 && !k3 && !k5)	return int_pow(2,lN/l2);
+	else if(k3 && !k2 && !k5)	return int_pow(3,lN/l3);
+	else if(k5 && !k3 && !k2)	return int_pow(5,lN/l5);
+	else if(k2 && k3 && !k5)
+	{
+		double dm=lN;	long im=0, jm=0;
+		for(long i=0;i<=lN/l2;i++)	for(long j=0;j<=(lN-i*l2)/l3;j++)
+		{
+			double d = lN-i*l2-j*l3;
+			if(d>0 && d<dm)	{	im=i;	jm=j;	dm=d;	}
+		}
+		return int_pow(2,im)*int_pow(3,jm);
+	}
+	else if(k2 && k5 && !k3)
+	{
+		double dm=lN;	long im=0, jm=0;
+		for(long i=0;i<=lN/l2;i++)	for(long j=0;j<=(lN-i*l2)/l5;j++)
+		{
+			double d = lN-i*l2-j*l5;
+			if(d>0 && d<dm)	{	im=i;	jm=j;	dm=d;	}
+		}
+		return int_pow(2,im)*int_pow(5,jm);
+	}
+	else if(k5 && k3 && !k2)
+	{
+		double dm=lN;	long im=0, jm=0;
+		for(long i=0;i<=lN/l5;i++)	for(long j=0;j<=(lN-i*l5)/l3;j++)
+		{
+			double d = lN-i*l5-j*l3;
+			if(d>0 && d<dm)	{	im=i;	jm=j;	dm=d;	}
+		}
+		return int_pow(5,im)*int_pow(3,jm);
+	}
+	return 0;
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_crop_opt(HMDT d, const char *how)
+{
+	const char *h = "235";
+	if(mglchr(how,'2') || mglchr(how,'3') || mglchr(how,'5'))	h = how;
+	if(mglchr(how,'x'))	mgl_data_crop(d, 0, mgl_powers(d->nx, h), 'x');
+	if(mglchr(how,'y'))	mgl_data_crop(d, 0, mgl_powers(d->ny, h), 'y');
+	if(mglchr(how,'z'))	mgl_data_crop(d, 0, mgl_powers(d->nz, h), 'z');
+}
+void MGL_EXPORT mgl_data_crop_opt_(uintptr_t *d, const char *how, int l)
+{	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
+	mgl_data_crop_opt(_DT_,s);	delete []s;	}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_crop(HMDT d, long n1, long n2, char dir)
 {
 	long nx=d->nx,ny=d->ny,nz=d->nz, nn;

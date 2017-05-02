@@ -289,6 +289,16 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 Обрезает границы данных при @var{i}<@var{n1} и @var{i}>@var{n2} (при @var{n2}>0) или @var{i}>@code{n[xyz]}-@var{n2} (при @var{n2}<=0) вдоль направления @var{dir}.
 @end deftypefn
 
+@deftypefn {Команда MGL} {} crop dat 'how'
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Crop (@code{const char *}how=@code{"235x"})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Crop (@code{const char *}how=@code{"235x"})
+@deftypefnx {Функция Сn} @code{void} mgl_data_crop_opt (@code{HMDT} dat, @code{const char *}how)
+@deftypefnx {Функция Сn} @code{void} mgl_datac_crop_opt (@code{HADT} dat, @code{const char *}how)
+@end ifclear
+Обрезает дальний край данных, чтобы сделать их более оптимальным для быстрого преобразования Фурье. Размер массива будет равен наиболее близким к исходному из 2^n*3^m*5^l. Строка @var{how} может содержать: @samp{x}, @samp{y}, @samp{z} для направлений, и @samp{2}, @samp{3}, @samp{5} для использования соответствующего основания.
+@end deftypefn
+
 @anchor{insert}
 @deftypefn {Команда MGL} {} insert dat 'dir' @code{[pos=off num=0]}
 @ifclear UDAV
@@ -1047,9 +1057,14 @@ These functions change the data in some direction like differentiations, integra
 
 @deftypefn {Команда MGL} {} diff dat xdat ydat [zdat]
 @ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Diff (@code{const mglDataA &}x)
 @deftypefnx {Метод класса @code{mglData}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y)
 @deftypefnx {Метод класса @code{mglData}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Diff (@code{const mglDataA &}x)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z)
 @deftypefnx {Функция С} @code{void} mgl_data_diff_par (@code{HMDT} dat, @code{HCDT} x, @code{HCDT}y, @code{HCDT}z)
+@deftypefnx {Функция С} @code{void} mgl_datac_diff_par (@code{HADT} dat, @code{HCDT} x, @code{HCDT}y, @code{HCDT}z)
 @end ifclear
 Выполняет дифференцирование данных, параметрически зависящих от координат, в направлении @var{x} с @var{y}, @var{z}=constant. Параметр @var{z} может быть опущен, что соответствует 2D случаю. Используются следующие формулы (2D случай): @math{da/dx = (a_j*y_i-a_i*y_j)/(x_j*y_i-x_i*y_j)}, где @math{a_i=da/di, a_j=da/dj} обозначает дифференцирование вдоль 1-ой и 2-ой размерности. Похожие формулы используются и в 3D случае. Порядок аргументов можно менять -- например, если данные a(i,j) зависят от координат @{x(i,j), y(i,j)@}, то обычная производная по @samp{x} будет равна @code{Diff(x,y);}, а обычная производная по @samp{y} будет равна @code{Diff(y,x);}.
 @end deftypefn

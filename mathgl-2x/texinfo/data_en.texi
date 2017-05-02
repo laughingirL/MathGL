@@ -291,6 +291,16 @@ Reduces the data size by excluding data elements which indexes are not divisible
 Cuts off edges of the data @var{i}<@var{n1} and @var{i}>@var{n2} if @var{n2}>0 or @var{i}>@code{n[xyz]}-@var{n2} if @var{n2}<=0 along direction @var{dir}.
 @end deftypefn
 
+@deftypefn {MGL command} {} crop dat 'how'
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} Crop (@code{const char *}how=@code{"235x"})
+@deftypefnx {Method on @code{mglDataC}} @code{void} Crop (@code{const char *}how=@code{"235x"})
+@deftypefnx {C function} @code{void} mgl_data_crop_opt (@code{HMDT} dat, @code{const char *}how)
+@deftypefnx {C function} @code{void} mgl_datac_crop_opt (@code{HADT} dat, @code{const char *}how)
+@end ifclear
+Cuts off far edge of the data to be more optimal for fast Fourier transform. The resulting size will be the closest value of 2^n*3^m*5^l to the original one. The string @var{how} may contain: @samp{x}, @samp{y}, @samp{z} for directions, and @samp{2}, @samp{3}, @samp{5} for using corresponding bases.
+@end deftypefn
+
 @anchor{insert}
 @deftypefn {MGL command} {} insert dat 'dir' @code{[pos=off num=0]}
 @ifclear UDAV
@@ -1061,9 +1071,14 @@ Differentiates the data in given direction or directions.
 
 @deftypefn {MGL command} {} diff dat xdat ydat [zdat]
 @ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} Diff (@code{const mglDataA &}x)
 @deftypefnx {Method on @code{mglData}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y)
 @deftypefnx {Method on @code{mglData}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z)
+@deftypefnx {Method on @code{mglDataC}} @code{void} Diff (@code{const mglDataA &}x)
+@deftypefnx {Method on @code{mglDataC}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y)
+@deftypefnx {Method on @code{mglDataC}} @code{void} Diff (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z)
 @deftypefnx {C function} @code{void} mgl_data_diff_par (@code{HMDT} dat, @code{HCDT} x, @code{HCDT}y, @code{HCDT}z)
+@deftypefnx {C function} @code{void} mgl_datac_diff_par (@code{HADT} dat, @code{HCDT} x, @code{HCDT}y, @code{HCDT}z)
 @end ifclear
 Differentiates the data specified parametrically in direction @var{x} with @var{y}, @var{z}=constant. Parametrical differentiation uses the formula (for 2D case): @math{da/dx = (a_j*y_i-a_i*y_j)/(x_j*y_i-x_i*y_j)} where @math{a_i=da/di, a_j=da/dj} denotes usual differentiation along 1st and 2nd dimensions. The similar formula is used for 3D case. Note, that you may change the order of arguments -- for example, if you have 2D data a(i,j) which depend on coordinates @{x(i,j), y(i,j)@} then usual derivative along @samp{x} will be @code{Diff(x,y);} and usual derivative along @samp{y} will be @code{Diff(y,x);}.
 @end deftypefn

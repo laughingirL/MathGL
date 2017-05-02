@@ -168,7 +168,9 @@ int MGL_NO_EXPORT mgls_crop(mglGraph *, long , mglArg *a, const char *k, const c
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
 	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
 	if(d && !strcmp(k,"dnns"))	d->Crop(mgl_int(a[1].v),mgl_int(a[2].v),a[3].s.c_str()[0]);
+	else if(d && !strcmp(k,"ds"))	d->Crop(a[1].s.c_str());
 	else if(c && !strcmp(k,"dnns"))	c->Crop(mgl_int(a[1].v),mgl_int(a[2].v),a[3].s.c_str()[0]);
+	else if(c && !strcmp(k,"ds"))	c->Crop(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1524,7 +1526,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"copy",_("Copy data from another variable"),"copy Dat1 Dat2 ['eq']|ReDat ImDat Cdat|Dat val|Dat 'name'", mgls_copy ,4},
 	{"correl",_("Find correlation between data arrays"), "correl Res Adat Bdat 'dir'", mgls_correl ,4},
 	{"cosfft",_("Cos-Fourier transform at some direction"),"cosfft Dat 'dir'", mgls_cosfft ,16},
-	{"crop",_("Crop edge of data"),"crop Dat n1 n2 'dir'", mgls_crop ,16},
+	{"crop",_("Crop edge of data"),"crop Dat n1 n2 'dir'|Dat 'how'", mgls_crop ,16},
 	{"cumsum",_("Cumulative summation along direction(s)"),"cumsum Dat 'dir'", mgls_cumsum ,16},
 	{"datagrid",_("Fill data by triangulated values"),"datagrid Var Xdat Ydat Zdat", mgls_datagrid ,3},
 	{"datas",_("Print list of data names in HDF file"),"datas 'fname'", mgls_datas ,3},

@@ -1,4 +1,4 @@
-2.4 Released ??? April 2017
+2.4 Released 11 May 2017
 
 * Add mgllab executable, which is FLTK based version of UDAV. Most things mgllab do faster.
 * Add string manipulation in MGL language:
@@ -8,16 +8,16 @@
 * Add time value to MGL language in format: "hh-mm-ss_DD.MM.YYYY" or "hh-mm-ss" or "DD.MM.YYYY".
 * Add 'iris' plot to show cross-dependencies of several data arrays.
 * Add 'flame2d' to draw flame fractals.
-* Add 'symbol' to draw the glyphs defined by 'addsymbol'.
 * Add 'bbox' to set bounding box for 2D output.
 * Add 'section' to get part of data between specified values.
 * Add 'detect' to found curves along data maximums.
 * Add 'dilate' to extend the region of 1-th value.
 * Add 'erode' to narrow the region of 1-th value.
 * Add 'apde' to solve PDE equation in inhomogeneous nonlinear media with spatial dispersion.
+* Add 'symbol' to draw the glyphs defined by 'addsymbol'.
 * Add 'addsymbol' to declare user-defined symbol (or glyph), which can be used as markers for plot (with style '&') or drawn itself by 'symbol' command.
-* Add 'symbol' to draw user-defined symbol (or glyph).
 * Add 'openhdf' to open all data arrays from HDF file.
+* Extend 'crop' to cut to optimal size for FFT (i.e. to closest of 2^n*3^m*5^l).
 * Add function mgl_data_max_first() and data suffixes .m[xyz][fl] to find first/last maximum along direction.
 * Add function mgl_datac_diff_par() to parametric derivative of complex data.
 * Add style 'F' for 'bars' and 'barh' to set fixed bar widths.
@@ -25,6 +25,7 @@
 * Add style '#' for 'region' to draw wired plot.
 * Add possibility of manual shift in 'multiplot'.
 * Add parsing arguments of options for MGL commands.
+* MGL command 'correl' now can perform 2d and 3d correlations.
 * Option 'meshnum' now change the number of drawn markers for 'plot', 'tens', 'step, 'mark' and 'textmark'.
 * Function 'step' handle data with x.nx>y.nx similarly to 'bars'.
 * Extend 'tile' and 'tiles' by adding manual coloring and face orientation.
@@ -38,7 +39,8 @@
 * Update CMake find_package to find MathGL.
 * Increase line width for wired text.
 * Update documentation: add description of new commands, add hint @ref{Mixing bitmap and vector output}.
-* Name 'all' are reserved in MGL scripts now as synonim of -1.
+* Add translation to Russian for most of labels and messages.
+* Name 'all' are reserved in MGL scripts now as synonym of -1.
 
 * INCOMPATIBLE: Replace libmgl-qt by libmgl-qt4 and libmgl-qt5 for resolving conflicts of simultaneously installed both Qt4 and Qt5.
 * Minor bugfixes.

@@ -101,6 +101,10 @@ add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en.html
 )
 add_custom_command(OUTPUT ${MGL_OUT}/mgl_en.html
 	COMMAND ${findth} ${th_opt} --set-customization-variable 'BODYTEXT ' -I ${MGL_OUT} --no-split ${MGL_TEX}/mgl_en.texi
+	# following line bypass FLTK bugs
+	COMMAND sed "'s/&ndash;/-/g'" -i ${MGL_OUT}/mgl_en.html
+	COMMAND sed "'s/&lsquo;/`/g'" -i ${MGL_OUT}/mgl_en.html
+	COMMAND sed "'s/&rsquo;/`/g'" -i ${MGL_OUT}/mgl_en.html
 	DEPENDS ${list_texi_files_en} mgl_en.texi ${MGL_PNG_N}
 	WORKING_DIRECTORY ${MGL_OUT}
 )
@@ -111,6 +115,10 @@ add_custom_command(OUTPUT ${MGL_OUT}/mathgl_ru.html
 )
 add_custom_command(OUTPUT ${MGL_OUT}/mgl_ru.html
 	COMMAND ${findth} ${th_opt} --set-customization-variable 'BODYTEXT ' -I=${MGL_OUT} --no-split ${MGL_TEX}/mgl_ru.texi
+	# following line bypass FLTK bugs
+	COMMAND sed "'s/&ndash;/-/g'" -i ${MGL_OUT}/mgl_ru.html
+	COMMAND sed "'s/&lsquo;/`/g'" -i ${MGL_OUT}/mgl_ru.html
+	COMMAND sed "'s/&rsquo;/`/g'" -i ${MGL_OUT}/mgl_ru.html
 	DEPENDS ${list_texi_files_ru} mgl_ru.texi ${MGL_PNG_N}
 	WORKING_DIRECTORY ${MGL_OUT}
 )

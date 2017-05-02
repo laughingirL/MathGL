@@ -279,6 +279,9 @@ void MGL_EXPORT mgl_datac_mirror_(uintptr_t *dat, const char *dir,int);
 /// Crop the data
 void MGL_EXPORT mgl_datac_crop(HADT dat, long n1, long n2, char dir);
 void MGL_EXPORT mgl_datac_crop_(uintptr_t *dat, int *n1, int *n2, const char *dir,int);
+/// Crop the data to be most optimal for FFT (i.e. to closest value of 2^n*3^m*5^l)
+void MGL_EXPORT mgl_datac_crop_opt(HADT dat, const char *how);
+void MGL_EXPORT mgl_datac_crop_opt_(uintptr_t *dat, const char *how,int);
 
 /// Multiply the data by other one for each element
 void MGL_EXPORT mgl_datac_mul_dat(HADT dat, HCDT d);

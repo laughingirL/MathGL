@@ -165,6 +165,9 @@ using mglDataA::Momentum;
 	/// Crop the data
 	inline void Crop(long n1, long n2,char dir='x')
 	{	mgl_datac_crop(this,n1,n2,dir);	}
+	/// Crop the data to be most optimal for FFT (i.e. to closest value of 2^n*3^m*5^l)
+	inline void Crop(const char *how="235x")
+	{	mgl_datac_crop_opt(this, how);	}
 	/// Insert data
 	inline void Insert(char dir, long at=0, long num=1)
 	{	mgl_datac_insert(this,dir,at,num);	}

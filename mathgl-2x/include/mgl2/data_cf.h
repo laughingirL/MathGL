@@ -445,6 +445,9 @@ void MGL_EXPORT mgl_data_sew_(uintptr_t *dat, const char *dirs, mreal *da, int);
 /// Crop the data
 void MGL_EXPORT mgl_data_crop(HMDT dat, long n1, long n2, char dir);
 void MGL_EXPORT mgl_data_crop_(uintptr_t *dat, int *n1, int *n2, const char *dir,int);
+/// Crop the data to be most optimal for FFT (i.e. to closest value of 2^n*3^m*5^l)
+void MGL_EXPORT mgl_data_crop_opt(HMDT dat, const char *how);
+void MGL_EXPORT mgl_data_crop_opt_(uintptr_t *dat, const char *how,int);
 /// Remove rows with duplicate values in column id
 void MGL_EXPORT mgl_data_clean(HMDT dat, long id);
 void MGL_EXPORT mgl_data_clean_(uintptr_t *dat, int *id);
