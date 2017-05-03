@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-02 21:52+0300\n"
+"POT-Creation-Date: 2017-05-03 10:56+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -187,14 +187,6 @@ msgstr " Сохранить"
 #: mgllab/mgllab.cpp:219
 msgid " Yes "
 msgstr "Да"
-
-#: mgllab/dialogs.cpp:1194
-msgid "##### setup end #####\n"
-msgstr ""
-
-#: mgllab/dialogs.cpp:1194
-msgid "##### setup start #####\n"
-msgstr ""
 
 #: udav/plot_pnl.cpp:191
 #, c-format
@@ -858,7 +850,7 @@ msgstr "Назад"
 #: src/font.cpp:946
 #, c-format
 msgid "Bad '%ls' at %zu\n"
-msgstr ""
+msgstr "Неправильный '%ls' при %zu\n"
 
 #: src/parser.cpp:766
 #, c-format
@@ -2450,7 +2442,12 @@ msgstr "Настройка графика"
 msgid "Graphics/Adjust size"
 msgstr "Графика/Подогнать размер"
 
-#: widgets/fltk.cpp:909
+#. /< Parameter for handling animation
+#. /< Callback function for next frame
+#. /< Callback function for prev frame
+#. /< Callback function for delay
+#. /< Callback function for reloading
+#: widgets/fltk.cpp:909 include/mgl2/Fl_MathGL.h:148
 msgid "Graphics/Alpha"
 msgstr "Графика/Прозрачность"
 
@@ -2466,7 +2463,7 @@ msgstr "Графика/Анимация/Предыдущий"
 msgid "Graphics/Animation/Setup animation"
 msgstr "Графика/Анимация/Настройка"
 
-#: widgets/fltk.cpp:943
+#: widgets/fltk.cpp:943 include/mgl2/Fl_MathGL.h:150
 msgid "Graphics/Animation/Slideshow"
 msgstr "Графика/Анимация/Запустить"
 
@@ -2534,15 +2531,15 @@ msgstr "Графика/Экспорт/как PNG с заливкой"
 msgid "Graphics/Export/as vector EPS"
 msgstr "Графика/Экспорт/как EPS"
 
-#: widgets/fltk.cpp:911
+#: widgets/fltk.cpp:911 include/mgl2/Fl_MathGL.h:151
 msgid "Graphics/Grid"
 msgstr "Графика/Сетка"
 
-#: widgets/fltk.cpp:910
+#: widgets/fltk.cpp:910 include/mgl2/Fl_MathGL.h:149
 msgid "Graphics/Light"
 msgstr "Графика/Освещение"
 
-#: widgets/fltk.cpp:920 mgllab/mgllab.cpp:364
+#: widgets/fltk.cpp:920 include/mgl2/Fl_MathGL.h:157 mgllab/mgllab.cpp:364
 msgid "Graphics/Pause calc"
 msgstr "Графика/Пауза расчета"
 

@@ -474,6 +474,11 @@ As an additional feature, when an image is not found or cannot be included, inst
 Задает вариант аргумента(ов), разделенных символом @samp{?}, для всех последующих комманд.
 @end deftypefn
 
+@deftypefn {Метод класса @code{mglParse}} @code{void} StartID (@code{int} id=@code{0})
+@deftypefnx {Функция С} @code{void} mgl_parser_start_id (@code{HMPR} p, @code{int} id)
+Задает начальный id (обычно это номер строки) первой строки при последующем выполнении скрипта.
+@end deftypefn
+
 
 @deftypefn {Метод класса @code{mglParse}} @code{long} GetCmdNum ()
 @deftypefnx {Функция С} @code{long} mgl_parser_cmd_num (@code{HMPR} p)

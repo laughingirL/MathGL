@@ -1191,7 +1191,7 @@ public:
 		}
 		else
 		{
-			textbuf->insert(0, (_("##### setup start #####\n") + result + _("##### setup end #####\n")).c_str());
+			textbuf->insert(0, ("##### setup start #####\n" + result + "##### setup end #####\n").c_str());
 //			if(e)	e->draw->script="";
 		}
 	}

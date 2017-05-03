@@ -458,10 +458,14 @@ Sends stop signal which terminate execution at next command.
 @end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{void} SetVariant (@code{int} var=@code{0})
-@deftypefnx {C function} @code{void} mgl_parser_variant (@code{HMPR} p, @code{int} var=@code{0})
+@deftypefnx {C function} @code{void} mgl_parser_variant (@code{HMPR} p, @code{int} var)
 Sets variant of argument(s) separated by @samp{?} symbol to be used in further commands.
 @end deftypefn
 
+@deftypefn {Method on @code{mglParse}} @code{void} StartID (@code{int} id=@code{0})
+@deftypefnx {C function} @code{void} mgl_parser_start_id (@code{HMPR} p, @code{int} id)
+Sets id (like, line number) of first line in further script parsing.
+@end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{long} GetCmdNum ()
 @deftypefnx {C function} @code{long} mgl_parser_cmd_num (@code{HMPR} p)

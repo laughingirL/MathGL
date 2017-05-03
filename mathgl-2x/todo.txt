@@ -39,9 +39,7 @@
 7. Add ##d comment(s) -- analogue of 'ask' but update figure after each change ???
 8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
 9. MGLD and new user-defined symbols
-
-
-10. bindtextdomain -- check (1) "/usr/share/locale/", (2) "/usr/local/share/locale/", (3) args[0] with '/', (4) getcwd()
+10. Check legend in EPS/PDF
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -57,15 +55,11 @@ D. Docs about JS interface
 
 2. Sample about PDE -- add 'tridmat' + 'diffract'
 3. Sample about complex 'ode' (like Raman scattering)
-4. Docs about mglParse::StartID
+4. Sample about earth map
+5. Sample about 'erode' and 'dilate'
 6. Sample about 'flame2d'
-9. Sample about 'detect'
-10. Docs about 'apde'
-11. Sample about earth map
-17. Sample about 'section'
-22. Sample about 'erode' and 'dilate'
-21. Docs about mgl_datac_diff_par()
-22. Update docs about Fl_MathGL
+7. Sample about 'detect'
+8. Sample about 'section'
 
 26. Update installation (dll from mgl_script + Qt plugins/ + Win10)
 
@@ -80,11 +74,12 @@ ZZ. Update time.texi {before release!!!}
 
 ============= mgllab ===========
 
-*. Manual data changing should be written into script ?!?
-
+* Manual data changing should be written into script ?!?
 * Check: "You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."
-
 * Hint about string manipulation
+* Highlight positive -- red, negative -- blue, peaks by orange and lime
+* Progress bar for external loop ?!!
+* 1d view -- over longer size + y-size for current slice only
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???
