@@ -98,7 +98,7 @@ void mglCanvas::pxl_pntcol(long id, long n, const void *)
 #pragma omp parallel for
 #endif
 	for(long i=id;i<n;i+=mglNumThr)
-	{	mglRGBA c;	col2int(Pnt[i],c.r,-1);	pnt_col[i]=c.c;	}
+	{	mglRGBA c;	col2int(Pnt[i],c.r,HighId-1);	pnt_col[i]=c.c;	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_setz(long id, long n, const void *)
