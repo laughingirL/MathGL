@@ -876,6 +876,8 @@ TableWindow::TableWindow(ScriptWindow *e)
 	data->col_header(1);	data->col_header_height(25);
 	data->col_resize(1);	data->cols(1);
 	data->col_width_all(80);
+	data->tooltip(_("Colors denote values: magenta - local max, cyan - local min,\n"
+	"\tred - Re(v)>0, blue - Re(v)<0, purple - Im(v)>0, teal - Im(v)<0."));
 
 	w->end();	w->resizable(data);
 }

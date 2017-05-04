@@ -126,7 +126,7 @@ void mglCanvas::line_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, con
 	else if(u>dd)	v += (u-dd)*(u-dd);
 	float pw=dr->PenWidth, dpw=3*pen_delta;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2*pen_delta;	}
-	if(v>pw*pw || !(dr->PDef & ( (uint64_t)1<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	return;
+	if(v>pw*pw || !(dr->PDef & ( (uint64_t)1<<long(fmod(dr->pPos+u/pw, 16)) ) ))	return;
 	mglPnt p(p1+d*(u/dd));
 	unsigned char r[4];
 	col2int(p,r,dr->ObjId);

@@ -552,7 +552,7 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 			if(u<0)			v += u*u;
 			else if(u>dd)	v += (u-dd)*(u-dd);
 //			if(v>pw*pw)		continue;
-			if(!(pd & ((uint64_t)1<<long(fmod(pp+u/pw/1.5, 16)) ) ))	continue;
+			if(!(pd & ((uint64_t)1<<long(fmod(pp+u/pw, 16)) ) ))	continue;
 			mglPnt p(p1+d*(u/dd));	col2int(p,r,oi);
 			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
 			pnt_plot(i,j,p.z+dz,r,oi);
@@ -572,7 +572,7 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 			if(u<0)			v += u*u;
 			else if(u>dd)	v += (u-dd)*(u-dd);
 //			if(v>pw*pw)		continue;
-			if(!(pd & ((uint64_t)1<<long(fmod(pp+u/pw/1.5, 16)))))		continue;
+			if(!(pd & ((uint64_t)1<<long(fmod(pp+u/pw, 16)))))		continue;
 			mglPnt p(p1+d*(u/dd));	col2int(p,r,oi);
 			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
 			pnt_plot(i,j,p.z+dz,r,oi);

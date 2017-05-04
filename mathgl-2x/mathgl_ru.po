@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-03 10:56+0300\n"
+"POT-Creation-Date: 2017-05-04 17:10+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -912,7 +912,7 @@ msgstr "По формуле"
 #. R
 #: udav/style_dlg.cpp:240 mgllab/dialogs.cpp:48
 msgid "C - teal"
-msgstr "C - темно-голубой"
+msgstr "C - бирюзовый"
 
 #: udav/setup_dlg.cpp:51 mgllab/dialogs.cpp:989
 msgid "C axis"
@@ -1048,6 +1048,13 @@ msgstr "Цвет(а) или цветовая схема"
 #: mgllab/dialogs.cpp:1002
 msgid "Colors"
 msgstr "Цвета"
+
+#: mgllab/table.cpp:879
+msgid ""
+"Colors denote values: magenta - local max, cyan - local min,\n"
+"\tred - Re(v)>0, blue - Re(v)<0, purple - Im(v)>0, teal - Im(v)<0."
+msgstr "Цветом выделены значения: фуксия - лок.максимум, голубой - лок.минимум,\n"
+"\tкрасный - Re(v)>0, синий - Re(v)<0, пурпурный - Im(v)>0, бирюзовый - Im(v)<0."
 
 #: mgllab/dialogs.cpp:577
 msgid "Column expr"

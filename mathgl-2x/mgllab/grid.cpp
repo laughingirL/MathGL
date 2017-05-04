@@ -63,10 +63,25 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_pop_clip();
 		fl_push_clip(X+3, Y+3, W-6, H-6);
 		fl_font(FL_HELVETICA, 14);
-		fl_color(FL_BLACK);
 		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
 		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
 		else	strncpy(s,mgl_str_num(data->vc(C,R,sl)).c_str(),64);
+		{	dual vc = data->vc(C,R,sl);
+			mreal v = data->v(C,R,sl);
+			std::vector<mreal> vn;
+			if(C>0)	vn.push_back(data->v(C-1,R,sl));
+			if(R>0)	vn.push_back(data->v(C,R-1,sl));
+			if(C<data->GetNx()-1)	vn.push_back(data->v(C+1,R,sl));
+			if(R<data->GetNy()-1)	vn.push_back(data->v(C,R+1,sl));
+			bool v1=true, v2=true;
+			for(size_t i=0;i<vn.size();i++)	{	if(vn[i]<v)	v1=false;	if(vn[i]>v)	v2=false;	}
+			if(v2)	fl_color(FL_MAGENTA);
+			else if(v1)	fl_color(FL_CYAN);
+			else if(real(vc)>0)		fl_color(FL_RED);
+			else if(real(vc)<0)	fl_color(FL_BLUE);
+			else if(imag(vc)>0)	fl_color(FL_DARK_MAGENTA);
+			else if(imag(vc)<0)	fl_color(FL_DARK_CYAN);
+			else	fl_color(FL_BLACK);	}
 		fl_draw(s, X+3, Y+3, W-6, H-6, FL_ALIGN_RIGHT);
 		break;
 	case CONTEXT_RC_RESIZE:

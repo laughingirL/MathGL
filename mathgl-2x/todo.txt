@@ -77,7 +77,6 @@ ZZ. Update time.texi {before release!!!}
 * Manual data changing should be written into script ?!?
 * Check: "You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."
 * Hint about string manipulation
-* Highlight positive -- red, negative -- blue, peaks by orange and lime
 * Progress bar for external loop ?!!
 * 1d view -- over longer size + y-size for current slice only
 

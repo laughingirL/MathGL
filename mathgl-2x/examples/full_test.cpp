@@ -536,6 +536,7 @@ fflush(stdout);
 			else	s->func(gr);
 			save(gr, s->name, suf);
 			printf("%s ",s->name);	fflush(stdout);	s++;
+			gr->SetQuality(quality);
 		}
 		printf("\n");
 	}
