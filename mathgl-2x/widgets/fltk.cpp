@@ -21,7 +21,6 @@
 #include <FL/fl_ask.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
-#include <FL/Fl_Copy_Surface.H>
 #include <FL/Fl_Native_File_Chooser.H>
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
@@ -762,6 +761,8 @@ void copy_coor_cb(Fl_Widget *,void *v)
 	Fl::copy(buf,strlen(buf),1);
 }
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_FL_COPY
+#include <FL/Fl_Copy_Surface.H>
 void mgl_copyimg_cb(Fl_Widget *,void *v)
 {
 	Fl_MathGL *g = ((Fl_MGLView*)v)->FMGL;
@@ -772,6 +773,9 @@ void mgl_copyimg_cb(Fl_Widget *,void *v)
 	delete copy_surf;									// after this, the clipboard is loaded
 	Fl_Display_Device::display_device()->set_current();	// direct graphics requests back to the display
 }
+#else
+void mgl_copyimg_cb(Fl_Widget *,void *v)	{}
+#endif
 //-----------------------------------------------------------------------------
 Fl_Menu_Item pop_graph[] = {
 	{ _("Export as ..."), 0, mgl_no_cb, 0, FL_SUBMENU},

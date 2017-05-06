@@ -546,6 +546,12 @@ if(enable-fltk)
 	FIND_PACKAGE(FLTK)
 	if(NOT FLTK_FOUND)
 		message(SEND_ERROR "Couldn't find FLTK library.")
+		set(MGL_HAVE_FL_COPY 0)
+	else(NOT FLTK_FOUND)
+		include_directories(${FLTK_INCLUDE_DIR})
+		CHECK_CXX_SOURCE_COMPILES(
+		"#include <FL/Fl_Copy_Surface.H>
+		int main(){return 0;}" MGL_HAVE_FL_COPY)
 	endif(NOT FLTK_FOUND)
 else(enable-fltk)
 	set(MGL_HAVE_FLTK 0)

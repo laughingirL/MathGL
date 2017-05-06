@@ -640,8 +640,8 @@ std::vector<mglPointB> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &a1, const m
 		y1=mgl_d(0, p2.y-p1.y, q2.y-q1.y);	if(y1>0 && y1<1)	dd.push_back(y1);
 		z1=mgl_d(0, p2.z-p1.z, q2.z-q1.z);	if(z1>0 && z1<1)	dd.push_back(z1);
 		std::sort(dd.begin(),dd.end());
-		for(size_t i=0;i<dd.size();i++)
-			out.push_back(mglPointB(p1+dd[i]*(q1-p1), p2+dd[i]*(q2-p2), false));
+		for(size_t j=0;j<dd.size();j++)
+			out.push_back(mglPointB(p1+dd[j]*(q1-p1), p2+dd[j]*(q2-p2), false));
 		if((d11<1 && d12>=1) || (d21<1 && d22>=1))	out.push_back(mglPointB(q1,q2,true));
 		else if(i==n-1)	out.push_back(mglPointB(mglPoint(NAN),mglPoint(NAN),true));
 		p1 = q1;	p2 = q2;

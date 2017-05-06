@@ -954,8 +954,10 @@ bool MGL_NO_EXPORT test_transl(const char *p)
 	FILE *fp = fopen(f.c_str(),"r");
 	if(fp)
 	{
+#if MGL_USE_GETTEXT
 		bindtextdomain("mathgl", p);
 		textdomain("mathgl");
+#endif
 		fclose(fp);	return true;
 	}
 	return false;
@@ -963,16 +965,16 @@ bool MGL_NO_EXPORT test_transl(const char *p)
 void MGL_EXPORT mgl_textdomain(const char *argv0)
 {
 	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
-	#if MGL_USE_GETTEXT
+#if MGL_USE_GETTEXT
 	if(!test_transl(MGL_INSTALL_DIR"/share/locale/"))
 		if(!test_transl("/usr/share/locale/"))
 			if(!test_transl("/usr/local/share/locale/"))
 				if(!test_transl(getcwd(NULL,0)))
 				{
 					const char *f = argv0?strrchr(argv0,'/'):NULL;
-					#ifdef WIN32
+#ifdef WIN32
 					if(!f)	f = argv0?strrchr(argv0,'\\'):NULL;
-					#endif
+#endif
 					if(f)
 					{
 						std::string p(argv0,f-argv0);
@@ -981,7 +983,7 @@ void MGL_EXPORT mgl_textdomain(const char *argv0)
 					}
 					else	return;
 				}
-				#endif
+#endif
 }
 void MGL_EXPORT mgl_textdomain_()	{	mgl_textdomain(NULL);	}
 //---------------------------------------------------------------------------
