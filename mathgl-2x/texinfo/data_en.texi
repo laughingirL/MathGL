@@ -1846,7 +1846,7 @@ Computes @var{num} points @{x[i]=res[0,i], y[i]=res[1,i]@} for fractal using ite
 x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[4,i];
 y[i+1] = dat[2,i]*x[i] + dat[3,i]*y[i] + dat[5,i];
 @end verbatim
-Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 7. @sref{IFS sample}
+Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 7. @sref{Fractal sample}
 @end deftypefn
 
 @anchor{ifs3d}
@@ -1859,9 +1859,9 @@ Computes @var{num} points @{x[i]=res[0,i], y[i]=res[1,i], z[i]=res[2,i]@} for fr
 @verbatim
 x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[2,i]*z[i] + dat[9,i];
 y[i+1] = dat[3,i]*x[i] + dat[4,i]*y[i] + dat[5,i]*z[i] + dat[10,i];
-z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[10,i];
+z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[11,i];
 @end verbatim
-Value @code{dat[12,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 13. @sref{IFS sample}
+Value @code{dat[12,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 13. @sref{Fractal sample}
 @end deftypefn
 
 @anchor{ifsfile}
@@ -1925,7 +1925,7 @@ The possible function ids are: @code{mglFlame2d_linear=0,	mglFlame2d_sinusoidal,
 	mglFlame2d_cos,			mglFlame2d_tan,			mglFlame2d_sec,			mglFlame2d_csc,			mglFlame2d_cot,
 	mglFlame2d_sinh,		mglFlame2d_cosh,		mglFlame2d_tanh,		mglFlame2d_sech,		mglFlame2d_csch,
 	mglFlame2d_coth,		mglFlame2d_auger,		mglFlame2d_flux.}
-Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Sizes of data arrays must be: @var{dat}.nx>=7, @var{func}.nx>=2 and @var{func}.nz=@var{dat}.ny. @c TODO @sref{Flame sample}
+Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Sizes of data arrays must be: @var{dat}.nx>=7, @var{func}.nx>=2 and @var{func}.nz=@var{dat}.ny.  @sref{Fractal sample}
 @end deftypefn
 
 

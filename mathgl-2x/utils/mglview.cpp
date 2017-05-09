@@ -21,8 +21,13 @@
 #include <getopt.h>
 
 #include "mgl2/mgl.h"
-#include "mgl2/qt.h"
-#include "mgl2/parser.h"
+#if USE_FLTK
+	#include "mgl2/fltk.h"
+	#include <Fl/Fl.H>
+	#include <Fl/Fl_Preferences.H>
+#else
+	#include "mgl2/qt.h"
+#endif
 //-----------------------------------------------------------------------------
 std::wstring str, opt;
 mglParse p(true);
@@ -92,9 +97,17 @@ int main(int argc, char **argv)
 		else	{	printf("No file for MGL script\n");	return 0;	}
 	}
 
-	//mgl_ask_func = mgl_ask_gets;
+#if USE_FLTK
+	mgl_ask_func = mgl_ask_fltk;
+	Fl_Preferences pref(Fl_Preferences::USER,"abalakin","mgllab");
+	static const char *sch[4]={"base","gtk+","plastic","gleam"};
+	int scheme;	pref.get("scheme",scheme,2);
+	Fl::scheme(sch[scheme]);
+	mglFLTK gr(mgld?NULL:show, *iname?iname:"mglview");
+#else
 	mgl_ask_func = mgl_ask_qt;
 	mglQT gr(mgld?NULL:show, *iname?iname:"mglview");
+#endif
 	if(gray)	gr.Gray(gray);
 
 	if(mgld)

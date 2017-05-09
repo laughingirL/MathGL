@@ -216,7 +216,7 @@ void ScriptWindow::mem_init()
 	for(long i=0;i<Parse->GetNumConst();i++)
 	{
 		mglNum *v = Parse->GetConst(i);
-		snprintf(str,128,"%ls\t%s\t%lu b", v->s.c_str(), ("const="+mgl_str_num(v->c)).c_str(), sizeof(mglNum));
+		snprintf(str,128,"%ls\t%s\t%zu b", v->s.c_str(), ("const="+mgl_str_num(v->c)).c_str(), sizeof(mglNum));
 		var->add(str,v);
 	}
 }

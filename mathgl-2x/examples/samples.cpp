@@ -2951,7 +2951,7 @@ void smgl_diffract(mglGraph *gr)
 
 	// tridmat periodic variant
 	mglDataC a(n), b(n);	a = dual(0,dt*n*n/8);
-	for(long i=0;i<n;i++)	b.a[i] = 1.-2.*a.a[i];
+	for(long i=0;i<n;i++)	b.a[i] = mreal(1)-mreal(2)*a.a[i];
 	mglDataC u(n);	gr->Fill(u,"exp(-6*x^2)");	res.Put(u,-1,0);
 	for(long i=0;i<m;i++)
 	{
@@ -2996,8 +2996,33 @@ void smgl_diffract(mglGraph *gr)
 	gr->Axis();	gr->Box();	gr->Dens(res);
 }
 //-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
+const char *mmgl_earth="import dat 'Equirectangular-projection.jpg' 'BbGYw' -1 1\n"
+"subplot 1 1 0 '<>':title 'Earth in 3D':rotate 40 60\n"
+"copy phi dat 'pi*x':copy tet dat 'pi*y/2'\n"
+"copy x cos(tet)*cos(phi)\ncopy y cos(tet)*sin(phi)\ncopy z sin(tet)\n\n"
+"light on\nsurfc x y z dat 'BbGYw'\ncontp [-0.5,-0.5] x y z dat 'y'";
+void smgl_earth(mglGraph *gr)
+{
+	mglData dat;	dat.Import("Equirectangular-projection.jpg","BbGYw",-1,1);
+	// Calc proper 3d coordinates from projection
+	mglData phi(dat.nx,dat.ny);	phi.Fill(-M_PI,M_PI);
+	mglData tet(dat.nx,dat.ny);	tet.Fill(-M_PI/2,M_PI/2,'y');
+	mglData x(dat.nx,dat.ny), y(dat.nx,dat.ny), z(dat.nx,dat.ny);
+#pragma omp parallel for
+	for(long i=0;i<dat.nx*dat.ny;i++)
+	{	x.a[i] = cos(tet.a[i])*cos(phi.a[i]);
+		y.a[i] = cos(tet.a[i])*sin(phi.a[i]);
+		z.a[i] = sin(tet.a[i]);	}
 
+	gr->SubPlot(1,1,0,"<>");
+	if(big!=3)	gr->Title("Earth in 3D");
+	gr->Rotate(40,60);	gr->Light(true);
+	gr->SurfC(x,y,z,dat,"BbGYw");
+	mglData vals(2);	vals.a[0]=-0.5;
+	gr->ContP(vals, x,y,z,dat,"y");
+}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 mglSample samp[] = {
 	{"3wave", smgl_3wave, mmgl_3wave},
 	{"alpha", smgl_alpha, mmgl_alpha},
@@ -3043,6 +3068,7 @@ mglSample samp[] = {
 	{"diffract", smgl_diffract, mmgl_diffract},
 	{"dilate", smgl_dilate, mmgl_dilate},
 	{"dots", smgl_dots, mmgl_dots},
+	{"earth", smgl_earth, mmgl_earth},
 	{"error", smgl_error, mmgl_error},
 	{"error2", smgl_error2, mmgl_error2},
 	{"export", smgl_export, mmgl_export},

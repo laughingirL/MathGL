@@ -21,6 +21,7 @@
 #include <locale.h>
 #include <time.h>
 #include <getopt.h>
+#include <unistd.h>
 
 #include "mgl2/mgl.h"
 #include "mgl2/font.h"
@@ -64,16 +65,6 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	std::string str="rec 0 1.1 2 3 'r'";
-	std::vector<std::string> args = mgl_str_args(str,' ');
-	for(size_t i=0;i<args.size();i++)
-		printf("i=%lu: '%s'\t'%s'\n",i, args[i].c_str(), mgl_str_arg(str,' ',i).c_str());
-	for(size_t i=0;i<args.size();i++)
-		printf("Begin i=%lu: '%s'\n",i, mgl_str_arg(str,' ',0,i).c_str());
-	for(size_t i=0;i<args.size();i++)
-		printf("End i=%lu: '%s'\n",i, mgl_str_arg(str,' ',i,100).c_str());
-
-	return;
 	mglParse par;
 	par.Execute(gr,"text 0 -0.2 'abcde'\ntext 0 0 'abcde'[2]\n"
 	"text 0 0.2 'abcde'+2\ntext 0 0.4 'abcde',2\ntext 0 0.6 'abcde',2,'k'"

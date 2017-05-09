@@ -38,6 +38,7 @@ int auto_exec;
 int exec_save;
 int highlight;
 int mouse_zoom;
+int use_thr;
 int complete_word;
 std::string docdir;
 std::string helpname;
@@ -74,6 +75,7 @@ void save_pref()
 	pref.set("exec_save",exec_save);
 	pref.set("highlight",highlight);
 	pref.set("mouse_zoom",mouse_zoom);
+	pref.set("use_thr", use_thr);
 	pref.set("font_kind",font_kind);
 	pref.set("font_size",font_size);
 	pref.set("complete_word",complete_word);
@@ -96,12 +98,14 @@ void load_pref(ScriptWindow *w)
 	pref.get("exec_save",exec_save,1);
 	pref.get("highlight",highlight,1);
 	pref.get("mouse_zoom",mouse_zoom,0);
+	pref.get("use_thr",use_thr,1);
 	pref.get("complete_word",complete_word,1);
 	pref.get("font_kind",font_kind,1);
 	pref.get("font_size",font_size,14);
 	set_style(font_kind, font_size);
 	pref.get("font_name",s,"");
 	if(s)	{	fontname=s;	free(s);	}
+	w->graph->FMGL->use_pthr = use_thr;
 	if(w && w->graph)
 		mgl_load_font(w->graph->get_graph(),fontname.c_str(),NULL);
 	pref.get("fname1",s,"");	if(s)	{	lastfiles[0]=s;	free(s);	}
@@ -442,6 +446,7 @@ class PropDlg : public GeneralDlg
 	Fl_Check_Button *complete_w;
 	Fl_Check_Button *highlight_w;
 	Fl_Check_Button *mouse_zoom_w;
+	Fl_Check_Button *use_thr_w;
 	Fl_Choice *lang_w;
 	Fl_Choice *scheme_w;
 public:
@@ -449,7 +454,7 @@ public:
 	PropDlg() : GeneralDlg()
 	{
 		Fl_Button *o;
-		w = new Fl_Double_Window(340, 365, _("Properties"));
+		w = new Fl_Double_Window(340, 390, _("Properties"));
 		w->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
 		fkind = new Fl_Choice(75, 10, 90, 25, _("Font kind"));
 		fkind->add("Helvetica");	fkind->add("Courier");	fkind->add("Times");
@@ -465,12 +470,13 @@ public:
 		complete_w = new Fl_Check_Button(5, 195, 330, 25, _("Enable keywords completion"));
 		highlight_w = new Fl_Check_Button(5, 220, 330, 25, _("Highlight current object(s)"));
 		mouse_zoom_w = new Fl_Check_Button(5, 245, 330, 25, _("Enable mouse wheel for zooming"));
-		lang_w = new Fl_Choice(160, 275, 175, 25, _("Language for mgllab"));
+		use_thr_w = new Fl_Check_Button(5, 270, 330, 25, _("Use multi-threading for drawing"));
+		lang_w = new Fl_Choice(160, 300, 175, 25, _("Language for mgllab"));
 		lang_w->add("C.UTF8");	lang_w->add("ru_RU.utf8");	lang_w->add("ru_RU.cp1251");
-		scheme_w = new Fl_Choice(160, 305, 175, 25, _("Widget scheme"));
+		scheme_w = new Fl_Choice(160, 330, 175, 25, _("Widget scheme"));
 		scheme_w->add("base");	scheme_w->add("gtk+");	scheme_w->add("plastic");	scheme_w->add("gleam");
-		o = new Fl_Button(85, 340, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
-		o = new Fl_Return_Button(180, 340, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
+		o = new Fl_Button(85, 360, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);
+		o = new Fl_Return_Button(180, 360, 75, 25, _("OK"));	o->callback(cb_dlg_ok,this);
 		w->set_modal();	w->end();
 	}
 	void init()
@@ -484,6 +490,7 @@ public:
 		complete_w->value(complete_word);
 		highlight_w->value(highlight);
 		mouse_zoom_w->value(mouse_zoom);
+		use_thr_w->value(use_thr);
 		lang_w->value(lang);
 		scheme_w->value(scheme);
 	}
@@ -495,6 +502,7 @@ public:
 		highlight = highlight_w->value();
 		mouse_zoom = mouse_zoom_w->value();
 		complete_word = complete_w->value();
+		use_thr = use_thr_w->value();
 		docdir = help_path->value();
 		fontname = font_path->value();
 		if(e->graph->get_graph())

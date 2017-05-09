@@ -532,7 +532,9 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	w->editor->textfont(FL_COURIER);
 	w->editor->buffer(textbuf);
 	w->editor->highlight_data(stylebuf, styletable, sizeof(styletable) / sizeof(styletable[0]), 'A', style_unfinished_cb, 0);
+#if MGL_HAVE_FL_COPY
 	w->editor->linenumber_width(30);
+#endif
 //	w->editor->when(FL_WHEN_RELEASE_ALWAYS);	w->editor->callback(cb_descr,w);
 
 	textbuf->add_modify_callback(changed_cb, w);

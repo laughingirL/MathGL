@@ -454,7 +454,7 @@ public:
 		{
 			unsigned long mask=0;
 			for(int i=0;i<16;i++)	if(dash_m[i]->value())	mask += 1<<i;
-			char buf[128];	snprintf(buf,128,"{d%lX}",mask);
+			char buf[128];	snprintf(buf,128,"{d%lX}",mask);	// TODO: %llX in 32bit!
 			result += buf;
 		}
 		else if(dsh!='-')	result += dsh;

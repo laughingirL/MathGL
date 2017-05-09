@@ -20,6 +20,7 @@
 #include <locale.h>
 #include <ctype.h>
 #include <wctype.h>
+#include <unistd.h>
 
 #if !defined(__BORLANDC__) || (__CODEGEARC__ >=  0x0630)
 #include <algorithm>
@@ -950,6 +951,7 @@ long MGL_EXPORT mgl_check_tex_table()
 //---------------------------------------------------------------------------
 bool MGL_NO_EXPORT test_transl(const char *p)
 {
+#if MGL_USE_GETTEXT
 	std::string f = std::string(p) + "/ru/LC_MESSAGES/mathgl.mo";
 	FILE *fp = fopen(f.c_str(),"r");
 	if(fp)
@@ -960,6 +962,7 @@ bool MGL_NO_EXPORT test_transl(const char *p)
 #endif
 		fclose(fp);	return true;
 	}
+#endif
 	return false;
 }
 void MGL_EXPORT mgl_textdomain(const char *argv0)

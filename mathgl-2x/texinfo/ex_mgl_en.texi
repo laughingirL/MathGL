@@ -1894,7 +1894,7 @@ Basically, you can put this text after the script. Note, that you need to termin
 * ContF projection sample::
 * TriPlot and QuadPlot::
 * Dots sample::
-* IFS sample::
+* Fractal sample::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -2126,7 +2126,7 @@ tricont t xt yt zt 'B'
 
 @c ------------------------------------------------------------------
 @external{}
-@node Dots sample, IFS sample, TriPlot and QuadPlot, 3D samples
+@node Dots sample, Fractal sample, TriPlot and QuadPlot, 3D samples
 @subsection Dots sample
 @nav{}
 
@@ -2150,8 +2150,8 @@ box:tens x y z x ' .'
 
 @c ------------------------------------------------------------------
 @external{}
-@node IFS sample, , Dots sample, 3D samples
-@subsection IFS sample
+@node Fractal sample, , Dots sample, 3D samples
+@subsection Fractal sample
 @nav{}
 
 Commands @ref{ifs2d} and @ref{ifs3d} generate points for fractals using iterated function system in 2d and 3d cases correspondingly. The sample codes are:
@@ -2177,6 +2177,22 @@ dots f(0) f(1) f(2) 'G#o';size 0.05
 
 @pfig{ifs3d, Example of IFS fractal (3d case).}
 
+
+Command @ref{flame2d} generate points for flame fractals in 2d case. The sample codes are:
+@verbatim
+list A [0.33,0,0,0.33,0,0,0.2] [0.33,0,0,0.33,0.67,0,0.2] [0.33,0,0,0.33,0.33,0.33,0.2]\
+        [0.33,0,0,0.33,0,0.67,0.2] [0.33,0,0,0.33,0.67,0.67,0.2]
+new B 2 3 A.ny '0.3'
+put B 3 0 0 -1
+put B 3 0 1 -1
+put B 3 0 2 -1
+flame2d fx fy A B 1000000
+subplot 1 1 0 '<_':title 'Flame2d sample'
+ranges fx fy:box:axis
+plot fx fy 'r#o ';size 0.05
+@end verbatim
+
+@pfig{flame2d, Example of flame fractal (2d case).}
 
 
 @c ------------------------------------------------------------------
@@ -2876,7 +2892,7 @@ text 0 0.95 'Equation: ik_0\partial_zu + \Delta u + x\cdot u +\
 
 @pfig{pde, Example of PDE solving.}
 
-The last example is example of beam tracing. Beam tracing equation is special kind of PDE equation written in coordinates accompanied to a ray. Generally this is the same parameters and limitation as for PDE solving but the coordinates are defined by the ray and by parameter of grid width @var{w} in direction transverse the ray. So, you don't need to specify the range of coordinates. @strong{BUT} there is limitation. The accompanied coordinates are well defined only for smooth enough rays, i.e. then the ray curvature @math{K} (which is defined as @math{1/K^2 = (|r''|^2 |r'|^2 - (r'', r'')^2)/|r'|^6}) is much large then the grid width: @math{K>>w}. So, you may receive incorrect results if this condition will be broken.
+The next example is example of beam tracing. Beam tracing equation is special kind of PDE equation written in coordinates accompanied to a ray. Generally this is the same parameters and limitation as for PDE solving but the coordinates are defined by the ray and by parameter of grid width @var{w} in direction transverse the ray. So, you don't need to specify the range of coordinates. @strong{BUT} there is limitation. The accompanied coordinates are well defined only for smooth enough rays, i.e. then the ray curvature @math{K} (which is defined as @math{1/K^2 = (|r''|^2 |r'|^2 - (r'', r'')^2)/|r'|^6}) is much large then the grid width: @math{K>>w}. So, you may receive incorrect results if this condition will be broken.
 
 You may use following code for obtaining the same solution as in previous example:
 @verbatim
@@ -2894,6 +2910,26 @@ text 0.7 -0.05 'central ray'
 
 @pfig{qo2d, Example of beam tracing.}
 
+Note, the @ref{pde} is fast enough and suitable for many cases routine. However, there is situations then media have both together: strong spatial dispersion and spatial inhomogeneity. In this, case the @ref{pde} will produce incorrect result and you need to use advanced PDE solver @ref{apde}. For example, a wave beam, propagated in plasma, described by Hamiltonian @math{exp(-x^2-p^2)}, will have different solution for using of simplification and advanced PDE solver:
+@verbatim
+ranges -1 1 0 2 0 2
+new ar 256 'exp(-2*(x+0.0)^2)':new ai 256
+
+apde res1 'exp(-x^2-p^2)' ar ai 0.01:transpose res1
+subplot 1 2 0 '_':title 'Advanced PDE solver'
+ranges 0 2 -1 1:crange res1
+dens res1:box                                                                     
+axis:xlabel '\i z':ylabel '\i x'                                                  
+text -0.5 0.2 'i\partial_z\i u = exp(-\i x^2+\partial_x^2)[\i u]' 'y'             
+                                                                                  
+pde res2 'exp(-x^2-p^2)' ar ai 0.01
+subplot 1 2 1 '_':title 'Simplified PDE solver'                                   
+dens res2:box                                                                     
+axis:xlabel '\i z':ylabel '\i x'                                                  
+text -0.5 0.2 'i\partial_z\i u \approx\ exp(-\i x^2)\i u+exp(\partial_x^2)[\i u]' 'y'
+@end verbatim
+
+@pfig{apde, Comparison of simplified and advanced PDE solvers.}
 
 @c ------------------------------------------------------------------
 @external{}

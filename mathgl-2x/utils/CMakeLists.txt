@@ -24,19 +24,31 @@ install(
 
 mgl_po_src(mglconv.cpp mglview.cpp mglcgi.cpp)
 
-if(QT_ENABLED)
+if(MGL_HAVE_FLTK)
+	add_definitions(-DUSE_FLTK)
 	add_executable(mglview mglview.cpp)
-	if(enable-qt5)
-		include(../cmake-qt5.txt)
-		target_link_libraries(mglview mgl-qt5${link_type} ${getopt_lib-static} ${MGL_QT5_LIBS})
-	else(enable-qt5)
-		include(../cmake-qt4.txt)
-		target_link_libraries(mglview mgl-qt4${link_type} ${getopt_lib-static} ${MGL_QT4_LIBS})
-	endif(enable-qt5)
-
+	target_link_libraries(mglview mgl-fltk ${getopt_lib-static} ${FLTK_LIBRARIES})
 	install(
 		TARGETS mglview
 		EXPORT MathGLTargets
 		RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
 	)
-endif(QT_ENABLED)
+
+else(MGL_HAVE_FLTK)
+	if(QT_ENABLED)
+		add_executable(mglview mglview.cpp)
+		if(enable-qt5)
+			include(../cmake-qt5.txt)
+			target_link_libraries(mglview mgl-qt5${link_type} ${getopt_lib-static} ${MGL_QT5_LIBS})
+		else(enable-qt5)
+			include(../cmake-qt4.txt)
+			target_link_libraries(mglview mgl-qt4${link_type} ${getopt_lib-static} ${MGL_QT4_LIBS})
+		endif(enable-qt5)
+
+		install(
+			TARGETS mglview
+			EXPORT MathGLTargets
+			RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
+		)
+	endif(QT_ENABLED)
+endif(MGL_HAVE_FLTK)

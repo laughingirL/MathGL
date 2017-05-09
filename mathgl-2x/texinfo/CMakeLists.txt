@@ -12,7 +12,7 @@ set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 	torus traj triangulation triplot tube type0 type1 type2 vect vecta venn
 	projection5 mask correl refill ohlc ode indirect
 	pulse scanfile bifurcation lamerey pmap ifs2d ifs3d
-	flame2d detect dilate iris section apde )
+	flame2d detect dilate iris section apde earth )
 set(MGL_PNG_N )
 set(MGL_PNG_S )
 set(MGL_PNG_J )
@@ -31,6 +31,10 @@ file(COPY ${CMAKE_SOURCE_DIR}/examples/iris.dat DESTINATION ${MGL_OUT}/png)
 file(COPY ${CMAKE_SOURCE_DIR}/examples/iris.dat DESTINATION ${MGL_OUT}/small)
 file(COPY ${CMAKE_SOURCE_DIR}/examples/iris.dat DESTINATION ${MGL_OUT}/json)
 file(COPY ${CMAKE_SOURCE_DIR}/examples/iris.dat DESTINATION ${MGL_OUT}/pdf)
+file(COPY ${CMAKE_SOURCE_DIR}/examples/Equirectangular-projection.jpg DESTINATION ${MGL_OUT}/png)
+file(COPY ${CMAKE_SOURCE_DIR}/examples/Equirectangular-projection.jpg DESTINATION ${MGL_OUT}/small)
+file(COPY ${CMAKE_SOURCE_DIR}/examples/Equirectangular-projection.jpg DESTINATION ${MGL_OUT}/json)
+file(COPY ${CMAKE_SOURCE_DIR}/examples/Equirectangular-projection.jpg DESTINATION ${MGL_OUT}/pdf)
 
 set(UDAV_IMG udav_arg.png udav_calc.png udav_cmd.png udav_data.png udav_mask.png
 	udav_gen_set.png udav_help.png udav_light.png udav_main.png udav_opt.png udav_inplot.png

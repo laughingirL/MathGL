@@ -1827,7 +1827,7 @@ These functions change the data in some direction like differentiations, integra
 x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[4,i];
 y[i+1] = dat[2,i]*x[i] + dat[3,i]*y[i] + dat[5,i];
 @end verbatim
-Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 7. @sref{IFS sample}
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 7. @sref{Fractal sample}
 @end deftypefn
 
 @anchor{ifs3d}
@@ -1840,9 +1840,9 @@ y[i+1] = dat[2,i]*x[i] + dat[3,i]*y[i] + dat[5,i];
 @verbatim
 x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[2,i]*z[i] + dat[9,i];
 y[i+1] = dat[3,i]*x[i] + dat[4,i]*y[i] + dat[5,i]*z[i] + dat[10,i];
-z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[10,i];
+z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[11,i];
 @end verbatim
-Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 13. @sref{IFS sample}
+Значение @code{dat[12,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 13. @sref{Fractal sample}
 @end deftypefn
 
 @anchor{ifsfile}
@@ -1886,7 +1886,7 @@ yy = dat[2,i]*x[j] + dat[3,j]*y[i] + dat[5,j];
 x[j+1] = sum_i @var{func}[1,i,j]*@var{func}[0,i,j]_x(xx, yy; @var{func}[2,i,j],...,@var{func}[5,i,j]);
 y[j+1] = sum_i @var{func}[1,i,j]*@var{func}[0,i,j]_y(xx, yy; @var{func}[2,i,j],...,@var{func}[5,i,j]);
 @end verbatim
-Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 7. @sref{IFS sample}
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 7.
 Доступные идентификаторы функций: @code{mglFlame2d_linear=0,	mglFlame2d_sinusoidal,	mglFlame2d_spherical,	mglFlame2d_swirl,		mglFlame2d_horseshoe,
 	mglFlame2d_polar,		mglFlame2d_handkerchief,mglFlame2d_heart,		mglFlame2d_disc,		mglFlame2d_spiral,
 	mglFlame2d_hyperbolic,	mglFlame2d_diamond,		mglFlame2d_ex,			mglFlame2d_julia,		mglFlame2d_bent,
@@ -1907,7 +1907,7 @@ y[j+1] = sum_i @var{func}[1,i,j]*@var{func}[0,i,j]_y(xx, yy; @var{func}[2,i,j],.
 	mglFlame2d_cos,			mglFlame2d_tan,			mglFlame2d_sec,			mglFlame2d_csc,			mglFlame2d_cot,
 	mglFlame2d_sinh,		mglFlame2d_cosh,		mglFlame2d_tanh,		mglFlame2d_sech,		mglFlame2d_csch,
 	mglFlame2d_coth,		mglFlame2d_auger,		mglFlame2d_flux.}
-Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Размеры массивов должны удовлетворять требованиям: @var{dat}.nx>=7, @var{func}.nx>=2 и @var{func}.nz=@var{dat}.ny. @c @sref{Flame sample}
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Размеры массивов должны удовлетворять требованиям: @var{dat}.nx>=7, @var{func}.nx>=2 и @var{func}.nz=@var{dat}.ny. @sref{Fractal sample}
 @end deftypefn
 
 

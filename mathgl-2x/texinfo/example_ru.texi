@@ -2876,7 +2876,7 @@ void mgls_prepare3d(HMDT a, HMDT b=0)
 * ContF projection sample::
 * TriPlot and QuadPlot::
 * Dots sample::
-* IFS sample::
+* Fractal sample::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -3157,7 +3157,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Dots sample, IFS sample, TriPlot and QuadPlot, 3D samples
+@node Dots sample, Fractal sample, TriPlot and QuadPlot, 3D samples
 @subsection Dots sample
 @nav{}
 
@@ -3192,8 +3192,8 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node IFS sample, , Dots sample, 3D samples
-@subsection IFS sample
+@node Fractal sample, , Dots sample, 3D samples
+@subsection Fractal sample
 @nav{}
 
 Commands @ref{ifs2d} and @ref{ifs3d} generate points for fractals using iterated function system in 2d and 3d cases correspondingly. The sample codes are:
@@ -3230,6 +3230,28 @@ int sample(mglGraph *gr)
 @end verbatim
 
 @pfig{ifs3d, Example of IFS fractal (3d case).}
+
+Command @ref{flame2d} generate points for flame fractals in 2d case. The sample codes are:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData A, B(2,3,5);
+  A.SetList(35, 0.33,0.,0.,0.33,0.,0.,0.2, 0.33,0.,0.,0.33,0.67,0.,0.2, 0.33,0.,0.,0.33,0.33,0.33,0.2,
+      0.33,0.,0.,0.33,0.,0.67,0.2, 0.33,0.,0.,0.33,0.67,0.67,0.2);
+  A.Rearrange(7);
+  for(long i=0;i<2*3*5;i++)	B.a[i] = 0.3;
+  for(long i=0;i<5;i++)	B.a[2*3*i] = B.a[2*3*i+1*2] = B.a[2*3*i+2*2] = 3;
+  mglData f(mglFlame2d(A,B,1000000));
+  gr->SubPlot(1,1,0,"<_");
+  if(big!=3)	gr->Title("Flame2d sample");
+  gr->SetRanges(f.SubData(0), f.SubData(1));
+  gr->Axis();	gr->Box();
+  gr->Plot(f.SubData(0), f.SubData(1),"r#o ","size 0.05");
+}
+@end verbatim
+
+@pfig{flame2d, Example of flame fractal (2d case).}
+
 
 
 @c ------------------------------------------------------------------
@@ -4124,7 +4146,7 @@ int sample(mglGraph *gr)
 
 @pfig{pde, Example of PDE solving.}
 
-The last example is example of beam tracing. Beam tracing equation is special kind of PDE equation written in coordinates accompanied to a ray. Generally this is the same parameters and limitation as for PDE solving but the coordinates are defined by the ray and by parameter of grid width @var{w} in direction transverse the ray. So, you don't need to specify the range of coordinates. @strong{BUT} there is limitation. The accompanied coordinates are well defined only for smooth enough rays, i.e. then the ray curvature @math{K} (which is defined as @math{1/K^2 = (|r''|^2 |r'|^2 - (r'', r'')^2)/|r'|^6}) is much large then the grid width: @math{K>>w}. So, you may receive incorrect results if this condition will be broken.
+The next example is example of beam tracing. Beam tracing equation is special kind of PDE equation written in coordinates accompanied to a ray. Generally this is the same parameters and limitation as for PDE solving but the coordinates are defined by the ray and by parameter of grid width @var{w} in direction transverse the ray. So, you don't need to specify the range of coordinates. @strong{BUT} there is limitation. The accompanied coordinates are well defined only for smooth enough rays, i.e. then the ray curvature @math{K} (which is defined as @math{1/K^2 = (|r''|^2 |r'|^2 - (r'', r'')^2)/|r'|^6}) is much large then the grid width: @math{K>>w}. So, you may receive incorrect results if this condition will be broken.
 
 You may use following code for obtaining the same solution as in previous example:
 @verbatim
@@ -4150,6 +4172,31 @@ int sample(mglGraph *gr)
 @end verbatim
 
 @pfig{qo2d, Example of beam tracing.}
+
+Note, the @ref{pde} is fast enough and suitable for many cases routine. However, there is situations then media have both together: strong spatial dispersion and spatial inhomogeneity. In this, case the @ref{pde} will produce incorrect result and you need to use advanced PDE solver @ref{apde}. For example, a wave beam, propagated in plasma, described by Hamiltonian @math{exp(-x^2-p^2)}, will have different solution for using of simplification and advanced PDE solver:
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SetRanges(-1,1,0,2,0,2);
+  mglData ar(256), ai(256);	gr->Fill(ar,"exp(-2*x^2)");
+
+  mglData res1(gr->APDE("exp(-x^2-p^2)",ar,ai,0.01));	res1.Transpose();
+  gr->SubPlot(1,2,0,"_");	gr->Title("Advanced PDE solver");
+  gr->SetRanges(0,2,-1,1);	gr->SetRange('c',res1);
+  gr->Dens(res1);	gr->Axis();	gr->Box();
+  gr->Label('x',"\\i z");	gr->Label('y',"\\i x");
+  gr->Puts(mglPoint(-0.5,0.2),"i\\partial_z\\i u = exp(-\\i x^2+\\partial_x^2)[\\i u]","y");
+
+  mglData res2(gr->PDE("exp(-x^2-p^2)",ar,ai,0.01));
+  gr->SubPlot(1,2,1,"_");	gr->Title("Simplified PDE solver");
+  gr->Dens(res2);	gr->Axis();	gr->Box();
+  gr->Label('x',"\\i z");	gr->Label('y',"\\i x");
+  gr->Puts(mglPoint(-0.5,0.2),"i\\partial_z\\i u \\approx\\ exp(-\\i x^2)\\i u+exp(\\partial_x^2)[\\i u]","y");
+  return 0;
+}
+@end verbatim
+
+@pfig{apde, Comparison of simplified and advanced PDE solvers.}
 
 
 @c ------------------------------------------------------------------

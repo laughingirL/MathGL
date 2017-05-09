@@ -56,7 +56,6 @@ D. Docs about JS interface
 3. Sample about complex 'ode' (like Raman scattering)
 4. Sample about earth map
 5. Sample about 'erode' and 'dilate'
-6. Sample about 'flame2d'
 7. Sample about 'detect'
 8. Sample about 'section'
 
@@ -75,6 +74,7 @@ ZZ. Update time.texi {before release!!!}
 
 * Manual data changing should be written into script ?!?
 * Check: "You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."
+* Shift/Zoom/Perspective by mouse!!!
 * Hint about string manipulation
 * Progress bar for external loop ?!!
 * 1d view -- over longer size + y-size for current slice only

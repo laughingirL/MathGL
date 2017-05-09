@@ -125,7 +125,9 @@ protected:
 	char pos[128];
 	bool run;					///< flag that drawing in progress
 	const unsigned char *img;	///< image for drawing
+#if (MGL_HAVE_PTHREAD|MGL_HAVE_PTHR_WIDGET)
 	pthread_t thr;				///< main thread for drawing
+#endif
 
 	virtual void draw();		///< quick drawing function
 	int handle(int code);		///< handle mouse events
