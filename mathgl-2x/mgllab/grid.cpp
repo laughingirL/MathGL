@@ -74,7 +74,7 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 			if(C<data->GetNx()-1)	vn.push_back(data->v(C+1,R,sl));
 			if(R<data->GetNy()-1)	vn.push_back(data->v(C,R+1,sl));
 			bool v1=true, v2=true;
-			for(size_t i=0;i<vn.size();i++)	{	if(vn[i]<v)	v1=false;	if(vn[i]>v)	v2=false;	}
+			for(size_t i=0;i<vn.size();i++)	{	if(vn[i]<=v)	v1=false;	if(vn[i]>=v)	v2=false;	}
 			if(v2)	fl_color(FL_MAGENTA);
 			else if(v1)	fl_color(FL_CYAN);
 			else if(real(vc)>0)		fl_color(FL_RED);

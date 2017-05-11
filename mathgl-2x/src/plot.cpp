@@ -519,6 +519,7 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 			else if(i==np-1)	{	nn.x=pp[np-2].p.y-pp[np-1].p.y;	nn.y=pp[np-1].p.x-pp[np-2].p.x;	}
 			n1 = gr->AddPnt(pp[i].p, c1,nn,-1,27);	pp[i].p.z = z0;
 			n2 = gr->AddPnt(pp[i].p, c2,nn,-1,27);
+			if(gr->SamePnt(n1,n3) || gr->SamePnt(n2,n4))	continue;
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -562,7 +563,8 @@ void MGL_EXPORT mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			n1 = gr->AddPnt(pp[i].p, c1,nn,-1,27);	pp[i].p.y = y0;
 			n2 = gr->AddPnt(pp[i].p, c2,nn,-1,27);
-			if(n1<0 || n2<0)	n1=n2=-1;
+			if(n1<0 || n2<0)	{	n1=n2=-1;	continue;	}
+			if(gr->SamePnt(n1,n3) || gr->SamePnt(n2,n4))	continue;
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -710,7 +712,8 @@ void MGL_EXPORT mgl_region_3d(HMGL gr, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT 
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			n1 = gr->AddPnt(pp[i].p1, c1,nn,-1,27);
 			n2 = gr->AddPnt(pp[i].p2, c2,nn,-1,27);
-			if(n1<0 || n2<0)	n1=n2=-1;
+			if(n1<0 || n2<0)	{	n1=n2=-1;	continue;	}
+			if(gr->SamePnt(n1,n3) || gr->SamePnt(n2,n4))	continue;
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -761,8 +764,9 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			n1 = gr->AddPnt(pp[i].p1, c1,nn,-1,27);
 			n2 = gr->AddPnt(pp[i].p2, c2,nn,-1,27);
-			if(n1<0 || n2<0)	n1=n2=-1;
+			if(n1<0 || n2<0)	{	n1=n2=-1;	continue;	}
 			if(inside && (f2<f1 || f4<f3))	continue;
+			if(gr->SamePnt(n1,n3) || gr->SamePnt(n2,n4))	continue;
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);

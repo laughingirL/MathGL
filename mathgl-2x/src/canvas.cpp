@@ -374,7 +374,7 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
-	if(p1<0 || p2<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x))	return;
+	if(p1<0 || p2<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || SamePnt(p1,p2))	return;
 	if(p1>p2)	{	long kk=p1;	p1=p2;	p2=kk;	}	// rearrange start/end for proper dashing
 	long pp1=p1,pp2=p2;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
@@ -394,6 +394,7 @@ void mglCanvas::line_plot(long p1, long p2)
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
 	if(p1<0 || p2<0 || p3<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || mgl_isnan(Pnt[p3].x))	return;
+	if(SamePnt(p1,p2) || SamePnt(p1,p3))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
 	if(TernAxis&12) for(int i=0;i<4;i++)
@@ -409,10 +410,10 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 							a.m=mask;	a.angl=MaskAn;	a.w = pw;	add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
-	if(p1<0 || mgl_isnan(Pnt[p1].x))	{	trig_plot(p4,p2,p3);	return;	}
-	if(p2<0 || mgl_isnan(Pnt[p2].x))	{	trig_plot(p1,p4,p3);	return;	}
-	if(p3<0 || mgl_isnan(Pnt[p3].x))	{	trig_plot(p1,p2,p4);	return;	}
-	if(p4<0 || mgl_isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
+	if(p1<0 || mgl_isnan(Pnt[p1].x) || SamePnt(p1,p2))	{	trig_plot(p4,p2,p3);	return;	}
+	if(p2<0 || mgl_isnan(Pnt[p2].x) || SamePnt(p2,p4))	{	trig_plot(p1,p4,p3);	return;	}
+	if(p3<0 || mgl_isnan(Pnt[p3].x) || SamePnt(p1,p3))	{	trig_plot(p1,p2,p4);	return;	}
+	if(p4<0 || mgl_isnan(Pnt[p4].x) || SamePnt(p3,p4))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
 	if(TernAxis&12) for(int i=0;i<4;i++)

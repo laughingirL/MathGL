@@ -1104,24 +1104,24 @@ void MGL_NO_EXPORT mgl_addpnts(mreal x1,mreal y1,mreal x2,mreal y2, std::vector<
 }
 void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph &g, const mglDrawReg *d)
 {
-	if(g.trig && g.nt>0)	// slow but look very nice :(
-	{
-		const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
-		mglPnt q0=pp, q1=pp, q2=pp;
-		q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=NAN;
-		for(long ik=0;ik<g.nt;ik++)
-		{
-			long ii = 6*ik; mreal x, y;
-			x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
-			q0.x = pp.x+(x*co+y*si)/2;	q0.y = pp.y+(y*co-x*si)/2;	ii+=2;
-			x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
-			q1.x = pp.x+(x*co+y*si)/2;	q1.y = pp.y+(y*co-x*si)/2;	ii+=2;
-			x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
-			q2.x = pp.x+(x*co+y*si)/2;	q2.y = pp.y+(y*co-x*si)/2;
-			trig_draw(q0,q1,q2,false,d);
-		}
-		return;
-	}
+// 	if(g.trig && g.nt>0)	// slow but look very nice :(
+// 	{
+// 		const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
+// 		mglPnt q0=pp, q1=pp, q2=pp;
+// 		q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=NAN;
+// 		for(long ik=0;ik<g.nt;ik++)
+// 		{
+// 			long ii = 6*ik; mreal x, y;
+// 			x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+// 			q0.x = pp.x+(x*co+y*si)/2;	q0.y = pp.y+(y*co-x*si)/2;	ii+=2;
+// 			x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+// 			q1.x = pp.x+(x*co+y*si)/2;	q1.y = pp.y+(y*co-x*si)/2;	ii+=2;
+// 			x = pp.u+g.trig[ii]*f;	y = pp.v+g.trig[ii+1]*f;
+// 			q2.x = pp.x+(x*co+y*si)/2;	q2.y = pp.y+(y*co-x*si)/2;
+// 			trig_draw(q0,q1,q2,false,d);
+// 		}
+// 		return;
+// 	}
 	if(!g.line || g.nl<=0)	return;
 	const mreal co=cos(phi*M_PI/180), si=sin(phi*M_PI/180);
 
@@ -1178,7 +1178,29 @@ void mglCanvas::glyph_fill(mreal phi, const mglPnt &pp, mreal f, const mglGlyph 
 			xx2 = pp.x+(x*co+y*si)/2-x1;	yy2 = pp.y+(y*co-x*si)/2-y1;
 		}
 		mgl_addpnts(xx1,yy1,xx2,yy2,b);
+		// draw boundary lines in any case ???
+		if(fabs(xx2-xx1)>fabs(yy2-yy1))	// horizontal line
+		{
+			mreal d = (yy2-yy1)/(xx2-xx1), a = yy1-d*xx1+0.5;
+			if(xx1>xx2)	{	mreal t=xx1;	xx1=xx2;	xx2=t;	}
+			for(long k=xx1;k<=xx2;k++)
+			{
+				long ii = long(k), jj = long(a+d*k);
+				if(ii>=i1 && ii<=i2 && jj>=j1 && jj<=j2)	pnt_plot(x0+ii,y0+jj,pp.z+dz,r,oi);
+			}
+		}
+		else	// vertical line
+		{
+			mreal d = (xx2-xx1)/(yy2-yy1), a = xx1-d*yy1+0.5;
+			if(yy1>yy2)	{	mreal t=yy1;	yy1=yy2;	yy2=t;	}
+			for(long k=yy1;k<=yy2;k++)
+			{
+				long jj = long(k), ii = long(a+d*k);
+				if(ii>=i1 && ii<=i2 && jj>=j1 && jj<=j2)	pnt_plot(x0+ii,y0+jj,pp.z+dz,r,oi);
+			}
+		}
 	}
+	// TODO add smoothing -- if 3 neighbors >0 => set 1; if 3 neighbors=0 => set 0 ???
 	for(long j=j1;j<=j2;j++)	// draw glyph
 	{
 		if(b[j].size()<2)	continue;
