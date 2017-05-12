@@ -196,11 +196,17 @@ if(MSVC AND MSVC_VERSION GREATER 1899)
 	SET(CMAKE_C_FLAGS "-D_CRT_STDIO_ISO_WIDE_SPECIFIERS ${CMAKE_C_FLAGS}")
 endif(MSVC AND MSVC_VERSION GREATER 1899)
 
+include(CheckCXXSourceCompiles)
+
 if(${CMAKE_SIZEOF_VOID_P} EQUAL 4)
-	if(CMAKE_COMPILER_IS_GNUCXX)
+	set(CMAKE_REQUIRED_FLAGS -msse2 -mfpmath=sse)
+	CHECK_CXX_SOURCE_COMPILES("
+		int main(void){}" mgl_sse)
+	if(mgl_sse)
 		SET(CMAKE_CXX_FLAGS "-msse2 -mfpmath=sse ${CMAKE_CXX_FLAGS}")
 		SET(CMAKE_C_FLAGS "-msse2 -mfpmath=sse ${CMAKE_C_FLAGS}")
-	endif(CMAKE_COMPILER_IS_GNUCXX)
+	endif(mgl_sse)
+	unset(CMAKE_REQUIRED_FLAGS)
 endif(${CMAKE_SIZEOF_VOID_P} EQUAL 4)
 
 if(enable-qt4 OR enable-qt5)
@@ -273,7 +279,6 @@ endif(HAVE_MEMRCHR)
 include(CheckTypeSize)
 check_type_size("long" SIZEOF_LONG)
 
-include(CheckCXXSourceCompiles)
 #unset(MGL_HAVE_C99_COMPLEX)
 CHECK_CXX_SOURCE_COMPILES(
 "#include <complex>
