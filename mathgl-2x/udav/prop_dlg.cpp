@@ -53,7 +53,7 @@ extern bool mglDotsRefr;
 extern bool mglWheelZoom;
 int defWidth, defHeight;
 QString pathFont;
-QString lang[]={"","ru"};
+QString lang[]={"en","ru","es"};
 //-----------------------------------------------------------------------------
 PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 {
@@ -138,13 +138,14 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 	h = new QHBoxLayout();		v->addLayout(h);
 	l = new QLabel(_("Language for UDAV"), this);	h->addWidget(l,0);
 	lng = new QComboBox(this);		h->addWidget(lng,1);
-	lng->addItem(_("English"));	lng->addItem(_("Russian"));
+	lng->addItem(_("English"));	lng->addItem(_("Russian"));	lng->addItem(_("Spanish"));
 
 	QSettings settings("udav","UDAV");
 	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
 	settings.beginGroup("/UDAV");
 	QString prev = settings.value("/udavLang", "").toString();
 	if(prev==lang[1])	lng->setCurrentIndex(1);
+	if(prev==lang[2])	lng->setCurrentIndex(2);
 	defWidth = settings.value("/defWidth", 640).toInt();
 	defHeight = settings.value("/defHeight", 480).toInt();
 	settings.endGroup();
@@ -275,7 +276,13 @@ void PropDialog::applyChanges()
 	if(cur>=0 && prev!=lang[cur])
 	{
 		settings.setValue("/udavLang", lang[lng->currentIndex()]);
-		QMessageBox::critical(this,_("UDAV - Properties"),_("You have to restart UDAV for applying the changes."));
+#if WIN32
+		const char *loc[]={"C.UTF8",	"ru_RU.cp1251",	"es_ES.utf8",	""};
+#else
+		const char *loc[]={"C.UTF8",	"ru_RU.utf8",	"es_ES.utf8",	""};
+#endif
+		mgl_textdomain(NULL,loc[cur]);
+		QMessageBox::critical(this,_("UDAV - Properties"),_("You need to restart UDAV for applying the changes."));
 	}
 	settings.setValue("/defWidth", defWidth);
 	settings.setValue("/defHeight", defHeight);

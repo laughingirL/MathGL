@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-	mgl_textdomain(argv?argv[0]:NULL);
+	mgl_textdomain(argv?argv[0]:NULL,"");
 	QApplication a(argc, argv);
 	MainWindow w;
 	w.show();

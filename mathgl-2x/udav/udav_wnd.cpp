@@ -91,7 +91,31 @@ void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	mgl_textdomain(argv?argv[0]:NULL);
+	QString lang="";
+	QSettings settings("udav","UDAV");
+	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
+	settings.beginGroup("/UDAV");
+	pathHelp = settings.value("/helpPath", MGL_DOC_DIR).toString();
+#if defined(WIN32)
+	if(pathHelp.isEmpty())	pathHelp = a.applicationDirPath()+"\\";
+#endif
+	pathFont = settings.value("/userFont", "").toString();
+	lang = settings.value("/udavLang", "").toString();
+	
+	const char *loc="";
+	if(lang=="en")	loc = "C.UTF8";
+#if WIN32
+	if(lang=="ru")	loc = "ru_RU.cp1251";
+#else
+	if(lang=="ru")	loc = "ru_RU.utf8";
+#endif
+	if(lang=="es")	{	loc = "es_ES.utf8";	lang="en";	}	// TODO remove lang="en"; then Spanish translation is ready !
+	mgl_textdomain(argv?argv[0]:NULL,loc);
+	
+	bool showHint = settings.value("/showHint", true).toBool();
+	mglCompleter = settings.value("/completer",  true).toBool();
+	settings.endGroup();
+
 	mgl_suppress_warn(true);
 	QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
 #ifdef WIN32
@@ -103,19 +127,6 @@ int main(int argc, char **argv)
 	QApplication a(argc, argv);
 	QTranslator translator;
 //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-	QString lang="";
-	QSettings settings("udav","UDAV");
-	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
-	settings.beginGroup("/UDAV");
-	pathHelp = settings.value("/helpPath", MGL_DOC_DIR).toString();
-#if defined(WIN32)
-	if(pathHelp.isEmpty())	pathHelp = a.applicationDirPath()+"\\";
-#endif
-	pathFont = settings.value("/userFont", "").toString();
-	lang = settings.value("/udavLang", "").toString();
-	bool showHint = settings.value("/showHint", true).toBool();
-	mglCompleter = settings.value("/completer",  true).toBool();
-	settings.endGroup();
 	if(pathHelp.isEmpty())	pathHelp=MGL_DOC_DIR;
 
 	if(!lang.isEmpty())

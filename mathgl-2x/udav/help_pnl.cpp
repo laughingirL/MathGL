@@ -62,7 +62,7 @@ HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 // 	QStringList s;	s<<(pathHelp);
 // 	help->setSearchPaths(s);
 // 	setWindowTitle("Examples");	raisePanel(this);
-// 	help->setSource(_("mgl_en")+"_2.html");
+// 	help->setSource("mgl_en"+"_2.html");
 // }
 //-----------------------------------------------------------------------------
 void HelpPanel::showHelp(const QString &txt)
@@ -72,8 +72,9 @@ void HelpPanel::showHelp(const QString &txt)
 	QStringList s;	s<<(pathHelp);
 	help->setSearchPaths(s);
 	if(cmd.isEmpty())	cmd = entry->text().trimmed();
-	if(cmd.isEmpty())	help->setSource(_("mgl_en")+QString(".html"));
-	else	help->setSource(_("mgl_en")+QString(".html#")+cmd);
+	// NOTE disable other translations for help files due to Qt bug
+	if(cmd.isEmpty())	help->setSource("mgl_en"+QString(".html"));
+	else	help->setSource("mgl_en"+QString(".html#")+cmd);
 	setWindowTitle("Help");
 }
 //-----------------------------------------------------------------------------

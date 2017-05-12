@@ -403,7 +403,7 @@ std::string p(argv[0],f-argv[0]);
 printf("getcwd = '%s', argv = '%s', path = '%s', inst = '%s'\n", getcwd(NULL,0), argv[0], p.c_str(), MGL_INSTALL_DIR);
 fflush(stdout);
 
-	mgl_textdomain(argv?argv[0]:NULL);
+	mgl_textdomain(argv?argv[0]:NULL,"");
 	mgl_suppress_warn(true);
 	const char *suf = "";
 	char name[256]="", *tmp;

@@ -48,16 +48,17 @@ int scheme;
 std::string lastfiles[5];
 Fl_Preferences pref(Fl_Preferences::USER,"abalakin","mgllab");
 //-----------------------------------------------------------------------------
+#define NUM_LOCALE	4
+const char *sch[4]={"base","gtk+","plastic","gleam"};
+const char *loc[]={"en_EN.UTF8",	"ru_RU.utf8",	"ru_RU.cp1251",	"es_ES.utf8",	""};
+const char *hlp[]={"mgl_en.html#","mgl_ru.html#", "mgl_ru.html#", "mgl_en.html#",	""};
 void set_scheme_lang(int s, int l)
 {
-	static const char *sch[4]={"base","gtk+","plastic","gleam"};
-	static const char *loc[3]={"C.UTF8",	"ru_RU.utf8",	"ru_RU.cp1251"};
 	if(s<0 || s>3)	s=1;
-	if(l<0 || l>2)	l=1;
-	setlocale(LC_ALL, loc[l]);	setlocale(LC_NUMERIC, "C");
+	if(l<0 || l>NUM_LOCALE-1)	l=1;
+	mgl_textdomain(NULL,loc[l]);
 	Fl::scheme(sch[s]);
 	scheme = s;	lang = l;
-	static const char *hlp[3]={"mgl_en.html#","mgl_ru.html#", "mgl_ru.html#"};
 #ifdef WIN32
 	char sep = '\\';
 #else
@@ -105,16 +106,19 @@ void load_pref(ScriptWindow *w)
 	set_style(font_kind, font_size);
 	pref.get("font_name",s,"");
 	if(s)	{	fontname=s;	free(s);	}
-	w->graph->FMGL->use_pthr = use_thr;
-	if(w && w->graph)
-		mgl_load_font(w->graph->get_graph(),fontname.c_str(),NULL);
 	pref.get("fname1",s,"");	if(s)	{	lastfiles[0]=s;	free(s);	}
 	pref.get("fname2",s,"");	if(s)	{	lastfiles[1]=s;	free(s);	}
 	pref.get("fname3",s,"");	if(s)	{	lastfiles[2]=s;	free(s);	}
 	pref.get("fname4",s,"");	if(s)	{	lastfiles[3]=s;	free(s);	}
 	pref.get("fname5",s,"");	if(s)	{	lastfiles[4]=s;	free(s);	}
 	set_scheme_lang(scheme,lang);	// NOTE: must be after setting docdir
-	example_cb(NULL, w);	w->graph->parent()->show();
+	if(w && w->graph)
+	{
+		w->graph->FMGL->use_pthr = use_thr;
+		mgl_load_font(w->graph->get_graph(),fontname.c_str(),NULL);
+		example_cb(NULL, w);
+		w->graph->parent()->show();
+	}
 }
 //-----------------------------------------------------------------------------
 void set_title(Fl_Window* w)
@@ -381,7 +385,7 @@ int main(int argc, char **argv)
 {
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
-	mgl_textdomain(argv?argv[0]:NULL);
+	load_pref(NULL);
 	
 	textbuf = new Fl_Text_Buffer;
 	style_init();
@@ -472,7 +476,7 @@ public:
 		mouse_zoom_w = new Fl_Check_Button(5, 245, 330, 25, _("Enable mouse wheel for zooming"));
 		use_thr_w = new Fl_Check_Button(5, 270, 330, 25, _("Use multi-threading for drawing"));
 		lang_w = new Fl_Choice(160, 300, 175, 25, _("Language for mgllab"));
-		lang_w->add("C.UTF8");	lang_w->add("ru_RU.utf8");	lang_w->add("ru_RU.cp1251");
+		for(long i=0;i<NUM_LOCALE;i++)	lang_w->add(loc[i]);
 		scheme_w = new Fl_Choice(160, 330, 175, 25, _("Widget scheme"));
 		scheme_w->add("base");	scheme_w->add("gtk+");	scheme_w->add("plastic");	scheme_w->add("gleam");
 		o = new Fl_Button(85, 360, 75, 25, _("Cancel"));	o->callback(cb_dlg_cancel,this);

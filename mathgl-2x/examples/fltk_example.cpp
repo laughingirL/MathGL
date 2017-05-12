@@ -121,7 +121,7 @@ public:
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
-	mgl_textdomain(argv?argv[0]:NULL);
+	mgl_textdomain(argv?argv[0]:NULL,"");
 	mglFLTK *gr;
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];

@@ -31,7 +31,7 @@ void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-	mgl_textdomain(argv?argv[0]:NULL);
+	mgl_textdomain(argv?argv[0]:NULL,"");
 	mgl_suppress_warn(true);
 	mglGraph gr;
 	mglParse p(true);

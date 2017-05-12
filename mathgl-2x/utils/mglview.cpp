@@ -41,7 +41,7 @@ int show(mglGraph *gr)
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	mgl_textdomain(argv?argv[0]:NULL);
+	mgl_textdomain(argv?argv[0]:NULL,"");
 	char iname[256]="";
 	mgl_suppress_warn(true);
 	bool gray = false;

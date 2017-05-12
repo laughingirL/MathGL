@@ -888,7 +888,7 @@ pthread_mutex_t mutexRnd;
 float mgl_cos[360];
 void MGL_NO_EXPORT mgl_init()
 {
-	mgl_textdomain(NULL);
+	mgl_textdomain(NULL,"");
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexRnd,0);
 #endif
@@ -956,18 +956,18 @@ bool MGL_NO_EXPORT test_transl(const char *p)
 	FILE *fp = fopen(f.c_str(),"r");
 	if(fp)
 	{
-#if MGL_USE_GETTEXT
 		bindtextdomain("mathgl", p);
 		textdomain("mathgl");
-#endif
 		fclose(fp);	return true;
 	}
 #endif
 	return false;
 }
-void MGL_EXPORT mgl_textdomain(const char *argv0)
+void MGL_EXPORT mgl_textdomain(const char *argv0, const char *loc)
 {
-	setlocale(LC_ALL, "");	setlocale(LC_NUMERIC, "C");
+	static const char *argv=NULL;
+	if(!argv0)	argv0=argv;	else	argv=argv0;
+	setlocale(LC_ALL, loc);	setlocale(LC_NUMERIC, "C");
 #if MGL_USE_GETTEXT
 	if(!test_transl(MGL_INSTALL_DIR"/share/locale/"))
 		if(!test_transl("/usr/share/locale/"))
@@ -988,5 +988,7 @@ void MGL_EXPORT mgl_textdomain(const char *argv0)
 				}
 #endif
 }
-void MGL_EXPORT mgl_textdomain_()	{	mgl_textdomain(NULL);	}
+void MGL_EXPORT mgl_textdomain_(const char *locale, int l)
+{	char *s=new char[l+1];	memcpy(s,locale,l);	s[l]=0;
+	mgl_textdomain(NULL,s);	delete []s;	}
 //---------------------------------------------------------------------------

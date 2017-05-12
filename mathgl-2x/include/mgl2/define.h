@@ -374,8 +374,8 @@ void MGL_EXPORT mgl_set_global_warn_(const char *text,int);
 MGL_EXPORT const char *mgl_get_global_warn();
 int MGL_EXPORT mgl_get_global_warn_(char *out, int len);
 /// Setup gettext usage. NOTE: Russian translation MUST be installed.
-void MGL_EXPORT mgl_textdomain(const char *argv0);
-void MGL_EXPORT mgl_textdomain_();
+void MGL_EXPORT mgl_textdomain(const char *argv0, const char *locale);
+void MGL_EXPORT mgl_textdomain_(const char *locale, int);
 /// size of var array
 const int MGL_VS = 'z'-'a'+1;
 #ifdef __cplusplus
