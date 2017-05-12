@@ -175,11 +175,11 @@ SubplotDialog::SubplotDialog(QWidget *parent) : QDialog(parent)
 	l = new QLabel(_("Aspect"),this);	H->addWidget(l);
 	l = new QLabel(_("X/Z"),this);	H->addWidget(l);
 	axz = new QLineEdit(this);	H->addWidget(axz);	axz->setText("1");
-	axz->setToolTip(_("Aspect ratio of x-scale to z-acale"));
+	axz->setToolTip(_("Aspect ratio of x-scale to z-scale"));
 	connect(axz,SIGNAL(textChanged(QString)),this,SLOT(updatePic()));
 	l = new QLabel(_("Y/Z"),this);	H->addWidget(l);
 	ayz = new QLineEdit(this);	H->addWidget(ayz);	ayz->setText("1");
-	ayz->setToolTip(_("Aspect ratio of y-scale to z-acale"));
+	ayz->setToolTip(_("Aspect ratio of y-scale to z-scale"));
 	connect(ayz,SIGNAL(textChanged(QString)),this,SLOT(updatePic()));
 
 	H = new QHBoxLayout;	u->addLayout(H);
