@@ -1406,3 +1406,85 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st, float ll)
 	}
 }
 //-----------------------------------------------------------------------------
+bool mglCanvas::quad_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4) const
+{
+	unsigned char r[4];
+	long y1,x1,y2,x2;
+	mglPnt d1(p2-p1), d2(p3-p1), d3(p4+p1-p2-p3);
+
+	if(d1.x==0 && d1.y==0)	return trig_vis(p1,p3,p4);
+	if(d2.x==0 && d2.y==0)	return trig_vis(p1,p2,p4);
+
+	x1 = long(mgl_min(mgl_min(p1.x,p2.x), mgl_min(p3.x,p4.x)));	// bounding box
+	y1 = long(mgl_min(mgl_min(p1.y,p2.y), mgl_min(p3.y,p4.y)));
+	x2 = long(mgl_max(mgl_max(p1.x,p2.x), mgl_max(p3.x,p4.x)));
+	y2 = long(mgl_max(mgl_max(p1.y,p2.y), mgl_max(p3.y,p4.y)));
+	x1=mgl_max(x1,0);	x2=mgl_min(x2,Width);
+	y1=mgl_max(y1,0);	y2=mgl_min(y2,Height);
+//	if(x1>x2 || y1>y2)	return;
+
+	const float dd = d1.x*d2.y-d1.y*d2.x;
+	const float dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
+	const float dsy = 4*(d2.y*d3.x - d2.x*d3.y)*d1.x;
+
+	const float x0 = p1.x, y0 = p1.y;
+	bool vis = false;
+	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+	{
+		float xx = (i-x0), yy = (j-y0), s;
+		s = dsx*xx + dsy*yy + (dd+d3.y*xx-d3.x*yy)*(dd+d3.y*xx-d3.x*yy);
+		if(s>=0)
+		{
+			s = sqrt(s);
+			float qu = d3.x*yy - d3.y*xx + dd + s;
+			float qv = d3.y*xx - d3.x*yy + dd + s;
+			float u = 2.f*(d2.y*xx - d2.x*yy)/qu;
+			float v = 2.f*(d1.x*yy - d1.y*xx)/qv;
+			if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	// first root bad
+			{
+				qu = d3.x*yy - d3.y*xx + dd - s;
+				qv = d3.y*xx - d3.x*yy + dd - s;
+//					u = v = -1.f;
+				u = 2.f*(d2.y*xx - d2.x*yy)/qu;	v = 2.f*(d1.x*yy - d1.y*xx)/qv;
+				if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
+			}
+			float zz = p1.z+d1.z*u+d2.z*v+d3.z*(u*v);
+			if(zz>=Z[3*(i+Width*(Height-1-j))]-2)	vis=true;
+		}
+	}
+	return vis;
+}
+//-----------------------------------------------------------------------------
+bool mglCanvas::trig_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3) const
+{
+	unsigned char r[4];
+	long y1,x1,y2,x2;
+	const mglPnt d1(p2-p1), d2(p3-p1);
+
+	const float tmp = d2.x*d1.y - d1.x*d2.y;
+	if(fabs(tmp)<1e-5)	return false;		// points lies on the same line
+	const float dyv =-d1.x/tmp,	dxv = d1.y/tmp;
+	const float dyu = d2.x/tmp,	dxu =-d2.y/tmp;
+
+	x1 = long(mgl_min(p1.x<p2.x?p1.x:p2.x, p3.x));	// bounding box
+	y1 = long(mgl_min(p1.y<p2.y?p1.y:p2.y, p3.y));
+	x2 = long(mgl_max(p1.x>p2.x?p1.x:p2.x, p3.x));
+	y2 = long(mgl_max(p1.y>p2.y?p1.y:p2.y, p3.y));
+	x1=x1>0?x1:0;	x2=x2<Width?x2:Width;
+	y1=y1>0?y1:0;	y2=y2<Height?y2:Height;
+//	if(x1>x2 || y1>y2)	return;
+	// default normale
+	const float x0 = p1.x, y0 = p1.y;
+	bool vis=false;
+	// provide additional height to be well visible on the surfaces
+	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+	{
+		float xx = (i-x0), yy = (j-y0);
+		float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
+		if(u<0 || v<0 || u+v>1)	continue;
+		float zz = p1.z+d1.z*u+d2.z*v;
+		if(zz>=Z[3*(i+Width*(Height-1-j))]-2)	vis=true;
+	}
+	return vis;
+}
+//-----------------------------------------------------------------------------

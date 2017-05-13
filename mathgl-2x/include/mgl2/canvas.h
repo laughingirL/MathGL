@@ -431,6 +431,10 @@ protected:
 	void glyph_draw_new(const mglPrim &P, mglDrawReg *d);
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
 
+	// check if visible
+	bool trig_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3) const;
+	bool quad_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4) const;
+
 	// functions for glyph drawing
 	virtual void glyph_fill(mreal phi, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_wire(mreal phi, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);

@@ -588,6 +588,11 @@ public:
 	virtual float GetGlyphPhi(const mglPnt &q, float phi)=0;
 	virtual mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'),bool rot=true)=0;
 	void vect_plot(long p1, long p2, mreal s=1);
+	
+	// check if visible
+	virtual bool trig_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3) const =0;
+	virtual bool quad_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4) const =0;
+
 	inline mreal mark_size()	{	return MarkSize*font_factor;	}
 //	inline char last_color()	{	return last_style[1];	}
 	inline const char *last_line()	{	return last_style;	}
