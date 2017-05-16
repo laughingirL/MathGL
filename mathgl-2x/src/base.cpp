@@ -64,15 +64,15 @@ void MGL_EXPORT mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 	for(i=l=n=0;i<s.size();i++)
 	{
 		ch = f->Internal(s[i]);
-		l += 2*f->GetNl(0,ch);
-		n += 6*f->GetNt(0,ch);
+		if(ch>=0)	{	l += 2*f->GetNl(0,ch);	n += 6*f->GetNt(0,ch);	}
 	}
-	printf("const long mgl_numg=%lu, mgl_cur=%lu;\n",(unsigned long)s.size(),l+n);
-	printf("float mgl_fact=%g;\n",f->GetFact(0)/mgl_fgen);
+	printf("const unsigned long mgl_numg=%lu, mgl_cur=%lu;\n",(unsigned long)s.size(),l+n);
+	printf("const float mgl_fact=%g;\n",f->GetFact(0)/mgl_fgen);
 	printf("long mgl_gen_fnt[%lu][6] = {\n", (unsigned long)s.size());
 	for(i=m=0;i<s.size();i++)	// first write symbols descriptions
 	{
 		ch = f->Internal(s[i]);
+		if(ch<0)	continue;
 		int m1 = f->GetNl(0,ch), m2 = f->GetNt(0,ch);
 		printf("\t{0x%x,%d,%d,%lu,%d,%lu},\n",unsigned(s[i]),f->GetWidth(0,ch),m1,m,m2,m+2*m1);
 		m += 2*m1+6*m2;
@@ -82,6 +82,7 @@ void MGL_EXPORT mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 	for(i=0;i<s.size();i++)		// now write data itself
 	{
 		ch = f->Internal(s[i]);
+		if(ch<0)	continue;
 		unsigned m1 = f->GetNl(0,ch), m2 = f->GetNt(0,ch);
 		const short *ln = f->GetLn(0,ch), *tr = f->GetTr(0,ch);
 		for(l=0;l<2*m1;l++)	printf("%d,",ln[l]);

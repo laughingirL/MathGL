@@ -398,10 +398,10 @@ void smgl_fexport(mglGraph *gr)	// test file export
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
-const char *f = strrchr(argv[0],'/');
-std::string p(argv[0],f-argv[0]);
-printf("getcwd = '%s', argv = '%s', path = '%s', inst = '%s'\n", getcwd(NULL,0), argv[0], p.c_str(), MGL_INSTALL_DIR);
-fflush(stdout);
+// const char *f = strrchr(argv[0],'/');
+// std::string p(argv[0],f-argv[0]);
+// printf("getcwd = '%s', argv = '%s', path = '%s', inst = '%s'\n", getcwd(NULL,0), argv[0], p.c_str(), MGL_INSTALL_DIR);
+// fflush(stdout);
 
 	mgl_textdomain(argv?argv[0]:NULL,"");
 	mgl_suppress_warn(true);
@@ -458,7 +458,6 @@ fflush(stdout);
 		delete gr;	return 0;
 	}
 	else if(dotest==2)	// NOTE mgl_gen_fnt[###][6] have to be updated if new glyphs will be added to built-in font
-
 	{	mgl_create_cpp_font(gr->Self(), L"!-~,¡-ÿ,̀-̏,Α-ω,ϑ,ϕ,ϖ,ϰ,ϱ,ϵ,А-я,ℏ,ℑ,ℓ,ℜ,←-↙,∀-∯,≠-≯,⟂");
 		delete gr;	return 0;	}
 	else if(dotest==3)
