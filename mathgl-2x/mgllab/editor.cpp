@@ -169,15 +169,14 @@ void style_parse(const char *text, char *style, int /*length*/)
 // Initialize the style buffer
 void style_init()
 {
-	char *style = new char[textbuf->length() + 1];
+	long len = textbuf->length();
+	char *style = new char[len + 1];
 	char *text = textbuf->text();
-	memset(style, 'A', textbuf->length());
-	style[textbuf->length()] = '\0';
-	if (!stylebuf) stylebuf = new Fl_Text_Buffer(textbuf->length());
-	style_parse(text, style, textbuf->length());
+	memset(style, 'A', len);	style[len] = '\0';
+	if(!stylebuf)	stylebuf = new Fl_Text_Buffer(len);
+	style_parse(text, style, len);
 	stylebuf->text(style);
-	delete[] style;
-	free(text);
+	delete []style;	free(text);
 }
 //-----------------------------------------------------------------------------
 // Update unfinished styles.

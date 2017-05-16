@@ -53,7 +53,7 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 @strong{Latest news}
 @itemize
 
-@item @emph{16 May 2017.}
+@item @emph{17 May 2017.}
 New version (v.2.4) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are @code{mgllab} executable, string manipulation in MGL, new functions, plot types and styles, translation to Russian using @code{gettext} and bugfixes, which denoted @ref{News, here}.
 @end itemize
 
@@ -74,7 +74,7 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 
 @itemize
 
-@item @strong{16 May 2017.}
+@item @strong{17 May 2017.}
 New version (v.2.4) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are @code{mgllab} executable, string manipulation in MGL, new functions, plot types and styles, translation to Russian using @code{gettext} and bugfixes:
 @itemize @bullet
 
@@ -334,19 +334,11 @@ You may download current version of MathGL for following configurations:
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.tar.gz, Source} file with cmake build system.
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686).
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}-mingw.x86.7z,Win32 GPL} binaries for MinGW with all required DLL files (32-bit build for Pentium IV, GPL version).
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.LGPL-mingw.i386.7z,Win32 LGPL} binaries for MinGW (build for i386, no GSL and HDF5 support).
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.Win10-mingw.i386.7z,Win32 GPL} binaries for MinGW (build for i386). This should work on Windows 8 and Windows 10.
-@c @item
-@c @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.LGPL-win64.7z,Win64 LGPL} binaries for MSVS 2010 (no GSL and HDF5 support)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}-mingw.x64.7z,Win32 GPL} binaries for MinGW with all required DLL files (64-bit build, GPL version).
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.eng.pdf,PDF} documentation in English.
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}@value{MINVER}.7z, UDAV and utilities} with all required DLL files (build for i686).
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}@value{MINVER}.Win10.7z, UDAV and utilities} with all required DLL files (build for i386). This should work on Windows 8 and Windows 10.
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-doc-html-@value{VERSION}@value{MINVER}.7z, Archive} with HTML documentation and figures.
 @c @item
