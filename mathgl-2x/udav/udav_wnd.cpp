@@ -96,9 +96,6 @@ int main(int argc, char **argv)
 	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
 	settings.beginGroup("/UDAV");
 	pathHelp = settings.value("/helpPath", MGL_DOC_DIR).toString();
-#if defined(WIN32)
-	if(pathHelp.isEmpty())	pathHelp = a.applicationDirPath()+"\\";
-#endif
 	pathFont = settings.value("/userFont", "").toString();
 	lang = settings.value("/udavLang", "").toString();
 	
@@ -127,7 +124,11 @@ int main(int argc, char **argv)
 	QApplication a(argc, argv);
 	QTranslator translator;
 //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+#if defined(WIN32)
+	if(pathHelp.isEmpty())	pathHelp = a.applicationDirPath()+"\\";
+#else
 	if(pathHelp.isEmpty())	pathHelp=MGL_DOC_DIR;
+#endif
 
 	if(!lang.isEmpty())
 	{

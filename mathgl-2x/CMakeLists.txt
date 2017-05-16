@@ -5,6 +5,7 @@ endif()
 
 project( MathGL2 )
 
+set(mgl_clean_files )
 set(MGL_DEP_LIBS)
 add_definitions(-DMGL_SRC)
 
@@ -729,24 +730,24 @@ if(enable-mgltex)
 	add_subdirectory( mgltex )
 endif(enable-mgltex)
 
-#if(WIN32)
-#	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${CMAKE_INSTALL_PREFIX} RENAME mathgl2-config.cmake)
-#else(WIN32)
-#	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${MGL_LIB_INSTALL_DIR}/cmake/mathgl2/ RENAME mathgl2-config.cmake)
-#endif(WIN32)
+if(WIN32)
+	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${CMAKE_INSTALL_PREFIX} RENAME mathgl2-config.cmake)
+else(WIN32)
+	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${MGL_LIB_INSTALL_DIR}/cmake/mathgl2/ RENAME mathgl2-config.cmake)
+endif(WIN32)
 
 #export(TARGETS MathGLTargets FILE "${PROJECT_BINARY_DIR}/MathGLTargets.cmake")
-export(PACKAGE FooBar)
+#export(PACKAGE MathGL2)
 
-configure_file(MathGLConfig.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfig.cmake" @ONLY)
-configure_file(MathGLConfigVersion.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake" @ONLY)
+#configure_file(MathGLConfig.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfig.cmake" @ONLY)
+#configure_file(MathGLConfigVersion.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake" @ONLY)
 
-install(FILES
-	"${MathGL2_BINARY_DIR}/MathGLConfig.cmake"
-	"${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake"
-	DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
+#install(FILES
+#	"${MathGL2_BINARY_DIR}/MathGLConfig.cmake"
+#	"${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake"
+#	DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
 
-install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
+#install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
 
 
 if(MGL_USE_LIBINTL)
@@ -755,6 +756,7 @@ if(MGL_USE_LIBINTL)
 			COMMAND ${findxgettext} -s --keyword=_ -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/mathgl.pot ${po_files}
 			WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/
 			DEPENDS ${po_files} )
+		set(mgl_clean_files mathgl.pot ${mgl_clean_files})
 		foreach(tl ru es en)
 			add_custom_target(mathgl_${tl}.po ALL
 				COMMAND ${findmsgmerge} -U mathgl_${tl}.po ${MathGL2_BINARY_DIR}/mathgl.pot
@@ -764,6 +766,7 @@ if(MGL_USE_LIBINTL)
 				COMMAND ${findmsgfmt} -o mathgl_${tl}.mo ${MathGL2_SOURCE_DIR}/mathgl_${tl}.po
 				DEPENDS mathgl_${tl}.po)
 			install( FILES ${MathGL2_BINARY_DIR}/mathgl_${tl}.mo DESTINATION "${CMAKE_INSTALL_PREFIX}/share/locale/${tl}/LC_MESSAGES/" RENAME mathgl.mo )
+			set(mgl_clean_files mathgl_${tl}.mo ${mgl_clean_files})
 		endforeach(tl)
 	else(USE_GETTEXT)
 		foreach(tl ru es en)
@@ -772,6 +775,7 @@ if(MGL_USE_LIBINTL)
 	endif(USE_GETTEXT)
 endif(MGL_USE_LIBINTL)
 
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${mgl_clean_files}")
 
 # WARNING!!! DO NOT ADD ANYTHING AFTER THIS LINE!
 
