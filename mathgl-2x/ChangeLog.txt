@@ -1,4 +1,4 @@
-2.4 Released 11 May 2017
+2.4 Released 17 May 2017
 
 * Add mgllab executable, which is FLTK based version of UDAV. Most things mgllab do faster.
 * Add string manipulation in MGL language:

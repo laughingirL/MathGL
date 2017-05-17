@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-16 15:46+0300\n"
+"POT-Creation-Date: 2017-05-17 07:55+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -908,7 +908,7 @@ msgstr ""
 #: udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552 udav/dat_pnl.cpp:629
 #: udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145 udav/files_dlg.cpp:58
 #: udav/style_dlg.cpp:206 udav/data_dlg.cpp:90 udav/subplot_dlg.cpp:219
-#: mgllab/editor.cpp:283 mgllab/mathgl.cpp:164 mgllab/mathgl.cpp:195
+#: mgllab/editor.cpp:282 mgllab/mathgl.cpp:164 mgllab/mathgl.cpp:195
 #: mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164 mgllab/dialogs.cpp:410
 #: mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749 mgllab/dialogs.cpp:1071
 #: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:482
@@ -984,7 +984,7 @@ msgstr ""
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
 #: widgets/qt.cpp:1091 udav/find_dlg.cpp:52 udav/hint_dlg.cpp:70
-#: mgllab/editor.cpp:566 mgllab/help.cpp:308 mgllab/help.cpp:367
+#: mgllab/editor.cpp:565 mgllab/help.cpp:308 mgllab/help.cpp:367
 #: mgllab/help.cpp:483
 msgid "Close"
 msgstr ""
@@ -1109,7 +1109,7 @@ msgstr ""
 msgid "Copy selected text or data to clipboard (Ctrl+C)."
 msgstr ""
 
-#: mgllab/editor.cpp:512
+#: mgllab/editor.cpp:511
 msgid "Copy selection to clipboard"
 msgstr ""
 
@@ -1430,7 +1430,7 @@ msgstr ""
 msgid "Do you want to save the changes to the document?"
 msgstr ""
 
-#: mgllab/editor.cpp:283
+#: mgllab/editor.cpp:282
 msgid "Don't Save"
 msgstr ""
 
@@ -1998,7 +1998,7 @@ msgstr ""
 msgid "Erode data larger val"
 msgstr ""
 
-#: mgllab/editor.cpp:349
+#: mgllab/editor.cpp:348
 #, c-format
 msgid ""
 "Error reading from file '%s':\n"
@@ -2010,7 +2010,7 @@ msgstr ""
 msgid "Error to call external viewer\n"
 msgstr ""
 
-#: mgllab/editor.cpp:360
+#: mgllab/editor.cpp:359
 #, c-format
 msgid ""
 "Error writing to file '%s':\n"
@@ -2130,7 +2130,7 @@ msgstr ""
 msgid "File to export"
 msgstr ""
 
-#: mgllab/editor.cpp:268 mgllab/mgllab.cpp:396
+#: mgllab/editor.cpp:267 mgllab/mgllab.cpp:396
 msgid "File/Recent files"
 msgstr ""
 
@@ -2166,7 +2166,7 @@ msgstr ""
 msgid "Fill x-,k-samples for transforms"
 msgstr ""
 
-#: udav/find_dlg.cpp:48 mgllab/editor.cpp:560
+#: udav/find_dlg.cpp:48 mgllab/editor.cpp:559
 msgid "Find"
 msgstr ""
 
@@ -2198,7 +2198,7 @@ msgstr ""
 msgid "Find next"
 msgstr ""
 
-#: mgllab/editor.cpp:516
+#: mgllab/editor.cpp:515
 msgid "Find or replace text"
 msgstr ""
 
@@ -2218,11 +2218,11 @@ msgstr ""
 msgid "Find triangles of randomly placed points"
 msgstr ""
 
-#: udav/find_dlg.cpp:36 mgllab/editor.cpp:559
+#: udav/find_dlg.cpp:36 mgllab/editor.cpp:558
 msgid "Find what:"
 msgstr ""
 
-#: udav/text_pnl.cpp:546 mgllab/editor.cpp:558
+#: udav/text_pnl.cpp:546 mgllab/editor.cpp:557
 msgid "Find/Replace"
 msgstr ""
 
@@ -2703,7 +2703,7 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: mgllab/editor.cpp:519
+#: mgllab/editor.cpp:518
 msgid "Insert MGL command"
 msgstr ""
 
@@ -2711,7 +2711,7 @@ msgstr ""
 msgid "Insert as 'list'"
 msgstr ""
 
-#: mgllab/editor.cpp:487
+#: mgllab/editor.cpp:486
 msgid "Insert file content?"
 msgstr ""
 
@@ -2719,11 +2719,11 @@ msgstr ""
 msgid "Insert file name?"
 msgstr ""
 
-#: mgllab/editor.cpp:521
+#: mgllab/editor.cpp:520
 msgid "Insert filename"
 msgstr ""
 
-#: mgllab/editor.cpp:523
+#: mgllab/editor.cpp:522
 msgid "Insert inplot command"
 msgstr ""
 
@@ -3043,7 +3043,7 @@ msgstr ""
 msgid "Mask size"
 msgstr ""
 
-#: udav/find_dlg.cpp:42 mgllab/editor.cpp:563
+#: udav/find_dlg.cpp:42 mgllab/editor.cpp:562
 msgid "Match case"
 msgstr ""
 
@@ -3346,7 +3346,7 @@ msgstr ""
 msgid "No filename."
 msgstr ""
 
-#: mgllab/editor.cpp:585 mgllab/editor.cpp:607 mgllab/editor.cpp:632
+#: mgllab/editor.cpp:584 mgllab/editor.cpp:606 mgllab/editor.cpp:631
 #, c-format
 msgid "No occurrences of '%s' found!"
 msgstr ""
@@ -3473,7 +3473,7 @@ msgstr ""
 msgid "Open printer dialog and print graphics (Ctrl+P)"
 msgstr ""
 
-#: mgllab/editor.cpp:507
+#: mgllab/editor.cpp:506
 msgid "Open script or data file"
 msgstr ""
 
@@ -3564,7 +3564,7 @@ msgstr ""
 msgid "Paste text"
 msgstr ""
 
-#: mgllab/editor.cpp:514
+#: mgllab/editor.cpp:513
 msgid "Paste text from clipboard"
 msgstr ""
 
@@ -3858,15 +3858,15 @@ msgstr ""
 msgid "Remove jump into the data, like phase jumps"
 msgstr ""
 
-#: udav/find_dlg.cpp:50 mgllab/editor.cpp:562
+#: udav/find_dlg.cpp:50 mgllab/editor.cpp:561
 msgid "Replace"
 msgstr ""
 
-#: mgllab/editor.cpp:565
+#: mgllab/editor.cpp:564
 msgid "Replace all"
 msgstr ""
 
-#: udav/find_dlg.cpp:39 mgllab/editor.cpp:561
+#: udav/find_dlg.cpp:39 mgllab/editor.cpp:560
 msgid "Replace by:"
 msgstr ""
 
@@ -3874,7 +3874,7 @@ msgstr ""
 msgid "Replace expression by its numerical value."
 msgstr ""
 
-#: mgllab/editor.cpp:631
+#: mgllab/editor.cpp:630
 #, c-format
 msgid "Replaced %ld occurrences."
 msgstr ""
@@ -4052,7 +4052,7 @@ msgstr ""
 msgid "Saturation"
 msgstr ""
 
-#: udav/setup_dlg.cpp:143 mgllab/editor.cpp:283
+#: udav/setup_dlg.cpp:143 mgllab/editor.cpp:282
 msgid "Save"
 msgstr ""
 
@@ -4104,7 +4104,7 @@ msgstr ""
 msgid "Save script to a file (Ctrl+S)"
 msgstr ""
 
-#: mgllab/editor.cpp:509
+#: mgllab/editor.cpp:508
 msgid "Save script to file"
 msgstr ""
 
@@ -4128,7 +4128,7 @@ msgstr ""
 msgid "Script"
 msgstr ""
 
-#: udav/find_dlg.cpp:43 mgllab/editor.cpp:564
+#: udav/find_dlg.cpp:43 mgllab/editor.cpp:563
 msgid "Search backward"
 msgstr ""
 
@@ -4152,7 +4152,7 @@ msgstr ""
 msgid "Select direction"
 msgstr ""
 
-#: mgllab/editor.cpp:655
+#: mgllab/editor.cpp:654
 msgid "Select file name"
 msgstr ""
 
@@ -4160,7 +4160,7 @@ msgstr ""
 msgid "Select first the proper kind of arguments"
 msgstr ""
 
-#: mgllab/editor.cpp:668
+#: mgllab/editor.cpp:667
 msgid "Select folder name"
 msgstr ""
 
@@ -4514,7 +4514,7 @@ msgid ""
 "Textual formulas may contain data variables too."
 msgstr ""
 
-#: mgllab/editor.cpp:526 mgllab/editor.cpp:528
+#: mgllab/editor.cpp:525 mgllab/editor.cpp:527
 msgid "Show calculator window"
 msgstr ""
 
@@ -5003,7 +5003,7 @@ msgid ""
 "put it into the script."
 msgstr ""
 
-#: mgllab/editor.cpp:281
+#: mgllab/editor.cpp:280
 msgid ""
 "The current file has not been saved.\n"
 "Would you like to save it now?"
@@ -5033,7 +5033,7 @@ msgstr ""
 msgid "There is no 'fmt' argument for this command"
 msgstr ""
 
-#: udav/text_pnl.cpp:137 mgllab/editor.cpp:682
+#: udav/text_pnl.cpp:137 mgllab/editor.cpp:681
 msgid "There is no fitted formula."
 msgstr ""
 
