@@ -938,8 +938,7 @@ void MGL_EXPORT mgl_data_transpose(HMDT d, const char *dim)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz, n;
 	mreal *b=new mreal[nx*ny*nz], *a=d->a;
-	if(!strcmp(dim,"xyz"))	memcpy(b,a,nx*ny*nz*sizeof(mreal));
-	else if(!strcmp(dim,"xzy") || !strcmp(dim,"zy"))
+	if(!strcmp(dim,"xzy") || !strcmp(dim,"zy"))
 	{
 #pragma omp parallel for collapse(3)
 		for(long j=0;j<ny;j++)	for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)
@@ -974,6 +973,7 @@ void MGL_EXPORT mgl_data_transpose(HMDT d, const char *dim)
 			b[k+nz*(j+ny*i)] = a[i+nx*(j+ny*k)];
 		n=nz;	nz=nx;	nx=n;
 	}
+	else	memcpy(b,a,nx*ny*nz*sizeof(mreal));
 	memcpy(a,b,nx*ny*nz*sizeof(mreal));	delete []b;
 	n=d->nx;	d->nx=nx;	d->ny=ny;	d->nz=nz;
 	if(nx!=n)	d->NewId();
@@ -1361,7 +1361,7 @@ size_t MGL_EXPORT mgl_fread(FILE *fp, void *vals, size_t size, size_t num, int s
 		{
 			memcpy(buf,ptr+i*size,size);
 			ch=buf[0];	buf[0]=buf[3];	buf[3]=ch;
-			ch=buf[1];	buf[1]=buf[2];	buf[1]=ch;
+			ch=buf[1];	buf[1]=buf[2];	buf[2]=ch;
 		}
 		else if(size==2)	for(size_t i=0;i<r;i++)
 		{

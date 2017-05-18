@@ -81,6 +81,7 @@ AnimParam::AnimParam(QWidget *parent) : QDialog(parent)
 //	fname = new QLineEdit(this);	a->addWidget(fname);
 	gif = new QCheckBox(_("Export to GIF"), this);		a->addWidget(gif);
 	jpg = new QCheckBox(_("Save JPEG frames"), this);	a->addWidget(jpg);
+	gifOn = jpgOn = false;
 }
 //-----------------------------------------------------------------------------
 AnimParam::~AnimParam()	{}

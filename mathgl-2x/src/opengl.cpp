@@ -63,17 +63,18 @@ void mglCanvasGL::Finish()
 		{
 			p=GetPrm(i);	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
 			long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
+			mglDrawReg d;	d.set(this,1,1,0);
 			switch(p.type)
 			{
 /*			case 0:	mark_draw(Pnt[n1],n4,p.s,0);	break;
 			case 1:	line_draw(n1,n2);	break;
 			case 2:	trig_draw(n1,n2,n3);	break;
 			case 3:	quad_draw(n1,n2,n3,n4);	break;*/
-			case 0:	mark_draw(Pnt[n1],n4,p.s,0);	break;
-			case 1:	line_draw(Pnt[n1],Pnt[n2],0);	break;
-			case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,0);	break;
-			case 3:	quad_draw(Pnt[n1],Pnt[n2],Pnt[n3],Pnt[n4],0);	break;
-			case 4:	glyph_draw(p,0);	break;
+			case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
+			case 1:	line_draw(Pnt[n1],Pnt[n2],&d);	break;
+			case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,&d);	break;
+			case 3:	quad_draw(Pnt[n1],Pnt[n2],Pnt[n3],Pnt[n4],&d);	break;
+			case 4:	glyph_draw(p,&d);	break;
 			}
 		}
 		PDef=pdef;	pPos=ss;	PenWidth=ww;

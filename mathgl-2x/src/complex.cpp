@@ -1169,7 +1169,7 @@ mdual MGL_EXPORT mgl_gsplinec(HCDT c, mreal dx, dual *d1, dual *d2)
 	while(dx>c->v(5*i) && i<n-1)	{	dx-=c->v(5*i);	i++;	}
 	dual res;
 	const mglDataC *d = dynamic_cast<const mglDataC *>(c);
-	if(c)
+	if(d)
 	{
 		const dual *a = d->a+5*i;
 		if(d1)	*d1 = a[2]+dx*(mreal(2)*a[3]+(3*dx)*a[4]);
@@ -1298,6 +1298,7 @@ void MGL_EXPORT mgl_datac_refill_xy(HADT dat, HCDT xdat, HCDT ydat, HCDT vdat, m
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_refill_xyz(HADT dat, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2)
 {
+	if(!dat || !xdat || !ydat || !zdat || !vdat)	return;
 	long nx=dat->nx,ny=dat->ny,nz=dat->nz,mx=vdat->GetNx(),my=vdat->GetNy(),mz=vdat->GetNz();
 	bool both=(xdat->GetNN()==vdat->GetNN() && ydat->GetNN()==vdat->GetNN() && zdat->GetNN()==vdat->GetNN());
 	if(!both && (xdat->GetNx()!=mx || ydat->GetNx()!=my || zdat->GetNx()!=mz))	return;	// incompatible dimensions

@@ -84,6 +84,6 @@ void ArgsDialog::putArguments()
 		str[j] = 0;
 		parser.AddParam(i, str);
 	}
-	accept();
+	delete []str;	accept();
 }
 //-----------------------------------------------------------------------------

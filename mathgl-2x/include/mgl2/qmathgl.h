@@ -206,7 +206,6 @@ protected:
 	bool dotsRefr;		///< Set dots for image preview/rotation
 	mreal x1,x2,y1,y2;	///< Zoom in region
 	mreal ax1,ax2,ay1,ay2;	///< Axis range zoom
-	bool showMessage;	///< Flag for showing messages (enabled by each execute())
 	QMenu *popup;		///< Pointer to pop-up menu
 	QTimer *timer;		///< Timer for animation
 	QTimer *timerRefr;	///< Timer for redrawing

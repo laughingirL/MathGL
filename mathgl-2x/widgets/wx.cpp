@@ -89,8 +89,8 @@ END_EVENT_TABLE()
 wxMathGL::wxMathGL(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name) : wxWindow(parent,id,pos,size,style,name)
 {
 	AutoResize = false;	draw_par = 0;	draw_func = 0;
-	gr = new mglCanvas;	popup = 0;
-	phi = tet = per = 0;
+	gr = new mglCanvas;	popup = 0;		draw_cl = 0;
+	phi = tet = per = 0;	x0=y0=xe=ye=0;
 	x1 = y1 = 0;	x2 = y2 = 1;
 	alpha = light = zoom = rotate = false;
 //	SetSize(600, 400);

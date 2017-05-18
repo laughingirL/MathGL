@@ -46,7 +46,7 @@ void MGL_EXPORT mgl_puts_fit(HMGL gr, double x, double y, double z, const char *
 	long n = strlen(mglFitRes)+(pre?strlen(pre):0)+1;
 	char *buf = new char[n];
 	if(pre)	snprintf(buf,n,"%s%s",pre,mglFitRes);
-	else	strncpy(buf,mglFitRes,n);
+	else	mgl_strncpy(buf,mglFitRes,n);
 	buf[n-1]=0;	mgl_puts(gr,x,y,z,buf,font,size);
 	delete []buf;
 }
@@ -516,7 +516,7 @@ MGL_EXPORT const char *mgl_get_fit(HMGL )	{	return mglFitRes;	}
 int MGL_EXPORT mgl_get_fit_(uintptr_t *gr, char *out, int len)
 {
 	const char *res = mgl_get_fit(_GR_);
-	if(out)	strncpy(out,res,len);
+	if(out)	mgl_strncpy(out,res,len);
 	return strlen(res);
 }
 //-----------------------------------------------------------------------------

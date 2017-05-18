@@ -331,6 +331,7 @@ inline int mgl_sign(double a)	{	return a<0?-1:1;	}
 inline long mgl_int(double a)	{	return long(a+(a>=0?0.5:-0.5));	}
 inline double mgl_min(double a, double b)	{	return a>b?b:a;	}
 inline double mgl_max(double a, double b)	{	return a>b?a:b;	}
+inline void mgl_strncpy(char *a, const char *b, size_t s)	{	strncpy(a,b,s);	a[s-1]=0;	}
 //-----------------------------------------------------------------------------
 extern "C" {
 #else

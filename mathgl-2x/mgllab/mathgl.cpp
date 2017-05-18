@@ -231,7 +231,7 @@ public:
 			double a1=s1?atof(s1):NAN, a2=s2?atof(s2):NAN, a3=s3?atof(s3):1;
 			if(a3*(a2-a1)>0)
 			{
-				result = result + "##c "+s1+' '+s2+' '+(s3?s3:"1")+'\n';
+				result = result + "##c "+(s1?s1:"nan")+' '+(s2?s2:"nan")+' '+(s3?s3:"1")+'\n';
 				if(dr)
 				{
 					dr->a1=a1;	dr->a2=a2;	dr->da=a3;

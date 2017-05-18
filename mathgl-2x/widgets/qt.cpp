@@ -100,8 +100,8 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	autoResize = false;	draw_par = 0;	draw_func = 0;
 	dotsRefr = true;
 	gr = new mglCanvas;	appName = "MathGL";
-	popup = 0;	grBuf = 0;	draw = 0;
-	phi = tet = per = 0;
+	popup = 0;	grBuf = 0;	draw = 0;	prevQuality=MGL_DRAW_NORM;
+	phi = tet = per = 0;	x0=y0=xe=ye=0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
 	alpha = light = zoom = rotate = grid = viewYZ = custZoom = custDraw = pause = false;
 	resize(600, 400);	mgl_set_flag(gr, true, MGL_CLF_ON_UPD);

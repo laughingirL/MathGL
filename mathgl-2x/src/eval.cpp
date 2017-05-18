@@ -276,7 +276,7 @@ mglFormula::mglFormula(const char *string)
 	else
 	{
 		char name[128];
-		strncpy(name,str,128);	name[127]=name[n]=0;
+		mgl_strncpy(name,str,128);	name[127]=name[n]=0;
 		memmove(str,str+n+1,len-n);
 		len=strlen(str);		str[--len]=0;
 		if(!strncmp(name,"jacobi_",7))

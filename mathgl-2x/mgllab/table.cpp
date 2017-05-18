@@ -102,7 +102,7 @@ public:
 		o->tooltip(_("Do nothing and close this window"));	o->callback(cb_dlg_cancel,this);
 		o = new Fl_Return_Button(230, 90, 85, 25, _("Change"));
 		o->tooltip(_("Change (resize) data"));	o->callback(cb_dlg_ok,this);
-		w->end();	w->set_modal();
+		w->end();	w->set_modal();	OK=false;
 	}
 	void cb_ok()	{	OK=true;	hide();	}
 	bool run()	{	OK=false;	w->show();	while(w->shown())	Fl::wait();	return OK;	}

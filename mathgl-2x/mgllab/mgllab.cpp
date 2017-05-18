@@ -168,10 +168,8 @@ void new_cb(Fl_Widget*, void*)
 void open_cb(Fl_Widget*, void *v)
 {
 	if (!check_save()) return;
-	char *lastname=0;
 	const char *newfile = mgl_file_chooser(_("Open File?"),
 		_("MGL files \t*.mgl\nDAT files \t*.{dat,csv}"));
-	if(lastname)	free(lastname);
 	if(newfile != NULL)
 	{
 		ScriptWindow* e = (ScriptWindow*)v;
@@ -454,7 +452,6 @@ class PropDlg : public GeneralDlg
 	Fl_Choice *lang_w;
 	Fl_Choice *scheme_w;
 public:
-	HMGL gr;
 	PropDlg() : GeneralDlg()
 	{
 		Fl_Button *o;

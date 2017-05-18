@@ -33,7 +33,7 @@ Fl_Data_Table::Fl_Data_Table(int x, int y, int w, int h, const char *l) : Fl_Tab
 	input->callback(input_cb, (void*)this);
 	input->when(FL_WHEN_ENTER_KEY_ALWAYS);
 	input->maximum_size(16);
-	sl = 0;	row=col=-1;
+	nx=ny=sl = 0;	row=col=-1;	data = NULL;
 //	(new Fl_Box(9999,9999,0,0))->hide();  // HACK: prevent flickering in Fl_Scroll
 	end();
 }
@@ -65,7 +65,7 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_font(FL_HELVETICA, 14);
 		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
 		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
-		else	strncpy(s,mgl_str_num(data->vc(C,R,sl)).c_str(),64);
+		else	mgl_strncpy(s,mgl_str_num(data->vc(C,R,sl)).c_str(),64);
 		{	dual vc = data->vc(C,R,sl);
 			mreal v = data->v(C,R,sl);
 			std::vector<mreal> vn;

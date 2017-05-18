@@ -418,7 +418,7 @@ int main(int argc,char **argv)
 			case 'w':	width =atoi(optarg);	break;
 			case 'h':	height=atoi(optarg);	break;
 			case 'q':	quality =atoi(optarg);	break;
-			case 'k':	strncpy(name, optarg,256);
+			case 'k':	mgl_strncpy(name, optarg,256);
 						tmp=strchr(name,'.');	if(tmp)	*tmp=0;
 						tmp=strchr(name,'-');	if(tmp)	*tmp=0;
 						break;

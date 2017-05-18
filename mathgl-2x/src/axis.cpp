@@ -56,12 +56,12 @@ void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 //-----------------------------------------------------------------------------
 void mglCanvas::SetAxisStl(const char *stl, const char *tck, const char *sub)
 {
-	if(!stl || !(*stl))	strncpy(AxisStl,"k",32);
-	else 				strncpy(AxisStl,stl,32);
-	if(!tck || !(*tck))	strncpy(TickStl,AxisStl,32);
-	else 				strncpy(TickStl,tck,32);
-	if(!sub || !(*sub))	strncpy(SubTStl,TickStl,32);
-	else 				strncpy(SubTStl,sub,32);
+	if(!stl || !(*stl))	mgl_strncpy(AxisStl,"k",32);
+	else 				mgl_strncpy(AxisStl,stl,32);
+	if(!tck || !(*tck))	mgl_strncpy(TickStl,AxisStl,32);
+	else 				mgl_strncpy(TickStl,tck,32);
+	if(!sub || !(*sub))	mgl_strncpy(SubTStl,TickStl,32);
+	else 				mgl_strncpy(SubTStl,sub,32);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTickLen(mreal tlen, mreal stt)
@@ -853,7 +853,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 		char font[64],ff[3]=":C";	memset(font,0,64);
 		if(pos<-0.2)	ff[1]='L';
 		if(pos>0.2)	ff[1]='R';
-		strncpy(font,FontDef,32);	strcat(font,ff);
+		mgl_strncpy(font,FontDef,32);	strcat(font,ff);
 		long kk = AddPnt(&B, p,-1,q,0,7);	ff[1]=0;
 		if(kk>=0)
 		{

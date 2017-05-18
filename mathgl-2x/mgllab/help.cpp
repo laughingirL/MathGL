@@ -348,6 +348,7 @@ class InfoDlg : public GeneralDlg
 public:
 	InfoDlg() : GeneralDlg()
 	{
+		nx=ny=nz=sl=plot=0;
 		Fl_Button *o;
 		w = new Fl_Double_Window(420, 530);
 		out = new Fl_Multiline_Output(10, 25, 400, 150, _("Information"));

@@ -855,7 +855,7 @@ int mglParser::ParseDat(mglGraph *gr, std::wstring str, mglData &res)
 		str = str.substr(n+1);	str = mgl_trim_ws(str);
 	}
 	// try to find last argument
-	if(!str.empty())	{	arg[k] = str;	k++;	}
+	if(!str.empty() && k<32)	{	arg[k] = str;	k++;	}
 	if(k<1) n = 0;
 	else
 	{	// fill arguments by its values
@@ -1074,7 +1074,7 @@ void mglParser::AddCommand(const mglCommand *cmd)
 	memcpy(buf+mc, Cmd, (mp+1)*sizeof(mglCommand));
 	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);	// sort it
 #pragma omp critical(cmd_parser)
-	{	if(Cmd && Cmd!=BaseCmd)   delete []Cmd;	Cmd = buf;	}
+	{	if(Cmd!=BaseCmd)   delete []Cmd;	Cmd = buf;	}
 }
 //-----------------------------------------------------------------------------
 HMPR MGL_EXPORT mgl_create_parser()		{	return new mglParser;	}

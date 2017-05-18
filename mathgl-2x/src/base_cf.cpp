@@ -62,7 +62,7 @@ MGL_EXPORT const char *mgl_get_plotid(HMGL gr)	{	return gr->PlotId.c_str();	}
 int MGL_EXPORT mgl_get_plotid_(uintptr_t *gr, char *out, int len)
 {
 	const char *res = mgl_get_plotid(_GR_);
-	if(out)	strncpy(out,res,len);
+	if(out)	mgl_strncpy(out,res,len);
 	return strlen(res);
 }
 //-----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ MGL_EXPORT const char *mgl_get_mess(HMGL gr)	{	return gr->Mess.c_str();	}
 int MGL_EXPORT mgl_get_mess_(uintptr_t *gr, char *out, int len)
 {
 	const char *res = mgl_get_mess(_GR_);
-	if(out)	strncpy(out,res,len);
+	if(out)	mgl_strncpy(out,res,len);
 	return strlen(res);
 }
 int MGL_EXPORT mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
@@ -91,7 +91,7 @@ MGL_EXPORT const char *mgl_get_global_warn()	{	return mglGlobalMess.c_str();	}
 int MGL_EXPORT mgl_get_global_warn_(char *out, int len)
 {
 	const char *res = mgl_get_global_warn();
-	if(out)	strncpy(out,res,len);
+	if(out)	mgl_strncpy(out,res,len);
 	return strlen(res);
 }
 //-----------------------------------------------------------------------------

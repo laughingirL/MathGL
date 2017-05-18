@@ -26,10 +26,10 @@ struct GifFileType;
 /// Structure for drawing axis and ticks
 struct MGL_EXPORT mglAxis
 {
-	mglAxis() : dv(0),ds(0),d(0),ns(0),	v0(0),v1(0),v2(0),o(NAN),	f(0),	ch(0),	pos('t'),sh(0),inv(false)	{}
-	mglAxis(const mglAxis &aa) : dv(aa.dv),ds(aa.ds),d(aa.d),ns(aa.ns),	t(aa.t),fact(aa.fact),stl(aa.stl),	dir(aa.dir),a(aa.a),b(aa.b),org(aa.org), v0(aa.v0),v1(aa.v1),v2(aa.v2),o(aa.o),	f(aa.f),txt(aa.txt),	ch(aa.ch),	pos(aa.pos),sh(aa.sh),inv(aa.inv)	{}
+	mglAxis() : dv(0),ds(0),d(0),ns(0),	v0(0),v1(0),v2(0),o(NAN),	f(0),	ch(0),	pos('t'),sh(0),inv(false),angl(NAN)	{}
+	mglAxis(const mglAxis &aa) : dv(aa.dv),ds(aa.ds),d(aa.d),ns(aa.ns),	t(aa.t),fact(aa.fact),stl(aa.stl),	dir(aa.dir),a(aa.a),b(aa.b),org(aa.org), v0(aa.v0),v1(aa.v1),v2(aa.v2),o(aa.o),	f(aa.f),txt(aa.txt),	ch(aa.ch),	pos(aa.pos),sh(aa.sh),inv(aa.inv),angl(aa.angl)	{}
 #if MGL_HAVE_RVAL
-	mglAxis(mglAxis &&aa) : dv(aa.dv),ds(aa.ds),d(aa.d),ns(aa.ns),	t(aa.t),fact(aa.fact),stl(aa.stl),	dir(aa.dir),a(aa.a),b(aa.b),org(aa.org), v0(aa.v0),v1(aa.v1),v2(aa.v2),o(aa.o),	f(aa.f),txt(aa.txt),	ch(aa.ch),	pos(aa.pos),sh(aa.sh),inv(aa.inv)	{}
+	mglAxis(mglAxis &&aa) : dv(aa.dv),ds(aa.ds),d(aa.d),ns(aa.ns),	t(aa.t),fact(aa.fact),stl(aa.stl),	dir(aa.dir),a(aa.a),b(aa.b),org(aa.org), v0(aa.v0),v1(aa.v1),v2(aa.v2),o(aa.o),	f(aa.f),txt(aa.txt),	ch(aa.ch),	pos(aa.pos),sh(aa.sh),inv(aa.inv),angl(aa.angl)	{}
 #endif
 
 	const mglAxis &operator=(const mglAxis &aa)
@@ -68,7 +68,7 @@ class mglCanvas;
 /// Structure for drawing region
 struct MGL_EXPORT mglDrawReg
 {
-	mglDrawReg() {}
+	mglDrawReg() {	memset(this,0,sizeof(mglDrawReg));	}
 	mglDrawReg(const mglDrawReg &aa) : PDef(aa.PDef),angle(aa.angle),ObjId(aa.ObjId),PenWidth(aa.PenWidth),pPos(aa.pPos) ,x1(aa.x1),x2(aa.x2),y1(aa.y1),y2(aa.y2)	{}
 #if MGL_HAVE_RVAL
 	mglDrawReg(mglDrawReg &&aa) : PDef(aa.PDef),angle(aa.angle),ObjId(aa.ObjId),PenWidth(aa.PenWidth),pPos(aa.pPos) ,x1(aa.x1),x2(aa.x2),y1(aa.y1),y2(aa.y2)	{}

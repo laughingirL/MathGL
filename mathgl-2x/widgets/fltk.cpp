@@ -104,6 +104,7 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widge
 	tet_val = phi_val = 0;
 	draw_par = 0;	draw_func = 0;	draw_cl = 0;
 	last_id = -1;	run = false;
+	popup=0;	vpar=0;	wpar=0;	thr=0;
 }
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
@@ -897,7 +898,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	FMGL->tet_val = tet;
 	FMGL->phi_val = phi;
 	FMGL->set_popup(pop_graph,FMGL,this);
-	scroll->end();	resizable(scroll);	end();
+	scroll->end();	resizable(scroll);	end();	par=0;
 }
 Fl_MGLView::~Fl_MGLView()	{}
 //-----------------------------------------------------------------------------
@@ -905,7 +906,7 @@ Fl_MGLView::~Fl_MGLView()	{}
 //		class mglCanvasFL
 //
 //-----------------------------------------------------------------------------
-mglCanvasFL::mglCanvasFL() : mglCanvasWnd()	{	Wnd=0;	}
+mglCanvasFL::mglCanvasFL() : mglCanvasWnd()	{	Wnd=0;	mgl=0;	}
 mglCanvasFL::~mglCanvasFL()		{	if(Wnd)	{	mgl->FMGL->gr=0;	delete Wnd;	}	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::GotoFrame(int d)

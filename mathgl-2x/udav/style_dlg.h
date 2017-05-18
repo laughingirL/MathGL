@@ -51,12 +51,12 @@ private:
 	QComboBox *cc[8], *cline, *cfont;
 	QSlider *nn[8], *nline;
 	QComboBox *axial, *ctext, *a1, *a2, *dash, *mark;
-	QCheckBox *swire, *upd;
+	QCheckBox *swire;
 	QCheckBox *ital, *bold, *wire, *uline, *oline;
 	QSpinBox *width;
 	QGroupBox *align;
 	QTabWidget *tab;
-	QLabel *box, *pic;
+	QLabel *pic;
 	QLineEdit *res;
 	QRadioButton *rbL, *rbC, *rbR;
 	uchar *grBuf;

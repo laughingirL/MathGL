@@ -102,11 +102,11 @@ int main(int argc, char *argv[])
 				"\t-h           print this message\n") );
 			return 0;
 		}
-		else if(ch=='o')	strncpy(oname, optarg,256);
+		else if(ch=='o')	mgl_strncpy(oname, optarg,256);
 		else if(ch==-1 && optind<argc)
-		{	strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
+		{	mgl_strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
 	}
-	if(*oname==0)	{	strncpy(oname,*iname?iname:"out",250);	strcat(oname,".png");	}
+	if(*oname==0)	{	mgl_strncpy(oname,*iname?iname:"out",250);	strcat(oname,".png");	}
 	else	none = false;
 
 	mgl_ask_func = mgl_ask_gets;

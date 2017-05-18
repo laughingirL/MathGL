@@ -80,7 +80,7 @@ void MGL_EXPORT mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char 
 			}
 		}
 	}
-	mgl_plot_xy(gr,&x,&y,pen,0);
+	delete eq;	mgl_plot_xy(gr,&x,&y,pen,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, const char *pen, const char *opt)
@@ -209,7 +209,8 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 	if(!y1)	{	y1 = new mglData(n);	d1=true;	((mglData *)y1)->Fill(NAN,NAN);	}
 	if(!y2)	{	y2 = new mglData(n);	d2=true;	((mglData *)y2)->Fill(NAN,NAN);	}
 	if(y1->GetNx()!=n || y2->GetNx()!=n)
-	{	gr->SetWarn(mglWarnDim,"Candle");	return;	}
+	{	if(d1)	delete y1;	if(d2)	delete y2;
+		gr->SetWarn(mglWarnDim,"Candle");	return;	}
 	static int cgid=1;	gr->StartGroup("Candle",cgid++);
 	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);	gr->Reserve(8*n);
 	bool sh = mglchr(pen,'!');
@@ -664,7 +665,8 @@ void MGL_EXPORT mgl_region_3d(HMGL gr, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT 
 	long n=y1->GetNx(), m, pal;
 	if(mgl_check_dim1(gr,x1,y1,z1,0,"Region"))	return;
 	if(mgl_check_dim1(gr,x1,x2,y2,z2,"Region"))	return;
-	m = x1->GetNy() > y1->GetNy() ? x1->GetNy() : y1->GetNy();	m = z1->GetNy() > m ? z1->GetNy() : m;
+	m = x1->GetNy() > y1->GetNy() ? x1->GetNy() : y1->GetNy();
+	m = (z1 && z1->GetNy() > m) ? z1->GetNy() : m;
 	bool zhave = z1 && z2;
 	if(x1->GetNy()!=x2->GetNy() || y1->GetNy()!=y2->GetNy())
 	{	gr->SetWarn(mglWarnDim,"Region");	return;	}

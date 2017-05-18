@@ -592,9 +592,9 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	if(gr->GetPrmNum()<1)	return;
 	_Gr_->clr(MGL_FINISHED);	_Gr_->PreparePrim(1);
 
-	FILE *fp = fopen(fname,"w");	fwide(fp,1);
+	FILE *fp = fopen(fname,"w");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
-	const std::string loc = setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, "C");	fwide(fp,1);
 	fwprintf(fp, L"%% Created by MathGL library\n%% Title: %s\n\n",descr?descr:fname);
 	// provide marks
 	fwprintf(fp, L"\\providecommand{\\mglp}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1,#2-#4) -- (#1,#2+#4);}\n");

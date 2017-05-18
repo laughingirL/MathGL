@@ -966,7 +966,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 
 		/* save the document to a file */
 		const size_t tlen = strlen(tname);
-		tname[tlen-2]='p';	tname[tlen-2]='d';	tname[tlen-1]='f';
+		tname[tlen-3]='p';	tname[tlen-2]='d';	tname[tlen-1]='f';
 		HPDF_SaveToFile (pdf, tname);
 
 		/* clean up */

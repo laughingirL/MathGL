@@ -549,7 +549,7 @@ void mglCanvas::FillBackground(const mglColor &cc)
 //-----------------------------------------------------------------------------
 void mglCanvas::Combine(const mglCanvas *gr)
 {
-	if(Width!=gr->Width || Height!=gr->Height || !gr)	return;	// wrong sizes
+	if(!gr || Width!=gr->Width || Height!=gr->Height)	return;	// wrong sizes
 	mglStartThread(&mglCanvas::pxl_other,this,Width*Height,gr);
 }
 //-----------------------------------------------------------------------------

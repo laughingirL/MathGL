@@ -674,12 +674,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 	}
 	else
 	{
-		if(d)
-		{
-			d->PDef = MGL_SOLID_MASK;	d->angle = 0;
-			PW = d->PenWidth*sqrt(fabs(50*size));
-			if(PW<1)	PW=1;
-		}
+		d->PDef = MGL_SOLID_MASK;	d->angle = 0;
+		PW = d->PenWidth*sqrt(fabs(50*size));
+		if(PW<1)	PW=1;
 		if(oi==HighId)	PW *= 2;
 		const mreal pw = PW;
 

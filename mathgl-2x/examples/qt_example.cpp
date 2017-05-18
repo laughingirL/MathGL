@@ -111,7 +111,7 @@ class myDraw : public mglDraw
 	long i;			// another variable to be shown
 	mglWnd *wnd;	// external window for plotting
 public:
-	myDraw(mglWnd *w=0) : mglDraw()	{	wnd=w;	}
+	myDraw(mglWnd *w=0) : mglDraw()	{	wnd=w;	i=0;	}
 	void SetWnd(mglWnd *w)	{	wnd=w;	}
 	int Draw(mglGraph *gr)
 	{

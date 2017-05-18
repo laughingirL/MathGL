@@ -968,7 +968,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 {
 	// NOTE: New syntax -- colors are CCCCC or {CNCNCCCN}; options inside []
 	if(!s || !s[0])	return;
-	strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;
+	mgl_strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;
 
 	long l=strlen(s);
 	bool map = smooth==2 || mglchr(s,'%'), sm = smooth>=0 && !strchr(s,'|');	// Use mapping, smoothed colors
@@ -1540,7 +1540,7 @@ bool MGL_EXPORT mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay
 	return false;
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetFontDef(const char *font) {	strncpy(FontDef, font, 31);	}
+void mglBase::SetFontDef(const char *font) {	mgl_strncpy(FontDef, font, 31);	}
 //-----------------------------------------------------------------------------
 void mglBase::ClearUnused()
 {

@@ -362,7 +362,7 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 	size *= MarkSize*0.35*font_factor;
 	if(type=='.')	size = fabs(PenWidth)*sqrt(font_factor/400);
 	if(TernAxis&12) for(int i=0;i<4;i++)
-	{	p = ProjScale(i, pp);	MGL_MARK_PLOT	}
+	{	p = ProjScale(i, pp);	if(p>=0)	{MGL_MARK_PLOT}	}
 	else	{	MGL_MARK_PLOT	}
 }
 //-----------------------------------------------------------------------------
@@ -380,7 +380,7 @@ void mglCanvas::line_plot(long p1, long p2)
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
 	if(TernAxis&12) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
-		MGL_LINE_PLOT	}
+		if(p1>=0&&p2>=0)	{MGL_LINE_PLOT}	}
 	else	{	MGL_LINE_PLOT	}
 	mreal d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 	pPos = fmod(pPos+d/pw/1.5, 16);
@@ -399,7 +399,7 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
 	if(TernAxis&12) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
-		p3 = ProjScale(i, pp3);	MGL_TRIG_PLOT	}
+		p3 = ProjScale(i, pp3);	if(p1>=0&&p2>=0&&p3>=0)	{MGL_TRIG_PLOT}	}
 	else	{	MGL_TRIG_PLOT	}
 }
 //-----------------------------------------------------------------------------
@@ -419,7 +419,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	if(TernAxis&12) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	p4 = ProjScale(i, pp4);
-		MGL_QUAD_PLOT	}
+		if(p1>=0&&p2>=0&&p3>=0&&p4>=0)	{MGL_QUAD_PLOT}	}
 	else	{	MGL_QUAD_PLOT	}
 }
 //-----------------------------------------------------------------------------

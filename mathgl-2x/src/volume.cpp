@@ -48,7 +48,7 @@ void MGL_EXPORT mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 	mreal	alpha = gr->AlphaDef;
 	bool inv = mglchr(sch,'i');
 	bool dot = mglchr(sch,'.');
-	alpha /= pow(n/tx*m/ty*l/tz,1./3)/20;
+	alpha /= pow((n/tx)*(m/ty)*(l/tz),1./3)/20;
 	if(alpha>1)	alpha = 1;
 	long ss = gr->AddTexture(sch);
 

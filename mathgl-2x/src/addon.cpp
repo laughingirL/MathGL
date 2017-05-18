@@ -95,6 +95,7 @@ void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
 		}
 		if(str[i]<=' ')	t = mgl_fgetstr(fp);
 	}
+	va_end(lst);
 }
 //-----------------------------------------------------------------------------
 int MGL_EXPORT_CONST mgl_istrue(char ch)

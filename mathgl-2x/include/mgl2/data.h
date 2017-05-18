@@ -143,6 +143,7 @@ using mglDataA::Momentum;
 		mgl_data_create(this,n,1,1);
 		va_list vl;	va_start(vl,n);
 		for(long i=0;i<n;i++)	a[i] = va_arg(vl,double);
+		va_end(vl);
 	}
 
 	/// Create or recreate the array with specified size and fill it by zero

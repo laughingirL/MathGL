@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 			return 0;
 		}
 		else if(ch==-1 && optind<argc)
-		{	strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
+		{	mgl_strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
 	}
 
 	bool mgld=(*iname && iname[strlen(iname)-1]=='d');

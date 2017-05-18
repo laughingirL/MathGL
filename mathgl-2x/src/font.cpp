@@ -534,7 +534,8 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 						unsigned sn = str[i+j];
 						if(sn<unsigned(-15) && (sn&MGL_FONT_MASK)>' ')	// specially center
 						{
-							dx = 0.75*ff*(GetWidth(a,Internal(sn&MGL_FONT_MASK))-GetWidth(a,j))/fact[a];
+							long jj = Internal(sn&MGL_FONT_MASK);
+							dx = jj<0?0:0.75*ff*(GetWidth(a,jj)-GetWidth(a,j))/fact[a];
 							if(dx<0)	dx=0;
 						}
 					}
@@ -951,6 +952,7 @@ long MGL_EXPORT mgl_check_tex_table()
 //---------------------------------------------------------------------------
 bool MGL_NO_EXPORT test_transl(const char *p)
 {
+	if(!p)	return false;
 #if MGL_USE_GETTEXT
 	std::string f = std::string(p) + "/ru/LC_MESSAGES/mathgl.mo";
 	FILE *fp = fopen(f.c_str(),"r");

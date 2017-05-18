@@ -1,76 +1,67 @@
 #!/bin/bash
 # Make releases
 
-VER=2.3.4
+VER=2.4
 LVER=${VER}.LGPL
-BIN=MathGL
-LBIN=MathGL-LGPL
-WBIN=MathGL-Win10
+BIN32=MathGL2-w32
+BIN64=MathGL2-w64
+LBIN32=MathGL2-lgpl-w32
+LBIN64=MathGL2-lgpl-w64
 SRC=/home/balakin/mathgl-code/mathgl-2x
 BSRC=${SRC}/build
-GPL=mathgl-${VER}-mingw.i686
-LGPL=mathgl-${VER}.LGPL-mingw.i386
-WIN8=mathgl-${VER}.Win10-mingw.i386
-EXE=mgl_scripts-${VER}
-EXE8=mgl_scripts-${VER}.Win10
 
-mkdir ${GPL}
-mkdir ${GPL}/bin/
-cp -p ${BIN}/bin/* ${GPL}/bin/
-mkdir ${GPL}/lib/
-cp -p ${BIN}/lib/* ${GPL}/lib/
-mkdir ${GPL}/include/
-mkdir ${GPL}/include/mgl2/
-cp -p ${BIN}/include/mgl2/* ${GPL}/include/mgl2/
-cp -p ${SRC}/ChangeLog.txt ${GPL}/
-cp -p ${SRC}/FindMathGL2.cmake ${GPL}/mathgl2-config.cmake
-7z a ${GPL}.7z ${GPL}/
-rm -R ${GPL}
+GPL32=mathgl-${VER}-mingw.win32
+LGPL32=mathgl-${VER}.LGPL-mingw.win32
+GPL64=mathgl-${VER}-mingw.win64
+LGPL64=mathgl-${VER}.LGPL-mingw.win64
+EXE32=mgl_scripts-${VER}.win32
+EXE64=mgl_scripts-${VER}.win64
 
-mkdir ${WIN8}
-mkdir ${WIN8}/bin/
-cp -p ${WBIN}/bin/* ${WIN8}/bin/
-mkdir ${WIN8}/lib/
-cp -p ${WBIN}/lib/* ${WIN8}/lib/
-mkdir ${WIN8}/include/
-mkdir ${WIN8}/include/mgl2/
-cp -p ${WBIN}/include/mgl2/* ${WIN8}/include/mgl2/
-cp -p ${SRC}/ChangeLog.txt ${WIN8}/
-cp -p ${SRC}/FindMathGL2.cmake ${WIN8}/mathgl2-config.cmake
-7z a ${WIN8}.7z ${WIN8}/
-rm -R ${WIN8}
+mkdir ${GPL32}
+mkdir ${GPL32}/bin/
+cp -p ${BIN32}/bin/libmgl* ${GPL32}/bin/
+cp -pR ${BIN32}/[slim]* ${GPL32}/
+cp -p ${SRC}/ChangeLog.txt ${GPL32}/
+7z a ${GPL32}.7z ${GPL32}/
+rm -R ${GPL32}
 
-mkdir ${LGPL}
-mkdir ${LGPL}/bin/
-cp -p ${LBIN}/bin/* ${LGPL}/bin/
-mkdir ${GPL}/lib/
-cp -p ${LBIN}/lib/* ${LGPL}/lib/
-mkdir ${LGPL}/include/
-mkdir ${LGPL}/include/mgl2/
-cp -p ${LBIN}/include/mgl2/* ${LGPL}/include/mgl2/
-cp -p ${SRC}/ChangeLog.txt ${LGPL}/
-cp -p ${SRC}/FindMathGL2.cmake ${LGPL}/mathgl2-config.cmake
-7z a ${LGPL}.7z ${LGPL}/
-rm -R ${LGPL}
+mkdir ${LGPL32}
+cp -pR ${LBIN32}/* ${LGPL32}/
+cp -p ${SRC}/ChangeLog.txt ${LGPL32}/
+7z a ${LGPL32}.7z ${LGPL32}/
+rm -R ${LGPL32}
 
-mkdir ${EXE}
-cp -pR ${BIN}/extra/* ${EXE}/
-cp -p ${BIN}/bin/* ${EXE}/
-cp -p ${BIN}/share/mathgl/mgl.cgi.exe ${EXE}/
-cp -p ${BIN}/share/udav/*.qm ${EXE}/
-cp -p ${BSRC}/texinfo/mgl_??.html ${EXE}/
-cp -p ${SRC}/ChangeLog.txt ${EXE}/
-7z a ${EXE}.7z ${EXE}/
-rm -R ${EXE}
+mkdir ${EXE32}
+cp -pR ${BIN32}/bin/* ${EXE32}/
+cp -p ${BIN32}/share/mathgl/mgl.cgi.exe ${EXE32}/
+cp -p ${BIN32}/share/udav/*.qm ${EXE32}/
+cp -p ${BSRC}/texinfo/mgl_??.html ${EXE32}/
+cp -p ${SRC}/ChangeLog.txt ${EXE32}/
+7z a ${EXE32}.7z ${EXE32}/
+rm -R ${EXE32}
 
-mkdir ${EXE8}
-cp -pR ${WBIN}/extra/* ${EXE8}/
-cp -p ${WBIN}/bin/* ${EXE8}/
-cp -p ${WBIN}/share/udav/*.qm ${EXE8}/
-cp -p ${BSRC}/texinfo/mgl_??.html ${EXE8}/
-cp -p ${SRC}/ChangeLog.txt ${EXE8}/
-7z a ${EXE8}.7z ${EXE8}/
-rm -R ${EXE8}
+mkdir ${GPL64}
+mkdir ${GPL64}/bin/
+cp -p ${BIN64}/bin/libmgl* ${GPL64}/bin/
+cp -pR ${BIN64}/[slim]* ${GPL64}/
+cp -p ${SRC}/ChangeLog.txt ${GPL64}/
+7z a ${GPL64}.7z ${GPL64}/
+rm -R ${GPL64}
+
+mkdir ${LGPL64}
+cp -pR ${LBIN64}/* ${LGPL64}/
+cp -p ${SRC}/ChangeLog.txt ${LGPL64}/
+7z a ${LGPL64}.7z ${LGPL64}/
+rm -R ${LGPL64}
+
+mkdir ${EXE64}
+cp -pR ${BIN64}/bin/* ${EXE64}/
+cp -p ${BIN64}/share/mathgl/mgl.cgi.exe ${EXE64}/
+cp -p ${BIN64}/share/udav/*.qm ${EXE64}/
+cp -p ${BSRC}/texinfo/mgl_??.html ${EXE64}/
+cp -p ${SRC}/ChangeLog.txt ${EXE64}/
+7z a ${EXE64}.7z ${EXE64}/
+rm -R ${EXE64}
 
 cp -p ${BSRC}/texinfo/mathgl_en.pdf mathgl-${VER}.eng.pdf
 cp -p ${BSRC}/texinfo/mgl_en.pdf mgl-${VER}.eng.pdf
@@ -80,6 +71,7 @@ cp -p ${SRC}/ChangeLog.txt ChangeLog-${VER}.txt
 svn checkout svn://svn.code.sf.net/p/mathgl/code/mathgl-2x/ mathgl-${VER}
 cd mathgl-${VER}
 ./clean-svn
+rm make_release
 cd ..
 tar -zcf mathgl-${VER}.tar.gz mathgl-${VER}/
 rm -R mathgl-${VER}

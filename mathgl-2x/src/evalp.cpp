@@ -832,8 +832,9 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 					{	k = res->ny;	res->Insert('y',k);	mgl_datac_put_dat(res,a1,-1,k,-1);	}
 					else		// res 3d array
 					{	k = res->nz;	res->Insert('z',k);	mgl_datac_put_dat(res,a1,-1,-1,k);	}
+					mgl_delete_datac(a1);
 				}
-				mgl_delete_datac(a1);	j=i+1;
+				j=i+1;
 			}
 		}
 		HADT a1=mglFormulaCalcC(str.substr(j,i-j), arg, head);
@@ -847,8 +848,9 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			{	k = res->ny;	res->Insert('y',k);	mgl_datac_put_dat(res,a1,-1,k,-1);	}
 			else		// res 3d array
 			{	k = res->nz;	res->Insert('z',k);	mgl_datac_put_dat(res,a1,-1,-1,k);	}
+			mgl_delete_datac(a1);
 		}
-		mgl_delete_datac(a1);	return res;
+		return res;
 	}
 
 	n=mglFindInText(str,"<>=");	// low priority -- conditions

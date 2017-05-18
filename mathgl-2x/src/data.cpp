@@ -1281,7 +1281,7 @@ mreal MGL_EXPORT mgl_data_momentum_val(HCDT dd, char dir, mreal *x, mreal *w, mr
 #pragma omp parallel for reduction(+:i0,i1,i2,i3,i4)
 		for(long i=0;i<nx*ny*nz;i++)
 		{
-			mreal d = i%nx, t = d*d, v = dd->vthr(i);
+			mreal d = mreal(i%nx), t = d*d, v = dd->vthr(i);
 			i0+= v;	i1+= v*d;	i2+= v*t;
 			i3+= v*d*t;		i4+= v*t*t;
 		}
@@ -1290,7 +1290,7 @@ mreal MGL_EXPORT mgl_data_momentum_val(HCDT dd, char dir, mreal *x, mreal *w, mr
 #pragma omp parallel for reduction(+:i0,i1,i2,i3,i4)
 		for(long i=0;i<nx*ny*nz;i++)
 		{
-			mreal d = (i/nx)%ny, t = d*d, v = dd->vthr(i);
+			mreal d = mreal((i/nx)%ny), t = d*d, v = dd->vthr(i);
 			i0+= v;	i1+= v*d;	i2+= v*t;
 			i3+= v*d*t;		i4+= v*t*t;
 		}
@@ -1299,7 +1299,7 @@ mreal MGL_EXPORT mgl_data_momentum_val(HCDT dd, char dir, mreal *x, mreal *w, mr
 #pragma omp parallel for reduction(+:i0,i1,i2,i3,i4)
 		for(long i=0;i<nx*ny*nz;i++)
 		{
-			mreal d = i/(nx*ny), t = d*d, v = dd->vthr(i);
+			mreal d = mreal(i/(nx*ny)), t = d*d, v = dd->vthr(i);
 			i0+= v;	i1+= v*d;	i2+= v*t;
 			i3+= v*d*t;		i4+= v*t*t;
 		}
@@ -1431,7 +1431,7 @@ MGL_EXPORT const char *mgl_data_info(HCDT d)	// NOTE: Not thread safe function!
 int MGL_EXPORT mgl_data_info_(uintptr_t *d, char *out, int len)
 {
 	const char *res = mgl_data_info(_DA_(d));
-	if(out)	strncpy(out,res,len);
+	if(out)	mgl_strncpy(out,res,len);
 	return strlen(res);
 }
 //-----------------------------------------------------------------------------
@@ -2116,6 +2116,7 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2)
 {
+	if(!dat || !xdat || !ydat || !zdat || !vdat)	return;
 	long nx=dat->nx,ny=dat->ny,nz=dat->nz,mx=vdat->GetNx(),my=vdat->GetNy(),mz=vdat->GetNz();
 	bool both=(xdat->GetNN()==vdat->GetNN() && ydat->GetNN()==vdat->GetNN() && zdat->GetNN()==vdat->GetNN());
 	if(!both && (xdat->GetNx()!=mx || ydat->GetNx()!=my || zdat->GetNx()!=mz))	return;	// incompatible dimensions

@@ -59,7 +59,7 @@ FilesDialog::FilesDialog(QWidget *parent) : QDialog(parent)
 	connect(b, SIGNAL(clicked()),this, SLOT(reject()));
 	b = new QPushButton(_("OK"), this);		h->addWidget(b);
 	connect(b, SIGNAL(clicked()),this, SLOT(putArguments()));
-	b->setDefault(true);
+	b->setDefault(true);	narg=0;
 }
 //-----------------------------------------------------------------------------
 FilesDialog::~FilesDialog()	{}
