@@ -756,22 +756,26 @@ endif(WIN32)
 
 if(MGL_USE_LIBINTL)
 	if(USE_GETTEXT)
-		add_custom_target(mathgl.pot ALL
+		set(mgl_tl_list )
+		add_custom_command(OUTPUT mathgl.pot
 			COMMAND ${findxgettext} -s --keyword=_ -C -c --package-name=MathGL2 --package-version=${MathGL_VERSION} -o ${MathGL2_BINARY_DIR}/mathgl.pot ${po_files}
 			WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/
 			DEPENDS ${po_files} )
 		set(mgl_clean_files mathgl.pot ${mgl_clean_files})
 		foreach(tl ru es) # en)
-			add_custom_target(mathgl_${tl}.po ALL
+			add_custom_command(OUTPUT mathgl_${tl}.po.done
 				COMMAND ${findmsgmerge} -U mathgl_${tl}.po ${MathGL2_BINARY_DIR}/mathgl.pot
+				COMMAND ${CMAKE_COMMAND} -E touch ${MathGL2_BINARY_DIR}/mathgl_${tl}.po.done
 				WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/
-				DEPENDS mathgl.pot )
-			add_custom_target(mathgl_${tl}.mo ALL
+				DEPENDS mathgl.pot mathgl_${tl}.po)
+			add_custom_command(OUTPUT mathgl_${tl}.mo
 				COMMAND ${findmsgfmt} -o mathgl_${tl}.mo ${MathGL2_SOURCE_DIR}/mathgl_${tl}.po
-				DEPENDS mathgl_${tl}.po)
+				DEPENDS mathgl_${tl}.po.done)
 			install( FILES ${MathGL2_BINARY_DIR}/mathgl_${tl}.mo DESTINATION "${CMAKE_INSTALL_PREFIX}/share/locale/${tl}/LC_MESSAGES/" RENAME mathgl.mo )
+			set(mgl_tl_list mathgl_${tl}.mo ${mgl_tl_list})
 			set(mgl_clean_files mathgl_${tl}.mo ${mgl_clean_files})
 		endforeach(tl)
+		add_custom_target(mgl_translations ALL DEPENDS ${mgl_tl_list})
 	else(USE_GETTEXT)
 		foreach(tl ru es) # en)
 			install( FILES ${MathGL2_SOURCE_DIR}/translations/mathgl_${tl}.mo DESTINATION "${CMAKE_INSTALL_PREFIX}/share/locale/${tl}/LC_MESSAGES/" RENAME mathgl.mo )
