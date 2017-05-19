@@ -761,7 +761,7 @@ if(MGL_USE_LIBINTL)
 			WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/
 			DEPENDS ${po_files} )
 		set(mgl_clean_files mathgl.pot ${mgl_clean_files})
-		foreach(tl ru es en)
+		foreach(tl ru es) # en)
 			add_custom_target(mathgl_${tl}.po ALL
 				COMMAND ${findmsgmerge} -U mathgl_${tl}.po ${MathGL2_BINARY_DIR}/mathgl.pot
 				WORKING_DIRECTORY ${MathGL2_SOURCE_DIR}/
@@ -773,7 +773,7 @@ if(MGL_USE_LIBINTL)
 			set(mgl_clean_files mathgl_${tl}.mo ${mgl_clean_files})
 		endforeach(tl)
 	else(USE_GETTEXT)
-		foreach(tl ru es en)
+		foreach(tl ru es) # en)
 			install( FILES ${MathGL2_SOURCE_DIR}/translations/mathgl_${tl}.mo DESTINATION "${CMAKE_INSTALL_PREFIX}/share/locale/${tl}/LC_MESSAGES/" RENAME mathgl.mo )
 		endforeach(tl)
 	endif(USE_GETTEXT)
