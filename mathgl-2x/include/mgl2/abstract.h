@@ -57,6 +57,7 @@ extern "C" {
 
 #else
 #define mglDataA void
+#define mglNum void
 typedef void *HMGL;
 typedef void *HMDT;
 typedef void *HADT;
