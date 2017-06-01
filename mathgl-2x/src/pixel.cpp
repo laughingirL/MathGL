@@ -643,9 +643,9 @@ void mglCanvas::pnt_draw(const mglPnt &p, const mglDrawReg *dr)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
+void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *dr)
 {
-	const int oi = d?d->ObjId:-1;
+	const int oi = dr->ObjId;
 	unsigned char cs[4];	col2int(q,cs,oi);
 	const unsigned char ca = cs[3];// = size>0 ? 255 : 255*q.t;
 	const mreal ss=(strchr("xsSoO",type)?1:1.1)*fabs(size), dpw=(oi==HighId?2:3)*pen_delta;
@@ -653,14 +653,14 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 
 	if(type=='.' || ss==0)
 	{
-		if(d)	PW = 3*(ss?ss:sqrt(font_factor/400));
+		PW = 3*(ss?ss:sqrt(font_factor/400));
 		if(oi==HighId)	PW *= 2;
 		const mreal pw = PW;
 		mreal dd = pw+10/dpw;
 		long x1 = long(q.x-dd), y1 = long(q.y-dd);	// bounding box
 		long x2 = long(q.x+dd), y2 = long(q.y+dd);
-		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
-		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
+		x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
+		y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
 		if(x1>x2 || y1>y2)	return;
 		const float V=(pw-1)*(pw-1)/4,S=(1-pw)/2;
 
@@ -674,8 +674,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 	}
 	else
 	{
-		d->PDef = MGL_SOLID_MASK;	d->angle = 0;
-		PW = d->PenWidth*sqrt(fabs(50*size));
+		dr->PDef = MGL_SOLID_MASK;	dr->angle = 0;
+		PW = dr->PenWidth*sqrt(fabs(50*size));
 		if(PW<1)	PW=1;
 		if(oi==HighId)	PW *= 2;
 		const mreal pw = PW;
@@ -683,8 +683,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		mreal dd = ss+pw+10/dpw;
 		long x1 = long(q.x-dd), y1 = long(q.y-dd);	// bounding box
 		long x2 = long(q.x+dd), y2 = long(q.y+dd);
-		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
-		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
+		x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
+		y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
 		if(x1>x2 || y1>y2)	return;
 		const float V=(pw-1)*(pw-1)/4,S=(1-pw)/2;
 

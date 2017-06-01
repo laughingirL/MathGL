@@ -377,13 +377,22 @@ void mglCanvas::line_plot(long p1, long p2)
 	if(p1<0 || p2<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || SamePnt(p1,p2))	return;
 	if(p1>p2)	{	long kk=p1;	p1=p2;	p2=kk;	}	// rearrange start/end for proper dashing
 	long pp1=p1,pp2=p2;
-	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
+	mreal pw = fabs(PenWidth)*sqrt(font_factor/400), d=0;
 	if(TernAxis&12) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
-		if(p1>=0&&p2>=0)	{MGL_LINE_PLOT}	}
-	else	{	MGL_LINE_PLOT	}
-	mreal d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
-	pPos = fmod(pPos+d/pw/1.5, 16);
+		if(p1>=0&&p2>=0)
+		{
+			d += hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
+			MGL_LINE_PLOT
+			pPos = fmod(pPos+d/pw/1.5, 16);
+		}
+	}
+	else
+	{
+		d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
+		MGL_LINE_PLOT
+		pPos = fmod(pPos+d/pw/1.5, 16);
+	}
 }
 //-----------------------------------------------------------------------------
 #define MGL_TRIG_PLOT	if(Quality&MGL_DRAW_LMEM)	\

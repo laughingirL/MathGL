@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 	{
 		long len=atol(getenv("CONTENT_LENGTH"));
 		buf = new char[len+1];
-		if(!fread(buf,len,1,stdin))	len=0;
+		len = fread(buf,len,1,stdin);
 		buf[len]=0;	alloc=true;
 	}
 	else		buf = getenv("QUERY_STRING");

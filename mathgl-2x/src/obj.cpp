@@ -395,7 +395,8 @@ size_t MGL_LOCAL_CONST power_of_two(size_t input)
 
 void MGL_EXPORT mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 {
-	if(gr->GetPrmNum()==0)	return;	// nothing to do
+	mglCanvas *gg = dynamic_cast<mglCanvas *>(gr);
+	if(!gg || gr->GetPrmNum()==0)	return;	// nothing to do
 
 	{
 		long mmin=0,mmax=0,m;
@@ -425,8 +426,8 @@ void MGL_EXPORT mgl_write_obj(HMGL gr, const char *fname,const char *descr, int 
 
 	// center point
 	mglPnt p0;
-	const mreal width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
-	const mreal height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
+	const mreal width  = gg->GetWidth();
+	const mreal height = gg->GetHeight();
 	const mreal depth  = sqrt(width*height);
 
 	p0.x = width/2.;

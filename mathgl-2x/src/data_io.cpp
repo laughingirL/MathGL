@@ -1384,13 +1384,14 @@ size_t MGL_EXPORT mgl_fread(FILE *fp, void *vals, size_t size, size_t num, int s
 /** Parse Tektronix TDS5000/B, TDS6000/B/C, TDS/CSA7000/B, MSO70000/C, DSA70000/B/C DPO70000/B/C DPO7000/ MSO/DPO5000. */
 int MGL_EXPORT mgl_data_read_wfm(HMDT d,const char *fname, long num, long step/*=1*/, long start/*=0*/)
 {
-	if(step<1)	step=1;
+/*	if(step<1)	step=1;
 	if(start<0)	start=0;
 	FILE *fp = fopen(fname,"rb");
 	if(!fp)	return 0;	// couldn't open file
 	unsigned short byte_order;
 	fread(&byte_order,2,1,fp);
 	bool byteorder;	// TODO
+*/	return 0;	
 }
 int MGL_EXPORT mgl_data_read_wfm_(uintptr_t *d, const char *fname, long *num, long *step, long *start,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -1400,6 +1401,7 @@ int MGL_EXPORT mgl_data_read_wfm_(uintptr_t *d, const char *fname, long *num, lo
 int MGL_EXPORT mgl_data_read_matlab(HMDT d,const char *fname,const char *data)
 {
 	// TODO
+/**/return 0;
 }
 int MGL_EXPORT mgl_data_read_matlab_(uintptr_t *d, const char *fname, const char *data,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

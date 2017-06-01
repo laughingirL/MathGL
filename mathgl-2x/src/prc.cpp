@@ -244,7 +244,8 @@ void my_png_flush(png_structp /*png_ptr*/)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pdf)
 {
-	if(gr->GetPrmNum()==0)	return;	// nothing to do
+	mglCanvas *gg = dynamic_cast<mglCanvas *>(gr);
+	if(!gg || gr->GetPrmNum()==0)	return;	// nothing to do
 	{
 		long mmin=0,mmax=0,m;
 		for(size_t i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
@@ -355,8 +356,8 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 	// primitive definition in groups
 
 	mglPnt p0;
-	const double width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
-	const double height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
+	const double width  = gg->GetWidth();
+	const double height = gg->GetHeight();
 	const double depth  = sqrt(width*height);
 
 	p0.x = width/2.;

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-18 13:38+0300\n"
+"POT-Creation-Date: 2017-05-31 15:52+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -3596,7 +3596,7 @@ msgstr "Собственная яркость поверхности"
 msgid "P - darkpink"
 msgstr "P - багровый"
 
-#: src/prc.cpp:981
+#: src/prc.cpp:982
 msgid "PDF support was disabled. Please, enable it and rebuild MathGL."
 msgstr "PDF поддержка отключена. Включите ее и пересоберите MathGL."
 

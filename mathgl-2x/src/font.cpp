@@ -545,7 +545,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 						else					gr->Glyph(x+dx,yy,ff,a,j,ccol);
 					}
 				}
-				ww = ff*GetWidth(a,j)/fact[a];
+				ww = j>=0?ff*GetWidth(a,j)/fact[a]:0;
 				if(gr && !(style&0x10))	// add under-/over- line now
 					draw_ouline(st,x,y,f,fact[a],ww,ccol);
 				if(s & MGL_FONT_ZEROW)	ww = 0;
