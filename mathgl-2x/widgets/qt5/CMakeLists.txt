@@ -1,7 +1,7 @@
 include(GenerateExportHeader)
 
 if(enable-qt5)
-	include(../../cmake-qt5.txt)
+	include(../../scripts/qt5.cmake)
 	set(MGL_QT5_FILES ../qt.cpp ../../include/mgl2/qt.h ../../include/mgl2/qmathgl.h)
 	mgl_add_lib(qt5 ${MGL_QT5_FILES})
 	target_link_libraries(mgl-qt5 mgl ${MGL_QT5_LIBS})

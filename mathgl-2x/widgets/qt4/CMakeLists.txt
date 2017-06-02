@@ -1,7 +1,7 @@
 include(GenerateExportHeader)
 
 if(enable-qt4)
-	include(../../cmake-qt4.txt)
+	include(../../scripts/qt4.cmake)
 	set(MGL_QT4_FILES ../qt.cpp ../../include/mgl2/qt.h ../../include/mgl2/qmathgl.h)
 	mgl_add_lib(qt4 ${MGL_QT4_FILES})
 	target_link_libraries(mgl-qt4 mgl ${MGL_QT4_LIBS})

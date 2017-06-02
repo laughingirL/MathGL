@@ -1,5 +1,5 @@
 if(enable-qt5)
-	include(../cmake-qt5.txt)
+	include(../scripts/qt5.cmake)
 
 	find_qt5_libs(OFF ON Network)
 	if(TARGET Qt5::Network)
@@ -25,7 +25,7 @@ if(enable-qt5)
 		set(enable-json-sample OFF)
 	endif(TARGET Qt5::Network)
 else(enable-qt5)
-	include(../cmake-qt4.txt)
+	include(../scripts/qt4.cmake)
 
 	foreach(mgl_qt4_lib ${MGL_QT4_LIBS_FIND_JSON})
 		if(TARGET Qt4::${mgl_qt4_lib})

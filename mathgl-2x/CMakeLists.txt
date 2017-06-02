@@ -734,26 +734,6 @@ if(enable-mgltex)
 	add_subdirectory( mgltex )
 endif(enable-mgltex)
 
-if(WIN32)
-	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${CMAKE_INSTALL_PREFIX} RENAME mathgl2-config.cmake)
-else(WIN32)
-	install(FILES ${CMAKE_SOURCE_DIR}/FindMathGL2.cmake DESTINATION ${MGL_LIB_INSTALL_DIR}/cmake/mathgl2/ RENAME mathgl2-config.cmake)
-endif(WIN32)
-
-#export(TARGETS MathGLTargets FILE "${PROJECT_BINARY_DIR}/MathGLTargets.cmake")
-#export(PACKAGE MathGL2)
-
-#configure_file(MathGLConfig.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfig.cmake" @ONLY)
-#configure_file(MathGLConfigVersion.cmake.in "${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake" @ONLY)
-
-#install(FILES
-#	"${MathGL2_BINARY_DIR}/MathGLConfig.cmake"
-#	"${MathGL2_BINARY_DIR}/MathGLConfigVersion.cmake"
-#	DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
-
-#install(EXPORT MathGLTargets DESTINATION "${MathGL_INSTALL_CMAKE_DIR}" COMPONENT dev)
-
-
 if(MGL_USE_LIBINTL)
 	if(USE_GETTEXT)
 		set(mgl_tl_list )
@@ -786,7 +766,4 @@ endif(MGL_USE_LIBINTL)
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${mgl_clean_files}")
 
 # WARNING!!! DO NOT ADD ANYTHING AFTER THIS LINE!
-
-if(enable-dep-dll)
-	add_subdirectory ( win32-install-deps )
-endif(enable-dep-dll)
+add_subdirectory ( scripts )
