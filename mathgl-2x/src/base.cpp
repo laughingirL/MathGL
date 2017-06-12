@@ -1540,8 +1540,6 @@ bool MGL_EXPORT mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay
 	return false;
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetFontDef(const char *font) {	mgl_strncpy(FontDef, font, 31);	}
-//-----------------------------------------------------------------------------
 void mglBase::ClearUnused()
 {
 #if MGL_HAVE_PTHREAD

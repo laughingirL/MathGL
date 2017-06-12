@@ -338,7 +338,7 @@ You may download current version of MathGL for following configurations:
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}-mingw.win64.7z,GPL} or @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.LGPL-mingw.win64.7z,LGPL} binaries for MinGW, 64-bit build.
 @item
-MathGL utilities with all required DLL files for @uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}.win32.7z,32-bit} and @uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}.win32.7z,64-bit} versions of MS Windows.
+MathGL utilities with all required DLL files for @uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}.win32.7z,32-bit} and @uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}.win64.7z,64-bit} versions of MS Windows.
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.eng.pdf,PDF} documentation in English.
 @item

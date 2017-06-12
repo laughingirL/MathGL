@@ -1264,11 +1264,11 @@ void MGL_EXPORT mgl_data_wavelet(HMDT dat, const char *how, int k)
 		gsl_wavelet_workspace *work = gsl_wavelet_workspace_alloc(n);
 		if(mglchr(how,'i'))
 #pragma omp for collapse(2)
-			for(long i=0;i<dat->nx;i++)	for(long j=0;j<dat->nz;j++)
+			for(long j=0;j<dat->nz;j++)	for(long i=0;i<dat->nx;i++)
 				gsl_wavelet_transform_inverse(w, a+i+n*s*j, s, n, work);
 		else
 #pragma omp for collapse(2)
-			for(long i=0;i<dat->nx;i++)	for(long j=0;j<dat->nz;j++)
+			for(long j=0;j<dat->nz;j++)	for(long i=0;i<dat->nx;i++)
 				gsl_wavelet_transform_forward(w, a+i+n*s*j, s, n, work);
 		gsl_wavelet_workspace_free(work);
 	}

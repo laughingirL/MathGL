@@ -371,7 +371,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 	mglData x(m, n), y(m, n), z(zz), s(ss);	x.s=L"x";	y.s=L"y";
 	long nz = zz->GetNz(), mm = n*m;
 #pragma omp parallel for collapse(2)
-	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)
+	for(long j=0;j<n;j++)	for(long i=0;i<m;i++)
 	{
 		long i0 = i+m*j;
 		x.a[i0] = GetX(xx,i,j,0).x;
@@ -417,7 +417,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	mglData x(m,n,l), y(m,n,l), z(m,n,l), a(aa), s(ss);
 	x.s=L"x";	y.s=L"y";	z.s=L"z";
 #pragma omp parallel for collapse(3)
-	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	for(long k=0;k<l;k++)
+	for(long k=0;k<l;k++)	for(long j=0;j<n;j++)	for(long i=0;i<m;i++)
 	{
 		long i0 = i+m*(j+n*k);
 		x.a[i0] = GetX(xx,i,j,k).x;

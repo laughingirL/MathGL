@@ -409,7 +409,7 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 		hh0=hu[0];
 		if(ny>1)
 #pragma omp parallel for collapse(2)
-			for(long i=0;i<2*nx;i++) for(long j=0;j<2*ny;j++)
+		 for(long j=0;j<2*ny;j++)	for(long i=0;i<2*nx;i++)
 			{
 				long i0 = i+2*nx*j;	huv[i0] -= hh0;
 				hxv[i0] -= hx[i]+hv[j]-hh0;
@@ -456,7 +456,7 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 			mgl_fft_free_thr(wsx);
 		}
 #pragma omp parallel for collapse(2)
-		for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	// save result
+		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)	// save result
 			res->a[k+nz*(i+nx*j)] = a[i+nx/2+2*nx*(j+ny/2)];
 	}
 	mgl_fft_free(wtx,0,0);	mgl_fft_free(wty,0,0);

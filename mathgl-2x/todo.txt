@@ -39,6 +39,7 @@
 7. Add ##d comment(s) -- analogue of 'ask' but update figure after each change ???
 8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
 9. Mask in EPS/SVG
+10. '0' style for axis to show dots for x=0,y=0 and z=0
 
 ZZ. Update *.i for new functions {before release!!!}
 

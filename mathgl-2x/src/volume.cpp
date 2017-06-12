@@ -638,25 +638,23 @@ void MGL_EXPORT mgl_beam_val(HMGL gr, double val, HCDT tr, HCDT g1, HCDT g2, HCD
 			amax = amax?sqrt(asum/asum0)/amax:0;
 			for(long j=0;j<m*l;j++)	b.a[j+m*l*i] = b.a[j+m*l*i]*amax;
 		}
-		if(flag & 1)	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
+		const long ii=m*l*i;
+		if(flag & 1)	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)
 		{
-			long i0 = j+m*(k+l*i);
+			long i0 = ii+j+m*k;
 			x.a[i0] = 2*j/(m-1.)-1;
 			y.a[i0] = 2*k/(l-1.)-1;
 			z.a[i0] = gr->Max.z*i/(n-1.);
 		}
-		else	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
+		else	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)
 		{
-			long i0 = j+m*(k+l*i);
+			long i0 = ii+j+m*k;
 			x.a[i0] = tr->v(0,i) + g1->v(0,i)*(2*j/(m-1.)-1)*r + g2->v(0,i)*(2*k/(l-1.)-1)*r;
 			y.a[i0] = tr->v(1,i) + g1->v(1,i)*(2*j/(m-1.)-1)*r + g2->v(1,i)*(2*k/(l-1.)-1)*r;
 			z.a[i0] = tr->v(2,i) + g1->v(2,i)*(2*j/(m-1.)-1)*r + g2->v(2,i)*(2*k/(l-1.)-1)*r;
 		}
-		if(flag & 2)	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)
-		{
-			long i0 = j+m*(k+l*i);
-			x.a[i0] = hypot(x.a[i0],y.a[i0]);
-		}
+		if(flag & 2)	for(long j=0;j<m*l;j++)
+		{	long i0 = j+ii;	x.a[i0] = hypot(x.a[i0],y.a[i0]);	}
 	}
 	mgl_surf3_xyz_val(gr,val,&x,&y,&z,&b,stl,0);
 }

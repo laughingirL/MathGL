@@ -1168,8 +1168,8 @@ void MGL_EXPORT mgl_data_crop(HMDT d, long n1, long n2, char dir)
 		n2 = n2>0 ? n2 : ny+n2;
 		if(n2<0 || n2>=ny || n2<n1)	n2 = ny;
 		nn = n2-n1;	b = new mreal[nn*nx*nz];
-#pragma omp parallel for
-		for(long i=0;i<nn;i++)	for(long j=0;j<nz;j++)
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<nz;j++)	for(long i=0;i<nn;i++)
 			memcpy(b+nx*(i+nn*j),d->a+nx*(n1+i+ny*j),nx*sizeof(mreal));
 		d->ny = nn;	if(!d->link)	delete []d->a;
 		d->a = b;	d->link=false;
@@ -1613,7 +1613,7 @@ void MGL_EXPORT mgl_data_put_val(HMDT d, mreal val, long xx, long yy, long zz)
 		for(long i=0;i<nz*ny;i++)	a[xx+i*nx] = val;
 	else if(xx<0 && zz<0)
 #pragma omp parallel for collapse(2)
-		for(long i=0;i<nx;i++)	for(long j=0;j<nz;j++)	a[i+nx*(yy+j*ny)] = val;
+		for(long j=0;j<nz;j++)	for(long i=0;i<nx;i++)	a[i+nx*(yy+j*ny)] = val;
 	else if(xx<0)
 #pragma omp parallel for
 		for(long i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = val;

@@ -1108,7 +1108,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	if(fixed)
 	{
 		long nn=x->GetNy();
-		for(long i=0;i<n-1;i++)	for(long j=0;j<nn;j++)
+		for(long j=0;j<nn;j++)	for(long i=0;i<n-1;i++)
 		{
 			mreal cx = fabs(x->v(i+1,j)-x->v(i,j));
 			if(cx<dx)	dx=cx;
@@ -1204,7 +1204,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	if(fixed)
 	{
 		long nn=y->GetNy();
-		for(long i=0;i<n-1;i++)	for(long j=0;j<nn;j++)
+		for(long j=0;j<nn;j++)	for(long i=0;i<n-1;i++)
 		{
 			mreal cx = fabs(y->v(i+1,j)-y->v(i,j));
 			if(cx<dy)	dy=cx;

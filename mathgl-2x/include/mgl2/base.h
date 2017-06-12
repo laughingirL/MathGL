@@ -484,7 +484,7 @@ public:
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
 	/// Set default font style and color
-	void SetFontDef(const char *font);
+	inline void SetFontDef(const char *font){	mgl_strncpy(FontDef, font, 31);	}
 	/// Set to use or not text rotation
 	inline void SetTickRotate(bool val)	{	set(val,MGL_TICKS_ROTATE);	}
 	/// Set to use or not text rotation

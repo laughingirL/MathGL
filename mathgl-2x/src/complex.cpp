@@ -602,7 +602,7 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 	if(strchr(dir,'z') && nz>1)
 	{
 #pragma omp parallel for collapse(2)
-		for(long i=0;i<nx*ny;i++)	for(long j=0;j<nz/2;j++)
+		for(long j=0;j<nz/2;j++)	for(long i=0;i<nx*ny;i++)
 		{
 			long i0 = i+j*nx*ny, j0 = i+(nz-1-j)*nx*ny;
 			dual b = a[i0];	a[i0] = a[j0];	a[j0] = b;
@@ -611,7 +611,7 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 	if(strchr(dir,'y') && ny>1)
 	{
 #pragma omp parallel for collapse(2)
-		for(long i=0;i<nx*nz;i++)	for(long j=0;j<ny/2;j++)
+		for(long j=0;j<ny/2;j++)	for(long i=0;i<nx*nz;i++)
 		{
 			long j0 = (i%nx)+nx*(ny*(i/nx)+j), i0 = j0+(ny-1-2*j)*nx;
 			dual b = a[j0];	a[j0] = a[i0];	a[i0] = b;
@@ -760,7 +760,7 @@ void MGL_EXPORT mgl_datac_crop(HADT d, long n1, long n2, char dir)
 		if(n2<0 || n2>=ny || n2<n1)	n2 = ny;
 		nn = n2-n1;	b = new dual[nn*nx*nz];
 #pragma omp parallel for
-		for(long i=0;i<nn;i++)	for(long j=0;j<nz;j++)
+		for(long j=0;j<nz;j++)	for(long i=0;i<nn;i++)
 			memcpy(b+nx*(i+nn*j),d->a+nx*(n1+i+ny*j),nx*sizeof(dual));
 		d->ny = nn;	if(!d->link)	delete []d->a;
 		d->a = b;	d->link=false;
@@ -938,7 +938,7 @@ void MGL_EXPORT mgl_datac_put_val(HADT d, dual val, long xx, long yy, long zz)
 		for(long i=0;i<nz*ny;i++)	a[xx+i*nx] = val;
 	else if(xx<0 && zz<0)
 #pragma omp parallel for collapse(2)
-		for(long i=0;i<nx;i++)	for(long j=0;j<nz;j++)	a[i+nx*(yy+j*ny)] = val;
+		for(long j=0;j<nz;j++)	for(long i=0;i<nx;i++)	a[i+nx*(yy+j*ny)] = val;
 	else if(xx<0)
 #pragma omp parallel for
 		for(long i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = val;
