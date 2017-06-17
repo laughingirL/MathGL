@@ -1178,7 +1178,7 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	if(grp_counter>1)	return;	// do nothing in "subgroups"
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
 	size_t len = Grp.size();
-	if(ObjId>=0 && len>0 && ObjId!=Grp[len-1].Id)
+	if(ObjId>=0 && (len==0 || (len>0 && ObjId!=Grp[len-1].Id)))
 #pragma omp critical(grp)
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);}
 	else if(ObjId<0)

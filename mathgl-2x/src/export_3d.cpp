@@ -308,12 +308,12 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	{
 		const mglPnt &pp = gr->GetPnt(i);
 		fprintf(fp,"v %g %g %g\n",pp.x,pp.y,pp.z);
-		fprintf(fp,"vt %g %g\n",1-pp.ta,pp.c/ntxt);
+		fprintf(fp,"vt %g %g\n",1-pp.ta,1-pp.c/ntxt);
 //		if(mgl_isnan(pp.u))	fprintf(fp,"vn 0 0 0\n");
 //		else fprintf(fp,"vn %g %g %g\n",pp.u,pp.v,pp.w);
 	}
 	// primitive definition in groups
-	char *tname = new char[len+5];	strcpy(tname,fname);
+	char *tname = new char[len+15];	strcpy(tname,fname);
 	tname[len-4]=0;	fprintf(fp,"# Primitives Definitions\nmtllib %s.mtl\nusemtl %s\n",tname,tname);
 	for(size_t i=0;i<gr->Grp.size();i++)
 	{
@@ -335,10 +335,10 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	fprintf(fp,"Ka 1.000 1.000 1.000\n");
 	fprintf(fp,"Kd 1.000 1.000 1.000\n");
 	fprintf(fp,"Ks 0.000 0.000 0.000\n");
-	fprintf(fp,"d 1.0\nillum 2\n");
-	if(use_png)	strcat(tname,"_txt.png");
+	fprintf(fp,"d 1.0\nTr 0.0\nillum 2\n");
+	if(use_png)	strcat(tname,"_texture.png");
 //	{	tname[len-4]='.';	tname[len-3]='p';	tname[len-2]='n';	tname[len-1]='g';	}
-	else		strcat(tname,"_txt.tga");
+	else		strcat(tname,"_texture.tga");
 //	{	tname[len-4]='.';	tname[len-3]='t';	tname[len-2]='g';	tname[len-1]='a';	}
 	fprintf(fp,"map_Ka %s\nmap_Kd %s\nmap_Ks %s\n",tname,tname,tname);
 	fclose(fp);
@@ -485,7 +485,7 @@ void MGL_EXPORT mgl_write_off(HMGL gr, const char *fname,const char *descr, int 
 		{
 			if(q.type==2)
 				fprintf(fp,"3 %ld %ld %ld\n",q.n1,q.n2,q.n3);
-			if(q.type==3)
+			else if(q.type==3)
 				fprintf(fp,"4 %ld %ld %ld %ld\n",q.n1,q.n2,q.n4,q.n3);
 		}
 		else
@@ -497,7 +497,7 @@ void MGL_EXPORT mgl_write_off(HMGL gr, const char *fname,const char *descr, int 
 					fprintf(fp,"3 %ld %ld %ld %.2g %.2g %.2g %.2g\n",q.n1,q.n2,q.n3,
 							(p1.r+p2.r+p3.r)/3, (p1.g+p2.g+p3.g)/3, (p1.b+p2.b+p3.b)/3, (p1.a+p2.a+p3.a)/3);
 			}
-			if(q.type==3)
+			else if(q.type==3)
 			{
 				const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3), &p4=gr->GetPnt(q.n4);
 				if(p1.a>mgl_min_a || p2.a>mgl_min_a || p3.a>mgl_min_a || p4.a>mgl_min_a)
