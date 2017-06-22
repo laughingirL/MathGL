@@ -613,7 +613,10 @@ int mglParser::ParseDef(std::wstring &str)
 	{
 		int res = 1;	mreal d;
 		PutArg(str,true);
-		const std::wstring s = mgl_trim_ws(str.substr(7));
+		size_t end;	bool ss=false;
+		for(end=7;str[end] && (str[end]!='#' || ss);end++)
+		{	if(str[end]=='\'')	ss=!ss;	}
+		const std::wstring s = mgl_trim_ws(str.substr(7,end-7));
 		if(!str.compare(3,3,L"ine"))
 		{
 			int nn = s[1]<='9' ? s[1]-'0' : (s[1]>='a' ? s[1]-'a'+10:-1);
