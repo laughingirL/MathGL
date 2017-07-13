@@ -1283,6 +1283,14 @@ public:
 	/** Style 'x' draw belts in x-direction. */
 	inline void Belt(const mglDataA &z, const char *stl="", const char *opt="")
 	{	mgl_belt(gr, &z, stl, opt);	}
+	/// Draw belts for 2d data specified parametrically with color proportional to c
+	/** Style 'x' draw belts in x-direction. */
+	inline void BeltC(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_beltc_xy(gr, &x, &y, &z, &c, stl, opt);	}
+	/// Draw belts for 2d data with color proportional to c
+	/** Style 'x' draw belts in x-direction. */
+	inline void BeltC(const mglDataA &z, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_beltc(gr, &z, &c, stl, opt);	}
 
 	/// Draw surface for 2d data specified parametrically with color proportional to z
 	/** Style ‘#’ draw grid lines. Style ‘.’ produce plot by dots.*/

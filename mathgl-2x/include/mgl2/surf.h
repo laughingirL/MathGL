@@ -66,6 +66,15 @@ void MGL_EXPORT mgl_belt_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintp
 void MGL_EXPORT mgl_belt(HMGL graph, HCDT z, const char *sch, const char *opt);
 void MGL_EXPORT mgl_belt_(uintptr_t *graph, uintptr_t *z, const char *sch, const char *opt,int,int);
 
+/// Draw belts for 2d data specified parametrically with color proportional to c
+/** Style 'x' draw belts in x-direction. */
+void MGL_EXPORT mgl_beltc_xy(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, const char *opt);
+void MGL_EXPORT mgl_beltc_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int,int);
+/// Draw belts for 2d data with color proportional to c
+/** Style 'x' draw belts in x-direction. */
+void MGL_EXPORT mgl_beltc(HMGL graph, HCDT z, HCDT c, const char *sch, const char *opt);
+void MGL_EXPORT mgl_beltc_(uintptr_t *graph, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int,int);
+
 /// Draw surface for 2d data specified parametrically with color proportional to z
 /** Style ‘#’ draw grid lines. Style ‘.’ produce plot by dots.*/
 void MGL_EXPORT mgl_surf_xy(HMGL graph, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt);

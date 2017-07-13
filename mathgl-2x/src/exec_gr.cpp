@@ -355,6 +355,16 @@ int MGL_NO_EXPORT mgls_belt(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_beltc(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"dd"))	gr->BeltC(*(a[0].d),*(a[1].d),"",opt);
+	else if(!strcmp(k,"dds"))	gr->BeltC(*(a[0].d),*(a[1].d),a[2].s.c_str(),opt);
+	else if(!strcmp(k,"dddd"))	gr->BeltC(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),"",opt);
+	else if(!strcmp(k,"dddds"))	gr->BeltC(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_boxs(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -1029,6 +1039,7 @@ mglCommand mgls_grf_cmd[] = {
 	{"bars",_("Draw bars for 1D data"),"bars Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars ,7},
 	{"beam",_("Draw quasi-optical beam"),"beam Ray G1 G2 Adat r ['sch' flag num]|val Ray G1 G2 Adat r ['sch' flag num]", mgls_beam ,9},
 	{"belt",_("Draw belts"),"belt Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_belt ,8},
+	{"beltc",_("Draw belts colored by other data"),"beltc Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_beltc ,8},
 	{"bifurcation",_("Draw Bifurcation diagram"),"bifurcation dx Func ['fmt']|dx 'func' ['fmt']", mgls_bifurcation,13},
 	{"boxplot",_("Draw boxplot for 2D data"),"boxplot Ydat ['fmt']|Xdat Ydat ['fmt']", mgls_boxplot ,7},
 	{"boxs",_("Draw boxes"),"boxs Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_boxs ,8},

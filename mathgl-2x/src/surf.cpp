@@ -428,9 +428,11 @@ void MGL_EXPORT mgl_surfa_(uintptr_t *gr, uintptr_t *z, uintptr_t *a, const char
 //
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+{	mgl_beltc_xy(gr,x,y,z,z,sch,opt);	}
+void MGL_EXPORT mgl_beltc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, const char *opt)
 {
 	long n=z->GetNx(),m=z->GetNy();
-	if(mgl_check_dim2(gr,x,y,z,0,"Belt"))	return;
+	if(mgl_check_dim2(gr,x,y,z,c,"Belt"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Belt",cgid++);
@@ -441,6 +443,7 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	bool how = !mglchr(sch,'x');
 
 	mglPoint p1,p2,q,s,xx,yy;
+	int dk = c->GetNz()>=z->GetNz() ? 1:0;
 	for(long k=0;k<z->GetNz();k++)
 	{
 		if(gr->NeedStop())	break;
@@ -452,10 +455,10 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 				p1.Set(xx.x, yy.x, z->v(i,j,k));
 				s.Set(xx.z, yy.z, z->dvy(i,j,k));
 				q.Set(xx.y, yy.y, 0);	s = q^s;
-				mreal c = gr->GetC(ss,p1.z);
+				mreal cc = gr->GetC(ss,c->v(i,j,dk*k));
 				p2.Set(GetX(x,i+dx,j,k).x,GetY(y,i+dx,j,k).x,p1.z);
-				pos[2*j] = gr->AddPnt(p1,c,s);
-				pos[2*j+1]=gr->AddPnt(p2,c,s);
+				pos[2*j] = gr->AddPnt(p1,cc,s);
+				pos[2*j+1]=gr->AddPnt(p2,cc,s);
 			}
 			mgl_surf_plot(gr,pos,2,m);
 		}
@@ -467,10 +470,10 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 				p1.Set(xx.x, yy.x, z->v(i,j,k));
 				q.Set(xx.y, yy.y, z->dvx(i,j,k));
 				s.Set(xx.z, yy.z, 0);	s = q^s;
-				mreal c = gr->GetC(ss,p1.z);
+				mreal cc = gr->GetC(ss,c->v(i,j,dk*k));
 				p2.Set(GetX(x,i,j+dy,k).x,GetY(y,i,j+dy,k).x,p1.z);
-				pos[2*i] = gr->AddPnt(p1,c,s);
-				pos[2*i+1]=gr->AddPnt(p2,c,s);
+				pos[2*i] = gr->AddPnt(p1,cc,s);
+				pos[2*i+1]=gr->AddPnt(p2,cc,s);
 			}
 			mgl_surf_plot(gr,pos,2,n);
 		}
@@ -479,12 +482,14 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_belt(HMGL gr, HCDT z, const char *sch, const char *opt)
+{	mgl_beltc(gr,z,z,sch,opt);	}
+void MGL_EXPORT mgl_beltc(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglDataV x(z->GetNx()), y(z->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
-	mgl_belt_xy(gr,&x,&y,z,sch,0);
+	mgl_beltc_xy(gr,&x,&y,z,c,sch,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_belt_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -496,6 +501,16 @@ void MGL_EXPORT mgl_belt_(uintptr_t *gr, uintptr_t *a, const char *sch, const ch
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_belt(_GR_, _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_beltc_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_beltc_xy(_GR_, _DA_(x), _DA_(y), _DA_(a), _DA_(c), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_beltc_(uintptr_t *gr, uintptr_t *a, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_beltc(_GR_, _DA_(a), _DA_(c), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Dens series

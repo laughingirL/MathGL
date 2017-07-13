@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-22 19:25+0300\n"
+"POT-Creation-Date: 2017-07-12 22:00+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -1482,31 +1482,31 @@ msgstr "Не сохранять"
 msgid "Double diff."
 msgstr "Вторая производная"
 
-#: src/exec_gr.cpp:1032
+#: src/exec_gr.cpp:1043
 msgid "Draw Bifurcation diagram"
 msgstr "Нарисовать бифуркационную диаграмму"
 
-#: src/exec_gr.cpp:1067
+#: src/exec_gr.cpp:1078
 msgid "Draw Iris plots"
 msgstr "Нарисовать график Iris"
 
-#: src/exec_gr.cpp:1069
+#: src/exec_gr.cpp:1080
 msgid "Draw Lamerey diagram"
 msgstr "Нарисовать диаграмму Ламерея"
 
-#: src/exec_gr.cpp:1073
+#: src/exec_gr.cpp:1084
 msgid "Draw Open-High-Low-Close (OHLC) diagram"
 msgstr "Нарисовать диаграмму OHLC (Open-High-Low-Close)"
 
-#: src/exec_gr.cpp:1076
+#: src/exec_gr.cpp:1087
 msgid "Draw Poincare map"
 msgstr "Нарисовать диаграмму Пуанкаре"
 
-#: src/exec_gr.cpp:1082
+#: src/exec_gr.cpp:1093
 msgid "Draw STFA diagram"
 msgstr "Нарисовать диаграмму STFA"
 
-#: src/exec_gr.cpp:1094
+#: src/exec_gr.cpp:1105
 msgid "Draw TeX mark at point position"
 msgstr "Нарисовать ТеХ символы в положении точек"
 
@@ -1514,19 +1514,24 @@ msgstr "Нарисовать ТеХ символы в положении точ�
 msgid "Draw angle arc"
 msgstr "Нарисовать дугу"
 
-#: src/exec_gr.cpp:1026
+#: src/exec_gr.cpp:1036
 msgid "Draw area plot for 1D data"
 msgstr "Закрасить область между кривой и осью"
 
-#: src/exec_gr.cpp:1029
+#: src/exec_gr.cpp:1039
 msgid "Draw bars for 1D data"
 msgstr "Нарисовать график из вертикальных полос"
 
-#: src/exec_gr.cpp:1031
+#: src/exec_gr.cpp:1041
 msgid "Draw belts"
 msgstr "Нарисовать поверхность ленточками"
 
-#: src/exec_gr.cpp:1092
+#: src/exec_gr.cpp:1042
+#, fuzzy
+msgid "Draw belts colored by other data"
+msgstr "Нарисовать поверхность с заданным цветом"
+
+#: src/exec_gr.cpp:1103
 msgid "Draw binormales for 1D data"
 msgstr "Нарисовать нормаль и бинормаль для кривой"
 
@@ -1538,19 +1543,19 @@ msgstr "Нарисовать растр (логотип) в области ос�
 msgid "Draw bounding box"
 msgstr "Нарисовать ограничивающий параллелепипед"
 
-#: src/exec_gr.cpp:1034
+#: src/exec_gr.cpp:1045
 msgid "Draw boxes"
 msgstr "Нарисовать поверхность ящиками"
 
-#: src/exec_gr.cpp:1033
+#: src/exec_gr.cpp:1044
 msgid "Draw boxplot for 2D data"
 msgstr "Нарисовать box-and-whisker диаграмму"
 
-#: src/exec_gr.cpp:1035
+#: src/exec_gr.cpp:1046
 msgid "Draw candlestick chart"
 msgstr "Нарисовать свечной график"
 
-#: src/exec_gr.cpp:1036
+#: src/exec_gr.cpp:1047
 msgid "Draw chart"
 msgstr "Нарисовать линейчатую (круговую) диаграмму"
 
@@ -1558,7 +1563,7 @@ msgstr "Нарисовать линейчатую (круговую) диагр�
 msgid "Draw circle"
 msgstr "Нарисовать окружность (круг)"
 
-#: src/exec_gr.cpp:1037
+#: src/exec_gr.cpp:1048
 msgid "Draw cloud"
 msgstr "Нарисовать облако для 3D данных"
 
@@ -1570,43 +1575,43 @@ msgstr "Нарисовать цветовую шкалу"
 msgid "Draw cone"
 msgstr "Нарисовать конус"
 
-#: src/exec_gr.cpp:1038
+#: src/exec_gr.cpp:1049
 msgid "Draw cones for 1D data"
 msgstr "Нарисовать конусы для 1D данных"
 
-#: src/exec_gr.cpp:1039
+#: src/exec_gr.cpp:1050
 msgid "Draw contour lines"
 msgstr "Нарисовать линии уровня"
 
-#: src/exec_gr.cpp:1049
+#: src/exec_gr.cpp:1060
 msgid "Draw contour lines at x-slice (or x-plane)"
 msgstr "Нарисовать линии уровня на x-срезе"
 
-#: src/exec_gr.cpp:1050
+#: src/exec_gr.cpp:1061
 msgid "Draw contour lines at y-slice (or y-plane)"
 msgstr "Нарисовать линии уровня на y-срезе"
 
-#: src/exec_gr.cpp:1051
+#: src/exec_gr.cpp:1062
 msgid "Draw contour lines at z-slice (or z-plane)"
 msgstr "Нарисовать линии уровня на z-срезе"
 
-#: src/exec_gr.cpp:1040
+#: src/exec_gr.cpp:1051
 msgid "Draw contour lines for 3D data"
 msgstr "Нарисовать линии уровня на срезах 3D данных"
 
-#: src/exec_gr.cpp:1099
+#: src/exec_gr.cpp:1110
 msgid "Draw contour lines for surface of triangles"
 msgstr "Нарисовать линии уровня для поверхности из треугольников"
 
-#: src/exec_gr.cpp:1047
+#: src/exec_gr.cpp:1058
 msgid "Draw contour lines on parametric surface"
 msgstr "Нарисовать линии уровня на параметрической поверхности"
 
-#: src/exec_gr.cpp:1048
+#: src/exec_gr.cpp:1059
 msgid "Draw contour tubes"
 msgstr "Нарисовать цилиндры по линиям уровней"
 
-#: src/exec_gr.cpp:1100
+#: src/exec_gr.cpp:1111
 msgid "Draw contour tubes for surface of triangles"
 msgstr "Нарисовать цилиндры по линиям уровней для поверхности из треугольников"
 
@@ -1614,35 +1619,35 @@ msgstr "Нарисовать цилиндры по линиям уровней �
 msgid "Draw curve"
 msgstr "Нарисовать кривую"
 
-#: src/exec_gr.cpp:1102
+#: src/exec_gr.cpp:1113
 msgid "Draw curve by tube"
 msgstr "Нарисовать трубу около кривой"
 
-#: src/exec_gr.cpp:1053
+#: src/exec_gr.cpp:1064
 msgid "Draw density plot"
 msgstr "Нарисовать график плотности"
 
-#: src/exec_gr.cpp:1054
+#: src/exec_gr.cpp:1065
 msgid "Draw density plot at slices of 3D data"
 msgstr "Нарисовать график плотности на срезе 3D данных"
 
-#: src/exec_gr.cpp:1055
+#: src/exec_gr.cpp:1066
 msgid "Draw density plot at x-slice (or x-plane)"
 msgstr "Нарисовать график плотности на x-срезе"
 
-#: src/exec_gr.cpp:1056
+#: src/exec_gr.cpp:1067
 msgid "Draw density plot at y-slice (or y-plane)"
 msgstr "Нарисовать график плотности на y-срезе"
 
-#: src/exec_gr.cpp:1057
+#: src/exec_gr.cpp:1068
 msgid "Draw density plot at z-slice (or z-plane)"
 msgstr "Нарисовать график плотности на z-срезе"
 
-#: src/exec_gr.cpp:1058
+#: src/exec_gr.cpp:1069
 msgid "Draw dew plot"
 msgstr "Нарисовать векторное поле каплями"
 
-#: src/exec_gr.cpp:1059
+#: src/exec_gr.cpp:1070
 msgid "Draw dots for arbitrary data points"
 msgstr "Нарисовать набор точек"
 
@@ -1658,7 +1663,7 @@ msgstr "Нарисовать эллипс"
 msgid "Draw error box"
 msgstr "Нарисовать размер ошибки"
 
-#: src/exec_gr.cpp:1060
+#: src/exec_gr.cpp:1071
 msgid "Draw error boxes"
 msgstr "Нарисовать размеры ошибок для 1D данных"
 
@@ -1678,19 +1683,19 @@ msgstr "Нарисовать грань поперек оси y"
 msgid "Draw face perpendicular to z-axis"
 msgstr "Нарисовать грань поперек оси z"
 
-#: src/exec_gr.cpp:1079
+#: src/exec_gr.cpp:1090
 msgid "Draw filled region (ribbon) between 2 curves"
 msgstr "Закрасить область между двумя кривыми"
 
-#: src/exec_gr.cpp:1074
+#: src/exec_gr.cpp:1085
 msgid "Draw flow pipes for vector field"
 msgstr "Нарисовать трубки тока для векторного поля"
 
-#: src/exec_gr.cpp:1062
+#: src/exec_gr.cpp:1073
 msgid "Draw flow threads for vector field"
 msgstr "Нарисовать линии тока для векторного поля"
 
-#: src/exec_gr.cpp:1064
+#: src/exec_gr.cpp:1075
 msgid "Draw gradient lines for scalar field"
 msgstr "Нарисовать линии градиента для скалярного поля"
 
@@ -1698,43 +1703,43 @@ msgstr "Нарисовать линии градиента для скалярн
 msgid "Draw grid"
 msgstr "Нарисовать сетку осей координат"
 
-#: src/exec_gr.cpp:1066
+#: src/exec_gr.cpp:1077
 msgid "Draw grid at slices of 3D data"
 msgstr "Нарисовать сетку на срезе 3D данных"
 
-#: src/exec_gr.cpp:1065
+#: src/exec_gr.cpp:1076
 msgid "Draw grid for data array(s)"
 msgstr "Нарисовать сетку для массива"
 
-#: src/exec_gr.cpp:1028
+#: src/exec_gr.cpp:1038
 msgid "Draw horizontal bars for 1D data"
 msgstr "Нарисовать график из горизонтальных полос"
 
-#: src/exec_gr.cpp:1095
+#: src/exec_gr.cpp:1106
 msgid "Draw horizontal tiles"
 msgstr "Нарисовать поверхность горизонтальными плитками"
 
-#: src/exec_gr.cpp:1096
+#: src/exec_gr.cpp:1107
 msgid "Draw horizontal tiles with variable size"
 msgstr "Нарисовать поверхность плитками переменного размера"
 
-#: src/exec_gr.cpp:1084
+#: src/exec_gr.cpp:1095
 msgid "Draw isosurface for 3D data"
 msgstr "Нарисовать поверхность постоянного уровня"
 
-#: src/exec_gr.cpp:1087
+#: src/exec_gr.cpp:1098
 msgid "Draw isosurface for 3D data colored and transpared by other data"
 msgstr "Нарисовать поверхность уровня с заданными цветом и прозрачностью"
 
-#: src/exec_gr.cpp:1086
+#: src/exec_gr.cpp:1097
 msgid "Draw isosurface for 3D data colored by other data"
 msgstr "Нарисовать поверхность уровня с заданным цветом"
 
-#: src/exec_gr.cpp:1085
+#: src/exec_gr.cpp:1096
 msgid "Draw isosurface for 3D data transpared by other data"
 msgstr "Нарисовать поверхность уровня с заданной прозрачностью"
 
-#: src/exec_gr.cpp:1068
+#: src/exec_gr.cpp:1079
 msgid "Draw label at arbitrary position"
 msgstr "Вывести надписи для 1D данных"
 
@@ -1762,15 +1767,15 @@ msgstr "Нарисовать легенду графика"
 msgid "Draw line"
 msgstr "Нарисовать прямую линию"
 
-#: src/exec_gr.cpp:1070
+#: src/exec_gr.cpp:1081
 msgid "Draw mapping plot"
 msgstr "Нарисовать отображение матрицы"
 
-#: src/exec_gr.cpp:1071
+#: src/exec_gr.cpp:1082
 msgid "Draw mark plot for 1D data"
 msgstr "Нарисовать маркеры переменного размера"
 
-#: src/exec_gr.cpp:1072
+#: src/exec_gr.cpp:1083
 msgid "Draw mesh surface"
 msgstr "Нарисовать сетчатую поверхность"
 
@@ -1782,15 +1787,15 @@ msgstr "Нарисовать точку"
 msgid "Draw polygon"
 msgstr "Нарисовать полигон"
 
-#: src/exec_gr.cpp:1030
+#: src/exec_gr.cpp:1040
 msgid "Draw quasi-optical beam"
 msgstr "Нарисовать квазиоптический пучок"
 
-#: src/exec_gr.cpp:1078
+#: src/exec_gr.cpp:1089
 msgid "Draw radar chart"
 msgstr "Нарисовать круговой график"
 
-#: src/exec_gr.cpp:1052
+#: src/exec_gr.cpp:1063
 msgid "Draw reconstructed surface for arbitrary data points"
 msgstr "Нарисовать поверхность по произвольным точкам"
 
@@ -1802,43 +1807,43 @@ msgstr "Нарисовать прямоугольник"
 msgid "Draw rhombus"
 msgstr "Нарисовать ромб"
 
-#: src/exec_gr.cpp:1044
+#: src/exec_gr.cpp:1055
 msgid "Draw solid contour lines at x-slice (or x-plane)"
 msgstr "Закрасить линии уровня на x-срезе"
 
-#: src/exec_gr.cpp:1045
+#: src/exec_gr.cpp:1056
 msgid "Draw solid contour lines at y-slice (or y-plane)"
 msgstr "Закрасить линии уровня на y-срезе"
 
-#: src/exec_gr.cpp:1046
+#: src/exec_gr.cpp:1057
 msgid "Draw solid contour lines at z-slice (or z-plane)"
 msgstr "Закрасить линии уровня на z-срезе"
 
-#: src/exec_gr.cpp:1043
+#: src/exec_gr.cpp:1054
 msgid "Draw solid contour lines for 3D data"
 msgstr "Закрасить линии уровня на 3D данных"
 
-#: src/exec_gr.cpp:1042
+#: src/exec_gr.cpp:1053
 msgid "Draw solid contours"
 msgstr "Закрасить линии уровня"
 
-#: src/exec_gr.cpp:1041
+#: src/exec_gr.cpp:1052
 msgid "Draw solid contours with manual colors"
 msgstr "Закрасить линии уровня заданными цветами"
 
-#: src/exec_gr.cpp:1083
+#: src/exec_gr.cpp:1094
 msgid "Draw solid surface"
 msgstr "Нарисовать поверхность"
 
-#: src/exec_gr.cpp:1090
+#: src/exec_gr.cpp:1101
 msgid "Draw solid surface colored and transpared by other data"
 msgstr "Нарисовать поверхность с заданными цветом и прозрачностью"
 
-#: src/exec_gr.cpp:1089
+#: src/exec_gr.cpp:1100
 msgid "Draw solid surface colored by other data"
 msgstr "Нарисовать поверхность с заданным цветом"
 
-#: src/exec_gr.cpp:1088
+#: src/exec_gr.cpp:1099
 msgid "Draw solid surface transpared by other data"
 msgstr "Нарисовать поверхность с заданной прозрачностью"
 
@@ -1846,35 +1851,35 @@ msgstr "Нарисовать поверхность с заданной проз
 msgid "Draw sphere"
 msgstr "Нарисовать сферу"
 
-#: src/exec_gr.cpp:1080
+#: src/exec_gr.cpp:1091
 msgid "Draw stem plot for 1D data"
 msgstr "Нарисовать линии от 1D данных до оси"
 
-#: src/exec_gr.cpp:1081
+#: src/exec_gr.cpp:1092
 msgid "Draw step plot for 1D data"
 msgstr "Нарисовать ступеньки"
 
-#: src/exec_gr.cpp:1097
+#: src/exec_gr.cpp:1108
 msgid "Draw surface of curve rotation"
 msgstr "Нарисовать поверхность вращения"
 
-#: src/exec_gr.cpp:1077
+#: src/exec_gr.cpp:1088
 msgid "Draw surface of quadrangles"
 msgstr "Нарисовать поверхность из четырехугольников"
 
-#: src/exec_gr.cpp:1101
+#: src/exec_gr.cpp:1112
 msgid "Draw surface of triangles"
 msgstr "Нарисовать поверхность из треугольников"
 
-#: src/exec_gr.cpp:1027
+#: src/exec_gr.cpp:1037
 msgid "Draw surfaces of contour lines rotation"
 msgstr "Нарисовать поверхность вращения линий уровня"
 
-#: src/exec_gr.cpp:1091
+#: src/exec_gr.cpp:1102
 msgid "Draw table with data values"
 msgstr "Нарисовать таблицу значений данных"
 
-#: src/exec_gr.cpp:1093
+#: src/exec_gr.cpp:1104
 msgid "Draw tension plot for 1D data"
 msgstr "Нарисовать кривую с заданным цветом"
 
@@ -1886,23 +1891,23 @@ msgstr "Вывести текст в точке или вдоль кривой"
 msgid "Draw user-defined symbol at given position and direction"
 msgstr "Нарисовать символ в заданных точке и направлении"
 
-#: src/exec_gr.cpp:1075
+#: src/exec_gr.cpp:1086
 msgid "Draw usual plot for 1D data"
 msgstr "Нарисовать кривую для 1D данных"
 
-#: src/exec_gr.cpp:1103
+#: src/exec_gr.cpp:1114
 msgid "Draw vector field"
 msgstr "Нарисовать векторное поле"
 
-#: src/exec_gr.cpp:1104
+#: src/exec_gr.cpp:1115
 msgid "Draw vector field at slices of 3D data"
 msgstr "Нарисовать векторное поле на срезах 3D данных"
 
-#: src/exec_gr.cpp:1098
+#: src/exec_gr.cpp:1109
 msgid "Draw vectors along a curve"
 msgstr "Нарисовать вектора вдоль кривой"
 
-#: src/exec_gr.cpp:1061
+#: src/exec_gr.cpp:1072
 msgid "Draw waterfalls"
 msgstr "Нарисовать поверхность набором линий (водопад)"
 

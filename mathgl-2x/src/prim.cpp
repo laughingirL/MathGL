@@ -706,10 +706,11 @@ void MGL_EXPORT mgl_putsw_dir(HMGL gr, double x, double y, double z, double dx, 
 {
 	bool a=mglchr(font,'a'), A=mglchr(font,'A');
 	static int cgid=1;	gr->StartGroup("Puts",cgid++);
+
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g && (a||A))
 	{
-		g->Push();	g->Identity(a);
+		g->SaveInPlot();	g->Identity(a);
 		gr->set(MGL_DISABLE_SCALE);
 		mreal s=a?1:g->GetPlotFactor();
 		x = (2*x-1)*s;	y = (2*y-1)*s;
@@ -720,8 +721,8 @@ void MGL_EXPORT mgl_putsw_dir(HMGL gr, double x, double y, double z, double dx, 
 	long k = gr->AddPnt(p,-1,d,-1,7);
 	gr->AddActive(k,0);
 	gr->AddActive(gr->AddPnt(mglPoint(dx,dy,dz),-1,d,-1,7),1);
-	if(g && (a||A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
 	gr->text_plot(k,text,font,size);
+	if(g && (a||A))	{	g->LoadInPlot();	gr->clr(MGL_DISABLE_SCALE);	}
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------

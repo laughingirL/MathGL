@@ -1215,3 +1215,15 @@ void mglCanvas::Push()
 	{MGL_PUSH(stack,B,mutexStk);}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::Pop()
+{
+	B = stack.back(); 
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&m);
+	stack.pop_back();
+	pthread_mutex_unlock(&m);
+#else
+#pragma omp critical(stk)
+	stack.pop_back();
+#endif
+}

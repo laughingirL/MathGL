@@ -145,7 +145,7 @@ using mglBase::Light;
 	/// Get PlotFactor
 	inline mreal GetPlotFactor()	{	return B.pf;	}
 	/// Pop transformation matrix from stack
-	inline void Pop()	{	B = stack.back(); stack.pop_back();	}
+	void Pop();
 	/// Clear up the frame
 	virtual void Clf(mglColor back=NC);
 	virtual void Clf(const char *col);
@@ -173,6 +173,12 @@ using mglBase::Light;
 	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off. Return the current perspective.
 	void Perspective(mreal a, bool req=true)
 	{	if(req)	persp = Bp.pf = a;	else	Bp.pf = persp?persp:fabs(a);	}
+	/// Save parameters of current inplot
+	inline void SaveInPlot()
+	{	sB=B;	sW=inW, sH=inH, sZ=ZMin, sX=inX, sY=inY, sFF=font_factor;	}
+	/// Use saved parameters as current inplot
+	inline void LoadInPlot()
+	{	B=sB;	inW=sW, inH=sH, ZMin=sZ, inX=sX, inY=sY, font_factor=sFF;	}
 
 	/// Set size of frame in pixels. Normally this function is called internaly.
 	virtual void SetSize(int w,int h,bool clf=true);
@@ -461,6 +467,9 @@ protected:
 private:
     mglCanvas(const mglCanvas &){}	// copying is not allowed
 	const mglCanvas &operator=(const mglCanvas &t){return t;}	// copying is not allowed
+
+	mglMatrix sB;	// parameters of saved inplot
+	mreal sW, sH, sZ, sX, sY, sFF;
 
 	uint32_t *pnt_col;
 //	mreal _tetx,_tety,_tetz;		// extra angles
