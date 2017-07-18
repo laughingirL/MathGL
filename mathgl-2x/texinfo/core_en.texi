@@ -1720,7 +1720,7 @@ Draws a 3d error box at position @var{p}=@{@var{x}, @var{y}, @var{z}@} with size
 @deftypefnx {Method on @code{mglGraph}} @code{void} Line (@code{mglPoint} p1, @code{mglPoint} p2, @code{char *}stl=@code{"B"}, @code{int} num=@code{2})
 @deftypefnx {C function} @code{void} mgl_line (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{char *}stl, @code{int} num)
 @end ifclear
-Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (see @ref{Curved coordinates}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on). Line will be drawn even if it lies out of bounding box.
+Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas (see @ref{Curved coordinates}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on). Line will be drawn even if it lies out of bounding box.
 @end deftypefn
 
 @anchor{curve}
@@ -2032,6 +2032,7 @@ Draws axes with ticks (see @ref{Axis settings}). Parameter @var{dir} may contain
 @item @samp{!} for disabling ticks tuning (see @ref{tuneticks});
 @item @samp{AKDTVISO} for drawing arrow at the end of axis;
 @item @samp{a} for forced adjusting of axis ticks;
+@item @samp{:} for drawing lines through point (0,0,0);
 @item @samp{f} for printing ticks labels in fixed format;
 @item @samp{E} for using @samp{E} instead of @samp{e} in ticks labels;
 @item @samp{F} for printing ticks labels in LaTeX format;
@@ -2243,7 +2244,7 @@ String @var{pen} specifies the color and style of line and marks (see @ref{Line 
 @deftypefnx {C function} @code{void} mgl_plot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_plot_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. See also @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}, @ref{meshnum}. @sref{Plot sample}
+These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. If @var{pen} contain @samp{~} then number of segments is reduce for quasi-straight curves. See also @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}, @ref{meshnum}. @sref{Plot sample}
 @end deftypefn
 
 @anchor{radar}
@@ -2282,7 +2283,7 @@ These functions draw continuous stairs for points to axis plane. If @var{x}.nx>@
 @deftypefnx {C function} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (see @ref{Color scheme}) and style and/or width of line (see @ref{Line styles}). If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. See also @ref{plot}, @ref{mesh}, @ref{fall}, @ref{meshnum}. @sref{Tens sample}
+These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (see @ref{Color scheme}) and style and/or width of line (see @ref{Line styles}). If @var{pen} contain @samp{a} then segments between points outside of axis range are drawn too. If @var{pen} contain @samp{~} then number of segments is reduce for quasi-straight curves. See also @ref{plot}, @ref{mesh}, @ref{fall}, @ref{meshnum}. @sref{Tens sample}
 @end deftypefn
 
 @anchor{tape}
@@ -2748,7 +2749,7 @@ The function draws fall lines for surface specified parametrically @{@var{x}[i,j
 @deftypefnx {C function} @code{void} mgl_belt (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_belt_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws belts for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. This plot can be used as 3d generalization of @ref{plot}). If @var{sch} contain @samp{x} then belts are drawn along x-direction else (by default) belts are drawn along y-direction. See also @ref{fall}, @ref{surf}, @ref{plot}, @ref{meshnum}. @sref{Belt sample}
+The function draws belts for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. This plot can be used as 3d generalization of @ref{plot}). If @var{sch} contain @samp{x} then belts are drawn along x-direction else (by default) belts are drawn along y-direction. See also @ref{fall}, @ref{surf}, @ref{beltc}, @ref{plot}, @ref{meshnum}. @sref{Belt sample}
 @end deftypefn
 
 @anchor{boxs}
@@ -3092,8 +3093,23 @@ These plotting functions draw @emph{two matrix} simultaneously. There are 5 gene
 @deftypefnx {C function} @code{void} mgl_surfc (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surfc_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfa}, @ref{surfca}, @ref{surf3c}. @sref{SurfC sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfa}, @ref{surfca}, @ref{beltc}, @ref{surf3c}. @sref{SurfC sample}
 @end deftypefn
+
+
+@anchor{beltc}
+@deftypefn {MGL command} {} beltc zdat cdat ['sch'='']
+@deftypefnx {MGL command} {} beltc xdat ydat zdat cdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} BeltC (@code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} BeltC (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_beltc (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_beltc_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+The function draws belts for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. This plot can be used as 3d generalization of @ref{plot}). If @var{sch} contain @samp{x} then belts are drawn along x-direction else (by default) belts are drawn along y-direction. See also @ref{belt}, @ref{surfc}, @ref{meshnum}. @c TODO @sref{BeltC sample}
+@end deftypefn
+
+
 
 @anchor{surf3c}
 @deftypefn {MGL command} {} surf3c adat cdat @code{val} ['sch'='']

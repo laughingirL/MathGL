@@ -122,6 +122,8 @@ stop color scheme parsing (see @ref{Color scheme});
 
 range operation in @ref{MGL scripts};
 
+style for @ref{axis};
+
 separator of commands in @ref{MGL scripts}.
 
 @item ;
@@ -256,6 +258,8 @@ string continuation symbol on next line for @ref{MGL scripts}.
 disable drawing of tick labels for @ref{axis} and @ref{colorbar};
 
 disable first segment in @ref{lamerey};
+
+reduce number of segments in @ref{plot} and @ref{tens};
 
 one of mask for face filling (see @ref{Color scheme}).
 

@@ -463,7 +463,8 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 //-----------------------------------------------------------------------------
 void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 {
-	bool text = !(mglchr(dir,'_') || mglchr(dir,'~'));
+	int text = !(mglchr(dir,'_') || mglchr(dir,'~'))?1:0;
+	if(mglchr(dir,':'))	text = text|2;
 	bool inv = mglchr(dir,'^');
 	bool ret = get(MGL_ENABLE_RTEXT);
 	if(mglchr(dir,'U'))	clr(MGL_ENABLE_RTEXT);
@@ -503,7 +504,7 @@ void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 	set(ret, MGL_ENABLE_RTEXT);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,mreal angl)
+void mglCanvas::DrawAxis(mglAxis &aa, int text, char arr,const char *stl,mreal angl)
 {
 	aa.angl = angl;
 	if(strchr("xyz",aa.ch))
@@ -518,11 +519,23 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,mreal 
 	dv.Set(mgl_sign(av.x-o.x), mgl_sign(av.y-o.y), mgl_sign(av.z-o.z));
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
 
+	static int cgid=1;	StartGroup("Axis",cgid++);
+
 	long k1,k2;
 	bool have_color=mgl_have_color(stl);
 	bool dif_color = !have_color && aa.dv==0 && strcmp(TickStl,SubTStl);
+	if(text&2)	// line throw point (0,0,0)
+	{
+		SetPenPal("k:");
+		p = d*aa.v1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
+		for(long i=1;i<31;i++)
+		{
+			p = d*(aa.v1+(aa.v2-aa.v1)*i/30.);
+			k2 = k1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
+			line_plot(k2,k1);
+		}
+	}
 	SetPenPal(have_color ? stl:AxisStl);
-	static int cgid=1;	StartGroup("Axis",cgid++);
 
 	p = o + d*aa.v1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
 	for(long i=1;i<31;i++)	// axis itself
@@ -564,7 +577,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,mreal 
 		}
 	}
 	if(!have_color)	SetPenPal(AxisStl);
-	if(text)	DrawLabels(aa);
+	if(text&1)	DrawLabels(aa);
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -878,25 +891,25 @@ void mglCanvas::Box(const char *col, bool ticks)
 	if(TernAxis&1)
 	{
 		Org.x=Max.x;	Org.y=Min.y;	Org.z=Max.z;
-		DrawAxis(ax, false, 0,col);	DrawAxis(az, false, 0,col);
+		DrawAxis(ax, 0, 0,col);	DrawAxis(az, 0, 0,col);
 		Org.x=Min.x;	Org.y=Max.y;	Org.z=Max.z;
-		DrawAxis(az, false, 0,col);
+		DrawAxis(az, 0, 0,col);
 
 		mglAxis ty(ay);				ty.ch='T';
 		ty.dir.Set(-1,1);	ty.org.Set(1,0,Max.z);
-		DrawAxis(ty, false, 0,col);	ty.ch='t';
+		DrawAxis(ty, 0, 0,col);	ty.ch='t';
 		ty.dir.Set(0,-1);	ty.org.Set(0,1,Max.z);
-		DrawAxis(ty, false, 0,col);
+		DrawAxis(ty, 0, 0,col);
 	}
 	else if(TernAxis&2)
 	{
 		mglAxis ty(az);
 		ty.ch='T';	ty.a.Set(1,0);	ty.b.Set(-1,1);
 		ty.dir.Set(-1,0,1);	ty.org.Set(1,0,0);
-		DrawAxis(ty, false, 0,col);
+		DrawAxis(ty, 0, 0,col);
 		ty.ch='t';	ty.a.Set(0,1);	ty.b.Set(-1,1);
 		ty.dir.Set(0,-1,1);	ty.org.Set(0,1,0);
-		DrawAxis(ty, false, 0,col);
+		DrawAxis(ty, 0, 0,col);
 	}
 	else
 	{

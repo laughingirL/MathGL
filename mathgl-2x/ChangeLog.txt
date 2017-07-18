@@ -1,3 +1,10 @@
+2.4.1 Released 20 July 2017
+
+* Add 'beltc' plot, which is 'belt' with manual coloring.
+* Add style '~' for 'plot' and 'tens' to omit some points at output.
+* Add style ':' for 'axis' to draw lines through point (0,0,0).
+* Bugfixes
+
 2.4 Released 17 May 2017
 
 * Add mgllab executable, which is FLTK based version of UDAV. Most things mgllab do faster.

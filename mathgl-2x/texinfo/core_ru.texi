@@ -1997,6 +1997,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @item @samp{!} для отключения улучшения вида меток (см. @ref{tuneticks});
 @item @samp{AKDTVISO} для вывода стрелки на конце оси;
 @item @samp{a} для принудительной автоматической расстановки меток;
+@item @samp{:} для рисования линий через точку (0,0,0);
 @item @samp{f} для вывода чисел в фиксированном формате;
 @item @samp{E} для вывода @samp{E} вместо @samp{e};
 @item @samp{F} для вывода в формате LaTeX;
@@ -2207,7 +2208,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_plot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_plot_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют ломанную линию по точкам @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. См. также @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}, @ref{meshnum}. @sref{Plot sample}
+Функции рисуют ломанную линию по точкам @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. Если @var{pen} содержит @samp{~}, то число сегментов уменьшается для квази-линейных участков. См. также @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}, @ref{meshnum}. @sref{Plot sample}
 @end deftypefn
 
 @anchor{radar}
@@ -2246,7 +2247,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют ломанную линию по точкам с цветом, определяемым массивом @var{c} (типа графика натяжений). Строка @var{pen} задает цветовую схему (см. @ref{Color scheme}) и стиль линий и/или маркеров (см. @ref{Line styles}). Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. См. также @ref{plot}, @ref{mesh}, @ref{fall}, @ref{meshnum}. @sref{Tens sample}
+Функции рисуют ломанную линию по точкам с цветом, определяемым массивом @var{c} (типа графика натяжений). Строка @var{pen} задает цветовую схему (см. @ref{Color scheme}) и стиль линий и/или маркеров (см. @ref{Line styles}). Если @var{pen} содержит @samp{a}, то рисуются и сегменты между точками вне диапазона осей координат. Если @var{pen} содержит @samp{~}, то число сегментов уменьшается для квази-линейных участков. См. также @ref{plot}, @ref{mesh}, @ref{fall}, @ref{meshnum}. @sref{Tens sample}
 @end deftypefn
 
 @anchor{tape}
@@ -2714,7 +2715,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_belt (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_belt_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует ленточки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График может использоваться как 3d обобщение графика @ref{plot}. Если @var{sch} содержит @samp{x}, то ленточки рисуются вдоль оси x, иначе (по умолчанию) вдоль оси y. См. также @ref{fall}, @ref{surf}, @ref{plot}, @ref{meshnum}. @sref{Belt sample}
+Рисует ленточки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График может использоваться как 3d обобщение графика @ref{plot}. Если @var{sch} содержит @samp{x}, то ленточки рисуются вдоль оси x, иначе (по умолчанию) вдоль оси y. См. также @ref{fall}, @ref{surf}, @ref{beltc}, @ref{plot}, @ref{meshnum}. @sref{Belt sample}
 @end deftypefn
 
 @anchor{boxs}
@@ -3060,8 +3061,22 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_surfc (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surfc_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с цветом, заданным массивом @var{c}[i,j]. Если @var{sch} содержит @samp{#}, то на поверхности рисуется сетка. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. Размерность массивов @var{z} и @var{c} должна быть одинакова. График строится для каждого z среза данных. См. также @ref{surf}, @ref{surfa}, @ref{surf3c}. @sref{SurfC sample}
+Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с цветом, заданным массивом @var{c}[i,j]. Если @var{sch} содержит @samp{#}, то на поверхности рисуется сетка. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. Размерность массивов @var{z} и @var{c} должна быть одинакова. График строится для каждого z среза данных. См. также @ref{surf}, @ref{surfa}, @ref{beltc}, @ref{surf3c}. @sref{SurfC sample}
 @end deftypefn
+
+
+@anchor{beltc}
+@deftypefn {Команда MGL} {} beltc zdat cdat ['sch'='']
+@deftypefnx {Команда MGL} {} beltc xdat ydat zdat cdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} BeltC (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} BeltC (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_beltc (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_beltc_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует ленточки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с цветом, заданным массивом @var{c}[i,j]. График может использоваться как 3d обобщение графика @ref{plot}. Если @var{sch} содержит @samp{x}, то ленточки рисуются вдоль оси x, иначе (по умолчанию) вдоль оси y. См. также @ref{belt}, @ref{surfc}, @ref{meshnum}. @c TODO @sref{Belt sample}
+@end deftypefn
+
 
 @anchor{surf3c}
 @deftypefn {Команда MGL} {} surf3c adat cdat @code{val} ['sch'='']

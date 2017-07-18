@@ -391,7 +391,7 @@ protected:
 	/// Prepare labels for ticks
 	void LabelTicks(mglAxis &aa);
 	/// Draw axis
-	void DrawAxis(mglAxis &aa, bool text=true, char arr=0,const char *stl="",mreal angl=NAN);
+	void DrawAxis(mglAxis &aa, int text=1, char arr=0,const char *stl="",mreal angl=NAN);
 	/// Draw axis grid lines
 	void DrawGrid(mglAxis &aa, bool at_tick=false);
 	/// Update axis ranges

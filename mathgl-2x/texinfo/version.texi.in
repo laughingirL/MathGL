@@ -1,4 +1,4 @@
 @set VERSION ${MathGL_VERSION_MAJOR}.${MathGL_VERSION_MINOR}
 @set MINVER 
-@set MINVER .1
+@c @set MINVER .1
 @set NIGHT ${MGL_NIGHT}
