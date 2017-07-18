@@ -361,15 +361,19 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		const std::vector<mglPointA> &pp = orig ? mgl_pnt_copy(&xx, &yy, &zz, 0) :
 			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy, &zz, 0);
 		size_t num = pp.size();
-		if(pp.size()<2)	continue;
 		long *nn = new long[num];
 		for(size_t i=0;i<num;i++)
 		{	mreal c = sh ? gr->NextColor(pal,i):gr->CDef;	nn[i] = gr->AddPnt(pp[i].p, c);	}
 		
-		if(nn[0]>=0 && nn[1]>=0)	gr->arrow_plot(nn[0],nn[1],gr->Arrow1);
-		if(nn[num-1]>=0 && nn[num-2]>=0)	gr->arrow_plot(nn[num-1],nn[num-2],gr->Arrow2);
 		if(mk)	for(size_t i=0;i<num;i+=dx)
-			if(nn[i]>=0 && pp[i].orig)	gr->mark_plot(nn[i],mk);
+			if(nn[i]>=0 && pp[i].orig)	gr->mark_plot(nn[i], mk);
+		if(num>1)
+		{
+			if(nn[0]>=0 && nn[1]>=0)
+				gr->arrow_plot(nn[0],nn[1],gr->Arrow1);
+			if(nn[num-1]>=0 && nn[num-2]>=0)
+				gr->arrow_plot(nn[num-1],nn[num-2],gr->Arrow2);
+		}
 		for(size_t i=0;i+1<num;i++)
 		{
 			if(nn[i]<0 || nn[i+1]<0)	continue;
@@ -458,14 +462,18 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy, &zz, &cc);
 
 		size_t num = pp.size();
-		if(pp.size()<2)	continue;
 		long *nn = new long[num];
 		for(size_t i=0;i<num;i++)	nn[i] = gr->AddPnt(pp[i].p, gr->GetC(ss,pp[i].p.c));
 		
-		if(nn[0]>=0 && nn[1]>=0)	gr->arrow_plot(nn[0],nn[1],gr->Arrow1);
-		if(nn[num-1]>=0 && nn[num-2]>=0)	gr->arrow_plot(nn[num-1],nn[num-2],gr->Arrow2);
 		if(mk)	for(size_t i=0;i<num;i+=dx)
-			if(nn[i]>=0 && pp[i].orig)	gr->mark_plot(nn[i],mk);
+			if(nn[i]>=0 && pp[i].orig)	gr->mark_plot(nn[i], mk);
+		if(num>1)
+		{
+			if(nn[0]>=0 && nn[1]>=0)
+				gr->arrow_plot(nn[0],nn[1],gr->Arrow1);
+			if(nn[num-1]>=0 && nn[num-2]>=0)
+				gr->arrow_plot(nn[num-1],nn[num-2],gr->Arrow2);
+		}
 		for(size_t i=0;i+1<num;i++)
 		{
 			if(nn[i]<0 || nn[i+1]<0)	continue;
