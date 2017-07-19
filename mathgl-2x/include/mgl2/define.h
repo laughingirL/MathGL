@@ -273,7 +273,7 @@ extern MGL_EXPORT uint64_t mgl_mask_val[16];
 #define MGL_PREFERVC 		0x040000 	///< Prefer vertex color instead of texture if output format supports
 #define MGL_ONESIDED 		0x080000 	///< Render only front side of surfaces if output format supports (for debugging)
 #define MGL_NO_ORIGIN 		0x100000 	///< Don't draw tick labels at axis origin
-#define MGL_GRAY_MODE 		0x100000 	///< Convert all colors to gray ones
+#define MGL_GRAY_MODE 		0x200000 	///< Convert all colors to gray ones
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_C99_COMPLEX
 #include <complex.h>
