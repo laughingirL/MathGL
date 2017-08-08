@@ -278,6 +278,9 @@ public:
 	/// Set to draw tick labels at axis origin
 	inline void SetOriginTick(bool enable=true)
 	{	mgl_set_flag(gr,!enable, MGL_NO_ORIGIN);	}
+	/// Set bit-value flag of HMGL state (for advanced users only)
+	inline void SetFlagAdv(int val, uint32_t flag)
+	{	mgl_set_flag(gr, val, flag);	}
 
 	/// Put further plotting in m-th cell of nx*ny grid of the image.
 	/** String \a style may contain:

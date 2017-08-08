@@ -1,3 +1,10 @@
+2.4.2 
+* Add style '.' for 'cont' to draw contour lines from saddle points
+* Add style '.' for 'flow' to draw flow thread from saddle points
+* Cut output of 'ode' if NAN or INFINITY value occurs
+
+
+
 2.4.1 Released 20 July 2017
 
 * Add 'beltc' plot, which is 'belt' with manual coloring.

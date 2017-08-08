@@ -59,6 +59,11 @@ D. Docs about JS interface
 5. Sample about 'erode' and 'dilate'
 7. Sample about 'detect'
 8. Sample about 'section'
+9. Docs about '.' for 'cont'
+10. Docs about '.' for 'flow'
+11. Remark about cutting in 'ode' at NAN or INF
+12. inline void SetFlagAdv(int val, uint32_t flag)
+
 
 26. Update installation (dll from mgl_script + Qt plugins/ + Win10)
 

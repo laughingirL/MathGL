@@ -434,6 +434,13 @@ int MGL_NO_EXPORT mgls_setsizescl(mglGraph *gr, long , mglArg *a, const char *k,
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_setup(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"nn"))	gr->SetFlagAdv(mgl_int(a[0].v), mgl_int(a[1].v));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_shear(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -736,6 +743,7 @@ mglCommand mgls_set_cmd[] = {
 	{"rotatetext",_("Set to auto rotate text or not"),"rotatetext val", mgls_rotatetext ,15},
 	{"setsize",_("Set picture size"),"setsize width height", mgls_setsize ,2},
 	{"setsizescl",_("Set scaling factor for further setsize"),"setsizescl val", mgls_setsizescl ,2},
+	{"setup",_("Set bit-flags (for advanced users only)"),"setup val flag", mgls_setup ,2},
 	{"shear",_("Shear plot"),"shear valx valy", mgls_shear ,5},
 	{"shearplot",_("Set position of plot inside cell of sheared stick"), "shearplot num ind sx sy [xd yd]", mgls_shearplot ,5},
 	{"stickplot",_("Set position of plot inside cell of rotated stick"), "stickplot num ind tet phi", mgls_stickplot ,5},

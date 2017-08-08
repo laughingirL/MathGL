@@ -381,16 +381,17 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 			else
 			{
 				size_t k=i+2;
-				while(k<num)
+				while(k<num && nn[k]>=0)
 				{
-					const mglPoint p1(gr->GetPntP(i)), p2(gr->GetPntP(k));
+					const mglPoint p1(gr->GetPntP(nn[i])), p2(gr->GetPntP(nn[k]));
 					mreal dy=p2.x-p1.x, dx=p1.y-p2.y, dd=2*(dx*dx+dy*dy);
 					bool ops=false;
 					for(size_t ii=i+1;ii<k;ii++)
 					{
-						const mglPoint p(gr->GetPntP(ii));
-						mreal d = dx*p.x+dy*p.y;
-						if(d*d>dd)	ops = true;
+						if(nn[ii]<0){	ops = true;	break;	}
+						const mglPoint p(gr->GetPntP(nn[ii]));
+						mreal d = dx*(p.x-p1.x)+dy*(p.y-p1.y);
+						if(d*d>dd)	{	ops = true;	break;	}
 					}
 					if(ops)	break;
 					k++;
@@ -481,16 +482,17 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 			else
 			{
 				size_t k=i+2;
-				while(k<num)
+				while(k<num && nn[k]>=0)
 				{
-					const mglPoint p1(gr->GetPntP(i)), p2(gr->GetPntP(k));
+					const mglPoint p1(gr->GetPntP(nn[i])), p2(gr->GetPntP(nn[k]));
 					mreal dy=p2.x-p1.x, dx=p1.y-p2.y, dd=2*(dx*dx+dy*dy);
 					bool ops=false;
 					for(size_t ii=i+1;ii<k;ii++)
 					{
-						const mglPoint p(gr->GetPntP(ii));
-						mreal d = dx*p.x+dy*p.y;
-						if(d*d>dd)	ops = true;
+						if(nn[ii]<0){	ops = true;	break;	}
+						const mglPoint p(gr->GetPntP(nn[ii]));
+						mreal d = dx*(p.x-p1.x)+dy*(p.y-p1.y);
+						if(d*d>dd)	{	ops = true;	break;	}
 					}
 					if(ops)	break;
 					k++;

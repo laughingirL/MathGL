@@ -443,24 +443,92 @@ void MGL_EXPORT mgl_cont_val(HMGL gr, HCDT v, HCDT z, const char *sch, const cha
 	mgl_cont_xy_val(gr,v,&x,&y,z,sch,0);
 }
 //-----------------------------------------------------------------------------
+#define norm(x,y)	((x)*(x)+(y)*(y))
+std::vector<mreal> MGL_NO_EXPORT mgl_find_saddle_val(HCDT z)
+{
+	long nx=z->GetNx(), ny=z->GetNy(), nn=nx*ny-1;
+	std::vector<mreal> v;
+	for(long i=1;i<nx-1;i++)
+	{
+		mreal dd=z->vthr(i), x1=z->vthr(i+1), x2=z->vthr(i-1), dp=z->vthr(i+nx);
+		if(dd<=x1 && dd<=x2 && dd>=dp)	v.push_back(z->vthr(i));
+		if(dd>=x1 && dd>=x2 && dd<=dp)	v.push_back(z->vthr(i));
+		long i0 = i+nx*(ny-1);
+		dd=z->vthr(i0);	x1=z->vthr(i0+1);	x2=z->vthr(i0-1);	dp=z->vthr(i0-nx);
+		if(dd<=x1 && dd<=x2 && dd>=dp)	v.push_back(z->vthr(i0));
+		if(dd>=x1 && dd>=x2 && dd<=dp)	v.push_back(z->vthr(i0));
+	}
+	for(long j=1;j<ny-1;j++)
+	{
+		long i0 = nx*j;
+		mreal dd=z->vthr(i0), dp=z->vthr(i0+1), y1=z->vthr(i0+nx), y2=z->vthr(i0-nx);
+		if(dd<=dp && dd>=y1 && dd>=y2)	v.push_back(z->vthr(i0));
+		if(dd>=dp && dd<=y1 && dd<=y2)	v.push_back(z->vthr(i0));
+		i0 = nx*j+nx-1;
+		dd=z->vthr(i0);	dp=z->vthr(i0-1);	y1=z->vthr(i0+nx);	y2=z->vthr(i0-nx);
+		if(dd<=dp && dd>=y1 && dd>=y2)	v.push_back(z->vthr(i0));
+		if(dd>=dp && dd<=y1 && dd<=y2)	v.push_back(z->vthr(i0));
+	}
+	for(long j=1;j<ny-1;j++)	for(long i=1;i<nx-1;i++)
+	{
+		long i0 = i+nx*j;	bool ok=false;
+		mreal dd=z->vthr(i0),x1=z->vthr(i0+1),x2=z->vthr(i0-1),y1=z->vthr(i0+nx),y2=z->vthr(i0-nx);
+		if(dd<=x1 && dd<=x2 && dd>=y1 && dd>=y2)	ok=true;
+		if(dd>=x1 && dd>=x2 && dd<=y1 && dd<=y2)	ok=true;
+		x1=z->vthr(i0+1+nx);	x2=z->vthr(i0-1-nx);
+		y1=z->vthr(i0-1+nx);	y2=z->vthr(i0+1-nx);
+		if(dd<=x1 && dd<=x2 && dd>=y1 && dd>=y2)	ok=true;
+		if(dd>=x1 && dd>=x2 && dd<=y1 && dd<=y2)	ok=true;
+		if(ok)	v.push_back(z->vthr(i0));
+	}
+	return v;
+}
 void MGL_EXPORT mgl_cont_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	mreal r = gr->SaveState(opt);
-	long Num = mgl_isnan(r)?7:long(r+0.5);
-	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
-	mglData v(Num);
-	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*mreal(i+1)/(Num+1);
-	mgl_cont_xy_val(gr,&v,x,y,z,sch,0);
+	if(mglchr(sch,'.'))
+	{
+		mglDataS v;	v.dat = mgl_find_saddle_val(z);
+		if(v.dat.size()>0)
+		{
+			std::sort( v.dat.begin(), v.dat.end() );
+			v.dat.erase( std::unique( v.dat.begin(), v.dat.end() ), v.dat.end() );
+			mgl_cont_xy_val(gr,&v,x,y,z,sch,0);
+		}
+		else	gr->SetWarn(mglWarnCnt,"Cont");
+	}
+	else
+	{
+		long Num = mgl_isnan(r)?7:long(r+0.5);
+		if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
+		mglData v(Num);
+		for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*mreal(i+1)/(Num+1);
+		mgl_cont_xy_val(gr,&v,x,y,z,sch,0);
+	}
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cont(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
 	mreal r = gr->SaveState(opt);
-	long Num = mgl_isnan(r)?7:long(r+0.5);
-	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
-	mglData v(Num);
-	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*mreal(i+1)/(Num+1);
-	mgl_cont_val(gr,&v,z,sch,0);
+	if(mglchr(sch,'.'))
+	{
+		mglDataS v;	v.dat = mgl_find_saddle_val(z);
+		if(v.dat.size()>0)
+		{
+			std::sort( v.dat.begin(), v.dat.end() );
+			v.dat.erase( std::unique( v.dat.begin(), v.dat.end() ), v.dat.end() );
+			mgl_cont_val(gr,&v,z,sch,0);
+		}
+		else	gr->SetWarn(mglWarnCnt,"Cont");
+	}
+	else
+	{
+		long Num = mgl_isnan(r)?7:long(r+0.5);
+		if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
+		mglData v(Num);
+		for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*mreal(i+1)/(Num+1);
+		mgl_cont_val(gr,&v,z,sch,0);
+	}
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cont_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)

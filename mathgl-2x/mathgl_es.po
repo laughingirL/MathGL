@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-12 22:00+0300\n"
+"POT-Creation-Date: 2017-08-01 14:44+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -570,7 +570,7 @@ msgstr ""
 msgid "Add inplot"
 msgstr "Anadir grafico interno"
 
-#: src/exec_set.cpp:690
+#: src/exec_set.cpp:697
 msgid "Add legend entry"
 msgstr "Anadir entrada a leyenda"
 
@@ -644,7 +644,7 @@ msgstr "Anadir titulo para el subgrafico/grafico interno actual"
 msgid "Add to"
 msgstr "Anadir a"
 
-#: src/exec_set.cpp:691
+#: src/exec_set.cpp:698
 msgid "Add user-defined symbol"
 msgstr "Anadir simbolo definido por el usuario"
 
@@ -656,7 +656,7 @@ msgstr "Ajustar tamano de la imagen para llenar el area de grafico"
 msgid "Adjust size"
 msgstr "Ajustar tamano"
 
-#: src/exec_set.cpp:692
+#: src/exec_set.cpp:699
 msgid "Adjust ticks for best view"
 msgstr "Ajustar marcas del eje a la mejor apariencia"
 
@@ -757,7 +757,7 @@ msgstr "Proporcion de aspecto de  escala-y a escala-z"
 msgid "Aspect x/z"
 msgstr "Aspecto x/z"
 
-#: src/exec_set.cpp:698
+#: src/exec_set.cpp:705
 msgid "Attach light settings to inplot"
 msgstr "Vincular configuracion de luz a grafico interno"
 
@@ -942,7 +942,7 @@ msgstr ""
 msgid "Change canvas size to fill whole region (F6)."
 msgstr ""
 
-#: src/exec_set.cpp:702
+#: src/exec_set.cpp:709
 msgid "Change current directory"
 msgstr ""
 
@@ -962,7 +962,7 @@ msgstr ""
 msgid "Change font"
 msgstr ""
 
-#: src/exec_set.cpp:751
+#: src/exec_set.cpp:759
 msgid "Change view angles - use 'rotate' for plot rotation"
 msgstr ""
 
@@ -974,11 +974,11 @@ msgstr ""
 msgid "Clear all"
 msgstr ""
 
-#: src/exec_set.cpp:703
+#: src/exec_set.cpp:710
 msgid "Clear legend entries"
 msgstr ""
 
-#: src/exec_set.cpp:704
+#: src/exec_set.cpp:711
 msgid "Clear picture"
 msgstr ""
 
@@ -2894,7 +2894,7 @@ msgstr ""
 msgid "Load Data?"
 msgstr ""
 
-#: src/exec_set.cpp:719
+#: src/exec_set.cpp:726
 msgid "Load commands from external DLL"
 msgstr ""
 
@@ -2912,7 +2912,7 @@ msgid ""
 "at exit but UDAV will not ask to save it (Ctrl+Shift+O)."
 msgstr ""
 
-#: src/exec_set.cpp:720
+#: src/exec_set.cpp:727
 msgid "Load fontfaces"
 msgstr ""
 
@@ -3676,7 +3676,7 @@ msgstr ""
 msgid "Primitives ..."
 msgstr ""
 
-#: src/exec_set.cpp:750
+#: src/exec_set.cpp:758
 msgid "Print MathGL version or check if it is valid"
 msgstr ""
 
@@ -3774,7 +3774,7 @@ msgstr ""
 msgid "R - maroon"
 msgstr ""
 
-#: src/exec_set.cpp:733
+#: src/exec_set.cpp:740
 msgid "Rasterize plot and save to background"
 msgstr ""
 
@@ -3912,7 +3912,7 @@ msgstr ""
 msgid "Reserve space for labels at top side (style '^')"
 msgstr ""
 
-#: src/exec_set.cpp:734
+#: src/exec_set.cpp:741
 msgid "Reset settings and clear picture"
 msgstr ""
 
@@ -4010,7 +4010,7 @@ msgstr ""
 msgid "Rotate picture by holding left mouse button"
 msgstr ""
 
-#: src/exec_set.cpp:735
+#: src/exec_set.cpp:742
 msgid "Rotate plot"
 msgstr ""
 
@@ -4172,7 +4172,7 @@ msgstr ""
 msgid "Select kind of plot"
 msgstr ""
 
-#: src/exec_set.cpp:749
+#: src/exec_set.cpp:757
 msgid "Select variant of plot style(s)"
 msgstr ""
 
@@ -4180,15 +4180,15 @@ msgstr ""
 msgid "Set"
 msgstr ""
 
-#: src/exec_set.cpp:745
+#: src/exec_set.cpp:753
 msgid "Set additional tick and axis labels shift"
 msgstr ""
 
-#: src/exec_set.cpp:695
+#: src/exec_set.cpp:702
 msgid "Set ambient light brightness"
 msgstr ""
 
-#: src/exec_set.cpp:716
+#: src/exec_set.cpp:723
 msgid "Set arbitrary position of plot in picture"
 msgstr ""
 
@@ -4196,31 +4196,35 @@ msgstr ""
 msgid "Set arguments"
 msgstr ""
 
-#: src/exec_set.cpp:697
+#: src/exec_set.cpp:704
 msgid "Set aspect ration"
 msgstr ""
 
-#: src/exec_set.cpp:699
+#: src/exec_set.cpp:706
 msgid "Set axis and tick style"
 msgstr ""
 
-#: src/exec_set.cpp:725
+#: src/exec_set.cpp:732
 msgid "Set axis origin"
 msgstr ""
 
-#: src/exec_set.cpp:732
+#: src/exec_set.cpp:739
 msgid "Set axis ranges"
 msgstr ""
 
-#: src/exec_set.cpp:701
+#: src/exec_set.cpp:746
+msgid "Set bit-flags (for advanced users only)"
+msgstr ""
+
+#: src/exec_set.cpp:708
 msgid "Set bounding box for 2d export"
 msgstr ""
 
-#: src/exec_set.cpp:722
+#: src/exec_set.cpp:729
 msgid "Set brush for given mask id"
 msgstr ""
 
-#: src/exec_set.cpp:706
+#: src/exec_set.cpp:713
 msgid "Set color range"
 msgstr ""
 
@@ -4236,23 +4240,23 @@ msgstr ""
 msgid "Set data sizes manually"
 msgstr ""
 
-#: src/exec_set.cpp:700
+#: src/exec_set.cpp:707
 msgid "Set default bars width"
 msgstr ""
 
-#: src/exec_set.cpp:730
+#: src/exec_set.cpp:737
 msgid "Set default filename"
 msgstr ""
 
-#: src/exec_set.cpp:694
+#: src/exec_set.cpp:701
 msgid "Set default transparency"
 msgstr ""
 
-#: src/exec_set.cpp:709
+#: src/exec_set.cpp:716
 msgid "Set diffusive light brightness"
 msgstr ""
 
-#: src/exec_set.cpp:710
+#: src/exec_set.cpp:717
 msgid "Set draw region for quality&4"
 msgstr ""
 
@@ -4276,71 +4280,71 @@ msgstr ""
 msgid "Set lighting off/on for particular plot"
 msgstr ""
 
-#: src/exec_set.cpp:723
+#: src/exec_set.cpp:730
 msgid "Set number of lines in mesh/fall/vect and so on"
 msgstr ""
 
-#: src/exec_set.cpp:717
+#: src/exec_set.cpp:724
 msgid "Set number of marks in the legend"
 msgstr ""
 
-#: src/exec_set.cpp:711
+#: src/exec_set.cpp:718
 msgid "Set number of visible faces"
 msgstr ""
 
-#: src/exec_set.cpp:727
+#: src/exec_set.cpp:734
 msgid "Set palette for 1D plots"
 msgstr ""
 
-#: src/exec_set.cpp:729
+#: src/exec_set.cpp:736
 msgid "Set perspective"
 msgstr ""
 
-#: src/exec_set.cpp:737
+#: src/exec_set.cpp:744
 msgid "Set picture size"
 msgstr ""
 
-#: src/exec_set.cpp:731
+#: src/exec_set.cpp:738
 msgid "Set plot quality"
 msgstr ""
 
-#: src/exec_set.cpp:742
+#: src/exec_set.cpp:750
 msgid "Set position of plot as cell of matrix"
 msgstr ""
 
-#: src/exec_set.cpp:724
+#: src/exec_set.cpp:731
 msgid "Set position of plot block in matrix"
 msgstr ""
 
-#: src/exec_set.cpp:705
+#: src/exec_set.cpp:712
 msgid "Set position of plot inside cell of column"
 msgstr ""
 
-#: src/exec_set.cpp:715
+#: src/exec_set.cpp:722
 msgid "Set position of plot inside cell of matrix"
 msgstr ""
 
-#: src/exec_set.cpp:741
+#: src/exec_set.cpp:749
 msgid "Set position of plot inside cell of rotated stick"
 msgstr ""
 
-#: src/exec_set.cpp:740
+#: src/exec_set.cpp:748
 msgid "Set position of plot inside cell of sheared stick"
 msgstr ""
 
-#: src/exec_set.cpp:753
+#: src/exec_set.cpp:761
 msgid "Set range for x-axis"
 msgstr ""
 
-#: src/exec_set.cpp:755
+#: src/exec_set.cpp:763
 msgid "Set range for y-axis"
 msgstr ""
 
-#: src/exec_set.cpp:759
+#: src/exec_set.cpp:767
 msgid "Set range for z-axis"
 msgstr ""
 
-#: src/exec_set.cpp:738
+#: src/exec_set.cpp:745
 msgid "Set scaling factor for further setsize"
 msgstr ""
 
@@ -4352,51 +4356,51 @@ msgstr ""
 msgid "Set size for text, marks and others"
 msgstr ""
 
-#: src/exec_set.cpp:696
+#: src/exec_set.cpp:703
 msgid "Set size of arrows"
 msgstr ""
 
-#: src/exec_set.cpp:721
+#: src/exec_set.cpp:728
 msgid "Set size of markers"
 msgstr ""
 
-#: src/exec_set.cpp:728
+#: src/exec_set.cpp:735
 msgid "Set size of semi-transparent area around line"
 msgstr ""
 
-#: src/exec_set.cpp:726
+#: src/exec_set.cpp:733
 msgid "Set tick labels drawing at origin"
 msgstr ""
 
-#: src/exec_set.cpp:744
+#: src/exec_set.cpp:752
 msgid "Set tick length"
 msgstr ""
 
-#: src/exec_set.cpp:707
+#: src/exec_set.cpp:714
 msgid "Set ticks for colorbar"
 msgstr ""
 
-#: src/exec_set.cpp:754
+#: src/exec_set.cpp:762
 msgid "Set ticks for x-axis"
 msgstr ""
 
-#: src/exec_set.cpp:756
+#: src/exec_set.cpp:764
 msgid "Set ticks for y-axis"
 msgstr ""
 
-#: src/exec_set.cpp:760
+#: src/exec_set.cpp:768
 msgid "Set ticks for z-axis"
 msgstr ""
 
-#: src/exec_set.cpp:746
+#: src/exec_set.cpp:754
 msgid "Set ticks in time format"
 msgstr ""
 
-#: src/exec_set.cpp:748
+#: src/exec_set.cpp:756
 msgid "Set ticks tuning"
 msgstr ""
 
-#: src/exec_set.cpp:736
+#: src/exec_set.cpp:743
 msgid "Set to auto rotate text or not"
 msgstr ""
 
@@ -4404,7 +4408,7 @@ msgstr ""
 msgid "Set to use whole area (style '#')"
 msgstr ""
 
-#: src/exec_set.cpp:747
+#: src/exec_set.cpp:755
 msgid "Set type transparency"
 msgstr ""
 
@@ -4444,11 +4448,11 @@ msgstr ""
 msgid "Setup colors for:"
 msgstr ""
 
-#: src/exec_set.cpp:713
+#: src/exec_set.cpp:720
 msgid "Setup font"
 msgstr ""
 
-#: src/exec_set.cpp:718
+#: src/exec_set.cpp:725
 msgid "Setup light"
 msgstr ""
 
@@ -4456,7 +4460,7 @@ msgstr ""
 msgid "Setup or draw axis"
 msgstr ""
 
-#: src/exec_set.cpp:708
+#: src/exec_set.cpp:715
 msgid "Setup plot points cutting"
 msgstr ""
 
@@ -4480,7 +4484,7 @@ msgstr ""
 msgid "Sharp colors"
 msgstr ""
 
-#: src/exec_set.cpp:739
+#: src/exec_set.cpp:747
 msgid "Shear plot"
 msgstr ""
 
@@ -4889,11 +4893,11 @@ msgstr ""
 msgid "Swap parts"
 msgstr ""
 
-#: src/exec_set.cpp:712
+#: src/exec_set.cpp:719
 msgid "Switch on/off fog"
 msgstr ""
 
-#: src/exec_set.cpp:714
+#: src/exec_set.cpp:721
 msgid "Switch on/off gray-scale mode"
 msgstr ""
 
@@ -4927,11 +4931,11 @@ msgstr ""
 msgid "Switch on/off mouse zoom of selected region."
 msgstr ""
 
-#: src/exec_set.cpp:743
+#: src/exec_set.cpp:751
 msgid "Switch on/off to use ternary axis"
 msgstr ""
 
-#: src/exec_set.cpp:693
+#: src/exec_set.cpp:700
 msgid "Switch on/off transparency"
 msgstr ""
 
@@ -5498,7 +5502,7 @@ msgstr ""
 msgid "Wire style"
 msgstr ""
 
-#: src/exec_set.cpp:752
+#: src/exec_set.cpp:760
 msgid "Write current image to graphical file"
 msgstr ""
 
@@ -5734,7 +5738,7 @@ msgstr ""
 msgid "Z-slice from"
 msgstr ""
 
-#: src/exec_set.cpp:758
+#: src/exec_set.cpp:766
 msgid "Zoom axis range"
 msgstr ""
 
@@ -5783,7 +5787,7 @@ msgstr ""
 msgid "Zoom out the picture"
 msgstr ""
 
-#: src/exec_set.cpp:757
+#: src/exec_set.cpp:765
 msgid "Zoom plot region"
 msgstr ""
 

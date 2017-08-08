@@ -619,7 +619,21 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	bool cnt=!mglchr(sch,'#');
 
 	std::vector<mreal> u, v;
-	if(mglchr(sch,'*'))	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
+	long nx=ax->GetNx(), ny=ax->GetNy();
+	if(mglchr(sch,'.'))	for(long j=1;j<ny-1;j++)	for(long i=1;i<nx-1;i++)
+	{
+		long i0 = i+nx*j;
+		if(ax->vthr(i0-1)*ax->vthr(i0+1)<0 && ay->vthr(i0-nx)*ay->vthr(i0+nx)<0 && 
+			(ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
+		{
+			mreal s = i/mreal(nx-1), t = j/mreal(ny-1), ds=1/mreal(nx-1);
+			u.push_back(s+ds);	v.push_back(t);
+			u.push_back(-s-ds);	v.push_back(-t);
+			u.push_back(s-ds);	v.push_back(t);
+			u.push_back(-s+ds);	v.push_back(-t);
+		}
+	}
+	else if(mglchr(sch,'*'))	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
 	{
 		mreal t = (i+1.)/(num+1.), s = (j+1.)/(num+1.);
 		u.push_back(s);		v.push_back(t);

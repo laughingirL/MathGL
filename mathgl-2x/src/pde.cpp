@@ -579,7 +579,9 @@ HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *p
 	// initial conditions
 	for(long i=0;i<n;i++)	x[i] = res->a[i] = x0[i];
 	// Runge Kutta scheme of 4th order
-	for(long k=1;k<nt;k++)
+	bool good=true;
+	long k;
+	for(k=1;k<nt && good;k++)
 	{
 		func(x,k1,par);
 		for(long i=0;i<n;i++)	v[i] = x[i]+k1[i]*hh;
@@ -590,9 +592,11 @@ HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *p
 		func(v,k2,par);
 		for(long i=0;i<n;i++)	x[i] += (k1[i]+k2[i]+2*k3[i])*dt/6;
 		if(bord)	bord(x,res->a+n*(k-1),par);
-		for(long i=0;i<n;i++)	res->a[i+n*k] = x[i];
+		for(long i=0;i<n;i++)
+		{	res->a[i+n*k] = x[i];	if(mgl_isbad(x[i]))	good=false;	}
 	}
 	delete []x;	delete []k1;	delete []k2;	delete []k3;	delete []v;
+	res->Crop(0,k,'y');
 	return res;
 }
 //-----------------------------------------------------------------------------
