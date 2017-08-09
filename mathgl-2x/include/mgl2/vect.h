@@ -71,6 +71,7 @@ void MGL_EXPORT mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintpt
 /** String \a sch may contain:
  * color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
  * ‘#’ for starting threads from edges only;
+ * ‘.’ for threads from vicinity of saddle point;
  * ‘v’ for drawing arrows on the threads.
  * Option "value" sets the number of threads (default is 5). */
 void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt);
@@ -79,6 +80,7 @@ void MGL_EXPORT mgl_flow_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_
 /** String \a sch may contain:
  * color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
  * ‘#’ for starting threads from edges only;
+ * ‘.’ for threads from vicinity of saddle point;
  * ‘v’ for drawing arrows on the threads.
  * Option "value" sets the number of threads (default is 5). */
 void MGL_EXPORT mgl_flow_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt);
@@ -101,6 +103,23 @@ void MGL_EXPORT mgl_flow_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr
  * Option "value" sets the number of threads (default is 5). */
 void MGL_EXPORT mgl_flow_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt);
 void MGL_EXPORT mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int,int);
+
+/// Plot flows from given plain for vector field {ax,ay,az} parametrically depended on coordinate {x,y,z} with color proportional to |a|
+/** String \a sch may contain:
+ * color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
+ * ‘v’ for drawing arrows on the threads;
+ * 't' for drawing tapes of normals in x-y and y-z planes.
+ * Option "value" sets the number of threads (default is 5). */
+void MGL_EXPORT mgl_flow3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt);
+void MGL_EXPORT mgl_flow3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, double *sVal, const char *opt,int,int);
+/// Plot flows from given plain for vector field {ax,ay,az} with color proportional to |a|
+/** String \a sch may contain:
+ * color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
+ * ‘v’ for drawing arrows on the threads;
+ * 't' for drawing tapes of normals in x-y and y-z planes.
+ * Option "value" sets the number of threads (default is 5). */
+void MGL_EXPORT mgl_flow3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt);
+void MGL_EXPORT mgl_flow3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, double *sVal, const char *opt,int,int);
 
 /// Plot flow from point p for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to |a|
 /** String \a sch may contain:

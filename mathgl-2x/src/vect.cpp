@@ -623,14 +623,24 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	if(mglchr(sch,'.'))	for(long j=1;j<ny-1;j++)	for(long i=1;i<nx-1;i++)
 	{
 		long i0 = i+nx*j;
-		if(ax->vthr(i0-1)*ax->vthr(i0+1)<0 && ay->vthr(i0-nx)*ay->vthr(i0+nx)<0 && 
-			(ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
+		if(ax->vthr(i0-1)*ax->vthr(i0+1)<0 && ay->vthr(i0-nx)*ay->vthr(i0+nx)<0)
+//			&& (ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
 		{
 			mreal s = i/mreal(nx-1), t = j/mreal(ny-1), ds=1/mreal(nx-1);
 			u.push_back(s+ds);	v.push_back(t);
 			u.push_back(-s-ds);	v.push_back(-t);
 			u.push_back(s-ds);	v.push_back(t);
 			u.push_back(-s+ds);	v.push_back(-t);
+		}
+		else if((ax->vthr(i0-1+nx)-ay->vthr(i0-1+nx))*(ax->vthr(i0+1-nx)-ay->vthr(i0+1-nx))<0 && 
+			(ax->vthr(i0-1-nx)+ay->vthr(i0-1-nx))*(ax->vthr(i0+1+nx)+ay->vthr(i0+1+nx))<0)
+//			&& (ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
+		{
+			mreal s = i/mreal(nx-1), t = j/mreal(ny-1), ds=1/mreal(nx-1), dt=1/mreal(ny-1);
+			u.push_back(s+ds);	v.push_back(t+dt);
+			u.push_back(-s-ds);	v.push_back(-t-dt);
+			u.push_back(s-ds);	v.push_back(t-dt);
+			u.push_back(-s+ds);	v.push_back(-t+dt);
 		}
 	}
 	else if(mglchr(sch,'*'))	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
@@ -902,48 +912,110 @@ void flow(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HCD
 	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flow3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
 {
 	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Flow3"))	return;
+	mreal r = gr->SaveState(opt);
+	long num = mgl_isnan(r)?5:long(r+0.5);
+	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
+	char dir='y';
+	if(mglchr(sch,'x'))	dir='x';
+	if(mglchr(sch,'z'))	dir='z';
+
+	long ss = gr->AddTexture(sch);
+	bool vv = mglchr(sch,'v'), tt = mglchr(sch,'t');
+	std::vector<mglPoint> u;
+	const double f = 1./(num+1);
+
+	if(dir=='x')
+	{
+		long n = ax->GetNx()-1;
+		sVal = (sVal<0 || sVal>n) ? 0.5 : sVal/n;
+		for(long j=0;j<num;j++)	for(long i=0;i<num;i++)
+		{
+			u.push_back(mglPoint(sVal,f*(i+1),f*(j+1)));
+			u.push_back(mglPoint(-sVal,-f*(i+1),-f*(j+1)));
+		}
+	}
+	else if(dir=='y')
+	{
+		long n = ax->GetNy()-1;
+		sVal = (sVal<0 || sVal>n) ? 0.5 : sVal/n;
+		for(long j=0;j<num;j++)	for(long i=0;i<num;i++)
+		{
+			u.push_back(mglPoint(f*(i+1),sVal,f*(j+1)));
+			u.push_back(mglPoint(-f*(i+1),-sVal,-f*(j+1)));
+		}
+	}
+	else if(dir=='z')
+	{
+		long n = ax->GetNy()-1;
+		sVal = (sVal<0 || sVal>n) ? 0.5 : sVal/n;
+		for(long j=0;j<num;j++)	for(long i=0;i<num;i++)
+		{
+			u.push_back(mglPoint(f*(i+1),f*(j+1),sVal));
+			u.push_back(mglPoint(-f*(i+1),-f*(j+1),-sVal));
+		}
+	}
+
+#pragma omp parallel for
+	for(long i=0;i<long(u.size());i++)	if(!gr->NeedStop())
+		flow(gr, u[i].x, u[i].y, u[i].z, x, y, z, ax, ay, az, ss,vv,tt,tt);
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_flow3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
+{
+	gr->SaveState(opt);
+	mglDataV x(ax->GetNx()), y(ax->GetNy()),z(ax->GetNz());
+	x.Fill(gr->Min.x,gr->Max.x);
+	y.Fill(gr->Min.y,gr->Max.y);
+	z.Fill(gr->Min.z,gr->Max.z);
+	mgl_flow3_xyz(gr,&x,&y,&z,ax,ay,az,sch,sVal,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_flow3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, double *sVal, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_flow3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *sVal, o);	delete []o;	delete []s;	}
+void MGL_EXPORT mgl_flow3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, double *sVal, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_flow3(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *sVal, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+{
+	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Flow3d"))	return;
 
 	mreal r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
-	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
+	static int cgid=1;	gr->StartGroup("Flow3d",cgid++);
 	bool cnt=!mglchr(sch,'#');
 	long ss = gr->AddTexture(sch);
 	bool vv = mglchr(sch,'v'), xo = mglchr(sch,'x'), zo = mglchr(sch,'z');
 
-	std::vector<mreal> u, v, w;
+	std::vector<mglPoint> u;
 	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
 	{
 		mreal t = (i+1.)/(num+1.), s = (j+1.)/(num+1.);
-		u.push_back(t);		v.push_back(s);		w.push_back(0);
-		u.push_back(-t);	v.push_back(-s);	w.push_back(0);
-		u.push_back(t);		v.push_back(s);		w.push_back(1);
-		u.push_back(-t);	v.push_back(-s);	w.push_back(-1);
+		u.push_back(mglPoint(t,s,0));	u.push_back(mglPoint(-t,-s,0));
+		u.push_back(mglPoint(t,s,1));	u.push_back(mglPoint(-t,-s,-1));
 
-		u.push_back(t);		v.push_back(0);		w.push_back(s);
-		u.push_back(-t);	v.push_back(0);		w.push_back(-s);
-		u.push_back(t);		v.push_back(1);		w.push_back(s);
-		u.push_back(-t);	v.push_back(-1);	w.push_back(-s);
+		u.push_back(mglPoint(t,0,s));	u.push_back(mglPoint(-t,0,-s));
+		u.push_back(mglPoint(t,1,s));	u.push_back(mglPoint(-t,-1,-s));
 
-		u.push_back(0);		v.push_back(s);		w.push_back(t);
-		u.push_back(0);		v.push_back(-s);	w.push_back(-t);
-		u.push_back(1);		v.push_back(s);		w.push_back(t);
-		u.push_back(-1);	v.push_back(-s);	w.push_back(-t);
+		u.push_back(mglPoint(0,s,t));	u.push_back(mglPoint(0,-s,-t));
+		u.push_back(mglPoint(1,s,t));	u.push_back(mglPoint(-1,-s,-t));
 		if(cnt)
 		{
-			u.push_back(t);		v.push_back(s);		w.push_back(0.5);
-			u.push_back(-t);	v.push_back(-s);	w.push_back(-0.5);
-			u.push_back(t);		v.push_back(0.5);	w.push_back(s);
-			u.push_back(-t);	v.push_back(-0.5);	w.push_back(-s);
-			u.push_back(0.5);	v.push_back(s);		w.push_back(t);
-			u.push_back(-0.5);	v.push_back(-s);	w.push_back(-t);
+			u.push_back(mglPoint(t,s,0.5));	u.push_back(mglPoint(-t,-s,-0.5));
+			u.push_back(mglPoint(t,0.5,s));	u.push_back(mglPoint(-t,-0.5,-s));
+			u.push_back(mglPoint(0.5,s,t));	u.push_back(mglPoint(-0.5,-s,-t));
 		}
 	}
 #pragma omp parallel for
 	for(long i=0;i<long(u.size());i++)	if(!gr->NeedStop())
-		flow(gr, u[i], v[i], w[i], x, y, z, ax, ay, az,ss,vv,xo,zo);
+		flow(gr, u[i].x, u[i].y, u[i].z, x, y, z, ax, ay, az,ss,vv,xo,zo);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------

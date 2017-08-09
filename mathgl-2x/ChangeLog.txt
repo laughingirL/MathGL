@@ -1,4 +1,5 @@
 2.4.2 
+* Add 'flow3' for flow threads of 3D vector field, which start from the plain
 * Add style '.' for 'cont' to draw contour lines from saddle points
 * Add style '.' for 'flow' to draw flow thread from saddle points
 * Cut output of 'ode' if NAN or INFINITY value occurs

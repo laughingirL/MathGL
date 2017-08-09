@@ -1820,6 +1820,23 @@ public:
 	inline void FlowP(mglPoint p, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
 	{	mgl_flowp_3d(gr, p.x, p.y, p.z, &ax, &ay, &az, sch, opt);	}
 
+	/// Plot flows from given plain for vector field {ax,ay,az} parametrically depended on coordinate {x,y,z} with color proportional to |a|
+	/** String \a sch may contain:
+	* color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
+	* ‘v’ for drawing arrows on the threads;
+	* 't' for drawing tapes of normals in x-y and y-z planes.
+	* Option "value" sets the number of threads (default is 5). */
+	inline void Flow3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", double sVal=-1, const char *opt="")
+	{	mgl_flow3_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, sVal, opt);	}
+	/// Plot flows from given plain for vector field {ax,ay,az} with color proportional to |a|
+	/** String \a sch may contain:
+	* color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
+	* ‘v’ for drawing arrows on the threads;
+	* 't' for drawing tapes of normals in x-y and y-z planes.
+	* Option "value" sets the number of threads (default is 5). */
+	inline void Flow3(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", double sVal=-1, const char *opt="")
+	{	mgl_flow3(gr, &ax, &ay, &az, sch, sVal, opt);	}
+
 	/// Plot flows for gradient of scalar field phi parametrically depended on coordinate {x,y,z}
 	/** String \a sch may contain:
 	 * color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);

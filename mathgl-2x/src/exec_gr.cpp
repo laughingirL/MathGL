@@ -947,6 +947,22 @@ int MGL_NO_EXPORT mgls_flow(mglGraph *gr, long , mglArg *a, const char *k, const
 	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_flow3(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"ddd"))	gr->Flow3(*(a[0].d),*(a[1].d),*(a[2].d),"",-1,opt);
+	else if(!strcmp(k,"ddds"))	gr->Flow3(*(a[0].d),*(a[1].d),*(a[2].d),a[3].s.c_str(),-1,opt);
+	else if(!strcmp(k,"dddsn"))	gr->Flow3(*(a[0].d),*(a[1].d),*(a[2].d),a[3].s.c_str(),a[4].v,opt);
+	else if(!strcmp(k,"dddddd"))
+		gr->Flow3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),"",-1,opt);
+	else if(!strcmp(k,"dddddds"))
+		gr->Flow3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),a[6].s.c_str(),-1,opt);
+	else if(!strcmp(k,"ddddddsn"))
+		gr->Flow3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),a[6].s.c_str(),a[7].v,opt);
+	else res = 1;
+	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_grad(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -1070,10 +1086,11 @@ mglCommand mgls_grf_cmd[] = {
 	{"dots",_("Draw dots for arbitrary data points"),"dots Xdat Ydat Zdat ['fmt']|Xdat Ydat Zdat Adat ['fmt']|Xdat Ydat Zdat Cdat Adat ['fmt']", mgls_dots ,9},
 	{"error",_("Draw error boxes"),"error Ydat Yerr ['fmt']|Xdat Ydat Yerr ['fmt']|Xdat Ydat Xerr Yerr ['fmt']", mgls_error ,7},
 	{"fall",_("Draw waterfalls"),"fall Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_fall ,8},
-	{"flow",_("Draw flow threads for vector field"),"flow Udat Vdat ['fmt' num]|Xdat Ydat Udat Vdat ['fmt' num]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
+	{"flow",_("Draw flow threads for vector field"),"flow Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']|Udat Vdat Wdat ['fmt']|Xdat Ydat Zdat Udat Vdat Wdat ['fmt']|\
 	x0 y0 Udat Vdat ['fmt']|x0 y0 Xdat Ydat Udat Vdat ['fmt']|x0 y0 z0 Udat Vdat Wdat ['fmt']|x0 y0 z0 Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_flow ,11},
+	{"flow3",_("Draw flow threads from plain for vector field"),"flow3 Udat Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' num]", mgls_flow3 ,11},
 	{"grad",_("Draw gradient lines for scalar field"),"grad Phi ['fmt' num]|Xdat Ydat Phi ['fmt' num]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad ,8},
-	{"grid2",_("Draw grid for data array(s)"),"grid Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid2 ,8},
+	{"grid2",_("Draw grid for data array(s)"),"grid2 Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid2 ,8},
 	{"grid3",_("Draw grid at slices of 3D data"),"grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3 ,9},
 	{"iris",_("Draw Iris plots"),"iris Dats 'ids' ['fmt']|Dats Ranges 'ids' ['fmt']", mgls_iris,13},
 	{"label",_("Draw label at arbitrary position"),"label Ydat 'txt' ['fmt'='']|Xdat Ydat 'txt' ['fmt'='']|Xdat Ydat Zdat 'txt' ['fmt'='']", mgls_label ,7},
