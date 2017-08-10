@@ -1342,12 +1342,36 @@ void MGL_EXPORT mgl_data_limit(HMDT d, mreal v)
 {
 	long n = d->GetNN();
 	mreal *a = d->a;
-	#pragma omp parallel for
+#pragma omp parallel for
 	for(long i=0;i<n;i++)
 	{	mreal b = fabs(a[i]);	if(b>v)	a[i] *= v/b;	}
 }
 void MGL_EXPORT mgl_data_limit_(uintptr_t *d, mreal *v)
 {	mgl_data_limit(_DT_, *v);	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_coil(HMDT d, mreal v1, mreal v2, int sep)
+{
+	long n = d->GetNN();
+	if(mgl_isnan(v2))	v2=-v1;
+	if(v2<v1)	{	mreal tmp=v1;	v1=v2;	v2=tmp;	}
+	mreal *a = d->a, dv = v2-v1;
+	if(dv==0)	return;
+	long *kk=new long[n];
+#pragma omp parallel for
+	for(long i=0;i<n;i++)
+	{
+		kk[i] = mgl_int((a[i]-v1)/dv-0.5);
+		a[i] -= kk[i]*dv;
+	}
+	if(sep)
+	{
+#pragma omp parallel for
+		for(long i=1;i<n;i++)	if(kk[i]!=kk[i-1])	a[i] = NAN;
+	}
+	delete []kk;
+}
+void MGL_EXPORT mgl_data_coil_(uintptr_t *d, mreal *v1, mreal *v2, int *sep)
+{	mgl_data_coil(_DT_, *v1, *v2, *sep);	}
 //-----------------------------------------------------------------------------
 /// Read binary data and swap big-endian to little-endian if swap=true
 size_t MGL_EXPORT mgl_fread(FILE *fp, void *vals, size_t size, size_t num, int swap)

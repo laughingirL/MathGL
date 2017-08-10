@@ -62,7 +62,8 @@ D. Docs about JS interface
 9. Docs about '.' for 'cont'
 10. Docs about '.' for 'flow'
 11. Remark about cutting in 'ode' at NAN or INF
-12. inline void SetFlagAdv(int val, uint32_t flag)
+12. Docs about 'setup' + inline void SetFlagAdv(int val, uint32_t flag)
+13. Docs about 'coil'
 
 
 26. Update installation (dll from mgl_script + Qt plugins/ + Win10)

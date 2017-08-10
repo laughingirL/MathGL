@@ -390,6 +390,9 @@ using mglDataA::Momentum;
 	/// Limit the data to be inside [-v,v], keeping the original sign
 	inline void Limit(mreal v)
 	{	mgl_data_limit(this, v);	}
+	/// Project the periodical data to range [v1,v2] (like mod() function). Separate branches by NAN if sep=true.
+	inline void Coil(mreal v1, mreal v2, bool sep=true)
+	{	mgl_data_coil(this, v1, v2, sep);	}
 
 	/// Apply Hankel transform
 	inline void Hankel(const char *dir)	{	mgl_data_hankel(this,dir);	}

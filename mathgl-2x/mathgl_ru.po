@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-09 12:24+0300\n"
+"POT-Creation-Date: 2017-08-10 10:48+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -590,7 +590,7 @@ msgstr "Добавить кривую"
 msgid "Add curve which properties can be changed later by mouse."
 msgstr "Добавить кривую. Ее свойства можно изменить позже мышью."
 
-#: src/exec_dat.cpp:1523
+#: src/exec_dat.cpp:1533
 msgid "Add data or number"
 msgstr "Прибавить массив или число"
 
@@ -1118,7 +1118,7 @@ msgstr "Копировать координаты последнего нажа�
 msgid "Copy data"
 msgstr "Копировать данные"
 
-#: src/exec_dat.cpp:1528
+#: src/exec_dat.cpp:1539
 msgid "Copy data from another variable"
 msgstr "Копировать данные из другой переменной"
 
@@ -1162,7 +1162,7 @@ msgstr "Косинус-Фурье"
 msgid "Cos-Fourier transform along direction(s)"
 msgstr "Косинус-Фурье преобразование вдоль направления(й)"
 
-#: src/exec_dat.cpp:1530
+#: src/exec_dat.cpp:1541
 msgid "Cos-Fourier transform at some direction"
 msgstr "Косинус-Фурье преобразование вдоль направления"
 
@@ -1199,7 +1199,7 @@ msgstr "Создание данных и I/O"
 msgid "Create data and IO"
 msgstr "Создание данных и ввод-вывод"
 
-#: src/exec_dat.cpp:1555
+#: src/exec_dat.cpp:1566
 msgid "Create histogram (distribution) of data values"
 msgstr "Создать гистограмму (распределение) значений данных"
 
@@ -1207,11 +1207,11 @@ msgstr "Создать гистограмму (распределение) зн�
 msgid "Create new"
 msgstr "Создать новый"
 
-#: src/exec_dat.cpp:1614
+#: src/exec_dat.cpp:1625
 msgid "Create new 1D data and fill it in range"
 msgstr "Создать новые 1d данные и заполнить их в диапазоне"
 
-#: src/exec_dat.cpp:1570
+#: src/exec_dat.cpp:1581
 msgid "Create new data"
 msgstr "Создать новый массив данных"
 
@@ -1243,7 +1243,7 @@ msgstr "Обрезать края массива данных"
 msgid "Crop data"
 msgstr "Обрезать данные"
 
-#: src/exec_dat.cpp:1531
+#: src/exec_dat.cpp:1542
 msgid "Crop edge of data"
 msgstr "Обрезать края массива данных"
 
@@ -1256,7 +1256,7 @@ msgstr ""
 msgid "CumSum"
 msgstr ""
 
-#: src/exec_dat.cpp:1532
+#: src/exec_dat.cpp:1543
 msgid "Cumulative summation along direction(s)"
 msgstr "Накопительное суммирование данных по направлению"
 
@@ -1380,7 +1380,7 @@ msgstr "Удалить @b все@. массивы данных."
 msgid "Delete ALL data arrays"
 msgstr "Удалить ВСЕ массивы данных"
 
-#: src/exec_dat.cpp:1535
+#: src/exec_dat.cpp:1546
 msgid "Delete data or slice of data"
 msgstr "Удалить данные или их срез"
 
@@ -1404,7 +1404,7 @@ msgstr "Удалить выбранный график"
 msgid "Description"
 msgstr "Описание"
 
-#: src/exec_dat.cpp:1536
+#: src/exec_dat.cpp:1547
 msgid "Detect curves for maximums of data array"
 msgstr "Найти кривые по максимумам массива данных"
 
@@ -1420,11 +1420,11 @@ msgstr "Дифференцировать данные по направлени�
 msgid "Diffuse"
 msgstr "Расс.свет"
 
-#: src/exec_dat.cpp:1540
+#: src/exec_dat.cpp:1551
 msgid "Dilate data larger val"
 msgstr "Расширить данные большие val"
 
-#: src/exec_dat.cpp:1527
+#: src/exec_dat.cpp:1538
 msgid "Direct multiplication of arrays"
 msgstr "Прямое произведение массивов"
 
@@ -1445,7 +1445,7 @@ msgstr "Расстояние между ячейками"
 msgid "Divide by"
 msgstr "Разделить на"
 
-#: src/exec_dat.cpp:1541
+#: src/exec_dat.cpp:1552
 msgid "Divide by data or number"
 msgstr "Разделить данные поэлементно на массив или число"
 
@@ -1453,11 +1453,11 @@ msgstr "Разделить данные поэлементно на массив
 msgid "Do"
 msgstr "OK"
 
-#: src/exec_dat.cpp:1603
+#: src/exec_dat.cpp:1614
 msgid "Do STFA transform"
 msgstr "Выполнить преобразование STFA"
 
-#: src/exec_dat.cpp:1609 src/exec_dat.cpp:1610
+#: src/exec_dat.cpp:1620 src/exec_dat.cpp:1621
 msgid "Do integral transform of data"
 msgstr "Выполнить интегральное преобразование данных"
 
@@ -2052,7 +2052,7 @@ msgstr "Введите значение аргумента %s"
 msgid "Envelop"
 msgstr "Огибающая"
 
-#: src/exec_dat.cpp:1544
+#: src/exec_dat.cpp:1555
 msgid "Erode data larger val"
 msgstr "Сузить данные большие val"
 
@@ -2079,7 +2079,7 @@ msgstr ""
 "Ошибка записи в файл '%s':\n"
 "%s."
 
-#: src/exec_dat.cpp:1545
+#: src/exec_dat.cpp:1556
 msgid ""
 "Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat"
 msgstr "Интерполирует значения в точках i=idat,j=jdat,k=kdat"
@@ -2133,7 +2133,7 @@ msgstr "Экспорт как 2D ..."
 msgid "Export as 3D ..."
 msgstr "Экспорт как 3D ..."
 
-#: src/exec_dat.cpp:1546 mgllab/table.cpp:844
+#: src/exec_dat.cpp:1557 mgllab/table.cpp:844
 msgid "Export data to PNG file"
 msgstr "Экспорт данных в PNG файл"
 
@@ -2146,7 +2146,7 @@ msgstr "Экспорт в GIF"
 msgid "Export to PNG"
 msgstr "Экспорт в PNG"
 
-#: src/exec_dat.cpp:1547
+#: src/exec_dat.cpp:1558
 msgid "Extend data array"
 msgstr "Расширить массив данных"
 
@@ -2154,11 +2154,11 @@ msgstr "Расширить массив данных"
 msgid "Extract data"
 msgstr "Выделить данные"
 
-#: src/exec_dat.cpp:1604
+#: src/exec_dat.cpp:1615
 msgid "Extract sub-array"
 msgstr "Выделить под-массив"
 
-#: src/exec_dat.cpp:1596
+#: src/exec_dat.cpp:1607
 msgid "Extract sub-array between values"
 msgstr "Выделить под-массив в диапазоне между значениями"
 
@@ -2204,19 +2204,19 @@ msgstr "Заполнить"
 msgid "Fill data by formula"
 msgstr "Заполнить по формуле"
 
-#: src/exec_dat.cpp:1553
+#: src/exec_dat.cpp:1564
 msgid "Fill data by global spline of Vdat"
 msgstr "Заполнить данные по глобальному сплайну Vdat"
 
-#: src/exec_dat.cpp:1588
+#: src/exec_dat.cpp:1599
 msgid "Fill data by interpolation of Vdat"
 msgstr "Заполнить данные интерполяцией Vdat"
 
-#: src/exec_dat.cpp:1533
+#: src/exec_dat.cpp:1544
 msgid "Fill data by triangulated values"
 msgstr "Заполнить данные триангуляцией"
 
-#: src/exec_dat.cpp:1548
+#: src/exec_dat.cpp:1559
 msgid "Fill data linearly in range [v1, v2]"
 msgstr "Заполнить данные линейно в диапазоне [v1, v2]"
 
@@ -2224,7 +2224,7 @@ msgstr "Заполнить данные линейно в диапазоне [v1
 msgid "Fill in range"
 msgstr "Заполнить в диапазоне"
 
-#: src/exec_dat.cpp:1549
+#: src/exec_dat.cpp:1560
 msgid "Fill x-,k-samples for transforms"
 msgstr "Заполнить как x-,k-координаты для трансформации"
 
@@ -2232,11 +2232,11 @@ msgstr "Заполнить как x-,k-координаты для трансф�
 msgid "Find"
 msgstr "Найти"
 
-#: src/exec_dat.cpp:1529
+#: src/exec_dat.cpp:1540
 msgid "Find correlation between data arrays"
 msgstr "Найти корреляцию между данными"
 
-#: src/exec_dat.cpp:1543
+#: src/exec_dat.cpp:1554
 msgid "Find envelop for the data"
 msgstr "Найти огибающую данных"
 
@@ -2248,11 +2248,11 @@ msgstr "Найти огибающую в направлении"
 msgid "Find histogram of data."
 msgstr "Найти гистограмму данных"
 
-#: src/exec_dat.cpp:1564
+#: src/exec_dat.cpp:1575
 msgid "Find maximal value over direction"
 msgstr "Найти максимум по направлению"
 
-#: src/exec_dat.cpp:1565
+#: src/exec_dat.cpp:1576
 msgid "Find minimal value over direction"
 msgstr "Найти минимум по направлению"
 
@@ -2264,19 +2264,19 @@ msgstr "Найти следующее"
 msgid "Find or replace text"
 msgstr "Найти или заменить"
 
-#: src/exec_dat.cpp:1600
+#: src/exec_dat.cpp:1611
 msgid "Find root Dat[i,j,k]=val (inverse evaluate)"
 msgstr "Найти корень Dat[i,j,k]=val (обратно evaluate)"
 
-#: src/exec_dat.cpp:1592
+#: src/exec_dat.cpp:1603
 msgid "Find roots using data as initial values"
 msgstr "Найти корни используя данные как начальные условия"
 
-#: src/exec_dat.cpp:1606
+#: src/exec_dat.cpp:1617
 msgid "Find summation over direction"
 msgstr "Найти сумму по направлению"
 
-#: src/exec_dat.cpp:1612
+#: src/exec_dat.cpp:1623
 msgid "Find triangles of randomly placed points"
 msgstr "Триангулировать произвольно расположенные точки"
 
@@ -2304,7 +2304,7 @@ msgstr "Первая ячейка"
 msgid "First slice"
 msgstr "Первый срез"
 
-#: src/exec_dat.cpp:1550 src/exec_dat.cpp:1551
+#: src/exec_dat.cpp:1561 src/exec_dat.cpp:1562
 msgid "Fit data to formula"
 msgstr "Подогнать данные по формуле"
 
@@ -2395,27 +2395,27 @@ msgstr "GIF поддержка отключена. Включите ее и пе
 msgid "General setup"
 msgstr "Общие настройки"
 
-#: src/exec_dat.cpp:1561
+#: src/exec_dat.cpp:1572
 msgid "Get Jacobian"
 msgstr "Вычислить якобиан"
 
-#: src/exec_dat.cpp:1526
+#: src/exec_dat.cpp:1537
 msgid "Get data column filled by formula on column ids"
 msgstr ""
 
-#: src/exec_dat.cpp:1595
+#: src/exec_dat.cpp:1606
 msgid "Get formated data from file"
 msgstr "Загрузить форматированные данные из файла"
 
-#: src/exec_dat.cpp:1568
+#: src/exec_dat.cpp:1579
 msgid "Get momentum along direction"
 msgstr "Вычислить момент по направлению"
 
-#: src/exec_dat.cpp:1577
+#: src/exec_dat.cpp:1588
 msgid "Get pulse properties"
 msgstr "Найти параметры импульса"
 
-#: src/exec_dat.cpp:1608
+#: src/exec_dat.cpp:1619
 msgid "Get trace of array"
 msgstr "Найти след матрицы"
 
@@ -2636,7 +2636,7 @@ msgstr "Ханкель"
 msgid "Hankel transform along direction(s)"
 msgstr "Преобразование Ханкеля по направлению(ям)"
 
-#: src/exec_dat.cpp:1554
+#: src/exec_dat.cpp:1565
 msgid "Hankel transform at some direction"
 msgstr "Преобразование Ханкеля по направлению"
 
@@ -2706,7 +2706,7 @@ msgstr "Номер среза в z-направлении"
 msgid "Image size"
 msgstr "Размер рисунка"
 
-#: src/exec_dat.cpp:1576
+#: src/exec_dat.cpp:1587
 msgid "Immediately print the message"
 msgstr "Напечатать это сообщение сразу же"
 
@@ -2714,7 +2714,7 @@ msgstr "Напечатать это сообщение сразу же"
 msgid "Import Data?"
 msgstr "Импортировать данные?"
 
-#: src/exec_dat.cpp:1557 mgllab/table.cpp:840
+#: src/exec_dat.cpp:1568 mgllab/table.cpp:840
 msgid "Import data from PNG file"
 msgstr "Импортировать данные из PNG файла"
 
@@ -2726,7 +2726,7 @@ msgstr "Импортировать из PNG"
 msgid "In range"
 msgstr "В диапазоне"
 
-#: src/exec_dat.cpp:1552
+#: src/exec_dat.cpp:1563
 msgid "In-place Fourier transform"
 msgstr "Фурье преобразование по месту"
 
@@ -2795,7 +2795,7 @@ msgstr "Вставить под-график"
 msgid "Insert last fitted formula with found coefficients."
 msgstr "Вставить последнюю подогнанную формулу с найденными коэффициентами"
 
-#: src/exec_dat.cpp:1559
+#: src/exec_dat.cpp:1570
 msgid "Insert slice of data"
 msgstr "Вставить срез данных"
 
@@ -2807,7 +2807,7 @@ msgstr "Вставить в скрипт как команду 'list'"
 msgid "Integrate"
 msgstr "Интегрировать"
 
-#: src/exec_dat.cpp:1560 udav/dat_pnl.cpp:615
+#: src/exec_dat.cpp:1571 udav/dat_pnl.cpp:615
 msgid "Integrate data along direction(s)"
 msgstr "Интегрировать данные по направлению"
 
@@ -2831,7 +2831,7 @@ msgstr "JPEG поддержка отключена. Включите ее и п�
 msgid "Jacobi"
 msgstr "Якоби"
 
-#: src/exec_dat.cpp:1562
+#: src/exec_dat.cpp:1573
 msgid "Join data arrays"
 msgstr "Объединить массивы данных"
 
@@ -2931,7 +2931,7 @@ msgstr "Положение источника света должно быть �
 msgid "Light settings"
 msgstr "Настройки освещения"
 
-#: src/exec_dat.cpp:1563
+#: src/exec_dat.cpp:1574
 msgid "Limit data to be inside [-v,v]"
 msgstr "Ограничить данные диапазоном [-v,v]"
 
@@ -3248,11 +3248,11 @@ msgstr "Отразить"
 msgid "Mirror data along direction(s)"
 msgstr "Отразить данные по направлению"
 
-#: src/exec_dat.cpp:1566
+#: src/exec_dat.cpp:1577
 msgid "Mirror data at some direction"
 msgstr "Отразить данные по направлению"
 
-#: src/exec_dat.cpp:1567
+#: src/exec_dat.cpp:1578
 msgid "Modify data values by formula"
 msgstr "Изменить данные по формуле"
 
@@ -3324,7 +3324,7 @@ msgstr "Сдвиг вверх"
 msgid "Multiply by"
 msgstr "Умножить на"
 
-#: src/exec_dat.cpp:1569
+#: src/exec_dat.cpp:1580
 msgid "Multiply by data or number"
 msgstr "Умножить на массив данных или число"
 
@@ -3452,11 +3452,11 @@ msgstr "Обычный вид"
 msgid "Normalize"
 msgstr "Нормировать"
 
-#: src/exec_dat.cpp:1571
+#: src/exec_dat.cpp:1582
 msgid "Normalize data"
 msgstr "Нормировать данные"
 
-#: src/exec_dat.cpp:1572
+#: src/exec_dat.cpp:1583
 msgid "Normalize data slice by slice"
 msgstr "Нормировать данные по срезам"
 
@@ -3484,11 +3484,11 @@ msgstr "Численный параметр"
 msgid "Numeric value"
 msgstr "Численное значение"
 
-#: src/exec_dat.cpp:1537
+#: src/exec_dat.cpp:1548
 msgid "Numerically differentiate data"
 msgstr "Численно дифференцировать данные"
 
-#: src/exec_dat.cpp:1538
+#: src/exec_dat.cpp:1549
 msgid "Numerically double differentiate data"
 msgstr "Численно дифференцировать данные дважды"
 
@@ -3528,7 +3528,7 @@ msgstr "Только текущий срез будет вставлен"
 msgid "Open File?"
 msgstr "Открыть файл?"
 
-#: src/exec_dat.cpp:1574
+#: src/exec_dat.cpp:1585
 msgid "Open all data arrays from HDF file"
 msgstr "Загрузить все данные из HDF файла"
 
@@ -3676,7 +3676,7 @@ msgstr "Пауза вычислений"
 msgid "Pause on/off external calculations"
 msgstr "Пауза вкл/выкл для внешних вычислений"
 
-#: src/exec_dat.cpp:1590
+#: src/exec_dat.cpp:1601
 msgid "Perform Runge-Kutta step"
 msgstr "Выполнить шаг Рунге-Кутта"
 
@@ -3761,11 +3761,11 @@ msgstr "Примитивы ..."
 msgid "Print MathGL version or check if it is valid"
 msgstr "Вывести версию MathGL или проверить, что она подходит"
 
-#: src/exec_dat.cpp:1542
+#: src/exec_dat.cpp:1553
 msgid "Print content of the data"
 msgstr "Вывести содержимое массива данных"
 
-#: src/exec_dat.cpp:1579
+#: src/exec_dat.cpp:1590
 msgid "Print fitted formula"
 msgstr "Вывести подобранную формулу"
 
@@ -3773,11 +3773,11 @@ msgstr "Вывести подобранную формулу"
 msgid "Print graphics"
 msgstr "Напечатать график"
 
-#: src/exec_dat.cpp:1534
+#: src/exec_dat.cpp:1545
 msgid "Print list of data names in HDF file"
 msgstr "Вывести список имен переменных в HDF файле"
 
-#: src/exec_dat.cpp:1558
+#: src/exec_dat.cpp:1569
 msgid "Print message or information about the data"
 msgstr "Вывести сообщение или информацию о данных"
 
@@ -3809,6 +3809,10 @@ msgstr "Печатаю ..."
 msgid "Program flow"
 msgstr "Команды управления"
 
+#: src/exec_dat.cpp:1536
+msgid "Project periodical data in [v1,v2]"
+msgstr ""
+
 #: udav/udav_wnd.cpp:312 mgllab/mgllab.cpp:320 mgllab/mgllab.cpp:458
 msgid "Properties"
 msgstr "Свойства"
@@ -3837,7 +3841,7 @@ msgstr "Поместить в этот массив данных"
 msgid "Put to script"
 msgstr "В скрипт"
 
-#: src/exec_dat.cpp:1578
+#: src/exec_dat.cpp:1589
 msgid "Put value (numeric or array) to given data element"
 msgstr "Поместить число или массив в заданный элемент данных"
 
@@ -3859,19 +3863,19 @@ msgstr "R - темно-красный"
 msgid "Rasterize plot and save to background"
 msgstr "Растеризовать график и установить вместо фона"
 
-#: src/exec_dat.cpp:1584
+#: src/exec_dat.cpp:1595
 msgid "Read and join data from several files"
 msgstr "Загрузить и объединить данные из нескольких файлов"
 
-#: src/exec_dat.cpp:1583
+#: src/exec_dat.cpp:1594
 msgid "Read data from file"
 msgstr "Загрузить данные из файла"
 
-#: src/exec_dat.cpp:1586
+#: src/exec_dat.cpp:1597
 msgid "Read data from file with sizes specified in first row"
 msgstr "Загрузить данные из файла с размерами из первой строки"
 
-#: src/exec_dat.cpp:1585
+#: src/exec_dat.cpp:1596
 msgid "Read data with name 'id' from HDF file"
 msgstr "Загрузить данные с именем 'id' из HDF файла"
 
@@ -3879,7 +3883,7 @@ msgstr "Загрузить данные с именем 'id' из HDF файла
 msgid "Ready"
 msgstr "Готов"
 
-#: src/exec_dat.cpp:1587
+#: src/exec_dat.cpp:1598
 msgid "Rearrange data dimensions"
 msgstr "Упорядочить размерности массива данных"
 
@@ -3935,11 +3939,11 @@ msgstr "Перезагрузить"
 msgid "Reload data and refresh the picture"
 msgstr "Перезагрузить данные и обновить рисунок"
 
-#: src/exec_dat.cpp:1525
+#: src/exec_dat.cpp:1535
 msgid "Remove duplicate rows"
 msgstr "Удалить одинаковые строки"
 
-#: src/exec_dat.cpp:1597
+#: src/exec_dat.cpp:1608
 msgid "Remove jump into the data, like phase jumps"
 msgstr "Убрать скачки данных, например скачки фазы"
 
@@ -4005,7 +4009,7 @@ msgstr "Изменить размер"
 msgid "Resize (interpolate) the data to specified sizes (Ctrl+Shift+R)."
 msgstr "Изменить размер (интерполоировать) данных (Ctrl+Shift+R)."
 
-#: src/exec_dat.cpp:1589
+#: src/exec_dat.cpp:1600
 msgid "Resize data array"
 msgstr "Изменить размер массива данных"
 
@@ -4062,7 +4066,7 @@ msgstr "Правый верхний угол"
 msgid "Roll"
 msgstr "Сдвинуть"
 
-#: src/exec_dat.cpp:1591
+#: src/exec_dat.cpp:1602
 msgid "Roll data along direction(s)"
 msgstr "Сдвинуть данные по направлению"
 
@@ -4163,7 +4167,7 @@ msgstr "Сохранить как ..."
 msgid "Save data"
 msgstr "Сохранить данные"
 
-#: src/exec_dat.cpp:1594
+#: src/exec_dat.cpp:1605
 msgid "Save data to HDF5 file"
 msgstr "Сохранить данные в HDF5 файл"
 
@@ -4171,7 +4175,7 @@ msgstr "Сохранить данные в HDF5 файл"
 msgid "Save data to a file (Ctrl+Shift+S)."
 msgstr "Сохранить данные в файл (Ctrl+Shift+S)."
 
-#: src/exec_dat.cpp:1593 mgllab/table.cpp:842
+#: src/exec_dat.cpp:1604 mgllab/table.cpp:842
 msgid "Save data to file"
 msgstr "Сохранить данные в файл"
 
@@ -4311,7 +4315,7 @@ msgstr "Задать кисть для маски с выбранным id"
 msgid "Set color range"
 msgstr "Задать диапазон цвета"
 
-#: src/exec_dat.cpp:1556
+#: src/exec_dat.cpp:1567
 msgid "Set column id for data"
 msgstr "Задать id колонок данных"
 
@@ -4701,7 +4705,7 @@ msgstr "Синус-Фурье"
 msgid "Sin-Fourier transform along direction(s)"
 msgstr "Синус-Фурье преобразование вдоль направления"
 
-#: src/exec_dat.cpp:1598
+#: src/exec_dat.cpp:1609
 msgid "Sin-Fourier transform at some direction"
 msgstr "Синус-Фурье преобразование вдоль направления"
 
@@ -4739,7 +4743,7 @@ msgstr "Анимация"
 msgid "Smooth"
 msgstr "Сгладить"
 
-#: src/exec_dat.cpp:1599
+#: src/exec_dat.cpp:1610
 msgid "Smooth data"
 msgstr "Сгладить массив данных"
 
@@ -4747,35 +4751,35 @@ msgstr "Сгладить массив данных"
 msgid "Smooth data along direction(s)"
 msgstr "Сгладить массив данных по направлению"
 
-#: src/exec_dat.cpp:1582
+#: src/exec_dat.cpp:1593
 msgid "Solve Hamiltonian ODE (find GO ray or trajectory)"
 msgstr "Решить гамильтонову ОДУ (найти ГО луч/траекторию)"
 
-#: src/exec_dat.cpp:1573
+#: src/exec_dat.cpp:1584
 msgid "Solve ODE"
 msgstr "Решить систему обыкновенных диф. уравнений"
 
-#: src/exec_dat.cpp:1575
+#: src/exec_dat.cpp:1586
 msgid "Solve PDE"
 msgstr "Решить уравнение в частных производных"
 
-#: src/exec_dat.cpp:1580
+#: src/exec_dat.cpp:1591
 msgid "Solve PDE in accompanied coordinates for 2d case"
 msgstr "Решить PDE в сопровождающей системе координат (2d)"
 
-#: src/exec_dat.cpp:1581
+#: src/exec_dat.cpp:1592
 msgid "Solve PDE in accompanied coordinates for 3d case"
 msgstr "Решить PDE в сопровождающей системе координат (3d)"
 
-#: src/exec_dat.cpp:1524
+#: src/exec_dat.cpp:1534
 msgid "Solve PDE using advanced method (X-Y only)"
 msgstr "Решить PDE (сложные уравнения, 2d случай)"
 
-#: src/exec_dat.cpp:1613
+#: src/exec_dat.cpp:1624
 msgid "Solve tridiagonal matrix"
 msgstr "Решить трехдиагональную систему"
 
-#: src/exec_dat.cpp:1601
+#: src/exec_dat.cpp:1612
 msgid "Sort data by values in column"
 msgstr "Сортировать данные по значениям в колонке"
 
@@ -4815,7 +4819,7 @@ msgstr ""
 msgid "Squeeze"
 msgstr "Сжать"
 
-#: src/exec_dat.cpp:1602
+#: src/exec_dat.cpp:1613
 msgid "Squeeze data"
 msgstr "Сжать данные"
 
@@ -4843,7 +4847,7 @@ msgstr "Индекс начальной ячейки"
 msgid "State"
 msgstr "Состояние"
 
-#: src/exec_dat.cpp:1539
+#: src/exec_dat.cpp:1550
 msgid "Step for pulse diffraction"
 msgstr "Шаг для расчета дифракции импульса"
 
@@ -4955,7 +4959,7 @@ msgstr "Подметки"
 msgid "Subticks"
 msgstr "Подметки"
 
-#: src/exec_dat.cpp:1605
+#: src/exec_dat.cpp:1616
 msgid "Subtract data or number"
 msgstr "Вычесть данные или число"
 
@@ -4980,7 +4984,7 @@ msgstr "Суммировать вдоль направления"
 msgid "Summation of"
 msgstr "Сумма от"
 
-#: src/exec_dat.cpp:1607
+#: src/exec_dat.cpp:1618
 msgid "Swap data (useful after Fourier transform)"
 msgstr "Поменять местами левую и правую части данных"
 
@@ -5251,7 +5255,7 @@ msgstr "Транспонировать"
 msgid "Transpose data"
 msgstr "Транспонировать данные"
 
-#: src/exec_dat.cpp:1611
+#: src/exec_dat.cpp:1622
 msgid "Transpose data array"
 msgstr "Транспонировать данные"
 
@@ -5590,7 +5594,7 @@ msgstr "Вертикальный размер"
 msgid "W - lightgray"
 msgstr "W - светло-серый"
 
-#: src/exec_dat.cpp:1615
+#: src/exec_dat.cpp:1626
 msgid "Wavelet transform at some direction"
 msgstr "Wavelet преобразование вдоль направления"
 

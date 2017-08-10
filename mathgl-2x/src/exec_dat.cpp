@@ -93,6 +93,16 @@ int MGL_NO_EXPORT mgls_clean(mglGraph *, long , mglArg *a, const char *k, const 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_coil(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(k[0]=='d' && a[0].d->temp)	return 5;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	if(d && !strcmp(k,"dnn"))		d->Coil(a[1].v, a[2].v);
+	else if(d && !strcmp(k,"dnnn"))	d->Coil(a[1].v, a[2].v, a[3].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_column(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -1523,6 +1533,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"addto",_("Add data or number"),"addto Var Dat|Var num", mgls_addto ,3},
 	{"apde",_("Solve PDE using advanced method (X-Y only)"),"apde Res 'ham' IniRe IniIm [dz k0]", mgls_apde ,4},
 	{"clean",_("Remove duplicate rows"),"clean Dat id", mgls_clean ,3},
+	{"coil",_("Project periodical data in [v1,v2]"),"coil Dat v1 v2 [sep]", mgls_coil ,16},
 	{"column",_("Get data column filled by formula on column ids"),"column Res Dat 'eq'", mgls_column ,4},
 	{"combine",_("Direct multiplication of arrays"), "combine Res Adat Bdat", mgls_combine ,4},
 	{"copy",_("Copy data from another variable"),"copy Dat1 Dat2 ['eq']|ReDat ImDat Cdat|Dat val|Dat 'name'", mgls_copy ,4},
