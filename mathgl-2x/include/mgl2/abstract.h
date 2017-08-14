@@ -85,8 +85,8 @@ void MGL_EXPORT mgl_data_set_func(mglDataA *dat, void (*func)(void *), void *par
 void MGL_EXPORT mgl_data_save(HCDT dat, const char *fname,long ns);
 void MGL_EXPORT mgl_data_save_(uintptr_t *dat, const char *fname,int *ns,int);
 /// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
-void MGL_EXPORT mgl_data_export(HCDT dat, const char *fname, const char *scheme,mreal v1,mreal v2,long ns);
-void MGL_EXPORT mgl_data_export_(uintptr_t *dat, const char *fname, const char *scheme,mreal *v1,mreal *v2,int *ns,int,int);
+void MGL_EXPORT mgl_data_export(HCDT dat, const char *fname, const char *scheme, double v1, double v2, long ns);
+void MGL_EXPORT mgl_data_export_(uintptr_t *dat, const char *fname, const char *scheme, mreal *v1, mreal *v2, int *ns,int,int);
 /// Save data to HDF file
 void MGL_EXPORT mgl_data_save_hdf(HCDT d,const char *fname,const char *data,int rewrite);
 void MGL_EXPORT mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n);

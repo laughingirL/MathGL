@@ -198,7 +198,7 @@ int MGL_NO_EXPORT mgl_bmp_save(const char *fname, int w, int h, unsigned char **
 int MGL_NO_EXPORT mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
 int MGL_NO_EXPORT mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p);
 int MGL_NO_EXPORT mgl_bps_save(const char *fname, int w, int h, unsigned char **p);
-void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,mreal v1,mreal v2,long ns)
+void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme, double v1, double v2, long ns)
 {
 	long nx=dd->GetNx(), ny=dd->GetNy(), nz=dd->GetNz();
 	if(v1>v2)	return;

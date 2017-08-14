@@ -88,6 +88,12 @@ public:
 		size_t d=n>>pb;
 		dat[d][n-(d<<pb)] = t;	n++;
 	}
+	void push_back(size_t num, const T *t)
+	{
+		if(n+num>=(m<<pb))	reserve(num);
+		for(size_t i=0;i<num;i++)
+		{	size_t d=n>>pb;	dat[d][n-(d<<pb)] = t[i];	n++;	}
+	}
 	size_t size()	const	{	return n;	}
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
@@ -506,6 +512,7 @@ public:
 	inline long AddPnt(mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
 	{	return AddPnt(&B,p,c,n,a,scl);	}
 	long AddPnt(const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
+	bool AddPnt(mglPnt &q, const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
 	long CopyNtoC(long k, mreal c);
 	long CopyProj(long from, mglPoint p, mglPoint n, short sub=0);
 	void SetRGBA(long k, const mglColor &c)
@@ -584,6 +591,7 @@ public:
 	virtual void trig_plot(long p1, long p2, long p3)=0;
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
 	virtual void smbl_plot(long p1, char id, double size)=0;
+	void curve_plot(int n, const long *pp);
 	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col)=0;
 	virtual float GetGlyphPhi(const mglPnt &q, float phi)=0;
 	virtual mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'),bool rot=true)=0;

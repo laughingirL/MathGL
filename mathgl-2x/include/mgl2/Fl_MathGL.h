@@ -59,16 +59,16 @@ public:
 	/// Update (redraw) plot
 	virtual void update();
 	/// Set angles for additional plot rotation
-	inline void set_angle(mreal t, mreal p){	tet = t;	phi = p;	}
+	inline void set_angle(double t, double p){	tet = t;	phi = p;	}
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)
 	inline void set_flag(int f)	{	flag = f;	}
 	/// Set flags for handling mouse
 	void set_state(bool z, bool r, bool g=false)	{	zoom = z;	rotate = r;	grid = g;	}
 	/// Set zoom in/out region
-	inline void set_zoom(mreal X1, mreal Y1, mreal X2, mreal Y2)
+	inline void set_zoom(double X1, double Y1, double X2, double Y2)
 	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	update();	}
 	/// Get zoom region
-	inline void get_zoom(mreal *X1, mreal *Y1, mreal *X2, mreal *Y2)
+	inline void get_zoom(double *X1, double *Y1, double *X2, double *Y2)
 	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	}
 	/// Set popup menu pointer
 	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
@@ -113,13 +113,13 @@ protected:
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu
 	void *vpar;					///< parameter for popup menu
-	mreal tet,phi;				///< rotation angles
+	double tet,phi;				///< rotation angles
 	bool rotate;				///< flag for handle mouse
 	bool zoom;					///< flag for zoom by mouse
 	bool grid;					///< flag to draw grid and edit prim
 	bool show_warn;				///< show window with warnings
 	bool handle_keys;
-	mreal x1,x2,y1,y2;			///< zoom region
+	double x1,x2,y1,y2;			///< zoom region
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
 	char pos[128];

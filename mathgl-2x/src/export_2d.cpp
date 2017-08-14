@@ -118,7 +118,7 @@ std::vector<long> MGL_NO_EXPORT put_line(HMGL gr, long i, mreal wp, uint32_t cp,
 		}
 	}
 	// exclude straight-line parts
-	for(size_t i=0;i<ids.size();i++)
+/*	for(size_t i=0;i<ids.size();i++)
 	{
 		size_t k=i+2, num = ids.size();
 		while(k<num)
@@ -141,11 +141,11 @@ std::vector<long> MGL_NO_EXPORT put_line(HMGL gr, long i, mreal wp, uint32_t cp,
 		if(k>i+1)
 			ids.erase(ids.begin()+(i+1),ids.begin()+k);
 	}
-// 	if(ids.size()==3)
-// 	{
-// 		const mglPoint p1(gr->GetPntP(ids[0])), p2(gr->GetPntP(ids[2]));
-// 		if(p1.x==p2.x && p1.y==p2.y)	ids.erase(ids.begin()+2);
-// 	}
+	if(ids.size()==3)
+	{
+		const mglPoint p1(gr->GetPntP(ids[0])), p2(gr->GetPntP(ids[2]));
+		if(p1.x==p2.x && p1.y==p2.y)	ids.erase(ids.begin()+2);
+	}*/
 	return ids;
 }
 //-----------------------------------------------------------------------------

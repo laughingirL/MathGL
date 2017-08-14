@@ -345,24 +345,31 @@ void MGL_NO_EXPORT mgl_coor_box(HMGL gr, mglPoint &p)
 }
 long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 {
+	mglPnt q;
+	if(!AddPnt(q,mat,p,c,n,a,scl))	return -1;
+	long k;
+#pragma omp critical(pnt)
+	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}	return k;
+}
+bool mglBase::AddPnt(mglPnt &q, const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
+{
 	// scl=0 -- no scaling
 	// scl&1 -- usual scaling
 	// scl&2 -- disable NAN at scaling
 	// scl&4 -- disable NAN for normales if no light
 	// scl&8 -- bypass palette for enabling alpha
 	// scl&16 -- put points inside axis range
-	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
+	if(mgl_isnan(c) || mgl_isnan(a))	{	q.x=NAN;	return false;	}
 	bool norefr = mgl_isnan(n.x) && mgl_isnan(n.y) && !mgl_isnan(n.z);
 	if(scl>0)
 	{
 		if(scl&16)	mgl_coor_box(this, p);
 		ScalePoint(mat,p,n,!(scl&2));
 	}
-	if(mgl_isnan(p.x))	return -1;
+	if(mgl_isnan(p.x))	{	q.x=NAN;	return false;	}
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	c = (c>=0) ? c:CDef;
 
-	mglPnt q;
 	if(get(MGL_REDUCEACC))
 	{
 		q.x=q.xx=int(p.x*10)*0.1;	q.y=q.yy=int(p.y*10)*0.1;	q.z=q.zz=int(p.z*10)*0.1;
@@ -397,9 +404,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	if(norefr)	q.v=0;
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	q.sub=mat->norot?-1*(short)Sub.size():Sub.size()-1;
-	long k;
-#pragma omp critical(pnt)
-	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}	return k;
+	return true;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyNtoC(long from, mreal c)
