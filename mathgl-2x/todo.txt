@@ -44,6 +44,8 @@
 ZZ. Update *.i for new functions {before release!!!}
 
 
+curve_draw: step?, bifurcation?, flow3d
+
 ============= DOCUMENTATION =============
 
 A. Paper about MathGL!!!
@@ -64,6 +66,7 @@ D. Docs about JS interface
 11. Remark about cutting in 'ode' at NAN or INF
 12. Docs about 'setup' + inline void SetFlagAdv(int val, uint32_t flag)
 13. Docs about 'coil'
+14. Update flags
 
 
 26. Update installation (dll from mgl_script + Qt plugins/ + Win10)

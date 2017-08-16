@@ -1016,7 +1016,7 @@ void MGL_EXPORT mgl_write_xgl_(uintptr_t *gr, const char *fname,const char *desc
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 {
-	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
+/*	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
 	m_s=false,m_a=false,m_o=false,m_T=false,
 	m_V=false,m_S=false,m_D=false,m_Y=false,m_l=false,
 	m_L=false,m_r=false,m_R=false,m_X=false,m_P=false;
@@ -1048,7 +1048,7 @@ void MGL_EXPORT mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 	if(m_X)	{	m_x=true;	m_s=true;	}
 	if(m_p)	mgl_printf(fp, gz, "<ProtoDeclare name='m_p'><ProtoInterface/>\n<ProtoBody>"
 		"<LineSet vertexCount='0,1,2,3'>\n<Coordinate point='-1 0 0, 1 0 0, 0 -1 0, 0 1 0'/>"
-		"\n</LineSet></ProtoBody></ProtoDeclare>\n");
+		"\n</LineSet></ProtoBody></ProtoDeclare>\n");*/
 	/*if(m_x)	mgl_printf(fp, gz, "/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");	// TODO
 	 *	if(m_s)	mgl_printf(fp, gz, "/m_s {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp d0} def\n");
 	 *	if(m_d)	mgl_printf(fp, gz, "/m_d {sm 0 rm ss ss rl ss sm rl sm sm rl cp d0} def\n");
@@ -1068,7 +1068,7 @@ void MGL_EXPORT mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 	 *	if(m_P)	mgl_printf(fp, gz, "/m_P {m_p 0 sm rm m_s} def\n");
 	 *	if(m_X)	mgl_printf(fp, gz, "/m_X {m_x ss sm rm m_s} def\n");*/
 	//	if(m_C)	mgl_printf(fp, gz, "/m_C {m_c m_o} def\n");
-	mgl_printf(fp, gz, "\n");
+//	mgl_printf(fp, gz, "\n");
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt, void *fp,bool gz, mreal size)

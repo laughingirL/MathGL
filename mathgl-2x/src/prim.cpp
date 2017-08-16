@@ -59,22 +59,19 @@ void MGL_EXPORT mgl_line(HMGL gr, double x1, double y1, double z1, double x2, do
 {
 	static int cgid=1;	gr->StartGroup("Line",cgid++);
 	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
-	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p=p1,nn(NAN);
+	const mglPoint p1(x1,y1,z1), p2(x2,y2,z2), nn(NAN);
 	gr->SetPenPal(pen);
 	n = (n<2) ? 2 : n;
 
 	gr->Reserve(n);
-	long k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
-	for(long i=1;i<n;i++)
-	{
-		mreal s = i/mreal(n-1);	p = p1*(1-s)+p2*s;
-		long k2 = k1;
-		k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
-		gr->line_plot(k2,k1);
-		if(i==1)	gr->arrow_plot(k2,k1,gr->Arrow1);
-		if(i==n-1)	gr->arrow_plot(k1,k2,gr->Arrow2);
-	}
-	gr->AddActive(k1,1);	gr->EndGroup();
+	long *pp = new long[n];
+	for(long i=0;i<n;i++)
+	{	mreal s=i/mreal(n-1);	pp[i] = gr->AddPnt(p1*(1-s)+p2*s,gr->CDef,nn,-1,3);	}
+	gr->curve_plot(n,pp);
+	gr->arrow_plot(pp[0],pp[1],gr->Arrow1);
+	gr->arrow_plot(pp[n-1],pp[n-2],gr->Arrow2);
+	gr->AddActive(pp[0]);	gr->AddActive(pp[n-1],1);
+	delete []pp;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_line_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, const char *pen,int *n,int l)
@@ -87,25 +84,21 @@ void MGL_EXPORT mgl_curve(HMGL gr, double x1, double y1, double z1, double dx1, 
 	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
 	const mglPoint p1(x1,y1,z1), p2(x2,y2,z2),nn(NAN);
 	const mglPoint d1(3*dx1,3*dy1,3*dz1), d2(3*dx2,3*dy2,3*dz2);	// NOTE use d->3*d to be exact as Bezier curve
-	mglPoint a,b,p=p1;
-	a = 3*(p2-p1)-d2-2*d1;	b = d1+d2-2*(p2-p1);
+	const mglPoint a(3*(p2-p1)-d2-2*d1),b(d1+d2-2*(p2-p1));
 	n = (n<2) ? 2 : n;
 	gr->SetPenPal(pen);
 
 	gr->Reserve(n);
-	long k1=gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
-	for(long i=1;i<n;i++)
-	{
-		mreal s = i/(n-1.);	p = p1+s*(d1+s*(a+s*b));
-		long k2 = k1;
-		k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
-		gr->line_plot(k2,k1);
-		if(i==1)	gr->arrow_plot(k2,k1,gr->Arrow1);
-		if(i==n-1)	gr->arrow_plot(k1,k2,gr->Arrow2);
-	}
+	long *pp = new long[n];
+	for(long i=0;i<n;i++)
+	{	mreal s=i/mreal(n-1);	pp[i] = gr->AddPnt(p1+s*d1+(s*s)*a+(s*s*s)*b,gr->CDef,nn,-1,3);	}
+	gr->curve_plot(n,pp);
+	gr->arrow_plot(pp[0],pp[1],gr->Arrow1);
+	gr->arrow_plot(pp[n-1],pp[n-2],gr->Arrow2);
+	gr->AddActive(pp[0]);	gr->AddActive(pp[n-1],1);
 	gr->AddActive(gr->AddPnt(p1+d1/3,gr->CDef,nn,-1,3),1);
 	gr->AddActive(gr->AddPnt(p2-d2/3,gr->CDef,nn,-1,3),3);
-	gr->AddActive(k1,2);	gr->EndGroup();
+	delete []pp;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_curve_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *dx1, mreal *dy1, mreal *dz1, mreal *x2, mreal *y2, mreal *z2, mreal *dx2, mreal *dy2, mreal *dz2, const char *pen,int *n, int l)
@@ -411,26 +404,25 @@ void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2,
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_arc_ext(HMGL gr, double x0, double y0, double z0, double xr, double yr, double zr, double x1, double y1, double z1, double a, const char* stl)
 {
-	long pal=0, n = long(fabs(a)/9+1.5);	a *= M_PI/180;
+	long pal=0, n = long(fabs(a)/3+1.5);	a *= M_PI/180;
 	static int cgid=1;	gr->StartGroup("Arc",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal);
 	gr->Reserve(n+2);
 	if(mgl_isnan(z0) || mgl_isnan(z1))	z0=z1=2*gr->Max.z-gr->Min.z;
-	mglPoint p0(x0,y0,z0), p1(x1,y1,z1), d=p1-p0, u(mglPoint(xr,yr,zr)^d), p,qq;
+	mglPoint p0(x0,y0,z0), p1(x1,y1,z1), d=p1-p0, u(mglPoint(xr,yr,zr)^d), qq(NAN);
 	if(u.norm()==0)	return;	// wrong vector orientation
 	u = (d.norm()/u.norm())*u;
 	gr->AddActive(gr->AddPnt(p0,gr->CDef,qq,-1,3),0);
-	long n1 = gr->AddPnt(p1,c,qq,-1,11);	gr->AddActive(n1,1);
-	for(long i=1;i<n;i++)
-	{
-		p = p0+d*cos(a*i/(n-1))+u*sin(a*i/(n-1));
-		long n2 = gr->AddPnt(p,c,qq,-1,11);
-		if(i==1)	gr->arrow_plot(n1,n2,gr->Arrow1);
-		if(i==n-1)	{	gr->arrow_plot(n2,n1,gr->Arrow2);	gr->AddActive(n2,2);	}
-		gr->line_plot(n1,n2);	n1 = n2;
-	}
-	gr->EndGroup();
+
+	long *pp = new long[n];
+	for(long i=0;i<n;i++)
+	{	mreal s=a*i/mreal(n-1);	pp[i] = gr->AddPnt(p0+d*cos(s)+u*sin(s),c,qq,-1,11);	}
+	gr->curve_plot(n,pp);
+	gr->arrow_plot(pp[0],pp[1],gr->Arrow1);
+	gr->arrow_plot(pp[n-1],pp[n-2],gr->Arrow2);
+	gr->AddActive(pp[0]);	gr->AddActive(pp[n-1],1);
+	delete []pp;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_arc(HMGL gr, double x0, double y0, double x1, double y1, double a, const char* stl)
@@ -1158,7 +1150,7 @@ void MGL_EXPORT mgl_bifurcation_str_(uintptr_t *gr, double *dx, const char *func
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, const char *stl, const char *opt)
 {
-	long m=dats->GetNx(), nx=dats->GetNy(), ny=dats->GetNz();	// TODO parse several slices?
+	long m=dats->GetNx(), nx=dats->GetNy();	// TODO parse several slices?
 	if(m<2 || nx<2)	{	gr->SetWarn(mglWarnLow,"Iris");	return;	}
 	if(m!=ranges->GetNy())	{	gr->SetWarn(mglWarnDim,"Iris");	return;	}
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(!g)	return;

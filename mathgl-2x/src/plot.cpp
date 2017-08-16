@@ -349,7 +349,7 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	gr->SaveState(opt);
 	long m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
-	bool sh = mglchr(pen,'!'), orig = !mglchr(pen,'a'), appr = mglchr(pen,'~');
+	bool sh = mglchr(pen,'!'), orig = !mglchr(pen,'a');
 
 	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n, dx = n>d?n/d:1;
 	for(long j=0;j<m;j++)
@@ -374,31 +374,7 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 			if(nn[num-1]>=0 && nn[num-2]>=0)
 				gr->arrow_plot(nn[num-1],nn[num-2],gr->Arrow2);
 		}
-		for(size_t i=0;i+1<num;i++)
-		{
-			if(nn[i]<0 || nn[i+1]<0)	continue;
-			if(!appr)	gr->line_plot(nn[i+1],nn[i]);
-			else
-			{
-				size_t k=i+2;
-				while(k<num && nn[k]>=0)
-				{
-					const mglPoint p1(gr->GetPntP(nn[i])), p2(gr->GetPntP(nn[k]));
-					mreal dy=p2.x-p1.x, dx=p1.y-p2.y, dd=2*(dx*dx+dy*dy);
-					bool ops=false;
-					for(size_t ii=i+1;ii<k;ii++)
-					{
-						if(nn[ii]<0){	ops = true;	break;	}
-						const mglPoint p(gr->GetPntP(nn[ii]));
-						mreal d = dx*(p.x-p1.x)+dy*(p.y-p1.y);
-						if(d*d>dd)	{	ops = true;	break;	}
-					}
-					if(ops)	break;
-					k++;
-				}
-				k--;	gr->line_plot(nn[k],nn[i]);	i = k-1;
-			}
-		}
+		gr->curve_plot(num,nn);
 		delete []nn;
 	}
 	gr->EndGroup();
@@ -450,7 +426,7 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	char mk=gr->SetPenPal(pen, &pal);	gr->Reserve(2*n*m);
 	long ss=gr->AddTexture(pen);
-	bool orig = !mglchr(pen,'a'), appr = mglchr(pen,'~');
+	bool orig = !mglchr(pen,'a');
 
 	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n, dx = n>d?n/d:1;
 	for(long j=0;j<m;j++)
@@ -475,31 +451,7 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 			if(nn[num-1]>=0 && nn[num-2]>=0)
 				gr->arrow_plot(nn[num-1],nn[num-2],gr->Arrow2);
 		}
-		for(size_t i=0;i+1<num;i++)
-		{
-			if(nn[i]<0 || nn[i+1]<0)	continue;
-			if(!appr)	gr->line_plot(nn[i+1],nn[i]);
-			else
-			{
-				size_t k=i+2;
-				while(k<num && nn[k]>=0)
-				{
-					const mglPoint p1(gr->GetPntP(nn[i])), p2(gr->GetPntP(nn[k]));
-					mreal dy=p2.x-p1.x, dx=p1.y-p2.y, dd=2*(dx*dx+dy*dy);
-					bool ops=false;
-					for(size_t ii=i+1;ii<k;ii++)
-					{
-						if(nn[ii]<0){	ops = true;	break;	}
-						const mglPoint p(gr->GetPntP(nn[ii]));
-						mreal d = dx*(p.x-p1.x)+dy*(p.y-p1.y);
-						if(d*d>dd)	{	ops = true;	break;	}
-					}
-					if(ops)	break;
-					k++;
-				}
-				k--;	gr->line_plot(nn[k],nn[i]);	i = k-1;
-			}
-		}
+		gr->curve_plot(num, nn);
 		delete []nn;
 	}
 	gr->EndGroup();

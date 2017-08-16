@@ -588,18 +588,16 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, HCDT x, HC
 	} while(!end);
 	if(k>1)
 	{
-		long j,a=long(0.3*gr->GetArrowSize()/fabs(dt));
-		gr->Reserve(k);	j = gr->AddPnt(pp[0],pp[0].c);
-		for(long i=1;i<k;i++)
-		{
-			long jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
-			if(vv && i%a==0)
-			{
-				if(dt<0)	gr->vect_plot(j,jj,a/3);
-				else		gr->vect_plot(jj,j,a/3);
-			}
-			else	gr->line_plot(jj,j);
-		}
+		long a=long(0.3*gr->GetArrowSize()/fabs(dt));
+		gr->Reserve(k);
+		long *nn = new long[k];
+		for(long i=0;i<k;i++)	nn[i] = gr->AddPnt(pp[i],pp[i].c);
+		gr->curve_plot(k,nn);
+		if(vv && dt<0)	for(long i=a;i<k;i+=a)
+			gr->vect_plot(nn[i],nn[i-1],a/3.);
+		if(vv && dt>0)	for(long i=a;i<k;i+=a)
+			gr->vect_plot(nn[i-1],nn[i],a/3.);
+		delete []nn;
 	}
 	delete []pp;
 }
@@ -908,6 +906,16 @@ void flow(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HCD
 			if(zo)
 			{	n3 = gr->AddPnt(pp[i],-1,q1);	n4 = gr->AddPnt(pp[i]+rr*q2,-1,q1);	gr->quad_plot(n3,n4,m3,m4);	}
 		}
+		/*	TODO	long a=long(0.3*gr->GetArrowSize()/fabs(dt));
+		gr->Reserve(k);
+		long *nn = new long[k];
+		for(long i=0;i<k;i++)	nn[i] = gr->AddPnt(pp[i],pp[i].c);
+		gr->curve_plot(k,nn);
+		if(vv && dt<0)	for(long i=a;i<k;i+=a)
+			gr->vect_plot(nn[i],nn[i-1],a/3.);
+		if(vv && dt>0)	for(long i=a;i<k;i+=a)
+			gr->vect_plot(nn[i-1],nn[i],a/3.);
+		delete []nn;*/
 	}
 	delete []pp;
 }

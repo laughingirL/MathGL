@@ -524,30 +524,23 @@ void mglCanvas::DrawAxis(mglAxis &aa, int text, char arr,const char *stl,mreal a
 	long k1,k2;
 	bool have_color=mgl_have_color(stl);
 	bool dif_color = !have_color && aa.dv==0 && strcmp(TickStl,SubTStl);
+	long nn[31];
 	if(text&2)	// line throw point (0,0,0)
 	{
 		SetPenPal("k:");
-		p = d*aa.v1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
-		for(long i=1;i<31;i++)
-		{
-			p = d*(aa.v1+(aa.v2-aa.v1)*i/30.);
-			k2 = k1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
-			line_plot(k2,k1);
-		}
+		for(long i=0;i<31;i++)
+			nn[i] = AddPnt(&B, d*(aa.v1+(aa.v2-aa.v1)*i/30.), CDef,q,-1,3);
+		curve_plot(31,nn);
 	}
 	SetPenPal(have_color ? stl:AxisStl);
 
-	p = o + d*aa.v1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
-	for(long i=1;i<31;i++)	// axis itself
-	{
-		p = o + d*(aa.v1+(aa.v2-aa.v1)*i/30.);
-		k2 = k1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
-		line_plot(k2,k1);
-	}
+	for(long i=0;i<31;i++)
+		nn[i] = AddPnt(&B, o + d*(aa.v1+(aa.v2-aa.v1)*i/30.), CDef,q,-1,3);
+	curve_plot(31,nn);
 	if(arr)
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*1.05);
-		k2 = k1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
+		k2 = nn[30];	k1 = AddPnt(&B, p,CDef,q,-1,3);
 		line_plot(k1,k2);	arrow_plot(k1,k2,arr);
 	}
 
@@ -666,7 +659,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		if(get(MGL_NO_ORIGIN) && v==aa.v0)	continue;
 		if(v>aa.v1 && v<aa.v2 && i%k!=0)	continue;
 		char pos[4]={up[i],':',align[i],0};
-		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.1,CDef);
+		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.05,CDef);
 	}
 	delete []w;	delete []kk;	delete []align;	delete []up;
 }
@@ -729,25 +722,15 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 void MGL_NO_EXPORT mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
 {
 	gr->Reserve(62);
-	mglPoint q,p;
-	q = oa+d*val;	p = q+da1;	// lines along 'a'
-	long k1 = gr->AddPnt(p), k2;
-	for(long j=1;j<31;j++)
-	{
-		mreal v = j/30.;
-		p = q+da1*(1-v)+da2*v;
-		k2 = k1;	k1 = gr->AddPnt(p);
-		gr->line_plot(k2,k1);
-	}
-	q = ob+d*val;	p = q+db1;	// lines along 'b'
-	k1 = gr->AddPnt(p);
-	for(long j=1;j<31;j++)
-	{
-		mreal v = j/30.;
-		p = q+db1*(1-v)+db2*v;
-		k2 = k1;	k1 = gr->AddPnt(p);
-		gr->line_plot(k2,k1);
-	}
+	mglPoint q(oa+d*val);	// lines along 'a'
+	long nn[31];
+	for(long i=0;i<31;i++)
+	{	mreal v = i/30.;	nn[i] = gr->AddPnt(q+da1*(1-v)+da2*v);	}
+	gr->curve_plot(31,nn);
+	q = ob+d*val;		// lines along 'b'
+	for(long i=0;i<31;i++)
+	{	mreal v = i/30.;	nn[i] = gr->AddPnt(q+db1*(1-v)+db2*v);	}
+	gr->curve_plot(31,nn);
 }
 void mglCanvas::DrawGrid(mglAxis &aa, bool at_tick)
 {
@@ -806,6 +789,7 @@ void mglCanvas::Label(char dir, const char *str, mreal pos, const char *opt)
 void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt)
 {
 	mreal shift =  SaveState(opt), t=0;	if(mgl_isnan(shift))	shift=0;
+	shift -= 0.1;
 	mglPoint p,q;
 	mglAxis *aa=0;
 

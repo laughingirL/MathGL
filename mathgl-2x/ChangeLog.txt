@@ -3,7 +3,8 @@
 * Add style '.' for 'cont' to draw contour lines from saddle points
 * Add style '.' for 'flow' to draw flow thread from saddle points
 * Cut output of 'ode' if NAN or INFINITY value occurs
-
+* Remove style '~' for 'plot' and 'tens'. Now, all curves try to omit points.
+* Shift axis labels closer to axis.
 
 
 2.4.1 Released 20 July 2017

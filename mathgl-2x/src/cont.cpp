@@ -446,7 +446,7 @@ void MGL_EXPORT mgl_cont_val(HMGL gr, HCDT v, HCDT z, const char *sch, const cha
 #define norm(x,y)	((x)*(x)+(y)*(y))
 std::vector<mreal> MGL_NO_EXPORT mgl_find_saddle_val(HCDT z)
 {
-	long nx=z->GetNx(), ny=z->GetNy(), nn=nx*ny-1;
+	long nx=z->GetNx(), ny=z->GetNy();
 	std::vector<mreal> v;
 	for(long i=1;i<nx-1;i++)
 	{

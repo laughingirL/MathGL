@@ -247,7 +247,7 @@ GifFileType *gif;*/
 	SetPenPal("k-1");		Alpha(false);
 	stack.clear();	Restore();	DefColor('k');
 	SetPlotFactor(0);	Sub.clear();
-	InPlot(0,1,0,1,false);
+	InPlot(0,1,0,1,false);	clr(MGL_FULL_CURV);
 	SetTickLen(0);	SetCut(true);
 	AdjustTicks("xyzc",true);	Clf('w');
 
@@ -1219,9 +1219,9 @@ void mglCanvas::Pop()
 {
 	B = stack.back(); 
 #if MGL_HAVE_PTHREAD
-	pthread_mutex_lock(&m);
+	pthread_mutex_lock(&mutexStk);
 	stack.pop_back();
-	pthread_mutex_unlock(&m);
+	pthread_mutex_unlock(&mutexStk);
 #else
 #pragma omp critical(stk)
 	stack.pop_back();

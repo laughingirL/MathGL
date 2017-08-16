@@ -1599,3 +1599,36 @@ void mglBase::ClearPrmInd()
 	{	if(PrmInd)	delete []PrmInd;	PrmInd=NULL;	}
 }
 //-----------------------------------------------------------------------------
+void mglBase::curve_plot(size_t num, const long *nn, size_t step)
+{
+	// exclude straight-line parts
+	if(get(MGL_FULL_CURV))	for(size_t i=0;i+1<num;i++)
+		line_plot(nn[i*step],nn[i*step+step]);
+	else	for(size_t i=0;i+1<num;i++)
+	{
+		if(nn[i*step]<0 || nn[i*step+step]<0)	continue;
+		size_t k=i+2;
+		while(k<num && nn[k*step]>=0)	
+		{
+			const mglPoint p1(GetPntP(nn[i*step])), p2(GetPntP(nn[k*step]));
+			const mglColor c1(GetPntC(nn[i*step])), c2(GetPntC(nn[k*step]));
+			mreal dx=p2.x-p1.x, dy=p2.y-p1.y, dd=dx*dx+dy*dy;
+			bool ops=false;
+			for(size_t ii=i+1;ii<k;ii++)
+			{
+				if(nn[ii*step]<0){	ops = true;	break;	}
+				const mglPoint p(GetPntP(nn[ii*step]));
+				const mglColor c(GetPntC(nn[ii*step]));
+				if(dd==0 && (p.x!=p1.x || p.y!=p1.y))	{	ops = true;	break;	}
+				mreal d = dy*(p.x-p1.x)-dx*(p.y-p1.y);
+				if(d*d>0.1*dd)	{	ops = true;	break;	}
+				mreal v = dx*(p.x-p1.x)+dy*(p.y-p1.y);
+				if(dd>0 && (c-c1-(v/dd)*(c2-c1)).NormS()>1e-4)	{	ops = true;	break;	}
+			}
+			if(ops)	break;
+			k++;
+		}
+		k--;	line_plot(nn[i*step],nn[k*step]);	i = k-1;
+	}
+}
+//-----------------------------------------------------------------------------

@@ -591,7 +591,7 @@ public:
 	virtual void trig_plot(long p1, long p2, long p3)=0;
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
 	virtual void smbl_plot(long p1, char id, double size)=0;
-	void curve_plot(int n, const long *pp);
+	void curve_plot(size_t n, const long *pp, size_t step=1);
 	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col)=0;
 	virtual float GetGlyphPhi(const mglPnt &q, float phi)=0;
 	virtual mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'),bool rot=true)=0;

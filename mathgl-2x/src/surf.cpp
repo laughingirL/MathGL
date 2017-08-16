@@ -32,17 +32,14 @@ void MGL_NO_EXPORT mgl_mesh_plot(mglBase *gr, long *pos, long n, long m, int how
 		long s=0;
 		for(long i=0;i<n-1;i++)	if(pos[n*j+i]>=0 && pos[n*j+i+1]>=0)	s++;
 		d = gr->FaceNum>0 ? gr->FaceNum+1 : n;	s = s>d?s/d:1;
-		for(long i=0;i<n-s;i+=s)
-			gr->line_plot(pos[n*j+i],pos[n*j+i+s]);
-
+		gr->curve_plot(1+(n-1)/s,pos+n*j,s);
 	}
 	if(how&2)	for(long i=0;i<n;i+=dx)
 	{
 		long s=0;
 		for(long j=0;j<m-1;j++)	if(pos[n*j+i]>=0 && pos[n*j+i+n]>=0)	s++;
 		d = gr->FaceNum>0 ? gr->FaceNum+1 : n;	s = s>d?s/d:1;
-		for(long j=0;j<m-s;j+=s)
-			gr->line_plot(pos[n*j+i],pos[n*j+i+s*n]);
+		gr->curve_plot(1+(m-1)/s,pos+i,n*s);
 	}
 }
 //-----------------------------------------------------------------------------

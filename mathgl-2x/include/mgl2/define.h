@@ -274,6 +274,7 @@ extern MGL_EXPORT uint64_t mgl_mask_val[16];
 #define MGL_ONESIDED 		0x080000 	///< Render only front side of surfaces if output format supports (for debugging)
 #define MGL_NO_ORIGIN 		0x100000 	///< Don't draw tick labels at axis origin
 #define MGL_GRAY_MODE 		0x200000 	///< Convert all colors to gray ones
+#define MGL_FULL_CURV 		0x400000 	///< Disable omitting points in straight-line part(s).
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_C99_COMPLEX
 #include <complex.h>

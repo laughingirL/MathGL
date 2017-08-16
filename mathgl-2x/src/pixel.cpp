@@ -1405,7 +1405,6 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st, float ll)
 //-----------------------------------------------------------------------------
 bool mglCanvas::quad_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4) const
 {
-	unsigned char r[4];
 	long y1,x1,y2,x2;
 	mglPnt d1(p2-p1), d2(p3-p1), d3(p4+p1-p2-p3);
 
@@ -1454,7 +1453,6 @@ bool mglCanvas::quad_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, c
 //-----------------------------------------------------------------------------
 bool mglCanvas::trig_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3) const
 {
-	unsigned char r[4];
 	long y1,x1,y2,x2;
 	const mglPnt d1(p2-p1), d2(p3-p1);
 

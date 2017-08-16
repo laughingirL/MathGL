@@ -606,7 +606,7 @@ void MGL_NO_EXPORT mgl_loonie_var66(mreal &xNew, mreal &yNew, mreal x, mreal y, 
 		c1 = par[0]*sqrt(c2/c1-1);
 		xNew += c1*x;	yNew += c1*y;
 	}
-	else	xNew += par[0]*x;	yNew += par[0]*y;
+	else	{	xNew += par[0]*x;	yNew += par[0]*y;	}
 }
 void MGL_NO_EXPORT mgl_preBlur_var67(mreal &xNew, mreal &yNew, mreal x, mreal y, const mreal *par)
 {
