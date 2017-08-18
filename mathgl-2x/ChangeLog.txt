@@ -4,6 +4,7 @@
 * Add style '.' for 'flow' to draw flow thread from saddle points
 * Cut output of 'ode' if NAN or INFINITY value occurs
 * Remove style '~' for 'plot' and 'tens'. Now, all curves try to omit points.
+* Add setup flag MGL_FULL_CURV which disable omitting points of curve. Enable it for output in 3D formats!
 * Shift axis labels closer to axis.
 
 

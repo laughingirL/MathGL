@@ -1615,7 +1615,7 @@ void mglBase::curve_plot(size_t num, const long *nn, size_t step)
 			mreal dx=p2.x-p1.x, dy=p2.y-p1.y, dd=dx*dx+dy*dy;
 			bool ops=false;
 			for(size_t ii=i+1;ii<k;ii++)
-			{
+			{	// TODO check the z-coordinate too!
 				if(nn[ii*step]<0){	ops = true;	break;	}
 				const mglPoint p(GetPntP(nn[ii*step]));
 				const mglColor c(GetPntC(nn[ii*step]));

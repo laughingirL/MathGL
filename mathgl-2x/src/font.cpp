@@ -414,7 +414,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-150*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b2, x+(ww-w2)/2, yy-175*ff/fact[a], ff/3, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
@@ -423,7 +423,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy+375*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b2, x+(ww-w2)/2, yy+400*ff/fact[a], ff/3, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
@@ -557,9 +557,9 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 			ss = (s/MGL_FONT_UPPER)%4;
 			if(ss)
 			{
-				if(ss==1)		{	ff *=0.6;	yy += 200*ff/fact[a];	}	// =  500*0.4
-				else if(ss==2)	{	ff *=0.6;	yy -=  80*ff/fact[a];	}	// = -500*0.16
-				else if(ss==3)	{	ff *=0.8;	yy +=  0*60*ff/fact[a];	}	// =  500*0.12
+				if(ss==1)		{	ff *=0.6;	yy += 250*ff/fact[a];	}	// =  500*0.4
+				else if(ss==2)	{	ff *=0.6;	yy -=  130*ff/fact[a];	}	// = -500*0.16
+				else if(ss==3)	{	ff *=0.6;	yy +=  60*ff/fact[a];	}	// =  500*0.12
 			}
 		}
 		x += ww;	w += ww;

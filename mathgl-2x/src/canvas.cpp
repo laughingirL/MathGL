@@ -384,14 +384,14 @@ void mglCanvas::line_plot(long p1, long p2)
 		{
 			d += hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 			MGL_LINE_PLOT
-			pPos = fmod(pPos+d/pw/1.5, 16);
+			pPos = fmod(pPos+d/pw, 16);
 		}
 	}
 	else
 	{
 		d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 		MGL_LINE_PLOT
-		pPos = fmod(pPos+d/pw/1.5, 16);
+		pPos = fmod(pPos+d/pw, 16);
 	}
 }
 //-----------------------------------------------------------------------------
