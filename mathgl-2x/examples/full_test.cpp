@@ -66,9 +66,7 @@ void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
 	mglParse par;
-	par.Execute(gr,"text 0 -0.2 'abcde'\ntext 0 0 'abcde'[2]\n"
-	"text 0 0.2 'abcde'+2\ntext 0 0.4 'abcde',2\ntext 0 0.6 'abcde',2,'k'"
-	"text 0 0.8 'abcde',2,'k'+1\ntext 0 1 'abcde',2,'k'[5]\ntext 0 1 'abcde''k'[5]");
+	par.Execute(gr,"axis:box '@':grid");
 	return;
 
 	gr->SubPlot(2,2,0);	gr->Axis();

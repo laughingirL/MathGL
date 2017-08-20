@@ -878,7 +878,7 @@ public:
 	}
 	void cb_ok()
 	{
-		std::string par = var->text(), a;
+		std::string par = var->text();
 		size_t isp = par.find_first_of(' ');
 		result = par.substr(0,isp);	// command name
 		for(int i=1;i<=args->size();i++)

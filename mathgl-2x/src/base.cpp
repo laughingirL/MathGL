@@ -332,6 +332,20 @@ void mglBase::DefineGlyph(HCDT x, HCDT y, unsigned char id)
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
 //-----------------------------------------------------------------------------
+long mglBase::PushPnts(size_t num, const mglPnt *qq)
+{
+	long k;
+#pragma omp critical(pnt)
+	{k=Pnt.size();	MGL_PUSHs(Pnt.push_back(num,qq),mutexPnt);}	return k;
+}
+//-----------------------------------------------------------------------------
+long mglBase::AllocPnts(size_t num)
+{
+	long k;
+#pragma omp critical(pnt)
+	MGL_PUSHs(k=Pnt.allocate(num),mutexPnt);	return k;
+}
+//-----------------------------------------------------------------------------
 void inline mgl_put_inbox(mreal a1, mreal a2, mreal &a)
 {
 	if(a1<a2)	{	if(a<a1)	a=a1;	if(a>a2)	a=a2;	}
@@ -346,12 +360,12 @@ void MGL_NO_EXPORT mgl_coor_box(HMGL gr, mglPoint &p)
 long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 {
 	mglPnt q;
-	if(!AddPnt(q,mat,p,c,n,a,scl))	return -1;
+	if(!AddPntQ(q,mat,p,c,n,a,scl))	return -1;
 	long k;
 #pragma omp critical(pnt)
 	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}	return k;
 }
-bool mglBase::AddPnt(mglPnt &q, const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
+bool mglBase::AddPntQ(mglPnt &q, const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 {
 	// scl=0 -- no scaling
 	// scl&1 -- usual scaling
@@ -1599,36 +1613,40 @@ void mglBase::ClearPrmInd()
 	{	if(PrmInd)	delete []PrmInd;	PrmInd=NULL;	}
 }
 //-----------------------------------------------------------------------------
-void mglBase::curve_plot(size_t num, const long *nn, size_t step)
+void mglBase::curve_plot(size_t num, const long *nn, size_t step, long k0)
 {
 	// exclude straight-line parts
 	if(get(MGL_FULL_CURV))	for(size_t i=0;i+1<num;i++)
-		line_plot(nn[i*step],nn[i*step+step]);
+		line_plot(k0+nn[i*step],k0+nn[i*step+step]);
 	else	for(size_t i=0;i+1<num;i++)
 	{
-		if(nn[i*step]<0 || nn[i*step+step]<0)	continue;
+		if(k0+nn[i*step]<0 || k0+nn[i*step+step]<0)	continue;
+		const mglPoint p1(GetPntP(k0+nn[i*step])), ps(GetPntP(k0+nn[i*step+step]));
+		if(mgl_isnan(p1.x) || mgl_isnan(ps.x))	continue;
+		const mglColor c1(GetPntC(k0+nn[i*step]));
 		size_t k=i+2;
-		while(k<num && nn[k*step]>=0)	
+		while(k<num && k0+nn[k*step]>=0)
 		{
-			const mglPoint p1(GetPntP(nn[i*step])), p2(GetPntP(nn[k*step]));
-			const mglColor c1(GetPntC(nn[i*step])), c2(GetPntC(nn[k*step]));
-			mreal dx=p2.x-p1.x, dy=p2.y-p1.y, dd=dx*dx+dy*dy;
+			const mglPoint p2(GetPntP(k0+nn[k*step]));
+			const mglColor c2(GetPntC(k0+nn[k*step]));
+			mreal dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z, dd=dx*dx+dy*dy+dz*dz;
 			bool ops=false;
 			for(size_t ii=i+1;ii<k;ii++)
-			{	// TODO check the z-coordinate too!
-				if(nn[ii*step]<0){	ops = true;	break;	}
-				const mglPoint p(GetPntP(nn[ii*step]));
-				const mglColor c(GetPntC(nn[ii*step]));
-				if(dd==0 && (p.x!=p1.x || p.y!=p1.y))	{	ops = true;	break;	}
-				mreal d = dy*(p.x-p1.x)-dx*(p.y-p1.y);
-				if(d*d>0.1*dd)	{	ops = true;	break;	}
-				mreal v = dx*(p.x-p1.x)+dy*(p.y-p1.y);
+			{
+				if(k0+nn[ii*step]<0){	ops = true;	break;	}
+				const mglPoint p(GetPntP(k0+nn[ii*step]));
+				if(p==p1)	continue;
+				if(mgl_isnan(p.x) || dd==0)	{	ops = true;	break;	}
+				mreal v = (dx*(p.x-p1.x)+dy*(p.y-p1.y)+dz*(p.y-p1.y))/dd;
+				mglPoint q(p-p1-v*(p2-p1));
+				if(q.norm()>0.1)	{	ops = true;	break;	}
+				const mglColor c(GetPntC(k0+nn[ii*step]));
 				if(dd>0 && (c-c1-(v/dd)*(c2-c1)).NormS()>1e-4)	{	ops = true;	break;	}
 			}
 			if(ops)	break;
 			k++;
 		}
-		k--;	line_plot(nn[i*step],nn[k*step]);	i = k-1;
+		k--;	line_plot(k0+nn[i*step],k0+nn[k*step]);	i = k-1;
 	}
 }
 //-----------------------------------------------------------------------------

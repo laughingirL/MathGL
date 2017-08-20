@@ -44,26 +44,36 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		mglPoint p1,p2,p3,q;
-		gr->Reserve(m*3);
-		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)
+		long kq = gr->AllocPnts(m*3);
+#pragma omp parallel for
+		for(long i=0;i<m;i++)
 		{
-			long k1 = long(nums->v(0,i)+0.5);
-			p1.Set(x->v(k1), y->v(k1), z->v(k1));
-			long k2 = long(nums->v(1,i)+0.5);
-			p2.Set(x->v(k2), y->v(k2), z->v(k2));
-			long k3 = long(nums->v(2,i)+0.5);
-			p3.Set(x->v(k3), y->v(k3), z->v(k3));
-			q = wire ? mglPoint(NAN,NAN) : (p2-p1) ^ (p3-p1);
-			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
-			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
-			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
-			gr->trig_plot(k1,k2,k3);
+			if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)
+			{
+				long k1 = long(nums->v(0,i)+0.5);
+				mglPoint p1(x->v(k1), y->v(k1), z->v(k1));
+				long k2 = long(nums->v(1,i)+0.5);
+				mglPoint p2(x->v(k2), y->v(k2), z->v(k2));
+				long k3 = long(nums->v(2,i)+0.5);
+				mglPoint p3(x->v(k3), y->v(k3), z->v(k3));
+				mglPoint q(wire ? mglPoint(NAN,NAN) : (p2-p1) ^ (p3-p1));
+				gr->AddPntQ(kq+3*i,p1,gr->GetC(ss,a->v(k1)),q);
+				gr->AddPntQ(kq+3*i+1,p2,gr->GetC(ss,a->v(k2)),q);
+				gr->AddPntQ(kq+3*i+2,p3,gr->GetC(ss,a->v(k3)),q);
+			}
+			else
+			{	gr->SetPntOff(kq+3*i);	gr->SetPntOff(kq+3*i+1);	gr->SetPntOff(kq+3*i+2);	}
 		}
+		if(wire)	for(long i=0;i<m;i++)
+		{
+			gr->line_plot(kq+3*i,kq+3*i+1);
+			gr->line_plot(kq+3*i+1,kq+3*i+2);
+			gr->line_plot(kq+3*i+2,kq+3*i);
+		}
+		else	for(long i=0;i<m;i++)	gr->trig_plot(kq+3*i,kq+3*i+1,kq+3*i+2);
 	}
 	else if(nc>=n)		// colors per point
 	{
-		gr->Reserve(n);
-		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)	// add averaged normales
 		{
@@ -81,8 +91,10 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 			}
 			else	pp[k1]=pp[k2]=pp[k3]=mglPoint(NAN,NAN);
 		}
+		long kq = gr->AllocPnts(n);
+#pragma omp parallel for
 		for(long i=0;i<n;i++)	// add points
-			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)), gr->GetC(ss,a->v(i)), pp[i]);
+			gr->AddPntQ(kq+i, mglPoint(x->v(i), y->v(i), z->v(i)), gr->GetC(ss,a->v(i)), pp[i]);
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)	// draw triangles
 		{
 			long k1 = long(nums->v(0,i)+0.5);
@@ -90,12 +102,12 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 			long k3 = long(nums->v(2,i)+0.5);
 			if(wire)
 			{
-				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);
-				gr->line_plot(kk[k3],kk[k2]);
+				gr->line_plot(kq+k1,kq+k2);	gr->line_plot(kq+k1,kq+k3);
+				gr->line_plot(kq+k3,kq+k2);
 			}
-			else	gr->trig_plot(kk[k1],kk[k2],kk[k3]);
+			else	gr->trig_plot(kq+k1,kq+k2,kq+k3);
 		}
-		delete []kk;	delete []pp;
+		delete []pp;
 	}
 	gr->EndGroup();
 }
@@ -146,28 +158,42 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 	bool wire = mglchr(sch,'#');
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
-		gr->Reserve(m*4);
-		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
+		long kq = gr->AllocPnts(m*4);
+#pragma omp parallel for
+		for(long i=0;i<m;i++)
 		{
-			long k1 = long(nums->v(0,i)+0.5);
-			p1.Set(x->v(k1), y->v(k1), z->v(k1));
-			long k2 = long(nums->v(1,i)+0.5);
-			p2.Set(x->v(k2), y->v(k2), z->v(k2));
-			long k3 = long(nums->v(2,i)+0.5);
-			p3.Set(x->v(k3), y->v(k3), z->v(k3));
-			long k4 = long(nums->v(3,i)+0.5);
-			p4.Set(x->v(k4), y->v(k4), z->v(k4));
-			mglPoint q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
-			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
-			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
-			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
-			k4 = gr->AddPnt(p4,gr->GetC(ss,a->v(k4)),q);
-			gr->quad_plot(k1,k2,k3,k4);
+			if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
+			{
+				long k1 = long(nums->v(0,i)+0.5);
+				p1.Set(x->v(k1), y->v(k1), z->v(k1));
+				long k2 = long(nums->v(1,i)+0.5);
+				p2.Set(x->v(k2), y->v(k2), z->v(k2));
+				long k3 = long(nums->v(2,i)+0.5);
+				p3.Set(x->v(k3), y->v(k3), z->v(k3));
+				long k4 = long(nums->v(3,i)+0.5);
+				p4.Set(x->v(k4), y->v(k4), z->v(k4));
+				mglPoint q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
+				gr->AddPntQ(kq+4*i,p1,gr->GetC(ss,a->v(k1)),q);
+				gr->AddPntQ(kq+4*i+1,p2,gr->GetC(ss,a->v(k2)),q);
+				gr->AddPntQ(kq+4*i+2,p3,gr->GetC(ss,a->v(k3)),q);
+				gr->AddPntQ(kq+4*i+3,p4,gr->GetC(ss,a->v(k4)),q);
+			}
+			else
+			{	gr->SetPntOff(kq+4*i);		gr->SetPntOff(kq+4*i+1);
+				gr->SetPntOff(kq+4*i+1);	gr->SetPntOff(kq+4*i+3);	}
 		}
+		if(wire)	for(long i=0;i<m;i++)
+		{
+			gr->line_plot(kq+3*i,kq+3*i+1);
+			gr->line_plot(kq+3*i+1,kq+3*i+2);
+			gr->line_plot(kq+3*i+2,kq+3*i);
+		}
+		else	for(long i=0;i<m;i++)
+			gr->quad_plot(kq+4*i,kq+4*i+1,kq+4*i+2,kq+4*i+3);
+
 	}
 	else if(nc>=n)		// colors per point
 	{
-		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
@@ -191,8 +217,10 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 				pp[k1] += q1;	pp[k2] += q2;	pp[k3] += q3;	pp[k4] += q4;
 			}
 		}
+		long kq = gr->AllocPnts(n);
+#pragma omp parallel for
 		for(long i=0;i<n;i++)	// add points
-			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
+			gr->AddPntQ(kq+i, mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
 		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
 		{	// draw quads
 			long k1 = long(nums->v(0,i)+0.5);
@@ -201,10 +229,10 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 			long k4 = long(nums->v(3,i)+0.5);
 			if(wire)
 			{
-				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);
-				gr->line_plot(kk[k4],kk[k2]);	gr->line_plot(kk[k4],kk[k3]);
+				gr->line_plot(kq+k1,kq+k2);	gr->line_plot(kq+k1,kq+k3);
+				gr->line_plot(kq+k4,kq+k2);	gr->line_plot(kq+k4,kq+k3);
 			}
-			else	gr->quad_plot(kk[k1],kk[k2],kk[k3],kk[k4]);
+			else	gr->quad_plot(kq+k1,kq+k2,kq+k3,kq+k4);
 		}
 		delete []kk;	delete []pp;
 	}
@@ -437,12 +465,14 @@ void MGL_EXPORT mgl_dots_ca(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, con
 	if(mk==0)	mk='.';
 	gr->Reserve(n);
 
+	long kq = gr->AllocPnts(n);
+#pragma omp parallel for
 	for(long i=0;i<n;i+=d)
 	{
 		mglPoint p(x->vthr(i),y->vthr(i),z->vthr(i));
-		long pp = gr->AddPnt(p,gr->GetC(ss,c->vthr(i)),mglPoint(NAN),a?gr->GetA(a->vthr(i)):-1);
-		gr->mark_plot(pp, mk);
+		gr->AddPntQ(kq+i,p,gr->GetC(ss,c->vthr(i)),mglPoint(NAN),a?gr->GetA(a->vthr(i)):-1);
 	}
+	for(long i=0;i<n;i+=d)	gr->mark_plot(kq+i, mk);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------

@@ -149,7 +149,7 @@ void mglCanvas::pnt_pix(long i, long j, const mglPnt &p, const mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_pix(long i, long j, const mglPnt &q, char type, mreal size, mglDrawReg *d)
 {
-	unsigned char cs[4];	col2int(q,cs,d?d->ObjId:d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
+	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p0=q,p1=q,p2=q,p3=q;
 	mreal ss=fabs(size);
 

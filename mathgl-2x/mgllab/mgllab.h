@@ -143,6 +143,7 @@ public:
 	Fl_Counter *slice;
 	mglDataA *var;
 protected:
+	TableWindow(const TableWindow &){}	// copying is not allowed
 	Fl_Data_Table *data;
 	Fl_Menu_Bar	*menu;
 	Fl_Double_Window *w;

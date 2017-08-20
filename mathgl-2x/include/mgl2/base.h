@@ -33,6 +33,12 @@
 #else
 #define MGL_PUSH(a,v,m)	a.push_back(v);
 #endif
+
+#if MGL_HAVE_PTHREAD
+#define MGL_PUSHs(func,m)	{pthread_mutex_lock(&m);	func;	pthread_mutex_unlock(&m);}
+#else
+#define MGL_PUSHs(func,m)	{func;}
+#endif
 //-----------------------------------------------------------------------------
 inline mreal mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
@@ -61,6 +67,8 @@ public:
 		dat[0] = new T[(size_t)1<<pb];	n=0;	m=1;	mutex = 0;	}
 	~mglStack()	{	clear();	delete [](dat[0]);	free(dat);	}
 	inline void set_mutex(void *mtx)	{	mutex = mtx;	}
+	inline size_t allocate(size_t num)
+	{	reserve(num);	size_t r=n;	n+=num;	return r;	}
 	void reserve(size_t num)
 	{
 		num+=n;
@@ -512,7 +520,16 @@ public:
 	inline long AddPnt(mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
 	{	return AddPnt(&B,p,c,n,a,scl);	}
 	long AddPnt(const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
-	bool AddPnt(mglPnt &q, const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
+	bool AddPntQ(mglPnt &q, const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
+	inline bool AddPntQ(mglPnt &q, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
+	{	return AddPntQ(q,&B,p,c,n,a,scl);	}
+	inline void AddPntQ(long id, const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
+	{	AddPntQ(Pnt[id],M,p,c,n,a,scl);	}
+	inline void AddPntQ(long id, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
+	{	AddPntQ(Pnt[id],&B,p,c,n,a,scl);	}
+	inline void SetPntOff(size_t id)	{	Pnt[id].x=NAN;	}
+	long AllocPnts(size_t num);
+	long PushPnts(size_t num, const mglPnt *qq);
 	long CopyNtoC(long k, mreal c);
 	long CopyProj(long from, mglPoint p, mglPoint n, short sub=0);
 	void SetRGBA(long k, const mglColor &c)
@@ -547,8 +564,7 @@ public:
 	{
 		if(i<0 || j<0)	return true;
 		const mglPnt &p=Pnt[i], &q=Pnt[j];
-//		return GetWidth()>1 ? (long(p.x)==long(q.x) && long(p.y)==long(q.y)): (p.x==q.x && p.y==q.y);
-		return p.x==q.x && p.y==q.y;	
+		return mgl_isnan(p.x) || mgl_isnan(q.x) || (p.x==q.x && p.y==q.y);
 	}
 //	inline mglPrim &GetPrm(long i)		{	return Prm[i];		}
 	inline mglPrim &GetPrm(long i, bool sort=true)
@@ -591,12 +607,12 @@ public:
 	virtual void trig_plot(long p1, long p2, long p3)=0;
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
 	virtual void smbl_plot(long p1, char id, double size)=0;
-	void curve_plot(size_t n, const long *pp, size_t step=1);
+	void curve_plot(size_t n, const long *pp, size_t step=1, long k0=0);
 	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col)=0;
 	virtual float GetGlyphPhi(const mglPnt &q, float phi)=0;
 	virtual mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'),bool rot=true)=0;
 	void vect_plot(long p1, long p2, mreal s=1);
-	
+
 	// check if visible
 	virtual bool trig_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3) const =0;
 	virtual bool quad_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4) const =0;

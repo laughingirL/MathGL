@@ -206,7 +206,6 @@ void saveas_cb(Fl_Widget*, void *v)
 {
 	const char *newfile;
 	char *fname=0;
-	FILE *fp=0;
 	while(1)
 	{
 		newfile = mgl_file_chooser(_("Save File As?"), _("MGL files \t*.mgl"), true);
@@ -218,7 +217,7 @@ void saveas_cb(Fl_Widget*, void *v)
 			strcpy(fname,newfile);	strcat(fname,".mgl");
 			newfile = fname;
 		}
-		fp = fl_fopen(newfile,"r");
+		FILE *fp = fl_fopen(newfile,"r");
 		if(fp)
 		{
 			fclose(fp);
@@ -384,7 +383,7 @@ int main(int argc, char **argv)
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
 	load_pref(NULL);
-	
+
 	textbuf = new Fl_Text_Buffer;
 	style_init();
 	textbuf->tab_distance(4);

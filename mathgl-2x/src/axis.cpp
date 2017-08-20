@@ -239,7 +239,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 			ds *= 365.25*24*3600;	}
 		// NOTE here should be months ... but it is too unregular ... so omit it now
 // 		else if(t1.tm_mon!=t2.tm_mon)	d = 30*24*3600;	// number of second in month
-		else if(abs(t1.tm_yday-t2.tm_yday)>=14)	// number of second in week 
+		else if(abs(t1.tm_yday-t2.tm_yday)>=14)	// number of second in week
 		{	d = mgl_adj_val(abs(t1.tm_yday-t2.tm_yday)/7,&ds);
 			ds = ((ds<1)?1./7:ds)*7*24*3600;	d = ((d>=1)?d:1)*7*24*3600;	}
 		else if(abs(t1.tm_yday-t2.tm_yday)>1)	// localtime("%x") cannot print time < 1 day
@@ -521,30 +521,33 @@ void mglCanvas::DrawAxis(mglAxis &aa, int text, char arr,const char *stl,mreal a
 
 	static int cgid=1;	StartGroup("Axis",cgid++);
 
-	long k1,k2;
 	bool have_color=mgl_have_color(stl);
 	bool dif_color = !have_color && aa.dv==0 && strcmp(TickStl,SubTStl);
-	long nn[31];
+	long nn[31], kq = AllocPnts(31);
+	for(long i=0;i<31;i++)	nn[i]=i;
 	if(text&2)	// line throw point (0,0,0)
 	{
 		SetPenPal("k:");
+#pragma omp parallel for
 		for(long i=0;i<31;i++)
-			nn[i] = AddPnt(&B, d*(aa.v1+(aa.v2-aa.v1)*i/30.), CDef,q,-1,3);
-		curve_plot(31,nn);
+			AddPntQ(kq+i, &B, d*(aa.v1+(aa.v2-aa.v1)*i/30.), CDef,q,-1,3);
+		curve_plot(31,nn,1,kq);
 	}
 	SetPenPal(have_color ? stl:AxisStl);
 
+	kq = AllocPnts(31);
+#pragma omp parallel for
 	for(long i=0;i<31;i++)
-		nn[i] = AddPnt(&B, o + d*(aa.v1+(aa.v2-aa.v1)*i/30.), CDef,q,-1,3);
-	curve_plot(31,nn);
+		AddPntQ(kq+i, &B, o + d*(aa.v1+(aa.v2-aa.v1)*i/30.), CDef,q,-1,3);
+	curve_plot(31,nn,1,kq);
 	if(arr)
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*1.05);
-		k2 = nn[30];	k1 = AddPnt(&B, p,CDef,q,-1,3);
+		long k2 = kq+nn[30], k1 = AddPnt(&B, p,CDef,q,-1,3);
 		line_plot(k1,k2);	arrow_plot(k1,k2,arr);
 	}
 
-	k2 = aa.txt.size();
+	long k2 = aa.txt.size();
 	mreal v, u, v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
 	if(*TickStl && !have_color)	SetPenPal(TickStl);
 	if(k2>0)	for(long i=0;i<k2;i++)
@@ -591,12 +594,14 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 
 	long n = aa.txt.size();
 	mreal *w=new mreal[n], wsp = 2*TextWidth(" ",FontDef,-1);
-	long *kk=new long[n];
+	long *kk=new long[n], kq = AllocPnts(n);
+#pragma omp parallel for
 	for(long i=0;i<n;i++)	// fill base label properties
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1);
-		kk[i] = AddPnt(M, o+d*aa.txt[i].val,-1,d,0,7);
+		AddPntQ(kq+i, M, o+d*aa.txt[i].val,-1,d,0,7);
 	}
+	for(long i=0;i<n;i++)	kk[i] = kq+i;
 	mreal c=INFINITY, l=0, h = TextHeight(FontDef,-1);	// find sizes
 	for(long i=0;i<n-1;i++)
 	{
@@ -721,16 +726,18 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
 {
-	gr->Reserve(62);
 	mglPoint q(oa+d*val);	// lines along 'a'
-	long nn[31];
+	long nn[31], kq = gr->AllocPnts(31);
+#pragma omp parallel for
 	for(long i=0;i<31;i++)
-	{	mreal v = i/30.;	nn[i] = gr->AddPnt(q+da1*(1-v)+da2*v);	}
-	gr->curve_plot(31,nn);
+	{	mreal v=i/30.;	nn[i]=i;	gr->AddPntQ(kq+i,q+da1*(1-v)+da2*v);	}
+	gr->curve_plot(31,nn,1,kq);
 	q = ob+d*val;		// lines along 'b'
+	kq = gr->AllocPnts(31);
+#pragma omp parallel for
 	for(long i=0;i<31;i++)
-	{	mreal v = i/30.;	nn[i] = gr->AddPnt(q+db1*(1-v)+db2*v);	}
-	gr->curve_plot(31,nn);
+	{	mreal v = i/30.;	gr->AddPntQ(kq+i,q+db1*(1-v)+db2*v);	}
+	gr->curve_plot(31,nn,1,kq);
 }
 void mglCanvas::DrawGrid(mglAxis &aa, bool at_tick)
 {
@@ -927,27 +934,24 @@ void mglCanvas::Box(const char *col, bool ticks)
 					else	{	color[0]=col[i];	color[1]=0;	break;	}
 				}
 			}
-			long *pos = new long[3*31*31];
 			SetPenPal(color);
 			mreal dx = (Max.x-Min.x)/30, dy = (Max.y-Min.y)/30, dz = (Max.z-Min.z)/30;
+			long kq = AllocPnts(3*31*31);
+#pragma omp parallel for collapse(2)
 			for(long i=0;i<31;i++)	for(long j=0;j<31;j++)
 			{
-				long i0=3*(i+31*j);
-				pos[i0]   = AddPnt(mglPoint(oo[im].x,Min.y+dy*i,Min.z+dz*j));
-				pos[i0+1] = AddPnt(mglPoint(Min.x+dx*i,oo[im].y,Min.z+dz*j));
-				pos[i0+2] = AddPnt(mglPoint(Min.x+dx*i,Min.y+dy*j,oo[im].z));
+				long i0=kq+3*(i+31*j);
+				AddPntQ(i0,  mglPoint(oo[im].x,Min.y+dy*i,Min.z+dz*j));
+				AddPntQ(i0+1,mglPoint(Min.x+dx*i,oo[im].y,Min.z+dz*j));
+				AddPntQ(i0+2,mglPoint(Min.x+dx*i,Min.y+dy*j,oo[im].z));
 			}
 			for(long i=0;i<30;i++)	for(long j=0;j<30;j++)
 			{
-				long i0=3*(i+31*j);
-				quad_plot(pos[i0],pos[i0+3],pos[i0+93],pos[i0+96]);
-				quad_plot(pos[i0+1],pos[i0+4],pos[i0+94],pos[i0+97]);
-				quad_plot(pos[i0+2],pos[i0+5],pos[i0+95],pos[i0+98]);
+				long i0=kq+3*(i+31*j);
+				quad_plot(i0,  i0+3,i0+93,i0+96);
+				quad_plot(i0+1,i0+4,i0+94,i0+97);
+				quad_plot(i0+2,i0+5,i0+95,i0+98);
 			}
-			delete []pos;
-// 			mgl_facex(this, oo[im].x, Min.y, Min.z, Max.y-Min.y, Max.z-Min.z, color,0,0);
-// 			mgl_facey(this, Min.x, oo[im].y, Min.z, Max.x-Min.x, Max.z-Min.z, color,0,0);
-// 			mgl_facez(this, Min.x, Min.y, oo[im].z, Max.x-Min.x, Max.y-Min.y, color,0,0);
 		}
 	}
 	EndGroup();

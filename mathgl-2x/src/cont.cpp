@@ -129,10 +129,11 @@ void MGL_EXPORT mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *tex
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TextC",cgid++);
 
-	long *nn = new long[n], *ff = new long[n];
+	long kq = gr->AllocPnts(n);
 	for(long i=0;i<n;i++)
-		ff[i] = gr->AddPnt(mglPoint(x->v(i),y->v(i),z->v(i)),-1);
-	for(long i=1;i<n;i++)	nn[i-1] = i;
+		gr->AddPntQ(kq+i, mglPoint(x->v(i),y->v(i),z->v(i)),-1);
+	long *nn = new long[n], *ff = new long[n];
+	for(long i=1;i<n;i++)	{	nn[i-1] = i;	ff[i] = kq+i;	}
 	nn[n-1]=-1;
 	mgl_string_curve(gr,0,n,ff,nn,text,font,-1);
 	gr->EndGroup();
@@ -1456,12 +1457,11 @@ long MGL_LOCAL_PURE mgl_find_prev(long i, long pc, long *nn)
 }
 void MGL_NO_EXPORT mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,mreal cc,int wire)
 {
-	mglPoint a(0,0,1),b,c,p,q1,q2;
+	mglPoint a(0,0,1),b,c,q1,q2;
 	if(dir=='x')	a.Set(1,0,0);
 	if(dir=='y')	a.Set(0,1,0);
 	b = !a;	c = a^b;
 
-	long p1,p2,p3,p4;
 	gr->Reserve(pc*82);
 	for(long i=0;i<pc;i++)
 	{
@@ -1470,28 +1470,35 @@ void MGL_NO_EXPORT mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,ch
 		q1 = k<0 ? ff[nn[i]]-ff[i]  : (ff[nn[i]]-ff[k])*0.5;
 		q2 = nn[nn[i]]<0 ? ff[nn[i]]-ff[i]  : (ff[nn[nn[i]]]-ff[i])*0.5;
 
-		p = a*ff[i].y + c*ff[i].x;
-		p1 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + c*q1.x)^b);
-		p = a*ff[nn[i]].y + c*ff[nn[i]].x;
-		p2 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + c*q2.x)^b);
-		if(wire==1)	gr->line_plot(p1,p2);
-		else if(wire)	{	gr->mark_plot(p1,'.');	gr->mark_plot(p2,'.');	}
-
-		for(long j=1;j<41;j++)
+		long kq = gr->AllocPnts(41*2);
+#pragma omp parallel for
+		for(long j=0;j<41;j++)
 		{
-			p3 = p1;	p4 = p2;
 			float co = mgl_cos[(j*18)%360], si = mgl_cos[(270+j*18)%360];
 //			fi = j*M_PI/20;		si = sin(fi);	co = cos(fi);
-			p = a*ff[i].y + b*(si*ff[i].x) +  c*(co*ff[i].x);
-			p1 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + b*(si*q1.x) +  c*(co*q1.x))^(b*co-c*si));
-			p = a*ff[nn[i]].y + b*(si*ff[nn[i]].x) +  c*(co*ff[nn[i]].x);
-			p2 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + b*(si*q2.x) +  c*(co*q2.x))^(b*co-c*si));
-			if(wire==1)
-			{	gr->line_plot(p1,p2);	gr->line_plot(p1,p3);
-			gr->line_plot(p4,p2);	gr->line_plot(p4,p3);	}
-			else if(wire)	{	gr->mark_plot(p1,'.');	gr->mark_plot(p2,'.');	}
-			else	gr->quad_plot(p3,p4,p1,p2);
+			mglPoint p1 = a*ff[i].y + b*(si*ff[i].x) +  c*(co*ff[i].x);
+			mglPoint p2 = a*ff[nn[i]].y + b*(si*ff[nn[i]].x) +  c*(co*ff[nn[i]].x);
+			if(wire)
+			{	gr->AddPntQ(kq+2*j,p1,cc);	gr->AddPntQ(kq+2*j+1,p2,cc);	}
+			else
+			{
+				gr->AddPntQ(kq+2*j, p1,cc,(a*q1.y + b*(si*q1.x) +  c*(co*q1.x))^(b*co-c*si));
+				gr->AddPntQ(kq+2*j+1,p2,cc,(a*q2.y + b*(si*q2.x) +  c*(co*q2.x))^(b*co-c*si));
+			}
 		}
+		if(wire==1)
+		{
+			gr->line_plot(kq,kq+1);
+			for(long j=1;j<41;j++)
+			{
+				gr->line_plot(kq+2*j,kq+2*j+1);		gr->line_plot(kq+2*j,kq+2*j-2);
+				gr->line_plot(kq+2*j-1,kq+2*j+1);	gr->line_plot(kq+2*j-1,kq+2*j-2);
+			}
+		}
+		else if(wire)	for(long j=0;j<41;j++)
+		{	gr->mark_plot(kq+2*j,'.');	gr->mark_plot(kq+2*j+1,'.');	}
+		else	for(long j=1;j<41;j++)
+		{	long i0 = kq+2*j;	gr->quad_plot(i0-2,i0-1,i0,i0+1);	}
 	}
 }
 //-----------------------------------------------------------------------------

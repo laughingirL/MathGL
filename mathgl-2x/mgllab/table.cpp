@@ -470,11 +470,11 @@ void save_dat_cb(Fl_Widget*, void*v)
 void exp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *scheme, *newfile = mgl_file_chooser(_("Export Data?"),
+	const char *newfile = mgl_file_chooser(_("Export Data?"),
 		_("PNG Files \t*.png"), true);
 	if(newfile)
 	{	// TODO show dialog for color scheme
-		scheme = fl_input(_("Enter color scheme"),MGL_DEF_SCH);
+		const char *scheme = fl_input(_("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)	e->var->Export(newfile,scheme);
 	}
 }
@@ -482,12 +482,12 @@ void exp_dat_cb(Fl_Widget*, void*v)
 void imp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *scheme, *newfile = mgl_file_chooser(_("Import Data?"),
+	const char *newfile = mgl_file_chooser(_("Import Data?"),
 		_("PNG Files \t*.png"));
 	HMDT d = dynamic_cast<HMDT>(e->var);
 	if(d && newfile)
 	{
-		scheme = fl_input(_("Enter color scheme"),MGL_DEF_SCH);
+		const char *scheme = fl_input(_("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)
 		{	d->Import(newfile,scheme);	e->refresh();	}
 	}

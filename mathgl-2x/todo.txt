@@ -39,7 +39,10 @@
 7. Add ##d comment(s) -- analogue of 'ask' but update figure after each change ???
 8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
 9. Mask in EPS/SVG
-11. Add momentum dat vdat ... where vdat is corresponding coordinate ???
+
+10. Add momentum dat vdat ... where vdat is corresponding coordinate ???
+
+11. Add sample of Step, Bars for x.nx = y.nx+1
 
 ZZ. Update *.i for new functions {before release!!!}
 
