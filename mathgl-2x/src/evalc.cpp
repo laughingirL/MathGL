@@ -144,11 +144,11 @@ mglFormulaC::mglFormulaC(const char *string)
 //		Left = Right = 0;
 		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// available variables
 		{	Kod=EQ_A;	Res = str[0]-'a';	}
-		else if(!strcmp(str,"rnd")) Kod=EQ_RND;
-		else if(!strcmp(str,"pi")) Res=M_PI;
-		else if(!strcmp(str,"inf")) Res=INFINITY;
-		else if(str[0]=='i')	Res = dual(0,str[1]>' '?atof(str+1):1);
-		else Res=atof(str);					// this is number
+		else if(!strcmp(str,"rnd"))	Kod=EQ_RND;
+		else if(!strcmp(str,"pi"))	Res=M_PI;
+		else if(!strcmp(str,"inf"))	Res=INFINITY;
+		else if(str[0]=='i')	Res = dual(0,atof(str+1));
+		else	Res = (str[len-1]=='i') ? dual(0,atof(str)) : atof(str);
 	}
 	else
 	{

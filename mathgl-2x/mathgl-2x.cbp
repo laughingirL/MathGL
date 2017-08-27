@@ -34,6 +34,7 @@
 			<Add option="-lpng -ljpeg -lgif -lhpdf" />
 			<Add option="-lhdf5 -lmfhdf -ldf -lmfhdf" />
 		</Linker>
+		<Unit filename="ChangeLog.txt" />
 		<Unit filename="Debug/include/mgl2/config.h" />
 		<Unit filename="Debug/include/mgl2/dllexport.h" />
 		<Unit filename="examples/full_test.cpp" />
@@ -111,7 +112,6 @@
 		<Unit filename="src/eval.cpp" />
 		<Unit filename="src/evalc.cpp" />
 		<Unit filename="src/evalp.cpp" />
-		<Unit filename="src/exec.cpp" />
 		<Unit filename="src/exec_dat.cpp" />
 		<Unit filename="src/exec_gr.cpp" />
 		<Unit filename="src/exec_prm.cpp" />
@@ -149,10 +149,10 @@
 		<Unit filename="src/s_hull/s_hull_pro.h" />
 		<Unit filename="src/surf.cpp" />
 		<Unit filename="src/tex_table.cc" />
-		<Unit filename="src/tex_table.cpp" />
 		<Unit filename="src/vect.cpp" />
 		<Unit filename="src/volume.cpp" />
 		<Unit filename="src/window.cpp" />
+		<Unit filename="todo.txt" />
 		<Unit filename="udav/anim_dlg.cpp" />
 		<Unit filename="udav/anim_dlg.h" />
 		<Unit filename="udav/args_dlg.cpp" />

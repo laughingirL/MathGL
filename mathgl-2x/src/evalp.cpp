@@ -806,7 +806,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 	mreal tval = mgl_gettime(str);
 	if(mgl_isnum(tval))
 	{	mglDataC *r=new mglDataC;	r->a[0] = tval;	return r;	}
-	
+
 	long n,len=str.length();
 	if(str[0]=='(' && mglCheck(str.substr(1,len-2)))	// remove braces
 	{	str = str.substr(1,len-2);	len-=2;	}
@@ -966,7 +966,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			if(ch<':')	// this is real number
 				res->a[0] = (str[str.length()-1]=='i') ? dual(0,wcstod(str.c_str(),0)) :  mreal(wcstod(str.c_str(),0));
 			else if(ch=='i')	// this is imaginary number
-				res->a[0] = dual(0,str[1]>' '?wcstod(str.c_str()+1,0):1);
+				res->a[0] = dual(0,(str[1]>='0' && str[1]<='9')?wcstod(str.c_str()+1,0):1);
 			else if(!str.compare(L"pi"))	res->a[0] = M_PI;
 			else if(ch==':')	res->a[0] = -1;
 			else if(!str.compare(L"nan"))	res->a[0] = NAN;

@@ -66,7 +66,14 @@ void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
 	mglParse par;
-	par.Execute(gr,"axis:box '@':grid");
+	par.Execute(gr,"new ch 7 2 'rnd+0.1':light on\n"
+//"subplot 2 2 0:title 'Chart plot (default)':rotate 50 60:box:chart ch\n"
+//"subplot 2 2 1:title '\"#\" style':rotate 50 60:box:chart ch '#'\n"
+//"subplot 2 2 2:title 'Pie chart; " " color':rotate 50 60:\n"
+"axis '(y+1)/2*cos(pi*x)' '(y+1)/2*sin(pi*x)' '':box\n"
+//"subplot 2 2 3:title 'Ring chart; " " color':rotate 50 60:\n"
+//"axis '(y+2)/3*cos(pi*x)' '(y+2)/3*sin(pi*x)' '':box:chart ch 'bgr cmy#'"
+);
 	return;
 
 	gr->SubPlot(2,2,0);	gr->Axis();

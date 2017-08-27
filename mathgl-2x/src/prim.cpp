@@ -63,15 +63,15 @@ void MGL_EXPORT mgl_line(HMGL gr, double x1, double y1, double z1, double x2, do
 	gr->SetPenPal(pen);
 	n = (n<2) ? 2 : n;
 
-	gr->Reserve(n);
-	long *pp = new long[n];
+	const long kq = gr->AllocPnts(n);
+#pragma omp parallel for
 	for(long i=0;i<n;i++)
-	{	mreal s=i/mreal(n-1);	pp[i] = gr->AddPnt(p1*(1-s)+p2*s,gr->CDef,nn,-1,3);	}
-	gr->curve_plot(n,pp);
-	gr->arrow_plot(pp[0],pp[1],gr->Arrow1);
-	gr->arrow_plot(pp[n-1],pp[n-2],gr->Arrow2);
-	gr->AddActive(pp[0]);	gr->AddActive(pp[n-1],1);
-	delete []pp;	gr->EndGroup();
+	{	mreal s=i/mreal(n-1);	gr->AddPntQ(kq+i,p1*(1-s)+p2*s,gr->CDef,nn,-1,3);	}
+	gr->curve_plot(n,kq);
+	gr->arrow_plot(kq,kq+1,gr->Arrow1);
+	gr->arrow_plot(kq+n-1,kq+n-2,gr->Arrow2);
+	gr->AddActive(kq);	gr->AddActive(kq+n-1,1);
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_line_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, const char *pen,int *n,int l)
@@ -88,17 +88,17 @@ void MGL_EXPORT mgl_curve(HMGL gr, double x1, double y1, double z1, double dx1, 
 	n = (n<2) ? 2 : n;
 	gr->SetPenPal(pen);
 
-	gr->Reserve(n);
-	long *pp = new long[n];
+	const long kq = gr->AllocPnts(n);
+#pragma omp parallel for
 	for(long i=0;i<n;i++)
-	{	mreal s=i/mreal(n-1);	pp[i] = gr->AddPnt(p1+s*d1+(s*s)*a+(s*s*s)*b,gr->CDef,nn,-1,3);	}
-	gr->curve_plot(n,pp);
-	gr->arrow_plot(pp[0],pp[1],gr->Arrow1);
-	gr->arrow_plot(pp[n-1],pp[n-2],gr->Arrow2);
-	gr->AddActive(pp[0]);	gr->AddActive(pp[n-1],1);
+	{	mreal s=i/mreal(n-1);	gr->AddPntQ(kq+i,p1+s*d1+(s*s)*a+(s*s*s)*b,gr->CDef,nn,-1,3);	}
+	gr->curve_plot(n,kq);
+	gr->arrow_plot(kq,kq+1,gr->Arrow1);
+	gr->arrow_plot(kq+n-1,kq+n-2,gr->Arrow2);
+	gr->AddActive(kq);	gr->AddActive(kq+n-1,1);
 	gr->AddActive(gr->AddPnt(p1+d1/3,gr->CDef,nn,-1,3),1);
 	gr->AddActive(gr->AddPnt(p2-d2/3,gr->CDef,nn,-1,3),3);
-	delete []pp;	gr->EndGroup();
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_curve_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *dx1, mreal *dy1, mreal *dz1, mreal *x2, mreal *y2, mreal *z2, mreal *dx2, mreal *dy2, mreal *dz2, const char *pen,int *n, int l)
@@ -184,8 +184,7 @@ void MGL_EXPORT mgl_facez(HMGL gr, double x0, double y0, double z0, double wx, d
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_facex_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wy, mreal *wz, const char *stl, mreal *dx, mreal *dy, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
-	mgl_facex(_GR_, *x0,*y0,*z0,*wy,*wz,s,*dx,*dy);	delete []s;
-}
+	mgl_facex(_GR_, *x0,*y0,*z0,*wy,*wz,s,*dx,*dy);	delete []s;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_facey_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wx, mreal *wz, const char *stl, mreal *dx, mreal *dy, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
@@ -209,7 +208,7 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	if(r1==0 && r2==0)	return;
 
 	static int cgid=1;	gr->StartGroup("Cone",cgid++);
-	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q(NAN,NAN),t(NAN,NAN), d=p2-p1,a,b;
+	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,qn(NAN,NAN),t(NAN,NAN), d=p2-p1,a,b;
 	a=!d;	a.Normalize();		b=d^a;	b.Normalize();
 	mreal c1,c2,dr=r2-r1;
 	const char *s;
@@ -235,33 +234,45 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	else if(mglchr(stl,'8'))	n=4;
 	bool refr = n>6;
 	if(refr)	t=d;
-
+	const long nq = (edge && !wire)?4:2;
+	const long kq = gr->AllocPnts(nq*(2*n+1));
+	int sq = wire?3:11;
+#pragma omp parallel for
 	for(long i=0;i<2*n+1;i++)
 	{
 		int f = n!=4?(2*i+1)*90/n:45*i;
-		mreal co = mgl_cos[f%360], si = mgl_cos[(f+270)%360];
-		p = p1+(r1*co)*a+(r1*si)*b;
-		if(refr)	q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
-		kk[i] = gr->AddPnt(p,c1,q,-1,3);
-		if(edge && !wire)	kk[i+82] = gr->AddPnt(p,c1,t,-1,3);
-		p = p2+(r2*co)*a+(r2*si)*b;
-		kk[i+2*n+1] = gr->AddPnt(p,c2,q,-1,3);
-		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,t,-1,3);
+		double co = mgl_cos[f%360], si = mgl_cos[(f+270)%360];
+		mglPoint p = p1+(r1*co)*a+(r1*si)*b;
+		mglPoint q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
+		long iq = kq+nq*i;
+		gr->AddPntQ(iq,p,c1,refr?q:qn,-1,sq);
+		mglPoint s = p2+(r2*co)*a+(r2*si)*b;
+		gr->AddPntQ(iq+1,s,c2,refr?q:qn,-1,sq);
+		if(edge && !wire)
+		{
+			gr->AddPntQ(iq+2,p,c1,t,-1,3);
+			gr->AddPntQ(iq+3,s,c2,t,-1,3);
+		}
 	}
-	if(wire)	for(long i=0;i<2*n;i++)
+	if(wire)
 	{
-		gr->line_plot(kk[i],kk[i+1]);
-		gr->line_plot(kk[i],kk[i+2*n+1]);
-		gr->line_plot(kk[i+2*n+2],kk[i+1]);
-		gr->line_plot(kk[i+2*n+2],kk[i+2*n+1]);
+		gr->line_plot(kq,kq+1);
+		for(long i=1;i<2*n+1;i++)
+		{
+			long iq = kq+nq*i;
+			gr->line_plot(iq,iq-nq);
+			gr->line_plot(iq+1,iq-nq+1);
+			gr->line_plot(iq,iq+1);
+		}
 	}
 	else	for(long i=0;i<2*n;i++)
 	{
-		gr->quad_plot(kk[i],kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
+		long iq = kq+nq*i;
+		gr->quad_plot(iq,iq+nq,iq+1,iq+nq+1);
 		if(edge)
 		{
-			gr->trig_plot(k1,kk[i+82],kk[i+83]);
-			gr->trig_plot(k2,kk[i+123],kk[i+124]);
+			gr->trig_plot(k1,iq+2,iq+2+nq);
+			gr->trig_plot(k2,iq+3,iq+3+nq);
 		}
 	}
 	gr->EndGroup();	delete []kk;
@@ -377,29 +388,34 @@ void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2,
 	mreal k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
 	bool fill = !mglchr(stl,'#'), box = mglchr(stl,'@') || !fill;
 	if(!fill)	k=c;
-	gr->Reserve(box?2*n+1:n+1);
+	gr->Reserve(box?2*n+3:n+2);
 	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), d=p2-p1, u=!d, p,qq;
-	n0 = gr->AddPnt(p1,c,qq,-1,11);
-	u = (d.norm()/u.norm())*u;
-	n1 = np = gr->AddPnt(p2,c,qq,-1,11);
-	gr->AddActive(n0,0);	gr->AddActive(n1,1);
-	if(box) k1 = kp = gr->CopyNtoC(n1,k);
-	for(long i=1;i<n;i++)
+	n0 = gr->AddPnt(p1,c,qq,-1,11);		u = (d.norm()/u.norm())*u;
+	long kq=-5;
+	if(fill)
 	{
-		p = p1+d*cos(2*M_PI*i/n)+u*sin(2*M_PI*i/n);
-		n2 = gr->AddPnt(p,c,qq,-1,11);
-		if(fill)	gr->trig_plot(n0,n1,n2);
-		if(box)
+		kq=gr->AllocPnts(n+1);
+#pragma omp parallel for
+		for(long i=0;i<=n;i++)
 		{
-			long kk = gr->CopyNtoC(n2,k);
-			gr->line_plot(k1, kk);	k1 = kk;
+			mglPoint p = p1+d*cos(2*M_PI*i/n)+u*sin(2*M_PI*i/n);
+			gr->AddPntQ(kq+i,p,c,qq,-1,11);
 		}
-		n1 = n2;
+		for(long i=0;i<n;i++)	gr->trig_plot(n0,kq+i,kq+i+1);
 	}
-	if(fill)	gr->trig_plot(n0,n2,np);
-	if(box)		gr->line_plot(k1, kp);
-	gr->EndGroup();
+	if(box)
+	{
+		kq=gr->AllocPnts(n+1);
+#pragma omp parallel for
+		for(long i=0;i<=n;i++)
+		{
+			mglPoint p = p1+d*cos(2*M_PI*i/n)+u*sin(2*M_PI*i/n);
+			gr->AddPntQ(kq+i,p,k,qq,-1,11);
+		}
+		for(long i=0;i<n;i++)	gr->line_plot(kq+i,kq+i+1);
+	}
+	gr->AddActive(n0,0);	gr->AddActive(kq,1);	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_arc_ext(HMGL gr, double x0, double y0, double z0, double xr, double yr, double zr, double x1, double y1, double z1, double a, const char* stl)
@@ -415,14 +431,14 @@ void MGL_EXPORT mgl_arc_ext(HMGL gr, double x0, double y0, double z0, double xr,
 	u = (d.norm()/u.norm())*u;
 	gr->AddActive(gr->AddPnt(p0,gr->CDef,qq,-1,3),0);
 
-	long *pp = new long[n];
+	const long kq = gr->AllocPnts(n);
+#pragma omp parallel for
 	for(long i=0;i<n;i++)
-	{	mreal s=a*i/mreal(n-1);	pp[i] = gr->AddPnt(p0+d*cos(s)+u*sin(s),c,qq,-1,11);	}
-	gr->curve_plot(n,pp);
-	gr->arrow_plot(pp[0],pp[1],gr->Arrow1);
-	gr->arrow_plot(pp[n-1],pp[n-2],gr->Arrow2);
-	gr->AddActive(pp[0]);	gr->AddActive(pp[n-1],1);
-	delete []pp;	gr->EndGroup();
+	{	mreal s=a*i/mreal(n-1);	gr->AddPntQ(kq+i,p0+d*cos(s)+u*sin(s),c,qq,-1,11);	}
+	gr->curve_plot(n,kq);
+	gr->arrow_plot(kq,kq+1,gr->Arrow1);
+	gr->arrow_plot(kq+n-1,kq+n-2,gr->Arrow2);
+	gr->AddActive(kq);	gr->AddActive(kq+n-1,1);	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_arc(HMGL gr, double x0, double y0, double x1, double y1, double a, const char* stl)
@@ -465,20 +481,32 @@ void MGL_EXPORT mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2,
 	// central point first
 	n0 = gr->AddPnt(p1,c,q,-1,11);	gr->AddActive(n0);
 	gr->AddActive(gr->AddPnt(p2,c,q,-1,11),1);
-	for(long i=0;i<n;i++)
+	long iq=-5;
+	if(fill)
 	{
-		int t=i*360/(n-1);
-		p = s+v*mgl_cos[t%360]+u*mgl_cos[(270+t)%360];
-		long n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,11);
-		if(i==n/4)	gr->AddActive(n1,2);
-		long m2 = m1;	m1 = gr->CopyNtoC(n1,k);
-		if(i>0)
+		const long kq = gr->AllocPnts(n);	iq = kq+n/4;
+#pragma omp parallel for
+		for(long i=0;i<n;i++)
 		{
-			if(fill)	gr->trig_plot(n0,n1,n2);
-			if(box)	gr->line_plot(m1,m2);
+			long t=i*360/(n-1);
+			mglPoint p = s+v*mgl_cos[t%360]+u*mgl_cos[(270+t)%360];
+			gr->AddPntQ(kq+i,p,c,q,-1,11);
 		}
+		for(long i=1;i<n;i++)	gr->trig_plot(n0,kq+i-1,kq+i);
 	}
-	gr->EndGroup();
+	if(box)
+	{
+		const long kq = gr->AllocPnts(n);	iq = kq+n/4;
+#pragma omp parallel for
+		for(long i=0;i<n;i++)
+		{
+			long t=i*360/(n-1);
+			mglPoint p = s+v*mgl_cos[t%360]+u*mgl_cos[(270+t)%360];
+			gr->AddPntQ(kq+i,p,k,q,-1,11);
+		}
+		for(long i=1;i<n;i++)	gr->line_plot(kq+i-1,kq+i);
+	}
+	gr->AddActive(iq,2);	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_rhomb(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl)
@@ -495,17 +523,27 @@ void MGL_EXPORT mgl_rhomb(HMGL gr, double x1, double y1, double z1, double x2, d
 	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=!(p1-p2), p, s,qq;
 	u = (r/u.norm())*u;	s = (p1+p2)/2.;
-	p = p1;		n1 = gr->AddPnt(p,c,qq,-1,11);
-	p = s+u;	n2 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
-	p = p2;		n3 = gr->AddPnt(p,b,qq,-1,11);
-	p = s-u;	n4 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
-	gr->AddActive(n1,0);	gr->AddActive(n2,2);	gr->AddActive(n3,1);
-	if(fill)	gr->quad_plot(n1,n2,n4,n3);
-	n1 = gr->CopyNtoC(n1,k);	n2 = gr->CopyNtoC(n2,k);
-	n3 = gr->CopyNtoC(n3,k);	n4 = gr->CopyNtoC(n4,k);
+	long kq=-5;
+	if(fill)
+	{
+		kq = gr->AllocPnts(4);
+		gr->AddPntQ(kq,p1,c,qq,-1,11);
+		gr->AddPntQ(kq+1,s+u,b==c?c:k,qq,-1,11);
+		gr->AddPntQ(kq+2,p2,b,qq,-1,11);
+		gr->AddPntQ(kq+3,s-u,b==c?c:k,qq,-1,11);
+		gr->quad_plot(kq,kq+1,kq+3,kq+2);
+	}
 	if(box)
-	{	gr->line_plot(n1,n2);	gr->line_plot(n2,n3);
-		gr->line_plot(n3,n4);	gr->line_plot(n4,n1);	}
+	{
+		kq = gr->AllocPnts(4);
+		gr->AddPntQ(kq,p1,k,qq,-1,11);
+		gr->AddPntQ(kq+1,s+u,k,qq,-1,11);
+		gr->AddPntQ(kq+2,p2,k,qq,-1,11);
+		gr->AddPntQ(kq+3,s-u,k,qq,-1,11);
+		gr->line_plot(kq,kq+1);	gr->line_plot(kq+1,kq+2);
+		gr->line_plot(kq+3,kq);	gr->line_plot(kq+3,kq+2);
+	}
+	gr->AddActive(kq,0);	gr->AddActive(kq+1,2);	gr->AddActive(kq+2,1);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -530,39 +568,35 @@ void MGL_EXPORT mgl_sphere_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, mreal *
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_drop(HMGL gr, mglPoint p, mglPoint q, double r, double c, double sh, double a)
 {
-	mglPoint p1,p2,pp,qq;
+	mglPoint p1,p2;
 	if(q.norm()==0)	{	q.Set(1,0,0);	sh=0;	}
 	q.Normalize();	p1 = !q;	p2 = q^p1;	r /= 2;
 
 	static int cgid=1;	gr->StartGroup("Drop",cgid++);
 	const int m=12, n=2*m+1;
-	gr->Reserve(n*m);
-	long *nn=new long[2*n],n1,n2;
-	mreal x,y,z,rr,dr;
+//	long n1 = gr->AddPnt(p + q*r*(1+sh)*(1+sh),c,q,-1,3);
+//	long n2 = gr->AddPnt(p + q*r*(1+sh)*(sh-1),c,q,-1,3);
 
-	z = r*(1+sh)*(1+sh);	n1 = gr->AddPnt(p + q*z,c,q,-1,3);
-	z = r*(1+sh)*(sh-1);	n2 = gr->AddPnt(p + q*z,c,q,-1,3);
-
-	for(long i=0;i<=m;i++)	for(long j=0;j<n;j++)	// NOTE use prev.points => not for omp
+	const long kq = gr->AllocPnts((m+1)*n);
+#pragma omp parallel for
+	for(long i=0;i<=m;i++)	for(long j=0;j<n;j++)
 	{
-		if(i>0 && i<m)
-		{
-			int u=i*180/m, v=180*j/m+202;
-			float co=mgl_cos[u%360], si=mgl_cos[(u+270)%360];
-			float cv=mgl_cos[v%360], sv=mgl_cos[(v+270)%360];
-			rr = r*a*si*(1.+sh*co)/(1+sh);
-			dr = r*a/(1+sh)*(co*(1.+sh*co) - sh*si*si);
-			x = rr*cv;	y = rr*sv;
-			z = r*(1+sh)*(co+sh);
-			pp = p + p1*x + p2*y + q*z;
-			qq = (p1*sv-p2*cv)^(p1*(dr*cv) + p2*(dr*sv) - q*(r*(1+sh)*si));
-			nn[j+n]=nn[j];	nn[j]=gr->AddPnt(pp,c,qq,-1,3);
-		}
-		else if(i==0)	nn[j] = n1;
-		else if(i==m)	{	nn[j+n]=nn[j];	nn[j]=n2;	}
-		if(i*j>0)	gr->quad_plot(nn[j-1], nn[j], nn[j+n-1], nn[j+n]);
+		int u=i*180/m, v=180*j/m+202;
+		double co=mgl_cos[u%360], si=mgl_cos[(u+270)%360];
+		double cv=mgl_cos[v%360], sv=mgl_cos[(v+270)%360];
+		double rr = r*a*si*(1.+sh*co)/(1+sh);
+		double dr = r*a/(1+sh)*(co*(1.+sh*co) - sh*si*si);
+		double x = rr*cv, y = rr*sv, z = r*(1+sh)*(co+sh);
+		mglPoint pp = p + p1*x + p2*y + q*z;
+		mglPoint qq = (p1*sv-p2*cv)^(p1*(dr*cv) + p2*(dr*sv) - q*(r*(1+sh)*si));
+		gr->AddPntQ(kq+j+n*i,pp,c,qq,-1,11);
 	}
-	delete []nn;	gr->EndGroup();
+	for(long i=0;i<m;i++)	for(long j=1;j<n;j++)	// NOTE use prev.points => not for omp
+	{
+		long iq = kq+j+n*i;
+		gr->quad_plot(iq-1,iq, iq+n-1,iq+n);
+	}
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_drop(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl, double sh, double a)
@@ -667,7 +701,7 @@ void MGL_EXPORT mgl_symbol_dir(HMGL gr, double x, double y, double z, double dx,
 	gr->AddActive(gr->AddPnt(mglPoint(dx,dy,dz),cc,d,-1,7),1);
 	if(g && (a||A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
 	if(size<0)	size *= -gr->GetFontSize();
-	
+
 	int font=0;	mglGetStyle(how, &font, NULL);
 	if(font&MGL_FONT_WIRE)	size = -size;
 	gr->smbl_plot(k,id,size);
@@ -952,38 +986,37 @@ void MGL_EXPORT mgl_logo(HMGL gr, long w, long h, const unsigned char *rgba, int
 	mreal z = gr->SaveState(opt);
 	if(mgl_isnan(z))	z = gr->Min.z;
 	mreal x1 = gr->Min.x, y1 = gr->Min.y, dx, dy;
-	if(!smooth || w<2 || h<2)
+	if(!smooth || w==1 || h==1)
 	{
-		dx = (gr->Max.x-x1)/w;	dy = (gr->Max.y-y1)/h;
+		dx = (gr->Max.x-x1)/(w==1?1:(w-1));	dy = (gr->Max.y-y1)/(h==1?1:(h-1));
 		gr->Reserve(4*(w+1)*(h+1));
+		const long kq = gr->AllocPnts(4*w*h);
+#pragma omp parallel for
 		for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
 		{
-			long i0 = 4*(i+w*(h-1-j)), k1,k2,k3,k4;
+			long i0 = 4*(i+w*(h-1-j)), iq = kq+4*(i+w*j);
 			mglColor c(rgba[i0]/255.,rgba[i0+1]/255.,rgba[i0+2]/255.);
-			k1 = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*j,z),0);	gr->SetRGBA(k1,c);
-			k2 = gr->AddPnt(mglPoint(x1+dx*(i+1),y1+dy*j,z),0);	gr->SetRGBA(k2,c);
-			k3 = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*(j+1),z),0);	gr->SetRGBA(k3,c);
-			k4 = gr->AddPnt(mglPoint(x1+dx*(i+1),y1+dy*(j+1),z),0);	gr->SetRGBA(k4,c);
-			gr->quad_plot(k1,k2,k3,k4);
+			gr->AddPntQ(iq,mglPoint(x1+dx*i,y1+dy*j,z),0);			gr->SetRGBA(iq,c);
+			gr->AddPntQ(iq+1,mglPoint(x1+dx*(i+1),y1+dy*j,z),0);	gr->SetRGBA(iq+1,c);
+			gr->AddPntQ(iq+2,mglPoint(x1+dx*i,y1+dy*(j+1),z),0);	gr->SetRGBA(iq+2,c);
+			gr->AddPntQ(iq+3,mglPoint(x1+dx*(i+1),y1+dy*(j+1),z),0);gr->SetRGBA(iq+3,c);
 		}
+		for(long j=0;j<h*w;j++)
+		{	long iq=kq+4*j;	gr->quad_plot(iq,iq+1,iq+2,iq+3);	}
 	}
 	else
 	{
 		dx = (gr->Max.x-x1)/(w-1);	dy = (gr->Max.y-y1)/(h-1);
-		gr->Reserve(w*h);
-		long *pos = new long[w*h];
+		const long kq = gr->AllocPnts(w*h);
+#pragma omp parallel for
 		for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
 		{
-			long i0 = 4*(i+w*(h-1-j)), i1 = i+w*j;
-			pos[i1] = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*j,z),0);
-			gr->SetRGBA(pos[i1],mglColor(rgba[i0]/255.,rgba[i0+1]/255.,rgba[i0+2]/255.));
+			long i0 = 4*(i+w*(h-1-j)), iq = kq+i+w*j;
+			gr->AddPntQ(iq,mglPoint(x1+dx*i,y1+dy*j,z),0);
+			gr->SetRGBA(iq,mglColor(rgba[i0]/255.,rgba[i0+1]/255.,rgba[i0+2]/255.));
 		}
 		for(long j=0;j<h-1;j++)	for(long i=0;i<w-1;i++)
-		{
-			long i1 = i+w*j;
-			gr->quad_plot(pos[i1],pos[i1+1],pos[i1+w],pos[i1+1+w]);
-		}
-		delete []pos;
+		{	long iq=kq+i+w*j;	gr->quad_plot(iq,iq+1,iq+w,iq+w+1);	}
 	}
 	gr->EndGroup();
 }

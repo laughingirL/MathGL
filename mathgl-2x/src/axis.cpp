@@ -523,15 +523,14 @@ void mglCanvas::DrawAxis(mglAxis &aa, int text, char arr,const char *stl,mreal a
 
 	bool have_color=mgl_have_color(stl);
 	bool dif_color = !have_color && aa.dv==0 && strcmp(TickStl,SubTStl);
-	long nn[31], kq = AllocPnts(31);
-	for(long i=0;i<31;i++)	nn[i]=i;
+	long kq = AllocPnts(31);
 	if(text&2)	// line throw point (0,0,0)
 	{
 		SetPenPal("k:");
 #pragma omp parallel for
 		for(long i=0;i<31;i++)
 			AddPntQ(kq+i, &B, d*(aa.v1+(aa.v2-aa.v1)*i/30.), CDef,q,-1,3);
-		curve_plot(31,nn,1,kq);
+		curve_plot(31,kq);
 	}
 	SetPenPal(have_color ? stl:AxisStl);
 
@@ -539,11 +538,11 @@ void mglCanvas::DrawAxis(mglAxis &aa, int text, char arr,const char *stl,mreal a
 #pragma omp parallel for
 	for(long i=0;i<31;i++)
 		AddPntQ(kq+i, &B, o + d*(aa.v1+(aa.v2-aa.v1)*i/30.), CDef,q,-1,3);
-	curve_plot(31,nn,1,kq);
+	curve_plot(31,kq);
 	if(arr)
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*1.05);
-		long k2 = kq+nn[30], k1 = AddPnt(&B, p,CDef,q,-1,3);
+		long k2 = kq+30, k1 = AddPnt(&B, p,CDef,q,-1,3);
 		line_plot(k1,k2);	arrow_plot(k1,k2,arr);
 	}
 
@@ -727,17 +726,17 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 void MGL_NO_EXPORT mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
 {
 	mglPoint q(oa+d*val);	// lines along 'a'
-	long nn[31], kq = gr->AllocPnts(31);
+	long kq = gr->AllocPnts(31);
 #pragma omp parallel for
 	for(long i=0;i<31;i++)
-	{	mreal v=i/30.;	nn[i]=i;	gr->AddPntQ(kq+i,q+da1*(1-v)+da2*v);	}
-	gr->curve_plot(31,nn,1,kq);
+	{	mreal v=i/30.;	gr->AddPntQ(kq+i,q+da1*(1-v)+da2*v);	}
+	gr->curve_plot(31,kq);
 	q = ob+d*val;		// lines along 'b'
 	kq = gr->AllocPnts(31);
 #pragma omp parallel for
 	for(long i=0;i<31;i++)
 	{	mreal v = i/30.;	gr->AddPntQ(kq+i,q+db1*(1-v)+db2*v);	}
-	gr->curve_plot(31,nn,1,kq);
+	gr->curve_plot(31,kq);
 }
 void mglCanvas::DrawGrid(mglAxis &aa, bool at_tick)
 {

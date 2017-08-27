@@ -32,7 +32,7 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	if(mgl_check_dim1(gr,x,z,y,ax,"Traj"))	return;
 	if(mgl_check_dim1(gr,ax,az,ay,0,"Traj"))	return;
 
-	mreal len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
+	double len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
 
 	// find maximum
@@ -41,30 +41,25 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	long j = z->GetNy()>az->GetNy() ? z->GetNy():az->GetNy();
 	if(i>m)	m=i;
 	if(j>m)	m=j;
+	double asize = gr->GetArrowSize();
 	gr->SetPenPal(sch,&pal);	gr->Reserve(4*n*m);
 
-	mglPoint p1,p2;
-/*	for(j=0;j<m;j++)	for(i=0;i<n;i++)	// find maximal amplitude of vector field
-	{
-		mx = j<ax->GetNy() ? j:0;	my = j<ay->GetNy() ? j:0;	mz = j<az->GetNy() ? j:0;
-		da = sqrt(ax->v(i,mx)*ax->v(i,mx)+ay->v(i,my)*ay->v(i,my)+az->v(i,mz)*az->v(i,mz));
-		xm = xm>da ? xm : da;
-	}
-	xm = 1./(xm ? sqrt(xm):1);*/
 	for(long j=0;j<m;j++) // start prepare arrows
 	{
 		if(gr->NeedStop())	break;
 		gr->NextColor(pal);
 		long nx = j<x->GetNy() ? j:0, ny = j<y->GetNy() ? j:0, nz = j<z->GetNy() ? j:0;
 		long mx = j<ax->GetNy() ? j:0,my = j<ay->GetNy() ? j:0,mz = j<az->GetNy() ? j:0;
+		const long kq = gr->AllocPnts(2*n);
+#pragma omp parallel for
 		for(long i=0;i<n;i++)
 		{
-			p1.Set(x->v(i,nx), y->v(i,ny), z->v(i,nz));
-			p2.Set(ax->v(i,mx),ay->v(i,my),az->v(i,mz));
-			mreal dd = p2.norm();
+			mglPoint p1(x->v(i,nx), y->v(i,ny), z->v(i,nz));
+			mglPoint p2(ax->v(i,mx),ay->v(i,my),az->v(i,mz));
+			double dd = p2.norm();
 			if(len==0)
 			{
-				mreal dx,dy,dz;
+				double dx,dy,dz;
 				if(i<n-1)
 				{	dx=x->v(i+1,nx)-p1.x;	dy=y->v(i+1,ny)-p1.y;	dz=z->v(i+1,nz)-p1.z;	}
 				else
@@ -72,8 +67,10 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 				dd = dd ? sqrt(dx*dx+dy*dy+dz*dz)/dd : 0;
 			}
 			else dd = len;
-			gr->vect_plot(gr->AddPnt(p1), gr->AddPnt(p1+dd*p2,-1,mglPoint(NAN),-1,2),gr->GetArrowSize());
+			gr->AddPntQ(kq+2*i,p1);
+			gr->AddPntQ(kq+2*i+1,p1+dd*p2,-1,mglPoint(NAN),-1,2);
 		}
+		for(long i=0;i<n;i++)	gr->vect_plot(kq+2*i, kq+2*i+1, asize);
 	}
 	gr->EndGroup();
 }
@@ -107,34 +104,29 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect",cgid++);
-	bool dot = sch && mglchr(sch,'.');
-	bool fix = mglchr(sch,'f');
-	bool end = mglchr(sch,'>');
-	bool beg = mglchr(sch,'<');
-	bool grd = mglchr(sch,'=');
+	bool dot = mglchr(sch,'.');
+	bool fix = mglchr(sch,'f'), end = mglchr(sch,'>');
+	bool beg = mglchr(sch,'<'), grd = mglchr(sch,'=');
 
 	long ss = gr->AddTexture(sch);
-	gr->Reserve(4*n*m);
-	mreal	zVal = gr->Min.z;
+	double zVal = gr->Min.z, asize = gr->GetArrowSize();
 
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;
 	if(ty<1)	ty=1;
 
-	mreal xm=0,cm=0,ca=0;
-	mreal dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	double xm=0,cm=0,ca=0;
+	double dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	// use whole array for determining maximal vectors length
-	mglPoint p1,p2,v,d;
-
-#pragma omp parallel private(p1,p2,v,d)
+#pragma omp parallel
 	{
-		mreal xm1=0,cm1=0,xx,c1,c2;
+		double xm1=0,cm1=0,xx,c1,c2;
 #pragma omp for nowait collapse(3) reduction(+:ca)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j+=ty)	for(long i=0;i<n;i+=tx)
 		{
-			d.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x);
-			v.Set(ax->v(i,j,k),ay->v(i,j,k));
+			mglPoint d(GetX(x,i,j,k).x, GetY(y,i,j,k).x),p1;
+			mglPoint v(ax->v(i,j,k),ay->v(i,j,k));
 			c1 = v.norm();	xm1 = xm1<c1 ? c1:xm1;	// handle NAN values
 			p1 = i<n-1 ? mglPoint(GetX(x,i+tx,j,k).x, GetY(y,i+tx,j,k).x)-d : d-mglPoint(GetX(x,i-tx,j,k).x, GetY(y,i-tx,j,k).x);
 			c1 = fabs(v*p1);	xx = p1.norm();	c1 *= xx?1/(xx*xx):0;
@@ -151,26 +143,32 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	for(long k=0;k<l;k++)
 	{
 		if(gr->NeedStop())	break;
-		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-		for(long j=0;j<m;j+=ty)	for(long i=0;i<n;i+=tx)
+		if(ax->GetNz()>1)	zVal = gr->Min.z+k*(gr->Max.z-gr->Min.z)/(ax->GetNz()-1);
+		const long ni = 1+((n-1)/tx), nj = 1+((m-1)/ty);
+		const long kq = gr->AllocPnts(2*ni*nj);
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<nj;j++)	for(long i=0;i<ni;i++)
 		{
-			d.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
-			v.Set(ax->v(i,j,k),ay->v(i,j,k));
-			mreal dd = v.norm(), c1, c2;
+			mglPoint d(GetX(x,i*tx,j*ty,k).x, GetY(y,i*tx,j*ty,k).x, zVal),p1,p2;
+			mglPoint v(ax->v(i*tx,j*ty,k),ay->v(i*tx,j*ty,k));
+			double dd = v.norm(), c1, c2;
 			v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
 
 			if(end)		{	p1 = d-v;	p2 = d;	}
-			else if(beg)	{	p1 = d;	p2 = d+v;	}
+			else if(beg){	p1 = d;	p2 = d+v;	}
 			else		{	p1=d-v/2.;	p2=d+v/2.;	}
 			if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);}
 			else	c1 = c2 = gr->GetC(ss,dd*xm,false);
-			long n1=gr->AddPnt(p1,c1),	n2=gr->AddPnt(p2,c2);
-			// allow vectors outside bounding box
-			if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
-			if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
-			if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
-			else	gr->vect_plot(n1,n2,gr->GetArrowSize());
+			long iq = kq+2*(i+ni*j);
+			bool r1=gr->AddPntQ(iq,p1,c1);
+			bool r2=gr->AddPntQ(iq+1,p2,c2);
+			if(!r1 && r2)	gr->AddPntQ(iq,p1,c1,mglPoint(NAN),-1,2);
+			if(!r2 && r1)	gr->AddPntQ(iq+1,p2,c2,mglPoint(NAN),-1,2);
 		}
+		if(dot)	for(long i=0;i<ni*nj;i++)
+		{	long iq=kq+2*i;	gr->line_plot(iq,iq+1);	gr->mark_plot(iq,'.');	}
+		else	for(long i=0;i<ni*nj;i++)
+		{	long iq=kq+2*i;	gr->vect_plot(iq,iq+1,asize);	}
 	}
 	gr->EndGroup();
 }
@@ -206,10 +204,8 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect_3d",cgid++);
-	bool dot = mglchr(sch,'.');
-	bool fix = mglchr(sch,'f');
-	bool end = mglchr(sch,'>');
-	bool beg = mglchr(sch,'<');
+	bool dot = mglchr(sch,'.'), fix = mglchr(sch,'f');
+	bool end = mglchr(sch,'>'), beg = mglchr(sch,'<');
 	bool grd = mglchr(sch,'=');
 
 	long ss = gr->AddTexture(sch);
@@ -221,19 +217,17 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	if(ty<1)	ty=1;
 	if(tz<1)	tz=1;
 
-	mreal xm=0,cm=0,ca=0;
-	mreal dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	double xm=0,cm=0,ca=0, asize = gr->GetArrowSize();
+	double dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	// use whole array for determining maximal vectors length
-	mglPoint p1,p2, v, d;
-
-#pragma omp parallel private(p1,p2,v,d)
+#pragma omp parallel
 	{
-		mreal c1,c2,c3, xm1=0,cm1=0,xx;
+		double c1,c2,c3, xm1=0,cm1=0,xx;
 #pragma omp for nowait collapse(3) reduction(+:ca)
 		for(long k=0;k<l;k+=tz)	for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 		{
-			d.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
-			v.Set(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
+			mglPoint d(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
+			mglPoint v(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k)),p1;
 			c1 = v.norm();	xm1 = xm1<c1 ? c1:xm1;	// handle NAN values
 			p1 = i<n-1 ? mglPoint(GetX(x,i+tx,j,k).x, GetY(y,i+tx,j,k).x, GetZ(z,i+tx,j,k).x)-d : d-mglPoint(GetX(x,i-tx,j,k).x, GetY(y,i-tx,j,k).x, GetZ(z,i-tx,j,k).x);
 			c1 = fabs(v*p1);	xx = p1.norm();	c1 *= xx?1/(xx*xx):0;
@@ -247,32 +241,35 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 #pragma omp critical(max_vec)
 		{cm = cm<cm1 ? cm1:cm;	xm = xm<xm1 ? xm1:xm;}
 	}
-	ca /= mreal(n*m*l)/mreal(tx*ty*tz);
+	ca /= double(n*m*l)/double(tx*ty*tz);
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
-	for(long k=0;k<l;k+=tz)
+	const long ni = 1+((n-1)/tx), nj = 1+((m-1)/ty), nk = 1+((l-1)/tz);
+	const long kq = gr->AllocPnts(2*ni*nj*nk);
+#pragma omp parallel for collapse(3)
+	for(long k=0;k<nk;k++)	for(long j=0;j<nj;j++)	for(long i=0;i<ni;i++)
 	{
-		if(gr->NeedStop())	break;
-		for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
-		{
-			d.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
-			v.Set(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
-			mreal dd = v.norm(),c1,c2;
-			v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
+		long ii=i*tx,ij=j*ty,ik=k*tz;
+		mglPoint d(GetX(x,ii,ij,ik).x, GetY(y,ii,ij,ik).x, GetZ(z,ii,ij,ik).x);
+		mglPoint v(ax->v(ii,ij,ik),ay->v(ii,ij,ik),az->v(ii,ij,ik)), p1, p2;
+		double dd = v.norm(),c1,c2;
+		v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
 
-			if(end)		{	p1 = d-v;	p2 = d;	}
-			else if(beg)	{	p1 = d;	p2 = d+v;	}
-			else		{	p1=d-v/2.;	p2=d+v/2.;	}
-			if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);	}
-			else	c1 = c2 = gr->GetC(ss,dd*xm,false);
-			long n1=gr->AddPnt(p1,c1),	n2=gr->AddPnt(p2,c2);
-			// allow vectors outside bounding box
-			if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
-			if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
-			if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
-			else	gr->vect_plot(n1,n2,gr->GetArrowSize());
-		}
+		if(end)		{	p1 = d-v;	p2 = d;	}
+		else if(beg){	p1 = d;	p2 = d+v;	}
+		else		{	p1=d-v/2.;	p2=d+v/2.;	}
+		if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);	}
+		else	c1 = c2 = gr->GetC(ss,dd*xm,false);
+		long iq = kq+2*(i+ni*(j+nj*k));
+		bool r1=gr->AddPntQ(iq,p1,c1);
+		bool r2=gr->AddPntQ(iq+1,p2,c2);
+		if(!r1 && r2)	gr->AddPntQ(iq,p1,c1,mglPoint(NAN),-1,2);
+		if(!r2 && r1)	gr->AddPntQ(iq+1,p2,c2,mglPoint(NAN),-1,2);
 	}
+	if(dot)	for(long i=0;i<ni*nj*nk;i++)
+	{	long iq=kq+2*i;	gr->line_plot(iq,iq+1);	gr->mark_plot(iq,'.');	}
+	else	for(long i=0;i<ni*nj*nk;i++)
+	{	long iq=kq+2*i;	gr->vect_plot(iq,iq+1,asize);	}
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -411,10 +408,8 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	if(mglchr(sch,'x'))	dir='x';
 	if(mglchr(sch,'z'))	dir='z';
 
-	bool dot = mglchr(sch,'.');
-	bool fix = mglchr(sch,'f');
-	bool end = mglchr(sch,'>');
-	bool beg = mglchr(sch,'<');
+	bool dot = mglchr(sch,'.'), fix = mglchr(sch,'f');
+	bool end = mglchr(sch,'>'), beg = mglchr(sch,'<');
 	bool grd = mglchr(sch,'=');
 	long ss = gr->AddTexture(sch);
 
@@ -425,15 +420,16 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;
 	if(ty<1)	ty=1;
-	mreal xm=0,cm=0,ca=0;
-	mreal dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	double xm=0,cm=0,ca=0, asize = gr->GetArrowSize();
+	double dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	// use whole array for determining maximal vectors length
-	mglPoint p1,p2, v, d=(gr->Max-gr->Min)/mglPoint(1./ax->GetNx(),1./ax->GetNy(),1./ax->GetNz());
+	mglPoint d=(gr->Max-gr->Min)/mglPoint(1./ax->GetNx(),1./ax->GetNy(),1./ax->GetNz());
 
 	long tn=ty*n;
-#pragma omp parallel private(p1,p2,v)
+#pragma omp parallel
 	{
-		mreal xm1=0,cm1=0, xx,yy,zz, c1,c2;
+		double xm1=0,cm1=0, xx,yy,zz, c1,c2;
+		mglPoint p1, p2, v;
 #pragma omp for nowait collapse(2) reduction(+:ca)
 		for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 		{
@@ -455,26 +451,33 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	ca /= mreal(n*m)/mreal(tx*ty);
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
-	for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
+	const long ni = 1+((n-1)/tx), nj = 1+((m-1)/ty);
+	const long kq = gr->AllocPnts(2*ni*nj);
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<nj;j++)	for(long i=0;i<ni;i++)
 	{
-		long i0 = i+n*j;
-		d.Set(s.x.a[i0], s.y.a[i0], s.z.a[i0]);
-		v.Set(s.ax.a[i0], s.ay.a[i0], s.az.a[i0]);
-		mreal dd = v.norm(),c1,c2;
+		long i0 = i*tx+n*j*ty;
+		mglPoint d(s.x.a[i0], s.y.a[i0], s.z.a[i0]), p1, p2;
+		mglPoint v(s.ax.a[i0], s.ay.a[i0], s.az.a[i0]);
+		double dd = v.norm(),c1,c2;
 		v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
 
 		if(end)		{	p1 = d-v;	p2 = d;	}
-		else if(beg)	{	p1 = d;	p2 = d+v;	}
+		else if(beg){	p1 = d;	p2 = d+v;	}
 		else		{	p1=d-v/2.;	p2=d+v/2.;	}
 		if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);}
 		else	c1 = c2 = gr->GetC(ss,dd*xm,false);
-		long n1=gr->AddPnt(p1,c1),	n2=gr->AddPnt(p2,c2);
-		// allow vectors outside bounding box
-		if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
-		if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
-		if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
-		else	gr->vect_plot(n1,n2,gr->GetArrowSize());
+
+		long iq = kq+2*(i+ni*j);
+		bool r1=gr->AddPntQ(iq,p1,c1);
+		bool r2=gr->AddPntQ(iq+1,p2,c2);
+		if(!r1 && r2)	gr->AddPntQ(iq,p1,c1,mglPoint(NAN),-1,2);
+		if(!r2 && r1)	gr->AddPntQ(iq+1,p2,c2,mglPoint(NAN),-1,2);
 	}
+	if(dot)	for(long i=0;i<ni*nj;i++)
+	{	long iq=kq+2*i;	gr->line_plot(iq,iq+1);	gr->mark_plot(iq,'.');	}
+	else	for(long i=0;i<ni*nj;i++)
+	{	long iq=kq+2*i;	gr->vect_plot(iq,iq+1,asize);	}
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -589,15 +592,14 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, HCDT x, HC
 	if(k>1)
 	{
 		long a=long(0.3*gr->GetArrowSize()/fabs(dt));
-		gr->Reserve(k);
-		long *nn = new long[k];
-		for(long i=0;i<k;i++)	nn[i] = gr->AddPnt(pp[i],pp[i].c);
-		gr->curve_plot(k,nn);
+		const long kq = gr->AllocPnts(k);
+//#pragma omp parallel for // NOTE: parallel is used in above function
+		for(long i=0;i<k;i++)	gr->AddPntQ(kq+i,pp[i],pp[i].c);
+		gr->curve_plot(k,kq);
 		if(vv && dt<0)	for(long i=a;i<k;i+=a)
-			gr->vect_plot(nn[i],nn[i-1],a/3.);
+			gr->vect_plot(kq+i,kq+i-1,a/3.);
 		if(vv && dt>0)	for(long i=a;i<k;i+=a)
-			gr->vect_plot(nn[i-1],nn[i],a/3.);
-		delete []nn;
+			gr->vect_plot(kq+i-1,kq+i,a/3.);
 	}
 	delete []pp;
 }
@@ -630,7 +632,7 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 			u.push_back(s-ds);	v.push_back(t);
 			u.push_back(-s+ds);	v.push_back(-t);
 		}
-		else if((ax->vthr(i0-1+nx)-ay->vthr(i0-1+nx))*(ax->vthr(i0+1-nx)-ay->vthr(i0+1-nx))<0 && 
+		else if((ax->vthr(i0-1+nx)-ay->vthr(i0-1+nx))*(ax->vthr(i0+1-nx)-ay->vthr(i0+1-nx))<0 &&
 			(ax->vthr(i0-1-nx)+ay->vthr(i0-1-nx))*(ax->vthr(i0+1+nx)+ay->vthr(i0+1+nx))<0)
 //			&& (ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
 		{
@@ -875,7 +877,7 @@ void flow(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HCD
 		// condition of end
 		end = end || k>=n || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
 	} while(!end);
-	if(k>1)
+	if(k>1)	// TODO exclude AddPnt() and use curve_plot()!!!
 	{
 		long j,a=long(gr->GetArrowSize()/fabs(dt));
 		mreal rr = mgl_anorm(gr->Max-gr->Min)*gr->BarWidth/25, ll;
@@ -1275,39 +1277,38 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, HCDT x, H
 	} while(!end);
 	if(k>1)
 	{
-		int num=!(gr->GetQuality()&3)?13:25;
-		long *id=new long[2*num];
-		mglPoint p,l=pp[1]-pp[0],t,q,d;
-		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
-		mreal rr=pp[0].c,dr=l.c;
-		gr->Reserve(num*k);
+		const int num=!(gr->GetQuality()&3)?13:25;
+		mglPoint l=pp[1]-pp[0],t=!l,q=t^l;
+		t.Normalize();	q.Normalize();
+		double rr=pp[0].c,dr=l.c;
 
+		const long kq = gr->AllocPnts(num*k);
 		for(long j=0;j<num;j++)
 		{
 			int fi=j*360/(num-1);
 			float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
-			p = pp[0] + t*(rr*co) + q*(rr*si);
-			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-			id[j] = gr->AddPnt(p,cc[0],d);
+			mglPoint p = pp[0] + t*(rr*co) + q*(rr*si);
+			mglPoint d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+			gr->AddPntQ(kq+j,p,cc[0],d);
 		}
 		for(long i=1;i<k;i++)
 		{
-			if(i<k-1)	l = pp[i+1]-pp[i-1];
-			else	l = pp[i]-pp[i-1];
-			t = !l;	t.Normalize();	q = t^l;	q.Normalize();
-			rr=pp[i].c;	dr=l.c;
-			memcpy(id+num,id,num*sizeof(long));
+			mglPoint l = pp[i]-pp[i-1];
+			mglPoint t = !l;	t.Normalize();
+			mglPoint q = t^l;	q.Normalize();
+			double rr=pp[i].c;	dr=l.c;
+			long iq = kq+i*num;
 			for(long j=0;j<num;j++)
 			{
 				int fi=j*360/(num-1);
 				float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
-				p = pp[i] + t*(rr*co) + q*(rr*si);
-				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-				id[j] = gr->AddPnt(p,cc[i],d);
-				if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
+				mglPoint p = pp[i] + t*(rr*co) + q*(rr*si);
+				mglPoint d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+				gr->AddPntQ(iq+j,p,cc[i],d);
 			}
 		}
-		delete []id;
+		for(long i=1;i<k;i++)	for(long j=1;j<num;j++)
+		{	long iq=kq+j+i*num;	gr->quad_plot(iq-1,iq,iq-num-1,iq-num);	}
 	}
 	delete []pp;	delete []cc;
 }
@@ -1504,39 +1505,37 @@ void flowr(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HC
 	} while(!end);
 	if(k>1)
 	{
-		const int num=24;
-		long *id=new long[2*num];
-		mglPoint p,l=pp[1]-pp[0],t,q,d;
-		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
-		mreal rr=pp[0].c,dr=l.c;
-		gr->Reserve(num*k);
-
+		const int num=!(gr->GetQuality()&3)?13:25;
+		mglPoint l=pp[1]-pp[0],t=!l,q=t^l;
+		t.Normalize();	q.Normalize();
+		double rr=pp[0].c,dr=l.c;
+		const long kq = gr->AllocPnts(num*k);
 		for(long j=0;j<num;j++)
 		{
 			int fi=j*360/(num-1);
 			float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
-			p = pp[0] + t*(rr*co) + q*(rr*si);
-			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-			id[j] = gr->AddPnt(p,cc[0],d);
+			mglPoint p = pp[0] + t*(rr*co) + q*(rr*si);
+			mglPoint d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+			gr->AddPntQ(kq+j,p,cc[0],d);
 		}
 		for(long i=1;i<k;i++)
 		{
-			if(i<k-1)	l = pp[i+1]-pp[i-1];
-			else	l = pp[i]-pp[i-1];
-			t = !l;	t.Normalize();	q = t^l;	q.Normalize();
-			rr=pp[i].c;	dr=l.c;
-			memcpy(id+num,id,num*sizeof(long));
+			mglPoint l = pp[i]-pp[i-1];
+			mglPoint t = !l;	t.Normalize();
+			mglPoint q = t^l;	q.Normalize();
+			double rr=pp[i].c;	dr=l.c;
+			long iq = kq+i*num;
 			for(long j=0;j<num;j++)
 			{
 				int fi=j*360/(num-1);
 				float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
-				p = pp[i] + t*(rr*co) + q*(rr*si);
-				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-				id[j] = gr->AddPnt(p,cc[i],d);
-				if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
+				mglPoint p = pp[i] + t*(rr*co) + q*(rr*si);
+				mglPoint d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+				gr->AddPntQ(iq+j,p,cc[i],d);
 			}
 		}
-		delete []id;
+		for(long i=1;i<k;i++)	for(long j=1;j<num;j++)
+		{	long iq=kq+j+i*num;	gr->quad_plot(iq-1,iq,iq-num-1,iq-num);	}
 	}
 	delete []pp;	delete []cc;
 }

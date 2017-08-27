@@ -423,23 +423,38 @@ bool mglBase::AddPntQ(mglPnt &q, const mglMatrix *mat, mglPoint p, mreal c, mglP
 //-----------------------------------------------------------------------------
 long mglBase::CopyNtoC(long from, mreal c)
 {
-	if(from<0)	return -1;
-	mglPnt p=Pnt[from];
-	if(mgl_isnum(c))	{	p.c=c;	p.t=1;	Txt[long(c)].GetC(c,0,p);	p.a=1;	}
+	mglPnt q;
+	if(!CopyNtoC(q,from,c))	return -1;
 	long k;
 #pragma omp critical(pnt)
-	{k=Pnt.size();	MGL_PUSH(Pnt,p,mutexPnt);}	return k;
+	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}	return k;
+}
+//-----------------------------------------------------------------------------
+bool mglBase::CopyNtoC(mglPnt &q, long from, mreal c)
+{
+	if(from<0)	return false;
+	q = Pnt[from];
+	if(mgl_isnum(c))	{	q.c=c;	q.t=1;	Txt[long(c)].GetC(c,0,q);	q.a=1;	}
+	else	q.x = NAN;
+	return mgl_isnum(q.x);
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyProj(long from, mglPoint p, mglPoint n, short sub)
 {
-	if(from<0)	return -1;
-	mglPnt q=Pnt[from];	q.sub = sub;
-	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
-	q.u = n.x;		q.v = n.y;		q.w = n.z;
+	mglPnt q;
+	if(!CopyProj(q,from,p,n,sub))	return -1;
 	long k;
 #pragma omp critical(pnt)
 	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}	return k;
+}
+//-----------------------------------------------------------------------------
+bool mglBase::CopyProj(mglPnt &q, long from, mglPoint p, mglPoint n, short sub)
+{
+	if(from<0)	return false;
+	q=Pnt[from];	q.sub = sub;
+	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
+	q.u = n.x;		q.v = n.y;		q.w = n.z;
+	return mgl_isnum(q.x);
 }
 //-----------------------------------------------------------------------------
 void mglBase::Reserve(long n)
@@ -1621,22 +1636,31 @@ void mglBase::curve_plot(size_t num, const long *nn, size_t step, long k0)
 	else	for(size_t i=0;i+1<num;i++)
 	{
 		if(k0+nn[i*step]<0 || k0+nn[i*step+step]<0)	continue;
-		const mglPoint p1(GetPntP(k0+nn[i*step])), ps(GetPntP(k0+nn[i*step+step]));
+		const mglPoint p1(GetPntP(k0+nn[i*step])), ps(GetPntP(k0+nn[(i+1)*step]));
 		if(mgl_isnan(p1.x) || mgl_isnan(ps.x))	continue;
 		const mglColor c1(GetPntC(k0+nn[i*step]));
+		// remove duplicates
+		for(;i+1<num;i++)
+		{
+			long ii = k0+nn[(i+1)*step];
+			if(ii<0)	break;
+			const mglPoint pp(GetPntP(ii));
+			if(p1!=pp || mgl_isnan(pp.x))	break;
+		}
+		if(i>=num-1)	break;
+
 		size_t k=i+2;
 		while(k<num && k0+nn[k*step]>=0)
 		{
 			const mglPoint p2(GetPntP(k0+nn[k*step]));
+			if(mgl_isnan(p2.x))	break;
 			const mglColor c2(GetPntC(k0+nn[k*step]));
 			mreal dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z, dd=dx*dx+dy*dy+dz*dz;
+			if(dd==0)	break;
 			bool ops=false;
 			for(size_t ii=i+1;ii<k;ii++)
 			{
-				if(k0+nn[ii*step]<0){	ops = true;	break;	}
 				const mglPoint p(GetPntP(k0+nn[ii*step]));
-				if(p==p1)	continue;
-				if(mgl_isnan(p.x) || dd==0)	{	ops = true;	break;	}
 				mreal v = (dx*(p.x-p1.x)+dy*(p.y-p1.y)+dz*(p.y-p1.y))/dd;
 				mglPoint q(p-p1-v*(p2-p1));
 				if(q.norm()>0.1)	{	ops = true;	break;	}
@@ -1647,6 +1671,50 @@ void mglBase::curve_plot(size_t num, const long *nn, size_t step, long k0)
 			k++;
 		}
 		k--;	line_plot(k0+nn[i*step],k0+nn[k*step]);	i = k-1;
+	}
+}
+//-----------------------------------------------------------------------------
+void mglBase::curve_plot(size_t num, size_t k0, size_t step)
+{
+	// exclude straight-line parts
+	if(get(MGL_FULL_CURV))	for(size_t i=0;i+1<num;i++)
+		line_plot(k0+i*step,k0+(i+1)*step);
+	else	for(size_t i=0;i+1<num;i++)
+	{
+		const mglPoint p1(GetPntP(k0+i*step)), ps(GetPntP(k0+(i+1)*step));
+		if(mgl_isnan(p1.x) || mgl_isnan(ps.x))	continue;
+		const mglColor c1(GetPntC(k0+i*step));
+		// remove duplicates
+		for(;i+1<num;i++)
+		{
+			size_t ii = k0+(i+1)*step;
+			const mglPoint pp(GetPntP(ii));
+			if(p1!=pp || mgl_isnan(pp.x))	break;
+		}
+		if(i+1>=num)	break;
+
+		size_t k=i+2;
+		while(k<num)
+		{
+			const mglPoint p2(GetPntP(k0+k*step));
+			if(mgl_isnan(p2.x))	break;
+			const mglColor c2(GetPntC(k0+k*step));
+			mreal dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z, dd=dx*dx+dy*dy+dz*dz;
+			if(dd==0)	break;
+			bool ops=false;
+			for(size_t ii=i+1;ii<k;ii++)
+			{
+				const mglPoint p(GetPntP(k0+ii*step));
+				mreal v = (dx*(p.x-p1.x)+dy*(p.y-p1.y)+dz*(p.y-p1.y))/dd;
+				mglPoint q(p-p1-v*(p2-p1));
+				if(q.norm()>0.1)	{	ops = true;	break;	}
+				const mglColor c(GetPntC(k0+ii*step));
+				if(dd>0 && (c-c1-(v/dd)*(c2-c1)).NormS()>1e-4)	{	ops = true;	break;	}
+			}
+			if(ops)	break;
+			k++;
+		}
+		k--;	line_plot(k0+i*step,k0+k*step);	i = k-1;
 	}
 }
 //-----------------------------------------------------------------------------

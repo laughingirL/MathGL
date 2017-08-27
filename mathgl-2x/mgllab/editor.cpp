@@ -651,7 +651,7 @@ void ins_fname_cb(Fl_Widget *, void *v)
 {
 	static std::string prev;
 	ScriptWindow* e = (ScriptWindow*)v;
-	const char *s = mgl_file_chooser(_("Select file name"), "DAT files \t*.{dat,csv}\nHDF files \t*.{hdf,h5}");
+	const char *s = mgl_file_chooser(_("Select file name"), "DAT files \t*.{dat,csv}\nHDF files \t*.{hdf,h5}\nImage files \t*.{png,jpg,jpeg}");
 	if(s)
 	{
 		std::string ss=prev=s;	ss = '\''+ss+'\'';

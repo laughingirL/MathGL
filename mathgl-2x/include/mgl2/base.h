@@ -523,15 +523,21 @@ public:
 	bool AddPntQ(mglPnt &q, const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
 	inline bool AddPntQ(mglPnt &q, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
 	{	return AddPntQ(q,&B,p,c,n,a,scl);	}
-	inline void AddPntQ(long id, const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
-	{	AddPntQ(Pnt[id],M,p,c,n,a,scl);	}
-	inline void AddPntQ(long id, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
-	{	AddPntQ(Pnt[id],&B,p,c,n,a,scl);	}
+	inline bool AddPntQ(long id, const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
+	{	return AddPntQ(Pnt[id],M,p,c,n,a,scl);	}
+	inline bool AddPntQ(long id, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
+	{	return AddPntQ(Pnt[id],&B,p,c,n,a,scl);	}
 	inline void SetPntOff(size_t id)	{	Pnt[id].x=NAN;	}
 	long AllocPnts(size_t num);
 	long PushPnts(size_t num, const mglPnt *qq);
 	long CopyNtoC(long k, mreal c);
+	bool CopyNtoC(mglPnt &q, long k, mreal c);
+	inline bool CopyNtoC(long id, long k, mreal c)
+	{	return (id>=0)?CopyNtoC(Pnt[id],k,c):false;	}
 	long CopyProj(long from, mglPoint p, mglPoint n, short sub=0);
+	bool CopyProj(mglPnt &q, long from, mglPoint p, mglPoint n, short sub=0);
+	void CopyProj(long id, long from, mglPoint p, mglPoint n, short sub=0)
+	{	if(id>=0)	CopyProj(Pnt[id],from,p,n,sub);	}
 	void SetRGBA(long k, const mglColor &c)
 	{	if(k>=0)	{mglPnt &p=Pnt[k];	p.r = c.r;	p.g = c.g;	p.b = c.b;	p.a = c.a;}	}
 	virtual void Reserve(long n);	///< Allocate n-cells for Pnt and return current position
@@ -607,6 +613,7 @@ public:
 	virtual void trig_plot(long p1, long p2, long p3)=0;
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
 	virtual void smbl_plot(long p1, char id, double size)=0;
+	void curve_plot(size_t n, size_t kq, size_t step=1);
 	void curve_plot(size_t n, const long *pp, size_t step=1, long k0=0);
 	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col)=0;
 	virtual float GetGlyphPhi(const mglPnt &q, float phi)=0;
