@@ -22,8 +22,6 @@
 
 11. Parallel drawing in QMathGL (looks to complicated -- FLTK is better!)
 12. \overline{\overline{a}} ???
-13. Manual AddPnt() with specified id + openmp ?!? -- possible memory overuse
-
 
 ============= NEW FEATURES =============
 

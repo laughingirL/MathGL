@@ -130,14 +130,14 @@ void MGL_EXPORT mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *tex
 	static int cgid=1;	gr->StartGroup("TextC",cgid++);
 
 	long kq = gr->AllocPnts(n);
-	for(long i=0;i<n;i++)
-		gr->AddPntQ(kq+i, mglPoint(x->v(i),y->v(i),z->v(i)),-1);
 	long *nn = new long[n], *ff = new long[n];
-	for(long i=1;i<n;i++)	{	nn[i-1] = i;	ff[i] = kq+i;	}
+#pragma omp parallel for
+	for(long i=0;i<n;i++)
+	{	ff[i] = kq+i;	nn[i] = i+1;
+		gr->AddPntQ(kq+i,mglPoint(x->v(i),y->v(i),z->v(i)),-1);	}
 	nn[n-1]=-1;
 	mgl_string_curve(gr,0,n,ff,nn,text,font,-1);
-	gr->EndGroup();
-	delete []ff;	delete []nn;
+	delete []ff;	delete []nn;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *font, const char *opt)

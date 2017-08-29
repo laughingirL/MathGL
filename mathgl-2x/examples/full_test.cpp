@@ -65,15 +65,17 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData x(100,100), y(100,100), z(100,100), c(100,100);
+	gr->Fill(x,"sin(pi*(x+y)/2)*cos(pi*y/2)");	gr->Fill(y,"cos(pi*(x+y)/2)*cos(pi*y/2)");
+	gr->Fill(z,"sin(pi*y/2)");	gr->Fill(c,"cos(pi*x)");
+
+	gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Box();	gr->Tile(x,y,z,"","meshnum 10");
+	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Box();	gr->TileS(x,y,z,c,"","meshnum 10");
+	gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Box();	gr->Belt(x,y,z,"x","meshnum 10;light on");
+	return;
 	mglParse par;
 	par.Execute(gr,"new ch 7 2 'rnd+0.1':light on\n"
-//"subplot 2 2 0:title 'Chart plot (default)':rotate 50 60:box:chart ch\n"
-//"subplot 2 2 1:title '\"#\" style':rotate 50 60:box:chart ch '#'\n"
-//"subplot 2 2 2:title 'Pie chart; " " color':rotate 50 60:\n"
-"axis '(y+1)/2*cos(pi*x)' '(y+1)/2*sin(pi*x)' '':box\n"
-//"subplot 2 2 3:title 'Ring chart; " " color':rotate 50 60:\n"
-//"axis '(y+2)/3*cos(pi*x)' '(y+2)/3*sin(pi*x)' '':box:chart ch 'bgr cmy#'"
-);
+		"axis '(y+1)/2*cos(pi*x)' '(y+1)/2*sin(pi*x)' '':box\n");
 	return;
 
 	gr->SubPlot(2,2,0);	gr->Axis();

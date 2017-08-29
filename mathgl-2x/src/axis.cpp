@@ -542,8 +542,8 @@ void mglCanvas::DrawAxis(mglAxis &aa, int text, char arr,const char *stl,mreal a
 	if(arr)
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*1.05);
-		long k2 = kq+30, k1 = AddPnt(&B, p,CDef,q,-1,3);
-		line_plot(k1,k2);	arrow_plot(k1,k2,arr);
+		long k1 = AddPnt(&B, p,CDef,q,-1,3);
+		line_plot(k1,kq+30);	arrow_plot(k1,kq+30,arr);
 	}
 
 	long k2 = aa.txt.size();
@@ -702,8 +702,8 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
 
 	ScalePoint(&B,o, d1, false);	d1.Normalize();
 	ScalePoint(&B,p, d2, false);	d2.Normalize();
-	long k2 = AddPnt(&B, p, CDef, mglPoint(NAN), 0, 0);
 	long k1 = AddPnt(&B, p+d1*v, CDef, mglPoint(NAN), 0, 0);
+	long k2 = AddPnt(&B, p, CDef, mglPoint(NAN), 0, 0);
 	long k3 = AddPnt(&B, p+d2*v, CDef, mglPoint(NAN), 0, 0);
 	line_plot(k1,k2);	line_plot(k2,k3);
 }

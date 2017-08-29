@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-19 16:11+0300\n"
+"POT-Creation-Date: 2017-08-28 20:00+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -553,7 +553,7 @@ msgid "Add curve which properties can be changed later by mouse."
 msgstr ""
 "Anadir curva cuyas propiedades pueden ser cambiadas luego con el mouse."
 
-#: src/exec_dat.cpp:1533
+#: src/exec_dat.cpp:1622
 msgid "Add data or number"
 msgstr "Anadir datos o numero"
 
@@ -570,7 +570,7 @@ msgstr ""
 msgid "Add inplot"
 msgstr "Anadir grafico interno"
 
-#: src/exec_set.cpp:697
+#: src/exec_set.cpp:768
 msgid "Add legend entry"
 msgstr "Anadir entrada a leyenda"
 
@@ -636,7 +636,7 @@ msgid "Add text which properties can be changed later by mouse."
 msgstr ""
 "Anadir texto cuyas propiedades pueden ser cambiadas luego con el mouse."
 
-#: src/exec_prm.cpp:611
+#: src/exec_prm.cpp:648
 msgid "Add title for current subplot/inplot"
 msgstr "Anadir titulo para el subgrafico/grafico interno actual"
 
@@ -644,7 +644,7 @@ msgstr "Anadir titulo para el subgrafico/grafico interno actual"
 msgid "Add to"
 msgstr "Anadir a"
 
-#: src/exec_set.cpp:698
+#: src/exec_set.cpp:769
 msgid "Add user-defined symbol"
 msgstr "Anadir simbolo definido por el usuario"
 
@@ -656,7 +656,7 @@ msgstr "Ajustar tamano de la imagen para llenar el area de grafico"
 msgid "Adjust size"
 msgstr "Ajustar tamano"
 
-#: src/exec_set.cpp:699
+#: src/exec_set.cpp:770
 msgid "Adjust ticks for best view"
 msgstr "Ajustar marcas del eje a la mejor apariencia"
 
@@ -757,7 +757,7 @@ msgstr "Proporcion de aspecto de  escala-y a escala-z"
 msgid "Aspect x/z"
 msgstr "Aspecto x/z"
 
-#: src/exec_set.cpp:705
+#: src/exec_set.cpp:776
 msgid "Attach light settings to inplot"
 msgstr "Vincular configuracion de luz a grafico interno"
 
@@ -942,7 +942,7 @@ msgstr ""
 msgid "Change canvas size to fill whole region (F6)."
 msgstr ""
 
-#: src/exec_set.cpp:709
+#: src/exec_set.cpp:780
 msgid "Change current directory"
 msgstr ""
 
@@ -962,7 +962,7 @@ msgstr ""
 msgid "Change font"
 msgstr ""
 
-#: src/exec_set.cpp:759
+#: src/exec_set.cpp:830
 msgid "Change view angles - use 'rotate' for plot rotation"
 msgstr ""
 
@@ -974,11 +974,11 @@ msgstr ""
 msgid "Clear all"
 msgstr ""
 
-#: src/exec_set.cpp:710
+#: src/exec_set.cpp:781
 msgid "Clear legend entries"
 msgstr ""
 
-#: src/exec_set.cpp:711
+#: src/exec_set.cpp:782
 msgid "Clear picture"
 msgstr ""
 
@@ -1049,19 +1049,19 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: src/exec_prm.cpp:599
+#: src/exec_prm.cpp:636
 msgid "Computes the attractor of an IFS"
 msgstr ""
 
-#: src/exec_prm.cpp:600
+#: src/exec_prm.cpp:637
 msgid "Computes the attractor of an IFS for 3d case"
 msgstr ""
 
-#: src/exec_prm.cpp:601
+#: src/exec_prm.cpp:638
 msgid "Computes the attractor of an IFS with parameters from *.ifs file"
 msgstr ""
 
-#: src/exec_prm.cpp:595
+#: src/exec_prm.cpp:632
 msgid "Computes the flame fractal"
 msgstr ""
 
@@ -1081,7 +1081,7 @@ msgstr ""
 msgid "Copy data"
 msgstr ""
 
-#: src/exec_dat.cpp:1539
+#: src/exec_dat.cpp:1628
 msgid "Copy data from another variable"
 msgstr ""
 
@@ -1125,7 +1125,7 @@ msgstr ""
 msgid "Cos-Fourier transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1541
+#: src/exec_dat.cpp:1630
 msgid "Cos-Fourier transform at some direction"
 msgstr ""
 
@@ -1162,7 +1162,7 @@ msgstr ""
 msgid "Create data and IO"
 msgstr ""
 
-#: src/exec_dat.cpp:1566
+#: src/exec_dat.cpp:1655
 msgid "Create histogram (distribution) of data values"
 msgstr ""
 
@@ -1170,11 +1170,11 @@ msgstr ""
 msgid "Create new"
 msgstr ""
 
-#: src/exec_dat.cpp:1625
+#: src/exec_dat.cpp:1714
 msgid "Create new 1D data and fill it in range"
 msgstr ""
 
-#: src/exec_dat.cpp:1581
+#: src/exec_dat.cpp:1670
 msgid "Create new data"
 msgstr ""
 
@@ -1206,7 +1206,7 @@ msgstr ""
 msgid "Crop data"
 msgstr ""
 
-#: src/exec_dat.cpp:1542
+#: src/exec_dat.cpp:1631
 msgid "Crop edge of data"
 msgstr ""
 
@@ -1218,7 +1218,7 @@ msgstr ""
 msgid "CumSum"
 msgstr ""
 
-#: src/exec_dat.cpp:1543
+#: src/exec_dat.cpp:1632
 msgid "Cumulative summation along direction(s)"
 msgstr ""
 
@@ -1336,7 +1336,7 @@ msgstr ""
 msgid "Delete ALL data arrays"
 msgstr ""
 
-#: src/exec_dat.cpp:1546
+#: src/exec_dat.cpp:1635
 msgid "Delete data or slice of data"
 msgstr ""
 
@@ -1360,7 +1360,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/exec_dat.cpp:1547
+#: src/exec_dat.cpp:1636
 msgid "Detect curves for maximums of data array"
 msgstr ""
 
@@ -1376,11 +1376,11 @@ msgstr ""
 msgid "Diffuse"
 msgstr ""
 
-#: src/exec_dat.cpp:1551
+#: src/exec_dat.cpp:1640
 msgid "Dilate data larger val"
 msgstr ""
 
-#: src/exec_dat.cpp:1538
+#: src/exec_dat.cpp:1627
 msgid "Direct multiplication of arrays"
 msgstr ""
 
@@ -1401,7 +1401,7 @@ msgstr ""
 msgid "Divide by"
 msgstr ""
 
-#: src/exec_dat.cpp:1552
+#: src/exec_dat.cpp:1641
 msgid "Divide by data or number"
 msgstr ""
 
@@ -1409,11 +1409,11 @@ msgstr ""
 msgid "Do"
 msgstr ""
 
-#: src/exec_dat.cpp:1614
+#: src/exec_dat.cpp:1703
 msgid "Do STFA transform"
 msgstr ""
 
-#: src/exec_dat.cpp:1620 src/exec_dat.cpp:1621
+#: src/exec_dat.cpp:1709 src/exec_dat.cpp:1710
 msgid "Do integral transform of data"
 msgstr ""
 
@@ -1438,435 +1438,435 @@ msgstr ""
 msgid "Double diff."
 msgstr ""
 
-#: src/exec_gr.cpp:1059
+#: src/exec_gr.cpp:1135
 msgid "Draw Bifurcation diagram"
 msgstr ""
 
-#: src/exec_gr.cpp:1095
+#: src/exec_gr.cpp:1171
 msgid "Draw Iris plots"
 msgstr ""
 
-#: src/exec_gr.cpp:1097
+#: src/exec_gr.cpp:1173
 msgid "Draw Lamerey diagram"
 msgstr ""
 
-#: src/exec_gr.cpp:1101
+#: src/exec_gr.cpp:1177
 msgid "Draw Open-High-Low-Close (OHLC) diagram"
 msgstr ""
 
-#: src/exec_gr.cpp:1104
+#: src/exec_gr.cpp:1180
 msgid "Draw Poincare map"
 msgstr ""
 
-#: src/exec_gr.cpp:1110
+#: src/exec_gr.cpp:1186
 msgid "Draw STFA diagram"
 msgstr ""
 
-#: src/exec_gr.cpp:1122
+#: src/exec_gr.cpp:1198
 msgid "Draw TeX mark at point position"
 msgstr ""
 
-#: src/exec_prm.cpp:578
+#: src/exec_prm.cpp:615
 msgid "Draw angle arc"
 msgstr ""
 
-#: src/exec_gr.cpp:1052
+#: src/exec_gr.cpp:1128
 msgid "Draw area plot for 1D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1055
+#: src/exec_gr.cpp:1131
 msgid "Draw bars for 1D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1057
+#: src/exec_gr.cpp:1133
 msgid "Draw belts"
 msgstr ""
 
-#: src/exec_gr.cpp:1058
+#: src/exec_gr.cpp:1134
 msgid "Draw belts colored by other data"
 msgstr ""
 
-#: src/exec_gr.cpp:1120
+#: src/exec_gr.cpp:1196
 msgid "Draw binormales for 1D data"
 msgstr ""
 
-#: src/exec_prm.cpp:604
+#: src/exec_prm.cpp:641
 msgid "Draw bitmap (logo) along axis range"
 msgstr ""
 
-#: src/exec_prm.cpp:582
+#: src/exec_prm.cpp:619
 msgid "Draw bounding box"
 msgstr ""
 
-#: src/exec_gr.cpp:1061
+#: src/exec_gr.cpp:1137
 msgid "Draw boxes"
 msgstr ""
 
-#: src/exec_gr.cpp:1060
+#: src/exec_gr.cpp:1136
 msgid "Draw boxplot for 2D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1062
+#: src/exec_gr.cpp:1138
 msgid "Draw candlestick chart"
 msgstr ""
 
-#: src/exec_gr.cpp:1063
+#: src/exec_gr.cpp:1139
 msgid "Draw chart"
 msgstr ""
 
-#: src/exec_prm.cpp:583
+#: src/exec_prm.cpp:620
 msgid "Draw circle"
 msgstr ""
 
-#: src/exec_gr.cpp:1064
+#: src/exec_gr.cpp:1140
 msgid "Draw cloud"
 msgstr ""
 
-#: src/exec_prm.cpp:584
+#: src/exec_prm.cpp:621
 msgid "Draw colorbar"
 msgstr ""
 
-#: src/exec_prm.cpp:585
+#: src/exec_prm.cpp:622
 msgid "Draw cone"
 msgstr ""
 
-#: src/exec_gr.cpp:1065
+#: src/exec_gr.cpp:1141
 msgid "Draw cones for 1D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1066
+#: src/exec_gr.cpp:1142
 msgid "Draw contour lines"
 msgstr ""
 
-#: src/exec_gr.cpp:1076
+#: src/exec_gr.cpp:1152
 msgid "Draw contour lines at x-slice (or x-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1077
+#: src/exec_gr.cpp:1153
 msgid "Draw contour lines at y-slice (or y-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1078
+#: src/exec_gr.cpp:1154
 msgid "Draw contour lines at z-slice (or z-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1067
+#: src/exec_gr.cpp:1143
 msgid "Draw contour lines for 3D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1127
+#: src/exec_gr.cpp:1203
 msgid "Draw contour lines for surface of triangles"
 msgstr ""
 
-#: src/exec_gr.cpp:1074
+#: src/exec_gr.cpp:1150
 msgid "Draw contour lines on parametric surface"
 msgstr ""
 
-#: src/exec_gr.cpp:1075
+#: src/exec_gr.cpp:1151
 msgid "Draw contour tubes"
 msgstr ""
 
-#: src/exec_gr.cpp:1128
+#: src/exec_gr.cpp:1204
 msgid "Draw contour tubes for surface of triangles"
 msgstr ""
 
-#: src/exec_prm.cpp:586
+#: src/exec_prm.cpp:623
 msgid "Draw curve"
 msgstr ""
 
-#: src/exec_gr.cpp:1130
+#: src/exec_gr.cpp:1206
 msgid "Draw curve by tube"
 msgstr ""
 
-#: src/exec_gr.cpp:1080
+#: src/exec_gr.cpp:1156
 msgid "Draw density plot"
 msgstr ""
 
-#: src/exec_gr.cpp:1081
+#: src/exec_gr.cpp:1157
 msgid "Draw density plot at slices of 3D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1082
+#: src/exec_gr.cpp:1158
 msgid "Draw density plot at x-slice (or x-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1083
+#: src/exec_gr.cpp:1159
 msgid "Draw density plot at y-slice (or y-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1084
+#: src/exec_gr.cpp:1160
 msgid "Draw density plot at z-slice (or z-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1085
+#: src/exec_gr.cpp:1161
 msgid "Draw dew plot"
 msgstr ""
 
-#: src/exec_gr.cpp:1086
+#: src/exec_gr.cpp:1162
 msgid "Draw dots for arbitrary data points"
 msgstr ""
 
-#: src/exec_prm.cpp:587
+#: src/exec_prm.cpp:624
 msgid "Draw drop"
 msgstr ""
 
-#: src/exec_prm.cpp:588
+#: src/exec_prm.cpp:625
 msgid "Draw ellipse"
 msgstr ""
 
-#: src/exec_prm.cpp:589
+#: src/exec_prm.cpp:626
 msgid "Draw error box"
 msgstr ""
 
-#: src/exec_gr.cpp:1087
+#: src/exec_gr.cpp:1163
 msgid "Draw error boxes"
 msgstr ""
 
-#: src/exec_prm.cpp:590
+#: src/exec_prm.cpp:627
 msgid "Draw face (quadrangle)"
 msgstr ""
 
-#: src/exec_prm.cpp:591
+#: src/exec_prm.cpp:628
 msgid "Draw face perpendicular to x-axis"
 msgstr ""
 
-#: src/exec_prm.cpp:592
+#: src/exec_prm.cpp:629
 msgid "Draw face perpendicular to y-axis"
 msgstr ""
 
-#: src/exec_prm.cpp:593
+#: src/exec_prm.cpp:630
 msgid "Draw face perpendicular to z-axis"
 msgstr ""
 
-#: src/exec_gr.cpp:1107
+#: src/exec_gr.cpp:1183
 msgid "Draw filled region (ribbon) between 2 curves"
 msgstr ""
 
-#: src/exec_gr.cpp:1102
+#: src/exec_gr.cpp:1178
 msgid "Draw flow pipes for vector field"
 msgstr ""
 
-#: src/exec_gr.cpp:1089
+#: src/exec_gr.cpp:1165
 msgid "Draw flow threads for vector field"
 msgstr ""
 
-#: src/exec_gr.cpp:1091
+#: src/exec_gr.cpp:1167
 msgid "Draw flow threads from plain for vector field"
 msgstr ""
 
-#: src/exec_gr.cpp:1092
+#: src/exec_gr.cpp:1168
 msgid "Draw gradient lines for scalar field"
 msgstr ""
 
-#: src/exec_prm.cpp:598
+#: src/exec_prm.cpp:635
 msgid "Draw grid"
 msgstr ""
 
-#: src/exec_gr.cpp:1094
+#: src/exec_gr.cpp:1170
 msgid "Draw grid at slices of 3D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1093
+#: src/exec_gr.cpp:1169
 msgid "Draw grid for data array(s)"
 msgstr ""
 
-#: src/exec_gr.cpp:1054
+#: src/exec_gr.cpp:1130
 msgid "Draw horizontal bars for 1D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1123
+#: src/exec_gr.cpp:1199
 msgid "Draw horizontal tiles"
 msgstr ""
 
-#: src/exec_gr.cpp:1124
+#: src/exec_gr.cpp:1200
 msgid "Draw horizontal tiles with variable size"
 msgstr ""
 
-#: src/exec_gr.cpp:1112
+#: src/exec_gr.cpp:1188
 msgid "Draw isosurface for 3D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1115
+#: src/exec_gr.cpp:1191
 msgid "Draw isosurface for 3D data colored and transpared by other data"
 msgstr ""
 
-#: src/exec_gr.cpp:1114
+#: src/exec_gr.cpp:1190
 msgid "Draw isosurface for 3D data colored by other data"
 msgstr ""
 
-#: src/exec_gr.cpp:1113
+#: src/exec_gr.cpp:1189
 msgid "Draw isosurface for 3D data transpared by other data"
 msgstr ""
 
-#: src/exec_gr.cpp:1096
+#: src/exec_gr.cpp:1172
 msgid "Draw label at arbitrary position"
 msgstr ""
 
-#: src/exec_prm.cpp:612
+#: src/exec_prm.cpp:649
 msgid "Draw label for t-axis"
 msgstr ""
 
-#: src/exec_prm.cpp:613
+#: src/exec_prm.cpp:650
 msgid "Draw label for x-axis"
 msgstr ""
 
-#: src/exec_prm.cpp:614
+#: src/exec_prm.cpp:651
 msgid "Draw label for y-axis"
 msgstr ""
 
-#: src/exec_prm.cpp:615
+#: src/exec_prm.cpp:652
 msgid "Draw label for z-axis"
 msgstr ""
 
-#: src/exec_prm.cpp:602
+#: src/exec_prm.cpp:639
 msgid "Draw legend"
 msgstr ""
 
-#: src/exec_prm.cpp:603
+#: src/exec_prm.cpp:640
 msgid "Draw line"
 msgstr ""
 
-#: src/exec_gr.cpp:1098
+#: src/exec_gr.cpp:1174
 msgid "Draw mapping plot"
 msgstr ""
 
-#: src/exec_gr.cpp:1099
+#: src/exec_gr.cpp:1175
 msgid "Draw mark plot for 1D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1100
+#: src/exec_gr.cpp:1176
 msgid "Draw mesh surface"
 msgstr ""
 
-#: src/exec_prm.cpp:581
+#: src/exec_prm.cpp:618
 msgid "Draw point (ball)"
 msgstr ""
 
-#: src/exec_prm.cpp:605
+#: src/exec_prm.cpp:642
 msgid "Draw polygon"
 msgstr ""
 
-#: src/exec_gr.cpp:1056
+#: src/exec_gr.cpp:1132
 msgid "Draw quasi-optical beam"
 msgstr ""
 
-#: src/exec_gr.cpp:1106
+#: src/exec_gr.cpp:1182
 msgid "Draw radar chart"
 msgstr ""
 
-#: src/exec_gr.cpp:1079
+#: src/exec_gr.cpp:1155
 msgid "Draw reconstructed surface for arbitrary data points"
 msgstr ""
 
-#: src/exec_prm.cpp:606
+#: src/exec_prm.cpp:643
 msgid "Draw rectangle"
 msgstr ""
 
-#: src/exec_prm.cpp:607
+#: src/exec_prm.cpp:644
 msgid "Draw rhombus"
 msgstr ""
 
-#: src/exec_gr.cpp:1071
+#: src/exec_gr.cpp:1147
 msgid "Draw solid contour lines at x-slice (or x-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1072
+#: src/exec_gr.cpp:1148
 msgid "Draw solid contour lines at y-slice (or y-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1073
+#: src/exec_gr.cpp:1149
 msgid "Draw solid contour lines at z-slice (or z-plane)"
 msgstr ""
 
-#: src/exec_gr.cpp:1070
+#: src/exec_gr.cpp:1146
 msgid "Draw solid contour lines for 3D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1069
+#: src/exec_gr.cpp:1145
 msgid "Draw solid contours"
 msgstr ""
 
-#: src/exec_gr.cpp:1068
+#: src/exec_gr.cpp:1144
 msgid "Draw solid contours with manual colors"
 msgstr ""
 
-#: src/exec_gr.cpp:1111
+#: src/exec_gr.cpp:1187
 msgid "Draw solid surface"
 msgstr ""
 
-#: src/exec_gr.cpp:1118
+#: src/exec_gr.cpp:1194
 msgid "Draw solid surface colored and transpared by other data"
 msgstr ""
 
-#: src/exec_gr.cpp:1117
+#: src/exec_gr.cpp:1193
 msgid "Draw solid surface colored by other data"
 msgstr ""
 
-#: src/exec_gr.cpp:1116
+#: src/exec_gr.cpp:1192
 msgid "Draw solid surface transpared by other data"
 msgstr ""
 
-#: src/exec_prm.cpp:608
+#: src/exec_prm.cpp:645
 msgid "Draw sphere"
 msgstr ""
 
-#: src/exec_gr.cpp:1108
+#: src/exec_gr.cpp:1184
 msgid "Draw stem plot for 1D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1109
+#: src/exec_gr.cpp:1185
 msgid "Draw step plot for 1D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1125
+#: src/exec_gr.cpp:1201
 msgid "Draw surface of curve rotation"
 msgstr ""
 
-#: src/exec_gr.cpp:1105
+#: src/exec_gr.cpp:1181
 msgid "Draw surface of quadrangles"
 msgstr ""
 
-#: src/exec_gr.cpp:1129
+#: src/exec_gr.cpp:1205
 msgid "Draw surface of triangles"
 msgstr ""
 
-#: src/exec_gr.cpp:1053
+#: src/exec_gr.cpp:1129
 msgid "Draw surfaces of contour lines rotation"
 msgstr ""
 
-#: src/exec_gr.cpp:1119
+#: src/exec_gr.cpp:1195
 msgid "Draw table with data values"
 msgstr ""
 
-#: src/exec_gr.cpp:1121
+#: src/exec_gr.cpp:1197
 msgid "Draw tension plot for 1D data"
 msgstr ""
 
-#: src/exec_prm.cpp:610
+#: src/exec_prm.cpp:647
 msgid "Draw text at some position or along curve"
 msgstr ""
 
-#: src/exec_prm.cpp:609
+#: src/exec_prm.cpp:646
 msgid "Draw user-defined symbol at given position and direction"
 msgstr ""
 
-#: src/exec_gr.cpp:1103
+#: src/exec_gr.cpp:1179
 msgid "Draw usual plot for 1D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1131
+#: src/exec_gr.cpp:1207
 msgid "Draw vector field"
 msgstr ""
 
-#: src/exec_gr.cpp:1132
+#: src/exec_gr.cpp:1208
 msgid "Draw vector field at slices of 3D data"
 msgstr ""
 
-#: src/exec_gr.cpp:1126
+#: src/exec_gr.cpp:1202
 msgid "Draw vectors along a curve"
 msgstr ""
 
-#: src/exec_gr.cpp:1088
+#: src/exec_gr.cpp:1164
 msgid "Draw waterfalls"
 msgstr ""
 
@@ -2002,7 +2002,7 @@ msgstr ""
 msgid "Envelop"
 msgstr ""
 
-#: src/exec_dat.cpp:1555
+#: src/exec_dat.cpp:1644
 msgid "Erode data larger val"
 msgstr ""
 
@@ -2025,7 +2025,7 @@ msgid ""
 "%s."
 msgstr ""
 
-#: src/exec_dat.cpp:1556
+#: src/exec_dat.cpp:1645
 msgid ""
 "Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat"
 msgstr ""
@@ -2079,7 +2079,7 @@ msgstr ""
 msgid "Export as 3D ..."
 msgstr ""
 
-#: src/exec_dat.cpp:1557 mgllab/table.cpp:844
+#: src/exec_dat.cpp:1646 mgllab/table.cpp:844
 msgid "Export data to PNG file"
 msgstr ""
 
@@ -2092,7 +2092,7 @@ msgstr ""
 msgid "Export to PNG"
 msgstr ""
 
-#: src/exec_dat.cpp:1558
+#: src/exec_dat.cpp:1647
 msgid "Extend data array"
 msgstr ""
 
@@ -2100,11 +2100,11 @@ msgstr ""
 msgid "Extract data"
 msgstr ""
 
-#: src/exec_dat.cpp:1615
+#: src/exec_dat.cpp:1704
 msgid "Extract sub-array"
 msgstr ""
 
-#: src/exec_dat.cpp:1607
+#: src/exec_dat.cpp:1696
 msgid "Extract sub-array between values"
 msgstr ""
 
@@ -2150,19 +2150,19 @@ msgstr ""
 msgid "Fill data by formula"
 msgstr ""
 
-#: src/exec_dat.cpp:1564
+#: src/exec_dat.cpp:1653
 msgid "Fill data by global spline of Vdat"
 msgstr ""
 
-#: src/exec_dat.cpp:1599
+#: src/exec_dat.cpp:1688
 msgid "Fill data by interpolation of Vdat"
 msgstr ""
 
-#: src/exec_dat.cpp:1544
+#: src/exec_dat.cpp:1633
 msgid "Fill data by triangulated values"
 msgstr ""
 
-#: src/exec_dat.cpp:1559
+#: src/exec_dat.cpp:1648
 msgid "Fill data linearly in range [v1, v2]"
 msgstr ""
 
@@ -2170,7 +2170,7 @@ msgstr ""
 msgid "Fill in range"
 msgstr ""
 
-#: src/exec_dat.cpp:1560
+#: src/exec_dat.cpp:1649
 msgid "Fill x-,k-samples for transforms"
 msgstr ""
 
@@ -2178,11 +2178,11 @@ msgstr ""
 msgid "Find"
 msgstr ""
 
-#: src/exec_dat.cpp:1540
+#: src/exec_dat.cpp:1629
 msgid "Find correlation between data arrays"
 msgstr ""
 
-#: src/exec_dat.cpp:1554
+#: src/exec_dat.cpp:1643
 msgid "Find envelop for the data"
 msgstr ""
 
@@ -2194,11 +2194,11 @@ msgstr ""
 msgid "Find histogram of data."
 msgstr ""
 
-#: src/exec_dat.cpp:1575
+#: src/exec_dat.cpp:1664
 msgid "Find maximal value over direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1576
+#: src/exec_dat.cpp:1665
 msgid "Find minimal value over direction"
 msgstr ""
 
@@ -2210,19 +2210,19 @@ msgstr ""
 msgid "Find or replace text"
 msgstr ""
 
-#: src/exec_dat.cpp:1611
+#: src/exec_dat.cpp:1700
 msgid "Find root Dat[i,j,k]=val (inverse evaluate)"
 msgstr ""
 
-#: src/exec_dat.cpp:1603
+#: src/exec_dat.cpp:1692
 msgid "Find roots using data as initial values"
 msgstr ""
 
-#: src/exec_dat.cpp:1617
+#: src/exec_dat.cpp:1706
 msgid "Find summation over direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1623
+#: src/exec_dat.cpp:1712
 msgid "Find triangles of randomly placed points"
 msgstr ""
 
@@ -2250,7 +2250,7 @@ msgstr ""
 msgid "First slice"
 msgstr ""
 
-#: src/exec_dat.cpp:1561 src/exec_dat.cpp:1562
+#: src/exec_dat.cpp:1650 src/exec_dat.cpp:1651
 msgid "Fit data to formula"
 msgstr ""
 
@@ -2341,27 +2341,27 @@ msgstr ""
 msgid "General setup"
 msgstr ""
 
-#: src/exec_dat.cpp:1572
+#: src/exec_dat.cpp:1661
 msgid "Get Jacobian"
 msgstr ""
 
-#: src/exec_dat.cpp:1537
+#: src/exec_dat.cpp:1626
 msgid "Get data column filled by formula on column ids"
 msgstr ""
 
-#: src/exec_dat.cpp:1606
+#: src/exec_dat.cpp:1695
 msgid "Get formated data from file"
 msgstr ""
 
-#: src/exec_dat.cpp:1579
+#: src/exec_dat.cpp:1668
 msgid "Get momentum along direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1588
+#: src/exec_dat.cpp:1677
 msgid "Get pulse properties"
 msgstr ""
 
-#: src/exec_dat.cpp:1619
+#: src/exec_dat.cpp:1708
 msgid "Get trace of array"
 msgstr ""
 
@@ -2582,7 +2582,7 @@ msgstr ""
 msgid "Hankel transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1565
+#: src/exec_dat.cpp:1654
 msgid "Hankel transform at some direction"
 msgstr ""
 
@@ -2650,7 +2650,7 @@ msgstr ""
 msgid "Image size"
 msgstr ""
 
-#: src/exec_dat.cpp:1587
+#: src/exec_dat.cpp:1676
 msgid "Immediately print the message"
 msgstr ""
 
@@ -2658,7 +2658,7 @@ msgstr ""
 msgid "Import Data?"
 msgstr ""
 
-#: src/exec_dat.cpp:1568 mgllab/table.cpp:840
+#: src/exec_dat.cpp:1657 mgllab/table.cpp:840
 msgid "Import data from PNG file"
 msgstr ""
 
@@ -2670,7 +2670,7 @@ msgstr ""
 msgid "In range"
 msgstr ""
 
-#: src/exec_dat.cpp:1563
+#: src/exec_dat.cpp:1652
 msgid "In-place Fourier transform"
 msgstr ""
 
@@ -2739,7 +2739,7 @@ msgstr ""
 msgid "Insert last fitted formula with found coefficients."
 msgstr ""
 
-#: src/exec_dat.cpp:1570
+#: src/exec_dat.cpp:1659
 msgid "Insert slice of data"
 msgstr ""
 
@@ -2751,7 +2751,7 @@ msgstr ""
 msgid "Integrate"
 msgstr ""
 
-#: src/exec_dat.cpp:1571 udav/dat_pnl.cpp:615
+#: src/exec_dat.cpp:1660 udav/dat_pnl.cpp:615
 msgid "Integrate data along direction(s)"
 msgstr ""
 
@@ -2775,7 +2775,7 @@ msgstr ""
 msgid "Jacobi"
 msgstr ""
 
-#: src/exec_dat.cpp:1573
+#: src/exec_dat.cpp:1662
 msgid "Join data arrays"
 msgstr ""
 
@@ -2870,7 +2870,7 @@ msgstr ""
 msgid "Light settings"
 msgstr ""
 
-#: src/exec_dat.cpp:1574
+#: src/exec_dat.cpp:1663
 msgid "Limit data to be inside [-v,v]"
 msgstr ""
 
@@ -2898,7 +2898,7 @@ msgstr ""
 msgid "Load Data?"
 msgstr ""
 
-#: src/exec_set.cpp:726
+#: src/exec_set.cpp:797
 msgid "Load commands from external DLL"
 msgstr ""
 
@@ -2916,7 +2916,7 @@ msgid ""
 "at exit but UDAV will not ask to save it (Ctrl+Shift+O)."
 msgstr ""
 
-#: src/exec_set.cpp:727
+#: src/exec_set.cpp:798
 msgid "Load fontfaces"
 msgstr ""
 
@@ -2924,7 +2924,7 @@ msgstr ""
 msgid "Load from file"
 msgstr ""
 
-#: src/exec_prm.cpp:580
+#: src/exec_prm.cpp:617
 msgid "Load image for background"
 msgstr ""
 
@@ -3175,11 +3175,11 @@ msgstr ""
 msgid "Mirror data along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1577
+#: src/exec_dat.cpp:1666
 msgid "Mirror data at some direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1578
+#: src/exec_dat.cpp:1667
 msgid "Modify data values by formula"
 msgstr ""
 
@@ -3251,7 +3251,7 @@ msgstr ""
 msgid "Multiply by"
 msgstr ""
 
-#: src/exec_dat.cpp:1580
+#: src/exec_dat.cpp:1669
 msgid "Multiply by data or number"
 msgstr ""
 
@@ -3379,11 +3379,11 @@ msgstr ""
 msgid "Normalize"
 msgstr ""
 
-#: src/exec_dat.cpp:1582
+#: src/exec_dat.cpp:1671
 msgid "Normalize data"
 msgstr ""
 
-#: src/exec_dat.cpp:1583
+#: src/exec_dat.cpp:1672
 msgid "Normalize data slice by slice"
 msgstr ""
 
@@ -3411,11 +3411,11 @@ msgstr ""
 msgid "Numeric value"
 msgstr ""
 
-#: src/exec_dat.cpp:1548
+#: src/exec_dat.cpp:1637
 msgid "Numerically differentiate data"
 msgstr ""
 
-#: src/exec_dat.cpp:1549
+#: src/exec_dat.cpp:1638
 msgid "Numerically double differentiate data"
 msgstr ""
 
@@ -3455,7 +3455,7 @@ msgstr ""
 msgid "Open File?"
 msgstr ""
 
-#: src/exec_dat.cpp:1585
+#: src/exec_dat.cpp:1674
 msgid "Open all data arrays from HDF file"
 msgstr ""
 
@@ -3601,7 +3601,7 @@ msgstr ""
 msgid "Pause on/off external calculations"
 msgstr ""
 
-#: src/exec_dat.cpp:1601
+#: src/exec_dat.cpp:1690
 msgid "Perform Runge-Kutta step"
 msgstr ""
 
@@ -3617,7 +3617,7 @@ msgstr ""
 msgid "Plot ID"
 msgstr ""
 
-#: src/exec_prm.cpp:596
+#: src/exec_prm.cpp:633
 msgid "Plot curve by formula"
 msgstr ""
 
@@ -3644,7 +3644,7 @@ msgstr ""
 msgid "Plot style"
 msgstr ""
 
-#: src/exec_prm.cpp:597
+#: src/exec_prm.cpp:634
 msgid "Plot surface by formula"
 msgstr ""
 
@@ -3680,15 +3680,15 @@ msgstr ""
 msgid "Primitives ..."
 msgstr ""
 
-#: src/exec_set.cpp:758
+#: src/exec_set.cpp:829
 msgid "Print MathGL version or check if it is valid"
 msgstr ""
 
-#: src/exec_dat.cpp:1553
+#: src/exec_dat.cpp:1642
 msgid "Print content of the data"
 msgstr ""
 
-#: src/exec_dat.cpp:1590
+#: src/exec_dat.cpp:1679
 msgid "Print fitted formula"
 msgstr ""
 
@@ -3696,11 +3696,11 @@ msgstr ""
 msgid "Print graphics"
 msgstr ""
 
-#: src/exec_dat.cpp:1545
+#: src/exec_dat.cpp:1634
 msgid "Print list of data names in HDF file"
 msgstr ""
 
-#: src/exec_dat.cpp:1569
+#: src/exec_dat.cpp:1658
 msgid "Print message or information about the data"
 msgstr ""
 
@@ -3712,7 +3712,7 @@ msgstr ""
 msgid "Print script"
 msgstr ""
 
-#: src/exec_prm.cpp:594
+#: src/exec_prm.cpp:631
 msgid "Print string from file"
 msgstr ""
 
@@ -3732,7 +3732,7 @@ msgstr ""
 msgid "Program flow"
 msgstr ""
 
-#: src/exec_dat.cpp:1536
+#: src/exec_dat.cpp:1625
 msgid "Project periodical data in [v1,v2]"
 msgstr ""
 
@@ -3764,7 +3764,7 @@ msgstr ""
 msgid "Put to script"
 msgstr ""
 
-#: src/exec_dat.cpp:1589
+#: src/exec_dat.cpp:1678
 msgid "Put value (numeric or array) to given data element"
 msgstr ""
 
@@ -3782,23 +3782,23 @@ msgstr ""
 msgid "R - maroon"
 msgstr ""
 
-#: src/exec_set.cpp:740
+#: src/exec_set.cpp:811
 msgid "Rasterize plot and save to background"
 msgstr ""
 
-#: src/exec_dat.cpp:1595
+#: src/exec_dat.cpp:1684
 msgid "Read and join data from several files"
 msgstr ""
 
-#: src/exec_dat.cpp:1594
+#: src/exec_dat.cpp:1683
 msgid "Read data from file"
 msgstr ""
 
-#: src/exec_dat.cpp:1597
+#: src/exec_dat.cpp:1686
 msgid "Read data from file with sizes specified in first row"
 msgstr ""
 
-#: src/exec_dat.cpp:1596
+#: src/exec_dat.cpp:1685
 msgid "Read data with name 'id' from HDF file"
 msgstr ""
 
@@ -3806,7 +3806,7 @@ msgstr ""
 msgid "Ready"
 msgstr ""
 
-#: src/exec_dat.cpp:1598
+#: src/exec_dat.cpp:1687
 msgid "Rearrange data dimensions"
 msgstr ""
 
@@ -3862,11 +3862,11 @@ msgstr ""
 msgid "Reload data and refresh the picture"
 msgstr ""
 
-#: src/exec_dat.cpp:1535
+#: src/exec_dat.cpp:1624
 msgid "Remove duplicate rows"
 msgstr ""
 
-#: src/exec_dat.cpp:1608
+#: src/exec_dat.cpp:1697
 msgid "Remove jump into the data, like phase jumps"
 msgstr ""
 
@@ -3920,7 +3920,7 @@ msgstr ""
 msgid "Reserve space for labels at top side (style '^')"
 msgstr ""
 
-#: src/exec_set.cpp:741
+#: src/exec_set.cpp:812
 msgid "Reset settings and clear picture"
 msgstr ""
 
@@ -3932,7 +3932,7 @@ msgstr ""
 msgid "Resize (interpolate) the data to specified sizes (Ctrl+Shift+R)."
 msgstr ""
 
-#: src/exec_dat.cpp:1600
+#: src/exec_dat.cpp:1689
 msgid "Resize data array"
 msgstr ""
 
@@ -3989,7 +3989,7 @@ msgstr ""
 msgid "Roll"
 msgstr ""
 
-#: src/exec_dat.cpp:1602
+#: src/exec_dat.cpp:1691
 msgid "Roll data along direction(s)"
 msgstr ""
 
@@ -4018,7 +4018,7 @@ msgstr ""
 msgid "Rotate picture by holding left mouse button"
 msgstr ""
 
-#: src/exec_set.cpp:742
+#: src/exec_set.cpp:813
 msgid "Rotate plot"
 msgstr ""
 
@@ -4088,7 +4088,7 @@ msgstr ""
 msgid "Save data"
 msgstr ""
 
-#: src/exec_dat.cpp:1605
+#: src/exec_dat.cpp:1694
 msgid "Save data to HDF5 file"
 msgstr ""
 
@@ -4096,7 +4096,7 @@ msgstr ""
 msgid "Save data to a file (Ctrl+Shift+S)."
 msgstr ""
 
-#: src/exec_dat.cpp:1604 mgllab/table.cpp:842
+#: src/exec_dat.cpp:1693 mgllab/table.cpp:842
 msgid "Save data to file"
 msgstr ""
 
@@ -4164,7 +4164,7 @@ msgstr ""
 msgid "Select direction"
 msgstr ""
 
-#: mgllab/editor.cpp:654
+#: mgllab/editor.cpp:653
 msgid "Select file name"
 msgstr ""
 
@@ -4172,7 +4172,7 @@ msgstr ""
 msgid "Select first the proper kind of arguments"
 msgstr ""
 
-#: mgllab/editor.cpp:667
+#: mgllab/editor.cpp:666
 msgid "Select folder name"
 msgstr ""
 
@@ -4180,7 +4180,7 @@ msgstr ""
 msgid "Select kind of plot"
 msgstr ""
 
-#: src/exec_set.cpp:757
+#: src/exec_set.cpp:828
 msgid "Select variant of plot style(s)"
 msgstr ""
 
@@ -4188,15 +4188,15 @@ msgstr ""
 msgid "Set"
 msgstr ""
 
-#: src/exec_set.cpp:753
+#: src/exec_set.cpp:824
 msgid "Set additional tick and axis labels shift"
 msgstr ""
 
-#: src/exec_set.cpp:702
+#: src/exec_set.cpp:773
 msgid "Set ambient light brightness"
 msgstr ""
 
-#: src/exec_set.cpp:723
+#: src/exec_set.cpp:794
 msgid "Set arbitrary position of plot in picture"
 msgstr ""
 
@@ -4204,39 +4204,39 @@ msgstr ""
 msgid "Set arguments"
 msgstr ""
 
-#: src/exec_set.cpp:704
+#: src/exec_set.cpp:775
 msgid "Set aspect ration"
 msgstr ""
 
-#: src/exec_set.cpp:706
+#: src/exec_set.cpp:777
 msgid "Set axis and tick style"
 msgstr ""
 
-#: src/exec_set.cpp:732
+#: src/exec_set.cpp:803
 msgid "Set axis origin"
 msgstr ""
 
-#: src/exec_set.cpp:739
+#: src/exec_set.cpp:810
 msgid "Set axis ranges"
 msgstr ""
 
-#: src/exec_set.cpp:746
+#: src/exec_set.cpp:817
 msgid "Set bit-flags (for advanced users only)"
 msgstr ""
 
-#: src/exec_set.cpp:708
+#: src/exec_set.cpp:779
 msgid "Set bounding box for 2d export"
 msgstr ""
 
-#: src/exec_set.cpp:729
+#: src/exec_set.cpp:800
 msgid "Set brush for given mask id"
 msgstr ""
 
-#: src/exec_set.cpp:713
+#: src/exec_set.cpp:784
 msgid "Set color range"
 msgstr ""
 
-#: src/exec_dat.cpp:1567
+#: src/exec_dat.cpp:1656
 msgid "Set column id for data"
 msgstr ""
 
@@ -4248,23 +4248,23 @@ msgstr ""
 msgid "Set data sizes manually"
 msgstr ""
 
-#: src/exec_set.cpp:707
+#: src/exec_set.cpp:778
 msgid "Set default bars width"
 msgstr ""
 
-#: src/exec_set.cpp:737
+#: src/exec_set.cpp:808
 msgid "Set default filename"
 msgstr ""
 
-#: src/exec_set.cpp:701
+#: src/exec_set.cpp:772
 msgid "Set default transparency"
 msgstr ""
 
-#: src/exec_set.cpp:716
+#: src/exec_set.cpp:787
 msgid "Set diffusive light brightness"
 msgstr ""
 
-#: src/exec_set.cpp:717
+#: src/exec_set.cpp:788
 msgid "Set draw region for quality&4"
 msgstr ""
 
@@ -4288,71 +4288,71 @@ msgstr ""
 msgid "Set lighting off/on for particular plot"
 msgstr ""
 
-#: src/exec_set.cpp:730
+#: src/exec_set.cpp:801
 msgid "Set number of lines in mesh/fall/vect and so on"
 msgstr ""
 
-#: src/exec_set.cpp:724
+#: src/exec_set.cpp:795
 msgid "Set number of marks in the legend"
 msgstr ""
 
-#: src/exec_set.cpp:718
+#: src/exec_set.cpp:789
 msgid "Set number of visible faces"
 msgstr ""
 
-#: src/exec_set.cpp:734
+#: src/exec_set.cpp:805
 msgid "Set palette for 1D plots"
 msgstr ""
 
-#: src/exec_set.cpp:736
+#: src/exec_set.cpp:807
 msgid "Set perspective"
 msgstr ""
 
-#: src/exec_set.cpp:744
+#: src/exec_set.cpp:815
 msgid "Set picture size"
 msgstr ""
 
-#: src/exec_set.cpp:738
+#: src/exec_set.cpp:809
 msgid "Set plot quality"
 msgstr ""
 
-#: src/exec_set.cpp:750
+#: src/exec_set.cpp:821
 msgid "Set position of plot as cell of matrix"
 msgstr ""
 
-#: src/exec_set.cpp:731
+#: src/exec_set.cpp:802
 msgid "Set position of plot block in matrix"
 msgstr ""
 
-#: src/exec_set.cpp:712
+#: src/exec_set.cpp:783
 msgid "Set position of plot inside cell of column"
 msgstr ""
 
-#: src/exec_set.cpp:722
+#: src/exec_set.cpp:793
 msgid "Set position of plot inside cell of matrix"
 msgstr ""
 
-#: src/exec_set.cpp:749
+#: src/exec_set.cpp:820
 msgid "Set position of plot inside cell of rotated stick"
 msgstr ""
 
-#: src/exec_set.cpp:748
+#: src/exec_set.cpp:819
 msgid "Set position of plot inside cell of sheared stick"
 msgstr ""
 
-#: src/exec_set.cpp:761
+#: src/exec_set.cpp:832
 msgid "Set range for x-axis"
 msgstr ""
 
-#: src/exec_set.cpp:763
+#: src/exec_set.cpp:834
 msgid "Set range for y-axis"
 msgstr ""
 
-#: src/exec_set.cpp:767
+#: src/exec_set.cpp:838
 msgid "Set range for z-axis"
 msgstr ""
 
-#: src/exec_set.cpp:745
+#: src/exec_set.cpp:816
 msgid "Set scaling factor for further setsize"
 msgstr ""
 
@@ -4364,51 +4364,51 @@ msgstr ""
 msgid "Set size for text, marks and others"
 msgstr ""
 
-#: src/exec_set.cpp:703
+#: src/exec_set.cpp:774
 msgid "Set size of arrows"
 msgstr ""
 
-#: src/exec_set.cpp:728
+#: src/exec_set.cpp:799
 msgid "Set size of markers"
 msgstr ""
 
-#: src/exec_set.cpp:735
+#: src/exec_set.cpp:806
 msgid "Set size of semi-transparent area around line"
 msgstr ""
 
-#: src/exec_set.cpp:733
+#: src/exec_set.cpp:804
 msgid "Set tick labels drawing at origin"
 msgstr ""
 
-#: src/exec_set.cpp:752
+#: src/exec_set.cpp:823
 msgid "Set tick length"
 msgstr ""
 
-#: src/exec_set.cpp:714
+#: src/exec_set.cpp:785
 msgid "Set ticks for colorbar"
 msgstr ""
 
-#: src/exec_set.cpp:762
+#: src/exec_set.cpp:833
 msgid "Set ticks for x-axis"
 msgstr ""
 
-#: src/exec_set.cpp:764
+#: src/exec_set.cpp:835
 msgid "Set ticks for y-axis"
 msgstr ""
 
-#: src/exec_set.cpp:768
+#: src/exec_set.cpp:839
 msgid "Set ticks for z-axis"
 msgstr ""
 
-#: src/exec_set.cpp:754
+#: src/exec_set.cpp:825
 msgid "Set ticks in time format"
 msgstr ""
 
-#: src/exec_set.cpp:756
+#: src/exec_set.cpp:827
 msgid "Set ticks tuning"
 msgstr ""
 
-#: src/exec_set.cpp:743
+#: src/exec_set.cpp:814
 msgid "Set to auto rotate text or not"
 msgstr ""
 
@@ -4416,7 +4416,7 @@ msgstr ""
 msgid "Set to use whole area (style '#')"
 msgstr ""
 
-#: src/exec_set.cpp:755
+#: src/exec_set.cpp:826
 msgid "Set type transparency"
 msgstr ""
 
@@ -4456,19 +4456,19 @@ msgstr ""
 msgid "Setup colors for:"
 msgstr ""
 
-#: src/exec_set.cpp:720
+#: src/exec_set.cpp:791
 msgid "Setup font"
 msgstr ""
 
-#: src/exec_set.cpp:725
+#: src/exec_set.cpp:796
 msgid "Setup light"
 msgstr ""
 
-#: src/exec_prm.cpp:579
+#: src/exec_prm.cpp:616
 msgid "Setup or draw axis"
 msgstr ""
 
-#: src/exec_set.cpp:715
+#: src/exec_set.cpp:786
 msgid "Setup plot points cutting"
 msgstr ""
 
@@ -4492,7 +4492,7 @@ msgstr ""
 msgid "Sharp colors"
 msgstr ""
 
-#: src/exec_set.cpp:747
+#: src/exec_set.cpp:818
 msgid "Shear plot"
 msgstr ""
 
@@ -4616,7 +4616,7 @@ msgstr ""
 msgid "Sin-Fourier transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1609
+#: src/exec_dat.cpp:1698
 msgid "Sin-Fourier transform at some direction"
 msgstr ""
 
@@ -4654,7 +4654,7 @@ msgstr ""
 msgid "Smooth"
 msgstr ""
 
-#: src/exec_dat.cpp:1610
+#: src/exec_dat.cpp:1699
 msgid "Smooth data"
 msgstr ""
 
@@ -4662,35 +4662,35 @@ msgstr ""
 msgid "Smooth data along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1593
+#: src/exec_dat.cpp:1682
 msgid "Solve Hamiltonian ODE (find GO ray or trajectory)"
 msgstr ""
 
-#: src/exec_dat.cpp:1584
+#: src/exec_dat.cpp:1673
 msgid "Solve ODE"
 msgstr ""
 
-#: src/exec_dat.cpp:1586
+#: src/exec_dat.cpp:1675
 msgid "Solve PDE"
 msgstr ""
 
-#: src/exec_dat.cpp:1591
+#: src/exec_dat.cpp:1680
 msgid "Solve PDE in accompanied coordinates for 2d case"
 msgstr ""
 
-#: src/exec_dat.cpp:1592
+#: src/exec_dat.cpp:1681
 msgid "Solve PDE in accompanied coordinates for 3d case"
 msgstr ""
 
-#: src/exec_dat.cpp:1534
+#: src/exec_dat.cpp:1623
 msgid "Solve PDE using advanced method (X-Y only)"
 msgstr ""
 
-#: src/exec_dat.cpp:1624
+#: src/exec_dat.cpp:1713
 msgid "Solve tridiagonal matrix"
 msgstr ""
 
-#: src/exec_dat.cpp:1612
+#: src/exec_dat.cpp:1701
 msgid "Sort data by values in column"
 msgstr ""
 
@@ -4724,7 +4724,7 @@ msgstr ""
 msgid "Squeeze"
 msgstr ""
 
-#: src/exec_dat.cpp:1613
+#: src/exec_dat.cpp:1702
 msgid "Squeeze data"
 msgstr ""
 
@@ -4752,7 +4752,7 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-#: src/exec_dat.cpp:1550
+#: src/exec_dat.cpp:1639
 msgid "Step for pulse diffraction"
 msgstr ""
 
@@ -4864,7 +4864,7 @@ msgstr ""
 msgid "Subticks"
 msgstr ""
 
-#: src/exec_dat.cpp:1616
+#: src/exec_dat.cpp:1705
 msgid "Subtract data or number"
 msgstr ""
 
@@ -4889,7 +4889,7 @@ msgstr ""
 msgid "Summation of"
 msgstr ""
 
-#: src/exec_dat.cpp:1618
+#: src/exec_dat.cpp:1707
 msgid "Swap data (useful after Fourier transform)"
 msgstr ""
 
@@ -4901,11 +4901,11 @@ msgstr ""
 msgid "Swap parts"
 msgstr ""
 
-#: src/exec_set.cpp:719
+#: src/exec_set.cpp:790
 msgid "Switch on/off fog"
 msgstr ""
 
-#: src/exec_set.cpp:721
+#: src/exec_set.cpp:792
 msgid "Switch on/off gray-scale mode"
 msgstr ""
 
@@ -4939,11 +4939,11 @@ msgstr ""
 msgid "Switch on/off mouse zoom of selected region."
 msgstr ""
 
-#: src/exec_set.cpp:751
+#: src/exec_set.cpp:822
 msgid "Switch on/off to use ternary axis"
 msgstr ""
 
-#: src/exec_set.cpp:700
+#: src/exec_set.cpp:771
 msgid "Switch on/off transparency"
 msgstr ""
 
@@ -5049,7 +5049,7 @@ msgstr ""
 msgid "There is no 'fmt' argument for this command"
 msgstr ""
 
-#: udav/text_pnl.cpp:137 mgllab/editor.cpp:681
+#: udav/text_pnl.cpp:137 mgllab/editor.cpp:680
 msgid "There is no fitted formula."
 msgstr ""
 
@@ -5150,7 +5150,7 @@ msgstr ""
 msgid "Transpose data"
 msgstr ""
 
-#: src/exec_dat.cpp:1622
+#: src/exec_dat.cpp:1711
 msgid "Transpose data array"
 msgstr ""
 
@@ -5471,7 +5471,7 @@ msgstr ""
 msgid "W - lightgray"
 msgstr ""
 
-#: src/exec_dat.cpp:1626
+#: src/exec_dat.cpp:1715
 msgid "Wavelet transform at some direction"
 msgstr ""
 
@@ -5510,7 +5510,7 @@ msgstr ""
 msgid "Wire style"
 msgstr ""
 
-#: src/exec_set.cpp:760
+#: src/exec_set.cpp:831
 msgid "Write current image to graphical file"
 msgstr ""
 
@@ -5746,7 +5746,7 @@ msgstr ""
 msgid "Z-slice from"
 msgstr ""
 
-#: src/exec_set.cpp:766
+#: src/exec_set.cpp:837
 msgid "Zoom axis range"
 msgstr ""
 
@@ -5795,7 +5795,7 @@ msgstr ""
 msgid "Zoom out the picture"
 msgstr ""
 
-#: src/exec_set.cpp:765
+#: src/exec_set.cpp:836
 msgid "Zoom plot region"
 msgstr ""
 

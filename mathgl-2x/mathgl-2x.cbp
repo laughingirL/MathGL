@@ -105,10 +105,8 @@
 		<Unit filename="src/data_ex.cpp" />
 		<Unit filename="src/data_gr.cpp" />
 		<Unit filename="src/data_io.cpp" />
-		<Unit filename="src/data_new.cpp" />
 		<Unit filename="src/data_png.cpp" />
 		<Unit filename="src/def_font.cc" />
-		<Unit filename="src/def_font.cpp" />
 		<Unit filename="src/eval.cpp" />
 		<Unit filename="src/evalc.cpp" />
 		<Unit filename="src/evalp.cpp" />

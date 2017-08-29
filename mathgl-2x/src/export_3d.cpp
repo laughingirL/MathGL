@@ -1195,7 +1195,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	delete []ng;
 
 	// primitive definition in groups
-	long npnt = gr->GetPntNum(), k;
+	long npnt = gr->GetPntNum();
 	long *pnt=new long[npnt];
 	mglPrim q;
 	for(size_t i=0;i<gr->Grp.size();i++)
@@ -1204,7 +1204,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 		std::vector<long> &p = gr->Grp[i].p;
 
 		// define coordinates, colors and so on
-		long line=-1, face=-1, other=-1;	k=0;
+		long line=-1, face=-1, other=-1;
 		for(size_t j=0;j<p.size();j++)	// find points for this group
 		{
 			const mglPrim &q=gr->GetPrm(p[j],false);

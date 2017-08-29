@@ -737,10 +737,10 @@ bool mglFont::LoadBin(const char *base, const char *path)
 //-----------------------------------------------------------------------------
 bool mglFont::Load(const char *base, const char *path)
 {
-//	base = 0;
-	char *buf=0,sep='/';
 #ifdef WIN32
-	sep='\\';
+	char *buf=0, sep='\\';
+#else
+	char *buf=0, sep='/';
 #endif
 	char str[256];
 	std::string loc = setlocale(LC_NUMERIC,"C");

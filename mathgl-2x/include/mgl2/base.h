@@ -50,55 +50,55 @@ mglPoint GetZ(HCDT z, int i, int j, int k=0);
 // NOTE memcpy is used --> no memory allocation in T
 template <class T> class mglStack
 {
-	T** dat;
+	std::vector<T*> dat;
 	size_t pb;	///< size of buffer (real size is 2^pb == 1L<<pb)
 	size_t np;	///< allocated pointers
-	size_t m;	///< used pointers (allocated size is m*nb)
 	size_t n;	///< used cells
 	void *mutex;
 public:
 	mglStack(const mglStack<T> &st)
-	{	np=st.np;	dat = (T**)malloc(np*sizeof(T*));
-		pb=st.pb;	m=n=0;	reserve(st.n);
-		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
+	{	np=st.np;	pb=st.pb;	n=0;	reserve(st.n);
+		for(size_t i=0;i<dat.size();i++)
+			memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
 		n=st.n;		mutex = 0;	}
 	mglStack(size_t Pbuf=10)
-	{	np=16;	pb=Pbuf;	dat = (T**)malloc(np*sizeof(T*));
-		dat[0] = new T[(size_t)1<<pb];	n=0;	m=1;	mutex = 0;	}
-	~mglStack()	{	clear();	delete [](dat[0]);	free(dat);	}
-	inline void set_mutex(void *mtx)	{	mutex = mtx;	}
+	{	np=16;	pb=Pbuf;	dat.push_back(new T[(size_t)1<<pb]);
+		n=0;	mutex = 0;	}
+	~mglStack()	{	clear();	delete [](dat[0]);	}
+	inline void set_mutex(void *mtx)	{	mutex=mtx;	}
 	inline size_t allocate(size_t num)
 	{	reserve(num);	size_t r=n;	n+=num;	return r;	}
 	void reserve(size_t num)
 	{
-		num+=n;
+		if(mutex)	mgl_mutex_lock(mutex);
+		num+=n;	// final required size
+		size_t m = dat.size();
 		if(num>(m<<pb))
 		{
 			num = 1+ (num>>pb);
-			if(num>np)
-			{	dat = (T**)realloc(dat, num*sizeof(T*));	np=num;	}
-			for(size_t i=m;i<num;i++)	dat[i] = new T[(size_t)1<<pb];
-			m = num;
+			for(size_t i=m;i<num;i++)	dat.push_back(new T[(size_t)1<<pb]);
 		}
+		if(mutex)	mgl_mutex_unlock(mutex);
 	}
 	void clear()
 	{
 		if(mutex)	mgl_mutex_lock(mutex);
-		for(size_t i=0;i<m;i++)	delete [](dat[i]);
-		dat[0] = new T[(size_t)1<<pb];	n=0;	m=1;
+		for(size_t i=0;i<dat.size();i++)	delete [](dat[i]);
+		dat.clear();	n=0;
+		dat.push_back(new T[(size_t)1<<pb]);
 		if(mutex)	mgl_mutex_unlock(mutex);
 	}
 	T &operator[](size_t i)	{	size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
 	const T &operator[](size_t i)	const	{	size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
 	void push_back(const T &t)
 	{
-		if(n>=(m<<pb))	reserve(1);
+		if(n>=(dat.size()<<pb))	reserve(1);
 		size_t d=n>>pb;
 		dat[d][n-(d<<pb)] = t;	n++;
 	}
 	void push_back(size_t num, const T *t)
 	{
-		if(n+num>=(m<<pb))	reserve(num);
+		if(n+num>=(dat.size()<<pb))	reserve(num);
 		for(size_t i=0;i<num;i++)
 		{	size_t d=n>>pb;	dat[d][n-(d<<pb)] = t[i];	n++;	}
 	}
@@ -106,7 +106,8 @@ public:
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
 		pb=st.pb;	clear();	reserve(st.n);
-		for(size_t i=0;i<st.m && i<m;i++)	memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
+		for(size_t i=0;i<dat.size();i++)
+			memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
 		n = st.n;	return st;
 	}
 };
@@ -572,6 +573,7 @@ public:
 		const mglPnt &p=Pnt[i], &q=Pnt[j];
 		return mgl_isnan(p.x) || mgl_isnan(q.x) || (p.x==q.x && p.y==q.y);
 	}
+	inline bool ValidPnt(size_t i)	{	return mgl_isnum(Pnt[i].x);	}
 //	inline mglPrim &GetPrm(long i)		{	return Prm[i];		}
 	inline mglPrim &GetPrm(long i, bool sort=true)
 	{	return (sort && PrmInd) ? Prm[PrmInd[i]]:Prm[i];	}
@@ -614,7 +616,6 @@ public:
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
 	virtual void smbl_plot(long p1, char id, double size)=0;
 	void curve_plot(size_t n, size_t kq, size_t step=1);
-	void curve_plot(size_t n, const long *pp, size_t step=1, long k0=0);
 	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col)=0;
 	virtual float GetGlyphPhi(const mglPnt &q, float phi)=0;
 	virtual mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'),bool rot=true)=0;

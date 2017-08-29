@@ -517,7 +517,6 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		std::vector<mglPointA> pp = orig ? mgl_pnt_copy(&xx, &yy, &zz, 0) :
 			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy, &zz, 0);
 		size_t np = pp.size();
-		long n1=-1, n2=-1;
 		mglPoint nn(pp[0].p.y-pp[1].p.y, pp[1].p.x-pp[0].p.x);
 		long kq = gr->AllocPnts(2*np);
 #pragma omp parallel for
@@ -721,7 +720,6 @@ void MGL_EXPORT mgl_region_3d(HMGL gr, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT 
 				mgl_pnt_prepare(gr->Min, gr->Max, &xx1, &yy1, &zz0, &xx2, &yy2, &zz0);
 		}
 
-		long n1=-1, n2=-1;
 		size_t np = pp.size();
 		long kq = gr->AllocPnts(2*np);
 #pragma omp parallel for
@@ -774,8 +772,6 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 		std::vector<mglPointB> pp = orig ? mgl_pnt_copy(&xx, &yy1, &zz0, &xx, &yy2, &zz0) :
 			mgl_pnt_prepare(gr->Min, gr->Max, &xx, &yy1, &zz0, &xx, &yy2, &zz0);
 
-		double f1=0, f2=0;
-		long n1=-1, n2=-1;
 		size_t np = pp.size();
 		long kq = gr->AllocPnts(2*np);
 #pragma omp parallel for
@@ -792,10 +788,31 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 			if(gr->SamePnt(iq,iq-2) || gr->SamePnt(iq+1,iq-1))	continue;
 			if(wire)
 			{
-				gr->line_plot(iq,iq+1);	gr->line_plot(iq-1,iq+1);
+				gr->line_plot(iq,iq+1);
+				gr->line_plot(iq-1,iq+1);
 				gr->line_plot(iq,iq-2);
 			}
-			else	gr->quad_plot(iq,iq+1,iq-2,iq-1);
+			else if(!inside)	gr->quad_plot(iq,iq+1,iq-2,iq-1);
+			else
+			{
+				const mglPointB &a=pp[i-1], &b=pp[i];
+				if(a.p1.y<=a.p2.y && b.p1.y<=b.p2.y)
+					gr->quad_plot(iq,iq+1,iq-2,iq-1);
+				else if(a.p1.y<=a.p2.y)
+				{
+					double cc=gr->NextColor(pal,i);
+					double dd = (a.p1.y-a.p2.y)/(b.p2.y-b.p1.y-a.p2.y+a.p1.y);
+					long ns = gr->AddPnt(b.p1*dd+a.p1*(1-dd), sh?cc:c1,nn,-1,27);
+					gr->trig_plot(iq-2,iq-1,ns);
+				}
+				else if(b.p1.y<=b.p2.y)
+				{
+					double cc=gr->NextColor(pal,i);
+					double dd = (a.p1.y-a.p2.y)/(b.p2.y-b.p1.y-a.p2.y+a.p1.y);
+					long ns = gr->AddPnt(b.p1*dd+a.p1*(1-dd), sh?cc:c1,nn,-1,27);
+					gr->trig_plot(iq,iq+1,ns);
+				}
+			}
 		}
 	}
 	gr->EndGroup();

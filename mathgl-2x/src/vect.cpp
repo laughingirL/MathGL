@@ -1197,8 +1197,8 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, HCDT x, H
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 	mglPoint nx(ax->GetNx(),ax->GetNy());
 
-	mreal dt = 0.5/(ax->GetNx() > ax->GetNy() ? ax->GetNx() : ax->GetNy()),e,f,g,ff[4],gg[4],h,s=2,acc=dt/20;
-	mreal ss = 16./mgl_ipow(gr->Max.c - gr->Min.c,2);
+	double dt = 0.5/(ax->GetNx() > ax->GetNy() ? ax->GetNx() : ax->GetNy()),e,f,g,ff[4],gg[4],h,s=2,acc=dt/20;
+	double ss = 16./mgl_ipow(gr->Max.c - gr->Min.c,2);
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;	v = -v;	s *= -1;}
 	long k=0;
 	bool end = false;
@@ -1297,14 +1297,13 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, HCDT x, H
 			mglPoint t = !l;	t.Normalize();
 			mglPoint q = t^l;	q.Normalize();
 			double rr=pp[i].c;	dr=l.c;
-			long iq = kq+i*num;
 			for(long j=0;j<num;j++)
 			{
 				int fi=j*360/(num-1);
 				float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
 				mglPoint p = pp[i] + t*(rr*co) + q*(rr*si);
 				mglPoint d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-				gr->AddPntQ(iq+j,p,cc[i],d);
+				gr->AddPntQ(kq+i*num+j,p,cc[i],d);
 			}
 		}
 		for(long i=1;i<k;i++)	for(long j=1;j<num;j++)
@@ -1400,8 +1399,8 @@ void flowr(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HC
 
 	nn = (ax->GetNx() > ax->GetNy() ? ax->GetNx() : ax->GetNy());
 	nn = (nn > ax->GetNz() ? nn : ax->GetNz());
-	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=2,u1,v1,w1,acc=dt/20;
-	mreal ss = 16./mgl_ipow(gr->Max.c - gr->Min.c,2);
+	double dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=2,u1,v1,w1,acc=dt/20;
+	double ss = 16./mgl_ipow(gr->Max.c - gr->Min.c,2);
 
 	if(u<0 || v<0 || w<0)
 	{	dt = -dt;	u = -u;	v = -v;	w = -w;	s *= -1;}
@@ -1506,32 +1505,31 @@ void flowr(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HC
 	if(k>1)
 	{
 		const int num=!(gr->GetQuality()&3)?13:25;
-		mglPoint l=pp[1]-pp[0],t=!l,q=t^l;
+		mglPoint l=pp[1]-pp[0],t=!l,q=t^l,p,d;
 		t.Normalize();	q.Normalize();
 		double rr=pp[0].c,dr=l.c;
-		const long kq = gr->AllocPnts(num*k);
+		long kq = gr->AllocPnts(num*k);
 		for(long j=0;j<num;j++)
 		{
 			int fi=j*360/(num-1);
 			float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
-			mglPoint p = pp[0] + t*(rr*co) + q*(rr*si);
-			mglPoint d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+			p = pp[0] + t*(rr*co) + q*(rr*si);
+			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
 			gr->AddPntQ(kq+j,p,cc[0],d);
 		}
 		for(long i=1;i<k;i++)
 		{
-			mglPoint l = pp[i]-pp[i-1];
-			mglPoint t = !l;	t.Normalize();
-			mglPoint q = t^l;	q.Normalize();
+			l = pp[i]-pp[i-1];
+			t = !l;	t.Normalize();
+			q = t^l;	q.Normalize();
 			double rr=pp[i].c;	dr=l.c;
-			long iq = kq+i*num;
 			for(long j=0;j<num;j++)
 			{
 				int fi=j*360/(num-1);
 				float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
-				mglPoint p = pp[i] + t*(rr*co) + q*(rr*si);
-				mglPoint d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-				gr->AddPntQ(iq+j,p,cc[i],d);
+				p = pp[i] + t*(rr*co) + q*(rr*si);
+				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+				gr->AddPntQ(kq+i*num+j,p,cc[i],d);
 			}
 		}
 		for(long i=1;i<k;i++)	for(long j=1;j<num;j++)

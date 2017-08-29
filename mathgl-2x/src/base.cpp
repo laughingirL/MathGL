@@ -336,14 +336,16 @@ long mglBase::PushPnts(size_t num, const mglPnt *qq)
 {
 	long k;
 #pragma omp critical(pnt)
-	{k=Pnt.size();	MGL_PUSHs(Pnt.push_back(num,qq),mutexPnt);}	return k;
+	MGL_PUSHs({k=Pnt.size();Pnt.push_back(num,qq);},mutexPnt);
+	return k;
 }
 //-----------------------------------------------------------------------------
 long mglBase::AllocPnts(size_t num)
 {
 	long k;
 #pragma omp critical(pnt)
-	MGL_PUSHs(k=Pnt.allocate(num),mutexPnt);	return k;
+	MGL_PUSHs({k=Pnt.allocate(num);},mutexPnt);
+	return k;
 }
 //-----------------------------------------------------------------------------
 void inline mgl_put_inbox(mreal a1, mreal a2, mreal &a)
@@ -1626,52 +1628,6 @@ void mglBase::ClearPrmInd()
 {
 #pragma omp critical(prmind)
 	{	if(PrmInd)	delete []PrmInd;	PrmInd=NULL;	}
-}
-//-----------------------------------------------------------------------------
-void mglBase::curve_plot(size_t num, const long *nn, size_t step, long k0)
-{
-	// exclude straight-line parts
-	if(get(MGL_FULL_CURV))	for(size_t i=0;i+1<num;i++)
-		line_plot(k0+nn[i*step],k0+nn[i*step+step]);
-	else	for(size_t i=0;i+1<num;i++)
-	{
-		if(k0+nn[i*step]<0 || k0+nn[i*step+step]<0)	continue;
-		const mglPoint p1(GetPntP(k0+nn[i*step])), ps(GetPntP(k0+nn[(i+1)*step]));
-		if(mgl_isnan(p1.x) || mgl_isnan(ps.x))	continue;
-		const mglColor c1(GetPntC(k0+nn[i*step]));
-		// remove duplicates
-		for(;i+1<num;i++)
-		{
-			long ii = k0+nn[(i+1)*step];
-			if(ii<0)	break;
-			const mglPoint pp(GetPntP(ii));
-			if(p1!=pp || mgl_isnan(pp.x))	break;
-		}
-		if(i>=num-1)	break;
-
-		size_t k=i+2;
-		while(k<num && k0+nn[k*step]>=0)
-		{
-			const mglPoint p2(GetPntP(k0+nn[k*step]));
-			if(mgl_isnan(p2.x))	break;
-			const mglColor c2(GetPntC(k0+nn[k*step]));
-			mreal dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z, dd=dx*dx+dy*dy+dz*dz;
-			if(dd==0)	break;
-			bool ops=false;
-			for(size_t ii=i+1;ii<k;ii++)
-			{
-				const mglPoint p(GetPntP(k0+nn[ii*step]));
-				mreal v = (dx*(p.x-p1.x)+dy*(p.y-p1.y)+dz*(p.y-p1.y))/dd;
-				mglPoint q(p-p1-v*(p2-p1));
-				if(q.norm()>0.1)	{	ops = true;	break;	}
-				const mglColor c(GetPntC(k0+nn[ii*step]));
-				if(dd>0 && (c-c1-(v/dd)*(c2-c1)).NormS()>1e-4)	{	ops = true;	break;	}
-			}
-			if(ops)	break;
-			k++;
-		}
-		k--;	line_plot(k0+nn[i*step],k0+nn[k*step]);	i = k-1;
-	}
 }
 //-----------------------------------------------------------------------------
 void mglBase::curve_plot(size_t num, size_t k0, size_t step)
