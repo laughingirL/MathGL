@@ -52,25 +52,25 @@ template <class T> class mglStack
 {
 	std::vector<T*> dat;
 	size_t pb;	///< size of buffer (real size is 2^pb == 1L<<pb)
-	size_t np;	///< allocated pointers
+//	size_t np;	///< allocated pointers
 	size_t n;	///< used cells
 	void *mutex;
 public:
 	mglStack(const mglStack<T> &st)
-	{	np=st.np;	pb=st.pb;	n=0;	reserve(st.n);
+	{	mutex = 0;	pb=st.pb;	n=0;	reserve(st.n);
 		for(size_t i=0;i<dat.size();i++)
 			memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
-		n=st.n;		mutex = 0;	}
+		n=st.n;	}
 	mglStack(size_t Pbuf=10)
-	{	np=16;	pb=Pbuf;	dat.push_back(new T[(size_t)1<<pb]);
-		n=0;	mutex = 0;	}
+	{	mutex = 0;	pb=Pbuf;	dat.push_back(new T[(size_t)1<<pb]);
+		n=0;	}
 	~mglStack()	{	clear();	delete [](dat[0]);	}
 	inline void set_mutex(void *mtx)	{	mutex=mtx;	}
 	inline size_t allocate(size_t num)
 	{	reserve(num);	size_t r=n;	n+=num;	return r;	}
 	void reserve(size_t num)
 	{
-		if(mutex)	mgl_mutex_lock(mutex);
+//		if(mutex)	mgl_mutex_lock(mutex);
 		num+=n;	// final required size
 		size_t m = dat.size();
 		if(num>(m<<pb))
@@ -78,7 +78,7 @@ public:
 			num = 1+ (num>>pb);
 			for(size_t i=m;i<num;i++)	dat.push_back(new T[(size_t)1<<pb]);
 		}
-		if(mutex)	mgl_mutex_unlock(mutex);
+//		if(mutex)	mgl_mutex_unlock(mutex);
 	}
 	void clear()
 	{

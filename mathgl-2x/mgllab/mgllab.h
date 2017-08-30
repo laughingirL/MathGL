@@ -47,7 +47,7 @@
 //-----------------------------------------------------------------------------
 extern mglParse *Parse;
 extern Fl_Menu_Item colors[];
-class Fl_MGL;
+struct Fl_MGL;
 //-----------------------------------------------------------------------------
 extern Fl_Preferences pref;
 extern Fl_Text_Display::Style_Table_Entry styletable[10];

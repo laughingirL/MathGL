@@ -304,7 +304,6 @@ int MGL_NO_EXPORT mgls_light(mglGraph *gr, long , mglArg *a, const char *k, cons
 		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0],a[8].v);
 	else if(!strcmp(k,"nnnnnnnsnn"))
 		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0],a[8].v,a[9].v);
-	else res = 1;
 	return res;
 }
 //-----------------------------------------------------------------------------
