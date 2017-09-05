@@ -2,6 +2,13 @@
 #define _MGL_CONFIG_H_
 
 #define MGL_VER2 	${MathGL_VERSION_MINOR}.${MathGL_PATCH_VERSION}	// minor version of MathGL 2.* (like 1.3 for v.2.1.3)
+#define MGL_VER_MAJOR 	${MathGL_VERSION_MAJOR}
+#define MGL_VER_MINOR 	${MathGL_VERSION_MINOR}
+#define MGL_VER_PATCH 	${MathGL_PATCH_VERSION}
+#define MGL_VERSION 	(${MathGL_VERSION_MAJOR}000+${MathGL_VERSION_MINOR}.${MathGL_PATCH_VERSION})
+#define MGL_VER_STRING 	"${MathGL_VERSION_MAJOR}.${MathGL_VERSION_MINOR}.${MathGL_PATCH_VERSION}"
+#define MGL_BUILD_DATE	"${MathGL_DATE}"
+
 
 #define MGL_USE_DOUBLE	${MGL_USE_DOUBLE}
 
