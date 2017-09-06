@@ -2062,7 +2062,6 @@ void MGL_EXPORT mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	gr->SetPenPal(pen,&pal);	gr->Reserve(4*n*m);
 	mglPoint qn(NAN,NAN);
-	long n1=-1,n2=-1,n3=-1,n4=-1, m1=-1,m2=-1,m3=-1,m4=-1;
 	bool sh = mglchr(pen,'!'), xo = mglchr(pen,'x'), zo = mglchr(pen,'z'), wire = mglchr(pen,'#');
 	if(!xo && !zo)	xo = zo = true;
 	int nv = xo && zo ? 4:2;

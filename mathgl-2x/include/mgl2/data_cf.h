@@ -528,6 +528,18 @@ double MGL_EXPORT mgl_expr_diff_(uintptr_t *ex, const char *dir, mreal *x, mreal
 /// Return value of expression differentiation over variable dir for given variables
 double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *vars);
 //-----------------------------------------------------------------------------
+/// Create HAEX object for expression evaluating
+HAEX MGL_EXPORT mgl_create_cexpr(const char *expr);
+uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int);
+/// Delete HAEX object
+void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
+void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex);
+/// Return value of expression for given x,y,z variables
+mdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
+mdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z);
+/// Return value of expression for given variables
+mdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
 #endif

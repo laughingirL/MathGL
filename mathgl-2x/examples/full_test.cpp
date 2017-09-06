@@ -21,7 +21,12 @@
 #include <locale.h>
 #include <time.h>
 #include <getopt.h>
+#ifdef WIN32
+#include <io.h>
+#include <direct.h>
+#else
 #include <unistd.h>
+#endif
 
 #include "mgl2/mgl.h"
 #include "mgl2/font.h"

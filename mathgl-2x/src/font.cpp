@@ -20,7 +20,12 @@
 #include <locale.h>
 #include <ctype.h>
 #include <wctype.h>
+#ifdef WIN32
+#include <io.h>
+#include <direct.h>
+#else
 #include <unistd.h>
+#endif
 
 #if !defined(__BORLANDC__) || (__CODEGEARC__ >=  0x0630)
 #include <algorithm>

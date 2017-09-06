@@ -489,79 +489,59 @@ uintptr_t MGL_EXPORT mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* i
 //		ODE series
 //
 //-----------------------------------------------------------------------------
-struct mglOdeTxt	{	long n;	HMEX *eq;	const char *var;	};
 void MGL_NO_EXPORT mgl_txt_func(const mreal *x, mreal *dx, void *par)
 {
-	mglOdeTxt *p=(mglOdeTxt *)par;
+	mglEqTxT *p=(mglEqTxT *)par;
 	mreal vars[MGL_VS];
-	for(long i=0;i<p->n;i++)
+	size_t n = p->str.size();
+	for(size_t i=0;i<n;i++)
 	{	char ch = p->var[i];	if(ch>='a' && ch<='z')	vars[ch-'a']=x[i];	}
 #pragma omp parallel for
-	for(long i=0;i<p->n;i++)
-		dx[i] = mgl_expr_eval_v(p->eq[i], vars);
+	for(long i=0;i<long(n);i++)
+		dx[i] = mgl_expr_eval_v(p->eqR[i], vars);
 }
 HMDT MGL_EXPORT mgl_ode_solve_str(const char *func, const char *var, HCDT x0, mreal dt, mreal tmax)
 {
 	if(!var || !(*var) || !func)	return 0;
-	long len = strlen(func);
-	mglOdeTxt par;	par.var=var;
-	par.n = strlen(var);
-	par.eq = new HMEX[par.n];
-	char *buf = new char[len+1], *f=buf, *g=f;	memcpy(buf,func,len+1);
-	mreal *xx = new mreal[par.n];
-	for(long i=0;i<par.n;i++)
-	{
-		xx[i] = x0?x0->vthr(i):0;
-		for(long k=0;f[k];k++)	if(f[k]==';')
-		{ g = f+k+1;	f[k]=0;	break;	}
-		if(f==g)	g = f+strlen(f);
-		par.eq[i] = mgl_create_expr(f);
-		f = g;
-	}
-	HMDT res = mgl_ode_solve_ex(mgl_txt_func,par.n,xx,dt,tmax,&par,NULL);
-	for(long i=0;i<par.n;i++)	mgl_delete_expr(par.eq[i]);
-	delete []par.eq;	delete []buf;	delete []xx;
-	return res;
+	mglEqTxT par;
+	par.var=var;	par.FillReal(func);
+	size_t n = par.str.size();
+	mreal *xx = new mreal[n];
+	for(size_t i=0;i<n;i++)	xx[i] = x0?x0->vthr(i):0;
+	HMDT res = mgl_ode_solve_ex(mgl_txt_func,n,xx,dt,tmax,&par,NULL);
+	delete []xx;	return res;
 }
 //-----------------------------------------------------------------------------
-struct mglOdeTxtC	{	long n;	HAEX *eq;	const char *var;	};
 void MGL_NO_EXPORT mgl_txt_funcC(const mreal *x, mreal *dx, void *par)
 {
-	mglOdeTxtC *p=(mglOdeTxtC *)par;
+	mglEqTxT *p=(mglEqTxT *)par;
 	dual vars[MGL_VS];
-	for(long i=0;i<p->n;i++)
+	size_t n = p->str.size();
+	for(size_t i=0;i<n;i++)
 	{	char ch = p->var[i];	if(ch>='a' && ch<='z')	vars[ch-'a']=dual(x[2*i],x[2*i+1]);	}
 #pragma omp parallel for
-	for(long i=0;i<p->n;i++)
+	for(long i=0;i<long(n);i++)
 	{
-		dual r = mgl_cexpr_eval_v(p->eq[i], vars);
+		dual r = mgl_cexpr_eval_v(p->eqC[i], vars);
 		dx[2*i] = real(r);	dx[2*i+1] = imag(r);
 	}
 }
 HADT MGL_EXPORT mgl_ode_solve_str_c(const char *func, const char *var, HCDT x0, mreal dt, mreal tmax)
 {
 	if(!var || !(*var) || !func)	return 0;
-	long len = strlen(func);
-	mglOdeTxtC par;	par.var=var;
-	par.n = strlen(var);
-	par.eq = new HAEX[par.n];
-	char *buf = new char[len+1], *f=buf, *g=f;	memcpy(buf,func,len+1);
-	mreal *xx = new mreal[2*par.n];
+	mglEqTxT par;	par.var=var;
+	par.var=var;	par.FillCmplx(func);
+	size_t n = par.str.size();
+	mreal *xx = new mreal[2*n];
 	const mglDataC *c = dynamic_cast<const mglDataC *>(x0);
-	for(long i=0;i<par.n;i++)
+	for(size_t i=0;i<n;i++)
 	{
 		if(c)	{	xx[2*i]=real(c->a[i]);	xx[2*i+1]=imag(c->a[i]);	}
 		else	{	xx[2*i] = x0?x0->vthr(i):0;	xx[2*i+1]=0;	}
-		for(long k=0;f[k];k++)	if(f[k]==';')
-		{ g = f+k+1;	f[k]=0;	break;	}
-		if(f==g)	g = f+strlen(f);
-		par.eq[i] = mgl_create_cexpr(f);
-		f = g;
 	}
-	HMDT res = mgl_ode_solve_ex(mgl_txt_funcC,2*par.n,xx,dt,tmax,&par,NULL);
-	for(long i=0;i<par.n;i++)	mgl_delete_cexpr(par.eq[i]);
-	delete []par.eq;	delete []buf;	delete []xx;
-	const long nn=par.n,nt=res->ny;
+	HMDT res = mgl_ode_solve_ex(mgl_txt_funcC,2*n,xx,dt,tmax,&par,NULL);
+	delete []xx;
+	const long nn=n, nt=res->ny;
 	mglDataC *out = new mglDataC(nn, nt);
 #pragma omp parallel for
 	for(long i=0;i<nt*nn;i++)	out->a[i] = dual(res->a[2*i],res->a[2*i+1]);

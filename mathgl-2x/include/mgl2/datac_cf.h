@@ -373,18 +373,6 @@ uintptr_t MGL_EXPORT mgl_gspline_init_(uintptr_t *x, uintptr_t *v);
 /// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
 mdual MGL_EXPORT mgl_gsplinec(HCDT coef, mreal dx, dual *d1, dual *d2);
 mdual MGL_EXPORT mgl_gsplinec_(uintptr_t *c, mreal *dx, dual *d1, dual *d2);
-//-----------------------------------------------------------------------------
-/// Create HAEX object for expression evaluating
-HAEX MGL_EXPORT mgl_create_cexpr(const char *expr);
-uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int);
-/// Delete HAEX object
-void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
-void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex);
-/// Return value of expression for given x,y,z variables
-mdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
-mdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z);
-/// Return value of expression for given variables
-mdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
 
 #ifdef __cplusplus
 }

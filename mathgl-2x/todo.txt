@@ -42,6 +42,12 @@
 
 11. Add sample of Step, Bars for x.nx = y.nx+1
 
+
+12. Miss first empty string at reading
+13. Check dashing in EPS,SVG
+14. Roots() for several equations
+
+
 ZZ. Update *.i for new functions {before release!!!}
 
 

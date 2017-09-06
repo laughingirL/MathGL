@@ -381,7 +381,7 @@ void MGL_EXPORT mgl_cones_(uintptr_t *gr, uintptr_t *y,	const char *pen, const c
 void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, int n, const char *stl)
 {
 	if(n<3)	return;
-	long pal=0, n0,n1,n2,np,k1=-1,kp=-1;
+	long pal=0, n0;
 	static int cgid=1;	gr->StartGroup("Polygon",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal);
@@ -463,7 +463,7 @@ void MGL_EXPORT mgl_arc_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *x1, mreal *
 void MGL_EXPORT mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl)
 {
 	const int n = 41;
-	long pal=0,n0,n1=-1,m1=-1;
+	long pal=0,n0;
 	static int cgid=1;	gr->StartGroup("Ellipse",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal), d;
@@ -511,7 +511,7 @@ void MGL_EXPORT mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2,
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_rhomb(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl)
 {
-	long pal=0, n1,n2,n3,n4;
+	long pal=0;
 	static int cgid=1;	gr->StartGroup("Rhomb",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal);
