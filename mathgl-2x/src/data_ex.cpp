@@ -21,6 +21,8 @@
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
 #include "mgl2/thread.h"
+#include "interp.hpp"
+void MGL_NO_EXPORT mgl_txt_func(const mreal *x, mreal *dx, void *par);
 HMDT MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_data_trace(HCDT d)
@@ -773,6 +775,80 @@ void MGL_EXPORT mgl_data_sort(HMDT dat, long idx, long idy)
 void MGL_EXPORT mgl_data_sort_(uintptr_t *d, int *idx, int *idy)
 {	mgl_data_sort(_DT_,*idx,*idy);	}
 //-----------------------------------------------------------------------------
+//
+//	Find roots series
+//
+//
+//-----------------------------------------------------------------------------
+#if MGL_HAVE_GSL
+#include <gsl/gsl_multiroots.h>
+struct mglRoots
+{
+	mreal *x, *f;
+	size_t n;
+	void (*func)(const mreal *x, mreal *f, void *par);
+	void *par;
+};
+int MGL_NO_EXPORT mgl_root(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	mglRoots *p = (mglRoots *)params;
+	for(size_t i=0;i<p->n;i++)	p->x[i] = gsl_vector_get (x, i);
+	p->func(p->x,p->f,p->par);
+	bool ok = true;
+	for(size_t i=0;i<p->n;i++)
+	{	gsl_vector_set (f, i, p->f[i]);
+		if(mgl_isbad(p->f[i]))	ok=false;	}
+	return ok?GSL_SUCCESS:GSL_FAILURE;
+}
+bool MGL_EXPORT mgl_find_roots(size_t n, void (*func)(const mreal *x, mreal *f, void *par), mreal *x0, void *par)
+{
+	for(size_t i=0;i<n;i++)	if(mgl_isbad(x0[i]))	return false;
+	mglRoots pp;
+	pp.x=x0;	pp.func=func;	pp.n=n;	pp.par=par;
+	mreal *y = new mreal[n];	pp.f=y;
+
+	gsl_multiroot_function f = {&mgl_root, n, &pp};
+	gsl_vector *x = gsl_vector_alloc(n);
+	for(size_t i=0;i<n;i++)	gsl_vector_set(x, i, x0[i]);
+
+	gsl_multiroot_fsolver *s = gsl_multiroot_fsolver_alloc(gsl_multiroot_fsolver_hybrids, n);
+	gsl_multiroot_fsolver_set(s, &f, x);
+
+	int status = GSL_CONTINUE;
+	for(size_t i=0;i<1000 && status==GSL_CONTINUE;i++)
+	{
+	  status = gsl_multiroot_fsolver_iterate(s);
+	  if(status)	break;
+	  status = gsl_multiroot_test_residual(s->f, 1e-7);
+	}
+	for(size_t i=0;i<n;i++)	x0[i] = gsl_vector_get(s->x, i);
+	gsl_multiroot_fsolver_free(s);
+	gsl_vector_free(x);	delete []y;
+	return status==GSL_SUCCESS;
+}
+#else
+bool MGL_EXPORT mgl_find_roots(size_t , void (*)(mreal *, mreal *, void *), mreal *, void *)
+{	return false;	}
+#endif // MGL_HAVE_GSL
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_find_roots_txt(const char *func, const char *vars, HCDT ini)
+{
+	if(!vars || !(*vars) || !func || !ini)	return 0;
+	mglEqTxT par;
+	par.var=vars;	par.FillReal(func);
+	size_t n = par.str.size();
+	if(ini->GetNx()!=n)	return 0;
+	mreal *xx = new mreal[n];
+	mglData *res = new mglData(ini);
+	for(long j=0;j<ini->GetNy()*ini->GetNz();j++)
+	{
+		for(size_t i=0;i<n;i++)	xx[i] = ini->vthr(i+n*j);
+		mgl_find_roots(n,mgl_txt_func,xx,&par);
+		for(size_t i=0;i<n;i++)	res->a[i+n*j] = xx[i];
+	}
+	delete []xx;	return res;
+}
+//-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal x, void *par), mreal x0, void *par)
 {
 	mreal x1=x0+1e-2*(x0?x0:1), f0=func(x0,par), f1=func(x1,par), x, f;
@@ -830,6 +906,11 @@ mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *va
 {	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
 	mreal r = mgl_find_root_txt(s,*ini,*var);
 	delete []s;	return r;	}
+uintptr_t MGL_EXPORT mgl_find_roots_txt_(const char *func, const char *vars, uintptr_t *ini,int l,int m)
+{	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
+	char *v=new char[m+1];	memcpy(v,vars,m);	v[m]=0;
+	uintptr_t r = uintptr_t(mgl_find_roots_txt(s,v,_DA_(ini)));
+	delete []s;	delete []v;	return r;	}
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_pulse_z(void *par)
 {

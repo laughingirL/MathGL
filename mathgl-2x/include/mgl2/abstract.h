@@ -41,7 +41,7 @@ typedef mglParser* HMPR;
 typedef mglFormula* HMEX;
 typedef mglFormulaC* HAEX;
 typedef const mglDataA* HCDT;
-
+//-----------------------------------------------------------------------------
 std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns);
 std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns);
 /// Get section separated by symbol ch. This is analog of QString::section().
@@ -52,6 +52,7 @@ std::vector<std::string> MGL_EXPORT mgl_str_args(const std::string &str, char ch
 std::string MGL_EXPORT mgl_str_num(double val);
 /// Get string from complex number
 std::string MGL_EXPORT mgl_str_num(dual val);
+//-----------------------------------------------------------------------------
 
 extern "C" {
 
@@ -152,6 +153,36 @@ mreal MGL_EXPORT mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z
 /// Internal function for (un-)locking mutex in mglStack
 void MGL_EXPORT mgl_mutex_lock(void *);
 void MGL_EXPORT mgl_mutex_unlock(void *);
+
+//-----------------------------------------------------------------------------
+/// Create HMEX object for expression evaluating
+HMEX MGL_EXPORT mgl_create_expr(const char *expr);
+uintptr_t MGL_EXPORT mgl_create_expr_(const char *expr, int);
+/// Delete HMEX object
+void MGL_EXPORT mgl_delete_expr(HMEX ex);
+void MGL_EXPORT mgl_delete_expr_(uintptr_t *ex);
+/// Return value of expression for given x,y,z variables
+double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z);
+double MGL_EXPORT mgl_expr_eval_(uintptr_t *ex, mreal *x, mreal *y, mreal *z);
+/// Return value of expression for given variables
+double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *vars);
+/// Return value of expression differentiation over variable dir for given x,y,z variables
+double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z);
+double MGL_EXPORT mgl_expr_diff_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int);
+/// Return value of expression differentiation over variable dir for given variables
+double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *vars);
+//-----------------------------------------------------------------------------
+/// Create HAEX object for expression evaluating
+HAEX MGL_EXPORT mgl_create_cexpr(const char *expr);
+uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int);
+/// Delete HAEX object
+void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
+void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex);
+/// Return value of expression for given x,y,z variables
+mdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
+mdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z);
+/// Return value of expression for given variables
+mdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
 
 //-----------------------------------------------------------------------------
 /// Callback function for asking user a question. Result shouldn't exceed 1024.

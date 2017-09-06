@@ -318,9 +318,12 @@ using mglDataA::Momentum;
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,0,norm));	}
 	inline mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,&kdat,norm));	}
-	/// Find roots for set of nonlinear equations defined by textual formula
+	/// Find roots for nonlinear equation defined by textual formula
 	inline mglData Roots(const char *eq, char var='x') const
 	{	return mglData(true,mgl_data_roots(eq, this, var));	}
+	/// Find roots for set of nonlinear equations defined by textual formula
+	inline mglData MultiRoots(const char *eq, const char *vars) const
+	{	return mglData(true,mgl_find_roots_txt(eq, vars, this));	}
 	/// Find correlation with another data arrays
 	inline mglData Correl(const mglDataA &dat, const char *dir) const
 	{	return mglData(true,mgl_data_correl(this,&dat,dir));	}
@@ -1020,46 +1023,6 @@ public:
 	{	return i>0? (i<long(dat.size()-1)? (dat[i+1]-dat[i-1])/2:dat[i]-dat[i-1]) : dat[i+1]-dat[i];	}
 	mreal dvy(long ,long =0,long =0) const	{	return 0;	}
 	mreal dvz(long ,long =0,long =0) const	{	return 0;	}
-};
-//-----------------------------------------------------------------------------
-struct mglEqTxT
-{
-	std::vector<std::string> str;
-	HAEX *eqC;
-	HMEX *eqR;
-	const char *var;
-
-	mglEqTxT(const char *vars=0):eqC(0),eqR(0),var(vars)	{}
-	~mglEqTxT()
-	{
-		if(eqR)	{	for(size_t i=0;i<str.size();i++)	mgl_delete_expr(eqR[i]);	delete []eqR;	}
-		if(eqC)	{	for(size_t i=0;i<str.size();i++)	mgl_delete_cexpr(eqC[i]);	delete []eqC;	}
-	}
-	void FillStr(const char *eqs)
-	{
-		const char *f=eqs;
-		while(1)
-		{
-			const char *g = strchr(f,';');
-			if(g)	str.push_back(std::string(f,g-f));
-			else	{	str.push_back(f);	break;	}
-			f = g+1;
-		}
-	}
-	void FillReal(const char *eqs)
-	{
-		FillStr(eqs);	size_t n = str.size();
-		if(n==0)	return;
-		eqR = new HMEX[n];
-		for(size_t i=0;i<n;i++)	eqR[i] = mgl_create_expr(str[i].c_str());
-	}
-	void FillCmplx(const char *eqs)
-	{
-		FillStr(eqs);	size_t n = str.size();
-		if(n==0)	return;
-		eqC = new HAEX[n];
-		for(size_t i=0;i<n;i++)	eqC[i] = mgl_create_cexpr(str[i].c_str());
-	}
 };
 //-----------------------------------------------------------------------------
 #endif

@@ -45,7 +45,7 @@
 
 12. Miss first empty string at reading
 13. Check dashing in EPS,SVG
-14. Roots() for several equations
+14. Roots() for several equations -- Add complex version
 
 
 ZZ. Update *.i for new functions {before release!!!}

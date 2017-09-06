@@ -22,6 +22,7 @@
 #include "mgl2/eval.h"
 #include "mgl2/thread.h"
 #include "mgl2/base.h"
+#include "interp.hpp"
 const double GAMMA=0.1;	///< value for damping
 HADT MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------

@@ -1261,10 +1261,16 @@ int MGL_NO_EXPORT mgls_roots(mglGraph *, long , mglArg *a, const char *k, const 
 	if(k[0]=='d' && a[0].d->temp)	return 5;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
 	if(!d)	return 1;
-	if(!strcmp(k,"dsds"))	*d = mglData(true,mgl_data_roots(a[1].s.c_str(), a[2].d, a[3].s[0]));
-	else if(!strcmp(k,"dsns"))	d->a[0] = mgl_find_root_txt(a[1].s.c_str(), a[2].v, a[3].s[0]);
-	else if(!strcmp(k,"dsd"))	*d = mglData(true,mgl_data_roots(a[1].s.c_str(), a[2].d, 'x'));
-	else if(!strcmp(k,"dsn"))	d->a[0] = mgl_find_root_txt(a[1].s.c_str(), a[2].v, 'x');
+	if(!strcmp(k,"dsds"))
+		*d = mglData(true,mgl_data_roots(a[1].s.c_str(), a[2].d, a[3].s[0]));
+	else if(!strcmp(k,"dsns"))
+		d->a[0] = mgl_find_root_txt(a[1].s.c_str(), a[2].v, a[3].s[0]);
+	else if(!strcmp(k,"dsd"))
+		*d = mglData(true,mgl_data_roots(a[1].s.c_str(), a[2].d, 'x'));
+	else if(!strcmp(k,"dsn"))
+		d->a[0] = mgl_find_root_txt(a[1].s.c_str(), a[2].v, 'x');
+	else if(!strcmp(k,"dssd"))
+		*d = mglData(true,mgl_find_roots_txt(a[1].s.c_str(), a[2].s.c_str(), a[3].d));
 	else res = 1;
 	return res;
 }
@@ -1689,7 +1695,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"resize",_("Resize data array"),"resize Res Dat mx [my mz]", mgls_resize ,4},
 	{"rkstep",_("Perform Runge-Kutta step"),"rkstep 'Diff1;Diff2;...' 'Var1;Var2;...' [dt]", mgls_rkstep, 6},
 	{"roll",_("Roll data along direction(s)"),"roll Dat 'dir' num", mgls_roll ,16},
-	{"roots",_("Find roots using data as initial values"), "roots Res 'func' Ini ['var']|Res 'func' ini ['var']", mgls_roots ,4},
+	{"roots",_("Find roots using data as initial values"), "roots Res 'func' Ini ['var']|Res 'func' ini ['var']|Res 'func' 'vars' Ini", mgls_roots ,4},
 	{"save",_("Save data to file"),"save Dat 'file'|'str' 'file' ['how']", mgls_save ,3},
 	{"savehdf",_("Save data to HDF5 file"),"savehdf Dat 'file' 'id' [rewrite]", mgls_savehdf ,3},
 	{"scanfile",_("Get formated data from file"),"scanfile Dat 'fname 'templ'", mgls_scanfile ,4},

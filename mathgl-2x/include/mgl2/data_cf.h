@@ -509,36 +509,11 @@ mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *va
 /// Find roots for nonlinear equation defined by textual formula
 HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, char var_id);
 uintptr_t MGL_EXPORT mgl_data_roots_(const char *func, uintptr_t *ini, const char *var_id,int,int);
-
-//-----------------------------------------------------------------------------
-/// Create HMEX object for expression evaluating
-HMEX MGL_EXPORT mgl_create_expr(const char *expr);
-uintptr_t MGL_EXPORT mgl_create_expr_(const char *expr, int);
-/// Delete HMEX object
-void MGL_EXPORT mgl_delete_expr(HMEX ex);
-void MGL_EXPORT mgl_delete_expr_(uintptr_t *ex);
-/// Return value of expression for given x,y,z variables
-double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z);
-double MGL_EXPORT mgl_expr_eval_(uintptr_t *ex, mreal *x, mreal *y, mreal *z);
-/// Return value of expression for given variables
-double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *vars);
-/// Return value of expression differentiation over variable dir for given x,y,z variables
-double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z);
-double MGL_EXPORT mgl_expr_diff_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int);
-/// Return value of expression differentiation over variable dir for given variables
-double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *vars);
-//-----------------------------------------------------------------------------
-/// Create HAEX object for expression evaluating
-HAEX MGL_EXPORT mgl_create_cexpr(const char *expr);
-uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int);
-/// Delete HAEX object
-void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
-void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex);
-/// Return value of expression for given x,y,z variables
-mdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
-mdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z);
-/// Return value of expression for given variables
-mdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
+/// Find roots for set of nonlinear equations defined by textual formulas
+HMDT MGL_EXPORT mgl_find_roots_txt(const char *func, const char *vars, HCDT ini);
+uintptr_t MGL_EXPORT mgl_find_roots_txt_(const char *func, const char *vars, uintptr_t *ini,int,int);
+/// Find roots for set of nonlinear equations defined by function
+bool MGL_EXPORT mgl_find_roots(size_t n, void (*func)(const mreal *x, mreal *f, void *par), mreal *x0, void *par);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
