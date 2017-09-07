@@ -84,19 +84,20 @@ mdual MGL_EXPORT mgl_atoc(const char *s, int adv)
 	return re+im*mgl_I;
 }
 //-----------------------------------------------------------------------------
-void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithreading read
+void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_datac_create(d, NX,NY,NZ);
 	const std::string loc = setlocale(LC_NUMERIC, "C");
 	std::vector<char *> lines;
 	std::vector<std::vector<dual> > numbs;
+	while(*buf && *buf<=' ')	buf++;
 	lines.push_back(buf);
 	for(char *s=buf; *s; s++)	if(isn(*s))
 	{	lines.push_back(s+1);	*s = 0;	s++;	}
 	numbs.resize(lines.size());
 	long nl = long(lines.size());
-//#pragma omp parallel for
+#pragma omp parallel for
 	for(long k=0;k<nl;k++)
 	{
 		char *b = lines[k];
@@ -281,7 +282,8 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 		if(!d->a)	mgl_datac_create(d, 1,1,1);
 		return	0;
 	}
-	char *buf = mgl_read_gz(fp);
+	char *buf = mgl_read_gz(fp), *tbuf=buf;
+	while(*buf && *buf<=' ')	buf++;	// remove leading spaces
 	nb = strlen(buf);	gzclose(fp);
 
 	bool first=false;	// space is not allowed delimiter for file with complex numbers
@@ -323,7 +325,7 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 	}
 	else	for(i=0;i<nb-1;i++)	if(buf[i]=='\f')	l++;
 	mglFromStr(d,buf,k,m,l);
-	free(buf);	return 1;
+	free(tbuf);	return 1;
 }
 int MGL_EXPORT mgl_datac_read_(uintptr_t *d, const char *fname,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;

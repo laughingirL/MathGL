@@ -42,10 +42,9 @@
 
 11. Add sample of Step, Bars for x.nx = y.nx+1
 
-
 12. Miss first empty string at reading
 13. Check dashing in EPS,SVG
-14. Roots() for several equations -- Add complex version
+14. Add sample of 'roots'
 
 
 ZZ. Update *.i for new functions {before release!!!}
@@ -74,6 +73,7 @@ D. Docs about JS interface
 12. Docs about 'setup' + inline void SetFlagAdv(int val, uint32_t flag)
 13. Docs about 'coil'
 14. Update flags
+15. Docs about 'roots' for system of equations
 
 
 26. Update installation (dll from mgl_script + Qt plugins/ + Win10)

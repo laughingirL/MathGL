@@ -843,11 +843,16 @@ HMDT MGL_EXPORT mgl_find_roots_txt(const char *func, const char *vars, HCDT ini)
 	for(long j=0;j<ini->GetNy()*ini->GetNz();j++)
 	{
 		for(size_t i=0;i<n;i++)	xx[i] = ini->vthr(i+n*j);
-		mgl_find_roots(n,mgl_txt_func,xx,&par);
-		for(size_t i=0;i<n;i++)	res->a[i+n*j] = xx[i];
+		bool ok=mgl_find_roots(n,mgl_txt_func,xx,&par);
+		for(size_t i=0;i<n;i++)	res->a[i+n*j] = ok?xx[i]:NAN;
 	}
 	delete []xx;	return res;
 }
+uintptr_t MGL_EXPORT mgl_find_roots_txt_(const char *func, const char *vars, uintptr_t *ini,int l,int m)
+{	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
+	char *v=new char[m+1];	memcpy(v,vars,m);	v[m]=0;
+	uintptr_t r = uintptr_t(mgl_find_roots_txt(s,v,_DA_(ini)));
+	delete []s;	delete []v;	return r;	}
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal x, void *par), mreal x0, void *par)
 {
@@ -906,11 +911,6 @@ mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *va
 {	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
 	mreal r = mgl_find_root_txt(s,*ini,*var);
 	delete []s;	return r;	}
-uintptr_t MGL_EXPORT mgl_find_roots_txt_(const char *func, const char *vars, uintptr_t *ini,int l,int m)
-{	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
-	char *v=new char[m+1];	memcpy(v,vars,m);	v[m]=0;
-	uintptr_t r = uintptr_t(mgl_find_roots_txt(s,v,_DA_(ini)));
-	delete []s;	delete []v;	return r;	}
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_pulse_z(void *par)
 {

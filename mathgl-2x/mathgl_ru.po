@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-07 01:31+0300\n"
+"POT-Creation-Date: 2017-09-07 16:04+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -2619,12 +2619,12 @@ msgstr "Группы команд MGL"
 msgid "H - darkgray"
 msgstr "H - темно-серый"
 
-#: src/data_io.cpp:1085
+#: src/data_io.cpp:1087
 msgid "HDF4 support was disabled. Please, enable it and rebuild MathGL."
 msgstr "HDF4 поддержка отключена. Включите ее и пересоберите MathGL."
 
-#: src/complex_io.cpp:922 src/complex_io.cpp:924 src/data_io.cpp:1184
-#: src/data_io.cpp:1186 src/data_io.cpp:1188 src/data_io.cpp:1190
+#: src/complex_io.cpp:924 src/complex_io.cpp:926 src/data_io.cpp:1186
+#: src/data_io.cpp:1188 src/data_io.cpp:1190 src/data_io.cpp:1192
 msgid "HDF5 support was disabled. Please, enable it and rebuild MathGL."
 msgstr "HDF5 поддержка отключена. Включите ее и пересоберите MathGL."
 

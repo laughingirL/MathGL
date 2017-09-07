@@ -64,6 +64,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 	const std::string loc = setlocale(LC_NUMERIC, "C");
 	std::vector<char *> lines;
 	std::vector<std::vector<mreal> > numbs;
+	while(*buf && *buf<=' ')	buf++;
 	lines.push_back(buf);
 	for(char *s=buf; *s; s++)	if(isn(*s))
 	{	lines.push_back(s+1);	*s = 0;	s++;	}
@@ -377,7 +378,8 @@ int MGL_EXPORT mgl_data_read(HMDT d, const char *fname)
 		if(!d->a)	mgl_data_create(d, 1,1,1);
 		return	0;
 	}
-	char *buf = mgl_read_gz(fp);
+	char *buf = mgl_read_gz(fp), *tbuf=buf;
+	while(*buf && *buf<=' ')	buf++;	// remove leading spaces
 	long nb = strlen(buf);	gzclose(fp);
 
 	bool first=false;
@@ -415,7 +417,7 @@ int MGL_EXPORT mgl_data_read(HMDT d, const char *fname)
 	}
 	else	for(i=0;i<nb-1;i++)	if(buf[i]=='\f')	l++;
 	mglFromStr(d,buf,k,m,l);
-	free(buf);	return 1;
+	free(tbuf);	return 1;
 }
 int MGL_EXPORT mgl_data_read_(uintptr_t *d, const char *fname,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
@@ -1415,7 +1417,7 @@ int MGL_EXPORT mgl_data_read_wfm(HMDT d,const char *fname, long num, long step/*
 	unsigned short byte_order;
 	fread(&byte_order,2,1,fp);
 	bool byteorder;	// TODO
-*/	return 0;	
+*/	return 0;
 }
 int MGL_EXPORT mgl_data_read_wfm_(uintptr_t *d, const char *fname, long *num, long *step, long *start,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

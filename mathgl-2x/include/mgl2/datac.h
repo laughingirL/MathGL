@@ -339,6 +339,9 @@ using mglDataA::Momentum;
 	/// Get array which is result of minimal values in given direction or directions
 	inline mglData Min(const char *dir) const
 	{	return mglData(true,mgl_data_min_dir(this,dir));	}
+	/// Find roots for set of nonlinear equations defined by textual formula
+	inline mglDataC MultiRoots(const char *eq, const char *vars) const
+	{	return mglDataC(true,mgl_find_roots_txt_c(eq, vars, this));	}
 
 	/// Cumulative summation the data in given direction or directions
 	inline void CumSum(const char *dir)	{	mgl_datac_cumsum(this,dir);	}

@@ -374,6 +374,10 @@ uintptr_t MGL_EXPORT mgl_gspline_init_(uintptr_t *x, uintptr_t *v);
 mdual MGL_EXPORT mgl_gsplinec(HCDT coef, mreal dx, dual *d1, dual *d2);
 mdual MGL_EXPORT mgl_gsplinec_(uintptr_t *c, mreal *dx, dual *d1, dual *d2);
 
+/// Find roots for set of nonlinear equations defined by textual formulas
+HADT MGL_EXPORT mgl_find_roots_txt_c(const char *func, const char *vars, HCDT ini);
+uintptr_t MGL_EXPORT mgl_find_roots_txt_c_(const char *func, const char *vars, uintptr_t *ini,int,int);
+
 #ifdef __cplusplus
 }
 #endif

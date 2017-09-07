@@ -22,6 +22,7 @@
 #include "mgl2/evalc.h"
 #include "mgl2/thread.h"
 #include "interp.hpp"
+void MGL_NO_EXPORT mgl_txt_funcC(const mreal *x, mreal *dx, void *par);
 HADT MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_trace(HCDT d)
@@ -703,4 +704,28 @@ uintptr_t MGL_EXPORT mgl_datac_section_(uintptr_t *d, uintptr_t *ids, const char
 {	return uintptr_t(mgl_datac_section(_DT_,_DA_(ids),dir[0],*val));	}
 uintptr_t MGL_EXPORT mgl_datac_section_val_(uintptr_t *d, int *id, const char *dir, mreal *val,int)
 {	return uintptr_t(mgl_datac_section_val(_DT_,*id,dir[0],*val));	}
+//-----------------------------------------------------------------------------
+HADT MGL_EXPORT mgl_find_roots_txt_c(const char *func, const char *vars, HCDT ini)
+{
+	if(!vars || !(*vars) || !func || !ini)	return 0;
+	mglEqTxT par;
+	par.var=vars;	par.FillCmplx(func);
+	size_t n = par.str.size();
+	if(ini->GetNx()!=n)	return 0;
+	mreal *xx = new mreal[2*n];
+	mglDataC *res = new mglDataC(ini);
+	for(long j=0;j<ini->GetNy()*ini->GetNz();j++)
+	{
+		for(size_t i=0;i<n;i++)
+		{	dual c = ini->vcthr(i+n*j);	xx[2*i] = real(c);	xx[2*i+1] = imag(c);	}
+		bool ok=mgl_find_roots(2*n,mgl_txt_funcC,xx,&par);
+		for(size_t i=0;i<n;i++)	res->a[i+n*j] = ok?dual(xx[2*i],xx[2*i+1]):NAN;
+	}
+	delete []xx;	return res;
+}
+uintptr_t MGL_EXPORT mgl_find_roots_txt_c_(const char *func, const char *vars, uintptr_t *ini,int l,int m)
+{	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
+	char *v=new char[m+1];	memcpy(v,vars,m);	v[m]=0;
+	uintptr_t r = uintptr_t(mgl_find_roots_txt_c(s,v,_DA_(ini)));
+	delete []s;	delete []v;	return r;	}
 //-----------------------------------------------------------------------------
