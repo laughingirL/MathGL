@@ -45,3 +45,8 @@ if(MGL_HAVE_LTDL)
 	target_link_libraries(mgl_module mgl)	# for compatibility with win32
 endif(MGL_HAVE_LTDL)
 
+if(MGL_HAVE_MPI)
+	add_executable(mgl_mpi_example mpi_test.cpp)
+	target_link_libraries(mgl_mpi_example mgl-mpi mgl ${MPI_LIBRARIES})
+	target_include_directories(mgl_mpi_example SYSTEM PUBLIC ${MPI_CXX_INCLUDE_PATH})
+endif(MGL_HAVE_MPI)

@@ -419,6 +419,12 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	const int oi = d->ObjId, ang=d->angle;
 	const mreal pw = d->PenWidth;
 	const uint64_t pd = d->PDef;
+	
+	mglPnt tmp(p1+d1+d2+d3), pp(p1);
+	if(mgl_isnan(tmp.u) && mgl_isnum(tmp.v))
+	{	pp.u = nr.x;	pp.v = nr.y;	pp.w = nr.z;
+		d1.u=d1.v=d1.w=d2.u=d2.v=d2.w=d3.u=d3.v=d3.u=0;	}
+	
 	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 	{
 		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
@@ -440,9 +446,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 					u = 2.f*(d2.y*xx - d2.x*yy)/qu;	v = 2.f*(d1.x*yy - d1.y*xx)/qv;
 					if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
 				}
-				mglPnt p(p1+d1*u+d2*v+d3*(u*v));
-				if(mgl_isnan(p.u) && mgl_isnum(p.v))
-				{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
+				mglPnt p(pp+d1*u+d2*v+d3*(u*v));
 				pnt_plot(i,j,p.z,col2int(p,r,oi),oi);
 			}
 		}
@@ -458,7 +462,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	{	fast_draw(p1,p2,d);	fast_draw(p1,p3,d);	fast_draw(p2,p3,d);	return;	}
 	unsigned char r[4];
 	long y1,x1,y2,x2;
-	const mglPnt d1(p2-p1), d2(p3-p1);
+	mglPnt d1(p2-p1), d2(p3-p1);
 
 	const float tmp = d2.x*d1.y - d1.x*d2.y;
 	if(fabs(tmp)<1e-5)	return;		// points lies on the same line
@@ -480,6 +484,11 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	const int oi = d->ObjId, ang=d->angle;
 	const mreal pw = d->PenWidth;
 	const uint64_t pd = d->PDef;
+
+	mglPnt tp(p1+d1+d2), pp(p1);
+	if(mgl_isnan(tp.u) && mgl_isnum(tp.v))
+	{	pp.u = nr.x;	pp.v = nr.y;	pp.w = nr.z;
+		d1.u=d1.v=d1.w=d2.u=d2.v=d2.w=0;	}
 	if(Quality&MGL_DRAW_NORM)	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 	{
 		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
@@ -487,9 +496,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 			float xx = (i-x0), yy = (j-y0);
 			float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 			if(u<0 || v<0 || u+v>1)	continue;
-			mglPnt p(p1+d1*u+d2*v);
-			if(mgl_isnan(p.u) && mgl_isnum(p.v) && anorm)
-			{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
+			mglPnt p(pp+d1*u+d2*v);
 			pnt_plot(i,j,p.z+dz,col2int(p,r,oi),oi);
 		}
 	}

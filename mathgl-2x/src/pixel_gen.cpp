@@ -446,12 +446,7 @@ void mglCanvas::Finish()
 	omp_set_lock((omp_lock_t*)lockClf);
 #endif
 	size_t n=Width*Height;
-	if(Quality==MGL_DRAW_DOTS)
-	{
-		mglStartThread(&mglCanvas::pxl_dotsdr,this,Pnt.size());
-		mglStartThread(&mglCanvas::pxl_memcpy,this,n);
-	}
-	else
+	if(Quality!=MGL_DRAW_DOTS)
 	{
 		if((Quality&MGL_DRAW_LMEM) || (memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&MGL_DRAW_LMEM) && Prm.size()>0))
 			clr(MGL_FINISHED);
@@ -468,6 +463,11 @@ void mglCanvas::Finish()
 			else 			mglStartThread(&mglCanvas::pxl_memcpy,this,n);
 			BDef[3] = 255;
 		}
+	}
+	else
+	{
+		mglStartThread(&mglCanvas::pxl_dotsdr,this,Pnt.size());
+		mglStartThread(&mglCanvas::pxl_memcpy,this,n);
 	}
 	int x2 = BBoxX2<0?Width:BBoxX2, y2 = BBoxY2<0?Height:BBoxY2;
 	if(BBoxX1>=0 && BBoxX1<x2 && BBoxY1>=0 && BBoxY1<y2)

@@ -27,8 +27,8 @@
 //-----------------------------------------------------------------------------
 size_t MGL_LOCAL_PURE mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 {
-	size_t res,d1=labs(long(c1[0])-long(c2[0])),
-		d2=labs(long(c1[1])-long(c2[1])),d3=labs(long(c1[2])-long(c2[2]));
+	size_t res,d1=labs(int(c1[0])-c2[0]),
+		d2=labs(int(c1[1])-c2[1]),d3=labs(int(c1[2])-c2[2]);
 	if(sum)	res = d1+d2+d3;
 	else	res = mgl_max(d1,mgl_max(d2,d3));
 	return res;
