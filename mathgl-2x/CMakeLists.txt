@@ -22,6 +22,10 @@ set(MathGL_VERSION ${MathGL_VERSION_MAJOR}.${MathGL_VERSION_MINOR}.${MathGL_PATC
 set(MathGL_SOVERSION 7.5.0)
 string(TIMESTAMP MathGL_DATE UTC)
 
+set(CMAKE_MODULE_PATH ${MathGL2_SOURCE_DIR}/scripts)
+include(CodeCoverage)
+APPEND_COVERAGE_COMPILER_FLAGS()
+
 #set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
 set(MathGL_INSTALL_LIB_DIR "lib" CACHE PATH "Installation directory for libraries")
 set(MathGL_INSTALL_BIN_DIR "bin" CACHE PATH "Installation directory for executables")
