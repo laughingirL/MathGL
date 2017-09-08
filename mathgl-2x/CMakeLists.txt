@@ -23,8 +23,10 @@ set(MathGL_SOVERSION 7.5.0)
 string(TIMESTAMP MathGL_DATE UTC)
 
 set(CMAKE_MODULE_PATH ${MathGL2_SOURCE_DIR}/scripts)
-include(CodeCoverage)
-APPEND_COVERAGE_COMPILER_FLAGS()
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	include(CodeCoverage)
+	APPEND_COVERAGE_COMPILER_FLAGS()
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 #set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
 set(MathGL_INSTALL_LIB_DIR "lib" CACHE PATH "Installation directory for libraries")
