@@ -8,6 +8,7 @@ project( MathGL2 )
 set(mgl_clean_files )
 set(MGL_DEP_LIBS)
 add_definitions(-DMGL_SRC)
+set(CMAKE_MODULE_PATH ${MathGL2_SOURCE_DIR}/scripts)
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are:
@@ -22,10 +23,12 @@ set(MathGL_VERSION ${MathGL_VERSION_MAJOR}.${MathGL_VERSION_MINOR}.${MathGL_PATC
 set(MathGL_SOVERSION 7.5.0)
 string(TIMESTAMP MathGL_DATE UTC)
 
-set(CMAKE_MODULE_PATH ${MathGL2_SOURCE_DIR}/scripts)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	include(CodeCoverage)
-	APPEND_COVERAGE_COMPILER_FLAGS()
+	option(enable-lcov "Enable coverage." OFF)
+	if(enable-lcov)
+		include(CodeCoverage)
+		APPEND_COVERAGE_COMPILER_FLAGS()
+	endif(enable-lcov)
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 #set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)

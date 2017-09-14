@@ -2,13 +2,13 @@ file(COPY ${CMAKE_SOURCE_DIR}/examples/iris.dat DESTINATION ${CMAKE_BINARY_DIR}/
 file(COPY ${CMAKE_SOURCE_DIR}/examples/Equirectangular-projection.jpg DESTINATION ${CMAKE_BINARY_DIR}/examples)
 add_executable(mgl_example wnd_samples.cpp full_test.cpp samples.cpp)
 target_link_libraries(mgl_example mgl-static ${getopt_lib-static})
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX AND enable-lcov)
 	setup_target_for_coverage(
 	    NAME mgl_coverage
-	    EXECUTABLE $<TARGET_FILE:mgl_example>
+	    EXECUTABLE $<TARGET_FILE:mgl_example> -mgl
 	    DEPENDENCIES mgl_example
 	)
-endif(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX AND enable-lcov)
 
 if(MGL_HAVE_FLTK)
 	include_directories(${FLTK_INCLUDE_DIR})
