@@ -29,6 +29,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		include(CodeCoverage)
 		APPEND_COVERAGE_COMPILER_FLAGS()
 	endif(enable-lcov)
+else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	unset(enable-lcov CACHE)
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 #set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
