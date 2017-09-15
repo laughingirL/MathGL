@@ -45,7 +45,8 @@
 12. Miss first empty string at reading
 13. Check dashing in EPS,SVG
 14. Add sample of 'roots'
-
+15. Use arrow_plot_3d
+16. Add new operation in formula parsing: `dat <==> Transpose(dat,"yx");
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -73,10 +74,47 @@ D. Docs about JS interface
 12. Docs about 'setup' + inline void SetFlagAdv(int val, uint32_t flag)
 13. Docs about 'coil'
 14. Update flags
-15. Docs about 'roots' for system of equations
+15. Docs and example about 'roots' for system of equations
+16. Example of 'cont' and 'flow' and '.' style.
+17. Example of 'contp', 'flowp'
+18. Example of ticks from data array
+19. Example of lines throw origin in 'axis'
+20. Example of adding user-defined glyph
+21. Example of "clear unused"
+22. Example of frame manipulation
+23. Example of 'legend' style '^'
+24. Example of 'title' style '#'
+25. Example of 'triplot'+'quadplot' with colors per-face
+26. Example of 'tricontv'
+27. Example of 'flow3'
+28. Example of 'grad_xyz'
+29. Example of 'flow', 'pipe' style '*'.
+30. Example of 'fsurf'
+31. Example of 'tile','tiles' styles 'x', 'z'
+32. Example of 'polygon', 'arc', 'symbol' (together with user-defined?), 'logo', 
+33. Example of 'lamerey' style '~'
+34. Example of 'iris', extended
+35. Example of saving into the main list
+36. Example of wired 'area' and 'region' (2d case), 'region' with !z1||!z2 (?!?)
+37. Example of 'step' with markers; 'barh', 'bars' (3d) style 'F'
+38. Example of CalcXYZ()
+39. Example of 'quality' use + info about used memory
+40. Example of 'clf' with color
+41. Example of 'rasterize' and 'loadbackground'
+42. Example of 'pde' in 3d, and of 'qo3d'
+43. Example of 'tridmat' in all 5 modes, and for real numbers too.
+44. Example of {'func','once','elseif','break','continue'}
+45. Example of "data" creation {'list', 'def*','ask','{OP DAT}'}
+46. Example of 'rk_step'
+47. Example of 'openhdf'
+48. Example of "TeX-like" commands: \color, \n, \sub, \sup, \stack*, \dfrac and so on.
+49. Extend examples of 'fit' and 'hist' on multi-dimension case.
+50. Example of complex 'hankel' for PDE solving
+51. Example of 'wavelet'
+52. Example of time-values in formulas (like hh-mm-ss_DD.MM.YYYY or hh-mm-ss or DD.MM.YYYY)
 
-
-26. Update installation (dll from mgl_script + Qt plugins/ + Win10)
+60. Generate *.texi from samples.cpp automatically
+61. Update installation (dll from mgl_script + Qt plugins/ + Win10)
 
 ZZ. Update time.texi {before release!!!}
 

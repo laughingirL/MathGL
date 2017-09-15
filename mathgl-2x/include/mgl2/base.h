@@ -70,15 +70,13 @@ public:
 	{	reserve(num);	size_t r=n;	n+=num;	return r;	}
 	void reserve(size_t num)
 	{
-//		if(mutex)	mgl_mutex_lock(mutex);
-		num+=n;	// final required size
+		num = num?num+n:n+1;	// final required size
 		size_t m = dat.size();
 		if(num>(m<<pb))
 		{
 			num = 1+ (num>>pb);
 			for(size_t i=m;i<num;i++)	dat.push_back(new T[(size_t)1<<pb]);
 		}
-//		if(mutex)	mgl_mutex_unlock(mutex);
 	}
 	void clear()
 	{
