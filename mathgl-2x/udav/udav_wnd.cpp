@@ -36,6 +36,7 @@
 #include <QTranslator>
 #include <QMimeData>
 #include <QUrl>
+#include <QFileInfo>
 //-----------------------------------------------------------------------------
 #include <mgl2/qmathgl.h>
 #include "udav_wnd.h"
