@@ -116,9 +116,8 @@ int main(int argc, char **argv)
 	mgl_suppress_warn(true);
 	QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
 #ifdef WIN32
-	char buf[512];	getcwd(buf,500);	strcat(buf,"\\plugins\\");
-	QCoreApplication::addLibraryPath(buf);
-	QCoreApplication::addLibraryPath("c:\\plugins\\");
+	QCoreApplication::addLibraryPath("c:/plugins/");
+	QCoreApplication::addLibraryPath(QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath().append("/plugins/"));
 #endif
 	mgl_ask_func = mgl_ask_qt;
 	QApplication a(argc, argv);
