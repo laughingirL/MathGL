@@ -446,7 +446,7 @@ void mglCanvasGL::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *
 			{
 				long x=long(q.x)+i, y=long(q.y)+j;
 				if(i*i+j*j>=ss*ss || !d || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
-				pnt_plot(x,y,q.z+1,cs,d->ObjId);
+				if(cs[3])	pnt_plot(x,y,q.z+1,cs,d->ObjId);
 			}*/
 		case 'o':
 			for(long i=0;i<=20;i++)	// TODO copy from mark_pix()?!

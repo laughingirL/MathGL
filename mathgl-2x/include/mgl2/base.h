@@ -230,24 +230,23 @@ struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 		float c,t,ta;	// index in color scheme
 	}; };
 	short sub;		// subplot id and rotation information (later will be in subplot)
-	mglPnt(float X, float Y=0, float Z=0, float U=0, float V=0, float W=0, float R=0, float G=0, float B=0, float A=0):x(X),y(Y),z(Z),u(U),v(V),w(W),r(R),g(G),b(B),a(A),xx(X),yy(Y),zz(Z),c(0),t(0),ta(0),sub(0)	{}
-	mglPnt():x(0),y(0),z(0),u(0),v(0),w(0),r(0),g(0),b(0),a(0),xx(0),yy(0),zz(0),c(0),t(0),ta(0),sub(0)	{}
+	mglPnt(float X=0, float Y=0, float Z=0, float U=0, float V=0, float W=0, float R=0, float G=0, float B=0, float A=0, short s=0) :x(X),y(Y),z(Z),u(U),v(V),w(W),r(R),g(G),b(B),a(A),xx(X),yy(Y),zz(Z),c(0),t(0),ta(0),sub(s)	{}
 	mglPnt(const mglPnt &aa) : sub(aa.sub)	{	memcpy(dat,aa.dat,16*sizeof(float));	}
 	inline const mglPnt&operator=(const mglPnt &aa)	{ sub=aa.sub;	memcpy(dat,aa.dat,16*sizeof(float));	return aa;	}
 	inline bool same(const mglPnt &p, mreal d)	const {	return fabs(x-p.x)<d && fabs(y-p.y)<d;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
-{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]+b.dat[i];	p.sub=a.sub;	return p;	}
-//{	return mglPnt(a.x+b.x,a.y+b.y,a.z+b.z, a.u+b.u,a.v+b.v,a.w+b.w, a.r+b.r,a.g+b.g,a.b+b.b,a.a+b.a);	}
+//{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]+b.dat[i];	p.sub=a.sub;	return p;	}
+{	return mglPnt(a.x+b.x,a.y+b.y,a.z+b.z, a.u+b.u,a.v+b.v,a.w+b.w, a.r+b.r,a.g+b.g,a.b+b.b,a.a+b.a, a.sub);	}
 inline mglPnt operator-(const mglPnt &a, const mglPnt &b)
-{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]-b.dat[i];	p.sub=a.sub;	return p;	}
-//{	return mglPnt(a.x-b.x,a.y-b.y,a.z-b.z, a.u-b.u,a.v-b.v,a.w-b.w, a.r-b.r,a.g-b.g,a.b-b.b,a.a-b.a);	}
+//{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]-b.dat[i];	p.sub=a.sub;	return p;	}
+{	return mglPnt(a.x-b.x,a.y-b.y,a.z-b.z, a.u-b.u,a.v-b.v,a.w-b.w, a.r-b.r,a.g-b.g,a.b-b.b,a.a-b.a, a.sub);	}
 inline mglPnt operator*(const mglPnt &a, float b)
-{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	p.sub=a.sub;	return p;	}
-//{	return mglPnt(a.x*b,a.y*b,a.z*b, a.u*b,a.v*b,a.w*b, a.r*b,a.g*b,a.b*b,a.a*b);	}
+//{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	p.sub=a.sub;	return p;	}
+{	return mglPnt(a.x*b,a.y*b,a.z*b, a.u*b,a.v*b,a.w*b, a.r*b,a.g*b,a.b*b,a.a*b, a.sub);	}
 inline mglPnt operator*(float b, const mglPnt &a)
-{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	p.sub=a.sub;	return p;	}
-//{	return mglPnt(a.x*b,a.y*b,a.z*b, a.u*b,a.v*b,a.w*b, a.r*b,a.g*b,a.b*b,a.a*b);	}
+//{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	p.sub=a.sub;	return p;	}
+{	return mglPnt(a.x*b,a.y*b,a.z*b, a.u*b,a.v*b,a.w*b, a.r*b,a.g*b,a.b*b,a.a*b, a.sub);	}
 //-----------------------------------------------------------------------------
 /// Structure for glyph representation
 struct MGL_EXPORT mglGlyph

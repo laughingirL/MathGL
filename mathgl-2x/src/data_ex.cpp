@@ -827,7 +827,7 @@ bool MGL_EXPORT mgl_find_roots(size_t n, void (*func)(const mreal *x, mreal *f, 
 	return status==GSL_SUCCESS;
 }
 #else
-bool MGL_EXPORT mgl_find_roots(size_t , void (*)(mreal *, mreal *, void *), mreal *, void *)
+bool MGL_EXPORT mgl_find_roots(size_t , void (*)(const mreal *, mreal *, void *), mreal *, void *)
 {	return false;	}
 #endif // MGL_HAVE_GSL
 //-----------------------------------------------------------------------------

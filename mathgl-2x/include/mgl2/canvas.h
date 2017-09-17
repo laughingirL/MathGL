@@ -491,7 +491,7 @@ private:
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f);
 	mreal FindOptOrg(char dir, int ind) const MGL_FUNC_PURE;
 	/// Transform mreal color and alpha to bits format
-	unsigned char* col2int(const mglPnt &p, unsigned char *r, int obj_id) const;
+	void col2int(const mglPnt &p, unsigned char *r, int obj_id) const;
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1, const unsigned char *c2) const;
 	/// Fast drawing of line between 2 points

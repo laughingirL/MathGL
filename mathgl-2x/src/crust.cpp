@@ -57,9 +57,10 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 				long k3 = long(nums->v(2,i)+0.5);
 				mglPoint p3(x->v(k3), y->v(k3), z->v(k3));
 				mglPoint q(wire ? mglPoint(NAN,NAN) : (p2-p1) ^ (p3-p1));
-				gr->AddPntQ(kq+3*i,p1,gr->GetC(ss,a->v(k1)),q);
-				gr->AddPntQ(kq+3*i+1,p2,gr->GetC(ss,a->v(k2)),q);
-				gr->AddPntQ(kq+3*i+2,p3,gr->GetC(ss,a->v(k3)),q);
+				mreal cc = a->v(i);
+				gr->AddPntQ(kq+3*i,p1,gr->GetC(ss,cc),q);
+				gr->AddPntQ(kq+3*i+1,p2,gr->GetC(ss,cc),q);
+				gr->AddPntQ(kq+3*i+2,p3,gr->GetC(ss,cc),q);
 			}
 			else
 			{	gr->SetPntOff(kq+3*i);	gr->SetPntOff(kq+3*i+1);	gr->SetPntOff(kq+3*i+2);	}
@@ -173,10 +174,11 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 				long k4 = long(nums->v(3,i)+0.5);
 				p4.Set(x->v(k4), y->v(k4), z->v(k4));
 				mglPoint q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
-				gr->AddPntQ(kq+4*i,p1,gr->GetC(ss,a->v(k1)),q);
-				gr->AddPntQ(kq+4*i+1,p2,gr->GetC(ss,a->v(k2)),q);
-				gr->AddPntQ(kq+4*i+2,p3,gr->GetC(ss,a->v(k3)),q);
-				gr->AddPntQ(kq+4*i+3,p4,gr->GetC(ss,a->v(k4)),q);
+				mreal cc = a->v(i);
+				gr->AddPntQ(kq+4*i,p1,gr->GetC(ss,cc),q);
+				gr->AddPntQ(kq+4*i+1,p2,gr->GetC(ss,cc),q);
+				gr->AddPntQ(kq+4*i+2,p3,gr->GetC(ss,cc),q);
+				gr->AddPntQ(kq+4*i+3,p4,gr->GetC(ss,cc),q);
 			}
 			else
 			{	gr->SetPntOff(kq+4*i);		gr->SetPntOff(kq+4*i+1);

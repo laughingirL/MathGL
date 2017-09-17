@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-07 16:04+0300\n"
+"POT-Creation-Date: 2017-09-16 11:29+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -917,7 +917,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/crust.cpp:587
+#: src/crust.cpp:589
 msgid "Cannot triangulate this set!"
 msgstr ""
 
@@ -5031,7 +5031,7 @@ msgid ""
 "fill its arguments and put it into the script."
 msgstr ""
 
-#: src/crust.cpp:589
+#: src/crust.cpp:591
 msgid ""
 "There are duplicated or indistinguishably adjacent points for triangulation."
 msgstr ""

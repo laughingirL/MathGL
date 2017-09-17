@@ -173,9 +173,10 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 #pragma omp parallel for private(id,us,pd,pp) collapse(2)
 	for(long j=0;j<m-1;j++)	for(long i=0;i<n-1;i++)
 	{
-		long i0 = i+n*j,ii,jj,k;
+		long i0 = i+n*j,ni = 0,ii,jj;
 		// find ID of points of Surf3 intersection with cell i0
-		memset(id,-1,12*sizeof(long));	long ni = 0;
+		for(int i=0;i<12;i++)	id[i]=-1;
+//		memset(id,-1,12*sizeof(long));	long ni = 0;
 		if(kx1[i0]>=0)		id[ni++] = kx1[i0];
 		if(ky1[i0]>=0)		id[ni++] = ky1[i0];
 		if(kx1[i0+n]>=0)	id[ni++] = kx1[i0+n];
@@ -215,7 +216,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 		// select the same orientation of all triangles of the surface
 		us[0] = us[jj] = 1;
 		// find all triangles
-		for(k=2;k<ni;k++)
+		for(long k=2;k<ni;k++)
 		{
 			// find closest point in sence cosine of angle
 			for(i0=-1,ii=1,d0=-2;ii<ni;ii++)

@@ -931,7 +931,7 @@ void mglFont::Copy(mglFont *f)
 #pragma omp critical(font)
 	{	if(Buf)	delete []Buf;	Buf=0;	}
 	// copy scale factors
-	memcpy(fact,f->fact,4*sizeof(float));
+	fact[0]=f->fact[0];	fact[1]=f->fact[1];	fact[2]=f->fact[2];	fact[3]=f->fact[3];
 	// copy symbols descriptions
 	numb = f->numb;	Buf = new short[numb];	memcpy(Buf, f->Buf, numb*sizeof(short));
 	// copy symbol parameters

@@ -94,13 +94,10 @@ D. Docs about JS interface
 32. Example of 'polygon', 'arc', 'symbol' (together with user-defined?), 'logo', 
 33. Example of 'lamerey' style '~'
 34. Example of 'iris', extended
-35. Example of saving into the main list
 36. Example of wired 'area' and 'region' (2d case), 'region' with !z1||!z2 (?!?)
 37. Example of 'step' with markers; 'barh', 'bars' (3d) style 'F'
 38. Example of CalcXYZ()
-39. Example of 'quality' use + info about used memory
-40. Example of 'clf' with color
-41. Example of 'rasterize' and 'loadbackground'
+40. Example of 'clf' with color, 'rasterize' and 'loadbackground'
 42. Example of 'pde' in 3d, and of 'qo3d'
 43. Example of 'tridmat' in all 5 modes, and for real numbers too.
 44. Example of {'func','once','elseif','break','continue'}
@@ -133,6 +130,8 @@ ZZ. Update time.texi {before release!!!}
 * Hint about string manipulation
 * Progress bar for external loop ?!!
 * 1d view -- over longer size + y-size for current slice only
+* info about used memory for graphics
+* coordinates under mouse
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???

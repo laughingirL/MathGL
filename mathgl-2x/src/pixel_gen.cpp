@@ -75,7 +75,9 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 	Z = new float[s*3];	// only 3 planes
 	OI= new int[s];
 #pragma omp parallel for
-	for(long i=0;i<s;i++)	memcpy(GB+4*i,BDef,4);
+	for(long i=0;i<s;i++)
+	{	unsigned char *b=GB+4*i;
+		b[0]=BDef[0];	b[1]=BDef[1];	b[2]=BDef[2];	b[3]=BDef[3];	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexClf);
 #elif MGL_HAVE_OMP
@@ -475,16 +477,24 @@ void mglCanvas::Finish()
 		unsigned char ff[8]={255,255,255,255, 0,0,0,255}, *g1 = G4+BBoxX1*4-4;
 		int ww = 8*Width;
 		if(BBoxX1>0)	for(long i=0;i<Height/2-1;i++)
-			memcpy(g1+ww*i,ff,8);
+		{	unsigned char *g=g1+ww*i;
+			g[0]=ff[0];	g[1]=ff[1];	g[2]=ff[2];	g[3]=ff[3];
+			g[4]=ff[4];	g[5]=ff[5];	g[6]=ff[6];	g[7]=ff[7];	}
 		g1 = G4+x2*4;
 		if(x2<Width)	for(long i=0;i<Height/2-1;i++)
-			memcpy(g1+ww*i,ff,8);
+		{	unsigned char *g=g1+ww*i;
+			g[0]=ff[0];	g[1]=ff[1];	g[2]=ff[2];	g[3]=ff[3];
+			g[4]=ff[4];	g[5]=ff[5];	g[6]=ff[6];	g[7]=ff[7];	}
 		g1 = G4+(BBoxY1-1)*4*Width;
 		if(BBoxY1>0)	for(long i=0;i<Width/2-1;i++)
-			memcpy(g1+8*i,ff,8);
+		{	unsigned char *g=g1+8*i;
+			g[0]=ff[0];	g[1]=ff[1];	g[2]=ff[2];	g[3]=ff[3];
+			g[4]=ff[4];	g[5]=ff[5];	g[6]=ff[6];	g[7]=ff[7];	}
 		g1 = G4+y2*4*Width;
 		if(y2<Height)	for(long i=0;i<Width/2-1;i++)
-			memcpy(g1+8*i,ff,8);
+		{	unsigned char *g=g1+8*i;
+			g[0]=ff[0];	g[1]=ff[1];	g[2]=ff[2];	g[3]=ff[3];
+			g[4]=ff[4];	g[5]=ff[5];	g[6]=ff[6];	g[7]=ff[7];	}
 	}
 	mglStartThread(&mglCanvas::pxl_backgr,this,n);
 	if(Quality!=MGL_DRAW_DOTS)	set(MGL_FINISHED);
@@ -544,7 +554,9 @@ void mglCanvas::FillBackground(const mglColor &cc)
 	BDef[0] = (unsigned char)(255*cc.r);	BDef[1] = (unsigned char)(255*cc.g);
 	BDef[2] = (unsigned char)(255*cc.b);	BDef[3] = (unsigned char)(255*cc.a);
 #pragma omp parallel for
-	for(long i=0;i<Width*Height;i++)	memcpy(GB+4*i,BDef,4);
+	for(long i=0;i<Width*Height;i++)
+	{	unsigned char *b=GB+4*i;
+		b[0]=BDef[0];	b[1]=BDef[1];	b[2]=BDef[2];	b[3]=BDef[3];	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Combine(const mglCanvas *gr)
