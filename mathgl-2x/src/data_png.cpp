@@ -25,13 +25,10 @@
 #include <jpeglib.h>
 #endif
 //-----------------------------------------------------------------------------
-size_t MGL_LOCAL_PURE mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
+unsigned MGL_LOCAL_PURE mgl_col_dif(unsigned char *c1,unsigned char *c2)
 {
-	size_t res,d1=labs(int(c1[0])-c2[0]),
-		d2=labs(int(c1[1])-c2[1]),d3=labs(int(c1[2])-c2[2]);
-	if(sum)	res = d1+d2+d3;
-	else	res = mgl_max(d1,mgl_max(d2,d3));
-	return res;
+	unsigned d1=abs(int(c1[0])-c2[0]), d2=abs(int(c1[1])-c2[1]), d3=abs(int(c1[2])-c2[2]);
+	d2 = d2>d3?d2:d3;	d2 = d2>d1?d2:d1;	return d2;
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
@@ -46,12 +43,12 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 		{	cc[3*np]=255*col.r;	cc[3*np+1]=255*col.g;	cc[3*np+2]=255*col.b;	np++;	}
 	}
 	if(np<2)	{	num=0;	delete []cc;	return 0;	}
-	for(size_t i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3,false);
+	for(size_t i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3);
 	c = new unsigned char[3*nc+3];
 	size_t pos=0;
 	for(size_t i=0;i<np-1;i++)
 	{
-		size_t dd=mgl_col_dif(cc+3*i,cc+3*i+3,false);
+		size_t dd=mgl_col_dif(cc+3*i,cc+3*i+3);
 		for(size_t j=0;j<dd;j++)
 		{
 			c1 = c+3*(pos+j);	c2 = cc+3*i;
@@ -61,10 +58,8 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 		}
 		pos += dd;
 	}
-	memcpy(c+3*nc-3,cc+3*np-3,3);
-	delete []cc;
-	num=nc;
-	return c;
+	memcpy(c+3*nc-3,cc+3*np-3,3);	delete []cc;
+	num=nc;	return c;
 }
 //-----------------------------------------------------------------------------
 bool MGL_NO_EXPORT mgl_read_image(unsigned char **g, int &w, int &h, const char *fname)
@@ -179,11 +174,16 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 #pragma omp parallel for collapse(2)
 		for(long i=0;i<h;i++)	for(long j=0;j<w;j++)
 		{
-			size_t pos=0,mval=256;
+			unsigned pos=0,mval=256*256;
+			const unsigned char *c2=g+4*w*(d->ny-i-1)+4*j;
 			for(long k=0;k<num;k++)
 			{
-				size_t val = mgl_col_dif(c+3*k,g+4*w*(d->ny-i-1)+4*j,true);
-				if(val==0)	{	pos=k;	break;	}
+				const unsigned char *c1=c+3*k;
+//				unsigned val=abs(int(c1[0])-c2[0])+abs(int(c1[1])-c2[1])+abs(int(c1[2])-c2[2]);
+				unsigned val=(int(c1[0])-c2[0])*(int(c1[0])-c2[0]) + 
+					(int(c1[1])-c2[1])*(int(c1[1])-c2[1]) + 
+					(int(c1[2])-c2[2])*(int(c1[2])-c2[2]);
+				if(val==0)		{	k=0;	break;	}
 				if(val<mval)	{	pos=k;	mval=val;	}
 			}
 			d->a[j+d->nx*i] = v1 + pos*(v2-v1)/num;

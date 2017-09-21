@@ -1004,7 +1004,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 {
 	// NOTE: New syntax -- colors are CCCCC or {CNCNCCCN}; options inside []
 	if(!s || !s[0])	return;
-	mgl_strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;
+	mgl_strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;	Clear();
 
 	long l=strlen(s);
 	bool map = smooth==2 || mglchr(s,'%'), sm = smooth>=0 && !strchr(s,'|');	// Use mapping, smoothed colors
@@ -1018,8 +1018,8 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	if(n<=0)	return;
 	bool man=sm;
-	mglColor *c = new mglColor[2*n];		// Colors itself
-	mreal *val = new mreal[n];
+	c0 = new mglColor[2*n];	// Colors itself
+	val = new float[n];
 	for(long i=0, m=0, j=n=0;i<l;i++)	// fill colors
 	{
 		if(smooth>=0 && s[i]==':' && j<1)	break;
@@ -1030,18 +1030,18 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		if(strchr(MGL_COLORS,s[i]) && j<1 && (m==0 || s[i-1]=='{'))	// {CN,val} format, where val in [0,1]
 		{
 			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
-			{	c[2*n].Set(s[i],(s[i+1]-'0')/5.f);	i++;	}
-			else	c[2*n].Set(s[i]);	// usual color
-			val[n]=-1;	c[2*n].a = -1;	n++;
+			{	c0[2*n].Set(s[i],(s[i+1]-'0')/5.f);	i++;	}
+			else	c0[2*n].Set(s[i]);	// usual color
+			val[n]=-1;	c0[2*n].a = -1;	n++;
 		}
 		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	// {xRRGGBB,val} format, where val in [0,1]
 		{
 			uint32_t id = strtoul(s+1+i,0,16);
-			if(memchr(s+i+1,'}',8) || memchr(s+i+1,',',8))	c[2*n].a = -1;
-			else	{	c[2*n].a = (id%256)/255.;	id /= 256;	}
-			c[2*n].b = (id%256)/255.;	id /= 256;
-			c[2*n].g = (id%256)/255.;	id /= 256;
-			c[2*n].r = (id%256)/255.;
+			if(memchr(s+i+1,'}',8) || memchr(s+i+1,',',8))	c0[2*n].a = -1;
+			else	{	c0[2*n].a = (id%256)/255.;	id /= 256;	}
+			c0[2*n].b = (id%256)/255.;	id /= 256;
+			c0[2*n].g = (id%256)/255.;	id /= 256;
+			c0[2*n].r = (id%256)/255.;
 			while(strchr("0123456789abcdefABCDEFx",s[i]))	i++;
 			val[n]=-1;	n++;	i--;
 		}
@@ -1053,19 +1053,19 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	for(long i=0;i<n;i++)	// default texture
 	{
-		if(c[2*i].a<0)	c[2*i].a=alpha;
-		c[2*i+1]=c[2*i];
-		if(man)	c[2*i].a=0;
+		if(c0[2*i].a<0)	c0[2*i].a=alpha;
+		c0[2*i+1]=c0[2*i];
+		if(man)	c0[2*i].a=0;
 	}
 	if(map && sm && n>1)		// map texture
 	{
 		if(n==2)
-		{	c[1]=c[2];	c[2]=c[0];	c[0]=BC;	c[3]=c[1]+c[2];	}
+		{	c0[1]=c0[2];	c0[2]=c0[0];	c0[0]=BC;	c0[3]=c0[1]+c0[2];	}
 		else if(n==3)
-		{	c[1]=c[2];	c[2]=c[0];	c[0]=BC;	c[3]=c[4];	n=2;}
+		{	c0[1]=c0[2];	c0[2]=c0[0];	c0[0]=BC;	c0[3]=c0[4];	n=2;}
 		else
-		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
-		c[0].a = c[1].a = c[2].a = c[3].a = alpha;
+		{	c0[1]=c0[4];	c0[3]=c0[6];	n=2;	}
+		c0[0].a = c0[1].a = c0[2].a = c0[3].a = alpha;
 		val[0]=val[1]=-1;
 	}
 	// TODO if(!sm && n==1)	then try to find color in palette ???
@@ -1089,7 +1089,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	if(!sm)	for(long i=0;i<256;i++)
 	{
 		long j = 2*long(v*i);	//u-=j;
-		col[2*i] = c[j];	col[2*i+1] = c[j+1];
+		col[2*i] = c0[j];	col[2*i+1] = c0[j+1];
 	}
 	else	for(long i=i1=0;i<256;i++)
 	{
@@ -1099,13 +1099,12 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 			for(;i1<n-1 && i>=255*val[i1];i1++);
 			v2 = i1<n?1/(val[i1]-val[i1-1]):0;
 			j=i1-1;	u=(i/255.-val[j])*v2;
-			col[2*i] = c[2*j]*(1-u)+c[2*j+2]*u;
-			col[2*i+1]=c[2*j+1]*(1-u)+c[2*j+3]*u;
+			col[2*i] = c0[2*j]*(1-u)+c0[2*j+2]*u;
+			col[2*i+1]=c0[2*j+1]*(1-u)+c0[2*j+3]*u;
 		}
 		else
-		{	col[2*i] = c[2*n-2];col[2*i+1] = c[2*n-1];	}
+		{	col[2*i] = c0[2*n-2];col[2*i+1] = c0[2*n-1];	}
 	}
-	delete []c;	delete []val;
 }
 //-----------------------------------------------------------------------------
 mglColor mglTexture::GetC(mreal u,mreal v) const

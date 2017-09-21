@@ -107,6 +107,8 @@ struct MGL_EXPORT mglColor
 
 	/// Constructor for RGB components manualy
 	mglColor(float R,float G,float B, float A=1):r(R),g(G),b(B),a(A)	{}
+	/// Constructor for RGB components manualy
+	mglColor(const unsigned char *c, float A=1):r(c[0]/255.f),g(c[1]/255.f),b(c[3]/255.f),a(A)	{}
 	/// Constructor set default color
 	mglColor():r(0),g(0),b(0),a(1)	{}
 	/// Constructor set color from character id
@@ -166,6 +168,8 @@ inline mglColor operator*(const mglColor &a, float b)
 {	return mglColor(a.r*b, a.g*b, a.b*b, a.a*b);	}
 inline mglColor operator*(float b, const mglColor &a)
 {	return mglColor(a.r*b, a.g*b, a.b*b, a.a*b);	}
+inline float operator*(const mglColor &b, const mglColor &a)
+{	return a.r*b.r+a.g*b.g+a.b*b.b;	}
 inline mglColor operator/(const mglColor &a, float b)
 {	return mglColor(a.r/b, a.g/b, a.b/b, a.a/b);	}
 inline mglColor operator!(const mglColor &a)

@@ -1924,7 +1924,7 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 	long m,n=y->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,z,r,"Tube"))	return;
 
-	gr->SaveState(opt);
+	mreal rnum = gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Tube",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
 	m = z->GetNy() > m ? z->GetNy() : m;
@@ -1932,7 +1932,7 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 	bool sh = mglchr(pen,'!');
 	bool wire = mglchr(pen,'#');
 
-	int num=!(gr->GetQuality()&3)?13:25;
+	int num = rnum>2?rnum:!(gr->GetQuality()&3)?13:25;
 	gr->SetPenPal(pen,&pal);	gr->Reserve(n*m*num);
 	for(long j=0;j<m;j++)
 	{
