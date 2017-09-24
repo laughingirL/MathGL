@@ -100,6 +100,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	autoResize = false;	draw_par = 0;	draw_func = 0;
 	dotsRefr = true;
 	gr = new mglCanvas;	appName = "MathGL";
+	setMinimumSize(gr->GetWidth(),gr->GetHeight());
 	popup = 0;	grBuf = 0;	draw = 0;	prevQuality=MGL_DRAW_NORM;
 	phi = tet = per = 0;	x0=y0=xe=ye=0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
@@ -155,6 +156,7 @@ void QMathGL::setGraph(HMGL GR)	///< Set grapher object
 	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
 	gr=gg;	mgl_use_graph(gg,1);
 	gr->SetEventFunc(mgl_qt_event_func, NULL);
+	setMinimumSize(gr->GetWidth(),gr->GetHeight());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::paintEvent(QPaintEvent *)
@@ -332,6 +334,7 @@ void QMathGL::update()
 		if(mgl_is_frames(gr))	mgl_end_frame(gr);
 		setlocale(LC_NUMERIC, loc.c_str());
 		gr->AskStop(false);
+		setMinimumSize(gr->GetWidth(),gr->GetHeight());
 	}
 	else if(mgl_get_num_frame(gr)>0)
 	{
@@ -851,7 +854,8 @@ void QMathGL::setSize(int w, int h)
 {
 	resize(w, h);
 	if(w!=pic.width() || h!=pic.height())	// update only when image size is changed
-	{	mgl_set_size(gr,w,h);	update();	}
+	{	mgl_set_size(gr,w,h);	update();
+		setMinimumSize(gr->GetWidth(),gr->GetHeight());	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::about()

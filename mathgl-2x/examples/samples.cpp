@@ -36,7 +36,7 @@ struct mglSample	/// Structure for list of samples
 //-----------------------------------------------------------------------------
 //		MGL functions for preparing data
 //-----------------------------------------------------------------------------
-const char *mmgl_dat_prepare = "\nstop\n\nfunc 'prepare1d'\n\
+const char *mmgl_dat_prepare = "\nfunc 'prepare1d'\n\
 new y 50 3\nmodify y '0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)'\n\
 modify y 'sin(2*pi*x)' 1\nmodify y 'cos(2*pi*x)' 2\n\
 new x1 50 'x'\nnew x2 50 '0.05-0.03*cos(pi*x)'\n\
@@ -3295,178 +3295,192 @@ void smgl_fexport(mglGraph *gr)	// test file export
 const char *mmgl_quality0="quality 0\n"
 all_prims_str;
 void smgl_quality0(mglGraph *gr)	// test file export
-{	gr->SetQuality(0);	all_prims(gr);	}
+{
+	gr->SetQuality(0);	all_prims(gr);
+}
 //-----------------------------------------------------------------------------
 const char *mmgl_quality1="quality 1\n"
 all_prims_str;
 void smgl_quality1(mglGraph *gr)	// test file export
-{	gr->SetQuality(1);	all_prims(gr);	}
+{
+	gr->SetQuality(1);	all_prims(gr);	
+}
 //-----------------------------------------------------------------------------
 const char *mmgl_quality2="quality 2\n"
 all_prims_str;
 void smgl_quality2(mglGraph *gr)	// test file export
-{	gr->SetQuality(2);	all_prims(gr);	}
+{
+	gr->SetQuality(2);	all_prims(gr);	
+}
 //-----------------------------------------------------------------------------
 const char *mmgl_quality4="quality 4\n"
 all_prims_str;
 void smgl_quality4(mglGraph *gr)	// test file export
-{	gr->SetQuality(4);	all_prims(gr);	}
+{
+	gr->SetQuality(4);	all_prims(gr);	
+}
 //-----------------------------------------------------------------------------
 const char *mmgl_quality5="quality 5\n"
 all_prims_str;
 void smgl_quality5(mglGraph *gr)	// test file export
-{	gr->SetQuality(5);	all_prims(gr);	}
+{
+	gr->SetQuality(5);	all_prims(gr);	
+}
 //-----------------------------------------------------------------------------
 const char *mmgl_quality6="quality 6\n"
 all_prims_str;
 void smgl_quality6(mglGraph *gr)	// test file export
-{	gr->SetQuality(6);	all_prims(gr);	}
+{
+	gr->SetQuality(6);	all_prims(gr);	
+}
 //-----------------------------------------------------------------------------
 const char *mmgl_quality8="quality 8\n"
 all_prims_str;
 void smgl_quality8(mglGraph *gr)	// test file export
-{	gr->SetQuality(8);	all_prims(gr);	}
+{
+	gr->SetQuality(8);	all_prims(gr);	
+}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 mglSample samp[] = {
-	{"3wave", smgl_3wave, mmgl_3wave, "Example of complex @ref{ode} on basis of 3-wave decay"},
-	{"alpha", smgl_alpha, mmgl_alpha},
-	{"apde", smgl_apde, mmgl_apde},
-	{"area", smgl_area, mmgl_area},
-	{"aspect", smgl_aspect, mmgl_aspect},
-	{"axial", smgl_axial, mmgl_axial},
-	{"axis", smgl_axis, mmgl_axis},
-	{"barh", smgl_barh, mmgl_barh},
-	{"bars", smgl_bars, mmgl_bars},
-	{"belt", smgl_belt, mmgl_belt},
-	{"bifurcation", smgl_bifurcation, mmgl_bifurcation},
-	{"box", smgl_box, mmgl_box},
-	{"boxplot", smgl_boxplot, mmgl_boxplot},
-	{"boxs", smgl_boxs, mmgl_boxs},
-	{"candle", smgl_candle, mmgl_candle},
-	{"chart", smgl_chart, mmgl_chart},
-	{"cloud", smgl_cloud, mmgl_cloud },
-	{"colorbar", smgl_colorbar, mmgl_colorbar},
-	{"combined", smgl_combined, mmgl_combined },
-	{"cones", smgl_cones, mmgl_cones},
-	{"cont", smgl_cont, mmgl_cont},
-	{"cont_xyz", smgl_cont_xyz, mmgl_cont_xyz},
-	{"conta", smgl_conta, mmgl_conta},
-	{"contd", smgl_contd, mmgl_contd},
-	{"contf", smgl_contf, mmgl_contf},
-	{"contf_xyz", smgl_contf_xyz, mmgl_contf_xyz},
-	{"contfa", smgl_contfa, mmgl_contfa},
-	{"contv", smgl_contv, mmgl_contv},
-	{"correl", smgl_correl, mmgl_correl},
-//	{"crust", smgl_crust, mmgl_crust},	// TODO: open after triangulation
-	{"curvcoor", smgl_curvcoor, mmgl_curvcoor},
-	{"cut", smgl_cut, mmgl_cut},
-	{"dat_diff", smgl_dat_diff, mmgl_dat_diff},
-	{"dat_extra", smgl_dat_extra, mmgl_dat_extra },
-	{"data1", smgl_data1, mmgl_data1},
-	{"data2", smgl_data2, mmgl_data2},
-	{"dens", smgl_dens, mmgl_dens},
-	{"dens_xyz", smgl_dens_xyz, mmgl_dens_xyz},
-	{"densa", smgl_densa, mmgl_densa},
-	{"detect", smgl_detect, mmgl_detect},
-	{"dew", smgl_dew, mmgl_dew},
-	{"diffract", smgl_diffract, mmgl_diffract},
-	{"dilate", smgl_dilate, mmgl_dilate},
-	{"dots", smgl_dots, mmgl_dots},
-	{"earth", smgl_earth, mmgl_earth},
-	{"error", smgl_error, mmgl_error},
-	{"error2", smgl_error2, mmgl_error2},
-	{"export", smgl_export, mmgl_export},
-	{"fall", smgl_fall, mmgl_fall},
-	{"fexport", smgl_fexport, mmgl_fexport},
-	{"fit", smgl_fit, mmgl_fit},
-	{"flame2d", smgl_flame2d, mmgl_flame2d},
-	{"flow", smgl_flow, mmgl_flow},
-	{"fog", smgl_fog, mmgl_fog},
-	{"fonts", smgl_fonts, mmgl_fonts},
-	{"grad", smgl_grad, mmgl_grad},
-	{"hist", smgl_hist, mmgl_hist},
-	{"ifs2d", smgl_ifs2d, mmgl_ifs2d},
-	{"ifs3d", smgl_ifs3d, mmgl_ifs3d},
-	{"indirect",smgl_indirect,mmgl_indirect},
-	{"inplot", smgl_inplot, mmgl_inplot},
-	{"iris", smgl_iris, mmgl_iris},
-	{"label", smgl_label, mmgl_label},
-	{"lamerey", smgl_lamerey, mmgl_lamerey},
-	{"legend", smgl_legend, mmgl_legend },
-	{"light", smgl_light, mmgl_light},
-	{"loglog", smgl_loglog, mmgl_loglog},
-	{"map", smgl_map, mmgl_map},
-	{"mark", smgl_mark, mmgl_mark},
-	{"mask", smgl_mask, mmgl_mask},
-	{"mesh", smgl_mesh, mmgl_mesh},
-	{"mirror", smgl_mirror, mmgl_mirror },
-	{"molecule", smgl_molecule, mmgl_molecule },
-	{"ode", smgl_ode, mmgl_ode},
-	{"ohlc", smgl_ohlc, mmgl_ohlc},
-	{"param1", smgl_param1, mmgl_param1},
-	{"param2", smgl_param2, mmgl_param2},
-	{"param3", smgl_param3, mmgl_param3},
-	{"paramv", smgl_paramv, mmgl_paramv},
-	{"parser", smgl_parser, mmgl_parser},
-	{"pde", smgl_pde, mmgl_pde},
-	{"pendelta", smgl_pendelta, mmgl_pendelta},
-	{"pipe", smgl_pipe, mmgl_pipe},
-	{"plot", smgl_plot, mmgl_plot},
-	{"pmap", smgl_pmap, mmgl_pmap},
-	{"primitives", smgl_primitives, mmgl_primitives },
-	{"projection", smgl_projection, mmgl_projection },
-	{"projection5", smgl_projection5, mmgl_projection5 },
-	{"pulse", smgl_pulse, mmgl_pulse },
-	{"qo2d", smgl_qo2d, mmgl_qo2d},
-	{"quality0", smgl_quality0, mmgl_quality0},
-	{"quality1", smgl_quality1, mmgl_quality1},
-	{"quality2", smgl_quality2, mmgl_quality2},
-	{"quality4", smgl_quality4, mmgl_quality4},
-	{"quality5", smgl_quality5, mmgl_quality5},
-	{"quality6", smgl_quality6, mmgl_quality6},
-	{"quality8", smgl_quality8, mmgl_quality8},
-	{"radar", smgl_radar, mmgl_radar},
-	{"refill", smgl_refill, mmgl_refill},
-	{"region", smgl_region, mmgl_region},
-	{"scanfile", smgl_scanfile, mmgl_scanfile },
-	{"schemes", smgl_schemes, mmgl_schemes },
-	{"section", smgl_section, mmgl_section},
-	{"several_light", smgl_several_light, mmgl_several_light },
-	{"solve", smgl_solve, mmgl_solve},
-	{"stem", smgl_stem, mmgl_stem},
-	{"step", smgl_step, mmgl_step},
-	{"stereo", smgl_stereo, mmgl_stereo},
-	{"stfa", smgl_stfa, mmgl_stfa},
-	{"style", smgl_style, mmgl_style },
-	{"surf", smgl_surf, mmgl_surf},
-	{"surf3", smgl_surf3, mmgl_surf3},
-	{"surf3a", smgl_surf3a, mmgl_surf3a},
-	{"surf3c", smgl_surf3c, mmgl_surf3c},
-	{"surf3ca", smgl_surf3ca, mmgl_surf3ca},
-	{"surfa", smgl_surfa, mmgl_surfa},
-	{"surfc", smgl_surfc, mmgl_surfc},
-	{"surfca", smgl_surfca, mmgl_surfca},
-	{"table", smgl_table, mmgl_table},
-	{"tape", smgl_tape, mmgl_tape},
-	{"tens", smgl_tens, mmgl_tens},
-	{"ternary", smgl_ternary, mmgl_ternary },
-	{"text", smgl_text, mmgl_text},
-	{"text2", smgl_text2, mmgl_text2},
-	{"textmark", smgl_textmark, mmgl_textmark},
-	{"ticks", smgl_ticks, mmgl_ticks},
-	{"tile", smgl_tile, mmgl_tile},
-	{"tiles", smgl_tiles, mmgl_tiles},
-	{"torus", smgl_torus, mmgl_torus },
-	{"traj", smgl_traj, mmgl_traj},
-	{"triangulation",smgl_triangulation, mmgl_triangulation },
-	{"triplot", smgl_triplot, mmgl_triplot},
-	{"tube", smgl_tube, mmgl_tube},
-	{"type0", smgl_type0, mmgl_type0},
-	{"type1", smgl_type1, mmgl_type1},
-	{"type2", smgl_type2, mmgl_type2},
-	{"vect", smgl_vect, mmgl_vect},
-	{"vecta", smgl_vecta, mmgl_vecta},
-	{"venn", smgl_venn, mmgl_venn},
-{"", NULL, NULL}};
+	{"3wave", smgl_3wave, mmgl_3wave, "Example of complex @ref{ode} on basis of 3-wave decay."},
+	{"alpha", smgl_alpha, mmgl_alpha, "Example of @ref{light} and @ref{alpha} (transparency)."},
+	{"apde", smgl_apde, mmgl_apde,  "Comparison of advanced PDE solver (@ref{apde}) and ordinary one (@ref{pde})."},
+	{"area", smgl_area, mmgl_area, "Example of @ref{area}."}, 
+	{"aspect", smgl_aspect, mmgl_aspect, "Example of @ref{subplot}, @ref{inplot}, @ref{rotate}, @ref{aspect}, @ref{shear}."},
+	{"axial", smgl_axial, mmgl_axial, "Example of @ref{axial} (surface of rotation)."},
+	{"axis", smgl_axis, mmgl_axis, "Different forms of @ref{axis} position."},
+	{"barh", smgl_barh, mmgl_barh, "Example of @ref{barh}."},
+	{"bars", smgl_bars, mmgl_bars, "Example of @ref{bars}."},
+	{"belt", smgl_belt, mmgl_belt, "Example of surface by belt @ref{belt}."},
+	{"bifurcation", smgl_bifurcation, mmgl_bifurcation, "Example of @ref{bifurcation}."},
+	{"box", smgl_box, mmgl_box, "Different styles of bounding @ref{box}."},
+	{"boxplot", smgl_boxplot, mmgl_boxplot, "Example of @ref{boxplot}."},
+	{"boxs", smgl_boxs, mmgl_boxs, "Example of @ref{boxs} (surface by boxes)."},
+	{"candle", smgl_candle, mmgl_candle, "Example of @ref{candle} plot."},
+	{"chart", smgl_chart, mmgl_chart, "Example of @ref{chart}."},
+	{"cloud", smgl_cloud, mmgl_cloud , "Example of @ref{cloud}."},
+	{"colorbar", smgl_colorbar, mmgl_colorbar, "Example of @ref{colorbar} position and styles."},
+	{"combined", smgl_combined, mmgl_combined , "Example of several plots in the same axis."},
+	{"cones", smgl_cones, mmgl_cones, "Example of @ref{cones}."},
+	{"cont", smgl_cont, mmgl_cont, "Example of @ref{cont} (contour lines)."},
+	{"cont_xyz", smgl_cont_xyz, mmgl_cont_xyz, "Example of @ref{contx}, @ref{conty}, @ref{contz}."},
+	{"conta", smgl_conta, mmgl_conta, "Example of @ref{conta} (contours at slices)."},
+	{"contd", smgl_contd, mmgl_contd, "Example of @ref{contd} (solid contours with manual colors)."},
+	{"contf", smgl_contf, mmgl_contf, "Example of @ref{contf} (solid contours)."},
+	{"contf_xyz", smgl_contf_xyz, mmgl_contf_xyz, "Example of @ref{contfx}, @ref{contfy}, @ref{contfz}."},
+	{"contfa", smgl_contfa, mmgl_contfa, "Example of @ref{contfa} (solid contours at slices)."},
+	{"contv", smgl_contv, mmgl_contv, "Example of @ref{contv} (tube on contours)."},
+	{"correl", smgl_correl, mmgl_correl, "Test of correlation function (@ref{correl})."},
+//	{"crust", smgl_crust, mmgl_crust, ""},	// TODO: open after triangulation
+	{"curvcoor", smgl_curvcoor, mmgl_curvcoor, "Some common curvilinear coordinates."},
+	{"cut", smgl_cut, mmgl_cut, "Example of point cutting (@ref{cut}."},
+	{"dat_diff", smgl_dat_diff, mmgl_dat_diff, "Example of @ref{diff} and @ref{integrate}."},
+	{"dat_extra", smgl_dat_extra, mmgl_dat_extra , "Example of @ref{envelop}, @ref{sew}, @ref{smooth} and @ref{resize}."},
+	{"data1", smgl_data1, mmgl_data1, ""},
+	{"data2", smgl_data2, mmgl_data2, ""},
+	{"dens", smgl_dens, mmgl_dens, "Example of @ref{dens} (density plot)."},
+	{"dens_xyz", smgl_dens_xyz, mmgl_dens_xyz, "Example of @ref{densx}, @ref{densy}, @ref{densz}."},
+	{"densa", smgl_densa, mmgl_densa, "Example of @ref{densa} (density plots at slaces)."},
+	{"detect", smgl_detect, mmgl_detect, "Example of curve @ref{detect}."},
+	{"dew", smgl_dew, mmgl_dew, "Example of @ref{dew}."},
+	{"diffract", smgl_diffract, mmgl_diffract, ""},
+	{"dilate", smgl_dilate, mmgl_dilate, "Example of @ref{dilate} and @ref{erode}."},
+	{"dots", smgl_dots, mmgl_dots, "Example of @ref{dots}."},
+	{"earth", smgl_earth, mmgl_earth, "Example of Earth map by using @ref{import}."},
+	{"error", smgl_error, mmgl_error, "Example of @ref{error} and @ref{errbox}."},
+	{"error2", smgl_error2, mmgl_error2, "Example of @ref{error} kinds."},
+	{"export", smgl_export, mmgl_export, "Example of data @ref{export} and @ref{import}."},
+	{"fall", smgl_fall, mmgl_fall, "Example of @ref{fall}."},
+	{"fexport", smgl_fexport, mmgl_fexport, "Example of @ref{write} to different file formats."},
+	{"fit", smgl_fit, mmgl_fit, "Example of nonlinear @ref{fit}."},
+	{"flame2d", smgl_flame2d, mmgl_flame2d, "Example of @ref{flame2d} fractal."},
+	{"flow", smgl_flow, mmgl_flow, "Example of @ref{flow}."},
+	{"fog", smgl_fog, mmgl_fog, "Example of @ref{fog}."},
+	{"fonts", smgl_fonts, mmgl_fonts, "Example of @ref{font} typefaces."},
+	{"grad", smgl_grad, mmgl_grad, "Example of @ref{grad}."},
+	{"hist", smgl_hist, mmgl_hist, "Example of @ref{hist} (histogram)."},
+	{"ifs2d", smgl_ifs2d, mmgl_ifs2d, "Example of @ref{ifs2d} fractal."},
+	{"ifs3d", smgl_ifs3d, mmgl_ifs3d, "Example of @ref{ifs3d} fractal."},
+	{"indirect",smgl_indirect,mmgl_indirect, "Comparison of @ref{subdata} vs @ref{evaluate}/"},
+	{"inplot", smgl_inplot, mmgl_inplot, "Example of @ref{inplot}, @ref{multiplot}, @ref{columnplot}, @ref{gridplot}, @ref{shearplot}, @ref{stickplot}."},
+	{"iris", smgl_iris, mmgl_iris, "Example of @ref{iris} plot."},
+	{"label", smgl_label, mmgl_label, "Example of @ref{label} for points."},
+	{"lamerey", smgl_lamerey, mmgl_lamerey, "Example of @ref{lamerey} diagram."},
+	{"legend", smgl_legend, mmgl_legend , "Example of @ref{legend} styles."},
+	{"light", smgl_light, mmgl_light, "Example of @ref{light} with different types."},
+	{"loglog", smgl_loglog, mmgl_loglog, "Example of log- and log-log- axis labels."},
+	{"map", smgl_map, mmgl_map, "Example of @ref{map}."},
+	{"mark", smgl_mark, mmgl_mark, "Example of @ref{mark}."},
+	{"mask", smgl_mask, mmgl_mask, "Example of @ref{mask} kinds."},
+	{"mesh", smgl_mesh, mmgl_mesh, "Example of @ref{mesh} (meshed surface)."},
+	{"mirror", smgl_mirror, mmgl_mirror , "Example of using options."},
+	{"molecule", smgl_molecule, mmgl_molecule , "Example of drawing molecules."},
+	{"ode", smgl_ode, mmgl_ode, "Example of phase plain created by @ref{ode} solving, contour lines (@ref{cont}) and @ref{flow} threads."},
+	{"ohlc", smgl_ohlc, mmgl_ohlc, "Example of @ref{ohlc} diagram."},
+	{"param1", smgl_param1, mmgl_param1, "Example of parametric plots for 1D data."},
+	{"param2", smgl_param2, mmgl_param2, "Example of parametric plots for 2D data."},
+	{"param3", smgl_param3, mmgl_param3, "Example of parametric plots for 3D data."},
+	{"paramv", smgl_paramv, mmgl_paramv, "Example of parametric plots for vector fields."},
+	{"parser", smgl_parser, mmgl_parser, "Basic MGL script."},
+	{"pde", smgl_pde, mmgl_pde, "Example of @ref{pde} solver."},
+	{"pendelta", smgl_pendelta, mmgl_pendelta, "Example of @ref{pendelta} for lines and glyphs smoothing."},
+	{"pipe", smgl_pipe, mmgl_pipe, "Example of @ref{pipe}."},
+	{"plot", smgl_plot, mmgl_plot, "Example of @ref{plot}."},
+	{"pmap", smgl_pmap, mmgl_pmap, "Example of @ref{pmap}."},
+	{"primitives", smgl_primitives, mmgl_primitives , "Example of primitives: @ref{line}, @ref{curve}, @ref{rhomb}, @ref{ellipse}, @ref{face}, @ref{sphere}, @ref{drop}, @ref{cone}."},
+	{"projection", smgl_projection, mmgl_projection , "Example of plot projection (@ref{ternary}=4)."},
+	{"projection5", smgl_projection5, mmgl_projection5 , "Example of plot projection in ternary coordinates (@ref{ternary}=5)."},
+	{"pulse", smgl_pulse, mmgl_pulse , "Example of @ref{pulse} parameter determining."},
+	{"qo2d", smgl_qo2d, mmgl_qo2d, "Example of PDE solving by quasioptical approach @ref{qo2d}."},
+	{"quality0", smgl_quality0, mmgl_quality0, "Show all kind of primitives in @ref{quality}=0."},
+	{"quality1", smgl_quality1, mmgl_quality1, "Show all kind of primitives in @ref{quality}=1."},
+	{"quality2", smgl_quality2, mmgl_quality2, "Show all kind of primitives in @ref{quality}=2."},
+	{"quality4", smgl_quality4, mmgl_quality4, "Show all kind of primitives in @ref{quality}=4."},
+	{"quality5", smgl_quality5, mmgl_quality5, "Show all kind of primitives in @ref{quality}=5."},
+	{"quality6", smgl_quality6, mmgl_quality6, "Show all kind of primitives in @ref{quality}=6."},
+	{"quality8", smgl_quality8, mmgl_quality8, "Show all kind of primitives in @ref{quality}=8."},
+	{"radar", smgl_radar, mmgl_radar, "Example of @ref{radar} plot."},
+	{"refill", smgl_refill, mmgl_refill, "Example of @ref{refill} and @ref{gspline}."},
+	{"region", smgl_region, mmgl_region, "Example of filled @ref{region}."},
+	{"scanfile", smgl_scanfile, mmgl_scanfile , "Example of @ref{scanfile} for reading 'named' data."},
+	{"schemes", smgl_schemes, mmgl_schemes , "Example of popular color schemes."},
+	{"section", smgl_section, mmgl_section, "Example of @ref{section} to separate data and @ref{join} it back."},
+	{"several_light", smgl_several_light, mmgl_several_light , "Example of using several @ref{light} sources."},
+	{"solve", smgl_solve, mmgl_solve, "Example of @ref{solve} for root finding."},
+	{"stem", smgl_stem, mmgl_stem, "Example of @ref{stem} plot."},
+	{"step", smgl_step, mmgl_step, "Example of @ref{step} plot."},
+	{"stereo", smgl_stereo, mmgl_stereo, "Example of stereo image of @ref{surf}."},
+	{"stfa", smgl_stfa, mmgl_stfa, "Example of @ref{stfa}."},
+	{"style", smgl_style, mmgl_style , "Example of colors and styles for plots."},
+	{"surf", smgl_surf, mmgl_surf, "Example of @ref{surf} (surface plot)."},
+	{"surf3", smgl_surf3, mmgl_surf3, "Example of @ref{surf3} (isosurface at given level)."},
+	{"surf3a", smgl_surf3a, mmgl_surf3a, "Example of @ref{surf3a} (isosurface with manual transparency)."},
+	{"surf3c", smgl_surf3c, mmgl_surf3c, "Example of @ref{surf3c} (isosurface with manual color)."},
+	{"surf3ca", smgl_surf3ca, mmgl_surf3ca, "Example of @ref{surf3ca} (isosurface with manual color and transparency)."},
+	{"surfa", smgl_surfa, mmgl_surfa, "Example of @ref{surfa} (surface with manual transparency)."},
+	{"surfc", smgl_surfc, mmgl_surfc, "Example of @ref{surfc} (surface with manual color)."},
+	{"surfca", smgl_surfca, mmgl_surfca, "Example of @ref{surfca} (surface with manual color and transparency)."},
+	{"table", smgl_table, mmgl_table, "Example of @ref{table} with data values."},
+	{"tape", smgl_tape, mmgl_tape, "Example of @ref{tape} (belts for transverse orts)."},
+	{"tens", smgl_tens, mmgl_tens, "Example of @ref{tens} (@ref{plot} manual color)."},
+	{"ternary", smgl_ternary, mmgl_ternary , "Example of @ref{ternary} coordinates."},
+	{"text", smgl_text, mmgl_text, "Example of @ref{text} possibilities."},
+	{"text2", smgl_text2, mmgl_text2, "Example of @ref{text} along curve."},
+	{"textmark", smgl_textmark, mmgl_textmark, "Example of @ref{textmark} for manual markers."},
+	{"ticks", smgl_ticks, mmgl_ticks, "Example of @ref{axis} ticks."},
+	{"tile", smgl_tile, mmgl_tile, "Example of @ref{tile} (surface by tiles)."},
+	{"tiles", smgl_tiles, mmgl_tiles, "Example of @ref{tiles} (surface by tiles with variable size)."},
+	{"torus", smgl_torus, mmgl_torus , "Example of @ref{torus} (surface of curve rotation)."},
+	{"traj", smgl_traj, mmgl_traj, "Example of @ref{traj} (vectors along curve)."},
+	{"triangulation",smgl_triangulation, mmgl_triangulation , "Example of use @ref{triangulate} for arbitrary placed points."},
+	{"triplot", smgl_triplot, mmgl_triplot, "Example of @ref{triplot} and @ref{quadplot (surface by set of triangles or quadrangles)."},
+	{"tube", smgl_tube, mmgl_tube, "Example of @ref{tube}."},
+	{"type0", smgl_type0, mmgl_type0, "Example of ordinary transparency (@ref{transptype}=0)."},
+	{"type1", smgl_type1, mmgl_type1, "Example of glass-like transparency (@ref{transptype}=1)."},
+	{"type2", smgl_type2, mmgl_type2, "Example of lamp-like transparency (@ref{transptype}=2)."},
+	{"vect", smgl_vect, mmgl_vect, "Example of @ref{vect} (vector field)."},
+	{"vecta", smgl_vecta, mmgl_vecta, "Example of @ref{vecta} (vector fields at slices)."},
+	{"venn", smgl_venn, mmgl_venn, "Example of venn-like diagram."},
+{"", NULL, NULL, NULL}};
 //-----------------------------------------------------------------------------

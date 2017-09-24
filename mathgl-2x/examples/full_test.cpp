@@ -98,6 +98,62 @@ void test(mglGraph *gr)
 	return;
 }
 //-----------------------------------------------------------------------------
+void mgl_generate_texi()
+{
+	FILE *fp = fopen("samples.texi","w");
+	fprintf(fp,"@c ------------------------------------------------------------------\n"
+		"@chapter Samples\n@nav{}\n\n"
+		"This chapter contain alphabetical list of MGL and C++ samples for most of MathGL graphics and features.\n\n@menu\n * Init function::\n");
+	for(const mglSample *s = samp;s->name && s->name[0];s++)
+		fprintf(fp," * %s_sample::\n",s->name);
+	fprintf(fp,"@end menu\n@external{}\n");
+	fprintf(fp,"@c ------------------------------------------------------------------\n"
+		"@node prepare_dat_sample, %s_sample, , Samples\n@section Functions for initialization\n@nav{}\n", samp[0].name);
+	fprintf(fp,"\nThis section contain functions for input data for most of further samples.\n\n@strong{MGL code:}\n@verbatim\n%s\n@end verbatim\n", mmgl_dat_prepare);
+	fprintf(fp,"\n@ifclear UDAV\n@strong{C++ code:}\n@verbatim\n");
+	
+	char buf[512], name[64];
+	FILE *fs = fopen("wnd_samples.cpp","r");
+	while(!feof(fs))
+	{
+		fgets(buf,512,fs);
+		if(strstr(buf,"void mgls_prepare1d"))	break;
+	}
+	while(!feof(fs))
+	{	fprintf(fp,"%s",buf);	fgets(buf,512,fs);	}
+	fprintf(fp,"\n@end verbatim\n@end ifclear\n\n@external{}\n");
+	fclose(fs);
+
+	const char *prev = "prepare_dat";
+	fs = fopen("samples.cpp","r");
+	for(size_t i=0;samp[i].name && samp[i].name[0];i++)
+	{
+		if(samp[i+1].name && samp[i+1].name[0])
+			fprintf(fp,"@c ------------------------------------------------------------------\n"
+				"@node %s_sample, %s_sample, %s_sample, Samples\n@section Sample '%s'\n@nav{}\n",
+				samp[i].name, samp[i+1].name, prev, samp[i].name);
+		else
+			fprintf(fp,"@c ------------------------------------------------------------------\n"
+				"@node %s_sample, , %s_sample, Samples\n@section Sample '%s'\n@nav{}\n",
+				samp[i].name, samp[i-1].name, samp[i].name);
+		prev = samp[i].name;
+		fprintf(fp,"\n%s\n\n@strong{MGL code:}\n@verbatim\n%s\n@end verbatim\n", samp[i].info, samp[i].mgl);
+		fprintf(fp,"\n@ifclear UDAV\n@strong{C++ code:}\n@verbatim\n");
+
+		fseek(fs,0,SEEK_SET);
+		snprintf(name, 64, "void smgl_%s", samp[i].name);
+		while(!feof(fs))
+		{	fgets(buf,512,fs);	if(strstr(buf,name))	break;	}
+		while(!feof(fs))
+		{
+			fprintf(fp,"%s",buf);	fgets(buf,512,fs);
+			if(*buf=='}')	break;
+		}
+		fprintf(fp,"}\n@end verbatim\n@end ifclear\n\n@external{}\n");
+	}
+	fclose(fs);	fclose(fp);
+}
+
 static struct option longopts[] =
 {
 	{ "big",	no_argument,	&big,		1 },
@@ -134,6 +190,7 @@ static struct option longopts[] =
 	{ "time",	no_argument,	&dotest,	3 },
 	{ "fexport",no_argument,	&dotest,	4 },
 	{ "textbl",	no_argument,	&dotest,	5 },
+	{ "texi",	no_argument,	&dotest,	6 },
 
 	{ "thread",	required_argument,	NULL,	't' },
 	{ "verbose",no_argument,	&verbose,	1 },
@@ -173,6 +230,7 @@ void usage()
 		"--mgl		- use MGL scripts for samples\n"
 		"--test		- run in test mode\n"
 		"--time		- measure execution time for all samples\n"
+		"--texi		- make TeXi file with all samples\n"
 		"--font		- write current font as C++ file\n"
 		"--quality=val	- use specified quality for plot(s)\n"
 		"--fexport	- test most of output formats\n"
@@ -195,7 +253,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 3:	// PNG
 			snprintf(buf,128,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,true);	break;
-		case 4:	// JPEG
+		case 4:	// JPEG/* 		r1 = 1./(x*x+y*y+z*z+0.01);	r2=exp(-0.01/r1/r1)*r1;
 			snprintf(buf,128,"%s%s.jpg",name,suf);
 			gr->WriteJPEG(buf);	break;
 		case 5:	// PRC
@@ -357,6 +415,11 @@ int main(int argc,char **argv)
 	else if(dotest==5)
 	{
 		mgl_check_tex_table();
+		delete gr;	return 0;
+	}
+	else if(dotest==6)
+	{
+		mgl_generate_texi();
 		delete gr;	return 0;
 	}
 
