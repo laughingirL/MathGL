@@ -417,7 +417,8 @@ mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u) const
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	return CalcIn(a1);
+	mreal b = CalcIn(a1);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
@@ -431,14 +432,16 @@ mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u,mreal v,mreal w) const
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	return CalcIn(a1);
+	mreal b = CalcIn(a1);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
 mreal mglFormula::Calc(const mreal var[MGL_VS]) const
 {
 	Error=0;
-	return CalcIn(var);
+	mreal b = CalcIn(var);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n'='v', 't'='z', 'u'='a' variables
@@ -450,7 +453,8 @@ mreal mglFormula::CalcD(char diff,mreal x,mreal y,mreal t,mreal u) const
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	return CalcDIn(diff-'a', a1);
+	mreal b = CalcDIn(diff-'a', a1);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
@@ -464,14 +468,16 @@ mreal mglFormula::CalcD(char diff,mreal x,mreal y,mreal t,mreal u,mreal v,mreal 
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	return CalcDIn(diff-'a', a1);
+	mreal b = CalcDIn(diff-'a', a1);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 // evaluate derivate of formula respect to 'diff' variable for arbitrary set of other variables
 mreal mglFormula::CalcD(const mreal var[MGL_VS], char diff) const
 {
 	Error=0;
-	return CalcDIn(diff-'a', var);
+	mreal b = CalcDIn(diff-'a', var);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 double MGL_LOCAL_CONST cand(double a,double b)	{return a&&b?1:0;}
@@ -555,18 +561,14 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 		{
 			// try to bypass calc b if a==0
 			if(a==0 && z2[Kod-EQ_LT]!=3)	return z2[Kod-EQ_LT];
-			double b = Right->CalcIn(a1);
-			b = mgl_isfin(b) ? f2[Kod-EQ_LT](a,b):NAN;
-			return mgl_isfin(b) ? b : NAN;
+			return f2[Kod-EQ_LT](a, Right->CalcIn(a1));
 		}
-		else if(Kod<EQ_SN)
-		{	a = f1[Kod-EQ_SIN](a);	return mgl_isfin(a)?a:NAN;	}
+		else if(Kod<EQ_SN)	return f1[Kod-EQ_SIN](a);
 #if MGL_HAVE_GSL
 		else if(Kod<=EQ_DC)
 		{
-			double sn=0,cn=0,dn=0,b = Right->CalcIn(a1);
-			if(mgl_isbad(b))	return NAN;
-			gsl_sf_elljac_e(a,b, &sn, &cn, &dn);
+			double sn=0, cn=0, dn=0;
+			gsl_sf_elljac_e(a,Right->CalcIn(a1), &sn, &cn, &dn);
 			switch(Kod)
 			{
 			case EQ_SN:		return sn;
@@ -664,23 +666,23 @@ static const func_1 f11[EQ_SN-EQ_SIN] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,co
 // evaluation of derivative of embedded (included) expressions
 mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 {
-	if(Kod<EQ_LT)	return (Kod==EQ_A && id==(int)Res)?1:0;
-
+	if(Kod==EQ_A && id==(int)Res)	return 1;
+	else if(Kod<EQ_LT)	return 0;
 	double a = Left->CalcIn(a1), d = Left->CalcDIn(id,a1);
 	if(mgl_isfin(a) && mgl_isfin(d))
 	{
 		if(Kod<EQ_SIN)
 		{
 			double b = Right->CalcIn(a1), c = Right->CalcDIn(id,a1);
-			b = mgl_isfin(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
-			return mgl_isfin(b) ? b : NAN;
+//			return mgl_isfin(b) ? (f21[Kod-EQ_LT](a,b)*d + f22[Kod-EQ_LT](a,b)*c) : NAN;
+			return mgl_isfin(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
 		}
-		else if(Kod<EQ_SN)
-		{	a = (d?f11[Kod-EQ_SIN](a)*d:0);	return mgl_isfin(a)?a:NAN;	}
+//		else if(Kod<EQ_SN)	return f11[Kod-EQ_SIN](a)*d;
+		else if(Kod<EQ_SN)	return d?f11[Kod-EQ_SIN](a)*d:0;
 #if MGL_HAVE_GSL
 		else if(Kod<=EQ_DC)
 		{
-			double sn=0,cn=0,dn=0,b = Right->CalcIn(a1);
+			double sn=0, cn=0, dn=0, b = Right->CalcIn(a1);
 			if(mgl_isbad(b))	return NAN;
 			gsl_sf_elljac_e(a,b, &sn, &cn, &dn);
 			switch(Kod)	// At this moment parse only differentiation or argument NOT mu !!!

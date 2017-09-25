@@ -208,7 +208,8 @@ dual mglFormulaC::Calc(dual x,dual y,dual t,dual u) const
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
 	a1['i'-'a'] = dual(0,1);
-	return CalcIn(a1);
+	dual b = CalcIn(a1);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
@@ -223,14 +224,16 @@ dual mglFormulaC::Calc(dual x,dual y,dual t,dual u,dual v,dual w) const
 	a1['y'-'a'] = a1['n'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
 	a1['i'-'a'] = dual(0,1);
-	return CalcIn(a1);
+	dual b = CalcIn(a1);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
 dual mglFormulaC::Calc(const dual var[MGL_VS]) const
 {
 	Error=0;
-	return CalcIn(var);
+	dual b = CalcIn(var);
+	return mgl_isfin(b) ? b : NAN;
 }
 //-----------------------------------------------------------------------------
 dual MGL_LOCAL_CONST ceqc(dual a,dual b)	{return a==b?1:0;}
@@ -280,22 +283,19 @@ static const func_1 f1[EQ_LAST-EQ_SIN] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc
 // evaluation of embedded (included) expressions
 dual mglFormulaC::CalcIn(const dual *a1) const
 {
-//	if(Error)	return 0;
-	if(Kod==EQ_A)	return a1[(int)Res.real()];
-	if(Kod==EQ_RND)	return mgl_rnd();
-	if(Kod==EQ_NUM) return Res;
+	if(Kod<EQ_LT)
+	{
+		if(Kod==EQ_RND)	return mgl_rnd();
+		else	return (Kod==EQ_A) ? a1[int(Res.real())] : Res;
+	}
 
 	dual a = Left->CalcIn(a1);
 	if(mgl_isfin(a))
 	{
 		if(Kod<EQ_SIN)
-		{
-			dual b = Right->CalcIn(a1);
-			b = mgl_isfin(b)?f2[Kod-EQ_LT](a,b):NAN;
-			return mgl_isfin(b)?b:NAN;
-		}
+			return f2[Kod-EQ_LT](a,Right->CalcIn(a1));
 		else
-		{	a = f1[Kod-EQ_SIN](a);	return mgl_isfin(a)?a:NAN;	}
+			return f1[Kod-EQ_SIN](a);
 	}
 	return NAN;
 }

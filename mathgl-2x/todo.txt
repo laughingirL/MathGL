@@ -42,12 +42,12 @@
 
 11. Add sample of Step, Bars for x.nx = y.nx+1
 
-12. Miss first empty string at reading
 13. Check dashing in EPS,SVG
 14. Add sample of 'roots'
 15. Use arrow_plot_3d
 16. Add new operation in formula parsing: `dat <==> Transpose(dat,"yx");
 17. CalcIn() without recursion?!!
+18. Show mouse position at widgets constantly.
 
 ZZ. Update *.i for new functions {before release!!!}
 
