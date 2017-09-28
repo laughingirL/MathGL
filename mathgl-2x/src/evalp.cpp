@@ -510,6 +510,11 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		if(mgl_isfin(v))
 		{	HMDT res = new mglData;	res->a[0]=v;	return res;	}
 	}
+	if(str[0]=='`')
+	{
+		HMDT res = mglFormulaCalc(str.substr(1), arg, head);
+		res->Transpose();	return res;
+	}
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
 	if(n>=len)		// this is number or variable
 	{
@@ -541,8 +546,16 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		std::wstring nm = str.substr(0,n);
 		str = str.substr(n+1,len-n-2);	len -= n+2;
 		HCDT v = FindVar(head, nm);
+		HMDT tmp = 0;
 //		mglVar *v = arg->FindVar(nm.c_str());
 		if(!v && !nm.compare(0,7,L"jacobi_"))	nm = nm.substr(7);
+		if(!v && nm.empty())	
+		{
+			long m=mglFindInText(str,")");
+			if(m>1)
+			{	nm = str.substr(0,m);	str = str.substr(m+2);
+				tmp = mglFormulaCalc(nm,arg,head);	v = tmp;	}
+		}
 		n = mglFindInText(str,",");
 		if(v)	// subdata
 		{
@@ -551,6 +564,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 				char *buf = new char[len];
 				mgl_wcstombs(buf, str.substr(1).c_str(), len-1);	buf[len-1]=0;
 				HMDT res = mgl_data_column(v,buf);
+				if(tmp)	mgl_delete_data(tmp);
 				delete []buf;	return res;
 			}
 			else
@@ -574,9 +588,11 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 				}
 				else	a1 = mglFormulaCalc(str, arg, head);
 				HMDT res = mgl_data_subdata_ext(v,a1,a2,a3);
+				if(tmp)	mgl_delete_data(tmp);
 				mgl_delete_data(a1);	mgl_delete_data(a2);
 				mgl_delete_data(a3);	return res;
 			}
+			if(tmp)	mgl_delete_data(tmp);
 		}
 		else if(nm[0]=='a')	// function
 		{
@@ -944,6 +960,11 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 		if(mgl_isfin(v))
 		{	HADT res = new mglDataC;	res->a[0]=v;	return res;	}
 	}
+	if(str[0]=='`')
+	{
+		HADT res = mglFormulaCalcC(str.substr(1), arg, head);
+		res->Transpose();	return res;
+	}
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
 	if(n>=len)		// this is number or variable
 	{
@@ -979,8 +1000,16 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 		std::wstring nm = str.substr(0,n);
 		str = str.substr(n+1,len-n-2);	len -= n+2;
 		HCDT v = FindVar(head, nm);
+		HADT tmp = 0;
 //		mglVar *v = arg->FindVar(nm.c_str());
 		if(!v && !nm.compare(0,7,L"jacobi_"))	nm = nm.substr(7);
+		if(!v && nm.empty())	
+		{
+			long m=mglFindInText(nm,")");
+			if(m>1)
+			{	nm = str.substr(0,m);	str = str.substr(m+2);
+				tmp = mglFormulaCalcC(nm,arg,head);	v = tmp;	}
+		}
 		n = mglFindInText(str,",");
 		if(v)	// subdata
 		{
@@ -989,6 +1018,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 				char *buf = new char[len];
 				mgl_wcstombs(buf, str.substr(1).c_str(), len-1);	buf[len-1]=0;
 				HADT res = mgl_datac_column(v,buf);
+				if(tmp)	mgl_delete_datac(tmp);
 				delete []buf;	return res;
 			}
 			else
@@ -1012,9 +1042,11 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 				}
 				else	a1 = mglFormulaCalc(str, arg, head);
 				HADT res = mgl_datac_subdata_ext(v,a1,a2,a3);
+				if(tmp)	mgl_delete_datac(tmp);
 				mgl_delete_data(a1);	mgl_delete_data(a2);
 				mgl_delete_data(a3);	return res;
 			}
+				if(tmp)	mgl_delete_datac(tmp);
 		}
 		else if(nm[0]=='a')	// function
 		{

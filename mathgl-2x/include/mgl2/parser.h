@@ -70,9 +70,28 @@ struct mglFunc
 /// Structure for stack of functions and its arguments.
 struct mglFnStack
 {
-	long pos;
-	std::wstring par[10];
-	mglFnStack():pos(0)	{}
+	long pos;	///< position to return
+	size_t stk;	///< stack at 'call'
+	std::wstring par[10];	///< input parameters
+	mglFnStack():pos(0),stk(0)	{}
+};
+//-----------------------------------------------------------------------------
+/// Structure for stack of if|for|while.
+#define MGL_ST_TRUE		0	// condition true
+#define MGL_ST_FALSE	1	// condition false
+#define MGL_ST_DONE		2	// condition done
+#define MGL_ST_LOOP		4	// normal loop
+#define MGL_ST_BREAK	8	// loop break
+#define MGL_ST_STOP		(MGL_ST_FALSE|MGL_ST_DONE|MGL_ST_BREAK)
+#define MGL_ST_SKIP		(MGL_ST_FALSE|MGL_ST_DONE)
+struct mglPosStack
+{
+	int pos;	///< position to return
+	mglData v;	///< data to iterate
+	long ind;	///< index in data array
+	int par;	///< for-parameter
+	unsigned state;	///< state of stack item
+	mglPosStack(int st=MGL_ST_LOOP):pos(-1),ind(0),par(-1),state(st)	{}
 };
 //-----------------------------------------------------------------------------
 /// Function for asking question in console mode
@@ -164,16 +183,9 @@ private:
 	std::wstring par[40];	///< Parameter for substituting instead of $1, ..., $9
 	bool Once;			///< Flag for command which should be executed only once
 	bool Skip;			///< Flag that commands should be skiped (inside 'once' block)
-	int if_stack[40];	///< Stack for if-else-endif commands
-	int if_pos;			///< position in if_stack
+	std::vector<mglPosStack> stack;	///< Stack of if|for|while commands
 	std::vector<mglFunc> func;	///< function names and position
 	std::vector<mglFnStack> fn_stack;	///< function calls stack
-//	int fn_pos;			///< position in function stack
-	int if_for[40];		///< position in if_stack for for-cycle start
-	mglData *fval;		///< Values for for-cycle. Note that nx - number of elements, ny - next element, nz - address (or string number) of first cycle command
-	int for_stack[40];	///< The order of for-variables
-	int for_addr;		///< Flag for saving address in variable (for_addr-1)
-	bool for_br;		///< Break is switched on (skip all commands until 'next')
 	unsigned Variant;	///< Select variant of argument(s) separated by '?'
 
 	/// Parse command
@@ -191,8 +203,10 @@ private:
 	/// Parse $N arguments
 	void PutArg(std::wstring &str, bool def);
 	/// In skip mode
-	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	}
-	bool inline skip()		{	return (Skip || ifskip() || for_br);	}
+	bool inline ifskip()
+	{	return ( stack.size() && (stack.back().state & MGL_ST_SKIP) );	}
+	bool inline skip()
+	{	return (Skip || (stack.size() && (stack.back().state & MGL_ST_STOP) ));	}
 	bool CheckForName(const std::wstring &s);	// check if name is valid for new data
 };
 //-----------------------------------------------------------------------------

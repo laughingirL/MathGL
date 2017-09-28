@@ -37,16 +37,10 @@
 7. Add ##d comment(s) -- analogue of 'ask' but update figure after each change ???
 8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
 9. Mask in EPS/SVG
-
 10. Add momentum dat vdat ... where vdat is corresponding coordinate ???
+11. Add "if COND then CODE"
 
-11. Add sample of Step, Bars for x.nx = y.nx+1
-
-13. Check dashing in EPS,SVG
-14. Add sample of 'roots'
-15. Use arrow_plot_3d
-16. Add new operation in formula parsing: `dat <==> Transpose(dat,"yx");
-17. CalcIn() without recursion?!!
+15. Use arrow_plot_3d ???
 18. Show mouse position at widgets constantly.
 
 ZZ. Update *.i for new functions {before release!!!}
@@ -110,6 +104,9 @@ D. Docs about JS interface
 50. Example of complex 'hankel' for PDE solving
 51. Example of 'wavelet'
 52. Example of time-values in formulas (like hh-mm-ss_DD.MM.YYYY or hh-mm-ss or DD.MM.YYYY)
+53. Example of Step, Bars for x.nx = y.nx+1
+54. Example of 'roots'
+55. Docs and example about new operation in formula parsing: `dat <==> Transpose(dat).
 
 
 60. Generate *.texi from samples.cpp automatically

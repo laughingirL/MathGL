@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-25 15:08+0300\n"
+"POT-Creation-Date: 2017-09-29 01:47+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -104,7 +104,7 @@ msgstr ""
 "(c) Алексей Балакин, 2007\n"
 "http://mathgl.sourceforge.net/"
 
-#: src/parser.cpp:1013
+#: src/parser.cpp:1049
 #, c-format
 msgid ""
 "\n"
@@ -113,7 +113,7 @@ msgstr ""
 "\n"
 "Попытка изменить временные данные в строке %ld"
 
-#: src/parser.cpp:1011
+#: src/parser.cpp:1047
 #, c-format
 msgid ""
 "\n"
@@ -122,7 +122,7 @@ msgstr ""
 "\n"
 "Строковый аргумент слишком длинный в строке %ld"
 
-#: src/parser.cpp:1012
+#: src/parser.cpp:1048
 #, c-format
 msgid ""
 "\n"
@@ -131,7 +131,7 @@ msgstr ""
 "\n"
 "Лишняя кавычка ' в строке %ld"
 
-#: src/parser.cpp:1009
+#: src/parser.cpp:1045
 #, c-format
 msgid ""
 "\n"
@@ -140,7 +140,7 @@ msgstr ""
 "\n"
 "Неправильные аргументы в строке %ld"
 
-#: src/parser.cpp:1010
+#: src/parser.cpp:1046
 #, c-format
 msgid ""
 "\n"
@@ -852,7 +852,7 @@ msgstr "Назад"
 msgid "Bad '%ls' at %zu\n"
 msgstr "Неправильный '%ls' при %zu\n"
 
-#: src/parser.cpp:769
+#: src/parser.cpp:764
 #, c-format
 msgid "Bad arguments for %ls: %ld instead of %d\n"
 msgstr "Неправильные аргументы для %ls: %ld вместо %d\n"
@@ -868,6 +868,10 @@ msgstr "Базовые"
 #: mgllab/dialogs.cpp:1461
 msgid "Begin"
 msgstr "Начало"
+
+#: src/parser.cpp:1465
+msgid "Begin of do-while loop"
+msgstr ""
 
 #: udav/calc_dlg.cpp:193
 msgid "Bessel"
@@ -893,7 +897,7 @@ msgstr "Оба поля в yrange должны быть заполнены"
 msgid "Both fields in zrange must be filled"
 msgstr "Оба поля в zrange должны быть заполнены"
 
-#: src/parser.cpp:1426
+#: src/parser.cpp:1462
 msgid "Break for-loop"
 msgstr "Прервать выполнение цикла for"
 
@@ -1102,7 +1106,11 @@ msgstr "Вычисляет точки фрактала IFS с параметра
 msgid "Computes the flame fractal"
 msgstr "Вычисляет точки фрактала flame"
 
-#: src/parser.cpp:1434 src/parser.cpp:1438
+#: src/parser.cpp:1481
+msgid "Condition of do-while loop"
+msgstr ""
+
+#: src/parser.cpp:1471 src/parser.cpp:1475
 msgid "Conditional operator"
 msgstr "Условный оператор"
 
@@ -1227,7 +1235,7 @@ msgstr "Создать новый массив данных, заполненн�
 msgid "Create new empty script window (Ctrl+N)."
 msgstr "Создать новое окно скрипта (Ctrl+N)."
 
-#: src/parser.cpp:1439
+#: src/parser.cpp:1476
 msgid "Creates new variable from list of numbers or data"
 msgstr "Создать новый массив из списка значений или данных"
 
@@ -1348,19 +1356,19 @@ msgstr "Уменьшить угол θ на 10 градусов."
 msgid "Decrease font size"
 msgstr "Уменьшить размер шрифта"
 
-#: src/parser.cpp:1430
+#: src/parser.cpp:1467
 msgid "Define constant or parameter"
 msgstr "Определит постоянную или параметр"
 
-#: src/parser.cpp:1429
+#: src/parser.cpp:1466
 msgid "Define parameter as character"
 msgstr "Определить параметр как символ"
 
-#: src/parser.cpp:1431
+#: src/parser.cpp:1468
 msgid "Define parameter as numerical value"
 msgstr "Определить параметр как значение выражения"
 
-#: src/parser.cpp:1425
+#: src/parser.cpp:1461
 msgid "Define parameter from user input"
 msgstr "Определить параметр по вводу пользователя"
 
@@ -2085,7 +2093,7 @@ msgid ""
 msgstr "Интерполирует значения в точках i=idat,j=jdat,k=kdat"
 
 #. {"defpal",_("Define parameter as palette color"),"defpal $N val", 0, 6},
-#: src/parser.cpp:1433
+#: src/parser.cpp:1470
 msgid "Execute if condition is false"
 msgstr "Выполнить если условие ложно"
 
@@ -2097,7 +2105,7 @@ msgstr "Выполнить скрипт после загрузки"
 msgid "Execute script and redraw graphics (F5)."
 msgstr "Выполнить скрипт и обновить рисунок (F5)."
 
-#: src/parser.cpp:1427
+#: src/parser.cpp:1463
 msgid "Execute script in external file"
 msgstr "Выполнить скрипт из внешнего файла"
 
@@ -2292,7 +2300,7 @@ msgstr "Найти/Заменить"
 msgid "Find|Replace"
 msgstr "Найти|Заменить"
 
-#: src/parser.cpp:1435
+#: src/parser.cpp:1472
 msgid "Finish if/else block"
 msgstr "Окончание блока if/else"
 
@@ -2360,7 +2368,7 @@ msgstr "Шрифт"
 msgid "FontSize"
 msgstr "Размер"
 
-#: src/parser.cpp:1436
+#: src/parser.cpp:1473
 msgid "For loop"
 msgstr "Цикл for"
 
@@ -3016,7 +3024,7 @@ msgstr "Нижняя граница для цвета или прозрачно�
 msgid "M - purple"
 msgstr "M - пурпурный"
 
-#: src/parser.cpp:1021
+#: src/parser.cpp:1057
 msgid "MGL Parser"
 msgstr "MGL парсер"
 
@@ -4050,7 +4058,7 @@ msgstr "Результат (будет иметь размеры "
 msgid "Resulting string"
 msgstr "Итоговая строка"
 
-#: src/parser.cpp:1442
+#: src/parser.cpp:1479
 msgid "Return from function"
 msgstr "Возврат из функции"
 
@@ -4731,7 +4739,7 @@ msgstr "Размер бруска"
 msgid "Sizes"
 msgstr "Размеры"
 
-#: src/parser.cpp:1428
+#: src/parser.cpp:1464
 msgid "Skip commands and iterate for-loop again"
 msgstr "Пропустить команды до конца цикла for"
 
@@ -4827,15 +4835,15 @@ msgstr "Сжать данные"
 msgid "Start"
 msgstr "Старт"
 
-#: src/parser.cpp:1437
+#: src/parser.cpp:1474
 msgid "Start function definition and stop execution of main script"
 msgstr "Начало определения функции и остановка выполнения основного скрипта"
 
-#: src/parser.cpp:1440
+#: src/parser.cpp:1477
 msgid "Start next for-loop iteration"
 msgstr "Начать новую итерацию цикла for"
 
-#: src/parser.cpp:1441
+#: src/parser.cpp:1478
 msgid "Start/close commands which should executed only once"
 msgstr "Начало/конец блока команд, которые будут выполняться единожды"
 
@@ -4859,7 +4867,7 @@ msgstr "Стоп"
 msgid "Stop drawing"
 msgstr "Остановить рисование"
 
-#: src/parser.cpp:1443
+#: src/parser.cpp:1480
 msgid "Stop execution"
 msgstr "Остановить выполнение скрипта"
 
@@ -6143,7 +6151,7 @@ msgstr "черно-белый"
 msgid "h - gray"
 msgstr "h - серый"
 
-#: src/parser.cpp:1014
+#: src/parser.cpp:1050
 #, c-format
 msgid "in line %ld"
 msgstr "в строке %ld"

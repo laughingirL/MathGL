@@ -205,17 +205,12 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 mglParser::mglParser(bool setsize)
 {
 	InUse = 1;	curGr = 0;	Variant = 0;
-	Skip=Stop=for_br=false;	StarObhID = 0;
-	memset(for_stack,0,40*sizeof(int));
-	memset(if_stack,0,40*sizeof(int));
-	memset(if_for,0,40*sizeof(int));
-	if_pos=for_addr=0;
+	Skip=Stop=false;	StarObhID = 0;
 	for(long i=0;i<40;i++)	par[i]=L"";
 
 	FillBaseCmd();	Cmd = BaseCmd;
 	AllowSetSize=setsize;	AllowFileIO=true;	AllowDllCall=true;
 	Once = true;
-	fval = new mglData[40];
 	mglNum *v;
 	v = new mglNum(0);	v->s = L"off";	NumList.push_back(v);
 	v = new mglNum(1);	v->s = L"on";	NumList.push_back(v);
@@ -230,7 +225,7 @@ mglParser::mglParser(bool setsize)
 //-----------------------------------------------------------------------------
 mglParser::~mglParser()
 {
-	DeleteAll();	delete []fval;
+	DeleteAll();
 	for(size_t i=0;i<NumList.size();i++)	// force delete built-in variables
 		if(NumList[i])	delete NumList[i];
 	NumList.clear();
@@ -771,7 +766,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				}
 				else if(n)
 				{
-					mglFnStack fn;			fn.pos = pos;
+					mglFnStack fn;			fn.pos = pos;	fn.stk = stack.size();
 					for(int i=0;i<10;i++)	{	fn.par[i] = par[i];	par[i]=L"";	}
 					for(int i=1;i<k-1;i++)	AddParam(i,arg[i+1].c_str());
 					fn_stack.push_back(fn);	n--;
@@ -794,6 +789,12 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 			}
 			delete []a;	return n;
 		}
+		if(!arg[0].compare(L"do"))
+		{
+			mglPosStack st(MGL_ST_LOOP);
+			st.pos = pos;	st.par = -1;	st.ind = -1;
+			stack.push_back(st);	delete []a;	return n;
+		}
 		if(!arg[0].compare(L"for"))
 		{
 			if(k<2)	{	delete []a;	return 1;	}
@@ -802,34 +803,30 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 			int r = ch-'0';
 			if(ch>='a' && ch<='z')	r = 10+ch-'a';
 //			int r = int(a[0].v);
+			mglPosStack st(MGL_ST_LOOP);
 			if(arg[1][1]==0 && (r>=0 && r<40))
 			{
-				if(a[1].type==0)
-				{
-					n=0;		fval[r] = *(a[1].d);
-					fval[r].nx *= fval[r].ny*fval[r].nz;
-				}
+				if(a[1].type==0)	{	st.v = *(a[1].d);	n=0;	}
 				else if(a[1].type==2 && a[2].type==2 && a[2].v>a[1].v)
 				{
 					mreal step = a[3].type==2?a[3].v:1;
 					mm = int(step>0 ? (a[2].v-a[1].v)/step : 0);
-					if(mm>0)
+					if(mm>=0)
 					{
-						n=0;	fval[r].Create(mm+1);
-						for(int ii=0;ii<mm+1;ii++)
-							fval[r].a[ii] = a[1].v + step*ii;
+						n=0;	st.v.Create(mm+1);
+						for(int ii=0;ii<mm+1;ii++)	st.v.a[ii] = a[1].v + step*ii;
 					}
 				}
 				if(n==0)
 				{
-					for(int i=39;i>0;i--)
-					{	for_stack[i]=for_stack[i-1];	if_for[i]=if_for[i-1];	}
-					for_stack[0] = r+1;		fval[r].nz = pos;	if_for[0]=if_pos;
-					wchar_t buf[32];		mglprintf(buf,32,L"%g",fval[r].a[0]);
-					AddParam(r, buf);	fval[r].ny = 1;
+					st.pos = pos;	st.par = r;	st.ind = 1;
+					st.v.nx *= st.v.ny*st.v.nz;	st.v.ny=st.v.nz=1;
+					wchar_t buf[32];	mglprintf(buf,32,L"%g",st.v.a[0]);
+					AddParam(r, buf);
 				}
 			}
-			delete []a;	return n;
+			if(n)	st.state = MGL_ST_BREAK;
+			stack.push_back(st);	delete []a;	return n;
 		}
 		// alocate new arrays and execute the command itself
 		n = PreExec(gr, k, &(arg[0]), a);
@@ -896,45 +893,121 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 	}
 	else if(!Skip && !com.compare(L"if"))
 	{
-		int cond;
+		bool cond=0;	n=1;
 		if(a[0].type==2)
-		{	n = 0;	cond = (a[0].v!=0)?3:0;	}
+		{	n = 0;	cond = (a[0].v!=0);	}
 		else if(a[0].type==0)
 		{
 			n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
-			cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u")?3:0;
+			cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u");
 		}
-		else n = 1;
 		if(n==0)
-		{	if_stack[if_pos] = cond;	if_pos = if_pos<39 ? if_pos+1 : 39;	}
+		{	mglPosStack st(cond?MGL_ST_TRUE:MGL_ST_FALSE);	stack.push_back(st);	}
+	}
+	else if(!Skip && !com.compare(L"while"))
+	{
+		n=1;	if(stack.size())
+		{
+			mglPosStack &st = stack.back();
+			if(st.state==MGL_ST_LOOP && st.ind<0)
+			{
+				bool cond=false;	n=1;
+				if(a[0].type==2)
+				{	n = 0;	cond = (a[0].v!=0);	}
+				else if(a[0].type==0)
+				{	n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
+					cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u");	}
+				if(cond)	n = -st.pos-1;	// do-while loop
+				else	stack.pop_back();
+			}
+		}
 	}
 	else if(!Skip && !com.compare(L"endif"))
-	{	if_pos = if_pos>0 ? if_pos-1 : 0;	n = 0;	}
+	{
+		if(stack.size() && stack.back().state<MGL_ST_LOOP)
+		{	stack.pop_back();	n=0;	}
+		else	n = 1;
+	}
 	else if(!Skip && !com.compare(L"else"))
 	{
-		if(if_pos>0)
-		{	n=0; if_stack[if_pos-1] = (if_stack[if_pos-1]&2)?2:3;	}
-		else n = 1;
+		n=1;	if(stack.size())
+		{
+			mglPosStack &st = stack.back();
+			if(st.state<MGL_ST_LOOP)	n=0;
+			if(st.state==MGL_ST_TRUE)	st.state = MGL_ST_DONE;
+			if(st.state==MGL_ST_FALSE)	st.state = MGL_ST_TRUE;
+		}
 	}
 	else if(!Skip && !com.compare(L"elseif"))
 	{
-		int cond;
-		if(if_pos<1 || m<1)	n = 1;
-		else if(if_stack[if_pos-1]&2)	{	n = 0;	cond = 2;	}
-		else if(a[0].type==2)
-		{	n = 0;	cond = (a[0].v!=0)?3:0;	}
-		else if(a[0].type==0)
+		n=1;	if(stack.size())
 		{
-			n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
-			cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u")?3:0;
+			mglPosStack &st = stack.back();
+			if(st.state<MGL_ST_LOOP)	n=0;
+			if(st.state==MGL_ST_TRUE)	st.state = MGL_ST_DONE;
+			if(st.state==MGL_ST_FALSE)
+			{
+				bool cond=false;	n=1;
+				if(a[0].type==2)
+				{	n = 0;	cond = (a[0].v!=0);	}
+				else if(a[0].type==0)
+				{
+					n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
+					cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u");
+				}
+				if(cond)	st.state = MGL_ST_TRUE;
+			}
 		}
-		else n = 1;
-		if(n==0)	if_stack[if_pos-1] = cond;
 	}
 	else if(!ifskip() && !Skip && !com.compare(L"break"))
 	{
-		if(if_pos==if_for[0])	if_pos = if_pos>0 ? if_pos-1 : 0;
-		n = for_stack[0] ? 0:1;	for_br = true;
+		bool nf=true;
+		size_t nn = stack.size();
+		if(nn)	for(size_t i=0;i<nn;i++)
+			if(stack[i].state==MGL_ST_LOOP)
+			{	nf=false;	stack[i].state=MGL_ST_BREAK;	break;	}
+		n = nf?1:0;
+	}
+	else if(!ifskip() && !Skip && !com.compare(L"next"))
+	{
+		n=1;
+		if(stack.size())
+		{
+			mglPosStack &st = stack.back();
+			if(st.state==MGL_ST_LOOP)
+			{
+				if(st.ind<0)	n = -st.pos-1;	// do-while loop
+				else if(st.ind<st.v.GetNN())	// next iteration
+				{
+					wchar_t buf[32];	mglprintf(buf,32,L"%g",st.v.a[st.ind]);
+					AddParam(st.par, buf);	st.ind++;	n = -st.pos-1;
+				}
+				else	{	stack.pop_back();	n=0;	}	// finish
+			}
+			else if(st.state==MGL_ST_BREAK)
+			{	stack.pop_back();	n=0;	}
+		}
+	}
+	else if(!ifskip() && !Skip && !com.compare(L"continue"))
+	{
+		bool nf=true;
+		size_t nn = stack.size();
+		if(nn)	for(size_t i=0;i<nn;i++)
+		{
+			mglPosStack &st = stack[i];
+			if(st.state==MGL_ST_LOOP)
+			{
+				if(st.ind<0)	n = -st.pos-1;	// do-while loop
+				else if(st.ind<st.v.GetNN())	// next iteration
+				{
+					wchar_t buf[32];	mglprintf(buf,32,L"%g",st.v.a[st.ind]);
+					AddParam(st.par, buf);	st.ind++;	n = -st.pos-1;
+				}
+				else	{	st.state = MGL_ST_BREAK;	n=0;	}	// finish
+				nf=false;	break;
+			}
+		}
+		if(nf)	n=1;
 	}
 	else if(!skip() && !com.compare(L"return"))
 	{
@@ -942,43 +1015,6 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 		const mglFnStack &fn=fn_stack.back();
 		for(int i=0;i<10;i++)	par[i]=fn.par[i];
 		n = -fn.pos-1;	fn_stack.pop_back();
-	}
-	else if(!ifskip() && !Skip && !com.compare(L"next"))
-	{
-		if(if_pos==if_for[0])	if_pos = if_pos>0 ? if_pos-1 : 0;
-		int r = for_stack[0]-1;
-		n = for_stack[0] ? 0:1;
-		if(for_stack[0])
-		{
-			if(fval[r].ny<fval[r].nx && !for_br)
-			{
-				wchar_t buf[32];		mglprintf(buf,32,L"%g",fval[r].a[fval[r].ny]);
-				AddParam(r, buf);	fval[r].ny += 1;
-				n = -fval[r].nz-1;
-			}
-			else
-			{
-				for(int i=0;i<39;i++)
-				{	for_stack[i]=for_stack[i+1];	if_for[i]=if_for[i+1];	}
-				for_stack[39] = 0;	for_br=false;
-			}
-		}
-	}
-	else if(!ifskip() && !Skip && !com.compare(L"continue"))
-	{
-		if(if_pos==if_for[0])	if_pos = if_pos>0 ? if_pos-1 : 0;
-		int r = for_stack[0]-1;
-		n = for_stack[0] ? 0:1;
-		if(for_stack[0])
-		{
-			if(fval[r].ny<fval[r].nx)
-			{
-				wchar_t buf[32];		mglprintf(buf,32,L"%g",fval[r].a[fval[r].ny]);
-				AddParam(r, buf);	fval[r].ny += 1;
-				n = -fval[r].nz-1;
-			}
-			else	for_br = true;
-		}
 	}
 	return n+1;
 }
@@ -998,7 +1034,7 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 	if(n<1 || text==0)	return;
 	long res=0;
 	char buf[64];
-	for_br=Skip=false;	if_pos=0;	ScanFunc(0);	fn_stack.clear();
+	Skip=false;	ScanFunc(0);	fn_stack.clear();	stack.clear();
 	for(long i=0;i<n;i++)	ScanFunc(text[i]);
 	for(long i=0;i<n;i++)
 	{
@@ -1426,6 +1462,7 @@ mglCommand mgls_prg_cmd[] = {
 	{"break",_("Break for-loop"),"break", 0, 6},
 	{"call",_("Execute script in external file"),"call 'name' [args]", 0, 6},
 	{"continue",_("Skip commands and iterate for-loop again"),"continue", 0, 6},
+	{"do",_("Begin of do-while loop"),"do", 0, 6},
 	{"defchr",_("Define parameter as character"),"defchr $N val", 0, 6},
 	{"define",_("Define constant or parameter"),"define $N sth | Var val", 0, 6},
 	{"defnum",_("Define parameter as numerical value"),"defnum $N val", 0, 6},
@@ -1441,5 +1478,6 @@ mglCommand mgls_prg_cmd[] = {
 	{"once",_("Start/close commands which should executed only once"),"once val", 0, 6},
 	{"return",_("Return from function"),"return", 0, 6},
 	{"stop",_("Stop execution"),"stop", 0, 6},
+	{"while",_("Condition of do-while loop"),"while val|Dat ['cond']", 0, 6},
 {"","","",NULL,0}};
 //-----------------------------------------------------------------------------

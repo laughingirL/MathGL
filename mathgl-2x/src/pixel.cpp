@@ -577,8 +577,8 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 		{
 			float xx = (i-p1.x), yy = (j-p1.y);
 			float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
-			if(u<0)			{	v += u*u;	u=0;	}
-			else if(u>dd)	{	v += (u-dd)*(u-dd);	u=dd;	}
+			if(u<0)			{	v += 16*u*u;	u=0;	}
+			else if(u>dd)	{	v += 16*(u-dd)*(u-dd);	u=dd;	}
 			if( pd & ((uint64_t)1<<(long(pp+u/pw)%16)) )
 			{
 				mglPnt p(p1+d*(u/dd));	col2int(p,r,oi);
@@ -596,8 +596,8 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 		{
 			float xx = (i-p1.x), yy = (j-p1.y);
 			float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
-			if(u<0)			{	v += u*u;	u=0;	}
-			else if(u>dd)	{	v += (u-dd)*(u-dd);	u=dd;	}
+			if(u<0)			{	v += 16*u*u;	u=0;	}
+			else if(u>dd)	{	v += 16*(u-dd)*(u-dd);	u=dd;	}
 			if( pd & ((uint64_t)1<<(long(pp+u/pw)%16)) )
 			{
 				mglPnt p(p1+d*(u/dd));	col2int(p,r,oi);
