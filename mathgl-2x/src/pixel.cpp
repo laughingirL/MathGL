@@ -446,7 +446,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	mglPnt tmp(p1+d1+d2+d3), pp(p1);
 	if(mgl_isnan(tmp.u) && mgl_isnum(tmp.v))
 	{	pp.u = nr.x;	pp.v = nr.y;	pp.w = nr.z;
-		d1.u=d1.v=d1.w=d2.u=d2.v=d2.w=d3.u=d3.v=d3.u=0;	}
+		d1.u=d1.v=d1.w=d2.u=d2.v=d2.w=d3.u=d3.v=d3.w=0;	}
 	
 	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 	{

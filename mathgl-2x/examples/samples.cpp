@@ -3001,7 +3001,7 @@ const char *mmgl_earth="import dat 'Equirectangular-projection.jpg' 'BbGYw' -1 1
 "subplot 1 1 0 '<>':title 'Earth in 3D':rotate 40 60\n"
 "copy phi dat 'pi*x':copy tet dat 'pi*y/2'\n"
 "copy x cos(tet)*cos(phi)\ncopy y cos(tet)*sin(phi)\ncopy z sin(tet)\n\n"
-"light on\nsurfc x y z dat 'BbGYw'\ncontp [-0.5,-0.5] x y z dat 'y'";
+"light on\nsurfc x y z dat 'BbGYw'\ncontp [-0.51,-0.51] x y z dat 'y'";
 void smgl_earth(mglGraph *gr)
 {
 	mglData dat;	dat.Import("Equirectangular-projection.jpg","BbGYw",-1,1);
@@ -3019,7 +3019,7 @@ void smgl_earth(mglGraph *gr)
 	if(big!=3)	gr->Title("Earth in 3D");
 	gr->Rotate(40,60);	gr->Light(true);
 	gr->SurfC(x,y,z,dat,"BbGYw");
-	mglData vals(2);	vals.a[0]=-0.5;
+	mglData vals(1);	vals.a[0]=-0.51;
 	gr->ContP(vals, x,y,z,dat,"y");
 }
 //-----------------------------------------------------------------------------

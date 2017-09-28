@@ -183,7 +183,7 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 				unsigned val=(int(c1[0])-c2[0])*(int(c1[0])-c2[0]) + 
 					(int(c1[1])-c2[1])*(int(c1[1])-c2[1]) + 
 					(int(c1[2])-c2[2])*(int(c1[2])-c2[2]);
-				if(val==0)		{	k=0;	break;	}
+				if(val==0)		{	pos=k;	break;	}
 				if(val<mval)	{	pos=k;	mval=val;	}
 			}
 			d->a[j+d->nx*i] = v1 + pos*(v2-v1)/num;

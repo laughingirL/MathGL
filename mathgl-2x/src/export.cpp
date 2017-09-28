@@ -611,33 +611,36 @@ void MGL_EXPORT mgl_write_frame_(uintptr_t *gr, const char *fname,const char *de
 #endif
 void MGL_EXPORT mgl_show_image(HMGL gr, const char *viewer, int keep)
 {
-	char fname[128], *cmd = new char [128];
-	snprintf(fname,128,"%s.png", tmpnam(NULL));	fname[127]=0;
+	static size_t counter=size_t(0xffffffff*mgl_rnd());
+	char *fname = new char[256], *cmd = new char [288];
+//	snprintf(fname,128,"%s.png", tmpnam(NULL));
+	snprintf(fname,256,"%s/mathgl%lu.png", P_tmpdir, counter);
+	fname[255]=0;	counter++;
 	mgl_write_png_solid(gr,fname,"MathGL ShowImage file");
 	if(!viewer || !viewer[0])
 		viewer = MGL_DEF_VIEWER;
 #ifdef WIN32
 		if(keep)
 		{
-			snprintf(cmd,128,"%s %s &", viewer,fname);	cmd[127]=0;
+			snprintf(cmd,288,"%s %s &", viewer,fname);	cmd[287]=0;
 			if(system(cmd)==-1)	printf(_("Error to call external viewer\n"));
 			Sleep(2000);
-			snprintf(cmd,128,"del %s", fname);
+			snprintf(cmd,288,"del %s", fname);
 		}
-		else	snprintf(cmd,128,"%s %s; del %s", viewer,fname,fname);
+		else	snprintf(cmd,288,"%s %s; del %s", viewer,fname,fname);
 #else
 		if(keep)
 		{
-			snprintf(cmd,128,"%s %s &", viewer,fname);	cmd[127]=0;
+			snprintf(cmd,288,"%s %s &", viewer,fname);	cmd[287]=0;
 			if(system(cmd)==-1)	printf(_("Error to call external viewer\n"));
 			sleep(2);
-			snprintf(cmd,128,"rm %s", fname);
+			snprintf(cmd,288,"rm %s", fname);
 		}
-		else	snprintf(cmd,128,"%s %s; rm %s", viewer,fname,fname);
+		else	snprintf(cmd,288,"%s %s; rm %s", viewer,fname,fname);
 #endif
-		cmd[127] = 0;
+		cmd[287] = 0;
 		if(system(cmd)==-1)	printf(_("Error to call external viewer\n"));
-		delete []cmd;
+		delete []cmd;	delete []fname;
 }
 void MGL_EXPORT mgl_show_image_(uintptr_t *gr, const char *viewer, int *keep, int l)
 {	char *s=new char[l+1];	memcpy(s,viewer,l);	s[l]=0;
