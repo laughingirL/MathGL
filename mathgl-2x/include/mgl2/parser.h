@@ -173,6 +173,10 @@ public:
 	void DeleteVar(const wchar_t *name);
 	/// Delete all data variables
 	void DeleteAll();
+	/// Delete temporary data arrays
+	inline void DeleteTemp()
+	{	for(size_t i=0;i<DataList.size();i++)	if(DataList[i] && DataList[i]->temp)
+		{	mglDataA *u=DataList[i];	DataList[i]=0;	delete u;	}	}
 	/// Set variant of argument(s) separated by '?' to be used
 	inline void SetVariant(int var=0)	{	Variant = var<=0?0:var;	}
 protected:

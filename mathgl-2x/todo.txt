@@ -30,7 +30,6 @@
 3. Read WFM files ?!!
 4. "latex on" option ?!?
 
-5. Add 'goto' or 'do|while' command
 6. Extend 'ask' as:
 	ask $N1 'text|kind:arg1:arg2:...' $N2 'text|kind:arg1:arg2:...' ...
 	where kind={default=edit,spin,choice,check,slider,float?}
@@ -38,8 +37,7 @@
 8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
 9. Mask in EPS/SVG
 10. Add momentum dat vdat ... where vdat is corresponding coordinate ???
-11. Add "if COND then CODE"
-
+12. Cont + labels ("t") for "narrow" contours
 15. Use arrow_plot_3d ???
 18. Show mouse position at widgets constantly.
 
@@ -107,6 +105,9 @@ D. Docs about JS interface
 53. Example of Step, Bars for x.nx = y.nx+1
 54. Example of 'roots'
 55. Docs and example about new operation in formula parsing: `dat <==> Transpose(dat).
+56. Docs and example about 'do|while' commands
+57. Docs and example about "if COND then CODE"
+
 
 
 60. Generate *.texi from samples.cpp automatically

@@ -789,6 +789,22 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 			}
 			delete []a;	return n;
 		}
+		if(!arg[0].compare(L"if") && k>3 && !arg[2].compare(L"then"))
+		{
+			bool cond=false;	n=0;
+			if(a[0].type==2)	cond = (a[0].v!=0);
+			else if(a[0].type==0)
+			{	a[1].s.assign(a[1].w.begin(),a[1].w.end());
+				cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u");	}
+			if(cond)
+			{	// alocate new arrays and execute the command itself
+				n = PreExec(gr, k-4, &(arg[3]), a+3);
+				if(n>0)	n--;
+				else if(!arg[3].compare(L"setsize") && !AllowSetSize)	n = 2;
+				else	n = Exec(gr, arg[3].c_str(),k-4,a+3, k>3?arg[4]:L"", opt.c_str());
+			}
+			delete []a;	DeleteTemp();	return n;
+		}
 		if(!arg[0].compare(L"do"))
 		{
 			mglPosStack st(MGL_ST_LOOP);
@@ -835,10 +851,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 		else	n = Exec(gr, arg[0].c_str(),k-1,a, k>1?arg[1]:L"", opt.c_str());
 		delete []a;
 	}
-	// delete temporary data arrays
-	for(size_t i=0;i<DataList.size();i++)	if(DataList[i] && DataList[i]->temp)
-	{	mglDataA *u=DataList[i];	DataList[i]=0;	delete u;	}
-	return n;
+	DeleteTemp();	return n;
 }
 //-----------------------------------------------------------------------------
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
@@ -894,7 +907,9 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 	else if(!Skip && !com.compare(L"if"))
 	{
 		bool cond=0;	n=1;
-		if(a[0].type==2)
+		if(m>3 && a[1].type==0 && !a[1].d->s.compare(L"then"))
+		{	n = -1;	a[1].d->temp=true;	}	// NOTE: ugly hack :(
+		else if(a[0].type==2)
 		{	n = 0;	cond = (a[0].v!=0);	}
 		else if(a[0].type==0)
 		{

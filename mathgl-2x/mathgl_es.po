@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-29 01:47+0300\n"
+"POT-Creation-Date: 2017-09-29 15:12+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -70,7 +70,7 @@ msgid ""
 "http://mathgl.sourceforge.net/"
 msgstr ""
 
-#: src/parser.cpp:1049
+#: src/parser.cpp:1064
 #, c-format
 msgid ""
 "\n"
@@ -79,7 +79,7 @@ msgstr ""
 "\n"
 "Cambiar datos temporales en linea %ld"
 
-#: src/parser.cpp:1047
+#: src/parser.cpp:1062
 #, c-format
 msgid ""
 "\n"
@@ -88,14 +88,14 @@ msgstr ""
 "\n"
 "Cadena de caracteres demasiado larga en linea %ld"
 
-#: src/parser.cpp:1048
+#: src/parser.cpp:1063
 #, c-format
 msgid ""
 "\n"
 "Unbalanced ' in line %ld"
 msgstr ""
 
-#: src/parser.cpp:1045
+#: src/parser.cpp:1060
 #, c-format
 msgid ""
 "\n"
@@ -104,7 +104,7 @@ msgstr ""
 "\n"
 "Argumento(s) incorrecto(s) en linea %ld"
 
-#: src/parser.cpp:1046
+#: src/parser.cpp:1061
 #, c-format
 msgid ""
 "\n"
@@ -839,7 +839,7 @@ msgstr ""
 msgid "Begin"
 msgstr ""
 
-#: src/parser.cpp:1465
+#: src/parser.cpp:1480
 msgid "Begin of do-while loop"
 msgstr ""
 
@@ -867,7 +867,7 @@ msgstr ""
 msgid "Both fields in zrange must be filled"
 msgstr ""
 
-#: src/parser.cpp:1462
+#: src/parser.cpp:1477
 msgid "Break for-loop"
 msgstr ""
 
@@ -1069,11 +1069,11 @@ msgstr ""
 msgid "Computes the flame fractal"
 msgstr ""
 
-#: src/parser.cpp:1481
+#: src/parser.cpp:1496
 msgid "Condition of do-while loop"
 msgstr ""
 
-#: src/parser.cpp:1471 src/parser.cpp:1475
+#: src/parser.cpp:1486 src/parser.cpp:1490
 msgid "Conditional operator"
 msgstr ""
 
@@ -1198,7 +1198,7 @@ msgstr ""
 msgid "Create new empty script window (Ctrl+N)."
 msgstr ""
 
-#: src/parser.cpp:1476
+#: src/parser.cpp:1491
 msgid "Creates new variable from list of numbers or data"
 msgstr ""
 
@@ -1312,19 +1312,19 @@ msgstr ""
 msgid "Decrease font size"
 msgstr ""
 
-#: src/parser.cpp:1467
+#: src/parser.cpp:1482
 msgid "Define constant or parameter"
 msgstr ""
 
-#: src/parser.cpp:1466
+#: src/parser.cpp:1481
 msgid "Define parameter as character"
 msgstr ""
 
-#: src/parser.cpp:1468
+#: src/parser.cpp:1483
 msgid "Define parameter as numerical value"
 msgstr ""
 
-#: src/parser.cpp:1461
+#: src/parser.cpp:1476
 msgid "Define parameter from user input"
 msgstr ""
 
@@ -2039,7 +2039,7 @@ msgid ""
 msgstr ""
 
 #. {"defpal",_("Define parameter as palette color"),"defpal $N val", 0, 6},
-#: src/parser.cpp:1470
+#: src/parser.cpp:1485
 msgid "Execute if condition is false"
 msgstr ""
 
@@ -2051,7 +2051,7 @@ msgstr ""
 msgid "Execute script and redraw graphics (F5)."
 msgstr ""
 
-#: src/parser.cpp:1463
+#: src/parser.cpp:1478
 msgid "Execute script in external file"
 msgstr ""
 
@@ -2246,7 +2246,7 @@ msgstr ""
 msgid "Find|Replace"
 msgstr ""
 
-#: src/parser.cpp:1472
+#: src/parser.cpp:1487
 msgid "Finish if/else block"
 msgstr ""
 
@@ -2314,7 +2314,7 @@ msgstr ""
 msgid "FontSize"
 msgstr ""
 
-#: src/parser.cpp:1473
+#: src/parser.cpp:1488
 msgid "For loop"
 msgstr ""
 
@@ -2961,7 +2961,7 @@ msgstr ""
 msgid "M - purple"
 msgstr ""
 
-#: src/parser.cpp:1057
+#: src/parser.cpp:1072
 msgid "MGL Parser"
 msgstr ""
 
@@ -3981,7 +3981,7 @@ msgstr ""
 msgid "Resulting string"
 msgstr ""
 
-#: src/parser.cpp:1479
+#: src/parser.cpp:1494
 msgid "Return from function"
 msgstr ""
 
@@ -4650,7 +4650,7 @@ msgstr ""
 msgid "Sizes"
 msgstr ""
 
-#: src/parser.cpp:1464
+#: src/parser.cpp:1479
 msgid "Skip commands and iterate for-loop again"
 msgstr ""
 
@@ -4740,15 +4740,15 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: src/parser.cpp:1474
+#: src/parser.cpp:1489
 msgid "Start function definition and stop execution of main script"
 msgstr ""
 
-#: src/parser.cpp:1477
+#: src/parser.cpp:1492
 msgid "Start next for-loop iteration"
 msgstr ""
 
-#: src/parser.cpp:1478
+#: src/parser.cpp:1493
 msgid "Start/close commands which should executed only once"
 msgstr ""
 
@@ -4772,7 +4772,7 @@ msgstr ""
 msgid "Stop drawing"
 msgstr ""
 
-#: src/parser.cpp:1480
+#: src/parser.cpp:1495
 msgid "Stop execution"
 msgstr ""
 
@@ -5999,7 +5999,7 @@ msgstr ""
 msgid "h - gray"
 msgstr ""
 
-#: src/parser.cpp:1050
+#: src/parser.cpp:1065
 #, c-format
 msgid "in line %ld"
 msgstr ""
