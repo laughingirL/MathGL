@@ -39,6 +39,7 @@
 10. Add momentum dat vdat ... where vdat is corresponding coordinate ???
 12. Cont + labels ("t") for "narrow" contours
 15. Use arrow_plot_3d ???
+16. Check Title "size" -- see 'primitives' sample
 18. Show mouse position at widgets constantly.
 
 ZZ. Update *.i for new functions {before release!!!}
@@ -55,12 +56,6 @@ D. Docs about JS interface
 
 1. Update Qt and UDAV figures
 
-2. Sample about PDE -- add 'tridmat' + 'diffract'
-3. Sample about complex 'ode' (like Raman scattering)
-4. Sample about earth map
-5. Sample about 'erode' and 'dilate'
-7. Sample about 'detect'
-8. Sample about 'section'
 9. Docs about '.' for 'cont'
 10. Docs about '.' for 'flow'
 11. Remark about cutting in 'ode' at NAN or INF
@@ -68,14 +63,9 @@ D. Docs about JS interface
 13. Docs about 'coil'
 14. Update flags
 15. Docs and example about 'roots' for system of equations
-16. Example of 'cont' and 'flow' and '.' style.
+16. Example of 'flow' and '.' style.
 17. Example of 'contp', 'flowp'
-18. Example of ticks from data array
-19. Example of lines throw origin in 'axis'
-20. Example of adding user-defined glyph
-21. Example of "clear unused"
 22. Example of frame manipulation
-23. Example of 'legend' style '^'
 24. Example of 'title' style '#'
 25. Example of 'triplot'+'quadplot' with colors per-face
 26. Example of 'tricontv'
@@ -84,21 +74,20 @@ D. Docs about JS interface
 29. Example of 'flow', 'pipe' style '*'.
 30. Example of 'fsurf'
 31. Example of 'tile','tiles' styles 'x', 'z'
-32. Example of 'polygon', 'arc', 'symbol' (together with user-defined?), 'logo', 
 33. Example of 'lamerey' style '~'
 34. Example of 'iris', extended
 36. Example of wired 'area' and 'region' (2d case), 'region' with !z1||!z2 (?!?)
 37. Example of 'step' with markers; 'barh', 'bars' (3d) style 'F'
 38. Example of CalcXYZ()
-40. Example of 'clf' with color, 'rasterize' and 'loadbackground'
-42. Example of 'pde' in 3d, and of 'qo3d'
+40. Example of 'clf' with color, 'rasterize', 'loadbackground', 'logo'
+42. Example of 'pde' in 3d, and 'qo3d'
 43. Example of 'tridmat' in all 5 modes, and for real numbers too.
 44. Example of {'func','once','elseif','break','continue'}
 45. Example of "data" creation {'list', 'def*','ask','{OP DAT}'}
 46. Example of 'rk_step'
 47. Example of 'openhdf'
 48. Example of "TeX-like" commands: \color, \n, \sub, \sup, \stack*, \dfrac and so on.
-49. Extend examples of 'fit' and 'hist' on multi-dimension case.
+49. Extend examples of 'fit' and 'hist' in multi-dimension case.
 50. Example of complex 'hankel' for PDE solving
 51. Example of 'wavelet'
 52. Example of time-values in formulas (like hh-mm-ss_DD.MM.YYYY or hh-mm-ss or DD.MM.YYYY)
@@ -133,6 +122,7 @@ ZZ. Update time.texi {before release!!!}
 * 1d view -- over longer size + y-size for current slice only
 * info about used memory for graphics
 * coordinates under mouse
+* abort saving shouldn't switch off "modified" flag (check!)
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???

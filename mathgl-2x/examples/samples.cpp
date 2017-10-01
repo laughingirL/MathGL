@@ -1471,7 +1471,7 @@ void smgl_cloud(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_cont="call 'prepare2d'\nlist v -0.5 -0.15 0 0.15 0.5\nsubplot 2 2 0:title 'Cont plot (default)':rotate 50 60:box:cont a\n"
 "subplot 2 2 1:title 'manual levels':rotate 50 60:box:cont v a\n"
-"subplot 2 2 2:title '\"\\_\" style':rotate 50 60:box:cont a '_'\n"
+"subplot 2 2 2:title '\"\\_\" and \".\" styles':rotate 50 60:box:cont a '_':cont a '_.2k'\n"
 "subplot 2 2 3 '':title '\"t\" style':box:cont a 't'";
 void smgl_cont(mglGraph *gr)
 {
@@ -1481,8 +1481,8 @@ void smgl_cont(mglGraph *gr)
 	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("manual levels");
 	gr->Rotate(50,60);	gr->Box();	gr->Cont(v,a);
-	gr->SubPlot(2,2,2);	gr->Title("'\\_' style");
-	gr->Rotate(50,60);	gr->Box();	gr->Cont(a,"_");
+	gr->SubPlot(2,2,2);	gr->Title("'\\_' and '.' styles");
+	gr->Rotate(50,60);	gr->Box();	gr->Cont(a,"_");	gr->Cont(a,"_.2k");
 	gr->SubPlot(2,2,3,"");	gr->Title("'t' style");
 	gr->Box();	gr->Cont(a,"t");
 }
@@ -1897,9 +1897,12 @@ void smgl_vect(mglGraph *gr)
 	gr->Box();	gr->Vect(a,b);
 	if(big==3)	return;
 	gr->SubPlot(3,2,1,"");	gr->Title("'.' style; '=' style");	gr->Box();	gr->Vect(a,b,"=.");
-	gr->SubPlot(3,2,2,"");	gr->Title("'f' style");	gr->Box();	gr->Vect(a,b,"f");
-	gr->SubPlot(3,2,3,"");	gr->Title("'>' style");	gr->Box();	gr->Vect(a,b,">");
-	gr->SubPlot(3,2,4,"");	gr->Title("'<' style");	gr->Box();	gr->Vect(a,b,"<");
+	gr->SubPlot(3,2,2,"");	gr->Title("'f' style");
+	gr->Box();	gr->Vect(a,b,"f");
+	gr->SubPlot(3,2,3,"");	gr->Title("'>' style");
+	gr->Box();	gr->Vect(a,b,">");
+	gr->SubPlot(3,2,4,"");	gr->Title("'<' style");
+	gr->Box();	gr->Vect(a,b,"<");
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->SubPlot(3,2,5);	gr->Title("3d variant");	gr->Rotate(50,60);
 	gr->Box();	gr->Vect(ex,ey,ez);
@@ -1907,7 +1910,7 @@ void smgl_vect(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_flow="call 'prepare2v'\ncall 'prepare3v'\nsubplot 2 2 0 '':title 'Flow plot (default)':box:flow a b\n"
 "subplot 2 2 1 '':title '\"v\" style':box:flow a b 'v'\n"
-"subplot 2 2 2 '':title 'from edges only':box:flow a b '#'\n"
+"subplot 2 2 2 '':title '\"#\" and \".\" styles':box:flow a b '#':flow a b '.2k'\n"
 "subplot 2 2 3:title '3d variant':rotate 50 60:box:flow ex ey ez";
 void smgl_flow(mglGraph *gr)
 {
@@ -1915,8 +1918,10 @@ void smgl_flow(mglGraph *gr)
 	if(big!=3)	{gr->SubPlot(2,2,0,"");	gr->Title("Flow plot (default)");}
 	gr->Box();	gr->Flow(a,b);
 	if(big==3)	return;
-	gr->SubPlot(2,2,1,"");	gr->Title("'v' style");	gr->Box();	gr->Flow(a,b,"v");
-	gr->SubPlot(2,2,2,"");	gr->Title("'\\#' style");	gr->Box();	gr->Flow(a,b,"#");
+	gr->SubPlot(2,2,1,"");	gr->Title("'v' style");
+	gr->Box();	gr->Flow(a,b,"v");
+	gr->SubPlot(2,2,2,"");	gr->Title("'\\#' and '.' styles");
+	gr->Box();	gr->Flow(a,b,"#");	gr->Flow(a,b,".2k");
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);
 	gr->Box();	gr->Flow(ex,ey,ez);
@@ -2094,7 +2099,7 @@ void smgl_axis(mglGraph *gr)
 	gr->InPlot(0,0.5,0,0.5);	gr->SetRanges(1,0,4,0);	gr->FPlot("4*x^2");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_ticks="subplot 3 3 0:title 'Usual axis'\naxis\n\n"
+const char *mmgl_ticks="subplot 3 3 0:title 'Usual axis with \":\" style'\naxis ':'\n\n"
 "subplot 3 3 1:title 'Too big/small range'\nranges -1000 1000 0 0.001:axis\n\n"
 "subplot 3 3 2:title 'LaTeX-like labels'\naxis 'F!'\n\n"
 "subplot 3 3 3:title 'Too narrow range'\nranges 100 100.1 10 10.01:axis\n\n"
@@ -2106,12 +2111,12 @@ const char *mmgl_ticks="subplot 3 3 0:title 'Usual axis'\naxis\n\n"
 "subplot 3 3 7:title 'Manual ticks'\nranges -pi pi 0 2\n"
 "xtick pi 3 '\\pi'\nxtick 0.886 'x^*' on # note this will disable subticks drawing\n"
 "# or you can use\n#xtick -pi '\\pi' -pi/2 '-\\pi/2' 0 '0' 0.886 'x^*' pi/2 '\\pi/2' pi 'pi'\n"
-"# or you can use\n#list v -pi -pi/2 0 0.886 pi/2 pi:xtick v '-\\pi\\n-\\pi/2\\n{}0\\n{}x^*\\n\\pi/2\\n\\pi'\n"
+"list v 0 0.5 1 2:ytick v '0\n0.5\n1\n2'\n"
 "axis:grid:fplot '2*cos(x^2)^2' 'r2'\n\n"
 "subplot 3 3 8:title 'Time ticks'\nxrange 0 3e5:ticktime 'x':axis";
 void smgl_ticks(mglGraph *gr)
 {
-	gr->SubPlot(3,3,0);	gr->Title("Usual axis");	gr->Axis();
+	gr->SubPlot(3,3,0);	gr->Title("Usual axis with ':' style");	gr->Axis(":");
 	gr->SubPlot(3,3,1);	gr->Title("Too big/small range");
 	gr->SetRanges(-1000,1000,0,0.001);	gr->Axis();
 	gr->SubPlot(3,3,2);	gr->Title("LaTeX-like labels");
@@ -2131,8 +2136,8 @@ void smgl_ticks(mglGraph *gr)
 	gr->SubPlot(3,3,7);	gr->Title("Manual ticks");	gr->SetRanges(-M_PI,M_PI, 0, 2);
 	gr->SetTicks('x',M_PI,0,0,"\\pi");	gr->AddTick('x',0.886,"x^*");
 	// alternatively you can use following lines
-	//double val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
-	//gr->SetTicksVal('x', mglData(6,val), "-\\pi\n-\\pi/2\n0\nx^*\n\\pi/2\n\\pi");
+	double val[]={0, 0.5, 1, 2};
+	gr->SetTicksVal('y', mglData(4,val), "0\n0.5\n1\n2");
 	gr->Axis();	gr->Grid();	gr->FPlot("2*cos(x^2)^2", "r2");
 	gr->SubPlot(3,3,8);	gr->Title("Time ticks");	gr->SetRange('x',0,3e5);
 	gr->SetTicksTime('x',0);	gr->Axis();
@@ -2209,13 +2214,17 @@ const char *mmgl_primitives="subplot 2 2 0 '':title 'Line, Curve, Rhomb, Ellipse
 "line -1 -1 -0.5 1 'qAI'\ncurve -0.6 -1 1 1 0 1 1 1 'rA'\nball 0 -0.5 '*':ball 1 -0.1 '*'\n"
 "rhomb 0 0.4 1 0.9 0.2 'b#'\nrhomb 0 0 1 0.4 0.2 'cg@'\n"
 "ellipse 0 -0.5 1 -0.1 0.2 'u#'\nellipse 0 -1 1 -0.6 0.2 'm@'\n\n"
-"light on\nsubplot 2 2 1:title 'Face[xyz]':rotate 50 60:box\n"
+"subplot 2 3 1 '':title 'Arc, Polygon, Symbol';size -1.2\n"
+"arc -0.6 0 -0.6 0.3 180 '2kA':ball -0.6 0\npolygon 0 0 0 0.4 6 'r'\n"
+"new x 50 'cos(3*pi*x)':new y 50 'sin(pi*x)'\n"
+"addsymbol 'a' x y\nsymbol 0.7 0 'a'\n\n"
+"light on\nsubplot 2 3 3 '<^>' 0 -0.2:title 'Face[xyz]';size -1.5:rotate 50 60:box\n"
 "facex 1 0 -1 1 1 'r':facey -1 -1 -1 1 1 'g':facez 1 -1 -1 -1 1 'b'\n"
 "face -1 -1 1 -1 1 1 1 -1 0 1 1 1 'bmgr'\n\n"
-"subplot 2 2 3 '':title 'Cone'\n"
-"cone -0.7 -0.3 0 -0.7 0.7 0.5 0.2 0.1 'b':text -0.7 -0.7 'no edges\\n(default)'\n"
-"cone 0 -0.3 0 0 0.7 0.5 0.2 0.1 'g@':text 0 -0.7 'with edges\\n('\\@' style)'\n"
-"cone 0.7 -0.3 0 0.7 0.7 0.5 0.2 0.1 'ry':text 0.7 -0.7 '\"arrow\" with\\n{}gradient'\n\n"
+"subplot 2 3 5 '':title 'Cone';size -1.5\n"
+"cone -0.7 -0.3 0 -0.7 0.7 0.5 0.2 0.1 'b':text -0.7 -0.7 'no edges\\n(default)';size -1.5\n"
+"cone 0 -0.3 0 0 0.7 0.5 0.2 0.1 'g@':text 0 -0.7 'with edges\\n(\"\\@\" style)';size -1.5\n"
+"cone 0.7 -0.3 0 0.7 0.7 0.5 0.2 0 'Ggb':text 0.7 -0.7 '\"arrow\" with\\n{}gradient';size -1.5\n"
 "subplot 2 2 2 '':title 'Sphere and Drop'\nline -0.9 0 1 0.9 0 1\n"
 "text -0.9 0.4 'sh=0':drop -0.9 0 0 1 0.5 'r' 0:ball -0.9 0 1 'k'\n"
 "text -0.3 0.6 'sh=0.33':drop -0.3 0 0 1 0.5 'r' 0.33:ball -0.3 0 1 'k'\n"
@@ -2236,20 +2245,27 @@ void smgl_primitives(mglGraph *gr)	// flag #
 	gr->Ellipse(mglPoint(0,-1),mglPoint(1,-0.6),0.2,"m@");
 	gr->Mark(mglPoint(0,-0.5),"*");	gr->Mark(mglPoint(1,-0.1),"*");
 
+	gr->SubPlot(2,3,1,"");	gr->Title("Arc, Polygon, Symbol","", -1.2);
+	gr->Arc(mglPoint(-0.6,0), mglPoint(-0.6,0.3), 180, "2kA");	gr->Ball(-0.6,0);
+	gr->Polygon(mglPoint(), mglPoint(0,0.4), 6, "r");
+	mglData x(50), y(50);	gr->Fill(x,"cos(3*pi*x)");	gr->Fill(y,"sin(pi*x)");
+	gr->DefineSymbol('a',x,y);	gr->Symbol(mglPoint(0.7),'a');
+
 	gr->Light(true);
-	gr->SubPlot(2,2,1);	gr->Title("Face[xyz]");	gr->Rotate(50,60);	gr->Box();
+	gr->SubPlot(2,3,3,"<^>",0,-0.2);	gr->Title("Face[xyz]", "", -1.5);
+	gr->Rotate(50,60);	gr->Box();
 	gr->FaceX(mglPoint(1,0,-1),1,1,"r");
 	gr->FaceY(mglPoint(-1,-1,-1),1,1,"g");
 	gr->FaceZ(mglPoint(1,-1,-1),-1,1,"b");
 	gr->Face(mglPoint(-1,-1,1),mglPoint(-1,1,1),mglPoint(1,-1,0),mglPoint(1,1,1),"bmgr");
 
-	gr->SubPlot(2,2,3,"");	gr->Title("Cone");
+	gr->SubPlot(2,3,5,"");	gr->Title("Cone", "", -1.5);
 	gr->Cone(mglPoint(-0.7,-0.3),mglPoint(-0.7,0.7,0.5),0.2,0.1,"b");
-	gr->Puts(mglPoint(-0.7,-0.7),"no edges\n(default)");
+	gr->Puts(mglPoint(-0.7,-0.7),"no edges\n(default)","", -1.5);
 	gr->Cone(mglPoint(0,-0.3),mglPoint(0,0.7,0.5),0.2,0.1,"g@");
-	gr->Puts(mglPoint(0,-0.7),"with edges\n('\\@' style)");
+	gr->Puts(mglPoint(0,-0.7),"with edges\n('\\@' style)","", -1.5);
 	gr->Cone(mglPoint(0.7,-0.3),mglPoint(0.7,0.7,0.5),0.2,0,"ry");
-	gr->Puts(mglPoint(0.7,-0.7),"'arrow' with\ngradient");
+	gr->Puts(mglPoint(0.7,-0.7),"'arrow' with\ngradient","", -1.5);
 
 	gr->SubPlot(2,2,2,"");	gr->Title("Sphere and Drop");	gr->Alpha(false);
 	gr->Puts(mglPoint(-0.9,0.4),"sh=0");		gr->Ball(mglPoint(-0.9,0,1),'k');
@@ -2337,10 +2353,11 @@ void smgl_colorbar(mglGraph *gr)
 const char *mmgl_legend="addlegend 'sin(\\pi {x^2})' 'b':addlegend 'sin(\\pi x)' 'g*'\n"
 "addlegend 'sin(\\pi \\sqrt{x})' 'rd':addlegend 'jsut text' ' ':addlegend 'no indent for this' ''\n"
 "subplot 2 2 0 '':title 'Legend (default)':box:legend\n"
+"legend 1 0.5 '^':text 0.49 0.88 'Style \"\\^\"' 'A:L'\n"
 "legend 3 'A#':text 0.75 0.65 'Absolute position' 'A'\n"
 "subplot 2 2 2 '':title 'coloring':box:legend 0 'r#':legend 1 'Wb#':legend 2 'ygr#'\n"
 "subplot 2 2 3 '':title 'manual position':box\n"
-"legend 0.5 1:text 0.5 0.55 'at x=0.5, y=1' 'a'\n"
+"legend 0.5 1:text 0.5 0.5 'at x=0.5, y=1' 'a'\n"
 "legend 1 '#-':text 0.75 0.25 'Horizontal legend' 'a'";
 void smgl_legend(mglGraph *gr)
 {
@@ -2352,13 +2369,14 @@ void smgl_legend(mglGraph *gr)
 	if(big!=3)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
 	gr->Box();	gr->Legend();
 	if(big==3)	return;
+	gr->Legend(1,0.5,"^");	gr->Puts(0.49, 0.88, "Style '\\^'","A:L");
 	gr->Legend(3,"A#");
 	gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
 	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
 	gr->Legend(0,"r#");	gr->Legend(1,"Wb#");	gr->Legend(2,"ygr#");
 	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();
 	gr->Legend(0.5,1);
-	gr->Puts(mglPoint(0.5,0.55),"at x=0.5, y=1","a");
+	gr->Puts(mglPoint(0.5,0.5),"at x=0.5, y=1","a");
 	gr->Legend(1,"#-");
 	gr->Puts(mglPoint(0.75,0.25),"Horizontal legend","a");
 }
