@@ -102,13 +102,13 @@ void mgl_generate_texi()
 {
 	FILE *fp = fopen("samples.texi","w");
 	fprintf(fp,"@c ------------------------------------------------------------------\n"
-		"@chapter Samples\n@nav{}\n\n"
-		"This chapter contain alphabetical list of MGL and C++ samples for most of MathGL graphics and features.\n\n@menu\n * Init function::\n");
+		"@chapter All samples\n@nav{}\n\n"
+		"This chapter contain alphabetical list of MGL and C++ samples for most of MathGL graphics and features.\n\n@menu\n* initialization sample::\n");
 	for(const mglSample *s = samp;s->name && s->name[0];s++)
-		fprintf(fp," * %s_sample::\n",s->name);
+		fprintf(fp,"* %s sample::\n",s->name);
 	fprintf(fp,"@end menu\n@external{}\n");
 	fprintf(fp,"@c ------------------------------------------------------------------\n"
-		"@node prepare_dat_sample, %s_sample, , Samples\n@section Functions for initialization\n@nav{}\n", samp[0].name);
+		"@node initialization sample, %s sample, , All samples\n@section Functions for initialization\n@nav{}\n", samp[0].name);
 	fprintf(fp,"\nThis section contain functions for input data for most of further samples.\n\n@strong{MGL code:}\n@verbatim\n%s\n@end verbatim\n", mmgl_dat_prepare);
 	fprintf(fp,"\n@ifclear UDAV\n@strong{C++ code:}\n@verbatim\n");
 	
@@ -124,17 +124,17 @@ void mgl_generate_texi()
 	fprintf(fp,"\n@end verbatim\n@end ifclear\n\n@external{}\n");
 	fclose(fs);
 
-	const char *prev = "prepare_dat";
+	const char *prev = "initialization";
 	fs = fopen("samples.cpp","r");
 	for(size_t i=0;samp[i].name && samp[i].name[0];i++)
 	{
 		if(samp[i+1].name && samp[i+1].name[0])
 			fprintf(fp,"@c ------------------------------------------------------------------\n"
-				"@node %s_sample, %s_sample, %s_sample, Samples\n@section Sample '%s'\n@nav{}\n",
+				"@node %s sample, %s sample, %s sample, All samples\n@section Sample @samp{%s}\n@nav{}\n",
 				samp[i].name, samp[i+1].name, prev, samp[i].name);
 		else
 			fprintf(fp,"@c ------------------------------------------------------------------\n"
-				"@node %s_sample, , %s_sample, Samples\n@section Sample '%s'\n@nav{}\n",
+				"@node %s sample, , %s sample, All samples\n@section Sample '%s'\n@nav{}\n",
 				samp[i].name, samp[i-1].name, samp[i].name);
 		prev = samp[i].name;
 		fprintf(fp,"\n%s\n\n@strong{MGL code:}\n@verbatim\n%s\n@end verbatim\n", samp[i].info, samp[i].mgl);
@@ -149,7 +149,7 @@ void mgl_generate_texi()
 			fprintf(fp,"%s",buf);	fgets(buf,512,fs);
 			if(*buf=='}')	break;
 		}
-		fprintf(fp,"}\n@end verbatim\n@end ifclear\n\n@external{}\n");
+		fprintf(fp,"}\n@end verbatim\n@end ifclear\n@pfig{%s, Sample @samp{%s}}\n@external{}\n", samp[i].name, samp[i].name);
 	}
 	fclose(fs);	fclose(fp);
 }

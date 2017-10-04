@@ -50,6 +50,7 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 * MGL scripts::
 * UDAV::
 * Other classes::
+* All samples::
 * Symbols and hot-keys::
 * File formats::
 @ifhtml
@@ -104,10 +105,13 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 @node UDAV, Other classes, MGL scripts, Top
 @include udav_en.texi
 
-@node Other classes, Symbols and hot-keys, UDAV, Top
+@node Other classes, All samples, UDAV, Top
 @include other_en.texi
 
-@node Symbols and hot-keys, File formats, Other classes, Top
+@node All samples, Symbols and hot-keys, Other classes, Top
+@include samples.texi
+
+@node Symbols and hot-keys, File formats, All samples, Top
 @appendix Symbols and hot-keys
 @include symbols_en.texi
 

@@ -1389,8 +1389,8 @@ void smgl_pde(mglGraph *gr)	// PDE sample
 	gr->Puts(mglPoint(0, 0.95), "Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0\nabsorption: (x+z)/2 for x+z>0");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_conta="call 'prepare3d'\ntitle 'Cont3 sample':rotate 50 60:box\ncont3 c 'x':cont3 c:cont3 c 'z'";
-void smgl_conta(mglGraph *gr)
+const char *mmgl_cont3="call 'prepare3d'\ntitle 'Cont3 sample':rotate 50 60:box\ncont3 c 'x':cont3 c:cont3 c 'z'";
+void smgl_cont3(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
 	if(big!=3)	gr->Title("Cont3 sample");
@@ -1398,9 +1398,9 @@ void smgl_conta(mglGraph *gr)
 	gr->Cont3(c,"x");	gr->Cont3(c);	gr->Cont3(c,"z");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_contfa="call 'prepare3d'\ntitle 'Cont3 sample':rotate 50 60:box:light on\n"
+const char *mmgl_contf3="call 'prepare3d'\ntitle 'Cont3 sample':rotate 50 60:box:light on\n"
 "contf3 c 'x':contf3 c:contf3 c 'z'\ncont3 c 'xk':cont3 c 'k':cont3 c 'zk'";
-void smgl_contfa(mglGraph *gr)
+void smgl_contf3(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
 	if(big!=3)	gr->Title("ContF3 sample");
@@ -1409,9 +1409,9 @@ void smgl_contfa(mglGraph *gr)
 	gr->Cont3(c,"kx");	gr->Cont3(c,"k");	gr->Cont3(c,"kz");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_densa="call 'prepare3d'\ntitle 'Dens3 sample':rotate 50 60:alpha on:alphadef 0.7\n"
+const char *mmgl_dens3="call 'prepare3d'\ntitle 'Dens3 sample':rotate 50 60:alpha on:alphadef 0.7\n"
 "origin 0 0 0:box:axis '_xyz'\ndens3 c 'x':dens3 c ':y':dens3 c 'z'";
-void smgl_densa(mglGraph *gr)
+void smgl_dens3(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
 	if(big!=3)	gr->Title("Dens3 sample");
@@ -1866,12 +1866,12 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 //	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_vecta="call 'prepare3v'\nsubplot 2 1 0:title 'Vect3 sample':rotate 50 60\n"
+const char *mmgl_vect3="call 'prepare3v'\nsubplot 2 1 0:title 'Vect3 sample':rotate 50 60\n"
 "origin 0 0 0:box:axis '_xyz'\nvect3 ex ey ez 'x':vect3 ex ey ez:vect3 ex ey ez 'z'\n"
 "subplot 2 1 1:title '\"f\" style':rotate 50 60\n"
 "origin 0 0 0:box:axis '_xyz'\nvect3 ex ey ez 'fx':vect3 ex ey ez 'f':vect3 ex ey ez 'fz'\n"
 "grid3 ex 'Wx':grid3 ex 'W':grid3 ex 'Wz'";
-void smgl_vecta(mglGraph *gr)
+void smgl_vect3(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	if(big!=3)	{	gr->SubPlot(2,1,0);	gr->Title("Vect3 sample");	}
@@ -3382,12 +3382,12 @@ mglSample samp[] = {
 	{"combined", smgl_combined, mmgl_combined , "Example of several plots in the same axis."},
 	{"cones", smgl_cones, mmgl_cones, "Example of @ref{cones}."},
 	{"cont", smgl_cont, mmgl_cont, "Example of @ref{cont} (contour lines)."},
+	{"cont3", smgl_cont3, mmgl_cont3, "Example of @ref{cont3} (contours at slices)."},
 	{"cont_xyz", smgl_cont_xyz, mmgl_cont_xyz, "Example of @ref{contx}, @ref{conty}, @ref{contz}."},
-	{"conta", smgl_conta, mmgl_conta, "Example of @ref{conta} (contours at slices)."},
 	{"contd", smgl_contd, mmgl_contd, "Example of @ref{contd} (solid contours with manual colors)."},
 	{"contf", smgl_contf, mmgl_contf, "Example of @ref{contf} (solid contours)."},
+	{"contf3", smgl_contf3, mmgl_contf3, "Example of @ref{contf3} (solid contours at slices)."},
 	{"contf_xyz", smgl_contf_xyz, mmgl_contf_xyz, "Example of @ref{contfx}, @ref{contfy}, @ref{contfz}."},
-	{"contfa", smgl_contfa, mmgl_contfa, "Example of @ref{contfa} (solid contours at slices)."},
 	{"contv", smgl_contv, mmgl_contv, "Example of @ref{contv} (tube on contours)."},
 	{"correl", smgl_correl, mmgl_correl, "Test of correlation function (@ref{correl})."},
 //	{"crust", smgl_crust, mmgl_crust, ""},	// TODO: open after triangulation
@@ -3398,8 +3398,8 @@ mglSample samp[] = {
 	{"data1", smgl_data1, mmgl_data1, ""},
 	{"data2", smgl_data2, mmgl_data2, ""},
 	{"dens", smgl_dens, mmgl_dens, "Example of @ref{dens} (density plot)."},
+	{"dens3", smgl_dens3, mmgl_dens3, "Example of @ref{dens3} (density plots at slaces)."},
 	{"dens_xyz", smgl_dens_xyz, mmgl_dens_xyz, "Example of @ref{densx}, @ref{densy}, @ref{densz}."},
-	{"densa", smgl_densa, mmgl_densa, "Example of @ref{densa} (density plots at slaces)."},
 	{"detect", smgl_detect, mmgl_detect, "Example of curve @ref{detect}."},
 	{"dew", smgl_dew, mmgl_dew, "Example of @ref{dew}."},
 	{"diffract", smgl_diffract, mmgl_diffract, ""},
@@ -3492,13 +3492,13 @@ mglSample samp[] = {
 	{"torus", smgl_torus, mmgl_torus , "Example of @ref{torus} (surface of curve rotation)."},
 	{"traj", smgl_traj, mmgl_traj, "Example of @ref{traj} (vectors along curve)."},
 	{"triangulation",smgl_triangulation, mmgl_triangulation , "Example of use @ref{triangulate} for arbitrary placed points."},
-	{"triplot", smgl_triplot, mmgl_triplot, "Example of @ref{triplot} and @ref{quadplot (surface by set of triangles or quadrangles)."},
+	{"triplot", smgl_triplot, mmgl_triplot, "Example of @ref{triplot} and @ref{quadplot} (surface by set of triangles or quadrangles)."},
 	{"tube", smgl_tube, mmgl_tube, "Example of @ref{tube}."},
 	{"type0", smgl_type0, mmgl_type0, "Example of ordinary transparency (@ref{transptype}=0)."},
 	{"type1", smgl_type1, mmgl_type1, "Example of glass-like transparency (@ref{transptype}=1)."},
 	{"type2", smgl_type2, mmgl_type2, "Example of lamp-like transparency (@ref{transptype}=2)."},
 	{"vect", smgl_vect, mmgl_vect, "Example of @ref{vect} (vector field)."},
-	{"vecta", smgl_vecta, mmgl_vecta, "Example of @ref{vecta} (vector fields at slices)."},
+	{"vect3", smgl_vect3, mmgl_vect3, "Example of @ref{vect3} (vector fields at slices)."},
 	{"venn", smgl_venn, mmgl_venn, "Example of venn-like diagram."},
 {"", NULL, NULL, NULL}};
 //-----------------------------------------------------------------------------

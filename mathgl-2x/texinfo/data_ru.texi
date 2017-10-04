@@ -1678,6 +1678,16 @@ These functions change the data in some direction like differentiations, integra
 Выполняет оконное преобразование Фурье длиной @var{dn} для комплексных данных @var{real}, @var{imag} и возвращает модуль результата. Например, для @var{dir}=@samp{x} результат будет иметь размер @{int(nx/dn), dn, ny@} и будет равен @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
 @end deftypefn
 
+
+@anchor{triangulate}
+@deftypefn {Команда MGL} {} triangulate dat xdat ydat
+@ifclear UDAV
+@deftypefnx {Общая функция} @code{mglData} mglTriangulation (@code{const mglDataA &}x, @code{const mglDataA &}y)
+@deftypefnx {Функция С} @code{void} mgl_triangulation_2d (@code{HCDT} x, @code{HCDT} y)
+@end ifclear
+Выполняет триангуляцию Делоне для точек на плоскости и возвращает массив, пригодный для @ref{triplot} и @ref{tricont}. @sref{Making regular data}
+@end deftypefn
+
 @anchor{tridmat}
 @deftypefn {Команда MGL} {} tridmat @sc{res adat bdat cdat ddat} 'how'
 @ifclear UDAV
@@ -1827,7 +1837,7 @@ These functions change the data in some direction like differentiations, integra
 x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[4,i];
 y[i+1] = dat[2,i]*x[i] + dat[3,i]*y[i] + dat[5,i];
 @end verbatim
-Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 7. @sref{Fractal sample}
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 7. См. также @ref{ifs3d}, @ref{flame2d}. @sref{ifs2d sample}
 @end deftypefn
 
 @anchor{ifs3d}
@@ -1842,7 +1852,7 @@ x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[2,i]*z[i] + dat[9,i];
 y[i+1] = dat[3,i]*x[i] + dat[4,i]*y[i] + dat[5,i]*z[i] + dat[10,i];
 z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[11,i];
 @end verbatim
-Значение @code{dat[12,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 13. @sref{Fractal sample}
+Значение @code{dat[12,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 13. См. также @ref{ifs2d}. @sref{ifs3d sample}
 @end deftypefn
 
 @anchor{ifsfile}
@@ -1853,7 +1863,7 @@ z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[11,i];
 @end ifclear
 Считывает параметры фрактала @var{name} из файла @var{fname} и находит @var{num} точек для него. Первые @var{skip} итераций будут опущены. См. также @ref{ifs2d}, @ref{ifs3d}.
 
-Файл IFS может содержать несколько записей. Каждая запись содержит имя фрактала (@samp{binary} в примере ниже) и тело в фигурных скобках @{@} с параметрами фрактала. Символ @samp{;} начинает комментарий. Если имя содержит @samp{(3D)} или @samp{(3d)}, то определен 3d IFS фрактал. Пример содержит два фрактала: @samp{binary} -- обычный 2d фрактал, и @samp{3dfern (3D)} -- 3d фрактал.
+Файл IFS может содержать несколько записей. Каждая запись содержит имя фрактала (@samp{binary} в примере ниже) и тело в фигурных скобках @{@} с параметрами фрактала. Символ @samp{;} начинает комментарий. Если имя содержит @samp{(3D)} или @samp{(3d)}, то определен 3d IFS фрактал. Пример содержит два фрактала: @samp{binary} -- обычный 2d фрактал, и @samp{3dfern (3D)} -- 3d фрактал. См. также @ref{ifs2d}, @ref{ifs3d}.
 
 @verbatim
  binary
@@ -1907,7 +1917,7 @@ y[j+1] = sum_i @var{func}[1,i,j]*@var{func}[0,i,j]_y(xx, yy; @var{func}[2,i,j],.
 	mglFlame2d_cos,			mglFlame2d_tan,			mglFlame2d_sec,			mglFlame2d_csc,			mglFlame2d_cot,
 	mglFlame2d_sinh,		mglFlame2d_cosh,		mglFlame2d_tanh,		mglFlame2d_sech,		mglFlame2d_csch,
 	mglFlame2d_coth,		mglFlame2d_auger,		mglFlame2d_flux.}
-Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Размеры массивов должны удовлетворять требованиям: @var{dat}.nx>=7, @var{func}.nx>=2 и @var{func}.nz=@var{dat}.ny. @sref{Fractal sample}
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Размеры массивов должны удовлетворять требованиям: @var{dat}.nx>=7, @var{func}.nx>=2 и @var{func}.nz=@var{dat}.ny. См. также @ref{ifs2d}, @ref{ifs3d}. @sref{flame2d sample}
 @end deftypefn
 
 

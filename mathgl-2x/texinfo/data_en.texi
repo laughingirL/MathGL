@@ -1693,6 +1693,16 @@ Does Fourier transform of complex data @var{re}+i*@var{im} in directions @var{di
 Short time Fourier transformation for real and imaginary parts. Output  is amplitude of partial Fourier of length @var{dn}. For example if @var{dir}=@samp{x}, result will have size @{int(nx/dn), dn, ny@} and it will contain @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
 @end deftypefn
 
+@anchor{triangulate}
+@deftypefn {MGL command} {} triangulate dat xdat ydat
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglTriangulation (@code{const mglDataA &}x, @code{const mglDataA &}y)
+@deftypefnx {C function} @code{void} mgl_triangulation_2d (@code{HCDT} x, @code{HCDT} y)
+@end ifclear
+Do Delone triangulation for 2d points and return result suitable for @ref{triplot} and @ref{tricont}. @sref{Making regular data}
+@end deftypefn
+
+
 @anchor{tridmat}
 @deftypefn {MGL command} {} tridmat @sc{res adat bdat cdat ddat} 'how'
 @ifclear UDAV
@@ -1846,7 +1856,7 @@ Computes @var{num} points @{x[i]=res[0,i], y[i]=res[1,i]@} for fractal using ite
 x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[4,i];
 y[i+1] = dat[2,i]*x[i] + dat[3,i]*y[i] + dat[5,i];
 @end verbatim
-Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 7. @sref{Fractal sample}
+Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 7. See also @ref{ifs3d}, @ref{flame2d}. @sref{ifs2d sample}
 @end deftypefn
 
 @anchor{ifs3d}
@@ -1861,7 +1871,7 @@ x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[2,i]*z[i] + dat[9,i];
 y[i+1] = dat[3,i]*x[i] + dat[4,i]*y[i] + dat[5,i]*z[i] + dat[10,i];
 z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[11,i];
 @end verbatim
-Value @code{dat[12,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 13. @sref{Fractal sample}
+Value @code{dat[12,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 13. See also @ref{ifs2d}. @sref{ifs3d sample}
 @end deftypefn
 
 @anchor{ifsfile}
@@ -1872,7 +1882,7 @@ Value @code{dat[12,i]} is used as weight factor for i-th row of matrix @var{dat}
 @end ifclear
 Reads parameters of IFS fractal named @var{name} from file @var{fname} and computes @var{num} points for this fractal. At this first @var{skip} iterations will be omitted. See also @ref{ifs2d}, @ref{ifs3d}.
 
-IFS file may contain several records. Each record contain the name of fractal (@samp{binary} in the example below) and the body of fractal, which is enclosed in curly braces @{@}. Symbol @samp{;} start the comment. If the name of fractal contain @samp{(3D)} or @samp{(3d)} then the 3d IFS fractal is specified. The sample below contain two fractals: @samp{binary} -- usual 2d fractal, and @samp{3dfern (3D)} -- 3d fractal.
+IFS file may contain several records. Each record contain the name of fractal (@samp{binary} in the example below) and the body of fractal, which is enclosed in curly braces @{@}. Symbol @samp{;} start the comment. If the name of fractal contain @samp{(3D)} or @samp{(3d)} then the 3d IFS fractal is specified. The sample below contain two fractals: @samp{binary} -- usual 2d fractal, and @samp{3dfern (3D)} -- 3d fractal. See also @ref{ifs2d}, @ref{ifs3d}.
 
 @verbatim
  binary
@@ -1925,7 +1935,7 @@ The possible function ids are: @code{mglFlame2d_linear=0,	mglFlame2d_sinusoidal,
 	mglFlame2d_cos,			mglFlame2d_tan,			mglFlame2d_sec,			mglFlame2d_csc,			mglFlame2d_cot,
 	mglFlame2d_sinh,		mglFlame2d_cosh,		mglFlame2d_tanh,		mglFlame2d_sech,		mglFlame2d_csch,
 	mglFlame2d_coth,		mglFlame2d_auger,		mglFlame2d_flux.}
-Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Sizes of data arrays must be: @var{dat}.nx>=7, @var{func}.nx>=2 and @var{func}.nz=@var{dat}.ny.  @sref{Fractal sample}
+Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Sizes of data arrays must be: @var{dat}.nx>=7, @var{func}.nx>=2 and @var{func}.nz=@var{dat}.ny. See also @ref{ifs2d}, @ref{ifs3d}. @sref{flame2d sample}
 @end deftypefn
 
 

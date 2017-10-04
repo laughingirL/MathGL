@@ -40,6 +40,7 @@
 12. Cont + labels ("t") for "narrow" contours
 15. Use arrow_plot_3d ???
 16. Check Title "size" -- see 'primitives' sample
+17. Optimize '.' style of Flow.
 18. Show mouse position at widgets constantly.
 
 ZZ. Update *.i for new functions {before release!!!}
@@ -92,7 +93,6 @@ D. Docs about JS interface
 51. Example of 'wavelet'
 52. Example of time-values in formulas (like hh-mm-ss_DD.MM.YYYY or hh-mm-ss or DD.MM.YYYY)
 53. Example of Step, Bars for x.nx = y.nx+1
-54. Example of 'roots'
 55. Docs and example about new operation in formula parsing: `dat <==> Transpose(dat).
 56. Docs and example about 'do|while' commands
 57. Docs and example about "if COND then CODE"
