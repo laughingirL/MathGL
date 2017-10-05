@@ -1768,7 +1768,7 @@ Solves GO ray equation like dr/dt = d @var{ham}/dp, dp/dt = -d @var{ham}/dr. Thi
 @deftypefnx {C function} @code{HMDT} mgl_ode_solve (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax)
 @deftypefnx {C function} @code{HMDT} mgl_ode_solve_ex (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax, @code{void (*}bord@code{)(mreal *x, const mreal *xprev, void *par)})
 @end ifclear
-Solves ODE equations dx/dt = df(x). The functions @var{df} can be specified as string of ';'-separated textual formulas (argument @var{var} set the character ids of variables x[i]) or as callback function, which fill @code{dx} array for give @code{x}'s. Parameters @var{ini}, @var{dt}, @var{tmax} set initial values, time step and maximal time of the calculation. Result is data array with dimensions @{@var{n} * int(@var{tmax}/@var{dt}+1)@}.
+Solves ODE equations dx/dt = df(x). The functions @var{df} can be specified as string of ';'-separated textual formulas (argument @var{var} set the character ids of variables x[i]) or as callback function, which fill @code{dx} array for give @code{x}'s. Parameters @var{ini}, @var{dt}, @var{tmax} set initial values, time step and maximal time of the calculation. Function stop execution if @code{NAN} or @code{INF} values appears. Result is data array with dimensions @{@var{n} * @var{Nt}@}, where @var{Nt} <= int(@var{tmax}/@var{dt}+1)
 @end deftypefn
 
 @anchor{qo2d}

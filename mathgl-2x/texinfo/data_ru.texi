@@ -1751,7 +1751,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Функция С} @code{HMDT} mgl_ode_solve (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax)
 @deftypefnx {Функция С} @code{HMDT} mgl_ode_solve_ex (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax, @code{void (*}bord@code{)(mreal *x, const mreal *xprev, void *par)})
 @end ifclear
-Решает систему обыкновенных дифференциальных уравнений dx/dt = df(x). Функции @var{df} могут быть заданны строкой с разделенными ';' формулами (аргумент @var{var} задает символы для переменных x[i]) или указателем на функцию, которая заполняет @code{dx} по заданным значениям @code{x}. Параметры @var{ini}, @var{dt}, @var{tmax} задают начальные значения, шаг и максимальное время интегрирования. Результат -- массив с размером @{@var{n} * int(@var{tmax}/@var{dt}+1)@}.
+Решает систему обыкновенных дифференциальных уравнений dx/dt = df(x). Функции @var{df} могут быть заданны строкой с разделенными ';' формулами (аргумент @var{var} задает символы для переменных x[i]) или указателем на функцию, которая заполняет @code{dx} по заданным значениям @code{x}. Параметры @var{ini}, @var{dt}, @var{tmax} задают начальные значения, шаг и максимальное время интегрирования. Функция обрывает расчет при появлении значений @code{NAN} или @code{INF}. Результат -- массив размером @{@var{n} * @var{Nt}@}, где @var{Nt} <= int(@var{tmax}/@var{dt}+1).
 @end deftypefn
 
 @anchor{qo2d}

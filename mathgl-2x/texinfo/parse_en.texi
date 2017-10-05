@@ -48,7 +48,7 @@ sub-arrays (like in @ref{subdata} command) as command argument. For example, @co
 any column combinations defined by formulas, like @code{a('n*w^2/exp(t)')} if names for data columns was specified (by @ref{idset} command or in the file at string started with @code{##}).
 
 @item
-any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}.
+any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}. At this symbol @samp{`} will return transposed data array: both @samp{`sqrt(dat(:,5)+1)} and @samp{sqrt(`dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[j,5,i]+1)}.
 
 @item
 temporary variable of higher dimensions by help of []. For example, @samp{[1,2,3]} will produce a temporary vector of 3 elements @{1, 2, 3@}; @samp{[[11,12],[21,22]]} will produce matrix 2*2 and so on. Here you can join even an arrays of the same dimensions by construction like @samp{[v1,v2,...,vn]}.

@@ -2595,7 +2595,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_tube_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tube_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{mreal} r, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют трубу радиуса @var{r}[i] вдоль кривой между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@}. См. также @ref{plot}. @sref{tube sample}
+Функции рисуют трубу радиуса @var{r}[i] вдоль кривой между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Опция @code{value} число сегментов в поперечном сечении (по умолчанию 25). См. также @ref{plot}. @sref{tube sample}
 @end deftypefn
 
 @anchor{torus}
@@ -2777,7 +2777,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_cont (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7). Если @var{sch} содержит @samp{.}, то будут строится только контуры по уровням седловых точек.
 @end deftypefn
 
 @anchor{contf}
@@ -3325,6 +3325,8 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 цветовую схему -- тёплые цвета соответствуют нормальному току (типа стока), холодные цвета соответствуют обратному току (типа источника);
 @item
 @samp{#} для использования нитей, начинающихся только на границе;
+@item
+@samp{.} для рисования сепаратрис (нитей из/в стационарных точек).
 @item
 @samp{*} для использования нитей, начинающихся с двумерной сетки внутри данных;
 @item

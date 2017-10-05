@@ -39,6 +39,14 @@ add_custom_command(OUTPUT ${MGL_OUT}/samples.texi
 	COMMAND mgl_example -texi
 	DEPENDS mgl_example
 	WORKING_DIRECTORY ${MGL_OUT} )
+#add_custom_command(OUTPUT ${MGL_OUT}/time.texi
+#	COMMAND mgl_example -time
+#	DEPENDS mgl_example
+#	WORKING_DIRECTORY ${MGL_OUT} )
+#add_custom_command(OUTPUT ${MGL_OUT}/time_big.texi
+#	COMMAND mgl_example -time -big
+#	DEPENDS mgl_example
+#	WORKING_DIRECTORY ${MGL_OUT} )
 
 foreach(SAMPLE ${MGL_PNG})
 	set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)
@@ -81,6 +89,7 @@ foreach(SAMPLE ${MGL_EXTRA})
 		WORKING_DIRECTORY ${MGL_OUT}/small )
 endforeach(SAMPLE)
 
+# NOTE: direct generation of time*.texi is too slow :(
 set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi formats_en.texi udav_en.texi symbols_en.texi core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi ${MathGL2_BINARY_DIR}/texinfo/version.texi time.texi time_big.texi ${MGL_OUT}/samples.texi )
 set(list_texi_files_ru overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi formats_ru.texi udav_ru.texi symbols_ru.texi core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi ${MathGL2_BINARY_DIR}/texinfo/version.texi time.texi time_big.texi ${MGL_OUT}/samples.texi )
 

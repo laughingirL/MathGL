@@ -382,6 +382,16 @@ int main(int argc,char **argv)
 		mglParse par;
 		par.AllowSetSize(true);
 		FILE *fp = fopen(big?"time_big.texi":"time.texi","w");
+		FILE *fi = fopen("/proc/cpuinfo","r");
+		if(fi)
+		{
+			char buf[128];
+			while(!feof(fi))
+			{	fgets(buf,128,fi);	
+				if(!strstr(buf,"model name"));
+				{	fprintf(fp,"@c %s\n",buf);	break;	}	}
+			fclose(fi);
+		}
 		fprintf(fp,"@multitable @columnfractions .16 .12 .12 .12 .12 .12 .12 .12\n");
 		fprintf(fp,"@headitem Name");
 		for(int i=0;i<7;i++)	fprintf(fp," @tab q=%d",qual[i]);

@@ -268,8 +268,8 @@ unsigned mglFont::Parse(const wchar_t *s) const
 	else if(!wcscmp(s,L"underset"))	res = unsigned(-9);
 	else if(!wcscmp(s,L"stackr"))	res = unsigned(-10);
 	else if(!wcscmp(s,L"stackl"))	res = unsigned(-11);
-	else if(!wcscmp(s,L"sub"))		res = unsigned(-12);
-	else if(!wcscmp(s,L"sup"))		res = unsigned(-13);
+	else if(!wcscmp(s,L"sub"))		res = unsigned(-9);	//unsigned(-12);
+	else if(!wcscmp(s,L"sup"))		res = unsigned(-8);	//unsigned(-13);
 	else if(!wcscmp(s,L"textsc"))	res = unsigned(-14);	// new
 	else if(!wcscmp(s,L"dfrac"))	res = unsigned(-15);
 	else if(!wcscmp(s,L"b"))		res = MGL_FONT_BOLD;
@@ -415,7 +415,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 			Puts(b2, x+(ww-w2)/2, yy-660*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
 			MGL_CLEAR_STYLE
 		}
-		else if(s==unsigned(-9))	// underset
+		else if(s==unsigned(-9))	// underset or sub
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
@@ -424,7 +424,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
 		}
-		else if(s==unsigned(-8))	// overset
+		else if(s==unsigned(-8))	// overset or sup
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
@@ -433,7 +433,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
 		}
-		else if(s==unsigned(-12))	// sub
+/*		else if(s==unsigned(-12))	// sub	// NOTE: unused because is the same as \underset now
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
@@ -441,8 +441,8 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
-		}
-		else if(s==unsigned(-13))	// sup
+		}*/
+/*		else if(s==unsigned(-13))	// sup	// NOTE: unused because is the same as \overset now
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
@@ -450,7 +450,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
-		}
+		}*/
 		else if(s==unsigned(-11))	// stackl
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);

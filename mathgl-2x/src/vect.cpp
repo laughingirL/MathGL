@@ -17,6 +17,9 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include "mgl2/prim.h"
+
+
 #include "mgl2/vect.h"
 #include "mgl2/eval.h"
 #include "mgl2/data.h"
@@ -620,27 +623,53 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 
 	std::vector<mreal> u, v;
 	long nx=ax->GetNx(), ny=ax->GetNy();
-	if(mglchr(sch,'.'))	for(long j=1;j<ny-1;j++)	for(long i=1;i<nx-1;i++)
+	if(mglchr(sch,'.'))
 	{
-		long i0 = i+nx*j;
-		if(ax->vthr(i0-1)*ax->vthr(i0+1)<0 && ay->vthr(i0-nx)*ay->vthr(i0+nx)<0)
-//			&& (ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
+		mglData a(nx,ny);
+		r = mgl_isnan(r)?0.5:r;
+		const mreal di = 1/mreal(nx-1), dj = 1/mreal(ny-1), ds=r*di, dt=r*dj;
+#pragma omp parallel for
+		for(long i=0;i<nx*ny;i++)
+			a.a[i] = ax->vthr(i)*ax->vthr(i)+ay->vthr(i)*ay->vthr(i);
+#pragma omp parallel for collapse(2)
+		for(long j=1;j<ny-1;j++)	for(long i=1;i<nx-1;i++)
 		{
-			mreal s = i/mreal(nx-1), t = j/mreal(ny-1), ds=1/mreal(nx-1);
-			u.push_back(s+ds);	v.push_back(t);
-			u.push_back(-s-ds);	v.push_back(-t);
-			u.push_back(s-ds);	v.push_back(t);
-			u.push_back(-s+ds);	v.push_back(-t);
-		}
-		else if((ax->vthr(i0-1+nx)-ay->vthr(i0-1+nx))*(ax->vthr(i0+1-nx)-ay->vthr(i0+1-nx))<0 &&
-			(ax->vthr(i0-1-nx)+ay->vthr(i0-1-nx))*(ax->vthr(i0+1+nx)+ay->vthr(i0+1+nx))<0)
-//			&& (ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
-		{
-			mreal s = i/mreal(nx-1), t = j/mreal(ny-1), ds=1/mreal(nx-1), dt=1/mreal(ny-1);
-			u.push_back(s+ds);	v.push_back(t+dt);
-			u.push_back(-s-ds);	v.push_back(-t-dt);
-			u.push_back(s-ds);	v.push_back(t-dt);
-			u.push_back(-s+ds);	v.push_back(-t+dt);
+			long i0 = i+nx*j;	mreal v0 = a.a[i0];
+			if(v0<=a.a[i0-1-nx] && v0<=a.a[i0-nx] && v0<=a.a[i0+1-nx] && v0<=a.a[i0-1] && v0<=a.a[i0+1] && v0<=a.a[i0-1+nx] && v0<=a.a[i0+nx] && v0<=a.a[i0+1+nx])
+#pragma omp critical(flow)
+			{
+				mreal s = i*di, t = j*dj;
+				u.push_back(s+ds);	v.push_back(t+dt);
+				u.push_back(-s-ds);	v.push_back(-t-dt);
+				u.push_back(s-ds);	v.push_back(t-dt);
+				u.push_back(-s+ds);	v.push_back(-t+dt);
+mgl_mark(gr,x->v(i),y->v(j),0,"b.");
+			}
+/*			{
+				if((ax->vthr(i0-1+nx)-ay->vthr(i0-1+nx))*(ax->vthr(i0+1-nx)-ay->vthr(i0+1-nx))<=0 &&
+				(ax->vthr(i0-1-nx)+ay->vthr(i0-1-nx))*(ax->vthr(i0+1+nx)+ay->vthr(i0+1+nx))<=0)
+//				&& (ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
+#pragma omp critical(flow)
+				{
+					mreal s = i*di, t = j*dj;
+					u.push_back(s+ds);	v.push_back(t+dt);
+					u.push_back(-s-ds);	v.push_back(-t-dt);
+					u.push_back(s-ds);	v.push_back(t-dt);
+					u.push_back(-s+ds);	v.push_back(-t+dt);
+mgl_mark(gr,x->v(i),y->v(j),0,"b.");
+				}
+				else if(ax->vthr(i0-1)*ax->vthr(i0+1)<=0 && ay->vthr(i0-nx)*ay->vthr(i0+nx)<=0)
+//				&& (ax->vthr(i0-1)*ay->vthr(i0-nx)<0 || ax->vthr(i0+1)*ay->vthr(i0+ny)<0))
+#pragma omp critical(flow)
+				{
+					mreal s = i*di, t = j*dj;
+					u.push_back(s+ds);	v.push_back(t);
+					u.push_back(-s-ds);	v.push_back(-t);
+					u.push_back(s-ds);	v.push_back(t);
+					u.push_back(-s+ds);	v.push_back(-t);
+mgl_mark(gr,x->v(i),y->v(j),0,"r.");
+				}
+			}*/
 		}
 	}
 	else if(mglchr(sch,'*'))	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)

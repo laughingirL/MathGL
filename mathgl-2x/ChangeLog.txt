@@ -1,11 +1,19 @@
+
 2.4.2 
-* Add 'flow3' for flow threads of 3D vector field, which start from the plain
-* Add style '.' for 'cont' to draw contour lines from saddle points
-* Add style '.' for 'flow' to draw flow thread from saddle points
-* Cut output of 'ode' if NAN or INFINITY value occurs
+* Add 'flow3' for flow threads of 3D vector field, which start from the plain.
+* Add 'setup' for setting all low-level flags.
+* Add 'coil' for projecting periodical data.
+* Add style '.' for 'cont' to draw contour lines from saddle points.
+* Add style '.' for 'flow' to draw flow thread from saddle points.
+* Crop output of 'ode' if NAN or INFINITY value occurs.
+* Add option 'value' in 'tube' for setting number of edges manually.
 * Remove style '~' for 'plot' and 'tens'. Now, all curves try to omit points.
 * Add setup flag MGL_FULL_CURV which disable omitting points of curve. Enable it for output in 3D formats!
+* Samples in documentation are generated automatically now (from sample.cpp).
+* Increase the number of samples.
 * Shift axis labels closer to axis.
+* Change size of LaTeX-like commands \sup, \sub to be the same as \overset, \underset.
+* Noticeable speed up drawing, PDE solving, etc.
 
 
 2.4.1 Released 20 July 2017
