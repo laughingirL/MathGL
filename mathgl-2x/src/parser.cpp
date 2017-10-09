@@ -798,10 +798,15 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u");	}
 			if(cond)
 			{	// alocate new arrays and execute the command itself
-				n = PreExec(gr, k-4, &(arg[3]), a+3);
-				if(n>0)	n--;
-				else if(!arg[3].compare(L"setsize") && !AllowSetSize)	n = 2;
-				else	n = Exec(gr, arg[3].c_str(),k-4,a+3, k>3?arg[4]:L"", opt.c_str());
+				n = FlowExec(gr, arg[3].c_str(),k-4,a+3);
+				if(!n && !skip())
+				{
+					n = PreExec(gr, k-4, &(arg[3]), a+3);
+					if(n>0)	n--;
+					else if(!arg[3].compare(L"setsize") && !AllowSetSize)	n = 2;
+					else	n = Exec(gr, arg[3].c_str(),k-4,a+3, k>3?arg[4]:L"", opt.c_str());
+				}
+				else	n = skip()?0:n-1;
 			}
 			delete []a;	DeleteTemp();	return n;
 		}
@@ -907,15 +912,11 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 	else if(!Skip && !com.compare(L"if"))
 	{
 		bool cond=0;	n=1;
-		if(m>3 && a[1].type==0 && !a[1].d->s.compare(L"then"))
+		if(m>2 && a[1].type==0 && !a[1].d->s.compare(L"then"))
 		{	n = -1;	a[1].d->temp=true;	}	// NOTE: ugly hack :(
 		else if(a[0].type==2)
 		{	n = 0;	cond = (a[0].v!=0);	}
-		else if(a[0].type==0)
-		{
-			n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
-			cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u");
-		}
+		else	n = TestCond(m, a[0], a[1], cond);
 		if(n==0)
 		{	mglPosStack st(cond?MGL_ST_TRUE:MGL_ST_FALSE);	stack.push_back(st);	}
 	}
@@ -924,17 +925,24 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 		n=1;	if(stack.size())
 		{
 			mglPosStack &st = stack.back();
-			if(st.state==MGL_ST_LOOP && st.ind<0)
+			if(st.state==MGL_ST_LOOP)
 			{
-				bool cond=false;	n=1;
-				if(a[0].type==2)
-				{	n = 0;	cond = (a[0].v!=0);	}
-				else if(a[0].type==0)
-				{	n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
-					cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u");	}
-				if(cond)	n = -st.pos-1;	// do-while loop
+				bool cond = false;
+				n = TestCond(m, a[0], a[1], cond);
+				if(cond)
+				{
+					if(st.ind<0)	n = -st.pos-1;	// do-while loop
+					else if(st.ind<st.v.GetNN())	// next iteration
+					{
+						wchar_t buf[32];	mglprintf(buf,32,L"%g",st.v.a[st.ind]);
+						AddParam(st.par, buf);	st.ind++;	n = -st.pos-1;
+					}
+					else	stack.pop_back();	// finish
+				}
 				else	stack.pop_back();
 			}
+			else if(st.state==MGL_ST_BREAK)
+			{	stack.pop_back();	n=0;	}
 		}
 	}
 	else if(!Skip && !com.compare(L"endif"))
@@ -962,14 +970,8 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 			if(st.state==MGL_ST_TRUE)	st.state = MGL_ST_DONE;
 			if(st.state==MGL_ST_FALSE)
 			{
-				bool cond=false;	n=1;
-				if(a[0].type==2)
-				{	n = 0;	cond = (a[0].v!=0);	}
-				else if(a[0].type==0)
-				{
-					n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
-					cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u");
-				}
+				bool cond=false;
+				n = TestCond(m, a[0], a[1], cond);
 				if(cond)	st.state = MGL_ST_TRUE;
 			}
 		}

@@ -139,6 +139,7 @@ Z. Flat toolbuttons ???
 10. Select subdata section (between NAN in curve) by mouse + adding it to script ?!!
 11. Zoom in a region by middle mouse (if not in rotation mode)
 12. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
+13. Substitute correct name for font files in PropDlg
 
 ============= UNSURE ===========
 

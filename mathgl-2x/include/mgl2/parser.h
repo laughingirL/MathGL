@@ -182,6 +182,17 @@ public:
 protected:
 	static mglCommand *BaseCmd;	///< Base table of MGL commands. It MUST be sorted by 'name'!!!
 	static void FillBaseCmd();	///< Fill BaseCmd at initialization stage
+
+	///< Test if condition is not-valid (n=1) or false (0) or true (1)
+	int TestCond(long m, const mglArg &a0, mglArg &a1, bool &cond)
+	{
+		int n = 1;
+		if(a0.type==2)	{	cond = a0.v!=0;	n=0;	}
+		else if(a0.type==0)
+		{	a1.s.assign(a1.w.begin(),a1.w.end());	n=0;
+			cond = a0.d->FindAny((m>1 && a1.type==1) ? a1.s.c_str():"u");	}
+		return n;
+	}
 private:
 //	long parlen;		///< Length of parameter strings
 	std::wstring par[40];	///< Parameter for substituting instead of $1, ..., $9

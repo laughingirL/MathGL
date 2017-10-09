@@ -246,55 +246,6 @@ uintptr_t MGL_EXPORT mgl_pde_adv_(uintptr_t* gr, const char *ham, uintptr_t* ini
 	uintptr_t res = uintptr_t(mgl_pde_adv(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
 	delete []o;	delete []s;	return res;	}
 //-----------------------------------------------------------------------------
-/*HADT MGL_EXPORT mgl_pde_adv_3d_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0, const char *opt)
-{
-	mreal gamma = gr->SaveState(opt);	if(mgl_isnan(gamma))	gamma = GAMMA;
-	mglPoint Min=gr->Min, Max=gr->Max;
-	long nx=ini_re->GetNx(), ny=ini_re->GetNy(), nz = long((Max.z-Min.z)/dz)+1;
-	if(nx<2 || nz<2 || Max.x==Min.x)			// Too small data
-	{	gr->SetWarn(mglWarnLow,"PDE");	return 0;	}
-	if(ini_im->GetNx()*ini_im->GetNy() != nx*ny)// Wrong dimensions
-	{	gr->SetWarn(mglWarnDim,"PDE");	return 0;	}
-	mglDataC *res=new mglDataC(nz, nx, ny);
-
-	mglDataV x(nx,ny), y(nx,ny), z, r(nx,ny);
-	mglDataW p(nx,ny), q(nx,ny);
-	x.s = L"x";	y.s = L"y";	p.s = L"p";	q.s = L"q";	z.s = L"z";	r.s=L"#$mgl";
-	//z.Fill(f->zz);
-	mreal dx = (Max.x-Min.x)/(nx-1), dy = ny>1?(Max.y-Min.y)/(ny-1):0;
-	mreal dp = M_PI/(Max.x-Min.x), dq = M_PI/(Max.y-Min.y);
-	double dd = k0*dz;
-	x.Fill(Min.x,Max.x,'x');	p.Freq(dp/k0,'x');
-	y.Fill(Min.y,Max.y,'y');	q.Freq(dq/k0,'y');
-
-	ddual *a = new ddual[4*nx*ny];	// Add "damping" area
-	ddual *f = new ddual[4*nx*ny];	// Effective "spectrum"
-	memset(a,0,4*nx*ny*sizeof(ddual));
-	memset(f,0,4*nx*ny*sizeof(ddual));
-#pragma omp parallel for collapse(2)
-	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)	// Initial conditions
-	{
-		long i0 = i+nx/2+2*nx*(j+ny/2);
-		a[i0] = dual(ini_re->v(i,j), ini_im->v(i,j));
-		res->a[nz*(i+nx*j)] = a[i0];
-	}
-	double *dmp = new double[4*nx*ny];
-	memset(dmp,0,4*nx*ny*sizeof(double));
-#pragma omp parallel for collapse(2)
-	for(long j=0;j<2*ny;j++)	for(long i=0;i<2*nx;i++)	// step 1
-	{
-		long i0 = i+2*nx*j;
-		if(i<nx/2)		dmp[i0] += gamma*mgl_ipow((nx/2-i)/(nx/2.),2);
-		if(i>3*nx/2)	dmp[i0] += gamma*mgl_ipow((i-3*nx/2-1)/(nx/2.),2);
-		if(j<ny/2)		dmp[i0] += gamma*mgl_ipow((ny/2-j)/(ny/2.),2);
-		if(j>3*ny/2)	dmp[i0] += gamma*mgl_ipow((j-3*ny/2-1)/(ny/2.),2);
-	}
-	ddual *Hdat = new ddual[nx*nx*ny*ny];
-	for(long k=1;k<nz;k++)
-	{
-	}
-}*/
-//-----------------------------------------------------------------------------
 //
 //		Simplified PDE series
 //
@@ -424,13 +375,13 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 		else
 #pragma omp parallel for
 			for(long i=0;i<4*nx*ny;i++)	huv[i] -= hh0;
-			// solve equation
+		// solve equation
 		if(ny>1)
 #pragma omp parallel
 		{
 			void *wsx = mgl_fft_alloc_thr(2*nx), *wsy = mgl_fft_alloc_thr(2*ny);
 #pragma omp for
-			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
+			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i]-double(dmp[i]*dz));
 #pragma omp for
 			for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
 #pragma omp for
@@ -452,7 +403,7 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 		{
 			void *wsx = mgl_fft_alloc_thr(2*nx);
 #pragma omp for
-			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
+			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i]-double(dmp[i]*dz));
 #pragma omp for
 			for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
 #pragma omp for
