@@ -418,9 +418,11 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 	n=mglFindInText(str,"+-");	// normal priority -- additions
 	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2])) ))
 		return str[n]=='+'? mglApplyOperAdd(str.substr(0,n),str.substr(n+1),arg, head) : mglApplyOperSub(str.substr(0,n),str.substr(n+1),arg, head);
-	n=mglFindInText(str,"*/");	// high priority -- multiplications
+	n=mglFindInText(str,"*/%");	// high priority -- multiplications
 	if(n>=0)
-		return str[n]=='*'? mglApplyOperMul(str.substr(0,n),str.substr(n+1),arg, head) : mglApplyOperDiv(str.substr(0,n),str.substr(n+1),arg, head);
+		return str[n]=='*'? mglApplyOperMul(str.substr(0,n),str.substr(n+1),arg, head) : 
+			(str[n]=='/'? mglApplyOperDiv(str.substr(0,n),str.substr(n+1),arg, head) :
+				mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmod));
 	n=mglFindInText(str,"@");	// high priority -- combine
 	if(n>=0)
 	{

@@ -243,10 +243,12 @@ mglFormula::mglFormula(const char *string)
 		Right=new mglFormula(str+n+1);
 		delete []str;	return;
 	}
-	n=mglFindInText(str,"*/");				// high priority -- multiplications
+	n=mglFindInText(str,"*/%");				// high priority -- multiplications
 	if(n>=0)
 	{
-		if(str[n]=='*') Kod=EQ_MUL; else Kod=EQ_DIV;
+		if(str[n]=='*')	Kod=EQ_MUL;
+		else if(str[n]=='/') Kod=EQ_DIV;
+		else	Kod=EQ_MOD;
 		str[n]=0;
 		Left=new mglFormula(str);
 		Right=new mglFormula(str+n+1);

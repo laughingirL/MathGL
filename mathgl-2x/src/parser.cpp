@@ -980,9 +980,9 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 	{
 		bool nf=true;
 		size_t nn = stack.size();
-		if(nn)	for(size_t i=0;i<nn;i++)
-			if(stack[i].state==MGL_ST_LOOP)
-			{	nf=false;	stack[i].state=MGL_ST_BREAK;	break;	}
+		if(nn)	for(size_t i=nn;i>0;i--)
+			if(stack[i-1].state==MGL_ST_LOOP)
+			{	nf=false;	stack[i-1].state=MGL_ST_BREAK;	break;	}
 		n = nf?1:0;
 	}
 	else if(!ifskip() && !Skip && !com.compare(L"next"))
@@ -1009,9 +1009,9 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 	{
 		bool nf=true;
 		size_t nn = stack.size();
-		if(nn)	for(size_t i=0;i<nn;i++)
+		if(nn)	for(size_t i=nn;i>0;i--)
 		{
-			mglPosStack &st = stack[i];
+			mglPosStack &st = stack[i-1];
 			if(st.state==MGL_ST_LOOP)
 			{
 				if(st.ind<0)	n = -st.pos-1;	// do-while loop
@@ -1021,7 +1021,7 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 					AddParam(st.par, buf);	st.ind++;	n = -st.pos-1;
 				}
 				else	{	st.state = MGL_ST_BREAK;	n=0;	}	// finish
-				nf=false;	break;
+				nf=false;	stack.resize(i);	break;
 			}
 		}
 		if(nf)	n=1;

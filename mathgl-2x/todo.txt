@@ -83,7 +83,6 @@ D. Docs about JS interface
 	* Example of 'clf' with color, 'rasterize', 'loadbackground', 'logo'
 	* Example of 'pde' in 3d, and 'qo3d'
 	* Example of 'tridmat' in all 5 modes, and for real numbers too.
-	* Example of {'func','once','elseif','break','continue'}
 	* Example of "data" creation {'list', 'def*','ask','{OP DAT}'}
 	* Example of 'rk_step'
 	* Example of 'openhdf'

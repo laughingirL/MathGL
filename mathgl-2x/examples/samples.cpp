@@ -1734,12 +1734,23 @@ void smgl_surf(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Surf(x,y,z,"BbwrR");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_parser="title 'MGL parser sample'\ncall 'sample'\nstop\nfunc 'sample'\n"
-"new dat 100 'sin(2*pi*(x+1))'\nplot dat; xrange 0 1\nbox\naxis\n"
-"xlabel 'x'\nylabel 'y'\nbox\nfor $0 -1 1 0.1\nif $0<0\n"
-"line 0 0 -1 $0 'r':else:line 0 0 -1 $0 'g'\nendif\nnext";
+const char *mmgl_parser="title 'MGL parser sample'\n# call function\ncall 'sample'\n"
+"\n# ordinary for-loop\nfor $0 -1 1 0.1\n"
+"if $0<0:line 0 0 1 $0 'r':else:line 0 0 1 $0 'g':endif\nnext\n"
+"\n# if-elseif-else\nfor $i -1 1 0.5\nif $i<0\ntext 1.1 $i '$i' 'b'\n"
+"elseif $i>0\ntext 1.1 $i '$i' 'r'\nelse\ntext 1.1 $i '$i'\nendif\nnext\n"
+"\n# ordinary do-while\ndo\ndefnum $i $i-0.2\nline 0 0 $i 1 'b'\nwhile $i>0\n"
+"\n# do-next-break\ndo\ndefnum $i $i-0.2\nif $i<-1 then break\nline 0 0 $i 1 'm'\nnext\n"
+"\n# for-while-continue\nfor $i -5 10\ntext $i/5 1.1 'a'+($i+5)\nif $i<0\n"
+"text $i/5-0.06 1.1 '--' 'b'\nelseif mod($i,2)=0\ntext $i/5-0.06 1.1 '~' 'r'\n"
+"else\n# NOTE: 'continue' bypass the 'while'!\ncontinue\nendif\n"
+"# NOTE: 'while' limit the actual number of iterations\nwhile $i<5\n"
+"\n# nested loops\nfor $i 0 1 0.1\nfor $j 0 1 0.1\nball $i $j\n"
+"if $j>0.5 then continue\nball $i $j 'b+'\nnext\nnext\n"
+"\nfunc 'sample'\nnew dat 100 'sin(pi*(x+1))'\nplot dat;xrange -1 0\nbox:axis\n"
+"xlabel 'x':ylabel 'y'\nreturn";
 void smgl_parser(mglGraph *gr)	// example of MGL parsing
-{
+{	// NOTE: MGL version show much more variants of loops and conditions
 	gr->Title("MGL parser sample");
 	double a[100];   // let a_i = sin(4*pi*x), x=0...1
 	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
