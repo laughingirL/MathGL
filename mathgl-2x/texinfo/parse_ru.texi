@@ -148,12 +148,15 @@ fplot 'x^3' 'b'?'r|'
 
 
 @cindex if
-@anchor{if}
-@deftypefn {Команда MGL} {} if dat 'cond'
-Начинает блок команд, выполняемый если каждый элемент @var{dat} удовлетворяет условию @var{cond}.
+@anchor{if} @anchor{then}
+@deftypefn {Команда MGL} {} if @code{val} @strong{then} @code{CMD}
+Выполняет команду @code{CMD} только если @code{val} не ноль.
 @end deftypefn
 @deftypefn {Команда MGL} {} if @code{val}
 Начинает блок команд, выполняемый если @code{val} не ноль.
+@end deftypefn
+@deftypefn {Команда MGL} {} if dat 'cond'
+Начинает блок команд, выполняемый если каждый элемент @var{dat} удовлетворяет условию @var{cond}.
 @end deftypefn
 @cindex elseif
 @anchor{elseif}
@@ -186,6 +189,20 @@ fplot 'x^3' 'b'?'r|'
 @anchor{next}
 @deftypefn {Команда MGL} {} next
 Заканчивает блок цикла @code{for}.
+@end deftypefn
+
+@cindex do
+@anchor{do}
+@deftypefn {Команда MGL} {} do
+Начинает бесконечный цикл.
+@end deftypefn
+@cindex while
+@anchor{while}
+@deftypefn {Команда MGL} {} while @code{val}
+Переходит к следующей итерации цикла если @var{val} не ноль, в противном случае заканчивает цикл.
+@end deftypefn
+@deftypefn {Команда MGL} {} while dat 'cond'
+Переходит к следующей итерации цикла если @var{dat} удовлетворяет условию @var{cond}, в противном случае заканчивает цикл.
 @end deftypefn
 
 @cindex once

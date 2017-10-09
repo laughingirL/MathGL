@@ -142,20 +142,23 @@ Load additional MGL command from external module (DLL or .so), located in file @
 
 
 @cindex if
-@anchor{if}
-@deftypefn {MGL command} {} if dat 'cond'
-Starts block which will be executed if @var{dat} satisfy to @var{cond}.
+@anchor{if} @anchor{then}
+@deftypefn {MGL command} {} if @code{val} @strong{then} @code{CMD}
+Executes command @code{CMD} only if @code{val} is nonzero.
 @end deftypefn
 @deftypefn {MGL command} {} if @code{val}
 Starts block which will be executed if @code{val} is nonzero.
 @end deftypefn
+@deftypefn {MGL command} {} if dat 'cond'
+Starts block which will be executed if @var{dat} satisfy to @var{cond}.
+@end deftypefn
 @cindex elseif
 @anchor{elseif}
-@deftypefn {MGL command} {} elseif dat 'cond'
-Starts block which will be executed if previous @code{if} or @code{elseif} is false and @var{dat} satisfy to @var{cond}.
-@end deftypefn
 @deftypefn {MGL command} {} elseif @code{val}
 Starts block which will be executed if previous @code{if} or @code{elseif} is false and @code{val} is nonzero.
+@end deftypefn
+@deftypefn {MGL command} {} elseif dat 'cond'
+Starts block which will be executed if previous @code{if} or @code{elseif} is false and @var{dat} satisfy to @var{cond}.
 @end deftypefn
 @cindex else
 @anchor{else}
@@ -171,16 +174,33 @@ Finishes @code{if/elseif/else} block.
 @cindex for
 @anchor{for}
 @deftypefn {MGL command} {} for $N @code{v1 v2 [dv=1]}
-Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
+Starts loop with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deftypefn
 @deftypefn {MGL command} {} for $N dat
-Starts cycle with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
+Starts loop with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deftypefn
 @cindex next
 @anchor{next}
 @deftypefn {MGL command} {} next
-Finishes @code{for} cycle.
+Finishes @code{for} loop.
 @end deftypefn
+
+@cindex do
+@anchor{do}
+@deftypefn {MGL command} {} do
+Starts infinite loop.
+@end deftypefn
+@cindex while
+@anchor{while}
+@deftypefn {MGL command} {} while @code{val}
+Continue loop iterations if @var{val} is nonzero, or finishes loop otherwise.
+@end deftypefn
+@deftypefn {MGL command} {} while dat 'cond'
+Continue loop iterations if @var{dat} satisfy to @var{cond}, or finishes loop otherwise.
+@end deftypefn
+
+
+
 
 @cindex once
 @anchor{once}

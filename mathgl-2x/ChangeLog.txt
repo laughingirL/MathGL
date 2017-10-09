@@ -1,5 +1,7 @@
 
 2.4.2 
+* Add 'contp' for contour lines on parametrically specified surface.
+* Add 'flowp' for flow threads on parametrically specified surface.
 * Add 'flow3' for flow threads of 3D vector field, which start from the plain.
 * Add 'setup' for setting all low-level flags.
 * Add 'coil' for projecting periodical data.

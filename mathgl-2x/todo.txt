@@ -61,8 +61,6 @@ D. Docs about JS interface
 2. Docs about 'coil'
 3. Update flags
 4. Docs and example about 'roots' for system of equations
-5. Docs and example about 'do|while' commands
-6. Docs and example about "if COND then CODE"
 7. Update installation (dll from mgl_script + Qt plugins/ + Win10)
 
 8. Add more samples:
