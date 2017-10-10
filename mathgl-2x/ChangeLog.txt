@@ -5,6 +5,7 @@
 * Add 'flow3' for flow threads of 3D vector field, which start from the plain.
 * Add 'setup' for setting all low-level flags.
 * Add 'coil' for projecting periodical data.
+* Add modulo operation "%" (x%y=fmod(x,y)) to the list of known operations in real-valued formulas.
 * Add style '.' for 'cont' to draw contour lines from saddle points.
 * Add style '.' for 'flow' to draw flow thread from saddle points.
 * Crop output of 'ode' if NAN or INFINITY value occurs.

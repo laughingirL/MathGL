@@ -54,7 +54,9 @@ start comment in @ref{MGL scripts} or in @ref{Command options}.
 denote parameter of @ref{MGL scripts}.
 
 @item %
-set color scheme along 2 coordinates @ref{Color scheme}.
+set color scheme along 2 coordinates @ref{Color scheme};
+
+operation in @ref{Textual formulas}.
 
 @item &
 

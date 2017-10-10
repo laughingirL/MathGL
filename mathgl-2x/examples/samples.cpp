@@ -1747,24 +1747,51 @@ const char *mmgl_parser="title 'MGL parser sample'\n# call function\ncall 'sampl
 "# NOTE: 'while' limit the actual number of iterations\nwhile $i<5\n"
 "\n# nested loops\nfor $i 0 1 0.1\nfor $j 0 1 0.1\nball $i $j\n"
 "if $j>0.5 then continue\nball $i $j 'b+'\nnext\nnext\n"
-"\nfunc 'sample'\nnew dat 100 'sin(pi*(x+1))'\nplot dat;xrange -1 0\nbox:axis\n"
-"xlabel 'x':ylabel 'y'\nreturn";
+"\nfunc 'sample'\nnew dat 100 'sin(2*pi*(i/99+1))'\nplot dat;xrange -1 0\n"
+"box:axis\nxlabel 'x':ylabel 'y'\nreturn";
 void smgl_parser(mglGraph *gr)	// example of MGL parsing
-{	// NOTE: MGL version show much more variants of loops and conditions
+{	// NOTE: MGL version show much more variants of loops and conditions.
 	gr->Title("MGL parser sample");
 	double a[100];   // let a_i = sin(4*pi*x), x=0...1
-	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
+	for(int i=0;i<100;i++)a[i]=sin(2*M_PI*i/99);
 	mglParse *parser = new mglParse;
+	// Add MGL variable and set yours data to it.
 	mglData *d = dynamic_cast<mglData*>(parser->AddVar("dat"));
-	if(d)	d->Set(a,100); // set data to variable
-	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
-	// you may break script at any line do something
-	// and continue after that
+	if(d)	d->Set(a,100);
+	parser->Execute(gr, "plot dat; xrange -1 0\nbox\naxis");
+	// You may break script at any line do something
+	// and continue after that.
 	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
-	// also you may use cycles or conditions in script
+	// Also you may use cycles or conditions in script.
 	parser->Execute(gr, "for $0 -1 1 0.1\nif $0<0\n"
-		"line 0 0 -1 $0 'r':else:line 0 0 -1 $0 'g'\n"
+		"line 0 0 1 $0 'r':else:line 0 0 1 $0 'g'\n"
 		"endif\nnext");
+	// You may use for or do-while loops as C/C++ one
+	double i=1;
+	do	{
+		char buf[64];	sprintf(buf,"line 0 0 %g 1 'b'",i);
+		parser->Execute(gr, buf);	i=i-0.2;
+	} while(i>0);
+	// or as MGL one.
+	parser->Execute(gr, "for $i -1 1 0.5\n"
+		"if $i<0\ntext 1.1 $i '$i' 'b'\n"
+		"elseif $i>0\ntext 1.1 $i '$i' 'r'\n"
+		"else\ntext 1.1 $i '$i'\nendif\nnext\n");
+	// There are 'break' and 'continue' commands in MGL too.
+	// NOTE: 'next' act as "while(1)" in do-while loops.
+	parser->Execute(gr, "do\ndefnum $i $i-0.2\n"
+		"if $i<-1 then break\nline 0 0 $i 1 'm'\nnext\n");
+	// One issue with 'continue' -- it bypass 'while' checking
+	parser->Execute(gr, "for $i -5 10\ntext $i/5 1.1 'a'+($i+5)\nif $i<0\n"
+		"text $i/5-0.06 1.1 '--' 'b'\n"
+		"elseif mod($i,2)=0\ntext $i/5-0.06 1.1 '~' 'r'\n"
+		"else\ncontinue\nendif\n"
+		// NOTE: 'while' limit the actual number of iterations in for-loop.
+		"while $i<5\n");
+	// Finally, MGL support nested loops too.
+	parser->Execute(gr, "for $i 0 1 0.1\nfor $j 0 1 0.1\nball $i $j\n"
+		"if $j>0.5 then continue\nball $i $j 'b+'\nnext\nnext\n");
+	// Clean up memory.
 	delete parser;
 }
 //-----------------------------------------------------------------------------

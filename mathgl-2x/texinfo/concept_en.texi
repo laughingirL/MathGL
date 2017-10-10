@@ -201,7 +201,7 @@ MathGL have the fast variant of textual formula evaluation
 @ifclear UDAV
 (@pxref{Evaluate expression})
 @end ifclear
-. There are a lot of functions and operators available. The operators are: @samp{+} -- addition, @samp{-} -- subtraction, @samp{*} -- multiplication, @samp{/} -- division, @samp{^} -- integer power. Also there are logical ``operators'': @samp{<} -- true if x<y, @samp{>} -- true if x>y, @samp{=} -- true if x=y, @samp{&} -- true if x and y both nonzero, @samp{|} -- true if x or y nonzero. These logical operators have lowest priority and return 1 if true or 0 if false.
+. There are a lot of functions and operators available. The operators are: @samp{+} -- addition, @samp{-} -- subtraction, @samp{*} -- multiplication, @samp{/} -- division, @samp{%} -- modulo, @samp{^} -- integer power. Also there are logical ``operators'': @samp{<} -- true if x<y, @samp{>} -- true if x>y, @samp{=} -- true if x=y, @samp{&} -- true if x and y both nonzero, @samp{|} -- true if x or y nonzero. These logical operators have lowest priority and return 1 if true or 0 if false.
 
 The basic functions are: @samp{sqrt(x)} -- square root of @var{x}, @samp{pow(x,y)} -- power @var{x} in @var{y}, @samp{ln(x)} -- natural logarithm of @var{x}, @samp{lg(x)} -- decimal logarithm of @var{x}, @samp{log(a,x)} -- logarithm base @var{a} of @var{x}, @samp{abs(x)} -- absolute value of @var{x}, @samp{sign(x)} -- sign of @var{x}, @samp{mod(x,y)} -- @var{x} modulo @var{y}, @samp{step(x)} -- step function, @samp{int(x)} -- integer part of @var{x}, @samp{rnd} -- random number, @samp{random(x)} -- random data of size as in @var{x}, @samp{hypot(x,y)}=sqrt(x^2+y^2) -- hypotenuse, @samp{cmplx(x,y)}=x+i*y -- complex number,  @samp{pi} -- number
 @ifhtml
