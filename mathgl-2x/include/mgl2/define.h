@@ -292,7 +292,7 @@ const mdual mgl_I=_Complex_I;
 #ifdef __cplusplus
 #include <string>
 #include <vector>
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
 template class MGL_EXPORT std::allocator<char>;
 template class MGL_EXPORT std::allocator<wchar_t>;
 template struct MGL_EXPORT std::char_traits<char>;

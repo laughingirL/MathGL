@@ -37,6 +37,7 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 
 	double len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
+	double fact = gr->size_opt<0 ? -gr->size_opt:1;
 
 	// find maximum
 	long m = x->GetNy()>y->GetNy() ? x->GetNy():y->GetNy();
@@ -71,7 +72,7 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 			}
 			else dd = len;
 			gr->AddPntQ(kq+2*i,p1);
-			gr->AddPntQ(kq+2*i+1,p1+dd*p2,-1,mglPoint(NAN),-1,2);
+			gr->AddPntQ(kq+2*i+1,p1+(fact*dd)*p2,-1,mglPoint(NAN),-1,2);
 		}
 		for(long i=0;i<n;i++)	gr->vect_plot(kq+2*i, kq+2*i+1, asize);
 	}
@@ -110,6 +111,7 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	bool dot = mglchr(sch,'.');
 	bool fix = mglchr(sch,'f'), end = mglchr(sch,'>');
 	bool beg = mglchr(sch,'<'), grd = mglchr(sch,'=');
+	double fact = gr->size_opt<0 ? -gr->size_opt:1;
 
 	long ss = gr->AddTexture(sch);
 	double zVal = gr->Min.z, asize = gr->GetArrowSize();
@@ -141,7 +143,7 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 		{cm = cm<cm1 ? cm1:cm;	xm = xm<xm1 ? xm1:xm;}
 	}
 	ca /= (n*m*l)/(tx*ty);
-	xm = xm?1./xm:0;	cm = cm?1./cm:0;
+	xm = xm?1./xm:0;	cm = cm?fact/cm:0;
 
 	for(long k=0;k<l;k++)
 	{
@@ -210,6 +212,7 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	bool dot = mglchr(sch,'.'), fix = mglchr(sch,'f');
 	bool end = mglchr(sch,'>'), beg = mglchr(sch,'<');
 	bool grd = mglchr(sch,'=');
+	double fact = gr->size_opt<0 ? -gr->size_opt:1;
 
 	long ss = gr->AddTexture(sch);
 	gr->Reserve(2*n*m*l);
@@ -245,7 +248,7 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 		{cm = cm<cm1 ? cm1:cm;	xm = xm<xm1 ? xm1:xm;}
 	}
 	ca /= double(n*m*l)/double(tx*ty*tz);
-	xm = xm?1./xm:0;	cm = cm?1./cm:0;
+	xm = xm?1./xm:0;	cm = cm?fact/cm:0;
 
 	const long ni = 1+((n-1)/tx), nj = 1+((m-1)/ty), nk = 1+((l-1)/tz);
 	const long kq = gr->AllocPnts(2*ni*nj*nk);
@@ -415,6 +418,7 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	bool end = mglchr(sch,'>'), beg = mglchr(sch,'<');
 	bool grd = mglchr(sch,'=');
 	long ss = gr->AddTexture(sch);
+	double fact = gr->size_opt<0 ? -gr->size_opt:1;
 
 	_mgl_vec_slice s;
 	mgl_get_slice(s,x,y,z,ax,ay,az,dir,sVal,both);
@@ -452,7 +456,7 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 		{cm = cm<cm1 ? cm1:cm;	xm = xm<xm1 ? xm1:xm;}
 	}
 	ca /= mreal(n*m)/mreal(tx*ty);
-	xm = xm?1./xm:0;	cm = cm?1./cm:0;
+	xm = xm?1./xm:0;	cm = cm?fact/cm:0;
 
 	const long ni = 1+((n-1)/tx), nj = 1+((m-1)/ty);
 	const long kq = gr->AllocPnts(2*ni*nj);
@@ -643,7 +647,7 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 				u.push_back(-s-ds);	v.push_back(-t-dt);
 				u.push_back(s-ds);	v.push_back(t-dt);
 				u.push_back(-s+ds);	v.push_back(-t+dt);
-mgl_mark(gr,x->v(i),y->v(j),0,"b.");
+//mgl_mark(gr,x->v(i),y->v(j),0,"b.");
 			}
 /*			{
 				if((ax->vthr(i0-1+nx)-ay->vthr(i0-1+nx))*(ax->vthr(i0+1-nx)-ay->vthr(i0+1-nx))<=0 &&
