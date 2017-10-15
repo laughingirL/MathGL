@@ -1,5 +1,9 @@
 include(GenerateExportHeader)
 
+if(MSVC)
+	add_definitions(-DMGL_LIB_MSVC)
+endif(MSVC)
+
 if(MGL_HAVE_FLTK)
 	mgl_add_lib(fltk fltk.cpp  image.cpp  image.h ../include/mgl2/fltk.h ../include/mgl2/Fl_MathGL.h)
 	target_include_directories(mgl-fltk SYSTEM PUBLIC ${FLTK_INCLUDE_DIR})

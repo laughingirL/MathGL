@@ -613,8 +613,11 @@ void MGL_EXPORT mgl_show_image(HMGL gr, const char *viewer, int keep)
 {
 	static size_t counter=size_t(0xffffffff*mgl_rnd());
 	char *fname = new char[256], *cmd = new char [288];
-//	snprintf(fname,128,"%s.png", tmpnam(NULL));
+#if defined(_MSC_VER)
+	snprintf(fname,128,"%s.png", tmpnam(NULL));
+#else
 	snprintf(fname,256,"%s/mathgl%lu.png", P_tmpdir, counter);
+#endif
 	fname[255]=0;	counter++;
 	mgl_write_png_solid(gr,fname,"MathGL ShowImage file");
 	if(!viewer || !viewer[0])

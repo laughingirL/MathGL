@@ -29,8 +29,9 @@
 // 4244 - conversion from 'mreal,double' to 'float', possible loss of data
 // 4267	- conversion from 'size_t' to 'long,int,etc', possible loss of data
 // 4305	- truncation from 'double' to 'float'
+// 4251 - class 'type' needs to have dll-interface to be used by clients of class 'type2'
 #if defined(_MSC_VER)
-#pragma warning(disable: 4996 4190 4786 4231 4800 4244 4267 4305)
+#pragma warning(disable: 4190 4996 4786 4800 4244 4267 4305 4251)
 #endif
 
 #include "mgl2/config.h"
@@ -41,6 +42,12 @@
 #endif
 
 #include "mgl2/dllexport.h"
+#if defined(MGL_LIB_MSVC)
+#define MGL_EXTERN
+#else
+#define MGL_EXTERN extern
+#endif
+
 #if defined(_MSC_VER)
 #define MGL_OBSOLETE	MGL_NO_EXPORT
 #else
@@ -292,24 +299,24 @@ const mdual mgl_I=_Complex_I;
 #ifdef __cplusplus
 #include <string>
 #include <vector>
-#if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
-template class MGL_EXPORT std::allocator<char>;
-template class MGL_EXPORT std::allocator<wchar_t>;
-template struct MGL_EXPORT std::char_traits<char>;
-template struct MGL_EXPORT std::char_traits<wchar_t>;
-template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
-template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
-template class MGL_EXPORT std::vector<long>;
-template class MGL_EXPORT std::vector<mreal>;
-#endif
+// #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
+// template class MGL_EXPORT std::allocator<char>;
+// template class MGL_EXPORT std::allocator<wchar_t>;
+// template struct MGL_EXPORT std::char_traits<char>;
+// template struct MGL_EXPORT std::char_traits<wchar_t>;
+// template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
+// template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
+// template class MGL_EXPORT std::vector<long>;
+// template class MGL_EXPORT std::vector<mreal>;
+// #endif
 //-----------------------------------------------------------------------------
 extern float mgl_cos[360];	///< contain cosine with step 1 degree
 //-----------------------------------------------------------------------------
 #include <complex>
-#if defined(_MSC_VER)
-template class MGL_EXPORT std::complex<float>;
-template class MGL_EXPORT std::complex<double>;
-#endif
+// #if defined(_MSC_VER)
+// template class MGL_EXPORT std::complex<float>;
+// template class MGL_EXPORT std::complex<double>;
+// #endif
 typedef std::complex<mreal> dual;
 typedef std::complex<double> ddual;
 #if !MGL_HAVE_C99_COMPLEX

@@ -24,6 +24,10 @@ ${MathGL2_BINARY_DIR}/include/mgl2/dllexport.h	cont.hpp
 #	tex_table.cc	 def_font.cc
 )
 
+if(MSVC)
+	add_definitions(-DMGL_LIB_MSVC)
+endif(MSVC)
+
 if(MGL_HAVE_GSL2)
 	add_definitions(-DMGL_HAVE_GSL2)
 endif(MGL_HAVE_GSL2)

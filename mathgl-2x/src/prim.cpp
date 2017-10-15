@@ -1210,7 +1210,7 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 // 			else	{	strs[i] = p;	break;	}
 // 		}
 	}
-	HMDT dat[m];
+	HMDT *dat = new HMDT[m];	//	HMDT dat[m];
 	mreal dx = 1./m;
 	for(long i=0;i<m;i++)	dat[i]=mgl_data_subdata(dats,i,-1,-1);
 	for(long i=0;i<m;i++)	for(long j=0;j<m;j++)
@@ -1242,7 +1242,8 @@ void MGL_EXPORT mgl_irisw(HMGL gr, HCDT dats, HCDT ranges, const wchar_t *ids, c
 			gr->SetFontSize(fsize);	g->InPlot(1-dx,1,dx*i,dx*(i+1),true);	g->Axis("y^");
 		}
 	}
-	delete []strs;	for(long i=0;i<m;i++)	delete dat[i];
+	for(long i=0;i<m;i++)	delete dat[i];
+	delete []strs;	delete []dat;
 	g->InPlot(0,1,0,1,true);	gr->EndGroup();	gr->SetFontSize(ofsize);
 }
 //-----------------------------------------------------------------------------

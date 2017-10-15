@@ -108,7 +108,7 @@ struct MGL_EXPORT mglDrawDat
 	std::vector<mglTexture> Txt;	///< Pointer to textures
 };
 #if defined(_MSC_VER)
-template class MGL_EXPORT std::vector<mglDrawDat>;
+MGL_EXTERN template class MGL_EXPORT std::vector<mglDrawDat>;
 #endif
 //-----------------------------------------------------------------------------
 union mglRGBA	{	uint32_t c; unsigned char r[4];	};

@@ -329,15 +329,15 @@ struct MGL_EXPORT mglActivePos
 };
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
-template class MGL_EXPORT mglStack<mglPnt>;
-template class MGL_EXPORT mglStack<mglPrim>;
-template class MGL_EXPORT std::vector<mglGroup>;
-template class MGL_EXPORT std::vector<mglText>;
-template class MGL_EXPORT std::vector<mglTexture>;
-template class MGL_EXPORT std::vector<mglGlyph>;
-template class MGL_EXPORT std::vector<mglBlock>;
-template class MGL_EXPORT std::vector<mglMatrix>;
-template class MGL_EXPORT mglStack<mglActivePos>;
+MGL_EXTERN  MGL_EXPORT mglStack<mglPnt>;
+MGL_EXTERN template class MGL_EXPORT mglStack<mglPrim>;
+MGL_EXTERN template class MGL_EXPORT std::vector<mglGroup>;
+MGL_EXTERN template class MGL_EXPORT std::vector<mglText>;
+MGL_EXTERN template class MGL_EXPORT std::vector<mglTexture>;
+MGL_EXTERN template class MGL_EXPORT std::vector<mglGlyph>;
+MGL_EXTERN template class MGL_EXPORT std::vector<mglBlock>;
+MGL_EXTERN template class MGL_EXPORT std::vector<mglMatrix>;
+MGL_EXTERN template class MGL_EXPORT mglStack<mglActivePos>;
 #endif
 //-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing
