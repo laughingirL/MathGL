@@ -300,22 +300,22 @@ const mdual mgl_I=_Complex_I;
 #include <string>
 #include <vector>
 // #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
-// template class MGL_EXPORT std::allocator<char>;
-// template class MGL_EXPORT std::allocator<wchar_t>;
-// template struct MGL_EXPORT std::char_traits<char>;
-// template struct MGL_EXPORT std::char_traits<wchar_t>;
-// template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
-// template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
-// template class MGL_EXPORT std::vector<long>;
-// template class MGL_EXPORT std::vector<mreal>;
+// MGL_EXTERN template class MGL_EXPORT std::allocator<char>;
+// MGL_EXTERN template class MGL_EXPORT std::allocator<wchar_t>;
+// MGL_EXTERN template struct MGL_EXPORT std::char_traits<char>;
+// MGL_EXTERN template struct MGL_EXPORT std::char_traits<wchar_t>;
+// MGL_EXTERN template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
+// MGL_EXTERN template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
+// MGL_EXTERN template class MGL_EXPORT std::vector<long>;
+// MGL_EXTERN template class MGL_EXPORT std::vector<mreal>;
 // #endif
 //-----------------------------------------------------------------------------
 extern float mgl_cos[360];	///< contain cosine with step 1 degree
 //-----------------------------------------------------------------------------
 #include <complex>
 // #if defined(_MSC_VER)
-// template class MGL_EXPORT std::complex<float>;
-// template class MGL_EXPORT std::complex<double>;
+// MGL_EXTERN template class MGL_EXPORT std::complex<float>;
+// MGL_EXTERN template class MGL_EXPORT std::complex<double>;
 // #endif
 typedef std::complex<mreal> dual;
 typedef std::complex<double> ddual;
