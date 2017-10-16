@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-15 18:42+0300\n"
+"POT-Creation-Date: 2017-10-17 00:31+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -70,7 +70,7 @@ msgid ""
 "http://mathgl.sourceforge.net/"
 msgstr ""
 
-#: src/parser.cpp:1066
+#: src/parser.cpp:1067
 #, c-format
 msgid ""
 "\n"
@@ -79,7 +79,7 @@ msgstr ""
 "\n"
 "Cambiar datos temporales en linea %ld"
 
-#: src/parser.cpp:1064
+#: src/parser.cpp:1065
 #, c-format
 msgid ""
 "\n"
@@ -88,14 +88,14 @@ msgstr ""
 "\n"
 "Cadena de caracteres demasiado larga en linea %ld"
 
-#: src/parser.cpp:1065
+#: src/parser.cpp:1066
 #, c-format
 msgid ""
 "\n"
 "Unbalanced ' in line %ld"
 msgstr ""
 
-#: src/parser.cpp:1062
+#: src/parser.cpp:1063
 #, c-format
 msgid ""
 "\n"
@@ -104,7 +104,7 @@ msgstr ""
 "\n"
 "Argumento(s) incorrecto(s) en linea %ld"
 
-#: src/parser.cpp:1063
+#: src/parser.cpp:1064
 #, c-format
 msgid ""
 "\n"
@@ -553,7 +553,7 @@ msgid "Add curve which properties can be changed later by mouse."
 msgstr ""
 "Anadir curva cuyas propiedades pueden ser cambiadas luego con el mouse."
 
-#: src/exec_dat.cpp:1628
+#: src/exec_dat.cpp:1625
 msgid "Add data or number"
 msgstr "Anadir datos o numero"
 
@@ -822,7 +822,7 @@ msgstr ""
 msgid "Bad '%ls' at %zu\n"
 msgstr ""
 
-#: src/parser.cpp:764
+#: src/parser.cpp:765
 #, c-format
 msgid "Bad arguments for %ls: %ld instead of %d\n"
 msgstr ""
@@ -839,7 +839,7 @@ msgstr ""
 msgid "Begin"
 msgstr ""
 
-#: src/parser.cpp:1482
+#: src/parser.cpp:1484
 msgid "Begin of do-while loop"
 msgstr ""
 
@@ -867,7 +867,7 @@ msgstr ""
 msgid "Both fields in zrange must be filled"
 msgstr ""
 
-#: src/parser.cpp:1479
+#: src/parser.cpp:1481
 msgid "Break for-loop"
 msgstr ""
 
@@ -1069,11 +1069,11 @@ msgstr ""
 msgid "Computes the flame fractal"
 msgstr ""
 
-#: src/parser.cpp:1498
+#: src/parser.cpp:1500
 msgid "Condition of do-while loop"
 msgstr ""
 
-#: src/parser.cpp:1488 src/parser.cpp:1492
+#: src/parser.cpp:1490 src/parser.cpp:1494
 msgid "Conditional operator"
 msgstr ""
 
@@ -1089,7 +1089,7 @@ msgstr ""
 msgid "Copy data"
 msgstr ""
 
-#: src/exec_dat.cpp:1634
+#: src/exec_dat.cpp:1631
 msgid "Copy data from another variable"
 msgstr ""
 
@@ -1133,7 +1133,7 @@ msgstr ""
 msgid "Cos-Fourier transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1636
+#: src/exec_dat.cpp:1633
 msgid "Cos-Fourier transform at some direction"
 msgstr ""
 
@@ -1170,7 +1170,7 @@ msgstr ""
 msgid "Create data and IO"
 msgstr ""
 
-#: src/exec_dat.cpp:1661
+#: src/exec_dat.cpp:1658
 msgid "Create histogram (distribution) of data values"
 msgstr ""
 
@@ -1178,11 +1178,11 @@ msgstr ""
 msgid "Create new"
 msgstr ""
 
-#: src/exec_dat.cpp:1720
+#: src/exec_dat.cpp:1717
 msgid "Create new 1D data and fill it in range"
 msgstr ""
 
-#: src/exec_dat.cpp:1676
+#: src/exec_dat.cpp:1673
 msgid "Create new data"
 msgstr ""
 
@@ -1198,7 +1198,7 @@ msgstr ""
 msgid "Create new empty script window (Ctrl+N)."
 msgstr ""
 
-#: src/parser.cpp:1493
+#: src/parser.cpp:1495
 msgid "Creates new variable from list of numbers or data"
 msgstr ""
 
@@ -1214,7 +1214,7 @@ msgstr ""
 msgid "Crop data"
 msgstr ""
 
-#: src/exec_dat.cpp:1637
+#: src/exec_dat.cpp:1634
 msgid "Crop edge of data"
 msgstr ""
 
@@ -1226,7 +1226,7 @@ msgstr ""
 msgid "CumSum"
 msgstr ""
 
-#: src/exec_dat.cpp:1638
+#: src/exec_dat.cpp:1635
 msgid "Cumulative summation along direction(s)"
 msgstr ""
 
@@ -1312,19 +1312,19 @@ msgstr ""
 msgid "Decrease font size"
 msgstr ""
 
-#: src/parser.cpp:1484
+#: src/parser.cpp:1486
 msgid "Define constant or parameter"
 msgstr ""
 
-#: src/parser.cpp:1483
+#: src/parser.cpp:1485
 msgid "Define parameter as character"
 msgstr ""
 
-#: src/parser.cpp:1485
+#: src/parser.cpp:1487
 msgid "Define parameter as numerical value"
 msgstr ""
 
-#: src/parser.cpp:1478
+#: src/parser.cpp:1480
 msgid "Define parameter from user input"
 msgstr ""
 
@@ -1344,7 +1344,7 @@ msgstr ""
 msgid "Delete ALL data arrays"
 msgstr ""
 
-#: src/exec_dat.cpp:1641
+#: src/exec_dat.cpp:1638
 msgid "Delete data or slice of data"
 msgstr ""
 
@@ -1368,7 +1368,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/exec_dat.cpp:1642
+#: src/exec_dat.cpp:1639
 msgid "Detect curves for maximums of data array"
 msgstr ""
 
@@ -1384,11 +1384,11 @@ msgstr ""
 msgid "Diffuse"
 msgstr ""
 
-#: src/exec_dat.cpp:1646
+#: src/exec_dat.cpp:1643
 msgid "Dilate data larger val"
 msgstr ""
 
-#: src/exec_dat.cpp:1633
+#: src/exec_dat.cpp:1630
 msgid "Direct multiplication of arrays"
 msgstr ""
 
@@ -1409,7 +1409,7 @@ msgstr ""
 msgid "Divide by"
 msgstr ""
 
-#: src/exec_dat.cpp:1647
+#: src/exec_dat.cpp:1644
 msgid "Divide by data or number"
 msgstr ""
 
@@ -1417,11 +1417,11 @@ msgstr ""
 msgid "Do"
 msgstr ""
 
-#: src/exec_dat.cpp:1709
+#: src/exec_dat.cpp:1706
 msgid "Do STFA transform"
 msgstr ""
 
-#: src/exec_dat.cpp:1715 src/exec_dat.cpp:1716
+#: src/exec_dat.cpp:1712 src/exec_dat.cpp:1713
 msgid "Do integral transform of data"
 msgstr ""
 
@@ -2010,7 +2010,7 @@ msgstr ""
 msgid "Envelop"
 msgstr ""
 
-#: src/exec_dat.cpp:1650
+#: src/exec_dat.cpp:1647
 msgid "Erode data larger val"
 msgstr ""
 
@@ -2033,13 +2033,13 @@ msgid ""
 "%s."
 msgstr ""
 
-#: src/exec_dat.cpp:1651
+#: src/exec_dat.cpp:1648
 msgid ""
 "Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat"
 msgstr ""
 
 #. {"defpal",_("Define parameter as palette color"),"defpal $N val", 0, 6},
-#: src/parser.cpp:1487
+#: src/parser.cpp:1489
 msgid "Execute if condition is false"
 msgstr ""
 
@@ -2051,7 +2051,7 @@ msgstr ""
 msgid "Execute script and redraw graphics (F5)."
 msgstr ""
 
-#: src/parser.cpp:1480
+#: src/parser.cpp:1482
 msgid "Execute script in external file"
 msgstr ""
 
@@ -2087,7 +2087,7 @@ msgstr ""
 msgid "Export as 3D ..."
 msgstr ""
 
-#: src/exec_dat.cpp:1652 mgllab/table.cpp:844
+#: src/exec_dat.cpp:1649 mgllab/table.cpp:844
 msgid "Export data to PNG file"
 msgstr ""
 
@@ -2100,7 +2100,7 @@ msgstr ""
 msgid "Export to PNG"
 msgstr ""
 
-#: src/exec_dat.cpp:1653
+#: src/exec_dat.cpp:1650
 msgid "Extend data array"
 msgstr ""
 
@@ -2108,11 +2108,11 @@ msgstr ""
 msgid "Extract data"
 msgstr ""
 
-#: src/exec_dat.cpp:1710
+#: src/exec_dat.cpp:1707
 msgid "Extract sub-array"
 msgstr ""
 
-#: src/exec_dat.cpp:1702
+#: src/exec_dat.cpp:1699
 msgid "Extract sub-array between values"
 msgstr ""
 
@@ -2158,19 +2158,19 @@ msgstr ""
 msgid "Fill data by formula"
 msgstr ""
 
-#: src/exec_dat.cpp:1659
+#: src/exec_dat.cpp:1656
 msgid "Fill data by global spline of Vdat"
 msgstr ""
 
-#: src/exec_dat.cpp:1694
+#: src/exec_dat.cpp:1691
 msgid "Fill data by interpolation of Vdat"
 msgstr ""
 
-#: src/exec_dat.cpp:1639
+#: src/exec_dat.cpp:1636
 msgid "Fill data by triangulated values"
 msgstr ""
 
-#: src/exec_dat.cpp:1654
+#: src/exec_dat.cpp:1651
 msgid "Fill data linearly in range [v1, v2]"
 msgstr ""
 
@@ -2178,7 +2178,7 @@ msgstr ""
 msgid "Fill in range"
 msgstr ""
 
-#: src/exec_dat.cpp:1655
+#: src/exec_dat.cpp:1652
 msgid "Fill x-,k-samples for transforms"
 msgstr ""
 
@@ -2186,11 +2186,11 @@ msgstr ""
 msgid "Find"
 msgstr ""
 
-#: src/exec_dat.cpp:1635
+#: src/exec_dat.cpp:1632
 msgid "Find correlation between data arrays"
 msgstr ""
 
-#: src/exec_dat.cpp:1649
+#: src/exec_dat.cpp:1646
 msgid "Find envelop for the data"
 msgstr ""
 
@@ -2202,11 +2202,11 @@ msgstr ""
 msgid "Find histogram of data."
 msgstr ""
 
-#: src/exec_dat.cpp:1670
+#: src/exec_dat.cpp:1667
 msgid "Find maximal value over direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1671
+#: src/exec_dat.cpp:1668
 msgid "Find minimal value over direction"
 msgstr ""
 
@@ -2218,19 +2218,19 @@ msgstr ""
 msgid "Find or replace text"
 msgstr ""
 
-#: src/exec_dat.cpp:1706
+#: src/exec_dat.cpp:1703
 msgid "Find root Dat[i,j,k]=val (inverse evaluate)"
 msgstr ""
 
-#: src/exec_dat.cpp:1698
+#: src/exec_dat.cpp:1695
 msgid "Find roots using data as initial values"
 msgstr ""
 
-#: src/exec_dat.cpp:1712
+#: src/exec_dat.cpp:1709
 msgid "Find summation over direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1718
+#: src/exec_dat.cpp:1715
 msgid "Find triangles of randomly placed points"
 msgstr ""
 
@@ -2246,7 +2246,7 @@ msgstr ""
 msgid "Find|Replace"
 msgstr ""
 
-#: src/parser.cpp:1489
+#: src/parser.cpp:1491
 msgid "Finish if/else block"
 msgstr ""
 
@@ -2258,7 +2258,7 @@ msgstr ""
 msgid "First slice"
 msgstr ""
 
-#: src/exec_dat.cpp:1656 src/exec_dat.cpp:1657
+#: src/exec_dat.cpp:1653 src/exec_dat.cpp:1654
 msgid "Fit data to formula"
 msgstr ""
 
@@ -2314,7 +2314,7 @@ msgstr ""
 msgid "FontSize"
 msgstr ""
 
-#: src/parser.cpp:1490
+#: src/parser.cpp:1492
 msgid "For loop"
 msgstr ""
 
@@ -2349,27 +2349,27 @@ msgstr ""
 msgid "General setup"
 msgstr ""
 
-#: src/exec_dat.cpp:1667
+#: src/exec_dat.cpp:1664
 msgid "Get Jacobian"
 msgstr ""
 
-#: src/exec_dat.cpp:1632
+#: src/exec_dat.cpp:1629
 msgid "Get data column filled by formula on column ids"
 msgstr ""
 
-#: src/exec_dat.cpp:1701
+#: src/exec_dat.cpp:1698
 msgid "Get formated data from file"
 msgstr ""
 
-#: src/exec_dat.cpp:1674
+#: src/exec_dat.cpp:1671
 msgid "Get momentum along direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1683
+#: src/exec_dat.cpp:1680
 msgid "Get pulse properties"
 msgstr ""
 
-#: src/exec_dat.cpp:1714
+#: src/exec_dat.cpp:1711
 msgid "Get trace of array"
 msgstr ""
 
@@ -2573,12 +2573,12 @@ msgstr ""
 msgid "H - darkgray"
 msgstr ""
 
-#: src/data_io.cpp:1087
+#: src/data_io.cpp:1092
 msgid "HDF4 support was disabled. Please, enable it and rebuild MathGL."
 msgstr ""
 
-#: src/complex_io.cpp:924 src/complex_io.cpp:926 src/data_io.cpp:1186
-#: src/data_io.cpp:1188 src/data_io.cpp:1190 src/data_io.cpp:1192
+#: src/complex_io.cpp:925 src/complex_io.cpp:927 src/data_io.cpp:1191
+#: src/data_io.cpp:1193 src/data_io.cpp:1195 src/data_io.cpp:1197
 msgid "HDF5 support was disabled. Please, enable it and rebuild MathGL."
 msgstr ""
 
@@ -2590,7 +2590,7 @@ msgstr ""
 msgid "Hankel transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1660
+#: src/exec_dat.cpp:1657
 msgid "Hankel transform at some direction"
 msgstr ""
 
@@ -2658,7 +2658,7 @@ msgstr ""
 msgid "Image size"
 msgstr ""
 
-#: src/exec_dat.cpp:1682
+#: src/exec_dat.cpp:1679
 msgid "Immediately print the message"
 msgstr ""
 
@@ -2666,7 +2666,7 @@ msgstr ""
 msgid "Import Data?"
 msgstr ""
 
-#: src/exec_dat.cpp:1663 mgllab/table.cpp:840
+#: src/exec_dat.cpp:1660 mgllab/table.cpp:840
 msgid "Import data from PNG file"
 msgstr ""
 
@@ -2678,7 +2678,7 @@ msgstr ""
 msgid "In range"
 msgstr ""
 
-#: src/exec_dat.cpp:1658
+#: src/exec_dat.cpp:1655
 msgid "In-place Fourier transform"
 msgstr ""
 
@@ -2747,7 +2747,7 @@ msgstr ""
 msgid "Insert last fitted formula with found coefficients."
 msgstr ""
 
-#: src/exec_dat.cpp:1665
+#: src/exec_dat.cpp:1662
 msgid "Insert slice of data"
 msgstr ""
 
@@ -2759,7 +2759,7 @@ msgstr ""
 msgid "Integrate"
 msgstr ""
 
-#: src/exec_dat.cpp:1666 udav/dat_pnl.cpp:615
+#: src/exec_dat.cpp:1663 udav/dat_pnl.cpp:615
 msgid "Integrate data along direction(s)"
 msgstr ""
 
@@ -2783,7 +2783,7 @@ msgstr ""
 msgid "Jacobi"
 msgstr ""
 
-#: src/exec_dat.cpp:1668
+#: src/exec_dat.cpp:1665
 msgid "Join data arrays"
 msgstr ""
 
@@ -2878,7 +2878,7 @@ msgstr ""
 msgid "Light settings"
 msgstr ""
 
-#: src/exec_dat.cpp:1669
+#: src/exec_dat.cpp:1666
 msgid "Limit data to be inside [-v,v]"
 msgstr ""
 
@@ -2961,7 +2961,7 @@ msgstr ""
 msgid "M - purple"
 msgstr ""
 
-#: src/parser.cpp:1074
+#: src/parser.cpp:1075
 msgid "MGL Parser"
 msgstr ""
 
@@ -3183,11 +3183,11 @@ msgstr ""
 msgid "Mirror data along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1672
+#: src/exec_dat.cpp:1669
 msgid "Mirror data at some direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1673
+#: src/exec_dat.cpp:1670
 msgid "Modify data values by formula"
 msgstr ""
 
@@ -3259,7 +3259,7 @@ msgstr ""
 msgid "Multiply by"
 msgstr ""
 
-#: src/exec_dat.cpp:1675
+#: src/exec_dat.cpp:1672
 msgid "Multiply by data or number"
 msgstr ""
 
@@ -3387,11 +3387,11 @@ msgstr ""
 msgid "Normalize"
 msgstr ""
 
-#: src/exec_dat.cpp:1677
+#: src/exec_dat.cpp:1674
 msgid "Normalize data"
 msgstr ""
 
-#: src/exec_dat.cpp:1678
+#: src/exec_dat.cpp:1675
 msgid "Normalize data slice by slice"
 msgstr ""
 
@@ -3419,11 +3419,11 @@ msgstr ""
 msgid "Numeric value"
 msgstr ""
 
-#: src/exec_dat.cpp:1643
+#: src/exec_dat.cpp:1640
 msgid "Numerically differentiate data"
 msgstr ""
 
-#: src/exec_dat.cpp:1644
+#: src/exec_dat.cpp:1641
 msgid "Numerically double differentiate data"
 msgstr ""
 
@@ -3463,7 +3463,7 @@ msgstr ""
 msgid "Open File?"
 msgstr ""
 
-#: src/exec_dat.cpp:1680
+#: src/exec_dat.cpp:1677
 msgid "Open all data arrays from HDF file"
 msgstr ""
 
@@ -3609,7 +3609,7 @@ msgstr ""
 msgid "Pause on/off external calculations"
 msgstr ""
 
-#: src/exec_dat.cpp:1696
+#: src/exec_dat.cpp:1693
 msgid "Perform Runge-Kutta step"
 msgstr ""
 
@@ -3692,11 +3692,11 @@ msgstr ""
 msgid "Print MathGL version or check if it is valid"
 msgstr ""
 
-#: src/exec_dat.cpp:1648
+#: src/exec_dat.cpp:1645
 msgid "Print content of the data"
 msgstr ""
 
-#: src/exec_dat.cpp:1685
+#: src/exec_dat.cpp:1682
 msgid "Print fitted formula"
 msgstr ""
 
@@ -3704,11 +3704,11 @@ msgstr ""
 msgid "Print graphics"
 msgstr ""
 
-#: src/exec_dat.cpp:1640
+#: src/exec_dat.cpp:1637
 msgid "Print list of data names in HDF file"
 msgstr ""
 
-#: src/exec_dat.cpp:1664
+#: src/exec_dat.cpp:1661
 msgid "Print message or information about the data"
 msgstr ""
 
@@ -3740,7 +3740,7 @@ msgstr ""
 msgid "Program flow"
 msgstr ""
 
-#: src/exec_dat.cpp:1631
+#: src/exec_dat.cpp:1628
 msgid "Project periodical data in [v1,v2]"
 msgstr ""
 
@@ -3772,7 +3772,7 @@ msgstr ""
 msgid "Put to script"
 msgstr ""
 
-#: src/exec_dat.cpp:1684
+#: src/exec_dat.cpp:1681
 msgid "Put value (numeric or array) to given data element"
 msgstr ""
 
@@ -3794,19 +3794,19 @@ msgstr ""
 msgid "Rasterize plot and save to background"
 msgstr ""
 
-#: src/exec_dat.cpp:1690
+#: src/exec_dat.cpp:1687
 msgid "Read and join data from several files"
 msgstr ""
 
-#: src/exec_dat.cpp:1689
+#: src/exec_dat.cpp:1686
 msgid "Read data from file"
 msgstr ""
 
-#: src/exec_dat.cpp:1692
+#: src/exec_dat.cpp:1689
 msgid "Read data from file with sizes specified in first row"
 msgstr ""
 
-#: src/exec_dat.cpp:1691
+#: src/exec_dat.cpp:1688
 msgid "Read data with name 'id' from HDF file"
 msgstr ""
 
@@ -3814,7 +3814,7 @@ msgstr ""
 msgid "Ready"
 msgstr ""
 
-#: src/exec_dat.cpp:1693
+#: src/exec_dat.cpp:1690
 msgid "Rearrange data dimensions"
 msgstr ""
 
@@ -3870,11 +3870,11 @@ msgstr ""
 msgid "Reload data and refresh the picture"
 msgstr ""
 
-#: src/exec_dat.cpp:1630
+#: src/exec_dat.cpp:1627
 msgid "Remove duplicate rows"
 msgstr ""
 
-#: src/exec_dat.cpp:1703
+#: src/exec_dat.cpp:1700
 msgid "Remove jump into the data, like phase jumps"
 msgstr ""
 
@@ -3940,7 +3940,7 @@ msgstr ""
 msgid "Resize (interpolate) the data to specified sizes (Ctrl+Shift+R)."
 msgstr ""
 
-#: src/exec_dat.cpp:1695
+#: src/exec_dat.cpp:1692
 msgid "Resize data array"
 msgstr ""
 
@@ -3981,7 +3981,7 @@ msgstr ""
 msgid "Resulting string"
 msgstr ""
 
-#: src/parser.cpp:1496
+#: src/parser.cpp:1498
 msgid "Return from function"
 msgstr ""
 
@@ -3997,7 +3997,7 @@ msgstr ""
 msgid "Roll"
 msgstr ""
 
-#: src/exec_dat.cpp:1697
+#: src/exec_dat.cpp:1694
 msgid "Roll data along direction(s)"
 msgstr ""
 
@@ -4096,7 +4096,7 @@ msgstr ""
 msgid "Save data"
 msgstr ""
 
-#: src/exec_dat.cpp:1700
+#: src/exec_dat.cpp:1697
 msgid "Save data to HDF5 file"
 msgstr ""
 
@@ -4104,7 +4104,7 @@ msgstr ""
 msgid "Save data to a file (Ctrl+Shift+S)."
 msgstr ""
 
-#: src/exec_dat.cpp:1699 mgllab/table.cpp:842
+#: src/exec_dat.cpp:1696 mgllab/table.cpp:842
 msgid "Save data to file"
 msgstr ""
 
@@ -4244,7 +4244,7 @@ msgstr ""
 msgid "Set color range"
 msgstr ""
 
-#: src/exec_dat.cpp:1662
+#: src/exec_dat.cpp:1659
 msgid "Set column id for data"
 msgstr ""
 
@@ -4624,7 +4624,7 @@ msgstr ""
 msgid "Sin-Fourier transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1704
+#: src/exec_dat.cpp:1701
 msgid "Sin-Fourier transform at some direction"
 msgstr ""
 
@@ -4650,7 +4650,7 @@ msgstr ""
 msgid "Sizes"
 msgstr ""
 
-#: src/parser.cpp:1481
+#: src/parser.cpp:1483
 msgid "Skip commands and iterate for-loop again"
 msgstr ""
 
@@ -4662,7 +4662,7 @@ msgstr ""
 msgid "Smooth"
 msgstr ""
 
-#: src/exec_dat.cpp:1705
+#: src/exec_dat.cpp:1702
 msgid "Smooth data"
 msgstr ""
 
@@ -4670,35 +4670,35 @@ msgstr ""
 msgid "Smooth data along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1688
+#: src/exec_dat.cpp:1685
 msgid "Solve Hamiltonian ODE (find GO ray or trajectory)"
 msgstr ""
 
-#: src/exec_dat.cpp:1679
+#: src/exec_dat.cpp:1676
 msgid "Solve ODE"
 msgstr ""
 
-#: src/exec_dat.cpp:1681
+#: src/exec_dat.cpp:1678
 msgid "Solve PDE"
 msgstr ""
 
-#: src/exec_dat.cpp:1686
+#: src/exec_dat.cpp:1683
 msgid "Solve PDE in accompanied coordinates for 2d case"
 msgstr ""
 
-#: src/exec_dat.cpp:1687
+#: src/exec_dat.cpp:1684
 msgid "Solve PDE in accompanied coordinates for 3d case"
 msgstr ""
 
-#: src/exec_dat.cpp:1629
+#: src/exec_dat.cpp:1626
 msgid "Solve PDE using advanced method (X-Y only)"
 msgstr ""
 
-#: src/exec_dat.cpp:1719
+#: src/exec_dat.cpp:1716
 msgid "Solve tridiagonal matrix"
 msgstr ""
 
-#: src/exec_dat.cpp:1707
+#: src/exec_dat.cpp:1704
 msgid "Sort data by values in column"
 msgstr ""
 
@@ -4732,7 +4732,7 @@ msgstr ""
 msgid "Squeeze"
 msgstr ""
 
-#: src/exec_dat.cpp:1708
+#: src/exec_dat.cpp:1705
 msgid "Squeeze data"
 msgstr ""
 
@@ -4740,15 +4740,15 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: src/parser.cpp:1491
+#: src/parser.cpp:1493
 msgid "Start function definition and stop execution of main script"
 msgstr ""
 
-#: src/parser.cpp:1494
+#: src/parser.cpp:1496
 msgid "Start next for-loop iteration"
 msgstr ""
 
-#: src/parser.cpp:1495
+#: src/parser.cpp:1497
 msgid "Start/close commands which should executed only once"
 msgstr ""
 
@@ -4760,7 +4760,7 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-#: src/exec_dat.cpp:1645
+#: src/exec_dat.cpp:1642
 msgid "Step for pulse diffraction"
 msgstr ""
 
@@ -4772,7 +4772,7 @@ msgstr ""
 msgid "Stop drawing"
 msgstr ""
 
-#: src/parser.cpp:1497
+#: src/parser.cpp:1499
 msgid "Stop execution"
 msgstr ""
 
@@ -4872,7 +4872,7 @@ msgstr ""
 msgid "Subticks"
 msgstr ""
 
-#: src/exec_dat.cpp:1711
+#: src/exec_dat.cpp:1708
 msgid "Subtract data or number"
 msgstr ""
 
@@ -4897,7 +4897,7 @@ msgstr ""
 msgid "Summation of"
 msgstr ""
 
-#: src/exec_dat.cpp:1713
+#: src/exec_dat.cpp:1710
 msgid "Swap data (useful after Fourier transform)"
 msgstr ""
 
@@ -5158,7 +5158,7 @@ msgstr ""
 msgid "Transpose data"
 msgstr ""
 
-#: src/exec_dat.cpp:1717
+#: src/exec_dat.cpp:1714
 msgid "Transpose data array"
 msgstr ""
 
@@ -5479,7 +5479,7 @@ msgstr ""
 msgid "W - lightgray"
 msgstr ""
 
-#: src/exec_dat.cpp:1721
+#: src/exec_dat.cpp:1718
 msgid "Wavelet transform at some direction"
 msgstr ""
 
@@ -5999,7 +5999,7 @@ msgstr ""
 msgid "h - gray"
 msgstr ""
 
-#: src/parser.cpp:1067
+#: src/parser.cpp:1068
 #, c-format
 msgid "in line %ld"
 msgstr ""

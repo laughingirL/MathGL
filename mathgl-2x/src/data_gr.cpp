@@ -84,20 +84,20 @@ void MGL_EXPORT mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCD
 	if(vdat && vdat->GetNN()!=d->GetNN())	return;	// incompatible dimensions
 	if(wdat && wdat->GetNN()!=d->GetNN())	return;
 	gr->SaveState(opt);
-	std::wstring s = d->s;	d->s = L"u";
-	mglDataV x(d->nx,d->ny,d->nz, gr->Min.x,gr->Max.x,'x');	x.s=L"x";
-	mglDataV y(d->nx,d->ny,d->nz, gr->Min.y,gr->Max.y,'y');	y.s=L"y";
-	mglDataV z(d->nx,d->ny,d->nz, gr->Min.z,gr->Max.z,'z');	z.s=L"z";
-	mglDataV i(d->nx,d->ny,d->nz, 0,d->nx-1,'x');	i.s=L"i";
-	mglDataV j(d->nx,d->ny,d->nz, 0,d->ny-1,'y');	j.s=L"j";
-	mglDataV k(d->nx,d->ny,d->nz, 0,d->nz-1,'z');	k.s=L"k";
-	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
-	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
+	std::wstring s = d->Name();	d->Name(L"u");
+	mglDataV x(d->nx,d->ny,d->nz, gr->Min.x,gr->Max.x,'x');	x.Name(L"x");
+	mglDataV y(d->nx,d->ny,d->nz, gr->Min.y,gr->Max.y,'y');	y.Name(L"y");
+	mglDataV z(d->nx,d->ny,d->nz, gr->Min.z,gr->Max.z,'z');	z.Name(L"z");
+	mglDataV i(d->nx,d->ny,d->nz, 0,d->nx-1,'x');	i.Name(L"i");
+	mglDataV j(d->nx,d->ny,d->nz, 0,d->ny-1,'y');	j.Name(L"j");
+	mglDataV k(d->nx,d->ny,d->nz, 0,d->nz-1,'z');	k.Name(L"k");
+	mglDataV r(d->nx,d->ny,d->nz);	r.Name(L"#$mgl");
+	mglData v(vdat), w(wdat);	v.Name(L"v");	w.Name(L"w");
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&r);
 	list.push_back(d);	list.push_back(&v);	list.push_back(&w);
 	list.push_back(&i);	list.push_back(&j);	list.push_back(&k);
-	d->Move(mglFormulaCalc(eq,list));	d->s = s;	gr->LoadState();
+	d->Move(mglFormulaCalc(eq,list));	d->Name(s.c_str());	gr->LoadState();
 }
 void MGL_EXPORT mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
@@ -109,20 +109,20 @@ void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HC
 	if(vdat && vdat->GetNN()!=d->GetNN())	return;	// incompatible dimensions
 	if(wdat && wdat->GetNN()!=d->GetNN())	return;
 	gr->SaveState(opt);
-	std::wstring s = d->s;	d->s = L"u";
-	mglDataV x(d->nx,d->ny,d->nz, gr->Min.x,gr->Max.x,'x');	x.s=L"x";
-	mglDataV y(d->nx,d->ny,d->nz, gr->Min.y,gr->Max.y,'y');	y.s=L"y";
-	mglDataV z(d->nx,d->ny,d->nz, gr->Min.z,gr->Max.z,'z');	z.s=L"z";
-	mglDataV i(d->nx,d->ny,d->nz, 0,d->nx-1,'x');	i.s=L"i";
-	mglDataV j(d->nx,d->ny,d->nz, 0,d->ny-1,'y');	j.s=L"j";
-	mglDataV k(d->nx,d->ny,d->nz, 0,d->nz-1,'z');	k.s=L"k";
-	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
-	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
+	std::wstring s = d->Name();	d->Name(L"u");
+	mglDataV x(d->nx,d->ny,d->nz, gr->Min.x,gr->Max.x,'x');	x.Name(L"x");
+	mglDataV y(d->nx,d->ny,d->nz, gr->Min.y,gr->Max.y,'y');	y.Name(L"y");
+	mglDataV z(d->nx,d->ny,d->nz, gr->Min.z,gr->Max.z,'z');	z.Name(L"z");
+	mglDataV i(d->nx,d->ny,d->nz, 0,d->nx-1,'x');	i.Name(L"i");
+	mglDataV j(d->nx,d->ny,d->nz, 0,d->ny-1,'y');	j.Name(L"j");
+	mglDataV k(d->nx,d->ny,d->nz, 0,d->nz-1,'z');	k.Name(L"k");
+	mglDataV r(d->nx,d->ny,d->nz);	r.Name(L"#$mgl");
+	mglData v(vdat), w(wdat);	v.Name(L"v");	w.Name(L"w");
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&r);
 	list.push_back(d);	list.push_back(&v);	list.push_back(&w);
 	list.push_back(&i);	list.push_back(&j);	list.push_back(&k);
-	d->Move(mglFormulaCalcC(eq,list));	d->s = s;	gr->LoadState();
+	d->Move(mglFormulaCalcC(eq,list));	d->Name(s.c_str());	gr->LoadState();
 }
 void MGL_EXPORT mgl_datac_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;

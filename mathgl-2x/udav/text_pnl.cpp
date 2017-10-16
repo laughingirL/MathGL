@@ -161,7 +161,7 @@ void TextPanel::refreshData()
 	for(i=0;i<n;i++)
 	{
 		const mglDataA *v=parser.GetVar(i);
-		if(v && v->s.length()>2)	vars<<QString::fromWCharArray(v->s.c_str());
+		if(v && wcslen(v->Name())>2)	vars<<QString::fromWCharArray(v->Name());
 	}
 	setCompleter(mglCompleter);
 }
@@ -387,7 +387,7 @@ void TextPanel::saveHDF5(const QString &fileName)
 		const mglData *v = dynamic_cast<const mglData *>(parser.GetVar(i));
 		mglData tmp;
 		if(!v)	{	tmp.Set(parser.GetVar(i));	v = &tmp;	}
-		wcstombs(name,v->s.c_str(),v->s.length()+1);
+		wcstombs(name,v->Name(),wcslen(v->Name())+1);
 		if(v->nz==1 && v->ny == 1)
 		{	rank = 1;	dims[0] = v->nx;	}
 		else if(v->nz==1)

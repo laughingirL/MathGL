@@ -34,13 +34,14 @@ dual MGL_EXPORT mglSpline3Cs(const dual *a, long nx, long ny, long nz, mreal x, 
 /// Class for working with complex data array
 class MGL_EXPORT mglDataC : public mglDataA
 {
+protected:
+	std::string id;	///< column (or slice) names
 public:
 using mglDataA::Momentum;
 	long nx;		///< number of points in 1st dimensions ('x' dimension)
 	long ny;		///< number of points in 2nd dimensions ('y' dimension)
 	long nz;		///< number of points in 3d dimensions ('z' dimension)
 	dual *a;		///< data array
-	std::string id;	///< column (or slice) names
 	bool link;		///< use external data (i.e. don't free it)
 
 	/// Initiate by other mglDataC variable
@@ -225,12 +226,6 @@ using mglDataA::Momentum;
 	/// Put array to data element(s)
 	inline void Put(const mglDataA &dat, long i=-1, long j=-1, long k=-1)
 	{	mgl_datac_put_dat(this,&dat,i,j,k);	}
-
-	/// Set names for columns (slices)
-	inline void SetColumnId(const char *ids)
-	{	mgl_datac_set_id(this,ids);	}
-	/// Make new id
-	inline void NewId()	{	id.clear();	}
 
 	/// Read data from tab-separated text file with auto determining size
 	inline bool Read(const char *fname)

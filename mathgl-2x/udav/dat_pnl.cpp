@@ -85,8 +85,7 @@ void DatPanel::refresh()
 	if(ny!=var->GetNy())	{	ny = var->GetNy();	tab->setRowCount(ny);	rc=true;	}
 	if(kz>=var->GetNz())	{	kz = 0;	emit sliceChanged(0);	}
 	if(nz!=var->GetNz())	{	nz = var->GetNz();	emit nzChanged(nz);		}
-	const mglData *dd = dynamic_cast<const mglData *>(var);	if(dd)	id = QString(dd->id.c_str());
-	const mglDataC *dc = dynamic_cast<const mglDataC *>(var);	if(dc)	id = QString(dc->id.c_str());
+	id = QString(var->GetColumnId());
 	if(nz==1 && ny>1 && !id.isEmpty())
 	{
 		QStringList head;
@@ -99,7 +98,6 @@ void DatPanel::refresh()
 		}
 		tab->setHorizontalHeaderLabels(head);
 	}
-	long m=var->s.length();
 	QString s,d;
 	if(rc)
 	{
@@ -131,8 +129,10 @@ void DatPanel::refresh()
 		tab->item(j,i)->setText(s);
 	}
 	infoDlg->allowRefresh=true;	infoDlg->refresh();
+	const wchar_t *vs = var->Name();
+	long m=wcslen(vs);
 	QChar *ss = new QChar[m+1];
-	for(long i=0;i<m;i++)	ss[i] = var->s[i];
+	for(long i=0;i<m;i++)	ss[i] = vs[i];
 	s = QString(ss, m);	delete []ss;
 	d.sprintf("%d * %d * %d", nx, ny, nz);
 	ready = true;
@@ -146,7 +146,7 @@ void DatPanel::setVar(mglDataA *v)
 	nx = ny = nz = kz = 0;
 	if(v)
 	{
-		QString s = QString::fromWCharArray(v->s.c_str());
+		QString s = QString::fromWCharArray(v->Name());
 		v->o = this;	v->func = deleteDat;
 		refresh();
 		setWindowTitle(s + _(" - UDAV variable"));
@@ -258,7 +258,7 @@ void DatPanel::save()
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
-		QString s = QInputDialog::getText(this, _("UDAV - Save to HDF"), _("Enter data name"), QLineEdit::Normal, QString::fromWCharArray(var->s.c_str()), &ok);
+		QString s = QInputDialog::getText(this, _("UDAV - Save to HDF"), _("Enter data name"), QLineEdit::Normal, QString::fromWCharArray(var->Name()), &ok);
 		if(ok)	var->SaveHDF(fn.toLocal8Bit().constData(), s.toLocal8Bit().constData());
 	}
 	else 	var->Save(fn.toLocal8Bit().constData());
@@ -280,7 +280,7 @@ void DatPanel::load()
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
-		QString s = QInputDialog::getText(this, _("UDAV - Read from HDF"), _("Enter data name"), QLineEdit::Normal, QString::fromWCharArray(var->s.c_str()), &ok);
+		QString s = QInputDialog::getText(this, _("UDAV - Read from HDF"), _("Enter data name"), QLineEdit::Normal, QString::fromWCharArray(var->Name()), &ok);
 		if(ok)	d->ReadHDF(fn.toLocal8Bit().constData(), s.toLocal8Bit().constData());
 	}
 	else 	d->Read(fn.toLocal8Bit().constData());
@@ -558,7 +558,7 @@ void DatPanel::newdat()
 	bool res = d->exec();
 	QString 	val = f1->text(), mgl;
 	int k = c->currentIndex();
-	QString self = QString::fromWCharArray(var->s.c_str());
+	QString self = QString::fromWCharArray(var->Name());
 	if(res)
 	{
 		if(k<0)
@@ -635,7 +635,7 @@ void DatPanel::oper()
 	bool res = d->exec();
 	QString 	val = f1->text(), mgl;
 	int k = c->currentIndex();
-	QString self = QString::fromWCharArray(var->s.c_str());
+	QString self = QString::fromWCharArray(var->Name());
 	if(res)
 	{
 		if(k<0)
@@ -836,5 +836,5 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 }
 //-----------------------------------------------------------------------------
-QString DatPanel::dataName()	{	return QString::fromWCharArray(var->s.c_str());	}
+QString DatPanel::dataName()	{	return QString::fromWCharArray(var->Name());	}
 //-----------------------------------------------------------------------------

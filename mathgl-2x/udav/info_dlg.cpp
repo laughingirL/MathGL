@@ -63,7 +63,7 @@ void InfoDialog::refresh(bool force)
 {
 	if(!var || (!force && (!allowRefresh || !isVisible())))	return;
 	QString text, name, sub;
-	name = QString::fromWCharArray(var->s.c_str());
+	name = QString::fromWCharArray(var->Name());
 	sub = "(:,:,"+QString::number(kz)+")\n";
 	int i = kind->currentIndex();
 	if(i<1)	text = "yrange "+name+"\nplot "+name + sub;

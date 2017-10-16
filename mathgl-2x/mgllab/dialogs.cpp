@@ -630,7 +630,7 @@ public:
 		for(long i=0;i<n;i++)
 		{
 			HCDT d = Parse->GetVar(i);
-			if(!d->temp)	name->add(wcstombs(d->s).c_str());
+			if(!d->temp)	name->add(wcstombs(d->Name()).c_str());
 		}
 		x1->value(0);	x2->value(0);
 		y1->value(0);	y2->value(0);

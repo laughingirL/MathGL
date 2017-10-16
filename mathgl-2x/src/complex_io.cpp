@@ -108,8 +108,10 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)
 			if(j>=nb)	break;
 			if(b[j]=='#')
 			{
+				std::string id;
 				if(j<nb-1 && b[j+1]=='#')	for(long i=j+2;i<nb;i++)
-					if(b[i]>='a' && b[i]<='z')	d->id.push_back(b[i]);
+					if(b[i]>='a' && b[i]<='z')	id.push_back(b[i]);
+				d->SetColumnId(id.c_str());
 				break;
 			}
 			char *s=b+j;
@@ -225,11 +227,6 @@ void MGL_EXPORT mgl_datac_rearrange(HADT d, long mx,long my,long mz)
 void MGL_EXPORT mgl_datac_rearrange_(uintptr_t *d, int *mx, int *my, int *mz)
 {	mgl_datac_rearrange(_DC_,*mx,*my,*mz);	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_set_id(HADT d, const char *ids)	{	d->id = ids;	}
-void MGL_EXPORT mgl_datac_set_id_(uintptr_t *d, const char *eq,int l)
-{	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
-	mgl_datac_set_id(_DC_, s);	delete []s;	}
-//-----------------------------------------------------------------------------
 std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns)
 {
 	std::string out;
@@ -240,7 +237,11 @@ std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns)
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data
 		const mglDataC *dc = dynamic_cast<const mglDataC *>(d);
-		if(dc && !dc->id.empty())	out += "## "+dc->id+'\n';
+		if(dc)
+		{
+			std::string id = dc->GetColumnId();
+			if(!id.empty())	out += "## "+id+'\n';
+		}
 		for(long i=0;i<ny;i++)
 		{
 			for(long j=0;j<nx-1;j++)
@@ -336,7 +337,7 @@ void MGL_EXPORT mgl_datac_create(HADT d,long mx,long my,long mz)
 	d->nx = mx>0 ? mx:1;	d->ny = my>0 ? my:1;	d->nz = mz>0 ? mz:1;
 	if(d->a && !d->link)	delete [](d->a);
 	d->a = new dual[d->nx*d->ny*d->nz];
-	d->id.clear();	d->link=false;
+	d->NewId();	d->link=false;
 	memset(d->a,0,d->nx*d->ny*d->nz*sizeof(dual));
 }
 void MGL_EXPORT mgl_datac_create_(uintptr_t *d, int *nx,int *ny,int *nz)
@@ -624,20 +625,20 @@ void MGL_EXPORT mgl_datac_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 {
-	std::wstring s = d->s;	d->s = L"u";
-	mglDataV x(d->nx,d->ny,d->nz, 0,1,'x');	x.s=L"x";
-	mglDataV y(d->nx,d->ny,d->nz, 0,1,'y');	y.s=L"y";
-	mglDataV z(d->nx,d->ny,d->nz, 0,1,'z');	z.s=L"z";
-	mglDataV i(d->nx,d->ny,d->nz, 0,d->nx-1,'x');	i.s=L"i";
-	mglDataV j(d->nx,d->ny,d->nz, 0,d->ny-1,'y');	j.s=L"j";
-	mglDataV k(d->nx,d->ny,d->nz, 0,d->nz-1,'z');	k.s=L"k";
-	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
-	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
+	std::wstring s = d->Name();	d->Name(L"u");
+	mglDataV x(d->nx,d->ny,d->nz, 0,1,'x');	x.Name(L"x");
+	mglDataV y(d->nx,d->ny,d->nz, 0,1,'y');	y.Name(L"y");
+	mglDataV z(d->nx,d->ny,d->nz, 0,1,'z');	z.Name(L"z");
+	mglDataV i(d->nx,d->ny,d->nz, 0,d->nx-1,'x');	i.Name(L"i");
+	mglDataV j(d->nx,d->ny,d->nz, 0,d->ny-1,'y');	j.Name(L"j");
+	mglDataV k(d->nx,d->ny,d->nz, 0,d->nz-1,'z');	k.Name(L"k");
+	mglDataV r(d->nx,d->ny,d->nz);	r.Name(L"#$mgl");
+	mglData v(vdat), w(wdat);	v.Name(L"v");	w.Name(L"w");
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(d);
 	list.push_back(&v);	list.push_back(&w);	list.push_back(&r);
 	list.push_back(&i);	list.push_back(&j);	list.push_back(&k);
-	d->Move(mglFormulaCalcC(eq,list));	d->s = s;
+	d->Move(mglFormulaCalcC(eq,list));	d->Name(s.c_str());
 }
 void MGL_EXPORT mgl_datac_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;

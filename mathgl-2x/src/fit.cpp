@@ -77,7 +77,7 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 	mglDataV *var = new mglDataV[fd->m];
 	std::vector<mglDataA*> list;
 	for(long i=0;i<fd->m;i++)
-	{	var[i].s=fd->var[i];	var[i].Fill(gsl_vector_get(x,i));	list.push_back(var+i);	}
+	{	var[i].s = fd->var[i];	var[i].Fill(gsl_vector_get(x,i));	list.push_back(var+i);	}
 	if(fd->x)	list.push_back(fd->x);
 	if(fd->y)	list.push_back(fd->y);
 	if(fd->z)	list.push_back(fd->z);
@@ -100,7 +100,7 @@ int MGL_NO_EXPORT mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 	mglDataV *var = new mglDataV[fd->m];
 	std::vector<mglDataA*> list;
 	for(long i=0;i<fd->m;i++)
-	{	var[i].s=fd->var[i];	var[i].Fill(gsl_vector_get(x,i));	list.push_back(var+i);	}
+	{	var[i].s = fd->var[i];	var[i].Fill(gsl_vector_get(x,i));	list.push_back(var+i);	}
 	if(fd->x)	list.push_back(fd->x);
 	if(fd->y)	list.push_back(fd->y);
 	if(fd->z)	list.push_back(fd->z);
@@ -131,7 +131,7 @@ int MGL_NO_EXPORT mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f
 	mglDataV *var = new mglDataV[fd->m];
 	std::vector<mglDataA*> list;
 	for(long i=0;i<fd->m;i++)
-	{	var[i].s=fd->var[i];	var[i].Fill(gsl_vector_get(x,i));	list.push_back(var+i);	}
+	{	var[i].s = fd->var[i];	var[i].Fill(gsl_vector_get(x,i));	list.push_back(var+i);	}
 	if(fd->x)	list.push_back(fd->x);
 	if(fd->y)	list.push_back(fd->y);
 	if(fd->z)	list.push_back(fd->z);
@@ -301,10 +301,10 @@ void MGL_NO_EXPORT mgl_fill_fit(HMGL gr, mglData &fit, mglData &in, mglFitData &
 	mglDataV *vv = new mglDataV[fd.m];
 	std::vector<mglDataA*> list;
 	for(long i=0;i<fd.m;i++)
-	{	vv[i].s=var[i];	vv[i].Fill(in.a[i]);	list.push_back(vv+i);	}
-	mglDataV x(nx,ny,nz, gr->Min.x,gr->Max.x,'x');	x.s = L"x";	list.push_back(&x);
-	mglDataV y(nx,ny,nz, gr->Min.y,gr->Max.y,'y');	y.s = L"y";	list.push_back(&y);
-	mglDataV z(nx,ny,nz, gr->Min.z,gr->Max.z,'z');	z.s = L"z";	list.push_back(&z);
+	{	vv[i].s = var[i];	vv[i].Fill(in.a[i]);	list.push_back(vv+i);	}
+	mglDataV x(nx,ny,nz, gr->Min.x,gr->Max.x,'x');	x.Name(L"x");	list.push_back(&x);
+	mglDataV y(nx,ny,nz, gr->Min.y,gr->Max.y,'y');	y.Name(L"y");	list.push_back(&y);
+	mglDataV z(nx,ny,nz, gr->Min.z,gr->Max.z,'z');	z.Name(L"z");	list.push_back(&z);
 	HMDT res = mglFormulaCalc(fd.eq, list);
 	long nn = nx*ny*nz;
 	memcpy(fit.a+k*nn,res->a,nn*sizeof(mreal));
@@ -325,7 +325,7 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 	if(!var || *var==0)
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
 
-	mglData x(xx), y(yy), s(ss);	x.s=L"x";
+	mglData x(xx), y(yy), s(ss);	x.Name(L"x");
 	long mm = yy->GetNy()*yy->GetNz();
 #pragma omp parallel for
 	for(long i=0;i<m;i++)	if(mgl_isnan(x.a[i]))
@@ -368,7 +368,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 	if(!var || *var==0)
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
 
-	mglData x(m, n), y(m, n), z(zz), s(ss);	x.s=L"x";	y.s=L"y";
+	mglData x(m, n), y(m, n), z(zz), s(ss);	x.Name(L"x");	y.Name(L"y");
 	long nz = zz->GetNz(), mm = n*m;
 #pragma omp parallel for collapse(2)
 	for(long j=0;j<n;j++)	for(long i=0;i<m;i++)
@@ -415,7 +415,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
 
 	mglData x(m,n,l), y(m,n,l), z(m,n,l), a(aa), s(ss);
-	x.s=L"x";	y.s=L"y";	z.s=L"z";
+	x.Name(L"x");	y.Name(L"y");	z.Name(L"z");
 #pragma omp parallel for collapse(3)
 	for(long k=0;k<l;k++)	for(long j=0;j<n;j++)	for(long i=0;i<m;i++)
 	{

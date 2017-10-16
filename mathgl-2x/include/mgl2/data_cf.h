@@ -170,9 +170,6 @@ uintptr_t MGL_EXPORT mgl_data_section_(uintptr_t *d, uintptr_t *ids, const char 
 HMDT MGL_EXPORT mgl_data_section_val(HCDT dat, long id, char dir, mreal val);
 uintptr_t MGL_EXPORT mgl_data_section_val_(uintptr_t *d, int *id, const char *dir, mreal *val,int);
 
-/// Set names for columns (slices)
-void MGL_EXPORT mgl_data_set_id(HMDT d, const char *id);
-void MGL_EXPORT mgl_data_set_id_(uintptr_t *dat, const char *id,int l);
 /// Equidistantly fill the data to range [x1,x2] in direction dir
 void MGL_EXPORT mgl_data_fill(HMDT dat, mreal x1,mreal x2,char dir);
 void MGL_EXPORT mgl_data_fill_(uintptr_t *dat, mreal *x1,mreal *x2,const char *dir,int);

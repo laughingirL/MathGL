@@ -209,7 +209,7 @@ void ScriptWindow::mem_init()
 			else if((sv>>20L)>0)	{	e=ext[3];	sv = sv>>20L;	}
 			else if((sv>>10L)>0)	{	e=ext[2];	sv = sv>>10L;	}
 			else	e=ext[1];
-			snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld %s", v->s.c_str(), v->GetNx(), v->GetNy(), v->GetNz(), sv, e);
+			snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld %s", v->Name(), v->GetNx(), v->GetNy(), v->GetNz(), sv, e);
 			var->add(str,v);
 		}
 	}
@@ -236,7 +236,7 @@ void ScriptWindow::mem_pressed(int kind)
 		w->update(v);	w->show();
 	}
 	else if(dat && kind==1)	info_dlg_cb(v);
-	else if(dat && kind==2)	Parse->DeleteVar(v->s.c_str());
+	else if(dat && kind==2)	Parse->DeleteVar(v->Name());
 	else if(kind==3)
 	{
 		const char *name = fl_input(_("Enter name for new variable"),"dat");
@@ -254,7 +254,7 @@ void ScriptWindow::mem_pressed(int kind)
 			const char *ext = fl_filename_ext(newfile);
 			if(!strcmp(ext,"h5") || !strcmp(ext,"hdf"))	// this is HDF file
 			{
-				std::string name = wcstombs(v->s);
+				std::string name = wcstombs(v->Name());
 				v->SaveHDF(newfile, name.c_str());
 			}
 			else	v->Save(newfile);
@@ -409,7 +409,7 @@ public:
 		{
 			nx=dat->GetNx();	ny=dat->GetNy();	nz=dat->GetNz();
 			result = dat->PrintInfo();	out->value(result.c_str());
-			name = wcstombs(dat->s);
+			name = wcstombs(dat->Name());
 			if(nz>1)		plot_3d();
 			else if(ny>1)	plot_2d();
 			else			plot_1d();

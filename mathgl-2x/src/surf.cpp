@@ -74,9 +74,9 @@ void MGL_EXPORT mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char 
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	mglData z(n,n);
-	mglDataV x(n,n,1, gr->Min.x,gr->Max.x,'x');	x.s=L"x";
-	mglDataV y(n,n,1, gr->Min.y,gr->Max.y,'y');	y.s=L"y";
-	mglDataV t(n,n);	t.s=L"#$mgl";
+	mglDataV x(n,n,1, gr->Min.x,gr->Max.x,'x');	x.Name(L"x");
+	mglDataV y(n,n,1, gr->Min.y,gr->Max.y,'y');	y.Name(L"y");
+	mglDataV t(n,n);	t.Name(L"#$mgl");
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&t);
 	z.Move(mglFormulaCalc(eqZ,list));
@@ -89,9 +89,9 @@ void MGL_EXPORT mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const c
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	mglData z(n,n), x(n,n), y(n,n);
-	mglDataV u(n,n,1, 0,1,'x');	u.s=L"u";
-	mglDataV v(n,n,1, 0,1,'y');	v.s=L"v";
-	mglDataV t(n,n);	t.s=L"#$mgl";
+	mglDataV u(n,n,1, 0,1,'x');	u.Name(L"u");
+	mglDataV v(n,n,1, 0,1,'y');	v.Name(L"v");
+	mglDataV t(n,n);	t.Name(L"#$mgl");
 	std::vector<mglDataA*> list;
 	list.push_back(&u);	list.push_back(&v);	list.push_back(&t);
 	x.Move(mglFormulaCalc(eqX,list));

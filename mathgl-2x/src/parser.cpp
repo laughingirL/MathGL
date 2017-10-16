@@ -307,7 +307,8 @@ mglDataA *mglParser::FindVar(const wchar_t *name)
 {
 	if(name[0]=='!')	name = name+1;	// ignore complex prefix
  	for(size_t i=0;i<DataList.size();i++)
- 		if(DataList[i] && DataList[i]->s==name)	return DataList[i];
+ 		if(DataList[i] && !wcscmp(DataList[i]->Name(),name))
+			return DataList[i];
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -315,9 +316,9 @@ mglDataA *mglParser::AddVar(const wchar_t *name)
 {	// TODO add list of forbidden names (like function names)
 	mglDataA *d=FindVar(name);
 	if(name[0]=='!' && dynamic_cast<mglDataC*>(d)==0)
-	{	d = new mglDataC;	d->s=(name+1);	DataList.push_back(d);	}
+	{	d = new mglDataC;	d->Name(name+1);	DataList.push_back(d);	}
 	else if(!d)
-	{	d = new mglData;	d->s = name;	DataList.push_back(d);	}
+	{	d = new mglData;	d->Name(name);	DataList.push_back(d);	}
 	return d;
 }
 //-----------------------------------------------------------------------------
@@ -458,13 +459,13 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 		{	// this is temp data
 			mglData *u=new mglData;
 			std::wstring s = str.substr(1,str.length()-2);
-			a[n-1].w = u->s = L"/*"+s+L"*/";
-			a[n-1].type = 0;
+			a[n-1].w = L"/*"+s+L"*/";
+			a[n-1].type = 0;	u->Name(a[n-1].w.c_str());
 			ParseDat(gr, s, *u);	a[n-1].d = u;
 			u->temp=true;	DataList.push_back(u);
 		}
 		else if((v = FindVar(str.c_str()))!=0)	// try to find normal variables (for data creation)
-		{	a[n-1].type=0;	a[n-1].d=v;	a[n-1].w=v->s;	}
+		{	a[n-1].type=0;	a[n-1].d=v;	a[n-1].w=v->Name();	}
 		else if((f = FindNum(str.c_str()))!=0)	// try to find normal number (for data creation)
 		{	a[n-1].type=2;	a[n-1].d=0;	a[n-1].v=f->d;	a[n-1].c=f->c;	a[n-1].w = f->s;	}
 		else if(str[0]=='!')	// complex array is asked
@@ -912,7 +913,7 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 	else if(!Skip && !com.compare(L"if"))
 	{
 		bool cond=0;	n=1;
-		if(m>2 && a[1].type==0 && !a[1].d->s.compare(L"then"))
+		if(m>2 && a[1].type==0 && !wcscmp(a[1].d->Name(),L"then"))
 		{	n = -1;	a[1].d->temp=true;	}	// NOTE: ugly hack :(
 		else if(a[0].type==2)
 		{	n = 0;	cond = (a[0].v!=0);	}
@@ -1115,8 +1116,9 @@ void mglParser::DeleteVar(const char *name)
 //-----------------------------------------------------------------------------
 void mglParser::DeleteVar(const wchar_t *name)
 {
-	for(size_t i=0;i<DataList.size();i++)	if(DataList[i] && DataList[i]->s==name)
-	{	mglDataA *u=DataList[i];	DataList[i]=0;	delete u;	}
+	for(size_t i=0;i<DataList.size();i++)
+		if(DataList[i] && !wcscmp(DataList[i]->Name(),name))
+		{	mglDataA *u=DataList[i];	DataList[i]=0;	delete u;	}
 }
 //-----------------------------------------------------------------------------
 void mglParser::AddCommand(const mglCommand *cmd)

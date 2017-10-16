@@ -28,7 +28,6 @@
 mreal MGL_EXPORT mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 mreal MGL_EXPORT mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);
 mreal MGL_EXPORT mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns);
 //-----------------------------------------------------------------------------
 /// Class for working with data array
 class MGL_EXPORT mglData : public mglDataA
@@ -39,7 +38,6 @@ using mglDataA::Momentum;
 	long ny;		///< number of points in 2nd dimensions ('y' dimension)
 	long nz;		///< number of points in 3d dimensions ('z' dimension)
 	mreal *a;		///< data array
-	std::string id;	///< column (or slice) names
 	bool link;		///< use external data (i.e. don't free it)
 
 	/// Initiate by other mglData variable
@@ -230,11 +228,6 @@ using mglDataA::Momentum;
 	/// Put array to data element(s)
 	inline void Put(const mglDataA &dat, long i=-1, long j=-1, long k=-1)
 	{	mgl_data_put_dat(this,&dat,i,j,k);	}
-	/// Set names for columns (slices)
-	inline void SetColumnId(const char *ids)
-	{	mgl_data_set_id(this,ids);	}
-	/// Make new id
-	inline void NewId()	{	id.clear();	}
 
 	/// Read data from tab-separated text file with auto determining size
 	inline bool Read(const char *fname)

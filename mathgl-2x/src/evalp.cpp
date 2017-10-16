@@ -315,7 +315,7 @@ void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
 MGL_LOCAL_PURE const mglDataA *FindVar(const std::vector<mglDataA*> &head, const std::wstring &name)
 {
 	for(size_t i=0;i<head.size();i++)
-		if(head[i] && head[i]->s==name)	return head[i];
+		if(head[i] && head[i]->Name()==name)	return head[i];
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -430,7 +430,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		HMDT a2 = mglFormulaCalc(str.substr(n+1),arg, head);
 		HMDT res = mgl_data_combine(a1,a2);
 		mgl_delete_data(a1);	mgl_delete_data(a2);
-		return res;
+		return res?res:new mglData;
 	}
 	n=mglFindInText(str,"^");	// highest priority -- power
 	if(n>=0)	return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, ipw);
@@ -567,7 +567,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 				mgl_wcstombs(buf, str.substr(1).c_str(), len-1);	buf[len-1]=0;
 				HMDT res = mgl_data_column(v,buf);
 				if(tmp)	mgl_delete_data(tmp);
-				delete []buf;	return res;
+				delete []buf;	return res?res:new mglData;
 			}
 			else
 			{
@@ -592,7 +592,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 				HMDT res = mgl_data_subdata_ext(v,a1,a2,a3);
 				if(tmp)	mgl_delete_data(tmp);
 				mgl_delete_data(a1);	mgl_delete_data(a2);
-				mgl_delete_data(a3);	return res;
+				mgl_delete_data(a3);	return res?res:new mglData;
 			}
 			if(tmp)	mgl_delete_data(tmp);
 		}
@@ -887,7 +887,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 		HADT a2 = mglFormulaCalcC(str.substr(n+1),arg, head);
 		HADT res = mgl_datac_combine(a1,a2);
 		mgl_delete_datac(a1);	mgl_delete_datac(a2);
-		return res;
+		return res?res:new mglDataC;
 	}
 	n=mglFindInText(str,"^");				// highest priority -- power
 	if(n>=0)
@@ -1021,7 +1021,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 				mgl_wcstombs(buf, str.substr(1).c_str(), len-1);	buf[len-1]=0;
 				HADT res = mgl_datac_column(v,buf);
 				if(tmp)	mgl_delete_datac(tmp);
-				delete []buf;	return res;
+				delete []buf;	return res?res:new mglDataC;
 			}
 			else
 			{
@@ -1046,7 +1046,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 				HADT res = mgl_datac_subdata_ext(v,a1,a2,a3);
 				if(tmp)	mgl_delete_datac(tmp);
 				mgl_delete_data(a1);	mgl_delete_data(a2);
-				mgl_delete_data(a3);	return res;
+				mgl_delete_data(a3);	return res?res:new mglDataC;
 			}
 				if(tmp)	mgl_delete_datac(tmp);
 		}

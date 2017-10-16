@@ -596,10 +596,7 @@ int MGL_NO_EXPORT mgls_idset(mglGraph *, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	if(k[0]=='d' && a[0].d->temp)	return 5;
-	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
-	if(d && !strcmp(k,"ds"))	d->SetColumnId(a[1].s.c_str());
-	else if(c && !strcmp(k,"ds"))	c->SetColumnId(a[1].s.c_str());
+	if(!strcmp(k,"ds"))	a[0].d->SetColumnId(a[1].s.c_str());
 	else res = 1;
 	return res;
 }

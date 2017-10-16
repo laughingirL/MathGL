@@ -358,10 +358,10 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 {
 	if(!how || !(*how) || !strchr("xyz",dir))	return 0;
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
-	mglDataV x(nx,ny,nz, 0,1,'x');	x.s=L"x";
-	mglDataV y(nx,ny,nz, 0,1,'y');	y.s=L"y";
-	mglDataV z(nx,ny,nz, 0,1,'z');	z.s=L"z";
-	mglDataC u(dat);	u.s=L"u";	// NOTE slow !!!
+	mglDataV x(nx,ny,nz, 0,1,'x');	x.Name(L"x");
+	mglDataV y(nx,ny,nz, 0,1,'y');	y.Name(L"y");
+	mglDataV z(nx,ny,nz, 0,1,'z');	z.Name(L"z");
+	mglDataC u(dat);	u.Name(L"u");	// NOTE slow !!!
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&u);
 	HADT res=mglFormulaCalcC(how,list), b=0;
@@ -455,24 +455,18 @@ uintptr_t MGL_EXPORT mgl_datac_evaluate_(uintptr_t *d, uintptr_t *idat, uintptr_
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_column(HCDT dat, const char *eq)
 {
-	const mglData *dd=dynamic_cast<const mglData *>(dat);
 	std::vector<mglDataA*> list;
-	if(dd && dd->id.length()>0)	for(size_t i=0;i<dd->id.length();i++)
+	const char *id = dat->GetColumnId();
+	size_t len = strlen(id);
+	for(size_t i=0;i<len;i++)
 	{
 		mglDataT *col = new mglDataT(*dat);
-		col->SetInd(i,dd->id[i]);
-		list.push_back(col);
-	}
-	const mglDataC *dc=dynamic_cast<const mglDataC *>(dat);
-	if(dc && dc->id.length()>0)	for(size_t i=0;i<dc->id.length();i++)
-	{
-		mglDataT *col = new mglDataT(*dat);
-		col->SetInd(i,dc->id[i]);
+		col->SetInd(i,id[i]);
 		list.push_back(col);
 	}
 	if(list.size()==0)	return 0;	// no named columns
 	mglDataV *t = new mglDataV(dat->GetNy(),dat->GetNz());
-	t->s=L"#$mgl";	list.push_back(t);
+	t->Name(L"#$mgl");	list.push_back(t);
 	HADT r = mglFormulaCalcC(eq,list);
 	for(size_t i=0;i<list.size();i++)	delete list[i];
 	return r;

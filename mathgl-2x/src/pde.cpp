@@ -180,11 +180,11 @@ HADT MGL_EXPORT mgl_pde_adv_c(HMGL gr, const char *func, HCDT ini_re, HCDT ini_i
 
 	mglDataC *res=new mglDataC(nx, nt);
 	mglData hIm(nx,nx);	// for advanced damping calculation
-	mglDataC u(nx);	u.s = L"u";
+	mglDataC u(nx);	u.Name(L"u");
 	mglDataV x(nx,nx), y(nx,nx), r(nx,nx);
-	mglDataW p(nx,nx);	p.s = L"p";
+	mglDataW p(nx,nx);	p.Name(L"p");
 	bool old = func[0]==';';	if(old)	func=func+1;
-	x.s = L"x";	y.s = L"y";	r.s=L"#$mgl";
+	x.Name(L"x");	y.Name(L"y");	r.Name(L"#$mgl");
 	const mreal dp = 2*M_PI/(Max.x-Min.x), dd = k0*dt/2;
 	x.Fill(Min.x,Max.x,'x');	p.Freq(dp/k0,'y');
 	std::vector<mglDataA*> list;
@@ -263,10 +263,10 @@ void MGL_NO_EXPORT mgl_pde_hprep(const mgl_pde_ham *f)
 	const long nx = f->nx, ny = f->ny;
 	mglDataV x(nx,ny), y(nx,ny), z, r(nx,ny);
 	mglDataW p(nx,ny), q(nx,ny);
-	x.s = L"x";	y.s = L"y";	p.s = L"p";	q.s = L"q";	r.s=L"#$mgl";
-	z.s = L"z";	z.Fill(f->zz);
+	x.Name(L"x");	y.Name(L"y");	p.Name(L"p");	q.Name(L"q");	r.Name(L"#$mgl");
+	z.Name(L"z");	z.Fill(f->zz);
 	dual dd(0,f->dd);
-	mglData u(nx,ny);	u.s = L"u";
+	mglData u(nx,ny);	u.Name(L"u");
 #pragma omp parallel for
 	for(long i=0;i<nx*ny;i++)	u.a[i] = abs(f->a[i]);
 	std::vector<mglDataA*> list;

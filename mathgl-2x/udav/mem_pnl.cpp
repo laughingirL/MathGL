@@ -132,7 +132,7 @@ void MemPanel::infoData()
 	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toLocal8Bit().constData());
 	if(!v)	return;
 	infoDlg->setVar(v);
-	QString s = QString::fromWCharArray(v->s.c_str());
+	QString s = QString::fromWCharArray(v->Name());
 	infoDlg->setWindowTitle(s + _(" - UDAV preview"));
 	infoDlg->refresh();
 	infoDlg->show();
@@ -150,7 +150,7 @@ void MemPanel::refresh()
 	{
 		mglDataA *v = parser.GetVar(i);
 		if(!v)	continue;
-		s = QString::fromWCharArray(v->s.c_str());
+		s = QString::fromWCharArray(v->Name());
 		it = new QTableWidgetItem(s);
 		tab->setItem(m,0,it);	it->setFlags(flags);
 		s.sprintf("%ld * %ld * %ld", v->GetNx(), v->GetNy(), v->GetNz());

@@ -79,8 +79,18 @@ double MGL_EXPORT mgl_rnd_();
 void MGL_EXPORT mgl_data_set_name(mglDataA *dat, const char *name);
 void MGL_EXPORT mgl_data_set_name_(uintptr_t *dat, const char *name,int);
 void MGL_EXPORT mgl_data_set_name_w(mglDataA *dat, const wchar_t *name);
+/// Get name of data variable
+MGL_EXPORT const wchar_t *mgl_data_get_name_w(HCDT dat);
 /// Set callback function which is called at deleting variable
 void MGL_EXPORT mgl_data_set_func(mglDataA *dat, void (*func)(void *), void *par);
+
+#define mgl_datac_set_id	mgl_data_set_id
+#define mgl_datac_set_id_	mgl_data_set_id_
+/// Set names for columns (slices)
+void MGL_EXPORT mgl_data_set_id(mglDataA *d, const char *ids);
+void MGL_EXPORT mgl_datac_set_id_(uintptr_t *d, const char *eq,int );
+/// Get names for columns (slices)
+MGL_EXPORT const char *mgl_data_get_id(HCDT d);
 
 /// Save whole data array (for ns=-1) or only ns-th slice to text file
 void MGL_EXPORT mgl_data_save(HCDT dat, const char *fname,long ns);
@@ -208,12 +218,27 @@ class MGL_EXPORT mglDataA
 {
 public:
 	std::wstring s;	///< Data name
+	std::string id;	///< column (or slice) names
+
 	bool temp;		///< This is temporary variable
 	void (*func)(void *);	///< Callback function for destroying
 	void *o; 		///< Pointer to external object
 
 	mglDataA()	{	temp=false;	func=0;	o=0;	}
 	virtual ~mglDataA()	{	if(func)	func(o);	}
+	/// Set name for data variable (can be used in mgl_formula_calc() or in MGL scripts)
+	inline void Name(const char *name)		{	mgl_data_set_name(this,name);	}
+	inline void Name(const wchar_t *name)	{	mgl_data_set_name_w(this,name);	}
+	/// Get name of data variable
+	inline const wchar_t *Name()	const	{	return mgl_data_get_name_w(this);	}
+
+	/// Set names for columns (slices)
+	inline void SetColumnId(const char *ids)	{	mgl_data_set_id(this,ids);	}
+	/// Make new id
+	inline void NewId()	{	mgl_data_set_id(this,"");	}
+	/// Get names for columns (slices)
+	inline const char *GetColumnId() const	{	return mgl_data_get_id(this);	}
+	
 	virtual void set_v(mreal /*val*/, long /*i*/,long /*j*/=0,long /*k*/=0)	{}
 	/// Get the interpolated value and its derivatives in given data cell without border checking
 	virtual mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const =0;

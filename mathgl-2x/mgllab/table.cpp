@@ -460,7 +460,7 @@ void save_dat_cb(Fl_Widget*, void*v)
 		const char *ext = fl_filename_ext(newfile);
 		if(!strcmp(ext,"h5") || !strcmp(ext,"hdf"))	// this is HDF file
 		{
-			std::string name = wcstombs(e->var->s);
+			std::string name = wcstombs(e->var->Name());
 			e->var->SaveHDF(newfile, name.c_str());
 		}
 		else	e->var->Save(newfile);
@@ -503,7 +503,7 @@ void list_dat_cb(Fl_Widget*, void*v)
 	{	fl_message(_("Incorrect type of base data"));	return;	}
 	if(e->var->GetNz()>1)	fl_message(_("Only current slice will be inserted"));
 
-	std::string list = "list " + wcstombs(e->var->s);
+	std::string list = "list " + wcstombs(e->var->Name());
 	long k=e->get_slice(), nx=e->var->GetNx(), ny=e->var->GetNy();
 	for(long j=0;j<ny;j++)
 	{
@@ -897,7 +897,7 @@ void TableWindow::update(mglDataA *v)
 {
 	static std::string name;
 	if(v==0)	return;
-	name = wcstombs(v->s);
+	name = wcstombs(v->Name());
 	w->label(name.c_str());
 	v->func = delete_cb;
 	if(var)	var->o = 0;

@@ -388,7 +388,7 @@ int main(int argc,char **argv)
 			char buf[128];
 			while(!feof(fi))
 			{	fgets(buf,128,fi);	
-				if(!strstr(buf,"model name"));
+				if(!strstr(buf,"model name"))
 				{	fprintf(fp,"@c %s\n",buf);	break;	}	}
 			fclose(fi);
 		}
