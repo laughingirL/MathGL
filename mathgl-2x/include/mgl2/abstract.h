@@ -206,7 +206,7 @@ struct MGL_EXPORT mglNum
 {
 	mreal d;		///< Number itself
 	dual c;
-	std::wstring s;	///< Number name
+	mglString s;	///< Number name
 	mglNum(mreal val=0):d(val),c(val)	{}
 	mglNum(const mglNum &n):d(n.d),c(n.c),s(n.s) {}
 	const mglNum &operator=(const mglNum &n)
@@ -217,8 +217,8 @@ struct MGL_EXPORT mglNum
 class MGL_EXPORT mglDataA
 {
 public:
-	std::wstring s;	///< Data name
-	std::string id;	///< column (or slice) names
+	mglString s;	///< Data name
+	mglString id;	///< column (or slice) names
 
 	bool temp;		///< This is temporary variable
 	void (*func)(void *);	///< Callback function for destroying
@@ -227,17 +227,17 @@ public:
 	mglDataA()	{	temp=false;	func=0;	o=0;	}
 	virtual ~mglDataA()	{	if(func)	func(o);	}
 	/// Set name for data variable (can be used in mgl_formula_calc() or in MGL scripts)
-	inline void Name(const char *name)		{	mgl_data_set_name(this,name);	}
-	inline void Name(const wchar_t *name)	{	mgl_data_set_name_w(this,name);	}
+	inline void Name(const char *name)		{	s = name;	}
+	inline void Name(const wchar_t *name)	{	s = name;	}
 	/// Get name of data variable
-	inline const wchar_t *Name()	const	{	return mgl_data_get_name_w(this);	}
+	inline const wchar_t *Name()	const	{	return s.w;	}
 
 	/// Set names for columns (slices)
-	inline void SetColumnId(const char *ids)	{	mgl_data_set_id(this,ids);	}
+	inline void SetColumnId(const char *ids)	{	id = ids;	}
 	/// Make new id
-	inline void NewId()	{	mgl_data_set_id(this,"");	}
+	inline void NewId()	{	id = "";	}
 	/// Get names for columns (slices)
-	inline const char *GetColumnId() const	{	return mgl_data_get_id(this);	}
+	inline const char *GetColumnId() const	{	return id.s;	}
 	
 	virtual void set_v(mreal /*val*/, long /*i*/,long /*j*/=0,long /*k*/=0)	{}
 	/// Get the interpolated value and its derivatives in given data cell without border checking

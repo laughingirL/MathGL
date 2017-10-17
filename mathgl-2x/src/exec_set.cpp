@@ -32,7 +32,7 @@ wchar_t *mgl_str_copy(const char *s);
 int MGL_NO_EXPORT mgls_addlegend(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"ss"))	gr->AddLegend(a[0].w.c_str(),a[1].s.c_str());
+	if(!strcmp(k,"ss"))	gr->AddLegend(a[0].s.w,a[1].s.s);
 	else	res = 1;
 	return res;
 }
@@ -49,7 +49,7 @@ int MGL_NO_EXPORT mgls_adjust(mglGraph *gr, long , mglArg *a, const char *k, con
 {
 	int res=0;
 	if(k[0]==0)	gr->Adjust();
-	else if(!strcmp(k,"s"))	gr->Adjust(a[0].s.c_str());
+	else if(!strcmp(k,"s"))	gr->Adjust(a[0].s.s);
 	else res = 1;
 	return res;
 }
@@ -108,9 +108,9 @@ int MGL_NO_EXPORT mgls_axisstl(mglGraph *gr, long , mglArg *a, const char *k, co
 {
 	int res=0;
 	if(k[0]==0)	gr->SetAxisStl();
-	else if(!strcmp(k,"s"))	gr->SetAxisStl(a[0].s.c_str());
-	else if(!strcmp(k,"ss"))	gr->SetAxisStl(a[0].s.c_str(), a[1].s.c_str());
-	else if(!strcmp(k,"sss"))	gr->SetAxisStl(a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str());
+	else if(!strcmp(k,"s"))	gr->SetAxisStl(a[0].s.s);
+	else if(!strcmp(k,"ss"))	gr->SetAxisStl(a[0].s.s, a[1].s.s);
+	else if(!strcmp(k,"sss"))	gr->SetAxisStl(a[0].s.s, a[1].s.s, a[2].s.s);
 	else res = 1;
 	return res;
 }
@@ -138,7 +138,7 @@ int MGL_NO_EXPORT mgls_chdir(mglGraph *gr, long , mglArg *a, const char *k, cons
 {
 	int res=0;
 	if(!strcmp(k,"s"))
-	{	if(chdir(a[0].s.c_str()))	gr->SetWarn(mglWarnFile,"chdir");	}
+	{	if(chdir(a[0].s.s))	gr->SetWarn(mglWarnFile,"chdir");	}
 	else res = 1;
 	return res;
 }
@@ -155,7 +155,7 @@ int MGL_NO_EXPORT mgls_clf(mglGraph *gr, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	if(k[0]==0)	gr->Clf();
-	else if(!strcmp(k,"s"))	gr->Clf(a[0].s.c_str());
+	else if(!strcmp(k,"s"))	gr->Clf(a[0].s.s);
 	else if(!strcmp(k,"nnn"))	gr->Clf(a[0].v,a[1].v,a[2].v);
 	else res = 1;
 	return res;
@@ -188,9 +188,9 @@ int MGL_NO_EXPORT mgls_crange(mglGraph *gr, long , mglArg *a, const char *k, con
 int MGL_NO_EXPORT mgls_ctick(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"s"))	gr->SetTickTempl('c',a[0].w.c_str());
+	if(!strcmp(k,"s"))	gr->SetTickTempl('c',a[0].s.w);
 	else if(!strcmp(k,"n"))	gr->SetTicks('c',a[0].v,0,0);
-	else if(!strcmp(k,"ns"))	gr->SetTicks('c',a[0].v,0,0,a[1].w.c_str());
+	else if(!strcmp(k,"ns"))	gr->SetTicks('c',a[0].v,0,0,a[1].s.w);
 	else res = 1;
 	return res;
 }
@@ -201,7 +201,7 @@ int MGL_NO_EXPORT mgls_cut(mglGraph *gr, long , mglArg *a, const char *k, const 
 	if(!strcmp(k,"n"))	gr->SetCut(a[0].v != 0);
 	else if(!strcmp(k,"nnnnnn"))
 		gr->SetCutBox(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v));
-	else if(!strcmp(k,"s"))	gr->CutOff(a[0].s.c_str());
+	else if(!strcmp(k,"s"))	gr->CutOff(a[0].s.s);
 	else res = 1;
 	return res;
 }
@@ -243,9 +243,9 @@ int MGL_NO_EXPORT mgls_fog(mglGraph *gr, long , mglArg *a, const char *k, const 
 int MGL_NO_EXPORT mgls_font(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"s"))	gr->SetFontDef(a[0].s.c_str());
+	if(!strcmp(k,"s"))	gr->SetFontDef(a[0].s.s);
 	else if(!strcmp(k,"sn"))
-	{	gr->SetFontDef(a[0].s.c_str());	gr->SetFontSize(a[1].v);	}
+	{	gr->SetFontDef(a[0].s.s);	gr->SetFontSize(a[1].v);	}
 	else res = 1;
 	return res;
 }
@@ -292,25 +292,25 @@ int MGL_NO_EXPORT mgls_light(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else if(!strcmp(k,"n"))	gr->Light(a[0].v!=0);
 	else if(!strcmp(k,"nn"))	gr->Light(mgl_int(a[0].v),a[1].v!=0);
 	else if(!strcmp(k,"nnnn"))	gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v));
-	else if(!strcmp(k,"nnnns"))	gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.c_str()[0]);
-	else if(!strcmp(k,"nnnnsn"))gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.c_str()[0],a[5].v);
+	else if(!strcmp(k,"nnnns"))	gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.s[0]);
+	else if(!strcmp(k,"nnnnsn"))gr->AddLight(mgl_int(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.s[0],a[5].v);
 	else if(!strcmp(k,"nnnnsnn"))
-		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.c_str()[0],a[5].v,a[6].v);
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), a[4].s.s[0],a[5].v,a[6].v);
 	else if(!strcmp(k,"nnnnnnn"))
 		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v));
 	else if(!strcmp(k,"nnnnnnns"))
-		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0]);
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.s[0]);
 	else if(!strcmp(k,"nnnnnnnsn"))
-		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0],a[8].v);
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.s[0],a[8].v);
 	else if(!strcmp(k,"nnnnnnnsnn"))
-		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.c_str()[0],a[8].v,a[9].v);
+		gr->AddLight(mgl_int(a[0].v), mglPoint(a[1].v,a[2].v,a[3].v), mglPoint(a[4].v,a[5].v,a[6].v), a[7].s.s[0],a[8].v,a[9].v);
 	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_load(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"s") && gr->pr)	mgl_parser_load(gr->pr, a[0].s.c_str());
+	if(!strcmp(k,"s") && gr->pr)	mgl_parser_load(gr->pr, a[0].s.s);
 	else res = 1;
 	return res;
 }
@@ -319,7 +319,7 @@ int MGL_NO_EXPORT mgls_loadfont(mglGraph *gr, long , mglArg *a, const char *k, c
 {
 	int res=0;
 	if(k[0]==0 || (!strcmp(k,"s") && a[0].s[0]==0))	gr->RestoreFont();
-	else if(!strcmp(k,"s"))	gr->LoadFont(a[0].s.c_str());
+	else if(!strcmp(k,"s"))	gr->LoadFont(a[0].s.s);
 	else res = 1;
 	return res;
 }
@@ -336,7 +336,7 @@ int MGL_NO_EXPORT mgls_mask(mglGraph *gr, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	if(!strcmp(k,"sn"))	gr->SetMask(a[0].s[0],a[1].v);
-	else if(!strcmp(k,"ss"))	gr->SetMask(a[0].s[0],a[1].s.c_str());
+	else if(!strcmp(k,"ss"))	gr->SetMask(a[0].s[0],a[1].s.s);
 	else if(!strcmp(k,"n"))		gr->SetMaskAngle(mgl_int(a[0].v));
 	else res = 1;
 	return res;
@@ -356,9 +356,9 @@ int MGL_NO_EXPORT mgls_multiplot(mglGraph *gr, long , mglArg *a, const char *k, 
 	if(!strcmp(k,"nnnnn"))
 		gr->MultiPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v), mgl_int(a[4].v));
 	else if(!strcmp(k,"nnnnns"))
-		gr->MultiPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v), mgl_int(a[4].v), a[5].s.c_str());
+		gr->MultiPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v), mgl_int(a[4].v), a[5].s.s);
 	else if(!strcmp(k,"nnnnnsnn"))
-		gr->MultiPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v), mgl_int(a[4].v), a[5].s.c_str(), a[6].v,a[7].v);
+		gr->MultiPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), mgl_int(a[3].v), mgl_int(a[4].v), a[5].s.s, a[6].v,a[7].v);
 	else res = 1;
 	return res;
 }
@@ -383,7 +383,7 @@ int MGL_NO_EXPORT mgls_origintick(mglGraph *gr, long , mglArg *a, const char *k,
 int MGL_NO_EXPORT mgls_palette(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"s"))	gr->SetPalette(a[0].s.c_str());
+	if(!strcmp(k,"s"))	gr->SetPalette(a[0].s.s);
 	else res = 1;
 	return res;
 }
@@ -407,7 +407,7 @@ int MGL_NO_EXPORT mgls_perspective(mglGraph *gr, long , mglArg *a, const char *k
 int MGL_NO_EXPORT mgls_plotid(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"s"))	gr->SetPlotId(a[1].s.c_str());
+	if(!strcmp(k,"s"))	gr->SetPlotId(a[1].s.s);
 	else  res = 1;
 	return res;
 }
@@ -518,8 +518,8 @@ int MGL_NO_EXPORT mgls_subplot(mglGraph *gr, long , mglArg *a, const char *k, co
 {
 	int res=0;
 	if(!strcmp(k,"nnn"))	gr->SubPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v));
-	else if(!strcmp(k,"nnns"))	gr->SubPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), a[3].s.c_str());
-	else if(!strcmp(k,"nnnsnn"))	gr->SubPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), a[3].s.c_str(), a[4].v,a[5].v);
+	else if(!strcmp(k,"nnns"))	gr->SubPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), a[3].s.s);
+	else if(!strcmp(k,"nnnsnn"))	gr->SubPlot(mgl_int(a[0].v), mgl_int(a[1].v), mgl_int(a[2].v), a[3].s.s, a[4].v,a[5].v);
 	else res = 1;
 	return res;
 }
@@ -557,7 +557,7 @@ int MGL_NO_EXPORT mgls_ticktime(mglGraph *gr, long , mglArg *a, const char *k, c
 	int res=0;
 	if(!strcmp(k,"s"))	gr->SetTicksTime(a[0].s[0]);
 	else if(!strcmp(k,"sn"))	gr->SetTicksTime(a[0].s[0],a[1].v);
-	else if(!strcmp(k,"sns"))	gr->SetTicksTime(a[0].s[0],a[1].v,a[2].s.c_str());
+	else if(!strcmp(k,"sns"))	gr->SetTicksTime(a[0].s[0],a[1].v,a[2].s.s);
 	else res = 1;
 	return res;
 }
@@ -592,7 +592,7 @@ int MGL_NO_EXPORT mgls_version(mglGraph *gr, long , mglArg *a, const char *k, co
 	int res=0;
 	char buf[32];	sprintf(buf,"MathGL version is 2.%g",MGL_VER2);
 	if(k[0]==0)	gr->SetWarn(-1,buf);
-	else if(!strcmp(k,"s"))	res = mgl_check_version(a[0].s.c_str())?1:0;
+	else if(!strcmp(k,"s"))	res = mgl_check_version(a[0].s.s)?1:0;
 	else res = 1;
 	return res;
 }
@@ -610,7 +610,7 @@ int MGL_NO_EXPORT mgls_write(mglGraph *gr, long , mglArg *a, const char *k, cons
 {
 	int res=0;
 	if(k[0]==0)	gr->WriteFrame("", "MathGL");
-	else if(!strcmp(k,"s"))	gr->WriteFrame(a[0].s.c_str(), "MathGL");
+	else if(!strcmp(k,"s"))	gr->WriteFrame(a[0].s.s, "MathGL");
 	else res = 1;
 	return res;
 }
@@ -634,14 +634,14 @@ int MGL_NO_EXPORT mgls_xtick(mglGraph *gr, long n, mglArg *a, const char *k, con
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('x', a[0].v);
-//	else if(!strcmp(k,"ns"))	gr->SetTicks('x', a[0].v, 0, NAN, a[1].w.c_str());
+//	else if(!strcmp(k,"ns"))	gr->SetTicks('x', a[0].v, 0, NAN, a[1].s.w);
 	else if(!strcmp(k,"nn"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v));
-	else if(!strcmp(k,"nns"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v), NAN, a[2].w.c_str());
+	else if(!strcmp(k,"nns"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v), NAN, a[2].s.w);
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v), a[2].v);
-	else if(!strcmp(k,"nnns"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v), a[2].v, a[3].w.c_str());
-	else if(!strcmp(k,"s"))		gr->SetTickTempl('x',a[0].w.c_str());
-	else if(!strcmp(k,"ds"))	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str());
-	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), a[2].v);
+	else if(!strcmp(k,"nnns"))	gr->SetTicks('x', a[0].v, mgl_int(a[1].v), a[2].v, a[3].s.w);
+	else if(!strcmp(k,"s"))		gr->SetTickTempl('x',a[0].s.w);
+	else if(!strcmp(k,"ds"))	gr->SetTicksVal('x', *(a[0].d), a[1].s.w);
+	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('x', *(a[0].d), a[1].s.w, a[2].v);
 	else if(!strncmp(k,"ns",2))
 	{
 		std::wstring s;
@@ -649,7 +649,7 @@ int MGL_NO_EXPORT mgls_xtick(mglGraph *gr, long n, mglArg *a, const char *k, con
 		for(long i=0;i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v.push_back(a[2*i].v);	s += a[2*i+1].w+L"\n";	}
+			{	v.push_back(a[2*i].v);	s += std::wstring(a[2*i+1].s.w)+L"\n";	}
 			else	break;
 		}
 		gr->SetTicksVal('x',mglDataS(v),s.c_str(),v.size()==1?true:false);
@@ -677,14 +677,14 @@ int MGL_NO_EXPORT mgls_ytick(mglGraph *gr, long n, mglArg *a, const char *k, con
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('y', a[0].v);
-//	else if(!strcmp(k,"ns"))	gr->SetTicks('y', a[0].v, 0, NAN, a[1].w.c_str());
+//	else if(!strcmp(k,"ns"))	gr->SetTicks('y', a[0].v, 0, NAN, a[1].s.w);
 	else if(!strcmp(k,"nn"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v));
-	else if(!strcmp(k,"nns"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v), NAN, a[2].w.c_str());
+	else if(!strcmp(k,"nns"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v), NAN, a[2].s.w);
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v), a[2].v);
-	else if(!strcmp(k,"nnns"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v), a[2].v, a[3].w.c_str());
-	else if(!strcmp(k,"s"))		gr->SetTickTempl('y',a[0].w.c_str());
-	else if(!strcmp(k,"ds"))	gr->SetTicksVal('y', *(a[0].d), a[1].w.c_str());
-	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('y', *(a[0].d), a[1].w.c_str(), a[2].v);
+	else if(!strcmp(k,"nnns"))	gr->SetTicks('y', a[0].v, mgl_int(a[1].v), a[2].v, a[3].s.w);
+	else if(!strcmp(k,"s"))		gr->SetTickTempl('y',a[0].s.w);
+	else if(!strcmp(k,"ds"))	gr->SetTicksVal('y', *(a[0].d), a[1].s.w);
+	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('y', *(a[0].d), a[1].s.w, a[2].v);
 	else if(!strncmp(k,"ns",2))
 	{
 		std::wstring s;
@@ -692,7 +692,7 @@ int MGL_NO_EXPORT mgls_ytick(mglGraph *gr, long n, mglArg *a, const char *k, con
 		for(long i=0;i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v.push_back(a[2*i].v);	s += a[2*i+1].w+L"\n";	}
+			{	v.push_back(a[2*i].v);	s += std::wstring(a[2*i+1].s.w)+L"\n";	}
 			else	break;
 		}
 		gr->SetTicksVal('y',mglDataS(v),s.c_str(),v.size()==1?true:false);
@@ -739,14 +739,14 @@ int MGL_NO_EXPORT mgls_ztick(mglGraph *gr, long n, mglArg *a, const char *k, con
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('z', a[0].v);
-//	else if(!strcmp(k,"ns"))	gr->SetTicks('z', a[0].v, 0, NAN, a[1].w.c_str());
+//	else if(!strcmp(k,"ns"))	gr->SetTicks('z', a[0].v, 0, NAN, a[1].s.w);
 	else if(!strcmp(k,"nn"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v));
-	else if(!strcmp(k,"nns"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v), NAN, a[2].w.c_str());
+	else if(!strcmp(k,"nns"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v), NAN, a[2].s.w);
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v), a[2].v);
-	else if(!strcmp(k,"nnns"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v), a[2].v, a[3].w.c_str());
-	else if(!strcmp(k,"s"))		gr->SetTickTempl('z',a[0].w.c_str());
-	else if(!strcmp(k,"ds"))	gr->SetTicksVal('z', *(a[0].d), a[1].w.c_str());
-	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('z', *(a[0].d), a[1].w.c_str(), a[2].v);
+	else if(!strcmp(k,"nnns"))	gr->SetTicks('z', a[0].v, mgl_int(a[1].v), a[2].v, a[3].s.w);
+	else if(!strcmp(k,"s"))		gr->SetTickTempl('z',a[0].s.w);
+	else if(!strcmp(k,"ds"))	gr->SetTicksVal('z', *(a[0].d), a[1].s.w);
+	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('z', *(a[0].d), a[1].s.w, a[2].v);
 	else if(!strncmp(k,"ns",2))
 	{
 		std::wstring s;
@@ -754,7 +754,7 @@ int MGL_NO_EXPORT mgls_ztick(mglGraph *gr, long n, mglArg *a, const char *k, con
 		for(long i=0;i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v.push_back(a[2*i].v);	s += a[2*i+1].w+L"\n";	}
+			{	v.push_back(a[2*i].v);	s += std::wstring(a[2*i+1].s.w)+L"\n";	}
 			else	break;
 		}
 		gr->SetTicksVal('z',mglDataS(v),s.c_str(),v.size()==1?true:false);

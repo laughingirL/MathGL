@@ -264,7 +264,7 @@ void MGL_EXPORT mgl_data_rearrange(HMDT d, long mx,long my,long mz)
 void MGL_EXPORT mgl_data_rearrange_(uintptr_t *d, int *mx, int *my, int *mz)
 {	mgl_data_rearrange(_DT_,*mx,*my,*mz);	}
 //-----------------------------------------------------------------------------
-MGL_EXPORT const char *mgl_data_get_id(HCDT d)	{	return d->id.c_str();	}
+MGL_EXPORT const char *mgl_data_get_id(HCDT d)	{	return d->id.s;	}
 void MGL_EXPORT mgl_data_set_id(mglDataA *d, const char *ids)	{	d->id = ids;	}
 void MGL_EXPORT mgl_data_set_id_(uintptr_t *d, const char *eq,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
@@ -273,7 +273,7 @@ void MGL_EXPORT mgl_data_set_id_(uintptr_t *d, const char *eq,int l)
 void MGL_EXPORT mgl_data_set_name_w(mglDataA *dat, const wchar_t *name)
 {	dat->s = name;	}
 MGL_EXPORT const wchar_t *mgl_data_get_name_w(HCDT dat)
-{	return dat->s.c_str();	}
+{	return dat->s.w;	}
 void MGL_EXPORT mgl_data_set_name(mglDataA *dat, const char *name)
 {	MGL_TO_WCS(name,dat->Name(wcs));	}
 void MGL_EXPORT mgl_data_set_name_(uintptr_t *d, const char *name,int l)

@@ -183,6 +183,12 @@ struct MGL_EXPORT mglString
 	char *s;
 	wchar_t *w;
 	mglString()	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
+	mglString(const mglString &str)
+	{
+		size_t ls = wcslen(str.w)+1;
+		s = new char[ls];		memcpy(s,str.s,ls);
+		w = new wchar_t[ls];	memcpy(w,str.w,ls*sizeof(wchar_t));
+	}
 	mglString(const char *str)
 	{
 		if(str)
@@ -203,15 +209,69 @@ struct MGL_EXPORT mglString
 		}
 		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
 	}
+	mglString(const std::string &str)
+	{
+		size_t ls=mbstowcs(0,str.c_str(),0);
+		w = new wchar_t[ls+1];	mbstowcs(w,str.c_str(),ls); w[ls]=0;
+		s = new char[ls+1];	for(size_t i=0;i<=ls;i++)	s[i]=w[i];
+	}
+	mglString(const std::wstring &str)
+	{
+		size_t len=str.length();
+		w = new wchar_t[len+1];	s = new char[len+1];
+		for(size_t i=0;i<=len;i++)	s[i]=w[i]=str[i];
+	}
 	~mglString()	{	delete []s;	delete []w;	}
+	/// String length
 	size_t length() const
 	{	return wcslen(w);	}
-	wchar_t operator[](size_t i) const
-	{	return w[i];	}
-	int operator==(const char *str) const
-	{	return	strcmp(s,str);	}
-	int operator==(const wchar_t *str) const
-	{	return	wcscmp(w,str);	}
+	/// Crop string (like std::string::substr())
+	void crop(size_t pos, size_t len=size_t(-1))
+	{
+		if(pos)	for(size_t i=0;i<len;i++)
+			s[i] = w[i] = w[i+pos];
+		s[len] = w[len] = 0;
+	}
+	/// Find the position of symbol
+	size_t find(wchar_t ch)
+	{	const wchar_t *p = wcschr(w,ch);	return p?p-w:size_t(-1);	}
+	/// Find the position of string
+	size_t find(const wchar_t *str)
+	{	const wchar_t *p = wcsstr(w,str);	return p?p-w:size_t(-1);	}
+	size_t find(const char *str)
+	{	const char *p = strstr(s,str);		return p?p-s:size_t(-1);	}
+	/// Access to i-th symbol
+	wchar_t operator[](size_t i) const	{	return w[i];	}
+	wchar_t &operator[](size_t i)		{	return w[i];	}
+	/// Comparison operators
+	bool operator==(const char *str) const	{	return	!strcmp(s,str);	}
+	bool operator==(const wchar_t *str) const{	return	!wcscmp(w,str);	}
+	bool operator==(const std::string &str) const	{	return	str==s;	}
+	bool operator==(const std::wstring &str) const	{	return	str==w;	}
+	/// Set operators
+	const mglString &operator=(const mglString &str)
+	{
+		delete []s;	delete []w;
+		size_t ls = wcslen(str.w)+1;
+		s = new char[ls];		memcpy(s,str.s,ls);
+		w = new wchar_t[ls];	memcpy(w,str.w,ls*sizeof(wchar_t));
+		return str;
+	}
+	wchar_t operator=(wchar_t ch)
+	{
+		delete []s;	delete []w;
+		w = new wchar_t[2];	s = new char[2];
+		s[0]=w[0]=ch;	s[1]=w[1]=0;
+		return ch;
+	}
+	const std::string &operator=(const std::string &str)
+	{
+		delete []s;	delete []w;
+		size_t ls=mbstowcs(0,str.c_str(),0);
+		w = new wchar_t[ls+1];	mbstowcs(w,str.c_str(),ls); w[ls]=0;
+		s = new char[ls+1];	for(size_t i=0;i<=ls;i++)	s[i]=w[i];
+		return str;
+	}
 	const char *operator=(const char *str)
 	{
 		delete []s;	delete []w;
@@ -222,6 +282,14 @@ struct MGL_EXPORT mglString
 			s = new char[ls+1];	for(size_t i=0;i<=ls;i++)	s[i]=w[i];
 		}
 		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
+		return str;
+	}
+	const std::wstring &operator=(const std::wstring &str)
+	{
+		delete []s;	delete []w;
+		size_t len=str.length();
+		w = new wchar_t[len+1];	s = new char[len+1];
+		for(size_t i=0;i<=len;i++)	s[i]=w[i]=str[i];
 		return str;
 	}
 	const wchar_t *operator=(const wchar_t *str)
@@ -235,6 +303,19 @@ struct MGL_EXPORT mglString
 		}
 		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
 		return str;
+	}
+	/// Append operator
+	void operator+=(const wchar_t *str)
+	{
+		if(str && *str)
+		{
+			wchar_t *t=w;	delete []s;
+			size_t l1=wcslen(w), l2=wcslen(str);
+			w = new wchar_t[l1+l2+1];	s = new char[l1+l2+1];
+			for(size_t i=0;i<l1;i++)	s[i]=w[i]=t[i];
+			for(size_t i=0;i<=l2;i++)	s[i+l1]=w[i+l1]=str[i];
+			delete []t;
+		}
 	}
 };
 //-----------------------------------------------------------------------------

@@ -31,8 +31,7 @@ struct mglArg
 {
 	int type;		///< Type of argument {0-data,1-string,2-number}
 	mglDataA *d;	///< Pointer to data (used if type==0)
-	std::wstring w;	///< String with parameters
-	std::string s;	///< String with parameters
+	mglString s;	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
 	dual c;			///< Numerical complex value (used if type==2)
 	mglArg():type(-1),d(0),v(0),c(0.)	{}
@@ -59,7 +58,7 @@ struct mglFunc
 {
 	long pos;
 	int narg;
-	std::wstring func;
+	mglString func;
 	mglFunc(long p, const wchar_t *f);
 	mglFunc(const mglFunc &f):pos(f.pos),narg(f.narg),func(f.func)	{}
 	mglFunc():pos(-1),narg(-1)	{}
@@ -72,7 +71,7 @@ struct mglFnStack
 {
 	long pos;	///< position to return
 	size_t stk;	///< stack at 'call'
-	std::wstring par[10];	///< input parameters
+	mglString par[10];	///< input parameters
 	mglFnStack():pos(0),stk(0)	{}
 };
 //-----------------------------------------------------------------------------
@@ -148,7 +147,7 @@ public:
 	/// Scan for functions (use NULL for reset)
 	void ScanFunc(const wchar_t *line);
 	/// Check if name is function and return its address (or 0 if no)
-	long IsFunc(const std::wstring &name, int *narg=0);
+	long IsFunc(const wchar_t *name, int *narg=0);
 	/// Find variable or return 0 if absent
 	mglDataA *FindVar(const char *name) MGL_FUNC_PURE;
 	mglDataA *FindVar(const wchar_t *name) MGL_FUNC_PURE;
@@ -189,13 +188,12 @@ protected:
 		int n = 1;
 		if(a0.type==2)	{	cond = a0.v!=0;	n=0;	}
 		else if(a0.type==0)
-		{	a1.s.assign(a1.w.begin(),a1.w.end());	n=0;
-			cond = a0.d->FindAny((m>1 && a1.type==1) ? a1.s.c_str():"u");	}
+		{	n=0;	cond = a0.d->FindAny((m>1 && a1.type==1) ? a1.s.s:"u");	}
 		return n;
 	}
 private:
 //	long parlen;		///< Length of parameter strings
-	std::wstring par[40];	///< Parameter for substituting instead of $1, ..., $9
+	mglString par[40];	///< Parameter for substituting instead of $1, ..., $9
 	bool Once;			///< Flag for command which should be executed only once
 	bool Skip;			///< Flag that commands should be skiped (inside 'once' block)
 	std::vector<mglPosStack> stack;	///< Stack of if|for|while commands
