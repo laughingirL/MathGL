@@ -368,7 +368,7 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		size_t num = pp.size();
 		long kq = gr->AllocPnts(num);
 #pragma omp parallel for
-		for(size_t i=0;i<num;i++)
+		for(msize i=0;i<num;i++)
 		{	double c = sh ? gr->NextColor(pal,i):gr->CDef;
 			gr->AddPntQ(kq+i, pp[i].p, c);	}
 		if(mk)	for(size_t i=0;i<num;i+=dx)
@@ -444,7 +444,7 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 		size_t num = pp.size();
 		long kq = gr->AllocPnts(num);
 #pragma omp parallel for
-		for(size_t i=0;i<num;i++)
+		for(msize i=0;i<num;i++)
 		{	gr->AddPntQ(kq+i,pp[i].p, gr->GetC(ss,pp[i].p.c));	}
 		if(mk)	for(size_t i=0;i<num;i+=dx)
 			if(pp[i].orig)	gr->mark_plot(kq+i, mk);
@@ -520,7 +520,7 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		mglPoint nn(pp[0].p.y-pp[1].p.y, pp[1].p.x-pp[0].p.x);
 		long kq = gr->AllocPnts(2*np);
 #pragma omp parallel for
-		for(size_t i=0;i<np;i++)
+		for(msize i=0;i<np;i++)
 		{
 			double cc=gr->NextColor(pal,i);
 			if(i>0 && i<np-1)	{	nn.x=(pp[i-1].p.y-pp[i+1].p.y)/2;	nn.y=(pp[i+1].p.x-pp[i-1].p.x)/2;	}
@@ -570,7 +570,7 @@ void MGL_EXPORT mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 		size_t np = pp.size();
 		long kq = gr->AllocPnts(2*np);
 #pragma omp parallel for
-		for(size_t i=0;i<np;i++)
+		for(msize i=0;i<np;i++)
 		{
 			double cc=gr->NextColor(pal,i);
 			gr->AddPntQ(kq+2*i,pp[i].p, sh?cc:c1,nn,-1,27);	pp[i].p.y = y0;
@@ -723,7 +723,7 @@ void MGL_EXPORT mgl_region_3d(HMGL gr, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT 
 		size_t np = pp.size();
 		long kq = gr->AllocPnts(2*np);
 #pragma omp parallel for
-		for(size_t i=0;i<np;i++)
+		for(msize i=0;i<np;i++)
 		{
 			double cc=gr->NextColor(pal,i);
 			gr->AddPntQ(kq+2*i,pp[i].p1, sh?cc:c1,nn,-1,27);
@@ -775,7 +775,7 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 		size_t np = pp.size();
 		long kq = gr->AllocPnts(2*np);
 #pragma omp parallel for
-		for(size_t i=0;i<np;i++)
+		for(msize i=0;i<np;i++)
 		{
 			double cc=gr->NextColor(pal,i);
 			gr->AddPntQ(kq+2*i,pp[i].p1, sh?cc:c1,nn,-1,27);

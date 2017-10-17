@@ -176,7 +176,8 @@ inline mglColor operator!(const mglColor &a)
 {	return mglColor(1-a.r, 1-a.g, 1-a.b, a.a);	}
 #endif
 //-----------------------------------------------------------------------------
-/// Class for Unicode string
+/// Class for Unicode string.
+/** NOTE: mglString accept multi-byte char* string for converting to wchar_t*. But it keep only single-byte char*!!! */
 struct MGL_EXPORT mglString
 {
 	char *s;
@@ -186,9 +187,9 @@ struct MGL_EXPORT mglString
 	{
 		if(str)
 		{
-			size_t len=strlen(str), ls=mbstowcs(0,str,0);
-			s = new char[len+1];	memcpy(s,str,len+1);
+			size_t ls=mbstowcs(0,str,0);
 			w = new wchar_t[ls+1];	mbstowcs(w,str,ls); w[ls]=0;
+			s = new char[ls+1];	for(size_t i=0;i<=ls;i++)	s[i]=w[i];
 		}
 		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
 	}
@@ -197,8 +198,8 @@ struct MGL_EXPORT mglString
 		if(str)
 		{
 			size_t len=wcslen(str);
-			w = new wchar_t[len+1];	wcscpy(w,str);
-			s = new char[len+1];	for(size_t i=0;i<=len;i++)	s[i]=str[i];
+			w = new wchar_t[len+1];	s = new char[len+1];
+			for(size_t i=0;i<=len;i++)	s[i]=w[i]=str[i];
 		}
 		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
 	}
@@ -216,9 +217,9 @@ struct MGL_EXPORT mglString
 		delete []s;	delete []w;
 		if(str)
 		{
-			size_t len=strlen(str), ls=mbstowcs(0,str,0);
-			s = new char[len+1];	memcpy(s,str,len+1);
+			size_t ls=mbstowcs(0,str,0);
 			w = new wchar_t[ls+1];	mbstowcs(w,str,ls); w[ls]=0;
+			s = new char[ls+1];	for(size_t i=0;i<=ls;i++)	s[i]=w[i];
 		}
 		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
 		return str;
@@ -229,8 +230,8 @@ struct MGL_EXPORT mglString
 		if(str)
 		{
 			size_t len=wcslen(str);
-			w = new wchar_t[len+1];	wcscpy(w,str);
-			s = new char[len+1];	for(size_t i=0;i<=len;i++)	s[i]=str[i];
+			w = new wchar_t[len+1];	s = new char[len+1];
+			for(size_t i=0;i<=len;i++)	s[i]=w[i]=str[i];
 		}
 		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
 		return str;

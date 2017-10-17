@@ -297,7 +297,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		{
 			const long kq = gr->AllocPnts(kk.size());
 #pragma omp parallel for
-			for(size_t i=kk1;i<kk.size();i++)
+			for(msize i=kk1;i<kk.size();i++)
 			{
 				mglPoint &u = kk[i];
 				double cc = c->linear(u.x,u.y,u.z), bb = b->linear(u.x,u.y,u.z);
@@ -311,7 +311,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		{
 			const long kq = gr->AllocPnts(kk.size());
 #pragma omp parallel for
-			for(size_t i=kk1;i<kk.size();i++)
+			for(msize i=kk1;i<kk.size();i++)
 			{
 				mglPoint &u = kk[i];
 				double cc = c->linear(u.x,u.y,u.z);
@@ -325,7 +325,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		{
 			const long kq = gr->AllocPnts(kk.size());
 #pragma omp parallel for
-			for(size_t i=kk1;i<kk.size();i++)
+			for(msize i=kk1;i<kk.size();i++)
 			{
 				mglPoint &u = kk[i];
 				double bb = b->linear(u.x,u.y,u.z);
@@ -339,7 +339,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		{
 			const long kq = gr->AllocPnts(kk.size());
 #pragma omp parallel for
-			for(size_t i=kk1;i<kk.size();i++)
+			for(msize i=kk1;i<kk.size();i++)
 			{
 				mglPoint &u = kk[i];
 				gr->AddPntQ(kq+i,nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) :

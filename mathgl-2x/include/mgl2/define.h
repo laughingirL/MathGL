@@ -74,7 +74,7 @@
 
 #endif
 //-----------------------------------------------------------------------------
-#ifdef WIN32 //_MSC_VER needs this before math.h
+#if defined(_MSC_VER) || defined(__BORLANDC__)	//_MSC_VER needs this before math.h
 #define	_USE_MATH_DEFINES
 #endif
 
@@ -127,6 +127,7 @@ typedef unsigned long uintptr_t;
 #include <wchar.h>
 
 #if defined(_MSC_VER)
+typedef long msize;
 #define collapse(a)	// MSVS don't support OpenMP 3.*
 #if (_MSC_VER<=1800)
 #define strtoull _strtoui64
@@ -138,6 +139,8 @@ typedef unsigned long uintptr_t;
 #if (_MSC_VER<1600) // based on https://hg.python.org/cpython/rev/9aedb876c2d7
 #define hypot	_hypot
 #endif
+#else
+typedef size_t msize;
 #endif
 
 #if !MGL_SYS_NAN
