@@ -74,10 +74,6 @@
 
 #endif
 //-----------------------------------------------------------------------------
-#if defined(_MSC_VER) || defined(__BORLANDC__)	//_MSC_VER needs this before math.h
-#define	_USE_MATH_DEFINES
-#endif
-
 #ifdef MGL_SRC
 
 #if MGL_USE_GETTEXT
@@ -118,6 +114,10 @@ typedef unsigned long long uint64_t;
 #endif
 #if defined(__BORLANDC__)
 typedef unsigned long uintptr_t;
+#endif
+
+#if ((defined(_MSC_VER) || defined(__BORLANDC__)) && !defined(M_PI))	//_MSC_VER needs this before math.h
+#define	_USE_MATH_DEFINES
 #endif
 
 #include <math.h>

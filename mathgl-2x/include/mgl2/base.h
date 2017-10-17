@@ -329,7 +329,7 @@ struct MGL_EXPORT mglActivePos
 };
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
-MGL_EXTERN  MGL_EXPORT mglStack<mglPnt>;
+MGL_EXTERN template class MGL_EXPORT mglStack<mglPnt>;
 MGL_EXTERN template class MGL_EXPORT mglStack<mglPrim>;
 MGL_EXTERN template class MGL_EXPORT std::vector<mglGroup>;
 MGL_EXTERN template class MGL_EXPORT std::vector<mglText>;
