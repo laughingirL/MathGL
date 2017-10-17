@@ -176,4 +176,65 @@ inline mglColor operator!(const mglColor &a)
 {	return mglColor(1-a.r, 1-a.g, 1-a.b, a.a);	}
 #endif
 //-----------------------------------------------------------------------------
+/// Class for Unicode string
+struct MGL_EXPORT mglString
+{
+	char *s;
+	wchar_t *w;
+	mglString()	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
+	mglString(const char *str)
+	{
+		if(str)
+		{
+			size_t len=strlen(str), ls=mbstowcs(0,str,0);
+			s = new char[len+1];	memcpy(s,str,len+1);
+			w = new wchar_t[ls+1];	mbstowcs(w,str,ls); w[ls]=0;
+		}
+		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
+	}
+	mglString(const wchar_t *str)
+	{
+		if(str)
+		{
+			size_t len=wcslen(str);
+			w = new wchar_t[len+1];	wcscpy(w,str);
+			s = new char[len+1];	for(size_t i=0;i<=len;i++)	s[i]=str[i];
+		}
+		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
+	}
+	~mglString()	{	delete []s;	delete []w;	}
+	size_t length() const
+	{	return wcslen(w);	}
+	wchar_t operator[](size_t i) const
+	{	return w[i];	}
+	int operator==(const char *str) const
+	{	return	strcmp(s,str);	}
+	int operator==(const wchar_t *str) const
+	{	return	wcscmp(w,str);	}
+	const char *operator=(const char *str)
+	{
+		delete []s;	delete []w;
+		if(str)
+		{
+			size_t len=strlen(str), ls=mbstowcs(0,str,0);
+			s = new char[len+1];	memcpy(s,str,len+1);
+			w = new wchar_t[ls+1];	mbstowcs(w,str,ls); w[ls]=0;
+		}
+		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
+		return str;
+	}
+	const wchar_t *operator=(const wchar_t *str)
+	{
+		delete []s;	delete []w;
+		if(str)
+		{
+			size_t len=wcslen(str);
+			w = new wchar_t[len+1];	wcscpy(w,str);
+			s = new char[len+1];	for(size_t i=0;i<=len;i++)	s[i]=str[i];
+		}
+		else	{	s=new char[1];	w=new wchar_t[1];	*s=*w=0;	}
+		return str;
+	}
+};
+//-----------------------------------------------------------------------------
 #endif
