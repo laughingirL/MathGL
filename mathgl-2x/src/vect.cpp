@@ -748,9 +748,18 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 	// find coordinates u, v
 	mreal dm=INFINITY;
 	long i0=0,j0=0;
-	for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	// first find closest
+	if(nboth)
 	{
-		mreal d = nboth ? hypot(x->v(i)-x0,y->v(j)-y0) : hypot(x->v(i,j)-x0,y->v(i,j)-y0);
+		mreal dx=INFINITY, dy=INFINITY;
+		for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	// first find closest
+		{	mreal d = fabs(x->v(i)-x0);	if(d<dx)	{	i0=i;	dx=d;	}	}
+		for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	// first find closest
+		{	mreal d = fabs(y->v(j)-y0);	if(d<dy)	{	j0=j;	dy=d;	}	}
+		dm = hypot(dx,dy);
+	}
+	else	for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	// first find closest
+	{
+		mreal d = hypot(x->v(i,j)-x0,y->v(i,j)-y0);
 		if(d<dm)	{	i0=i;	j0=j;	dm=d;	}
 	}
 	if(dm==0)	{	u = i0/mreal(n);	v = j0/mreal(m);	}	// we find it
@@ -1097,13 +1106,22 @@ void MGL_EXPORT mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, 
 	// find coordinates u, v, w
 	mreal dm=INFINITY;
 	long i0=0,j0=0,k0=0;
-	mreal dx,dy,dz;
-	for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)	// first find closest
+	if(nboth)	// first find closest
 	{
-		if(nboth)
-		{	dx = x->v(i)-p.x;	dy = y->v(j)-p.y;	dz = x->v(k)-p.z;	}
-		else
-		{	dx = x->v(i,j,k)-p.x;	dy = y->v(i,j,k)-p.y;	dz = x->v(i,j,k)-p.z;	}
+		mreal dx=INFINITY, dy=INFINITY, dz=INFINITY;
+		for(long i=0;i<n;i++)
+		{	mreal d = fabs(x->v(i)-p.x);	if(d<dx)	{	i0=i;	dx=d;	}	}
+		dm = INFINITY;
+		for(long j=0;j<m;j++)
+		{	mreal d = fabs(y->v(j)-p.y);	if(d<dy)	{	j0=j;	dy=d;	}	}
+		dm = INFINITY;
+		for(long k=0;k<l;k++)
+		{	mreal d = fabs(z->v(k)-p.z);	if(d<dz)	{	k0=k;	dz=d;	}	}
+		dm = sqrt(dx*dx+dy*dy+dz*dz);
+	}
+	else	for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	for(long k=0;k<l;k++)	// first find closest
+	{
+		mreal dx = x->v(i,j,k)-p.x,	dy = y->v(i,j,k)-p.y,	dz = x->v(i,j,k)-p.z;
 		mreal d = sqrt(dx*dx+dy*dy+dz*dz);
 		if(d<dm)	{	i0=i;	j0=j;	k0=k;	dm=d;	}
 	}
@@ -1111,7 +1129,7 @@ void MGL_EXPORT mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, 
 	{	u=i0/mreal(n);	v=j0/mreal(m);	w=k0/mreal(l);	}
 	else
 	{
-		mreal dxu,dxv,dxw,dyu,dyv,dyw,dzu,dzv,dzw;
+		mreal dxu,dxv,dxw,dyu,dyv,dyw,dzu,dzv,dzw, dx,dy,dz;
 		if(nboth)
 		{
 			dx = x->v(i0)-p.x;	dy = y->v(j0)-p.y;	dz = z->v(k0)-p.z;

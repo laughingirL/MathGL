@@ -27,7 +27,6 @@ public:
 	long ny;		///< number of points in 2nd dimensions ('y' dimension)
 	long nz;		///< number of points in 3d dimensions ('z' dimension)
 	mreal *a;		///< data array
-	std::string id;	///< column (or slice) names
 	bool link;		///< use external data (i.e. don't free it)
 
 	/// Initiate by other mglData variable
@@ -114,6 +113,9 @@ public:
 	/// Crop the data
 	inline void Crop(long n1, long n2,char dir='x')
 	{	mgl_data_crop(this,n1,n2,dir);	}
+	/// Crop the data to be most optimal for FFT (i.e. to closest value of 2^n*3^m*5^l)
+	inline void Crop(const char *how="235x")
+	{	mgl_data_crop_opt(this, how);	}
 	/// Insert data rows/columns/slices
 	inline void Insert(char dir, long at=0, long num=1)
 	{	mgl_data_insert(this,dir,at,num);	}
@@ -276,9 +278,12 @@ public:
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,0,norm));	}
 	inline mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,&kdat,norm));	}
-	/// Find roots for set of nonlinear equations defined by textual formula
+	/// Find roots for nonlinear equation defined by textual formula
 	inline mglData Roots(const char *eq, char var='x') const
 	{	return mglData(true,mgl_data_roots(eq, this, var));	}
+	/// Find roots for set of nonlinear equations defined by textual formula
+	inline mglData MultiRoots(const char *eq, const char *vars) const
+	{	return mglData(true,mgl_find_roots_txt(eq, vars, this));	}
 	/// Find correlation with another data arrays
 	inline mglData Correl(const mglData &dat, const char *dir) const
 	{	return mglData(true,mgl_data_correl(this,&dat,dir));	}
@@ -297,6 +302,9 @@ public:
 	inline void Integral(const char *dir)	{	mgl_data_integral(this,dir);	}
 	/// Differentiate the data in given direction or directions
 	inline void Diff(const char *dir)	{	mgl_data_diff(this,dir);	}
+	/// Differentiate the parametrically specified data along direction v1
+	inline void Diff(const mglData &v1)
+	{	mgl_data_diff_par(this,&v1,0,0);	}
 	/// Differentiate the parametrically specified data along direction v1 with v2=const
 	inline void Diff(const mglData &v1, const mglData &v2)
 	{	mgl_data_diff_par(this,&v1,&v2,0);	}
@@ -314,13 +322,12 @@ public:
 	inline void Mirror(const char *dir)		{	mgl_data_mirror(this,dir);	}
 	/// Sort rows (or slices) by values of specified column
 	inline void Sort(long idx, long idy=-1)	{	mgl_data_sort(this,idx,idy);	}
-	/// Return dilated array of 0 or 1 for data values larger val 
+	/// Return dilated array of 0 or 1 for data values larger val
 	inline void Dilate(mreal val=1, long step=1)
 	{	mgl_data_dilate(this, val, step);	}
-	/// Return eroded array of 0 or 1 for data values larger val 
+	/// Return eroded array of 0 or 1 for data values larger val
 	inline void Erode(mreal val=1, long step=1)
 	{	mgl_data_erode(this, val, step);	}
-	
 
 	/// Set as the data envelop
 	inline void Envelop(char dir='x')
@@ -346,6 +353,9 @@ public:
 	/// Limit the data to be inside [-v,v], keeping the original sign
 	inline void Limit(mreal v)
 	{	mgl_data_limit(this, v);	}
+	/// Project the periodical data to range [v1,v2] (like mod() function). Separate branches by NAN if sep=true.
+	inline void Coil(mreal v1, mreal v2, bool sep=true)
+	{	mgl_data_coil(this, v1, v2, sep);	}
 
 	/// Apply Hankel transform
 	inline void Hankel(const char *dir)	{	mgl_data_hankel(this,dir);	}

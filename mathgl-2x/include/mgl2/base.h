@@ -452,11 +452,11 @@ public:
 	/// Set number of mesh lines
 	inline void SetMeshNum(int val)	{	MeshNum=val;	}
 	/// Set relative width of rectangles in Bars, Barh, BoxPlot
-	inline void SetBarWidth(mreal val)	{	BarWidth=val;	}
+	inline void SetBarWidth(mreal val)	{	BarWidth=val>0?val:-BarWidth*val;	}
 	/// Set size of marks
-	inline void SetMarkSize(mreal val)	{	MarkSize=0.02*val;	}
+	inline void SetMarkSize(mreal val)	{	MarkSize=val>0?0.02*val:-val*MarkSize;	}
 	/// Set size of arrows
-	inline void SetArrowSize(mreal val)	{	ArrowSize=0.03*val;	}
+	inline void SetArrowSize(mreal val)	{	ArrowSize=val>0?0.03*val:-val*ArrowSize;	}
 	/// Get unscaled arrow size
 	inline mreal GetArrowSize() const	{	return ArrowSize/0.03;	}
 

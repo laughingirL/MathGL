@@ -127,6 +127,9 @@ public:
 	inline void SetRotatedText(bool rotated)	{	mgl_set_rotated_text(gr, rotated);	}
 	/// Set default font for all new HMGL and mglGraph objects
 	static inline void SetDefFont(const char *name, const char *path="")	{	mgl_def_font(name,path);	}
+	/// Add user-defined glyph for symbol and set its optional id
+	inline void DefineSymbol(char id, const mglData &x, const mglData &y)
+	{	mgl_define_symbol(gr, id, &x, &y);	}
 
 	/// Set default palette
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
@@ -263,6 +266,9 @@ public:
 	/// Set to draw tick labels at axis origin
 	inline void SetOriginTick(bool enable=true)
 	{	mgl_set_flag(gr,!enable, MGL_NO_ORIGIN);	}
+	/// Set bit-value flag of HMGL state (for advanced users only)
+	inline void SetFlagAdv(int val, uint32_t flag)
+	{	mgl_set_flag(gr, val, flag);	}
 
 	/// Put further plotting in m-th cell of nx*ny grid of the image.
 	/** String \a style may contain:
@@ -665,6 +671,12 @@ public:
 	inline void Logo(const char *fname, bool smooth=false, const char *opt="")
 	{	mgl_logo_file(gr, fname, smooth, opt);	}
 
+	/// Draw user-defined symbol in position p
+	inline void Symbol(mglPoint p, char id, const char *how="", double size=-1)
+	{	mgl_symbol(gr, p.x, p.y, p.z, id, how, size);	}
+	/// Draw user-defined symbol in position p along direction d
+	inline void Symbol(mglPoint p, mglPoint d, char id, const char *how="", double size=-1)
+	{	mgl_symbol_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, id, how, size);	}
 	/// Print text in position p with specified font
 	inline void Putsw(mglPoint p,const wchar_t *text,const char *font=":C",double size=-1)
 	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
@@ -1261,6 +1273,14 @@ public:
 	/** Style 'x' draw belts in x-direction. */
 	inline void Belt(const mglData &z, const char *stl="", const char *opt="")
 	{	mgl_belt(gr, &z, stl, opt);	}
+	/// Draw belts for 2d data specified parametrically with color proportional to c
+	/** Style 'x' draw belts in x-direction. */
+	inline void BeltC(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *stl="", const char *opt="")
+	{	mgl_beltc_xy(gr, &x, &y, &z, &c, stl, opt);	}
+	/// Draw belts for 2d data with color proportional to c
+	/** Style 'x' draw belts in x-direction. */
+	inline void BeltC(const mglData &z, const mglData &c, const char *stl="", const char *opt="")
+	{	mgl_beltc(gr, &z, &c, stl, opt);	}
 
 	/// Draw surface for 2d data specified parametrically with color proportional to z
 	/** Style ‘#’ draw grid lines. Style ‘.’ produce plot by dots.*/
@@ -1306,6 +1326,17 @@ public:
 	inline void Boxs(const mglData &z, const char *stl="", const char *opt="")
 	{	mgl_boxs(gr, &z, stl, opt);	}
 
+	/// Draw contour lines on parametric surface at manual levels for 2d data specified parametrically
+	/** Style ‘f’ to draw solid contours.
+	 * Style 't'/'T' draw contour labels below/above contours.*/
+	inline void ContP(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch="", const char *opt="")
+	{	mgl_contp_val(gr, &v, &x, &y, &z, &a, sch, opt);	}
+	/// Draw contour lines on parametric surface at manual levels for 2d data specified parametrically
+	/** Style ‘f’ to draw solid contours.
+	 * Style ‘t’/‘T’ draw contour labels below/above contours.
+	 * Option "value" set the number of contour levels (default is 7). */
+	inline void ContP(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch="", const char *opt="")
+	{	mgl_contp(gr, &x, &y, &z, &a, sch, opt);	}
 	/// Draw contour lines at manual levels for 2d data specified parametrically
 	/** Style ‘_’ to draw contours at bottom of axis box.
 	 * Style 't'/'T' draw contour labels below/above contours.*/
@@ -1774,6 +1805,22 @@ public:
 	inline void FlowP(mglPoint p, const mglData &ax, const mglData &ay, const mglData &az, const char *sch="", const char *opt="")
 	{	mgl_flowp_3d(gr, p.x, p.y, p.z, &ax, &ay, &az, sch, opt);	}
 
+	/// Plot flows from given plain for vector field {ax,ay,az} parametrically depended on coordinate {x,y,z} with color proportional to |a|
+	/** String \a sch may contain:
+	* color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
+	* ‘v’ for drawing arrows on the threads;
+	* 't' for drawing tapes of normals in x-y and y-z planes.
+	* Option "value" sets the number of threads (default is 5). */
+	inline void Flow3(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch="", double sVal=-1, const char *opt="")
+	{	mgl_flow3_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, sVal, opt);	}
+	/// Plot flows from given plain for vector field {ax,ay,az} with color proportional to |a|
+	/** String \a sch may contain:
+	* color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
+	* ‘v’ for drawing arrows on the threads;
+	* 't' for drawing tapes of normals in x-y and y-z planes.
+	* Option "value" sets the number of threads (default is 5). */
+	inline void Flow3(const mglData &ax, const mglData &ay, const mglData &az, const char *sch="", double sVal=-1, const char *opt="")
+	{	mgl_flow3(gr, &ax, &ay, &az, sch, sVal, opt);	}
 	/// Plot flows for gradient of scalar field phi parametrically depended on coordinate {x,y,z}
 	/** String \a sch may contain:
 	 * color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
@@ -2156,6 +2203,8 @@ public:
 class mglParse
 {
 	HMPR pr;
+	mglParse &operator=(mglParse &p)
+	{	pr = p.pr;	mgl_use_parser(pr,1);	return p;	}
 public:
 	mglParse(HMPR p)		{	pr = p;		mgl_use_parser(pr,1);	}
 	mglParse(mglParse &p)	{	pr = p.pr;	mgl_use_parser(pr,1);	}
@@ -2190,7 +2239,7 @@ public:
 	/// Return description of MGL command
 	inline const char *CmdDesc(const char *name)
 	{	return mgl_parser_cmd_desc(pr, name);	}
-	/// Get name of command with nmber n
+	/// Get name of command with number n
 	inline const char *GetCmdName(long n)
 	{	return mgl_parser_cmd_name(pr,n);	}
 	/// Get number of defined commands
@@ -2204,6 +2253,9 @@ public:
 	{	mgl_rk_step(pr, eqs, vars, dt);	}
 	inline void RK_Step(const wchar_t *eqs, const wchar_t *vars, mreal dt=1)
 	{	mgl_rk_step_w(pr, eqs, vars, dt);	}
+	// Open all data arrays from HDF file and assign it as variables of parser p
+	inline void OpenHDF(const char *fname)
+	{	mgl_parser_openhdf(pr, fname);	}
 
 	/// Set value for parameter $N
 	inline void AddParam(int id, const char *str)
@@ -2223,6 +2275,9 @@ public:
 	/// Set variant of argument(s) separated by '?' to be used in further commands
 	inline void SetVariant(int var=0)
 	{	mgl_parser_variant(pr, var);	}
+	/// Set starting object ID
+	inline void	StartID(int id=0)
+	{	mgl_parser_start_id(pr, id);	}
 
 	/// Return result of formula evaluation
 	inline mglData Calc(const char *formula)

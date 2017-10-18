@@ -176,6 +176,7 @@ inline mglColor operator!(const mglColor &a)
 {	return mglColor(1-a.r, 1-a.g, 1-a.b, a.a);	}
 #endif
 //-----------------------------------------------------------------------------
+#ifndef SWIG
 /// Class for Unicode string.
 /** NOTE: mglString accept multi-byte char* string for converting to wchar_t*. But it keep only single-byte char*!!! */
 struct MGL_EXPORT mglString
@@ -189,6 +190,9 @@ struct MGL_EXPORT mglString
 		s = new char[ls];		memcpy(s,str.s,ls);
 		w = new wchar_t[ls];	memcpy(w,str.w,ls*sizeof(wchar_t));
 	}
+#if MGL_HAVE_RVAL
+	mglString(mglString &&d):s(d.s),w(d.w)	{	d.s=NULL;	d.w=NULL;	}
+#endif
 	mglString(const char *str)
 	{
 		if(str)
@@ -221,7 +225,7 @@ struct MGL_EXPORT mglString
 		w = new wchar_t[len+1];	s = new char[len+1];
 		for(size_t i=0;i<=len;i++)	s[i]=w[i]=str[i];
 	}
-	~mglString()	{	delete []s;	delete []w;	}
+	~mglString()	{	if(w)	{	delete []s;	delete []w;	}	}
 	/// String length
 	size_t length() const
 	{	return wcslen(w);	}
@@ -318,5 +322,6 @@ struct MGL_EXPORT mglString
 		}
 	}
 };
+#endif
 //-----------------------------------------------------------------------------
 #endif
