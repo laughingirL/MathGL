@@ -389,7 +389,7 @@ bool mglBase::AddPntQ(mglPnt &q, const mglMatrix *mat, mglPoint p, mreal c, mglP
 	if(get(MGL_REDUCEACC))
 	{
 		q.x=q.xx=int(p.x*10)*0.1;	q.y=q.yy=int(p.y*10)*0.1;	q.z=q.zz=int(p.z*10)*0.1;
-		q.c=int(c*100)*0.01;	q.t=q.ta=int(a*100)*0.01;
+		q.c=int(c*100)*0.01;		q.ta=int(a*100)*0.01;
 		q.u=mgl_isnum(n.x)?int(n.x*100)*0.01:NAN;
 		q.v=mgl_isnum(n.y)?int(n.y*100)*0.01:NAN;
 		q.w=mgl_isnum(n.z)?int(n.z*100)*0.01:NAN;
@@ -397,7 +397,7 @@ bool mglBase::AddPntQ(mglPnt &q, const mglMatrix *mat, mglPoint p, mreal c, mglP
 	else
 	{
 		q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
-		q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
+		q.c=c;	q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	}
 	long ci=long(c);
 	if(ci<0 || ci>=(long)Txt.size())	ci=0;	// NOTE never should be here!!!
@@ -412,8 +412,7 @@ bool mglBase::AddPntQ(mglPnt &q, const mglMatrix *mat, mglPoint p, mreal c, mglP
 	// add gap for texture coordinates for compatibility with OpenGL
 	const mreal gap = 0./MGL_TEXTURE_COLOURS;
 	q.c = ci+(q.c-ci)*(1-2*gap)+gap;
-	q.t = q.t*(1-2*gap)+gap;
-	q.ta = q.t;
+	q.ta = q.ta*(1-2*gap)+gap;
 
 	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
@@ -436,7 +435,7 @@ bool mglBase::CopyNtoC(mglPnt &q, long from, mreal c)
 {
 	if(from<0)	return false;
 	q = Pnt[from];
-	if(mgl_isnum(c))	{	q.c=c;	q.t=1;	Txt[long(c)].GetC(c,0,q);	q.a=1;	}
+	if(mgl_isnum(c))	{	q.c=c;	q.ta=1;	Txt[long(c)].GetC(c,0,q);	q.a=1;	}
 	else	q.x = NAN;
 	return mgl_isnum(q.x);
 }

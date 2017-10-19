@@ -296,7 +296,8 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(q.type==0)	// mark
 		{
 			mreal x0 = p1.x,y0 = p1.y;
-			snprintf(str,256,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s*q.w>1?50*q.s*q.w:1, cp.r[0]/255.,cp.r[1]/255.,cp.r[2]/255.);
+//			snprintf(str,256,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s*q.w>1?50*q.s*q.w:1, cp.r[0]/255.,cp.r[1]/255.,cp.r[2]/255.);
+			snprintf(str,256,"%.2g lw %.2g %.2g %.2g rgb ", q.w>1?q.w:1, cp.r[0]/255.,cp.r[1]/255.,cp.r[2]/255.);
 			str[255]=0;	wp=1;	// NOTE: this may renew line style if a mark inside!
 			if(q.s!=qs_old)
 			{
@@ -468,7 +469,8 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			if(strchr("SDVTLR",q.n4))
 				mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\">\n", int(cp.r[0]),int(cp.r[1]),int(cp.r[2]));
 			else
-				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"  stroke-width=\"%g\">\n", int(cp.r[0]),int(cp.r[1]),int(cp.r[2]), 50*q.s*q.w>1?50*q.s*q.w:1);
+				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"  stroke-width=\"%g\">\n", int(cp.r[0]),int(cp.r[1]),int(cp.r[2]), q.w>1?q.w:1);
+//				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"  stroke-width=\"%g\">\n", int(cp.r[0]),int(cp.r[1]),int(cp.r[2]), 50*q.s*q.w>1?50*q.s*q.w:1);
 			switch(q.n4)
 			{
 			case 'P':
@@ -524,7 +526,8 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			if(q.n3)
 			{
 				mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(q.n3,q.w,','));
-				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", q.s*q.w);
+//				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", q.s*q.w);
+				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", q.w);
 			}
 			if(q.w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", q.w);
 			wp = q.w>1  ? q.w:1;	st = q.n3;

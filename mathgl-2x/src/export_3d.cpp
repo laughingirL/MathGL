@@ -641,7 +641,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	for(size_t i=0;i<Pnt.size();i++)
 	{
 		const mglPnt &q=Pnt[i];
-		fprintf(fp,"%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\n", q.xx, q.yy, q.zz, q.c, q.t, q.ta, q.u, q.v, q.w, q.r, q.g, q.b, q.a);
+		fprintf(fp,"%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\n", q.xx, q.yy, q.zz, q.c, q.ta, q.ta, q.u, q.v, q.w, q.r, q.g, q.b, q.a);
 	}
 	fprintf(fp,"# Primitives: type n1 n2 n3 n4 id s w p\n");
 	for(size_t i=0;i<Prm.size();i++)
@@ -710,11 +710,11 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 #pragma omp critical
 	{
 		Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);	Glf.reserve(k);
-		mglPnt p;
+		mglPnt p;	double tmp;
 		for(unsigned long i=0;i<n;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-			sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.ta, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
+			sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &tmp, &p.ta, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
 			// rescale to current image size
 			p.xx *= Width/double(w);	p.yy *= Height/double(h);	p.zz *= Depth/double(d);
 			Pnt.push_back(p);

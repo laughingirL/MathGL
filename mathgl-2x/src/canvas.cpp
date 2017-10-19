@@ -481,7 +481,7 @@ pthread_mutex_lock(&mutexPtx);
 		}
 
 		int align;
-		mreal col1=col, col2=col;
+		float col1=col, col2=col;
 		if(mglGetStyle(font,0,&align))
 		{
 			col1 = AddTexture(font);
@@ -513,17 +513,17 @@ pthread_mutex_lock(&mutexPtx);
 			add_prim(a);
 		}
 
-		q.c=col1;	q.t=0;	Txt[long(col1)].GetC(col1,0,q);
-		q.u = q.v = NAN;	q.a=q.t=q.ta=1;
-		memset(Bt.b,0,9*sizeof(mreal));
+		q.c=col1;	q.ta=0;	Txt[long(col1)].GetC(col1,0,q);
+		q.u = q.v = NAN;	q.a=q.ta=1;
+		memset(Bt.b,0,9*sizeof(float));
 		Bt.b[0] = Bt.b[4] = Bt.b[8] = fscl;
-		mreal opf = Bt.pf;
+		float opf = Bt.pf;
 		Bt.RotateN(ftet,0,0,1);	Bt.pf = Bt.norot?1.55:opf;
 		if(strchr(font,'@'))	// draw box around text
 		{
 			long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
 			w = fnt->Width(text,font);	h = fnt->Height(font);
-			mreal d=-w*align/2.-h*0.2;	w+=h*0.4;
+			float d=-w*align/2.-h*0.2;	w+=h*0.4;
 			pt = q;	pp.Set(d,-h*0.4);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
@@ -704,8 +704,8 @@ void mglCanvas::Rotate(mreal tetz,mreal tetx,mreal tety)
 	B.Rotate(tetz,tetx,tety);
 	if(get(MGL_AUTO_FACTOR))
 	{
-		mreal w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
-		mreal h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
+		float w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
+		float h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
 		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
 	}
 	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;
@@ -716,12 +716,12 @@ void mglMatrix::Rotate(mreal tetz,mreal tetx,mreal tety)
 //	RotateN(TetX,1.,0.,0.);
 //	RotateN(TetY,0.,1.,0.);
 //	RotateN(TetZ,0.,0.,1.);
-	mreal R[9], O[9];
-	mreal cx=cos(tetx*M_PI/180), sx=-sin(tetx*M_PI/180), cy=cos(tety*M_PI/180), sy=-sin(tety*M_PI/180), cz=cos(tetz*M_PI/180), sz=-sin(tetz*M_PI/180);
+	float R[9], O[9];
+	float cx=cos(tetx*M_PI/180), sx=-sin(tetx*M_PI/180), cy=cos(tety*M_PI/180), sy=-sin(tety*M_PI/180), cz=cos(tetz*M_PI/180), sz=-sin(tetz*M_PI/180);
 	R[0] = cx*cy;			R[1] = -cy*sx;			R[2] = sy;
 	R[3] = cx*sy*sz+cz*sx;	R[4] = cx*cz-sx*sy*sz;	R[5] =-cy*sz;
 	R[6] = sx*sz-cx*cz*sy;	R[7] = cx*sz+cz*sx*sy;	R[8] = cy*cz;
-	memcpy(O,b,9*sizeof(mreal));
+	memcpy(O,b,9*sizeof(float));
 	b[0] = R[0]*O[0] + R[3]*O[1] + R[6]*O[2];
 	b[1] = R[1]*O[0] + R[4]*O[1] + R[7]*O[2];
 	b[2] = R[2]*O[0] + R[5]*O[1] + R[8]*O[2];
@@ -738,8 +738,8 @@ void mglCanvas::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 	B.RotateN(Tet,x,y,z);
 	if(get(MGL_AUTO_FACTOR))
 	{
-		mreal w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
-		mreal h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
+		float w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
+		float h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
 		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
 	}
 	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;
@@ -747,12 +747,12 @@ void mglCanvas::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 //-----------------------------------------------------------------------------
 void mglMatrix::RotateN(mreal Tet,mreal vx,mreal vy,mreal vz)
 {
-	mreal R[9],T[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(vx*vx+vy*vy+vz*vz);
+	float R[9],T[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(vx*vx+vy*vy+vz*vz);
 	vx/=n;	vy/=n;	vz/=n;
 	T[0] = vx*vx*r+c;		T[1] = vx*vy*r-vz*s;	T[2] = vx*vz*r+vy*s;
 	T[3] = vx*vy*r+vz*s;	T[4] = vy*vy*r+c;		T[5] = vy*vz*r-vx*s;
 	T[6] = vx*vz*r-vy*s;	T[7] = vy*vz*r+vx*s;	T[8] = vz*vz*r+c;
-	memcpy(R,b,9*sizeof(mreal));
+	memcpy(R,b,9*sizeof(float));
 	b[0] = T[0]*R[0] + T[3]*R[1] + T[6]*R[2];
 	b[1] = T[1]*R[0] + T[4]*R[1] + T[7]*R[2];
 	b[2] = T[2]*R[0] + T[5]*R[1] + T[8]*R[2];

@@ -61,8 +61,8 @@ void mglCanvas::pxl_backgr(long id, long n, const void *)
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_transform(long id, long n, const void *)
 {
-	const mreal *b = Bp.b;
-	const mreal dx = -Bp.x*Width/2, dy = -Bp.y*Height/2, dz = Depth/2.;
+	const float *b = Bp.b;
+	const float dx = -Bp.x*Width/2, dy = -Bp.y*Height/2, dz = Depth/2.;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
@@ -172,8 +172,8 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_dotsdr(long id, long n, const void *)
 {
-	const mreal *b = Bp.b;
-	const mreal dx = -Bp.x*Width/2, dy = -Bp.y*Height/2, dz = Depth/2.;
+	const float *b = Bp.b;
+	const float dx = -Bp.x*Width/2, dy = -Bp.y*Height/2, dz = Depth/2.;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif

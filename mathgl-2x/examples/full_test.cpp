@@ -28,6 +28,7 @@
 #include <unistd.h>
 #endif
 
+#include "mgl2/base.h"
 #include "mgl2/mgl.h"
 #include "mgl2/font.h"
 #include "mgl2/eval.h"
@@ -72,26 +73,10 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData x(100,100), y(100,100), z(100,100), c(100,100);
-	gr->Fill(x,"sin(pi*(x+y)/2)*cos(pi*y/2)");	gr->Fill(y,"cos(pi*(x+y)/2)*cos(pi*y/2)");
-	gr->Fill(z,"sin(pi*y/2)");	gr->Fill(c,"cos(pi*x)");
-
-	gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Box();	gr->Tile(x,y,z,"","meshnum 10");
-	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Box();	gr->TileS(x,y,z,c,"","meshnum 10");
-	gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Box();	gr->Belt(x,y,z,"x","meshnum 10;light on");
+	printf("Prim=%lu, Pnt=%lu, Matrix=%lu, Color=%lu, Point=%lu, Light=%lu, ActivePos=%lu\n",
+		sizeof(mglPrim), sizeof(mglPnt), sizeof(mglMatrix), sizeof(mglColor), sizeof(mglPoint), sizeof(mglLight), sizeof(mglActivePos) );
 	return;
 	mglParse par;
-	par.Execute(gr,"new ch 7 2 'rnd+0.1':light on\n"
-		"axis '(y+1)/2*cos(pi*x)' '(y+1)/2*sin(pi*x)' '':box\n");
-	return;
-
-	gr->SubPlot(2,2,0);	gr->Axis();
-	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Axis();
-	gr->SetRotatedText(false);	gr->SubPlot(2,2,2);	gr->Axis();
-	gr->SubPlot(2,2,3);	gr->Rotate(40,60);	gr->Axis();	return;
-	mglData a;	a.SetList(5,0.,1.,0.,1.,-1.,2.);
-	gr->Plot(a);
-	return;
 	par.Execute(gr,"call 'test' -1\n func 'test' 1\nline $1 0 1 1 'b'\nreturn\n");
 //	par.Execute(gr,"load '/home/balakin/mathgl-code/mathgl-2x/build/examples/libmgl_module.so':baxis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");

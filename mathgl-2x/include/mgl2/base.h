@@ -113,21 +113,21 @@ public:
 /// Structure for transformation matrix
 struct MGL_EXPORT mglMatrix
 {
-	mreal b[9];
-	mreal x,y,z,pf;
+	float x,y,z,pf;
+	float b[9];
 	bool norot;	// flag to disable pnts rotation
-	mglMatrix()	{	memset(this,0,sizeof(mglMatrix));	clear();	}
-	mglMatrix(const mglMatrix &aa) : x(aa.x),y(aa.y),z(aa.z),pf(aa.pf),norot(aa.norot) 	{	memcpy(b,aa.b,9*sizeof(mreal));	}
+	mglMatrix()	{	clear();	}
+	mglMatrix(const mglMatrix &aa) : x(aa.x),y(aa.y),z(aa.z),pf(aa.pf),norot(aa.norot) 	{	memcpy(b,aa.b,9*sizeof(float));	}
 	void Rotate(mreal tetz,mreal tetx,mreal tety);
 	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
-	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	norot=false;	}
+	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(float));	b[0]=b[4]=b[8]=1;	norot=false;	}
 	inline const mglMatrix &operator=(const mglMatrix &a)
-	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	norot=false;	return a;	}
+	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(float));	norot=false;	return a;	}
 };
 inline bool operator==(const mglMatrix &a, const mglMatrix &b)
-{	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)==0)&&!memcmp(b.b,a.b,9*sizeof(mreal));}
+{	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)==0)&&!memcmp(b.b,a.b,9*sizeof(float));}
 inline bool operator!=(const mglMatrix &a, const mglMatrix &b)
-{	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)!=0)||memcmp(b.b,a.b,9*sizeof(mreal));	}
+{	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)!=0)||memcmp(b.b,a.b,9*sizeof(float));	}
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
 struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
@@ -159,33 +159,33 @@ bool operator>(const mglPrim &a,const mglPrim &b);
 /// Structure for light source
 struct MGL_EXPORT mglLight
 {
-	mglLight():n(false),a(0),b(0)	{}
-	mglLight(const mglLight &aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
+	mglLight():a(0),b(0),n(false)	{}
+	mglLight(const mglLight &aa) : d(aa.d),r(aa.r),q(aa.q),p(aa.p),c(aa.c),a(aa.a),b(aa.b),n(aa.n)	{}
 	const mglLight &operator=(const mglLight &aa)
 	{	memcpy(this,&aa,sizeof(mglLight));	return aa;	}
 
-	bool n;			///< Availability of light sources
 	mglPoint d;		///< Direction of light sources
 	mglPoint r;		///< Position of light sources (NAN for infinity)
 	mglPoint q;		///< Actual position of light sources (filled by LightScale() function)
 	mglPoint p;		///< Actual direction of light sources (filled by LightScale() function)
-	mreal a;		///< Aperture of light sources
-	mreal b;		///< Brightness of light sources
 	mglColor c;		///< Color of light sources
+	float a;		///< Aperture of light sources
+	float b;		///< Brightness of light sources
+	bool n;			///< Availability of light sources
 };
 //-----------------------------------------------------------------------------
 /// Structure for inplot
 struct MGL_EXPORT mglBlock
 {
-	int id;		///< object id
 	long n1,n2,n3,n4;	///< coordinates of corners {n1=x1,n2=x2,n3=y1,n4=y2}
 
 	mglLight light[10];	///< Light sources
-	mreal AmbBr;		///< Default ambient light brightness
-	mreal DifBr;		///< Default diffusive light brightness
+	float AmbBr;		///< Default ambient light brightness
+	float DifBr;		///< Default diffusive light brightness
 	mglMatrix B;		///< Transformation matrix
+	int id;		///< object id
 
-	mglBlock():id(0),n1(0),n2(0),n3(0),n4(0),AmbBr(0.5),DifBr(0.5)	{}
+	mglBlock():n1(0),n2(0),n3(0),n4(0),AmbBr(0.5),DifBr(0.5),id(0)	{}
 	mglBlock(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	}
 	const mglBlock &operator=(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	return aa;	}
 };
@@ -209,9 +209,9 @@ struct MGL_EXPORT mglText
 {
 	std::wstring text;
 	std::string stl;
-	mreal val;
-	mglText(const wchar_t *txt=L"", const char *fnt="", mreal v=0) : text(txt), stl(fnt), val(v) {}
-	mglText(const std::wstring &txt, mreal v=0): text(txt), val(v)	{}
+	float val;
+	mglText(const wchar_t *txt=L"", const char *fnt="", float v=0) : text(txt), stl(fnt), val(v) {}
+	mglText(const std::wstring &txt, float v=0): text(txt), val(v)	{}
 	mglText(const mglText &aa) : text(aa.text),stl(aa.stl),val(aa.val)	{}
 #if MGL_HAVE_RVAL
 	mglText(mglText &&aa) : text(aa.text),stl(aa.stl),val(aa.val)	{}
@@ -222,17 +222,17 @@ struct MGL_EXPORT mglText
 /// Structure for internal point representation
 struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 {
-	union {	float dat[16];	struct {
+	union {	float dat[15];	struct {
 		float x,y,z;	// coordinates
 		float u,v,w;	// normales
 		float r,g,b,a;	// RGBA color
 		float xx,yy,zz;	// original coordinates
-		float c,t,ta;	// index in color scheme
+		float c,ta;	// index in color scheme
 	}; };
-	short sub;		// subplot id and rotation information (later will be in subplot)
-	mglPnt(float X=0, float Y=0, float Z=0, float U=0, float V=0, float W=0, float R=0, float G=0, float B=0, float A=0, short s=0) :x(X),y(Y),z(Z),u(U),v(V),w(W),r(R),g(G),b(B),a(A),xx(X),yy(Y),zz(Z),c(0),t(0),ta(0),sub(s)	{}
-	mglPnt(const mglPnt &aa) : sub(aa.sub)	{	memcpy(dat,aa.dat,16*sizeof(float));	}
-	inline const mglPnt&operator=(const mglPnt &aa)	{ sub=aa.sub;	memcpy(dat,aa.dat,16*sizeof(float));	return aa;	}
+	int sub;		// subplot id and rotation information (later will be in subplot)
+	mglPnt(float X=0, float Y=0, float Z=0, float U=0, float V=0, float W=0, float R=0, float G=0, float B=0, float A=0, short s=0) :x(X),y(Y),z(Z),u(U),v(V),w(W),r(R),g(G),b(B),a(A),xx(X),yy(Y),zz(Z),c(0),ta(0),sub(s)	{}
+	mglPnt(const mglPnt &aa) : sub(aa.sub)	{	memcpy(dat,aa.dat,15*sizeof(float));	}
+	inline const mglPnt&operator=(const mglPnt &aa)	{ sub=aa.sub;	memcpy(dat,aa.dat,15*sizeof(float));	return aa;	}
 	inline bool same(const mglPnt &p, mreal d)	const {	return fabs(x-p.x)<d && fabs(y-p.y)<d;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)

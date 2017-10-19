@@ -167,8 +167,8 @@ void mglCanvas::PutDrawReg(mglDrawReg *d, const mglCanvas *gr)
 //-----------------------------------------------------------------------------
 void mglCanvas::PostScale(const mglMatrix *M, mglPoint &p) const
 {
-	mreal f = 1./(2*M->pf),x=p.x,y=p.y,z=p.z;
-	const mreal *b=M->b;
+	float f = 1./(2*M->pf),x=p.x,y=p.y,z=p.z;
+	const float *b=M->b;
 	p.x = M->x + f*(x*b[0] + y*b[1] + z*b[2]);
 	p.y = M->y + f*(x*b[3] + y*b[4] + z*b[5]);
 	p.z = M->z + f*(x*b[6] + y*b[7] + z*b[8]);
@@ -179,8 +179,8 @@ bool mglCanvas::ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool us
 	bool res = get(MGL_DISABLE_SCALE) || mglBase::ScalePoint(M,p,n,use_nan);
 	PostScale(M,p);
 
-	mreal nx=n.x, ny=n.y, nz=n.z;
-	const mreal *b=M->b;
+	float nx=n.x, ny=n.y, nz=n.z;
+	const float *b=M->b;
 	n.x = nx*b[0] + ny*b[1] + nz*b[2];	// simpler for rotation only
 	n.y = nx*b[3] + ny*b[4] + nz*b[5];
 	n.z = nx*b[6] + ny*b[7] + nz*b[8];
@@ -193,7 +193,7 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 	const mglPnt &pi = Pnt[id];
 	mglPoint pp(pi.x,pi.y,pi.z), nn(pi.u,pi.v,pi.w), p, n;
 	if(mgl_isnan(pp.x))	return -1;
-	const mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
+	const float w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
 	if(pi.sub>=0)
 	{
 		mglPoint q(RestorePnt(pp)/(2*B.pf));
@@ -206,7 +206,7 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z - q.x*d;	n.Set(u.z,u.y,-u.x);	}
 		else
 		{
-			const mreal *b=B.b;	n = nn;
+			const float *b=B.b;	n = nn;
 			p.x = xx+w + q.x*b[0]/2 + q.y*b[1]/2 + q.z*b[2]/2;
 			p.y = yy+h + q.x*b[3]/2 + q.y*b[4]/2 + q.z*b[5]/2;
 			p.z = B.z + q.x*b[6]/2 + q.y*b[7]/2 + q.z*b[8]/2;
@@ -238,23 +238,23 @@ void mglCanvas::LightScale(const mglMatrix *M)
 // NOTE: Perspective is not fully supported now !!! Also it use LAST InPlot parameters!!!
 mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 {
-	const mreal s3 = 2*B.pf;
+	const float s3 = 2*B.pf;
 	mglPoint p;
 
-	const mreal W=Width/2, H=Height/2, D=Depth/2;
-	const mreal *b=B.b,*d=Bp.b;
-	mreal cx = B.z*d[2]+B.y*d[1]+B.x*d[0]-Bp.x*W-d[0]*W+W-d[1]*H-d[2]*D;
-	const mreal c0 = b[6]*d[2]+b[3]*d[1]+b[0]*d[0];
-	const mreal c1 = b[7]*d[2]+b[4]*d[1]+b[1]*d[0];
-	const mreal c2 = b[8]*d[2]+b[5]*d[1]+b[2]*d[0];
-	mreal cy = B.z*d[5]+B.y*d[4]+B.x*d[3]-d[3]*W-Bp.y*H-d[4]*H+H-d[5]*D;
-	const mreal c3 = b[6]*d[5]+b[3]*d[4]+b[0]*d[3];
-	const mreal c4 = b[7]*d[5]+b[4]*d[4]+b[1]*d[3];
-	const mreal c5 = b[8]*d[5]+b[5]*d[4]+b[2]*d[3];
-	mreal cz = B.z*d[8]+B.y*d[7]+B.x*d[6]-d[6]*W-d[7]*H-Bp.z*D-d[8]*D+D;
-	const mreal c6 = b[6]*d[8]+b[3]*d[7]+b[0]*d[6];
-	const mreal c7 = b[7]*d[8]+b[4]*d[7]+b[1]*d[6];
-	const mreal c8 = b[8]*d[8]+b[5]*d[7]+b[2]*d[6];
+	const float W=Width/2, H=Height/2, D=Depth/2;
+	const float *b=B.b,*d=Bp.b;
+	float cx = B.z*d[2]+B.y*d[1]+B.x*d[0]-Bp.x*W-d[0]*W+W-d[1]*H-d[2]*D;
+	const float c0 = b[6]*d[2]+b[3]*d[1]+b[0]*d[0];
+	const float c1 = b[7]*d[2]+b[4]*d[1]+b[1]*d[0];
+	const float c2 = b[8]*d[2]+b[5]*d[1]+b[2]*d[0];
+	float cy = B.z*d[5]+B.y*d[4]+B.x*d[3]-d[3]*W-Bp.y*H-d[4]*H+H-d[5]*D;
+	const float c3 = b[6]*d[5]+b[3]*d[4]+b[0]*d[3];
+	const float c4 = b[7]*d[5]+b[4]*d[4]+b[1]*d[3];
+	const float c5 = b[8]*d[5]+b[5]*d[4]+b[2]*d[3];
+	float cz = B.z*d[8]+B.y*d[7]+B.x*d[6]-d[6]*W-d[7]*H-Bp.z*D-d[8]*D+D;
+	const float c6 = b[6]*d[8]+b[3]*d[7]+b[0]*d[6];
+	const float c7 = b[7]*d[8]+b[4]*d[7]+b[1]*d[6];
+	const float c8 = b[8]*d[8]+b[5]*d[7]+b[2]*d[6];
 	if(norm)	cx=cy=cz=0;
 
 	if(mgl_isnum(ps.z))	// try to take into account perspective if z-value is provided
@@ -263,13 +263,13 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 		ps.x = Width/2 + (ps.x-Width/2)/dd;
 		ps.y = Height/2+ (ps.y-Height/2)/dd;
 	}
-	const mreal xx = ps.x-cx, yy = ps.y-cy, zz = ps.z-cz;
-	const mreal d1=c0*c4-c1*c3, d2=c1*c5-c2*c4, d3=c0*c5-c2*c3;
+	const float xx = ps.x-cx, yy = ps.y-cy, zz = ps.z-cz;
+	const float d1=c0*c4-c1*c3, d2=c1*c5-c2*c4, d3=c0*c5-c2*c3;
 
 	if(mgl_isnum(zz))	// try to use z-values
 	{
 		// put inverse matrix here: [x,y,z]=B^(-1)[xx,yy,zz]
-		mreal det = (-c0*c4*c8+c1*c3*c8+c0*c5*c7-c2*c3*c7-c1*c5*c6+c2*c4*c6)/s3;
+		float det = (-c0*c4*c8+c1*c3*c8+c0*c5*c7-c2*c3*c7-c1*c5*c6+c2*c4*c6)/s3;
 		p.x = (c2*c4-c1*c5)*zz+(c1*c8-c2*c7)*yy+(c5*c7-c4*c8)*xx;	p.x /= det;
 		p.y = (c0*c5-c2*c3)*zz+(c2*c6-c0*c8)*yy+(c3*c8-c5*c6)*xx;	p.y /= det;
 		p.z = (c1*c3-c0*c4)*zz+(c0*c7-c1*c6)*yy+(c4*c6-c3*c7)*xx;	p.z /= det;
@@ -450,19 +450,18 @@ void mglCanvas::Finish()
 	size_t n=Width*Height;
 	if(Quality!=MGL_DRAW_DOTS)
 	{
-		if((Quality&MGL_DRAW_LMEM) || (memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&MGL_DRAW_LMEM) && Prm.size()>0))
+		if((Quality&MGL_DRAW_LMEM) || ( Bp!=bp && !(Quality&MGL_DRAW_LMEM) && Prm.size()>0))
 			clr(MGL_FINISHED);
 		if(!get(MGL_FINISHED))
 		{
 			if(!(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
 			{
-				PreparePrim(0);	bp=Bp;
-				clr(MGL_FINISHED);
+				PreparePrim(0);	bp=Bp;	clr(MGL_FINISHED);
 				mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
 			}
 			BDef[3] = (Flag&3)!=2 ? 0:255;
 			if(Quality&MGL_DRAW_NORM)	mglStartThread(&mglCanvas::pxl_combine,this,n);
-			else 			mglStartThread(&mglCanvas::pxl_memcpy,this,n);
+			else	mglStartThread(&mglCanvas::pxl_memcpy,this,n);
 			BDef[3] = 255;
 		}
 	}
