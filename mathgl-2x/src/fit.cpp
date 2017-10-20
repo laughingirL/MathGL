@@ -94,7 +94,7 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 	return GSL_SUCCESS;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
+int static mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 {
 	mglFitData *fd = (mglFitData *)data;
 	mglDataV *var = new mglDataV[fd->m];
@@ -125,7 +125,7 @@ int MGL_NO_EXPORT mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 	return GSL_SUCCESS;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f, gsl_matrix * J)
+int static mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f, gsl_matrix * J)
 {
 	mglFitData *fd = (mglFitData *)data;
 	mglDataV *var = new mglDataV[fd->m];
@@ -166,7 +166,7 @@ int MGL_NO_EXPORT mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f
 #endif
 //-----------------------------------------------------------------------------
 /// GSL based fitting procedure for formula/arguments specified by string
-mreal MGL_NO_EXPORT mgl_fit_base(mglFitData &fd, mreal *ini)
+mreal static mgl_fit_base(mglFitData &fd, mreal *ini)
 {
 #if MGL_HAVE_GSL
 	long m=fd.m,n=fd.n,iter=0;
@@ -296,7 +296,7 @@ HMDT MGL_EXPORT mgl_fit_ys(HMGL gr, HCDT y, HCDT s, const char *eq, const char *
 	return mgl_fit_xys(gr,&x,y,s,eq,var,ini,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_fill_fit(HMGL gr, mglData &fit, mglData &in, mglFitData &fd, const char *var, long nx, long ny, long nz, long k)
+void static mgl_fill_fit(HMGL gr, mglData &fit, mglData &in, mglFitData &fd, const char *var, long nx, long ny, long nz, long k)
 {
 	mglDataV *vv = new mglDataV[fd.m];
 	std::vector<mglDataA*> list;

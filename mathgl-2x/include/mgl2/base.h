@@ -61,7 +61,7 @@ public:
 		for(size_t i=0;i<dat.size();i++)
 			memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
 		n=st.n;	}
-	mglStack(size_t Pbuf=10)
+	explicit mglStack(size_t Pbuf=10)
 	{	mutex = 0;	pb=Pbuf;	dat.push_back(new T[(size_t)1<<pb]);
 		n=0;	}
 	~mglStack()	{	clear();	delete [](dat[0]);	}
@@ -149,7 +149,8 @@ struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 		};
 		uint64_t m;
 	};
-	mglPrim(int t=0):n1(0),n2(0),n3(0),n4(0),type(t),angl(0),id(0),z(0),w(0),m(0)	{}
+	mglPrim():n1(0),n2(0),n3(0),n4(0),type(0),angl(0),id(0),z(0),w(0),m(0)	{}
+	explicit mglPrim(int t):n1(0),n2(0),n3(0),n4(0),type(t),angl(0),id(0),z(0),w(0),m(0)	{}
 	mglPrim(const mglPrim &aa) : n1(aa.n1),n2(aa.n2),n3(aa.n3),n4(aa.n4),type(aa.type),angl(aa.angl),id(aa.id),z(aa.z),w(aa.w),m(aa.m) 	{}
 	const mglPrim &operator=(const mglPrim &aa)	{	memcpy(this, &aa, sizeof(mglPrim));	return aa;	}
 };
@@ -589,6 +590,9 @@ public:
 	inline long GetTxtNum() const		{	return Txt.size();	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool use_nan=true) const;
+
+	inline const mglBlock &GetSub(size_t i) const	{	return Sub[i];	}
+	inline const mglBlock &GetSub() const	{	return Sub.back();	}
 
 	virtual mreal GetOrgX(char dir, bool inv=false) const=0;	///< Get Org.x (parse NAN value)
 	virtual mreal GetOrgY(char dir, bool inv=false) const=0;	///< Get Org.y (parse NAN value)

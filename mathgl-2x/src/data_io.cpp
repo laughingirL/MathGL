@@ -989,7 +989,7 @@ void MGL_EXPORT mgl_data_transpose_(uintptr_t *d, const char *dim,int l)
 {	char *s=new char[l+1];	memcpy(s,dim,l);	s[l]=0;
 	mgl_data_transpose(_DT_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_modify(void *par)
+static void *mgl_modify(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	const mglFormula *f = (const mglFormula *)(t->v);

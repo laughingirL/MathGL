@@ -353,7 +353,7 @@ void inline mgl_put_inbox(mreal a1, mreal a2, mreal &a)
 	if(a1<a2)	{	if(a<a1)	a=a1;	if(a>a2)	a=a2;	}
 	else		{	if(a<a2)	a=a2;	if(a>a1)	a=a1;	}
 }
-void MGL_NO_EXPORT mgl_coor_box(HMGL gr, mglPoint &p)
+static void mgl_coor_box(HMGL gr, mglPoint &p)
 {
 	mgl_put_inbox(gr->Min.x, gr->Max.x, p.x);
 	mgl_put_inbox(gr->Min.y, gr->Max.y, p.y);
@@ -418,7 +418,7 @@ bool mglBase::AddPntQ(mglPnt &q, const mglMatrix *mat, mglPoint p, mreal c, mglP
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 	if(norefr)	q.v=0;
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
-	q.sub=mat->norot?-1*(short)Sub.size():Sub.size()-1;
+	q.sub=mat->norot?-1*(int)Sub.size():Sub.size()-1;
 	return true;
 }
 //-----------------------------------------------------------------------------

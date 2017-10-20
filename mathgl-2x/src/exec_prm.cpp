@@ -28,7 +28,7 @@
 #include "mgl2/parser.h"
 wchar_t *mgl_str_copy(const char *s);
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_arc(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_arc(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
@@ -47,7 +47,7 @@ int MGL_NO_EXPORT mgls_arc(mglGraph *gr, long , mglArg *a, const char *k, const 
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_axis(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_axis(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(k[0]==0)	gr->Axis("xyz","",opt);
@@ -62,7 +62,7 @@ int MGL_NO_EXPORT mgls_axis(mglGraph *gr, long , mglArg *a, const char *k, const
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_background(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int static mgls_background(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->LoadBackground(a[0].s.s);
@@ -71,7 +71,7 @@ int MGL_NO_EXPORT mgls_background(mglGraph *gr, long , mglArg *a, const char *k,
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ball(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_ball(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nn"))	gr->Mark(mglPoint(a[0].v,a[1].v,NAN),"r.");
@@ -82,7 +82,7 @@ int MGL_NO_EXPORT mgls_ball(mglGraph *gr, long , mglArg *a, const char *k, const
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_box(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_box(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(k[0]==0)	gr->Box();
@@ -92,7 +92,7 @@ int MGL_NO_EXPORT mgls_box(mglGraph *gr, long , mglArg *a, const char *k, const 
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_circle(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_circle(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnn"))	gr->Circle(mglPoint(a[0].v,a[1].v, NAN), a[2].v);
@@ -103,7 +103,7 @@ int MGL_NO_EXPORT mgls_circle(mglGraph *gr, long , mglArg *a, const char *k, con
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_colorbar(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_colorbar(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(k[0]==0)	gr->Colorbar();
@@ -121,7 +121,7 @@ int MGL_NO_EXPORT mgls_colorbar(mglGraph *gr, long , mglArg *a, const char *k, c
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_cone(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_cone(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnnnn"))	gr->Cone(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v);
@@ -132,7 +132,7 @@ int MGL_NO_EXPORT mgls_cone(mglGraph *gr, long , mglArg *a, const char *k, const
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_curve(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int static mgls_curve(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"nnnnnnnn"))
@@ -159,7 +159,7 @@ int MGL_NO_EXPORT mgls_curve(mglGraph *gr, long , mglArg *a, const char *k, cons
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_drop(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_drop(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
@@ -182,7 +182,7 @@ int MGL_NO_EXPORT mgls_drop(mglGraph *gr, long , mglArg *a, const char *k, const
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ellipse(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_ellipse(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
@@ -197,7 +197,7 @@ int MGL_NO_EXPORT mgls_ellipse(mglGraph *gr, long , mglArg *a, const char *k, co
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_errbox(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnn"))
@@ -212,7 +212,7 @@ int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long , mglArg *a, const char *k, con
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_face(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_face(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnnnnn"))
@@ -231,7 +231,7 @@ int MGL_NO_EXPORT mgls_face(mglGraph *gr, long , mglArg *a, const char *k, const
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_facex(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_facex(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))	gr->FaceX(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v);
@@ -241,7 +241,7 @@ int MGL_NO_EXPORT mgls_facex(mglGraph *gr, long , mglArg *a, const char *k, cons
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_facey(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_facey(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))	gr->FaceY(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v);
@@ -251,7 +251,7 @@ int MGL_NO_EXPORT mgls_facey(mglGraph *gr, long , mglArg *a, const char *k, cons
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_facez(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_facez(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))	gr->FaceZ(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v);
@@ -261,7 +261,7 @@ int MGL_NO_EXPORT mgls_facez(mglGraph *gr, long , mglArg *a, const char *k, cons
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	char *buf;	buf = new char[4096];
@@ -308,7 +308,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 	gr->Self()->LoadState();	delete []buf;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_flame2d(mglGraph *, long, mglArg *a, const char *k, const char *)
+int static mgls_flame2d(mglGraph *, long, mglArg *a, const char *k, const char *)
 {
 	mglData *fx = dynamic_cast<mglData*>(a[0].d);
 	mglData *fy = dynamic_cast<mglData*>(a[1].d);
@@ -330,7 +330,7 @@ int MGL_NO_EXPORT mgls_flame2d(mglGraph *, long, mglArg *a, const char *k, const
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_fplot(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_fplot(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->FPlot(a[0].s.s, "",opt);
@@ -341,7 +341,7 @@ int MGL_NO_EXPORT mgls_fplot(mglGraph *gr, long , mglArg *a, const char *k, cons
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_fsurf(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_fsurf(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->FSurf(a[0].s.s, "",opt);
@@ -352,7 +352,7 @@ int MGL_NO_EXPORT mgls_fsurf(mglGraph *gr, long , mglArg *a, const char *k, cons
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_grid(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_grid(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(k[0]==0)	gr->Grid("xyzt", "B",opt);
@@ -362,7 +362,7 @@ int MGL_NO_EXPORT mgls_grid(mglGraph *gr, long , mglArg *a, const char *k, const
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ifs2d(mglGraph *, long, mglArg *a, const char *k, const char *)
+int static mgls_ifs2d(mglGraph *, long, mglArg *a, const char *k, const char *)
 {
 	mglData *fx = dynamic_cast<mglData*>(a[0].d);
 	mglData *fy = dynamic_cast<mglData*>(a[1].d);
@@ -384,7 +384,7 @@ int MGL_NO_EXPORT mgls_ifs2d(mglGraph *, long, mglArg *a, const char *k, const c
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ifs3d(mglGraph *, long, mglArg *a, const char *k, const char *)
+int static mgls_ifs3d(mglGraph *, long, mglArg *a, const char *k, const char *)
 {
 	mglData *f = dynamic_cast<mglData*>(a[0].d);
 	if(!f)	return 1;
@@ -395,7 +395,7 @@ int MGL_NO_EXPORT mgls_ifs3d(mglGraph *, long, mglArg *a, const char *k, const c
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ifsfile(mglGraph *, long, mglArg *a, const char *k, const char *)
+int static mgls_ifsfile(mglGraph *, long, mglArg *a, const char *k, const char *)
 {
 	mglData *f = dynamic_cast<mglData*>(a[0].d);
 	if(!f)	return 1;
@@ -406,7 +406,7 @@ int MGL_NO_EXPORT mgls_ifsfile(mglGraph *, long, mglArg *a, const char *k, const
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_legend(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_legend(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(k[0]==0)	gr->Legend(3, "#", opt);
@@ -418,7 +418,7 @@ int MGL_NO_EXPORT mgls_legend(mglGraph *gr, long , mglArg *a, const char *k, con
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_line(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_line(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnn"))
@@ -433,7 +433,7 @@ int MGL_NO_EXPORT mgls_line(mglGraph *gr, long , mglArg *a, const char *k, const
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_logo(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_logo(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->Logo(a[0].s.s,false,opt);
@@ -442,7 +442,7 @@ int MGL_NO_EXPORT mgls_logo(mglGraph *gr, long , mglArg *a, const char *k, const
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_polygon(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_polygon(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
@@ -457,7 +457,7 @@ int MGL_NO_EXPORT mgls_polygon(mglGraph *gr, long , mglArg *a, const char *k, co
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_rect(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_rect(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnn"))
@@ -483,7 +483,7 @@ int MGL_NO_EXPORT mgls_rect(mglGraph *gr, long , mglArg *a, const char *k, const
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_rhomb(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_rhomb(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
@@ -498,7 +498,7 @@ int MGL_NO_EXPORT mgls_rhomb(mglGraph *gr, long , mglArg *a, const char *k, cons
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_sphere(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_sphere(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnn"))	gr->Sphere(mglPoint(a[0].v,a[1].v), a[2].v);
@@ -509,7 +509,7 @@ int MGL_NO_EXPORT mgls_sphere(mglGraph *gr, long , mglArg *a, const char *k, con
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_symbol(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
+int static mgls_symbol(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
 {
 	int res=0;
 	if(k[0]=='n')
@@ -534,7 +534,7 @@ int MGL_NO_EXPORT mgls_symbol(mglGraph *gr, long , mglArg *a, const char *k, con
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_text(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
+int static mgls_text(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
 {
 	int res=0;
 	if(k[0]=='n')
@@ -565,7 +565,7 @@ int MGL_NO_EXPORT mgls_text(mglGraph *gr, long , mglArg *a, const char *k, const
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_title(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_title(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"s"))	gr->Title(a[0].s.w);
@@ -575,7 +575,7 @@ int MGL_NO_EXPORT mgls_title(mglGraph *gr, long , mglArg *a, const char *k, cons
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_tlabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_tlabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->Label('t', a[0].s.w, 1, opt);
@@ -584,7 +584,7 @@ int MGL_NO_EXPORT mgls_tlabel(mglGraph *gr, long , mglArg *a, const char *k, con
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_xlabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_xlabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->Label('x', a[0].s.w, 1, opt);
@@ -593,7 +593,7 @@ int MGL_NO_EXPORT mgls_xlabel(mglGraph *gr, long , mglArg *a, const char *k, con
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ylabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_ylabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->Label('y', a[0].s.w, 1, opt);
@@ -602,7 +602,7 @@ int MGL_NO_EXPORT mgls_ylabel(mglGraph *gr, long , mglArg *a, const char *k, con
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_zlabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int static mgls_zlabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->Label('z', a[0].s.w, 1, opt);

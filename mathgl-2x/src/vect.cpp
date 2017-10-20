@@ -306,7 +306,7 @@ void MGL_EXPORT mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintpt
 //-----------------------------------------------------------------------------
 struct _mgl_vec_slice	{	mglData x,y,z,ax,ay,az;	};
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_get_slice(_mgl_vec_slice &s, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, char dir, mreal d, bool both)
+void static mgl_get_slice(_mgl_vec_slice &s, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, char dir, mreal d, bool both)
 {
 	long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(), nx=1,ny=1,p;
 
@@ -513,7 +513,7 @@ void MGL_EXPORT mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_
 //	Flow 2d series
 //
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, HCDT x, HCDT y, HCDT ax, HCDT ay, long ss, bool vv)
+void static flow(mglBase *gr, double zVal, double u, double v, HCDT x, HCDT y, HCDT ax, HCDT ay, long ss, bool vv)
 {
 	long n=100*(ax->GetNx()+ax->GetNy());
 	bool nboth = x->GetNx()*x->GetNy()!=ax->GetNx()*ax->GetNy() || y->GetNx()*y->GetNy()!=ax->GetNx()*ax->GetNy();
@@ -1238,7 +1238,7 @@ void MGL_EXPORT mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const c
 //	Pipe 2d series
 //
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, HCDT x, HCDT y, HCDT ax, HCDT ay, double r0,long sc)
+void static flowr(mglBase *gr, double zVal, double u, double v, HCDT x, HCDT y, HCDT ax, HCDT ay, double r0,long sc)
 {
 	long n=100*(ax->GetNx()+ax->GetNy());
 	bool nboth = x->GetNx()*x->GetNy()!=ax->GetNx()*ax->GetNy() || y->GetNx()*y->GetNy()!=ax->GetNx()*ax->GetNy();

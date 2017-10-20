@@ -156,7 +156,7 @@ uintptr_t MGL_EXPORT mgl_data_subdata_(uintptr_t *d, int *xx,int *yy,int *zz)
 uintptr_t MGL_EXPORT mgl_data_subdata_ext_(uintptr_t *d, uintptr_t *xx, uintptr_t *yy, uintptr_t *zz)
 {	return uintptr_t(mgl_data_subdata_ext(_DT_,_DA_(xx),_DA_(yy),_DA_(zz)));	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_resize(void *par)
+static void *mgl_resize(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0]+0.1, ny=t->p[1]+0.1;
@@ -211,7 +211,7 @@ HMDT MGL_EXPORT mgl_data_combine(HCDT d1, HCDT d2)
 uintptr_t MGL_EXPORT mgl_data_combine_(uintptr_t *a, uintptr_t *b)
 {	return uintptr_t(mgl_data_combine(_DA_(a),_DA_(b)));	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_sum_z(void *par)
+static void *mgl_sum_z(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nz=t->p[2], nn=t->n;
@@ -228,7 +228,7 @@ MGL_NO_EXPORT void *mgl_sum_z(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_sum_y(void *par)
+static void *mgl_sum_y(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], ny=t->p[1], nn=t->n;
@@ -245,7 +245,7 @@ MGL_NO_EXPORT void *mgl_sum_y(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_sum_x(void *par)
+static void *mgl_sum_x(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], nn=t->n;
@@ -300,7 +300,7 @@ uintptr_t MGL_EXPORT mgl_data_sum_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	uintptr_t r=uintptr_t(mgl_data_sum(_DT_,s));	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_max_z(void *par)
+static void *mgl_max_z(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nz=t->p[2], nn=t->n;
@@ -316,7 +316,7 @@ MGL_NO_EXPORT void *mgl_max_z(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_max_y(void *par)
+static void *mgl_max_y(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], ny=t->p[1], nn=t->n;
@@ -332,7 +332,7 @@ MGL_NO_EXPORT void *mgl_max_y(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_max_x(void *par)
+static void *mgl_max_x(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], nn=t->n;
@@ -386,7 +386,7 @@ uintptr_t MGL_EXPORT mgl_data_max_dir_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	uintptr_t r=uintptr_t(mgl_data_max_dir(_DT_,s));	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_min_z(void *par)
+static void *mgl_min_z(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nz=t->p[2], nn=t->n;
@@ -402,7 +402,7 @@ MGL_NO_EXPORT void *mgl_min_z(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_min_y(void *par)
+static void *mgl_min_y(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], ny=t->p[1], nn=t->n;
@@ -418,7 +418,7 @@ MGL_NO_EXPORT void *mgl_min_y(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_min_x(void *par)
+static void *mgl_min_x(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], nn=t->n;
@@ -661,7 +661,7 @@ void MGL_EXPORT mgl_data_div_num_(uintptr_t *d, mreal *b)		{	mgl_data_div_num(_D
 void MGL_EXPORT mgl_data_add_num_(uintptr_t *d, mreal *b)		{	mgl_data_add_num(_DT_, *b);	}
 void MGL_EXPORT mgl_data_sub_num_(uintptr_t *d, mreal *b)		{	mgl_data_sub_num(_DT_, *b);	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_hist_p(mglThreadD *t,mreal *a)
+void static mgl_hist_p(mglThreadD *t,mreal *a)
 {
 	long n=t[0].p[0];
 	memset(a,0,n*sizeof(mreal));
@@ -675,7 +675,7 @@ void MGL_NO_EXPORT mgl_hist_p(mglThreadD *t,mreal *a)
 		delete []b;
 	}
 }
-MGL_NO_EXPORT void *mgl_hist_1(void *par)
+static void *mgl_hist_1(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nn=t->n, n = t->p[0];
@@ -697,7 +697,7 @@ MGL_NO_EXPORT void *mgl_hist_1(void *par)
 	}
 	t->a = b;	return 0;
 }
-MGL_NO_EXPORT void *mgl_hist_2(void *par)
+static void *mgl_hist_2(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nn=t->n, n = t->p[0];
@@ -789,7 +789,7 @@ struct mglRoots
 	void (*func)(const mreal *x, mreal *f, void *par);
 	void *par;
 };
-int MGL_NO_EXPORT mgl_root(const gsl_vector *x, void *params, gsl_vector *f)
+int static mgl_root(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	mglRoots *p = (mglRoots *)params;
 	for(size_t i=0;i<p->n;i++)	p->x[i] = gsl_vector_get (x, i);
@@ -875,7 +875,7 @@ mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal x, void *par), mreal x0, void
 }
 //-----------------------------------------------------------------------------
 struct MGL_NO_EXPORT mglFuncV	{	mglFormula *eq;	char var;	};
-mreal MGL_NO_EXPORT mgl_funcv(mreal v, void *par)
+mreal static mgl_funcv(mreal v, void *par)
 {
 	mglFuncV *f = (mglFuncV *)par;
 	mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
@@ -912,7 +912,7 @@ mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *va
 	mreal r = mgl_find_root_txt(s,*ini,*var);
 	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_pulse_z(void *par)
+static void *mgl_pulse_z(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nz=t->p[2], nn=t->n;
@@ -952,7 +952,7 @@ MGL_NO_EXPORT void *mgl_pulse_z(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_pulse_y(void *par)
+static void *mgl_pulse_y(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], ny=t->p[1], nn=t->n;
@@ -993,7 +993,7 @@ MGL_NO_EXPORT void *mgl_pulse_y(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_pulse_x(void *par)
+static void *mgl_pulse_x(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], nn=t->n;

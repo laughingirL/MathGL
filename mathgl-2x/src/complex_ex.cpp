@@ -191,7 +191,7 @@ uintptr_t MGL_EXPORT mgl_datac_subdata_(uintptr_t *d, int *xx,int *yy,int *zz)
 uintptr_t MGL_EXPORT mgl_datac_subdata_ext_(uintptr_t *d, uintptr_t *xx, uintptr_t *yy, uintptr_t *zz)
 {	return uintptr_t(mgl_datac_subdata_ext(_DC_,_DA_(xx),_DA_(yy),_DA_(zz)));	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_cresize(void *par)
+static void *mgl_cresize(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	long nx=t->p[0]+0.1, ny=t->p[1]+0.1;
@@ -265,7 +265,7 @@ HADT MGL_EXPORT mgl_datac_combine(HCDT d1, HCDT d2)
 uintptr_t MGL_EXPORT mgl_datac_combine_(uintptr_t *a, uintptr_t *b)
 {	return uintptr_t(mgl_datac_combine(_DA_(a),_DA_(b)));	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_sumc_z(void *par)
+static void *mgl_sumc_z(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	long nz=t->p[2], nn=t->n;
@@ -282,7 +282,7 @@ MGL_NO_EXPORT void *mgl_sumc_z(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_sumc_y(void *par)
+static void *mgl_sumc_y(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	long nx=t->p[0], ny=t->p[1], nn=t->n;
@@ -299,7 +299,7 @@ MGL_NO_EXPORT void *mgl_sumc_y(void *par)
 	}
 	return 0;
 }
-MGL_NO_EXPORT void *mgl_sumc_x(void *par)
+static void *mgl_sumc_x(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	long nx=t->p[0], nn=t->n;

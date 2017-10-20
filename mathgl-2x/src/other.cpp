@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_surf_gen(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, const char *sch);
 //-----------------------------------------------------------------------------
-HCDT MGL_NO_EXPORT fill_slice_x(HMGL gr, double sv, HCDT a, mglDataV &xx, mglDataV &yy, mglDataV &zz, mglData &aa)
+HCDT static fill_slice_x(HMGL gr, double sv, HCDT a, mglDataV &xx, mglDataV &yy, mglDataV &zz, mglData &aa)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(l>1)
@@ -49,7 +49,7 @@ HCDT MGL_NO_EXPORT fill_slice_x(HMGL gr, double sv, HCDT a, mglDataV &xx, mglDat
 	return a;
 }
 //-----------------------------------------------------------------------------
-HCDT MGL_NO_EXPORT fill_slice_y(HMGL gr, double sv, HCDT a, mglDataV &xx, mglDataV &yy, mglDataV &zz, mglData &aa)
+HCDT static fill_slice_y(HMGL gr, double sv, HCDT a, mglDataV &xx, mglDataV &yy, mglDataV &zz, mglData &aa)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(l>1)
@@ -72,7 +72,7 @@ HCDT MGL_NO_EXPORT fill_slice_y(HMGL gr, double sv, HCDT a, mglDataV &xx, mglDat
 	return a;
 }
 //-----------------------------------------------------------------------------
-HCDT MGL_NO_EXPORT fill_slice_z(HMGL gr, double sv, HCDT a, mglDataV &xx, mglDataV &yy, mglDataV &zz, mglData &aa)
+HCDT static fill_slice_z(HMGL gr, double sv, HCDT a, mglDataV &xx, mglDataV &yy, mglDataV &zz, mglData &aa)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);

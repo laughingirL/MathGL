@@ -193,7 +193,7 @@ inline void Fl_MathGL::draw_plot()	// drawing itself
 	run = false;	Fl::awake();
 }
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *draw_plot_thr(void *v)
+static void *draw_plot_thr(void *v)
 {	((Fl_MathGL*)v)->draw_plot();	return 0;	}
 //-----------------------------------------------------------------------------
 void Fl_MathGL::update()
@@ -519,21 +519,21 @@ void Fl_MGLView::exec_pause()
 #endif
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_pause_cb(Fl_Widget*, void* v)
+void static mgl_pause_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_pause();	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_grid_cb(Fl_Widget*, void* v)
+void static mgl_grid_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_grid();	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_alpha_cb(Fl_Widget*, void* v)
+void static mgl_alpha_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_alpha();	}
 void mglCanvasFL::ToggleAlpha()	{	mgl->toggle_alpha();	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_light_cb(Fl_Widget*, void* v)
+void static mgl_light_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_light();	}
 void mglCanvasFL::ToggleLight()	{	mgl->toggle_light();	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_norm_cb(Fl_Widget*, void* v)
+void static mgl_norm_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	e->setoff_rotate();			e->setoff_zoom();
@@ -543,14 +543,14 @@ void MGL_NO_EXPORT mgl_norm_cb(Fl_Widget*, void* v)
 }
 void mglCanvasFL::ToggleNo()	{	mgl_norm_cb(0,mgl);	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_zoom_cb(Fl_Widget*, void* v)
+void static mgl_zoom_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	e->setoff_rotate();	e->toggle_zoom();
 }
 void mglCanvasFL::ToggleZoom()	{	mgl_zoom_cb(0,mgl);	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_rotate_cb(Fl_Widget*, void* v)
+void static mgl_rotate_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	e->setoff_zoom();	e->toggle_rotate();
@@ -563,11 +563,11 @@ void Fl_MGLView::update()
 	FMGL->set_flag(alpha + 2*light);
 	FMGL->update();
 }
-void MGL_NO_EXPORT mgl_draw_cb(Fl_Widget*, void* v)
+void static mgl_draw_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->update();	}
 void mglCanvasFL::Update()		{	mgl->update();	Wnd->show();	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT const char *mgl_save_name(const char *ext)
+static const char *mgl_save_name(const char *ext)
 {
 	static std::string fname;
 	fname = mgl_file_chooser(_("Save File As?"), ext, true);
@@ -577,91 +577,91 @@ MGL_NO_EXPORT const char *mgl_save_name(const char *ext)
 }
 #define _FGR_	((Fl_MGLView*)v)->FMGL->get_graph()
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_png_cb(Fl_Widget*, void* v)
+void static mgl_export_png_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.png");
 	if(fname)	mgl_write_png(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_bps_cb(Fl_Widget*, void* v)
+void static mgl_export_bps_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.eps");
 	if(fname)	mgl_write_bps(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_pngn_cb(Fl_Widget*, void* v)
+void static mgl_export_pngn_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.png");
 	if(fname)	mgl_write_png_solid(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_jpeg_cb(Fl_Widget*, void* v)
+void static mgl_export_jpeg_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.jpg");
 	if(fname)	mgl_write_jpg(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_svg_cb(Fl_Widget*, void* v)
+void static mgl_export_svg_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.svg");
 	if(fname)	mgl_write_svg(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_eps_cb(Fl_Widget*, void* v)
+void static mgl_export_eps_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.eps");
 	if(fname)	mgl_write_eps(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_gif_cb(Fl_Widget*, void* v)
+void static mgl_export_gif_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.gif");
 	if(fname)	mgl_write_gif(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_bmp_cb(Fl_Widget*, void* v)
+void static mgl_export_bmp_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.bmp");
 	if(fname)	mgl_write_bmp(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_prc_cb(Fl_Widget*, void* v)
+void static mgl_export_prc_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.prc");
 	if(fname)	mgl_write_prc(_FGR_,fname,0,1);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_tex_cb(Fl_Widget*, void* v)
+void static mgl_export_tex_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.tex");
 	if(fname)	mgl_write_tex(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_obj_cb(Fl_Widget*, void* v)
+void static mgl_export_obj_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.obj");
 	if(fname)	mgl_write_obj(_FGR_,fname,0,1);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_off_cb(Fl_Widget*, void* v)
+void static mgl_export_off_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.off");
 	if(fname)	mgl_write_off(_FGR_,fname,0,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_stl_cb(Fl_Widget*, void* v)
+void static mgl_export_stl_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.stl");
 	if(fname)	mgl_write_stl(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_export_xyz_cb(Fl_Widget*, void* v)
+void static mgl_export_xyz_cb(Fl_Widget*, void* v)
 {
 	const char *fname = mgl_save_name("*.xyz");
 	if(fname)	mgl_write_xyz(_FGR_,fname,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_su_cb(Fl_Widget*, void* v)
+void static mgl_su_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
@@ -670,7 +670,7 @@ void MGL_NO_EXPORT mgl_su_cb(Fl_Widget*, void* v)
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_sd_cb(Fl_Widget*, void* v)
+void static mgl_sd_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
@@ -679,7 +679,7 @@ void MGL_NO_EXPORT mgl_sd_cb(Fl_Widget*, void* v)
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_sr_cb(Fl_Widget*, void* v)
+void static mgl_sr_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
@@ -688,7 +688,7 @@ void MGL_NO_EXPORT mgl_sr_cb(Fl_Widget*, void* v)
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_sl_cb(Fl_Widget*, void* v)
+void static mgl_sl_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
@@ -697,7 +697,7 @@ void MGL_NO_EXPORT mgl_sl_cb(Fl_Widget*, void* v)
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_sz_cb(Fl_Widget*, void* v)
+void static mgl_sz_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
@@ -707,7 +707,7 @@ void MGL_NO_EXPORT mgl_sz_cb(Fl_Widget*, void* v)
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_so_cb(Fl_Widget*, void* v)
+void static mgl_so_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
@@ -717,22 +717,22 @@ void MGL_NO_EXPORT mgl_so_cb(Fl_Widget*, void* v)
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_adjust_cb(Fl_Widget*, void*v)
+void static mgl_adjust_cb(Fl_Widget*, void*v)
 {	Fl_MGLView *e = (Fl_MGLView*)v;	if(e)	e->adjust();	}
 void mglCanvasFL::Adjust()	{	mgl_adjust_cb(0,mgl);	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_oncemore_cb(Fl_Widget*, void*v)
+void static mgl_oncemore_cb(Fl_Widget*, void*v)
 {	Fl_MGLView *e = (Fl_MGLView*)v;	if(e && e->reload)	e->reload(e->par);	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_quit_cb(Fl_Widget*, void*)	{	Fl::first_window()->hide();	}
+void static mgl_quit_cb(Fl_Widget*, void*)	{	Fl::first_window()->hide();	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_snext_cb(Fl_Widget*, void* v)
+void static mgl_snext_cb(Fl_Widget*, void* v)
 {	Fl_MGLView *e = (Fl_MGLView*)v;	if(e && e->next)	e->next(e->par);	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_sprev_cb(Fl_Widget*, void* v)
+void static mgl_sprev_cb(Fl_Widget*, void* v)
 {	Fl_MGLView *e = (Fl_MGLView*)v;	if(e && e->prev)	e->prev(e->par);	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_time_cb(void *v)
+void static mgl_time_cb(void *v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;
 	if(!e || !e->is_sshow() || !e->next || !e->delay)	return;
@@ -740,7 +740,7 @@ void MGL_NO_EXPORT mgl_time_cb(void *v)
 	Fl::repeat_timeout(e->delay(e->par), mgl_time_cb, v);
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_sshow_cb(Fl_Widget *, void *v)
+void static mgl_sshow_cb(Fl_Widget *, void *v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;
 	if(!e || !e->delay || !e->next)	return;
@@ -750,15 +750,15 @@ void MGL_NO_EXPORT mgl_sshow_cb(Fl_Widget *, void *v)
 void mglCanvasFL::Animation()	{	mgl_sshow_cb(0,mgl);	}
 void MGL_LOCAL_CONST mgl_no_cb(Fl_Widget *, void *)	{}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_stop_cb(Fl_Widget*, void* v)
+void static mgl_stop_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;
 	if(e)	e->FMGL->stop();
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_fl_next(void *v)	{	((mglCanvasWnd*)v)->NextFrame();	}	///< Callback function for next frame
-void MGL_NO_EXPORT mgl_fl_prev(void *v)	{	((mglCanvasWnd*)v)->PrevFrame();	}	///< Callback function for prev frame
-void MGL_NO_EXPORT mgl_fl_reload(void *v)	{	((mglCanvasWnd*)v)->ReLoad();	}		///< Callback function for reloading
+void static mgl_fl_next(void *v)	{	((mglCanvasWnd*)v)->NextFrame();	}	///< Callback function for next frame
+void static mgl_fl_prev(void *v)	{	((mglCanvasWnd*)v)->PrevFrame();	}	///< Callback function for prev frame
+void static mgl_fl_reload(void *v)	{	((mglCanvasWnd*)v)->ReLoad();	}		///< Callback function for reloading
 mreal MGL_LOCAL_PURE mgl_fl_delay(void *v)	{	return ((mglCanvasWnd*)v)->GetDelay();	}	///< Callback function for delay
 //-----------------------------------------------------------------------------
 void copy_coor_cb(Fl_Widget *,void *v)
@@ -1021,7 +1021,7 @@ uintptr_t MGL_EXPORT mgl_create_graph_fltk_(const char *title, int l)
 }
 int MGL_EXPORT mgl_fltk_run_()	{	return mgl_fltk_run();	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_fltk_tmp(void *)
+static void *mgl_fltk_tmp(void *)
 {	mgl_fltk_run();	return 0;	}
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread

@@ -294,7 +294,7 @@ void MGL_EXPORT mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_
 //
 //-----------------------------------------------------------------------------
 struct mglPointA {	mglPoint p;	bool orig;	mglPointA(const mglPoint &pp, bool o) : p(pp), orig(o) {}	};
-std::vector<mglPointA> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &p1, const mglPoint &p2, HCDT xx, HCDT yy, HCDT zz, HCDT cc)
+std::vector<mglPointA> static mgl_pnt_prepare(const mglPoint &p1, const mglPoint &p2, HCDT xx, HCDT yy, HCDT zz, HCDT cc)
 {
 	std::vector<mglPointA> out;
 	long n = xx->GetNx();
@@ -321,7 +321,7 @@ std::vector<mglPointA> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &p1, const m
 	}
 	return out;
 }
-std::vector<mglPointA> MGL_NO_EXPORT mgl_pnt_copy(HCDT xx, HCDT yy, HCDT zz, HCDT cc)
+std::vector<mglPointA> static mgl_pnt_copy(HCDT xx, HCDT yy, HCDT zz, HCDT cc)
 {
 	std::vector<mglPointA> out;
 	long n = xx->GetNx();
@@ -620,7 +620,7 @@ void MGL_EXPORT mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen, const ch
 //-----------------------------------------------------------------------------
 struct mglPointB {	mglPoint p1, p2;	bool orig;
 	mglPointB(const mglPoint &pp1, const mglPoint &pp2, bool o) : p1(pp1), p2(pp2), orig(o) {}	};
-std::vector<mglPointB> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &a1, const mglPoint &a2, HCDT xx1, HCDT yy1, HCDT zz1, HCDT xx2, HCDT yy2, HCDT zz2)
+std::vector<mglPointB> static mgl_pnt_prepare(const mglPoint &a1, const mglPoint &a2, HCDT xx1, HCDT yy1, HCDT zz1, HCDT xx2, HCDT yy2, HCDT zz2)
 {
 	std::vector<mglPointB> out;
 	long n = xx1->GetNx();
@@ -666,7 +666,7 @@ std::vector<mglPointB> MGL_NO_EXPORT mgl_pnt_prepare(const mglPoint &a1, const m
 	}
 	return out;
 }
-std::vector<mglPointB> MGL_NO_EXPORT mgl_pnt_copy(HCDT xx1, HCDT yy1, HCDT zz1, HCDT xx2, HCDT yy2, HCDT zz2)
+std::vector<mglPointB> static mgl_pnt_copy(HCDT xx1, HCDT yy1, HCDT zz1, HCDT xx2, HCDT yy2, HCDT zz2)
 {
 	std::vector<mglPointB> out;
 	long n = xx1->GetNx();
@@ -1426,7 +1426,7 @@ void MGL_EXPORT mgl_ohlc_(uintptr_t *gr, uintptr_t *open, uintptr_t *high, uintp
 //
 //-----------------------------------------------------------------------------
 double sgn(double a);
-int MGL_NO_EXPORT mgl_cmp_flt(const void *a, const void *b)
+int static mgl_cmp_flt(const void *a, const void *b)
 {
 	const double *aa = (const double *)a;
 	const double *bb = (const double *)b;

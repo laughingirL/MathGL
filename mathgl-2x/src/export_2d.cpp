@@ -28,7 +28,7 @@
 #define _Gr_	((mglCanvas *)(gr))
 void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
+static const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
 {
 	static std::string s;
 	if(d==0xffff)	return "";
@@ -58,7 +58,7 @@ bool MGL_LOCAL_PURE mgl_is_same(HMGL gr, long i, mreal wp,uint32_t cp, int st)
 	return (cp==_Gr_->GetPrmCol(i));
 }
 //-----------------------------------------------------------------------------
-std::vector<long> MGL_NO_EXPORT put_line(HMGL gr, long i, mreal wp, uint32_t cp,int st)
+std::vector<long> static put_line(HMGL gr, long i, mreal wp, uint32_t cp,int st)
 {
 	std::vector<long> ids;
 	long n1=gr->GetPrm(i).n1, n2=gr->GetPrm(i).n2;
@@ -122,7 +122,7 @@ std::vector<long> MGL_NO_EXPORT put_line(HMGL gr, long i, mreal wp, uint32_t cp,
 //-----------------------------------------------------------------------------
 //put_desc(fp,"%c%c%c_%04x {", "np %d %d mt %d %d ll %d %d ll cp fill\n",
 //"np %d %d mt ", "%d %d ll ", "cp dr\n", "} def")
-void MGL_NO_EXPORT put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
+void static put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
 {
 	long n=0;
 	for(long i=0;i<gr->GetPrmNum();i++)	if(gr->GetPrm(i).type==4)	n++;

@@ -104,7 +104,7 @@ void MGL_EXPORT mgl_cloud_(uintptr_t *gr, uintptr_t *a, const char *sch, const c
 //	Surf3 series
 //
 //-----------------------------------------------------------------------------
-mreal MGL_NO_EXPORT mgl_get_norm(mreal x, mreal d1, mreal d2, mreal d3)
+mreal static mgl_get_norm(mreal x, mreal d1, mreal d2, mreal d3)
 {
 	mreal nx = d1*(1-x) + d2*x;
 	if(mgl_isbad(nx))
@@ -119,7 +119,7 @@ mreal MGL_NO_EXPORT mgl_get_norm(mreal x, mreal d1, mreal d2, mreal d3)
 	}
 	return nx;
 }
-mglPoint MGL_NO_EXPORT mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m,long l)
+mglPoint static mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m,long l)
 {
 	mreal x=p.x, y=p.y, z=p.z;
 	mreal nx=0, ny=0, nz=0;
@@ -133,14 +133,14 @@ mglPoint MGL_NO_EXPORT mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m
 	return inv ? mglPoint(nx,ny,nz) : mglPoint(-nx,-ny,-nz);
 }
 //-----------------------------------------------------------------------------
-mreal MGL_NO_EXPORT mgl_normal_1d(HCDT a, mreal x, long n)
+mreal static mgl_normal_1d(HCDT a, mreal x, long n)
 {
 	long i=long(x);
 	i = i<n-1 ? i:n-2;	x-=i;
 	return mgl_get_norm(x, a->dvx(i), a->dvx(i+1), i>0?a->dvx(i-1):NAN);
 }
 //-----------------------------------------------------------------------------
-mglPoint MGL_NO_EXPORT mgl_find_norm(bool nboth, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bool inv, long n,long m,long l)
+mglPoint static mgl_find_norm(bool nboth, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bool inv, long n,long m,long l)
 {
 	mglPoint s = mgl_normal_3d(a,u,inv,n,m,l), t, q;
 	if(nboth)
@@ -158,7 +158,7 @@ mglPoint MGL_NO_EXPORT mgl_find_norm(bool nboth, HCDT x, HCDT y, HCDT z, HCDT a,
 	return q;
 }
 //-----------------------------------------------------------------------------
-inline mreal MGL_NO_EXPORT mgl_cos_pp(const mglPoint *kk,long i0,long i1,long i2)
+inline mreal static mgl_cos_pp(const mglPoint *kk,long i0,long i1,long i2)
 {
 	mglPoint dp1 = kk[i1]-kk[i0], dp2 = kk[i2]-kk[i0];
 	mreal p1=dp1*dp1,p2=dp2*dp2,pc=dp1*dp2;
@@ -245,7 +245,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT c, HCDT b, const char *sch)
+void static mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT c, HCDT b, const char *sch)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	bool nboth = mgl_isnboth(x,y,z,a);

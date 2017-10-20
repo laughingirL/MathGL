@@ -1106,7 +1106,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_addpnts(mreal x1,mreal y1,mreal x2,mreal y2, std::vector<mreal> *b)
+void static mgl_addpnts(mreal x1,mreal y1,mreal x2,mreal y2, std::vector<mreal> *b)
 {
 // 	if(x1>x2)	{	mreal t=x1;	x1=x2;	x2=t;	t=y1;	y1=y2;	y2=t;	}
 	if(y1<y2)	for(int i=long(y1);i<=long(y2)+1;i++)

@@ -190,7 +190,7 @@ void mglCanvas::SetTickTempl(char dir, const char *t)
 	else	MGL_TO_WCS(t,aa.t=wcs);
 }
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT double mgl_adj_val(double v,mreal *ds=0)
+static double MGL_NO_EXPORT mgl_adj_val(double v,mreal *ds=0)
 {
 	double n = floor(log10(v)), s;
 	v = floor(v*pow(10.,-n));	n = pow(10.,n);
@@ -312,7 +312,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	LabelTicks(aa);
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
+static int MGL_NO_EXPORT mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 {
 	int kind = 0;
 	if(fabs(a-b)<=0.01*fabs(a))
@@ -353,7 +353,7 @@ int MGL_NO_EXPORT mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 	return kind;
 }
 //-----------------------------------------------------------------------------
-std::wstring MGL_NO_EXPORT mgl_format(mreal v1, mreal v2, bool zero)
+static std::wstring MGL_NO_EXPORT mgl_format(mreal v1, mreal v2, bool zero)
 {
 	v1=fabs(v1);	v2=fabs(v2);	if(v1>v2)	v2=v1;
 	wchar_t str[5]=L"%.3g";
@@ -365,7 +365,7 @@ std::wstring MGL_NO_EXPORT mgl_format(mreal v1, mreal v2, bool zero)
 	return str;
 }
 //-----------------------------------------------------------------------------
-std::wstring MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, const std::wstring &fact, mreal step, const char *stl)
+static std::wstring MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, const std::wstring &fact, mreal step, const char *stl)
 {
 	std::wstring str;
 	bool ff = step>0 && !fact.empty();// && mgl_wcslen(str)+fact.length()<62;
@@ -723,7 +723,7 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
+static void MGL_NO_EXPORT mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
 {
 	mglPoint q(oa+d*val);	// lines along 'a'
 	long kq = gr->AllocPnts(31);

@@ -23,7 +23,7 @@
 #include "mgl2/eval.h"
 #include "mgl2/base.h"
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_mesh_plot(mglBase *gr, long kq, long n, long m, int how)
+void static mgl_mesh_plot(mglBase *gr, long kq, long n, long m, int how)
 {
 	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n*m, dx = n>d?n/d:1, dy = m>d?m/d:1;
 	// NOTE: number of lines in each direction can be reduced too
@@ -45,7 +45,7 @@ void MGL_NO_EXPORT mgl_mesh_plot(mglBase *gr, long kq, long n, long m, int how)
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_surf_plot(mglBase *gr, long kq, long n, long m)
+void static mgl_surf_plot(mglBase *gr, long kq, long n, long m)
 {
 	long s=0;
 	for(long j=0;j<m-1;j++)	for(long i=0;i<n-1;i++)

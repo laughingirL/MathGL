@@ -611,7 +611,7 @@ uintptr_t MGL_EXPORT mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y)
 //	DataGrid
 //
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_grid_t(void *par)
+static void *mgl_grid_t(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0],ny=t->p[1];
@@ -714,7 +714,7 @@ void MGL_EXPORT mgl_crust_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t 
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_crust(_GR_, _DA_(x),_DA_(y),_DA_(z),s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-long MGL_NO_EXPORT mgl_insert_trig(long i1,long i2,long i3,long **n)
+long static mgl_insert_trig(long i1,long i2,long i3,long **n)
 {
 	static long Cur=0,Max=0;
 	if(i1<0 || i2<0 || i3<0)	return Cur;
@@ -744,7 +744,7 @@ long MGL_NO_EXPORT mgl_insert_trig(long i1,long i2,long i3,long **n)
 	Cur++;	return Cur;
 }
 //-----------------------------------------------------------------------------
-long MGL_NO_EXPORT mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
+long static mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 {
 	long i,j=-1;
 	mreal r,rm=FLT_MAX;

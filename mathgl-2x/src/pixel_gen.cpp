@@ -25,8 +25,8 @@
 #endif
 
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_canvas_thr(void *par)
-{	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
+//static void *mgl_canvas_thr(void *par)
+//{	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
 void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglCanvas *gr, long n, const void *p=NULL)
 {
 	if(!func || !gr)	return;
@@ -317,13 +317,13 @@ void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys) const
 mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_prm_swap(mglPrim &s1,mglPrim &s2,mglPrim *buf)
+void static mgl_prm_swap(mglPrim &s1,mglPrim &s2,mglPrim *buf)
 {
 	memcpy(buf, &s1, sizeof(mglPrim));
 	memcpy(&s1, &s2, sizeof(mglPrim));
 	memcpy(&s2, buf, sizeof(mglPrim));
 }
-void MGL_NO_EXPORT sort_prm_c(const size_t l0, const size_t r0, mglStack<mglPrim> &s, mglPrim *buf)
+void static sort_prm_c(const size_t l0, const size_t r0, mglStack<mglPrim> &s, mglPrim *buf)
 {
 	if(l0==r0)	return;
 	if(l0+1==r0)

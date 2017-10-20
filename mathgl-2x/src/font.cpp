@@ -892,7 +892,7 @@ pthread_mutex_t mutexRnd;
 #endif
 //-----------------------------------------------------------------------------
 float mgl_cos[360];
-void MGL_NO_EXPORT mgl_init()
+void static mgl_init()
 {
 	mgl_textdomain(NULL,"");
 #if MGL_HAVE_PTHREAD
@@ -955,7 +955,7 @@ long MGL_EXPORT mgl_check_tex_table()
 	return res;
 }
 //---------------------------------------------------------------------------
-bool MGL_NO_EXPORT test_transl(const char *p)
+bool static test_transl(const char *p)
 {
 	if(!p)	return false;
 #if MGL_USE_GETTEXT

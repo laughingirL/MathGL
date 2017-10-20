@@ -1067,7 +1067,7 @@ void MGL_EXPORT mgl_lamerey(HMGL gr, double x0, double (*f)(double,void *), void
 }
 //-----------------------------------------------------------------------------
 struct mglDatSpl	{	HCDT d;	double x0,dx;	double y0,dy;	};
-double MGL_NO_EXPORT func_dat(double x, void *p)
+double static func_dat(double x, void *p)
 {	mglDatSpl *s = (mglDatSpl *)p;	return s->d->value((x-s->x0)*s->dx);	}
 void MGL_EXPORT mgl_lamerey_dat(HMGL gr, double x0, HCDT f, const char *stl, const char *opt)
 {
@@ -1077,7 +1077,7 @@ void MGL_EXPORT mgl_lamerey_dat(HMGL gr, double x0, HCDT f, const char *stl, con
 	mgl_lamerey(gr,x0,func_dat,&s,stl,buf);
 }
 //-----------------------------------------------------------------------------
-double MGL_NO_EXPORT func_str(double x, void *p)
+double static func_str(double x, void *p)
 {	HMEX s = (HMEX)p;	return mgl_expr_eval(s,x,0,0);	}
 void MGL_EXPORT mgl_lamerey_str(HMGL gr, double x0, const char *f, const char *stl, const char *opt)
 {
@@ -1143,7 +1143,7 @@ void MGL_EXPORT mgl_bifurcation(HMGL gr, double dx, double (*f)(double,double,vo
 	gr->EndGroup();	delete []v1;	delete []v2;
 }
 //-----------------------------------------------------------------------------
-double MGL_NO_EXPORT bif_dat(double x, double y, void *p)
+double static bif_dat(double x, double y, void *p)
 {	mglDatSpl *s = (mglDatSpl *)p;	return s->d->value((x-s->x0)*s->dx, (y-s->y0)*s->dy);	}
 void MGL_EXPORT mgl_bifurcation_dat(HMGL gr, double dx, HCDT f, const char *stl, const char *opt)
 {
@@ -1157,7 +1157,7 @@ void MGL_EXPORT mgl_bifurcation_dat(HMGL gr, double dx, HCDT f, const char *stl,
 	mgl_bifurcation(gr,dx,bif_dat,&s,stl,buf);
 }
 //-----------------------------------------------------------------------------
-double MGL_NO_EXPORT bif_str(double x, double y, void *p)
+double static bif_str(double x, double y, void *p)
 {	HMEX s = (HMEX)p;	return mgl_expr_eval(s,x,y,0);	}
 void MGL_EXPORT mgl_bifurcation_str(HMGL gr, double dx, const char *f, const char *stl, const char *opt)
 {

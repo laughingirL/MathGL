@@ -424,7 +424,7 @@ int MGL_EXPORT mgl_datac_read_mat_(uintptr_t *d, const char *fname,int *dim,int 
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_datac_read_mat(_DC_,s,*dim);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_cfill_x(void *par)
+static void *mgl_cfill_x(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	long nx=t->p[0],ny=t->p[1];
@@ -584,7 +584,7 @@ void MGL_EXPORT mgl_datac_transpose_(uintptr_t *d, const char *dim,int l)
 {	char *s=new char[l+1];	memcpy(s,dim,l);	s[l]=0;
 	mgl_datac_transpose(_DC_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_cmodify(void *par)
+static void *mgl_cmodify(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	const mglFormulaC *f = (const mglFormulaC *)(t->v);
@@ -644,7 +644,7 @@ void MGL_EXPORT mgl_datac_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v,
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_modify_vw(_DC_,s,_DA_(v),_DA_(w));	delete []s;	}
 //-----------------------------------------------------------------------------
-bool MGL_NO_EXPORT mgl_add_file(long &kx,long &ky, long &kz, dual *&b, mglDataC *d,bool as_slice)
+static bool mgl_add_file(long &kx,long &ky, long &kz, dual *&b, mglDataC *d,bool as_slice)
 {
 	if(as_slice && d->nz==1)
 	{

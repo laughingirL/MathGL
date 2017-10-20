@@ -30,7 +30,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*>
 //		Advanced PDE series in 2D case
 //
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_operator_exp(long n, const dual *h, dual *a, dual *f)
+void static mgl_operator_exp(long n, const dual *h, dual *a, dual *f)
 {
 	memset(f,0,2*n*sizeof(dual));
 	const long i1=n/2, i2=3*n/2-1;
@@ -75,7 +75,7 @@ void MGL_NO_EXPORT mgl_operator_exp(long n, const dual *h, dual *a, dual *f)
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_operator_lin(long n, mreal *h, dual *a, dual *f, dual *g, dual *o, const dual *iexp)
+void static mgl_operator_lin(long n, mreal *h, dual *a, dual *f, dual *g, dual *o, const dual *iexp)
 {
 	memset(f,0,2*n*sizeof(dual));
 	memset(g,0,2*n*sizeof(dual));
@@ -128,7 +128,7 @@ void MGL_NO_EXPORT mgl_operator_lin(long n, mreal *h, dual *a, dual *f, dual *g,
 	}
 }
 //-----------------------------------------------------------------------------
-HADT MGL_NO_EXPORT mgl_apde_calc_ham(HMDT hs, bool old, const char *func, std::vector<mglDataA*> list, const mreal dd)
+HADT static mgl_apde_calc_ham(HMDT hs, bool old, const char *func, std::vector<mglDataA*> list, const mreal dd)
 {
 	HADT ham = mglFormulaCalcC(func, list);	mgl_datac_mul_num(ham,dd);
 	const long nx = ham->nx;
@@ -258,7 +258,7 @@ struct mgl_pde_ham
 	double xx,yy,xs,ys,dx,dy,dq,dp,zz;
 	double dd;
 };
-void MGL_NO_EXPORT mgl_pde_hprep(const mgl_pde_ham *f)
+void static mgl_pde_hprep(const mgl_pde_ham *f)
 {
 	const long nx = f->nx, ny = f->ny;
 	mglDataV x(nx,ny), y(nx,ny), z, r(nx,ny);
@@ -541,7 +541,7 @@ HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *p
 //		Common functions for quasioptical calculations
 //
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_ray3d(const mreal *in, mreal *out, void *par)
+void static mgl_ray3d(const mreal *in, mreal *out, void *par)
 {
 	mglFormula *eqs = (mglFormula *)par;
 	const char *v="xyzpqvt";
@@ -574,7 +574,7 @@ struct mgl_ap
 	mgl_ap()	{	memset(this,0,sizeof(mgl_ap));	}
 };
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_init_ra(long n, int n7, const mreal *r, mgl_ap *ra)	// prepare some intermediate data for QO (3d case)
+void static mgl_init_ra(long n, int n7, const mreal *r, mgl_ap *ra)	// prepare some intermediate data for QO (3d case)
 {
 	double tt = hypot(r[n7]-r[0], r[n7+1]-r[1]);
 	if(tt)
@@ -640,7 +640,7 @@ struct mgl_qo2d_ham
 	void *par;
 };
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_qo2d_hprep(void *par)
+static void *mgl_qo2d_hprep(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	mgl_qo2d_ham *f = (mgl_qo2d_ham *)t->v;
@@ -752,7 +752,7 @@ HMDT MGL_EXPORT mgl_qo2d_func(ddual (*ham)(mreal u, mreal x, mreal y, mreal px, 
 	HMDT out = mgl_datac_abs(res);	delete res;	return out;
 }
 //-----------------------------------------------------------------------------
-ddual MGL_NO_EXPORT mgl_ham2d(mreal u, mreal x, mreal y, mreal px, mreal py, void *par)
+ddual static mgl_ham2d(mreal u, mreal x, mreal y, mreal px, mreal py, void *par)
 {
 	mglFormula *h = (mglFormula *)par;
 	mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
@@ -793,7 +793,7 @@ struct mgl_qo3d_ham
 	void *par;
 };
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_qo3d_hprep(void *par)
+static void *mgl_qo3d_hprep(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	mgl_qo3d_ham *f = (mgl_qo3d_ham *)t->v;
@@ -828,7 +828,7 @@ MGL_NO_EXPORT void *mgl_qo3d_hprep(void *par)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_qo3d_post(void *par)
+static void *mgl_qo3d_post(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	mgl_qo3d_ham *f = (mgl_qo3d_ham *)t->v;
@@ -975,7 +975,7 @@ HMDT MGL_EXPORT mgl_qo3d_func(ddual (*ham)(mreal u, mreal x, mreal y, mreal z, m
 	HMDT out = mgl_datac_abs(res);	delete res;	return out;
 }
 //-----------------------------------------------------------------------------
-ddual MGL_NO_EXPORT mgl_ham3d(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par)
+ddual static mgl_ham3d(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par)
 {
 	mglFormula *h = (mglFormula *)par;
 	mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
@@ -1005,7 +1005,7 @@ uintptr_t MGL_EXPORT mgl_qo3d_solve_(const char *ham, uintptr_t* ini_re, uintptr
 //		mglJacobian series
 //
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_jacob2(void *par)
+static void *mgl_jacob2(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	const long nx=t->p[0], ny=t->p[1];
@@ -1052,7 +1052,7 @@ HMDT MGL_EXPORT mgl_jacobian_2d(HCDT x, HCDT y)
 	return r;
 }
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_jacob3(void *par)
+static void *mgl_jacob3(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	const long nx=t->p[0], ny=t->p[1], nz=t->p[2];
@@ -1121,7 +1121,7 @@ uintptr_t MGL_EXPORT mgl_jacobian_3d_(uintptr_t* x, uintptr_t* y, uintptr_t* z)
 //	Progonka
 //
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_progonka_sr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, long n, long id, long i0, long di, bool difr)
+void static mgl_progonka_sr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, long n, long id, long i0, long di, bool difr)
 {
 	mreal *aa=dat, *bb=dat+n, *uu=dat+2*n;
 	mreal b0=B->vthr(i0), c0=C->vthr(i0), d0=D->vthr(id);
@@ -1138,7 +1138,7 @@ void MGL_NO_EXPORT mgl_progonka_sr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, l
 	uu[n-1] = bb[n-1];
 	for(long i=n-2;i>=0;i--)	uu[i] = bb[i]+aa[i]*uu[i+1];
 }
-void MGL_NO_EXPORT mgl_progonka_pr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, long n, long id, long i0, long di, bool difr)
+void static mgl_progonka_pr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, long n, long id, long i0, long di, bool difr)
 {
 	mreal *aa=dat, *bb=dat+n, *gg=dat+2*n, *uu=dat+3*n;
 	mreal a0=A->vthr(i0), b0=B->vthr(i0), c0=C->vthr(i0), d0=D->vthr(id);
@@ -1163,7 +1163,7 @@ void MGL_NO_EXPORT mgl_progonka_pr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, l
 	mreal u0 = bb[0]/(1.-aa[0]);
 	for(long i=0;i<n;i++)	uu[i]=bb[i]+aa[i]*u0;
 }
-void MGL_NO_EXPORT mgl_progonka_hr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, long n, long id, long i0, bool difr)
+void static mgl_progonka_hr(HCDT A, HCDT B, HCDT C, HCDT D, mreal *dat, long n, long id, long i0, bool difr)
 {
 	mreal *aa=dat, *bb=dat+n, *uu=dat+n*n;
 	mreal b0=B->vthr(i0), c0=C->vthr(i0), d0=D->vthr(id);
@@ -1281,7 +1281,7 @@ uintptr_t MGL_EXPORT mgl_data_tridmat_(uintptr_t *A, uintptr_t *B, uintptr_t *C,
 	delete []s;	return r;
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_progonka_sc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, long n, long id, long i0, long di, bool difr)
+void static mgl_progonka_sc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, long n, long id, long i0, long di, bool difr)
 {
 	dual *aa=dat, *bb=dat+n, *uu=dat+2*n;
 	dual b0=B->vcthr(i0), c0=C->vcthr(i0), d0=D->vcthr(id);
@@ -1298,7 +1298,7 @@ void MGL_NO_EXPORT mgl_progonka_sc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, lo
 	uu[n-1] = bb[n-1];
 	for(long i=n-2;i>=0;i--)	uu[i] = bb[i]+aa[i]*uu[i+1];
 }
-void MGL_NO_EXPORT mgl_progonka_pc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, long n, long id, long i0, long di, bool difr)
+void static mgl_progonka_pc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, long n, long id, long i0, long di, bool difr)
 {
 	dual *aa=dat, *bb=dat+n, *gg=dat+2*n, *uu=dat+3*n;
 	dual a0=A->vcthr(i0), b0=B->vcthr(i0), c0=C->vcthr(i0), d0=D->vcthr(id);
@@ -1323,7 +1323,7 @@ void MGL_NO_EXPORT mgl_progonka_pc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, lo
 	dual u0 = bb[0]/(mreal(1)-aa[0]);
 	for(long i=0;i<n;i++)	uu[i]=bb[i]+aa[i]*u0;
 }
-void MGL_NO_EXPORT mgl_progonka_hc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, long n, long id, long i0, bool difr)
+void static mgl_progonka_hc(HCDT A, HCDT B, HCDT C, HCDT D, dual *dat, long n, long id, long i0, bool difr)
 {
 	dual *aa=dat, *bb=dat+n, *uu=dat+n*n;
 	dual b0=B->vcthr(i0), c0=C->vcthr(i0), d0=D->vcthr(id);
