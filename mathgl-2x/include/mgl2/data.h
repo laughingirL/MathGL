@@ -471,14 +471,17 @@ using mglDataA::Momentum;
 	mreal vthr(long i) const {	return a[i];	}
 	// add for speeding up !!!
 	mreal dvx(long i,long j=0,long k=0) const
-	{   long i0=i+nx*(j+ny*k);
-		return i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2:a[i0]-a[i0-1]) : a[i0+1]-a[i0];	}
+	{   long i0 = size_t(i)<size_t(nx-1) ? i+nx*(j+ny*k):nx*(1+j+ny*k)-2;	return a[i0+1]-a[i0];	}
+//	{   long i0=i+nx*(j+ny*k);
+//		return i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2:a[i0]-a[i0-1]) : a[i0+1]-a[i0];	}
 	mreal dvy(long i,long j=0,long k=0) const
-	{   long i0=i+nx*(j+ny*k);
-		return j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];}
+	{   long i0 = size_t(j)<size_t(ny-1) ? i+nx*(j+ny*k):i+nx*(ny*(k+1)-2);	return a[i0+nx]-a[i0];	}
+//	{   long i0=i+nx*(j+ny*k);
+//		return j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];}
 	mreal dvz(long i,long j=0,long k=0) const
-	{   long i0=i+nx*(j+ny*k), n=nx*ny;
-		return k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2:a[i0]-a[i0-n]) : a[i0+n]-a[i0];	}
+	{   long n=nx*ny, i0 = size_t(k)<size_t(nz-1) ? i+nx*(j+ny*k):i+nx*(j+ny*(nz-2));	return a[i0+n]-a[i0];	}
+//	{   long i0=i+nx*(j+ny*k), n=nx*ny;
+//		return k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2:a[i0]-a[i0-n]) : a[i0+n]-a[i0];	}
 };
 //-----------------------------------------------------------------------------
 #ifndef SWIG

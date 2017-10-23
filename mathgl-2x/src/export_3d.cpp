@@ -710,7 +710,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 #pragma omp critical
 	{
 		Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);	Glf.reserve(k);
-		mglPnt p;	double tmp;
+		mglPnt p;	float tmp;
 		for(unsigned long i=0;i<n;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');

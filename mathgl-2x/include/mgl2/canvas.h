@@ -386,6 +386,10 @@ protected:
 	mreal FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	mreal FogDz;		///< Relative shift of fog
 
+	inline mglAxis &GetAxis(unsigned ch)
+	{	mglAxis *aa[3]={&ax,&ay,&az};	ch-='x';	return ch<3?*(aa[ch]):ac;	}
+	inline HMEX GetFormula(unsigned ch)
+	{	HMEX aa[3]={fx,fy,fz};	ch-='x';	return ch<3?aa[ch]:fa;	}
 	/// Auto adjust ticks
 	void AdjustTicks(mglAxis &aa, bool ff);
 	/// Prepare labels for ticks

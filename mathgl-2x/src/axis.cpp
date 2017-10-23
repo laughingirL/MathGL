@@ -70,7 +70,7 @@ void mglCanvas::SetTickLen(mreal tlen, mreal stt)
 void mglCanvas::SetTicks(char dir, mreal d, int ns, mreal org, const wchar_t *lbl)
 {
 	if(!strchr("xyzca",dir))	return;
-	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
+	mglAxis &aa = GetAxis(dir);
 
 	if(aa.f==1)	aa.t.clear();
 	aa.d=d;	aa.f=0;	aa.ns=ns;	aa.o=org;
@@ -82,8 +82,8 @@ void mglCanvas::SetTicks(char dir, mreal d, int ns, mreal org, const wchar_t *lb
 void mglCanvas::AddTick(char dir, double v, const wchar_t *lbl)
 {
 	if(!strchr("xyzca",dir))	return;
-	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
-	bool ff = (dir=='x' ? fx : (dir=='y' ? fy : (dir=='z' ? fz : fa)));
+	mglAxis &aa = GetAxis(dir);
+	bool ff = GetFormula(dir);
 
 	UpdateAxis();	AdjustTicks(aa,ff);
 	if(!v || !lbl || !lbl[0])	{	aa.f = 0;	return;	}
@@ -97,8 +97,8 @@ void mglCanvas::AddTick(char dir, double v, const char *lbl)
 void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t *lbl, bool add)
 {
 	if(!strchr("xyzca",dir))	return;
-	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
-	bool ff = (dir=='x' ? fx : (dir=='y' ? fy : (dir=='z' ? fz : fa)));
+	mglAxis &aa = GetAxis(dir);
+	bool ff = GetFormula(dir);
 
 	if(add)	{	UpdateAxis();	AdjustTicks(aa,ff);	}
 	else	aa.txt.clear();
@@ -147,8 +147,8 @@ void mglCanvas::SetTicksVal(char dir, const char *lbl, bool add)
 void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t **lbl, bool add)
 {
 	if(!strchr("xyzca",dir))	return;
-	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
-	bool ff = (dir=='x' ? fx : (dir=='y' ? fy : (dir=='z' ? fz : fa)));
+	mglAxis &aa = GetAxis(dir);
+	bool ff = GetFormula(dir);
 
 	if(add)	{	UpdateAxis();	AdjustTicks(aa,ff);	}
 	else	aa.txt.clear();
@@ -161,8 +161,8 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t **lbl, bool add)
 void mglCanvas::SetTicksVal(char dir, HCDT v, const char **lbl, bool add)
 {
 	if(!strchr("xyzca",dir))	return;
-	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
-	bool ff = (dir=='x' ? fx : (dir=='y' ? fy : (dir=='z' ? fz : fa)));
+	mglAxis &aa = GetAxis(dir);
+	bool ff = GetFormula(dir);
 
 	aa.txt.clear();
 	if(add)	{	UpdateAxis();	AdjustTicks(aa,ff);	}
@@ -174,7 +174,7 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const char **lbl, bool add)
 void mglCanvas::SetTickTempl(char dir, const wchar_t *t)
 {
 	if(!strchr("xyzca",dir))	return;
-	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
+	mglAxis &aa = GetAxis(dir);
 
 	if(aa.f==1)	aa.f = 0;	// remove time ticks
 	if(!t || !t[0])	aa.t.clear();	else aa.t=t;
@@ -183,14 +183,14 @@ void mglCanvas::SetTickTempl(char dir, const wchar_t *t)
 void mglCanvas::SetTickTempl(char dir, const char *t)
 {
 	if(!strchr("xyzca",dir))	return;
-	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
+	mglAxis &aa = GetAxis(dir);
 
 	if(aa.f==1)	aa.f = 0;	// remove time ticks
 	if(!t || !t[0])	aa.t.clear();
 	else	MGL_TO_WCS(t,aa.t=wcs);
 }
 //-----------------------------------------------------------------------------
-static double MGL_NO_EXPORT mgl_adj_val(double v,mreal *ds=0)
+static double mgl_adj_val(double v,mreal *ds=0)
 {
 	double n = floor(log10(v)), s;
 	v = floor(v*pow(10.,-n));	n = pow(10.,n);
@@ -312,7 +312,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	LabelTicks(aa);
 }
 //-----------------------------------------------------------------------------
-static int MGL_NO_EXPORT mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
+static int mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 {
 	int kind = 0;
 	if(fabs(a-b)<=0.01*fabs(a))
@@ -353,7 +353,7 @@ static int MGL_NO_EXPORT mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 	return kind;
 }
 //-----------------------------------------------------------------------------
-static std::wstring MGL_NO_EXPORT mgl_format(mreal v1, mreal v2, bool zero)
+/*static std::wstring mgl_format(mreal v1, mreal v2, bool zero)
 {
 	v1=fabs(v1);	v2=fabs(v2);	if(v1>v2)	v2=v1;
 	wchar_t str[5]=L"%.3g";
@@ -363,9 +363,9 @@ static std::wstring MGL_NO_EXPORT mgl_format(mreal v1, mreal v2, bool zero)
 	else if(zero)
 	{	str[2] = '0'+prec;	str[3]='f';	}
 	return str;
-}
+}*/
 //-----------------------------------------------------------------------------
-static std::wstring MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, const std::wstring &fact, mreal step, const char *stl)
+static std::wstring mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, const std::wstring &fact, mreal step, const char *stl)
 {
 	std::wstring str;
 	bool ff = step>0 && !fact.empty();// && mgl_wcslen(str)+fact.length()<62;
@@ -723,7 +723,7 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-static void MGL_NO_EXPORT mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
+static void mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
 {
 	mglPoint q(oa+d*val);	// lines along 'a'
 	long kq = gr->AllocPnts(31);

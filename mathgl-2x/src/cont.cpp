@@ -350,25 +350,25 @@ void MGL_NO_EXPORT mgl_draw_curvs(HMGL gr, mreal val, mreal c, int text, const s
 		mglprintf(wcs,64,L"%4.3g",val);
 		mreal del = 2*gr->TextWidth(wcs,"",-0.5);
 		// find width and height of drawing area
-		const mglBlock &cb = gr->GetSub();
-		long w = cb.n2-cb.n1, h = cb.n4-cb.n3;	// coordinates of corners {n1=x1,n2=x2,n3=y1,n4=y2}
-		if(del<w/8.)	del = w/8.;
-		long m=long(2*w/del)+1, n=long(2*h/del)+1;
+		mreal ar=gr->GetRatio(), w=gr->GetWidth(), h = gr->GetHeight();
+		ar = (ar>1?1/ar:1)*gr->FontFactor();
+		if(del<ar/5)	del = ar/5;
+
+		long m=long(2*w/del)+3, n=long(2*h/del)+3;
 		long *oo=new long[n*m];
 		mreal *rr=new mreal[n*m];
 		for(long i=0;i<n*m;i++)	{	oo[i]=-1;	rr[i]=del*del;	}
 		int ii1 = (1664525*pc+1013904223)&0xffff, ii2 = (1664525*ii1+1013904223)&0xffff;
-		mreal d0=del*0.5, x0 = cb.n1+(d0*ii1)/0xffff, y0 = cb.n3+(d0*ii2)/0xffff;	// quasi-random shift
+		mreal x0 = (del*ii1)/0xffff, y0 = (del*ii2)/0xffff;
 		for(long k=0;k<pc;k++)	// print label several times if possible
 		{
 			if(nn[k]<0)	continue;
 			const mglPoint t = gr->GetPntP(ff[k]);
-			mreal tx = t.x-x0, ty = t.y-y0;
+			mreal tx = t.x+x0, ty = t.y+y0;		// quasi-random shift
 			long i = long(tx/del);	tx -= i*del;
 			long j = long(ty/del);	ty -= j*del;
 			if(i>=0 && i<m && j>=0 && j<n)
 			{
-				tx -= d0;	ty -= d0;
 				tx = tx*tx+ty*ty;	i += m*j;
 				if(rr[i]>tx)	{	rr[i]=tx;	oo[i]=k;	}
 			}

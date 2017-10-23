@@ -688,11 +688,11 @@ protected:
 	char FontDef[32];	///< Font specification (see mglGraph::Puts). Default is Roman with align at center.
 	int Quality;		///< Quality of plot (0x0-pure, 0x1-fast; 0x2-fine; 0x4 - low memory)
 
-	mglFormula *fx;		///< Transformation formula for x direction.
-	mglFormula *fy;		///< Transformation formula for y direction.
-	mglFormula *fz;		///< Transformation formula for z direction.
-	mglFormula *fa;		///< Transformation formula for coloring.
-	mglFormula *fc;		///< Cutting off condition (formula).
+	HMEX fx;			///< Transformation formula for x direction.
+	HMEX fy;			///< Transformation formula for y direction.
+	HMEX fz;			///< Transformation formula for z direction.
+	HMEX fa;			///< Transformation formula for coloring.
+	HMEX fc;			///< Cutting off condition (formula).
 
 	long CurrPal;		///< Current palette index
 	mreal MarkSize;		///< The size of marks for 1D plots.

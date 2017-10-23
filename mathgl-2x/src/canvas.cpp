@@ -814,8 +814,8 @@ void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 //-----------------------------------------------------------------------------
 void mglCanvas::Shear(mreal Sx,mreal Sy)
 {
-	mreal R[6], Fx=1+fabs(Sx)*inH/inW, Fy=1+fabs(Sy)*inW/inH;
-	memcpy(R,B.b,6*sizeof(mreal));
+	float Fx=1+fabs(Sx)*inH/inW, Fy=1+fabs(Sy)*inW/inH;
+	const float R[6]={B.b[0],B.b[1],B.b[2],B.b[3],B.b[4],B.b[5]};
 	B.b[0] = (R[0]+Sx*R[3])/Fx;	B.b[1] = (R[1]+Sx*R[4])/Fx;	B.b[2] = (R[2]+Sx*R[5])/Fx;
 	B.b[3] = (R[3]+Sy*R[0])/Fy;	B.b[4] = (R[4]+Sy*R[1])/Fy;	B.b[5] = (R[5]+Sy*R[2])/Fy;
 	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;

@@ -43,7 +43,7 @@ struct MGL_EXPORT mglPoint
 #endif
 	inline void Set(mreal X=0,mreal Y=0,mreal Z=0,mreal C=0)	{x=X;y=Y;z=Z;c=C;}
 	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
-	inline mreal val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
+	inline mreal val(int i)	{	mreal dat[4]={x,y,z,c};	return dat[i];	}
 	inline mreal norm()		{	return sqrt(x*x+y*y+z*z);	}
 	inline void Normalize()	{	mreal v=norm();	x/=v;	y/=v;	z/=v;	}
 
@@ -125,13 +125,14 @@ struct MGL_EXPORT mglColor
 	{
 		if(bright<0)	bright=0;
 		if(bright>2.f)	bright=2.f;
-		r = bright<=1 ? c.r*bright : 1 - (1-c.r)*(2-bright);
-		g = bright<=1 ? c.g*bright : 1 - (1-c.g)*(2-bright);
-		b = bright<=1 ? c.b*bright : 1 - (1-c.b)*(2-bright);	a = 1;
+		if(bright<=1)
+		{	r=c.r*bright;	g=c.g*bright;	b=c.b*bright;	a = 1;	}
+		else
+		{	r=1-(1-c.r)*(2-bright);	g=1-(1-c.g)*(2-bright);	b=1-(1-c.b)*(2-bright);	a=1;	}
 	}
 	/// Check if color is valid
 	inline bool Valid()
-	{	return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1 && a>=0 && a<=1);	}
+	{	return ((r>=0) & (r<=1) & (g>=0) & (g<=1) & (b>=0) & (b<=1) & (a>=0) & (a<=1));	}
 	/// Get maximal spectral component
 	inline float Norm()
 	{	return r>g ? r : (g>b ? g : b);	}
