@@ -1652,9 +1652,9 @@ void mglBase::curve_plot(size_t num, size_t k0, size_t step)
 		{
 			const mglPoint p2(GetPntP(k0+k*step));
 			if(mgl_isnan(p2.x))	break;
-			const mglColor c2(GetPntC(k0+k*step));
-			mreal dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z, dd=dx*dx+dy*dy+dz*dz;
-			if(dd==0)	break;
+			const mglColor c2(GetPntC(k0+k*step)-c1);
+			float dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z, dd=dx*dx+dy*dy+dz*dz;
+			if(dd<=0)	break;
 			bool ops=false;
 			for(size_t ii=i+1;ii<k;ii++)
 			{
@@ -1662,8 +1662,8 @@ void mglBase::curve_plot(size_t num, size_t k0, size_t step)
 				mreal v = (dx*(p.x-p1.x)+dy*(p.y-p1.y)+dz*(p.y-p1.y))/dd;
 				mglPoint q(p-p1-v*(p2-p1));
 				if(q.norm()>0.1)	{	ops = true;	break;	}
-				const mglColor c(GetPntC(k0+ii*step));
-				if(dd>0 && (c-c1-(v/dd)*(c2-c1)).NormS()>1e-4)	{	ops = true;	break;	}
+				const mglColor c(GetPntC(k0+ii*step)-c1-(v/dd)*c2);
+				if(c.NormS()>1e-4)	{	ops = true;	break;	}
 			}
 			if(ops)	break;
 			k++;

@@ -131,12 +131,12 @@ struct MGL_EXPORT mglColor
 		{	r=1-(1-c.r)*(2-bright);	g=1-(1-c.g)*(2-bright);	b=1-(1-c.b)*(2-bright);	a=1;	}
 	}
 	/// Check if color is valid
-	inline bool Valid()
+	inline bool Valid() const
 	{	return ((r>=0) & (r<=1) & (g>=0) & (g<=1) & (b>=0) & (b<=1) & (a>=0) & (a<=1));	}
 	/// Get maximal spectral component
-	inline float Norm()
+	inline float Norm() const
 	{	return r>g ? r : (g>b ? g : b);	}
-	inline float NormS()
+	inline float NormS() const
 	{	return r*r+g*g+b*b;	}
 	/// Set color from symbolic id
 	inline void Set(char p, float bright=1)
