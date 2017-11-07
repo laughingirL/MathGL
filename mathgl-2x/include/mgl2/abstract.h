@@ -68,6 +68,11 @@ typedef void *HMPR;
 typedef const void *HCDT;
 #endif
 
+/// Set buffer size for number of primitives as (1<<bsize)^2.
+/** I.e. as 10^12 for bsize=20 or 4*10^9 for bsize=16 (default). NOTE: you set it only once. The current value is returned. */
+unsigned MGL_EXPORT mgl_bsize(unsigned bsize);
+unsigned MGL_EXPORT mgl_bsize_(unsigned *bsize);
+
 /// Set seed for random numbers
 void MGL_EXPORT mgl_srnd(long seed);
 void MGL_EXPORT mgl_srnd_(int *seed);

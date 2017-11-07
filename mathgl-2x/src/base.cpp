@@ -25,6 +25,15 @@
 #endif
 
 //-----------------------------------------------------------------------------
+static unsigned mgl_pb=0;
+unsigned MGL_EXPORT mgl_bsize(unsigned bsize)
+{
+	if(!mgl_pb)	mgl_pb = (bsize>0 && bsize<100)?bsize:16;
+	return mgl_pb;
+}
+unsigned MGL_EXPORT mgl_bsize_(unsigned *bsize)
+{	return mgl_bsize(*bsize);	}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_mutex_unlock(void *mutex)
 {
 #if MGL_HAVE_PTHREAD

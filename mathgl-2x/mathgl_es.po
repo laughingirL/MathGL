@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-18 00:41+0300\n"
+"POT-Creation-Date: 2017-11-07 15:55+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3067,7 +3067,7 @@ msgstr ""
 msgid "MathGL - about"
 msgstr ""
 
-#: src/base.cpp:250
+#: src/base.cpp:259
 #, c-format
 msgid "MathGL message - %s\n"
 msgstr ""
@@ -5045,7 +5045,7 @@ msgid ""
 msgstr ""
 
 #. mglScrStr
-#: src/base.cpp:236
+#: src/base.cpp:245
 msgid "There is changing temporary data in script"
 msgstr ""
 
@@ -5078,22 +5078,22 @@ msgid ""
 msgstr ""
 
 #. mglScrCmd
-#: src/base.cpp:234
+#: src/base.cpp:243
 msgid "There is too long string(s) in script"
 msgstr ""
 
 #. mglScrLong
-#: src/base.cpp:235
+#: src/base.cpp:244
 msgid "There is unbalanced ' in script"
 msgstr ""
 
 #. mglWarnSpc
-#: src/base.cpp:232
+#: src/base.cpp:241
 msgid "There is wrong argument(s) in script"
 msgstr ""
 
 #. mglScrArg
-#: src/base.cpp:233
+#: src/base.cpp:242
 msgid "There is wrong command(s) in script"
 msgstr ""
 
@@ -5873,7 +5873,7 @@ msgid "attach light"
 msgstr "vincular luz"
 
 #. mglWarnFmt
-#: src/base.cpp:229
+#: src/base.cpp:238
 msgid "axis ranges are incompatible"
 msgstr ""
 
@@ -5914,7 +5914,7 @@ msgid "click at %g, %g, %g"
 msgstr ""
 
 #. mglWarnCnt
-#: src/base.cpp:225
+#: src/base.cpp:234
 msgid "couldn't open file"
 msgstr ""
 
@@ -5927,17 +5927,17 @@ msgid "cutting"
 msgstr ""
 
 #. -----------------------------------------------------------------------------
-#: src/base.cpp:216
+#: src/base.cpp:225
 msgid "data dimension(s) is incompatible"
 msgstr ""
 
 #. mglWarnDim
-#: src/base.cpp:217
+#: src/base.cpp:226
 msgid "data dimension(s) is too small"
 msgstr ""
 
 #. mglWarnMem
-#: src/base.cpp:221
+#: src/base.cpp:230
 msgid "data values are zero"
 msgstr ""
 
@@ -5969,7 +5969,7 @@ msgid "factor"
 msgstr ""
 
 #. mglWarnSize
-#: src/base.cpp:228
+#: src/base.cpp:237
 msgid "format is not supported for that build"
 msgstr ""
 
@@ -6035,7 +6035,7 @@ msgid "left"
 msgstr ""
 
 #. mglWarnOpen
-#: src/base.cpp:226
+#: src/base.cpp:235
 msgid "light: ID is out of range"
 msgstr ""
 
@@ -6117,7 +6117,7 @@ msgid "min"
 msgstr ""
 
 #. mglWarnLow
-#: src/base.cpp:218
+#: src/base.cpp:227
 msgid "minimal data value is negative"
 msgstr ""
 
@@ -6131,12 +6131,12 @@ msgid "name"
 msgstr ""
 
 #. mglWarnNeg
-#: src/base.cpp:219
+#: src/base.cpp:228
 msgid "no file or wrong data dimensions"
 msgstr ""
 
 #. mglWarnZero
-#: src/base.cpp:222
+#: src/base.cpp:231
 msgid "no legend entries"
 msgstr ""
 
@@ -6158,12 +6158,12 @@ msgid "none or default"
 msgstr ""
 
 #. mglWarnFile
-#: src/base.cpp:220
+#: src/base.cpp:229
 msgid "not enough memory"
 msgstr ""
 
 #. mglWarnNull
-#: src/base.cpp:231
+#: src/base.cpp:240
 msgid "not enough space for plot"
 msgstr ""
 
@@ -6172,7 +6172,7 @@ msgid "not used"
 msgstr ""
 
 #. mglWarnSlc
-#: src/base.cpp:224
+#: src/base.cpp:233
 msgid "number of contours is zero or negative"
 msgstr ""
 
@@ -6202,7 +6202,7 @@ msgid "plain"
 msgstr ""
 
 #. mglWarnTern
-#: src/base.cpp:230
+#: src/base.cpp:239
 msgid "pointer is NULL"
 msgstr ""
 
@@ -6255,12 +6255,12 @@ msgid "save slides"
 msgstr ""
 
 #. mglWarnLId
-#: src/base.cpp:227
+#: src/base.cpp:236
 msgid "size(s) is zero or negative"
 msgstr ""
 
 #. mglWarnLeg
-#: src/base.cpp:223
+#: src/base.cpp:232
 msgid "slice value is out of range"
 msgstr ""
 

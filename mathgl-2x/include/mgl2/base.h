@@ -50,62 +50,66 @@ mglPoint GetZ(HCDT z, int i, int j, int k=0);
 // NOTE memcpy is used --> no memory allocation in T
 template <class T> class mglStack
 {
-	std::vector<T*> dat;
-	size_t pb;	///< size of buffer (real size is 2^pb == 1L<<pb)
-//	size_t np;	///< allocated pointers
+	T **dat;
+	unsigned MGL_PB;	///< size of buffer (real size is 2^pb == 1L<<pb). 
+	/** NOTE This limit the number of maximal points and primitives as (1<<MGL_PB)^2, 
+	  * i.e. as 10^12 for MGL_PB=20 or 4*10^9 for MGL_PB=16. See mgl_bsize().*/
+	size_t nb;	///< used blocks
 	size_t n;	///< used cells
 	void *mutex;
 public:
 	mglStack(const mglStack<T> &st)
-	{	mutex = 0;	pb=st.pb;	n=0;	reserve(st.n);
-		for(size_t i=0;i<dat.size();i++)
-			memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
+	{	mutex = 0;	n=0;	nb=1;	MGL_PB = mgl_bsize(0);
+		dat = new T*[(size_t)1<<MGL_PB];
+		*dat = new T[(size_t)1<<MGL_PB];	reserve(st.n);
+		for(size_t i=0;i<nb;i++)
+			memcpy(dat[i],st.dat[i],((size_t)1<<MGL_PB)*sizeof(T));
 		n=st.n;	}
-	explicit mglStack(size_t Pbuf=10)
-	{	mutex = 0;	pb=Pbuf;	dat.push_back(new T[(size_t)1<<pb]);
-		n=0;	}
-	~mglStack()	{	clear();	delete [](dat[0]);	}
+	mglStack()
+	{	mutex = 0;	n=0;	nb=1;	MGL_PB = mgl_bsize(0);
+		dat = new T*[(size_t)1<<MGL_PB];
+		*dat = new T[(size_t)1<<MGL_PB];	}
+	~mglStack()	{	clear();	delete [](*dat);	delete []dat;	}
 	inline void set_mutex(void *mtx)	{	mutex=mtx;	}
 	inline size_t allocate(size_t num)
 	{	reserve(num);	size_t r=n;	n+=num;	return r;	}
 	void reserve(size_t num)
 	{
 		num = num?num+n:n+1;	// final required size
-		size_t m = dat.size();
-		if(num>(m<<pb))
+		if(num>(nb<<MGL_PB))
 		{
-			num = 1+ (num>>pb);
-			for(size_t i=m;i<num;i++)	dat.push_back(new T[(size_t)1<<pb]);
+			num = 1 + (num>>MGL_PB);
+			for(;nb<num;nb++)	dat[nb] = new T[(size_t)1<<MGL_PB];
 		}
 	}
 	void clear()
 	{
 		if(mutex)	mgl_mutex_lock(mutex);
-		for(size_t i=0;i<dat.size();i++)	delete [](dat[i]);
-		dat.clear();	n=0;
-		dat.push_back(new T[(size_t)1<<pb]);
+		for(size_t i=1;i<nb;i++)	delete [](dat[i]);
+		n=0;	nb=1;
 		if(mutex)	mgl_mutex_unlock(mutex);
 	}
-	T &operator[](size_t i)	{	size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
-	const T &operator[](size_t i)	const	{	size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
+	T &operator[](size_t i)
+	{	size_t d=i>>MGL_PB;	return dat[d][i-(d<<MGL_PB)];	}
+	const T &operator[](size_t i)	const
+	{	size_t d=i>>MGL_PB;	return dat[d][i-(d<<MGL_PB)];	}
 	void push_back(const T &t)
 	{
-		if(n>=(dat.size()<<pb))	reserve(1);
-		size_t d=n>>pb;
-		dat[d][n-(d<<pb)] = t;	n++;
+		if(n>=(nb<<MGL_PB))	reserve(1);
+		size_t d=n>>MGL_PB;	dat[d][n-(d<<MGL_PB)] = t;	n++;
 	}
 	void push_back(size_t num, const T *t)
 	{
-		if(n+num>=(dat.size()<<pb))	reserve(num);
+		if(n+num>=(nb<<MGL_PB))	reserve(num);
 		for(size_t i=0;i<num;i++)
-		{	size_t d=n>>pb;	dat[d][n-(d<<pb)] = t[i];	n++;	}
+		{	size_t d=n>>MGL_PB;	dat[d][n-(d<<MGL_PB)] = t[i];	n++;	}
 	}
 	size_t size()	const	{	return n;	}
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
-		pb=st.pb;	clear();	reserve(st.n);
-		for(size_t i=0;i<dat.size();i++)
-			memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
+		clear();	reserve(st.n);
+		for(size_t i=0;i<nb;i++)
+			memcpy(dat[i],st.dat[i],((size_t)1<<MGL_PB)*sizeof(T));
 		n = st.n;	return st;
 	}
 };
