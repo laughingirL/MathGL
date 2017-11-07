@@ -79,12 +79,12 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	const char *ffont=mglchr(font,':');
 	char *fnt = new char[strlen(font)+5];
 	if(ffont) strcpy(fnt,ffont);	else *fnt=0;
-	if(qa[0].x>qa[1].x)
+/*	if(qa[0].x>qa[1].x)
 	{
 		if(align==0){	strcat(fnt,":R");	align=2;	}
 		else if(align==1)	rev = true;
 		else		{	strcat(fnt,":L");	align=0;	}
-	}
+	}*/
 	if(mglchr(font,'T'))	strcat(fnt,":T");
 	if(rev)	reverse(qa.begin(),qa.end());
 	long len = mgl_wcslen(text);
@@ -352,7 +352,7 @@ void MGL_NO_EXPORT mgl_draw_curvs(HMGL gr, mreal val, mreal c, int text, const s
 		// find width and height of drawing area
 		mreal ar=gr->GetRatio(), w=gr->GetWidth(), h = gr->GetHeight();
 		ar = (ar>1?1/ar:1)*gr->FontFactor();
-		if(del<ar/5)	del = ar/5;
+		if(del<ar/1)	del = ar/1;
 
 		long m=long(2*w/del)+3, n=long(2*h/del)+3;
 		long *oo=new long[n*m];
