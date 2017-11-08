@@ -25,8 +25,10 @@
 #endif
 
 //-----------------------------------------------------------------------------
-//static void *mgl_canvas_thr(void *par)
-//{	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
+#if MGL_HAVE_PTHREAD
+static void *mgl_canvas_thr(void *par)
+{	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
+#endif
 void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglCanvas *gr, long n, const void *p=NULL)
 {
 	if(!func || !gr)	return;

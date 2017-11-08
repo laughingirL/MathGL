@@ -44,7 +44,7 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	if(!font)	font="";
 	int pos = strchr(font,'T') ? 1:-1, align;
 	bool cc=mglGetStyle(font,0,&align);		align = align&3;
-	mreal h=gr->TextHeight(font,size)/2;
+	mreal h=gr->TextHeight(font,size)/2, g = 1.1*h;
 	wchar_t L[2]=L"a";
 
 	if(align==1)	// TODO divide curve by 2
@@ -59,7 +59,7 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	for(long i=nn[f];i>=0 && i!=f;i=nn[i])	// find second real point
 		if(ff[i]>=0)	{	s=gr->GetPntP(ff[i]);	break;	}
 	mglPoint l=!(s-q), t=l;
-	qa.push_back(q+l*h);	qb.push_back(q-l*h);
+	qa.push_back(q+l*g);	qb.push_back(q-l*h);
 	for(long i=nn[f];i>=0 && i!=f;i=nn[i])	// construct curves
 	{
 		p=q;	q=s;	l=t;
@@ -67,11 +67,11 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 		mreal tet = t.x*l.y-t.y*l.x;
 		mreal tt = 1+fabs(t.x*l.x+t.y*l.y);
 		if(tet>0)
-		{	qa.push_back(q+l*h);	qa.push_back(q+t*h);	qb.push_back(q-(l+t)*(h/tt));	}
+		{	qa.push_back(q+l*g);	qa.push_back(q+t*g);	qb.push_back(q-(l+t)*(h/tt));	}
 		else if(tet<0)
-		{	qb.push_back(q-l*h);	qb.push_back(q-t*h);	qa.push_back(q+(l+t)*(h/tt));	}
+		{	qb.push_back(q-l*h);	qb.push_back(q-t*h);	qa.push_back(q+(l+t)*(g/tt));	}
 		else
-		{	qa.push_back(q+l*h);	qb.push_back(q-l*h);	}
+		{	qa.push_back(q+l*g);	qb.push_back(q-l*h);	}
 	}
 	if(pos>0)	qa=qb;
 	// adjust text direction
@@ -99,7 +99,8 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	mreal t1,t2, tt=0;
 	for(long j=0;j<len;j++)
 	{
-		mreal w = align==1 ? wdt[j] : (wdt[j]+wdt[j+1])/2;	p = pt[j];
+		mreal w = align==1 ? wdt[j] : (wdt[j]+wdt[j+1])/2;
+		p = pt[j];	w *= 1.03;
 		for(k=i+1;k<m;k++)	if((p-qa[k]).norm()>w)	break;
 		if(k>i+1 && k<m)	tt=-1;
 		i = k<m ? k-1 : m-2;		// check if end of curve
@@ -352,7 +353,7 @@ void MGL_NO_EXPORT mgl_draw_curvs(HMGL gr, mreal val, mreal c, int text, const s
 		// find width and height of drawing area
 		mreal ar=gr->GetRatio(), w=gr->GetWidth(), h = gr->GetHeight();
 		ar = (ar>1?1/ar:1)*gr->FontFactor();
-		if(del<ar/1)	del = ar/1;
+		if(del<ar/2)	del = ar/2;
 
 		long m=long(2*w/del)+3, n=long(2*h/del)+3;
 		long *oo=new long[n*m];

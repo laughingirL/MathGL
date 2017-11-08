@@ -3501,8 +3501,9 @@ msgid "Numerically double differentiate data"
 msgstr "Численно дифференцировать данные дважды"
 
 #: udav/open_dlg.cpp:64
+#, fuzzy
 msgid "Nx"
-msgstr ""
+msgstr "Следующий"
 
 #: udav/open_dlg.cpp:66
 msgid "Ny"

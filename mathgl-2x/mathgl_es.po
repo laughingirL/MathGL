@@ -159,8 +159,9 @@ msgstr "%d - %d de %d"
 
 #. :
 #: udav/style_dlg.cpp:316 mgllab/dialogs.cpp:208
+#, fuzzy
 msgid "' ' none"
-msgstr ""
+msgstr "'_' ninguno"
 
 #: udav/style_dlg.cpp:397
 msgid "'#*' Y-sign"
@@ -183,8 +184,9 @@ msgid "'#>' solid triangle right"
 msgstr "'#>' triangulo solido hacia la derecha"
 
 #: udav/style_dlg.cpp:404
+#, fuzzy
 msgid "'#^' solid triangle up"
-msgstr ""
+msgstr "'#<' triangulo solido hacia la izquierda"
 
 #: udav/style_dlg.cpp:402
 msgid "'#d' solid rhomb"
@@ -257,13 +259,15 @@ msgstr ""
 
 #. v
 #: udav/style_dlg.cpp:392 mgllab/dialogs.cpp:224
+#, fuzzy
 msgid "'<' triangle left"
-msgstr ""
+msgstr "'#<' triangulo solido hacia la izquierda"
 
 #. +
 #: udav/style_dlg.cpp:342 mgllab/dialogs.cpp:233
+#, fuzzy
 msgid "'=' double lines"
-msgstr ""
+msgstr "'-' lineas"
 
 #. i
 #: udav/style_dlg.cpp:312 mgllab/dialogs.cpp:206
@@ -272,8 +276,9 @@ msgstr "'=' guion pequeno"
 
 #. <
 #: udav/style_dlg.cpp:350 mgllab/dialogs.cpp:242
+#, fuzzy
 msgid "'>' right sign"
-msgstr ""
+msgstr "'>' triangulo hacia la derecha"
 
 #. <
 #: udav/style_dlg.cpp:393 mgllab/dialogs.cpp:225
@@ -364,8 +369,9 @@ msgstr "'d' rombo"
 
 #. ;
 #: udav/style_dlg.cpp:314 mgllab/dialogs.cpp:205
+#, fuzzy
 msgid "'i' small dash dot"
-msgstr ""
+msgstr "'=' guion pequeno"
 
 #. |
 #. ;
@@ -682,8 +688,9 @@ msgid "Alpha value (transparency) of surface or cloud"
 msgstr "Valor alfa (transparencia) de superficie o nube"
 
 #: udav/setup_dlg.cpp:93 mgllab/dialogs.cpp:1003
+#, fuzzy
 msgid "AlphaDef"
-msgstr ""
+msgstr "Alfa"
 
 #: udav/opt_dlg.cpp:56 udav/setup_dlg.cpp:95 mgllab/dialogs.cpp:111
 #: mgllab/dialogs.cpp:1004
@@ -766,8 +773,9 @@ msgid "Auto detect data sizes"
 msgstr "Autodetectar tamanos de datos"
 
 #: udav/open_dlg.cpp:177
+#, fuzzy
 msgid "Auto detect data sizes (%1 x %2 x %3)"
-msgstr ""
+msgstr "Autodetectar tamanos de datos"
 
 #: udav/prop_dlg.cpp:100
 msgid "AutoKey"
@@ -805,8 +813,9 @@ msgid "Axis and colorbar"
 msgstr ""
 
 #: udav/newcmd_dlg.cpp:177 mgllab/dialogs.cpp:718 mgllab/dialogs.cpp:949
+#, fuzzy
 msgid "Axis setup"
-msgstr ""
+msgstr "14 - configurar eje"
 
 #. W
 #: udav/style_dlg.cpp:237 mgllab/dialogs.cpp:45
@@ -889,8 +898,9 @@ msgid "C - teal"
 msgstr ""
 
 #: udav/setup_dlg.cpp:51 mgllab/dialogs.cpp:989
+#, fuzzy
 msgid "C axis"
-msgstr ""
+msgstr "12 - eje"
 
 #: udav/opt_dlg.cpp:47 mgllab/dialogs.cpp:97
 msgid "C-range"
@@ -955,8 +965,9 @@ msgid "Change data"
 msgstr ""
 
 #: mgllab/table.cpp:91
+#, fuzzy
 msgid "Change data sizes"
-msgstr ""
+msgstr "Autodetectar tamanos de datos"
 
 #: mgllab/table.cpp:559 mgllab/table.cpp:622 mgllab/table.cpp:677
 msgid "Change data values and close this window"
@@ -1046,8 +1057,9 @@ msgid ""
 msgstr ""
 
 #: udav/text_pnl.cpp:575
+#, fuzzy
 msgid "Command options"
-msgstr ""
+msgstr "Anadir opcion(es) de comando"
 
 #: udav/prop_dlg.cpp:82
 msgid "Comments"
@@ -1191,8 +1203,9 @@ msgid "Create new data array"
 msgstr ""
 
 #: mgllab/table.cpp:836
+#, fuzzy
 msgid "Create new data with zero filling"
-msgstr ""
+msgstr "Datos 3D con tamaños de archivo"
 
 #: udav/udav_wnd.cpp:284
 msgid "Create new empty script window (Ctrl+N)."
@@ -1243,8 +1256,9 @@ msgid "Cut selected text to clipboard (Ctrl+X)."
 msgstr ""
 
 #: udav/text_pnl.cpp:528 mgllab/mgllab.cpp:291
+#, fuzzy
 msgid "Cut text"
-msgstr ""
+msgstr "Anadir texto"
 
 #: udav/opt_dlg.cpp:61 mgllab/dialogs.cpp:106
 msgid "Cutting"
@@ -1289,16 +1303,18 @@ msgid "Data name"
 msgstr ""
 
 #: udav/info_dlg.cpp:42
+#, fuzzy
 msgid "Data preview"
-msgstr ""
+msgstr " - Vista previa de UDAV"
 
 #: udav/info_dlg.cpp:43
 msgid "Data preview for current slice."
 msgstr ""
 
 #: udav/newcmd_dlg.cpp:174 mgllab/dialogs.cpp:715
+#, fuzzy
 msgid "Data transform"
-msgstr ""
+msgstr "16 - transformar datos"
 
 #: udav/plot_pnl.cpp:556
 msgid "Decrease \\phi angle by 10 degrees."
@@ -1431,16 +1447,18 @@ msgid "Do nothing and close this window"
 msgstr ""
 
 #: udav/mem_pnl.cpp:122
+#, fuzzy
 msgid "Do you want to delete all data?"
-msgstr ""
+msgstr "Esta seguro que desea borrar TODOS los vectores de datos?"
 
 #: udav/udav_wnd.cpp:341 udav/udav_wnd.cpp:580 udav/udav_wnd.cpp:622
 msgid "Do you want to save the changes to the document?"
 msgstr ""
 
 #: mgllab/editor.cpp:282
+#, fuzzy
 msgid "Don't Save"
-msgstr ""
+msgstr " Guardar"
 
 #: mgllab/table.cpp:164
 msgid "Double diff."
@@ -1883,8 +1901,9 @@ msgid "Drawing time %1 ms"
 msgstr ""
 
 #: udav/newcmd_dlg.cpp:169 mgllab/dialogs.cpp:710
+#, fuzzy
 msgid "Dual plots"
-msgstr ""
+msgstr "Graficos 1D"
 
 #. L
 #: udav/style_dlg.cpp:244 mgllab/dialogs.cpp:52
@@ -1896,8 +1915,9 @@ msgid "Edges"
 msgstr ""
 
 #: udav/text_pnl.cpp:84 mgllab/mgllab.cpp:289
+#, fuzzy
 msgid "Edit"
-msgstr ""
+msgstr " Editar"
 
 #: udav/mem_pnl.cpp:59
 msgid "Edit selected data array"
@@ -1918,8 +1938,9 @@ msgid "Enable mouse wheel for zooming"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1463
+#, fuzzy
 msgid "End"
-msgstr ""
+msgstr "y"
 
 #: udav/prop_dlg.cpp:141
 msgid "English"
@@ -1952,8 +1973,9 @@ msgid "Enter name of data"
 msgstr ""
 
 #: udav/dat_pnl.cpp:388 udav/dat_pnl.cpp:402 udav/dat_pnl.cpp:436
+#, fuzzy
 msgid "Enter new data sizes"
-msgstr ""
+msgstr "Autodetectar tamanos de datos"
 
 #: mgllab/table.cpp:28
 msgid "Enter number for addition to data values"
@@ -2303,8 +2325,9 @@ msgid "Font kind"
 msgstr ""
 
 #: mgllab/mgllab.cpp:461
+#, fuzzy
 msgid "Font size"
-msgstr ""
+msgstr "Ajustar tamano"
 
 #: udav/style_dlg.cpp:183
 msgid "Font style"
@@ -2408,8 +2431,9 @@ msgid "Graphics"
 msgstr ""
 
 #: udav/text_pnl.cpp:596
+#, fuzzy
 msgid "Graphics setup"
-msgstr ""
+msgstr "14 - configurar eje"
 
 #: widgets/fltk.cpp:928
 msgid "Graphics/Adjust size"
@@ -2611,8 +2635,9 @@ msgid ""
 msgstr ""
 
 #: udav/udav_wnd.cpp:186 mgllab/mgllab.cpp:295
+#, fuzzy
 msgid "Hidden plots"
-msgstr ""
+msgstr "Anadir grafico interno"
 
 #: udav/plot_pnl.cpp:431
 msgid "Hide selected"
@@ -2703,16 +2728,19 @@ msgid "Increase font size"
 msgstr ""
 
 #: udav/udav_wnd.cpp:229
+#, fuzzy
 msgid "Info"
-msgstr ""
+msgstr " Info"
 
 #: udav/info_dlg.cpp:55 mgllab/help.cpp:354
+#, fuzzy
 msgid "Information"
-msgstr ""
+msgstr "Animacion"
 
 #: mgllab/mgllab.cpp:303
+#, fuzzy
 msgid "Inplot"
-msgstr ""
+msgstr "Anadir grafico interno"
 
 #. insert menu
 #: udav/text_pnl.cpp:557 mgllab/mgllab.cpp:299
@@ -2915,8 +2943,9 @@ msgid "Load data"
 msgstr ""
 
 #: mgllab/table.cpp:838
+#, fuzzy
 msgid "Load data from file"
-msgstr ""
+msgstr "Datos 3D con tamaños de archivo"
 
 #: udav/dat_pnl.cpp:684
 msgid ""
@@ -3032,8 +3061,9 @@ msgid "Manual mask"
 msgstr ""
 
 #: udav/text_pnl.cpp:591 mgllab/mgllab.cpp:305
+#, fuzzy
 msgid "Manual primitives"
-msgstr ""
+msgstr "13 - primitivas"
 
 #: mgllab/dialogs.cpp:1467
 msgid "Mark"
@@ -3056,8 +3086,9 @@ msgid "Mask rotation angle"
 msgstr ""
 
 #: udav/style_dlg.cpp:126
+#, fuzzy
 msgid "Mask size"
-msgstr ""
+msgstr "Ajustar tamano"
 
 #: udav/find_dlg.cpp:42 mgllab/editor.cpp:562
 msgid "Match case"
@@ -3077,8 +3108,9 @@ msgid "MathGL v. 2."
 msgstr ""
 
 #: udav/open_dlg.cpp:70
+#, fuzzy
 msgid "Matrix with sizes from file"
-msgstr ""
+msgstr "Datos 3D con tamaños de archivo"
 
 #: udav/dat_pnl.cpp:541
 msgid "Max along direction(s)"
@@ -3114,8 +3146,9 @@ msgid "Maximum is %g\t at x = %ld\ty = %ld\tz = %ld\n"
 msgstr ""
 
 #: mgllab/table.cpp:342 mgllab/table.cpp:789
+#, fuzzy
 msgid "Maximum of"
-msgstr ""
+msgstr "en el maximo"
 
 #: udav/mem_pnl.cpp:68 udav/mem_pnl.cpp:73 mgllab/mgllab.cpp:357
 msgid "Memory"
@@ -3171,8 +3204,9 @@ msgid "Minimum is %g\t at x = %ld\ty = %ld\tz = %ld\n"
 msgstr ""
 
 #: mgllab/table.cpp:342 mgllab/table.cpp:790
+#, fuzzy
 msgid "Minimum of"
-msgstr ""
+msgstr "en el minimo"
 
 #. { _("Wavelet"),	0, wavelet_cb },
 #: mgllab/table.cpp:166 mgllab/table.cpp:781
@@ -3282,8 +3316,9 @@ msgstr ""
 
 #. navigation menu
 #: udav/dat_pnl.cpp:720 mgllab/table.cpp:799
+#, fuzzy
 msgid "Navigation"
-msgstr ""
+msgstr "Animacion"
 
 #: udav/newcmd_dlg.cpp:101 udav/newcmd_dlg.cpp:308 udav/newcmd_dlg.cpp:336
 #: udav/newcmd_dlg.cpp:340 udav/newcmd_dlg.cpp:354 udav/newcmd_dlg.cpp:367
@@ -3300,8 +3335,9 @@ msgid ""
 msgstr ""
 
 #: udav/text_pnl.cpp:562 udav/plot_pnl.cpp:444
+#, fuzzy
 msgid "New inplot"
-msgstr ""
+msgstr "Anadir grafico interno"
 
 #: mgllab/table.cpp:671
 msgid "New order of dimensions"
@@ -3348,8 +3384,11 @@ msgid "No action is selected. Do nothing."
 msgstr ""
 
 #: udav/newcmd_dlg.cpp:308
+#, fuzzy
 msgid "No argument is selected"
 msgstr ""
+"\n"
+"Argumento(s) incorrecto(s) en linea %ld"
 
 #: udav/dat_pnl.cpp:573
 msgid "No direction/formula is entered. Do nothing."
@@ -3519,12 +3558,14 @@ msgid "Origin"
 msgstr ""
 
 #: udav/newcmd_dlg.cpp:171 mgllab/dialogs.cpp:712
+#, fuzzy
 msgid "Other plots"
-msgstr ""
+msgstr "1 - otro grafico"
 
 #: mgllab/dialogs.cpp:1025
+#, fuzzy
 msgid "Others"
-msgstr ""
+msgstr "Otro"
 
 #: udav/style_dlg.cpp:161 mgllab/dialogs.cpp:372
 msgid "Overline"
@@ -3645,8 +3686,9 @@ msgid ""
 msgstr ""
 
 #: mgllab/mgllab.cpp:322
+#, fuzzy
 msgid "Plot setup"
-msgstr ""
+msgstr "2 - configurar"
 
 #: udav/text_pnl.cpp:571 mgllab/dialogs.cpp:312 mgllab/mgllab.cpp:306
 msgid "Plot style"
@@ -3681,8 +3723,9 @@ msgid "Previous expressions"
 msgstr ""
 
 #: udav/newcmd_dlg.cpp:181 mgllab/dialogs.cpp:722
+#, fuzzy
 msgid "Primitives"
-msgstr ""
+msgstr "13 - primitivas"
 
 #: widgets/qt.cpp:1154 udav/plot_pnl.cpp:365
 msgid "Primitives ..."
@@ -3713,8 +3756,9 @@ msgid "Print message or information about the data"
 msgstr ""
 
 #: mgllab/mgllab.cpp:279
+#, fuzzy
 msgid "Print plot"
-msgstr ""
+msgstr "Anadir grafico interno"
 
 #: udav/udav_wnd.cpp:295
 msgid "Print script"
@@ -3737,8 +3781,9 @@ msgid "Printing..."
 msgstr ""
 
 #: udav/newcmd_dlg.cpp:180 mgllab/dialogs.cpp:721
+#, fuzzy
 msgid "Program flow"
-msgstr ""
+msgstr "6 - flujo de programa"
 
 #: src/exec_dat.cpp:1628
 msgid "Project periodical data in [v1,v2]"
@@ -3761,8 +3806,9 @@ msgid "Put function"
 msgstr ""
 
 #: udav/dat_pnl.cpp:457
+#, fuzzy
 msgid "Put in variable"
-msgstr ""
+msgstr " - Variable de UDAV"
 
 #: udav/dat_pnl.cpp:548
 msgid "Put into this data array"
@@ -4031,8 +4077,9 @@ msgid "Rotate plot"
 msgstr ""
 
 #: udav/plot_pnl.cpp:553
+#, fuzzy
 msgid "Rotate right"
-msgstr ""
+msgstr "'>' triangulo hacia la derecha"
 
 #: udav/plot_pnl.cpp:541
 msgid "Rotate up"
@@ -4073,8 +4120,9 @@ msgid "Saturation"
 msgstr ""
 
 #: udav/setup_dlg.cpp:143 mgllab/editor.cpp:282
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr " Guardar"
 
 #: mgllab/help.cpp:250 mgllab/table.cpp:456
 msgid "Save Data?"
@@ -4209,8 +4257,9 @@ msgid "Set arbitrary position of plot in picture"
 msgstr ""
 
 #: udav/udav_wnd.cpp:315 mgllab/mgllab.cpp:320
+#, fuzzy
 msgid "Set arguments"
-msgstr ""
+msgstr "Argumentos"
 
 #: src/exec_set.cpp:774
 msgid "Set aspect ration"
@@ -4457,8 +4506,9 @@ msgid "Setup"
 msgstr ""
 
 #: mgllab/mgllab.cpp:321
+#, fuzzy
 msgid "Setup animation"
-msgstr ""
+msgstr "Animacion"
 
 #: udav/prop_dlg.cpp:80
 msgid "Setup colors for:"
@@ -4529,8 +4579,9 @@ msgid "Short information about the data."
 msgstr ""
 
 #: udav/hint_dlg.cpp:62
+#, fuzzy
 msgid "Show at startup"
-msgstr ""
+msgstr "Flecha al principio"
 
 #: udav/udav_wnd.cpp:210
 msgid ""
@@ -4597,8 +4648,9 @@ msgid "Show info"
 msgstr ""
 
 #: mgllab/mgllab.cpp:296
+#, fuzzy
 msgid "Show lines"
-msgstr ""
+msgstr "'-' lineas"
 
 #: widgets/fltk.cpp:887
 msgid "Show next frame in slideshow"
@@ -5258,8 +5310,9 @@ msgid "UDAV - Make histogram"
 msgstr ""
 
 #: udav/mem_pnl.cpp:84
+#, fuzzy
 msgid "UDAV - New variable"
-msgstr ""
+msgstr " - Variable de UDAV"
 
 #: udav/dat_pnl.cpp:377
 msgid "UDAV - Normalize by slice"
@@ -5318,8 +5371,9 @@ msgid "UDAV - Setup inplot"
 msgstr ""
 
 #: udav/setup_dlg.cpp:39 udav/setup_dlg.cpp:190
+#, fuzzy
 msgid "UDAV - Setup plot"
-msgstr ""
+msgstr "11 - grafico de vectores"
 
 #: udav/dat_pnl.cpp:413
 msgid "UDAV - Squeeze data"
@@ -5330,8 +5384,9 @@ msgid "UDAV - about"
 msgstr ""
 
 #: udav/anim_dlg.cpp:105
+#, fuzzy
 msgid "UDAV - animation"
-msgstr ""
+msgstr "Animacion"
 
 #: udav/dat_pnl.cpp:608
 msgid "UDAV - change data"
@@ -5339,8 +5394,9 @@ msgstr ""
 
 #: udav/opt_dlg.cpp:94 udav/opt_dlg.cpp:101 udav/opt_dlg.cpp:108
 #: udav/opt_dlg.cpp:115
+#, fuzzy
 msgid "UDAV - command options"
-msgstr ""
+msgstr "Anadir opcion(es) de comando"
 
 #: udav/mem_pnl.cpp:121
 msgid "UDAV - delete all data"
@@ -5463,8 +5519,9 @@ msgid ""
 msgstr ""
 
 #: udav/newcmd_dlg.cpp:170 mgllab/dialogs.cpp:711
+#, fuzzy
 msgid "Vector plots"
-msgstr ""
+msgstr "11 - grafico de vectores"
 
 #: mgllab/dialogs.cpp:379
 msgid "Vertical align"
@@ -5523,16 +5580,18 @@ msgid "Write current image to graphical file"
 msgstr ""
 
 #: udav/setup_dlg.cpp:48 mgllab/dialogs.cpp:950
+#, fuzzy
 msgid "X axis"
-msgstr ""
+msgstr "12 - eje"
 
 #: udav/setup_dlg.cpp:118
 msgid "X pos"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1065
+#, fuzzy
 msgid "X position"
-msgstr ""
+msgstr "en la posicion"
 
 #: udav/dat_pnl.cpp:413
 msgid "X-direction"
@@ -5564,16 +5623,18 @@ msgid "Y - olive"
 msgstr ""
 
 #: udav/setup_dlg.cpp:49 mgllab/dialogs.cpp:963
+#, fuzzy
 msgid "Y axis"
-msgstr ""
+msgstr "12 - eje"
 
 #: udav/setup_dlg.cpp:119
 msgid "Y pos"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1066
+#, fuzzy
 msgid "Y position"
-msgstr ""
+msgstr "en la posicion"
 
 #: udav/dat_pnl.cpp:413
 msgid "Y-direction"
@@ -5596,8 +5657,9 @@ msgid "Y/Z"
 msgstr ""
 
 #: mgllab/help.cpp:135
+#, fuzzy
 msgid "Yes"
-msgstr ""
+msgstr " Si "
 
 #: udav/hint_dlg.cpp:36 mgllab/help.cpp:270
 msgid ""
@@ -5727,16 +5789,18 @@ msgid "You should specify required argument "
 msgstr ""
 
 #: udav/setup_dlg.cpp:50 mgllab/dialogs.cpp:976
+#, fuzzy
 msgid "Z axis"
-msgstr ""
+msgstr "12 - eje"
 
 #: udav/setup_dlg.cpp:120
 msgid "Z pos"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1067
+#, fuzzy
 msgid "Z position"
-msgstr ""
+msgstr "en la posicion"
 
 #: udav/dat_pnl.cpp:413
 msgid "Z-direction"
@@ -5905,8 +5969,9 @@ msgstr ""
 
 #: mgllab/dialogs.cpp:957 mgllab/dialogs.cpp:970 mgllab/dialogs.cpp:983
 #: mgllab/dialogs.cpp:996
+#, fuzzy
 msgid "center"
-msgstr ""
+msgstr "en el centro"
 
 #: widgets/fltk.cpp:769
 #, c-format
@@ -5919,8 +5984,9 @@ msgid "couldn't open file"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1455
+#, fuzzy
 msgid "curve"
-msgstr ""
+msgstr "Anadir curva"
 
 #: mgllab/dialogs.cpp:1026
 msgid "cutting"
@@ -5957,8 +6023,9 @@ msgid "e - lawngreen"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1455
+#, fuzzy
 msgid "ellipse"
-msgstr ""
+msgstr "Anadir elipse"
 
 #: mgllab/dialogs.cpp:1017
 msgid "facenum"
@@ -6010,8 +6077,9 @@ msgstr ""
 
 #: mgllab/dialogs.cpp:1236 mgllab/dialogs.cpp:1249 mgllab/dialogs.cpp:1262
 #: mgllab/dialogs.cpp:1271 mgllab/dialogs.cpp:1280
+#, fuzzy
 msgid "ind"
-msgstr ""
+msgstr "y"
 
 #. h
 #: udav/style_dlg.cpp:235 mgllab/dialogs.cpp:43
@@ -6044,8 +6112,9 @@ msgid "lighting"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1454
+#, fuzzy
 msgid "line"
-msgstr ""
+msgstr "Anadir linea"
 
 #. c
 #: udav/style_dlg.cpp:226 mgllab/dialogs.cpp:33
@@ -6113,8 +6182,9 @@ msgid ""
 msgstr ""
 
 #: udav/data_dlg.cpp:68
+#, fuzzy
 msgid "min"
-msgstr ""
+msgstr "Ambiente"
 
 #. mglWarnLow
 #: src/base.cpp:227
@@ -6150,8 +6220,9 @@ msgstr ""
 #: udav/style_dlg.cpp:339 udav/style_dlg.cpp:383 udav/data_dlg.cpp:67
 #: mgllab/dialogs.cpp:214 mgllab/dialogs.cpp:230 mgllab/dialogs.cpp:1035
 #: mgllab/dialogs.cpp:1039
+#, fuzzy
 msgid "none"
-msgstr ""
+msgstr "'_' ninguno"
 
 #: udav/style_dlg.cpp:220
 msgid "none or default"
@@ -6207,8 +6278,9 @@ msgid "pointer is NULL"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1456
+#, fuzzy
 msgid "polygon"
-msgstr ""
+msgstr "Anadir poligono"
 
 #: mgllab/dialogs.cpp:1040
 msgid "projection"
@@ -6237,8 +6309,9 @@ msgid "rectangle"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1455
+#, fuzzy
 msgid "rhomb"
-msgstr ""
+msgstr "'D' rombo"
 
 #: udav/style_dlg.cpp:172 udav/subplot_dlg.cpp:193 mgllab/dialogs.cpp:958
 #: mgllab/dialogs.cpp:971 mgllab/dialogs.cpp:984 mgllab/dialogs.cpp:997
@@ -6269,8 +6342,9 @@ msgid "smoothed"
 msgstr ""
 
 #: mgllab/dialogs.cpp:326
+#, fuzzy
 msgid "solid"
-msgstr ""
+msgstr "'-' solido"
 
 #: widgets/qt.cpp:1073 udav/plot_pnl.cpp:476
 msgid "solid PNG"
@@ -6293,8 +6367,9 @@ msgid "ternary proj"
 msgstr ""
 
 #: mgllab/dialogs.cpp:1021 mgllab/dialogs.cpp:1456
+#, fuzzy
 msgid "text"
-msgstr ""
+msgstr "Anadir texto"
 
 #: mgllab/dialogs.cpp:1022
 msgid "ticks"

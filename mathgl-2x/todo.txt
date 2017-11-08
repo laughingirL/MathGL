@@ -114,6 +114,8 @@ ZZ. Update time.texi {before release!!!}
 * info about used memory for graphics
 * coordinates under mouse
 * abort saving shouldn't switch off "modified" flag (check!)
+* "debug" mode?!? or breakpoints?!
+* something strange with highlighting
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???
@@ -140,6 +142,7 @@ Z. Flat toolbuttons ???
 11. Zoom in a region by middle mouse (if not in rotation mode)
 12. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
 13. Substitute correct name for font files in PropDlg
+* "debug" mode?!? or breakpoints?!
 
 ============= UNSURE ===========
 
