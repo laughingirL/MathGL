@@ -37,14 +37,12 @@
 8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
 9. Mask in EPS/SVG
 10. Add momentum dat vdat ... where vdat is corresponding coordinate ???
-12. Cont + labels ("t") for "narrow" contours
 15. Use arrow_plot_3d ???
 16. Check Title "size" -- see 'primitives' sample
 17. Optimize '.' style of Flow.
 18. Show mouse position at widgets constantly.
 
 ZZ. Update *.i for new functions {before release!!!}
-
 
 curve_draw: step?, bifurcation?, flow3d
 

@@ -113,6 +113,7 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	bool beg = mglchr(sch,'<'), grd = mglchr(sch,'=');
 	double fact = gr->size_opt<0 ? -gr->size_opt:1;
 
+	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	double zVal = gr->Min.z, asize = gr->GetArrowSize();
 
@@ -214,6 +215,7 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	bool grd = mglchr(sch,'=');
 	double fact = gr->size_opt<0 ? -gr->size_opt:1;
 
+	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	gr->Reserve(2*n*m*l);
 	long tx=1,ty=1,tz=1;
@@ -417,6 +419,7 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	bool dot = mglchr(sch,'.'), fix = mglchr(sch,'f');
 	bool end = mglchr(sch,'>'), beg = mglchr(sch,'<');
 	bool grd = mglchr(sch,'=');
+	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	double fact = gr->size_opt<0 ? -gr->size_opt:1;
 
@@ -619,6 +622,7 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
 
+	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	bool vv = mglchr(sch,'v');
 	// allocate memory
@@ -743,6 +747,7 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("FlowP",cgid++);
 
+	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	bool vv = mglchr(sch,'v');
 	// find coordinates u, v
@@ -974,6 +979,7 @@ void MGL_EXPORT mgl_flow3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	if(mglchr(sch,'x'))	dir='x';
 	if(mglchr(sch,'z'))	dir='z';
 
+	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	bool vv = mglchr(sch,'v'), tt = mglchr(sch,'t');
 	std::vector<mglPoint> u;
@@ -1043,6 +1049,7 @@ void MGL_EXPORT mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow3d",cgid++);
 	bool cnt=!mglchr(sch,'#');
+	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	bool vv = mglchr(sch,'v'), xo = mglchr(sch,'x'), zo = mglchr(sch,'z');
 
@@ -1100,6 +1107,7 @@ void MGL_EXPORT mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, 
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("FlowP3",cgid++);
+	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	bool vv = mglchr(sch,'v'), xo = mglchr(sch,'x'), zo = mglchr(sch,'z');
 

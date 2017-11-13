@@ -918,8 +918,9 @@ std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 	memmove(se+i+1,se+2+st+dig,le-dig);	le=strlen(se);
 	// add '+' sign if required
 	if(plus && !strchr("-0niNI",se[0]))
-	{	memmove(se+1,se,le+1);	se[0]='+';
-		memmove(sf+1,sf,lf+1);	sf[0]='+';	}
+	{	for(size_t i=le+1;i>0;i--)	se[i]=se[i-1];
+		for(size_t i=lf+1;i>0;i--)	sf[i]=sf[i-1];
+		se[0] = sf[0] = '+';	}
 	if((lf>le && !mglchr(fmt,'f')) || !strcmp(sf,"0") || !strcmp(sf,"-0"))	strcpy(sf,se);
 	lf = strlen(sf);
 	std::wstring res;	res.reserve(lf+8);

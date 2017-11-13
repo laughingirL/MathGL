@@ -1657,7 +1657,7 @@ void mglBase::curve_plot(size_t num, size_t k0, size_t step)
 		if(i+1>=num)	break;
 
 		size_t k=i+2;
-		while(k<num)
+		while(k<num)	// TODO change to half-division?!?
 		{
 			const mglPoint p2(GetPntP(k0+k*step));
 			if(mgl_isnan(p2.x))	break;
