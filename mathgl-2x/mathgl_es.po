@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-07 15:55+0300\n"
+"POT-Creation-Date: 2017-11-16 14:50+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -63,7 +63,7 @@ msgid ""
 "\t-h           print this message\n"
 msgstr ""
 
-#: widgets/qt.cpp:863
+#: widgets/qt.cpp:870
 msgid ""
 "\n"
 "(c) Alexey Balakin, 2007\n"
@@ -528,21 +528,21 @@ msgstr ""
 msgid "@<-  Prev"
 msgstr ""
 
-#: widgets/qt.cpp:1281 udav/udav_wnd.cpp:331 mgllab/mgllab.cpp:329
+#: widgets/qt.cpp:1288 udav/udav_wnd.cpp:331 mgllab/mgllab.cpp:329
 msgid "About"
 msgstr "Acerca de"
 
 #. -----------------------------------------------------------------------------
-#: widgets/qt.cpp:867 widgets/qt.cpp:1282 udav/udav_wnd.cpp:332
+#: widgets/qt.cpp:874 widgets/qt.cpp:1289 udav/udav_wnd.cpp:332
 #: udav/udav_wnd.cpp:460
 msgid "About Qt"
 msgstr "Acerca de Qt"
 
-#: widgets/qt.cpp:1160 udav/plot_pnl.cpp:372
+#: widgets/qt.cpp:1167 udav/plot_pnl.cpp:372
 msgid "Add arc"
 msgstr "Anadir arco"
 
-#: widgets/qt.cpp:1163 udav/plot_pnl.cpp:375
+#: widgets/qt.cpp:1170 udav/plot_pnl.cpp:375
 msgid "Add arc which properties can be changed later by mouse."
 msgstr "Anadir arco cuyas propiedades pueden ser cambiadas luego con el mouse."
 
@@ -550,11 +550,11 @@ msgstr "Anadir arco cuyas propiedades pueden ser cambiadas luego con el mouse."
 msgid "Add command option(s)"
 msgstr "Anadir opcion(es) de comando"
 
-#: widgets/qt.cpp:1165 udav/plot_pnl.cpp:378
+#: widgets/qt.cpp:1172 udav/plot_pnl.cpp:378
 msgid "Add curve"
 msgstr "Anadir curva"
 
-#: widgets/qt.cpp:1168 udav/plot_pnl.cpp:381
+#: widgets/qt.cpp:1175 udav/plot_pnl.cpp:381
 msgid "Add curve which properties can be changed later by mouse."
 msgstr ""
 "Anadir curva cuyas propiedades pueden ser cambiadas luego con el mouse."
@@ -563,11 +563,11 @@ msgstr ""
 msgid "Add data or number"
 msgstr "Anadir datos o numero"
 
-#: widgets/qt.cpp:1180 udav/plot_pnl.cpp:396
+#: widgets/qt.cpp:1187 udav/plot_pnl.cpp:396
 msgid "Add ellipse"
 msgstr "Anadir elipse"
 
-#: widgets/qt.cpp:1183 udav/plot_pnl.cpp:399 udav/plot_pnl.cpp:405
+#: widgets/qt.cpp:1190 udav/plot_pnl.cpp:399 udav/plot_pnl.cpp:405
 msgid "Add ellipse which properties can be changed later by mouse."
 msgstr ""
 "Anadir elipse cuyas propiedades pueden ser cambiadas luego con el  mouse."
@@ -576,7 +576,7 @@ msgstr ""
 msgid "Add inplot"
 msgstr "Anadir grafico interno"
 
-#: src/exec_set.cpp:767
+#: src/exec_set.cpp:775
 msgid "Add legend entry"
 msgstr "Anadir entrada a leyenda"
 
@@ -584,29 +584,29 @@ msgstr "Anadir entrada a leyenda"
 msgid "Add legend entry for the plot"
 msgstr "Anadir entrada a leyenda para grafico"
 
-#: widgets/qt.cpp:1155 udav/plot_pnl.cpp:366
+#: widgets/qt.cpp:1162 udav/plot_pnl.cpp:366
 msgid "Add line"
 msgstr "Anadir linea"
 
-#: widgets/qt.cpp:1158 udav/plot_pnl.cpp:369
+#: widgets/qt.cpp:1165 udav/plot_pnl.cpp:369
 msgid "Add line which properties can be changed later by mouse."
 msgstr ""
 "Anadir linea cuyas propiedades pueden ser cambiadas luego con el mouse."
 
-#: widgets/qt.cpp:1190 udav/plot_pnl.cpp:408
+#: widgets/qt.cpp:1197 udav/plot_pnl.cpp:408
 msgid "Add mark"
 msgstr "Anadir marca"
 
-#: widgets/qt.cpp:1193 udav/plot_pnl.cpp:411
+#: widgets/qt.cpp:1200 udav/plot_pnl.cpp:411
 msgid "Add marker which properties can be changed later by mouse."
 msgstr ""
 "Anadir marca cuyas propiedades pueden ser cambiadas luego con el mouse."
 
-#: widgets/qt.cpp:1185 udav/plot_pnl.cpp:402
+#: widgets/qt.cpp:1192 udav/plot_pnl.cpp:402
 msgid "Add polygon"
 msgstr "Anadir poligono"
 
-#: widgets/qt.cpp:1188
+#: widgets/qt.cpp:1195
 msgid "Add polygon which properties can be changed later by mouse."
 msgstr ""
 "Anadir poligono cuyas propiedades pueden ser cambiadas luego con el mouse."
@@ -615,29 +615,29 @@ msgstr ""
 msgid "Add primitive"
 msgstr "Anadir primitiva"
 
-#: widgets/qt.cpp:1170 udav/plot_pnl.cpp:384
+#: widgets/qt.cpp:1177 udav/plot_pnl.cpp:384
 msgid "Add rect"
 msgstr "Anadir recta"
 
-#: widgets/qt.cpp:1173 udav/plot_pnl.cpp:387
+#: widgets/qt.cpp:1180 udav/plot_pnl.cpp:387
 msgid "Add rectangle which properties can be changed later by mouse."
 msgstr ""
 "Anadir rectangulo cuyas propiedades pueden ser cambiadas luego con el mouse."
 
-#: widgets/qt.cpp:1175 udav/plot_pnl.cpp:390
+#: widgets/qt.cpp:1182 udav/plot_pnl.cpp:390
 msgid "Add rhombus"
 msgstr "Anadir rombo"
 
-#: widgets/qt.cpp:1178 udav/plot_pnl.cpp:393
+#: widgets/qt.cpp:1185 udav/plot_pnl.cpp:393
 msgid "Add rhombus which properties can be changed later by mouse."
 msgstr ""
 "Anadir rombo cuyas propiedades pueden ser cambiadas luego con el mouse."
 
-#: widgets/qt.cpp:1195 udav/plot_pnl.cpp:414
+#: widgets/qt.cpp:1202 udav/plot_pnl.cpp:414
 msgid "Add text"
 msgstr "Anadir texto"
 
-#: widgets/qt.cpp:1198 udav/plot_pnl.cpp:417
+#: widgets/qt.cpp:1205 udav/plot_pnl.cpp:417
 msgid "Add text which properties can be changed later by mouse."
 msgstr ""
 "Anadir texto cuyas propiedades pueden ser cambiadas luego con el mouse."
@@ -650,19 +650,19 @@ msgstr "Anadir titulo para el subgrafico/grafico interno actual"
 msgid "Add to"
 msgstr "Anadir a"
 
-#: src/exec_set.cpp:768
+#: src/exec_set.cpp:776
 msgid "Add user-defined symbol"
 msgstr "Anadir simbolo definido por el usuario"
 
-#: widgets/fltk.cpp:852
+#: widgets/fltk.cpp:860
 msgid "Adjust picture size to fill drawing area"
 msgstr "Ajustar tamano de la imagen para llenar el area de grafico"
 
-#: widgets/fltk.cpp:815 widgets/qt.cpp:1143 udav/plot_pnl.cpp:337
+#: widgets/fltk.cpp:823 widgets/qt.cpp:1150 udav/plot_pnl.cpp:337
 msgid "Adjust size"
 msgstr "Ajustar tamano"
 
-#: src/exec_set.cpp:769
+#: src/exec_set.cpp:777
 msgid "Adjust ticks for best view"
 msgstr "Ajustar marcas del eje a la mejor apariencia"
 
@@ -678,7 +678,7 @@ msgstr ""
 "en 0."
 
 #. graphics menu
-#: widgets/qt.cpp:1102 udav/opt_dlg.cpp:51 udav/setup_dlg.cpp:109
+#: widgets/qt.cpp:1109 udav/opt_dlg.cpp:51 udav/setup_dlg.cpp:109
 #: udav/plot_pnl.cpp:290 mgllab/dialogs.cpp:109
 msgid "Alpha"
 msgstr "Alfa"
@@ -706,7 +706,7 @@ msgid "Angle around z axis (in degrees)"
 msgstr "Angulo alrededor del eje z (en grados)"
 
 #. animation menu
-#: widgets/qt.cpp:1248 widgets/qt.cpp:1249 udav/plot_pnl.cpp:559
+#: widgets/qt.cpp:1255 widgets/qt.cpp:1256 udav/plot_pnl.cpp:559
 #: mgllab/mathgl.cpp:183
 msgid "Animation"
 msgstr "Animacion"
@@ -744,7 +744,7 @@ msgstr "Flecha al final"
 msgid "Arrow at start"
 msgstr "Flecha al principio"
 
-#: widgets/qt.cpp:1141
+#: widgets/qt.cpp:1148
 msgid "Ask to stop plot drawing (F7)."
 msgstr "Solicitar detener graficacion (F7)."
 
@@ -764,7 +764,7 @@ msgstr "Proporcion de aspecto de  escala-y a escala-z"
 msgid "Aspect x/z"
 msgstr "Aspecto x/z"
 
-#: src/exec_set.cpp:775
+#: src/exec_set.cpp:783
 msgid "Attach light settings to inplot"
 msgstr "Vincular configuracion de luz a grafico interno"
 
@@ -906,7 +906,7 @@ msgstr "12 - eje"
 msgid "C-range"
 msgstr ""
 
-#: widgets/qt.cpp:1267
+#: widgets/qt.cpp:1274
 msgid "Calculations"
 msgstr ""
 
@@ -917,17 +917,18 @@ msgstr ""
 msgid "Calculator"
 msgstr ""
 
-#: udav/anim_dlg.cpp:67 udav/prop_dlg.cpp:180 udav/args_dlg.cpp:63
-#: udav/newcmd_dlg.cpp:78 udav/open_dlg.cpp:90 udav/dat_pnl.cpp:460
-#: udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552 udav/dat_pnl.cpp:629
-#: udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145 udav/files_dlg.cpp:58
-#: udav/style_dlg.cpp:206 udav/data_dlg.cpp:90 udav/subplot_dlg.cpp:219
-#: mgllab/editor.cpp:282 mgllab/mathgl.cpp:164 mgllab/mathgl.cpp:195
-#: mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164 mgllab/dialogs.cpp:410
-#: mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749 mgllab/dialogs.cpp:1071
-#: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:478
-#: mgllab/table.cpp:101 mgllab/table.cpp:179 mgllab/table.cpp:353
-#: mgllab/table.cpp:556 mgllab/table.cpp:619 mgllab/table.cpp:674
+#: widgets/fltk.cpp:1102 udav/anim_dlg.cpp:67 udav/prop_dlg.cpp:180
+#: udav/args_dlg.cpp:63 udav/newcmd_dlg.cpp:78 udav/open_dlg.cpp:90
+#: udav/dat_pnl.cpp:460 udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552
+#: udav/dat_pnl.cpp:629 udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145
+#: udav/files_dlg.cpp:58 udav/style_dlg.cpp:206 udav/data_dlg.cpp:90
+#: udav/subplot_dlg.cpp:219 mgllab/editor.cpp:282 mgllab/mathgl.cpp:164
+#: mgllab/mathgl.cpp:195 mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164
+#: mgllab/dialogs.cpp:410 mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749
+#: mgllab/dialogs.cpp:1071 mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473
+#: mgllab/mgllab.cpp:478 mgllab/table.cpp:101 mgllab/table.cpp:179
+#: mgllab/table.cpp:353 mgllab/table.cpp:556 mgllab/table.cpp:619
+#: mgllab/table.cpp:674
 msgid "Cancel"
 msgstr ""
 
@@ -952,11 +953,11 @@ msgstr ""
 msgid "Change (resize) data"
 msgstr ""
 
-#: widgets/qt.cpp:1145 udav/plot_pnl.cpp:339
+#: widgets/qt.cpp:1152 udav/plot_pnl.cpp:339
 msgid "Change canvas size to fill whole region (F6)."
 msgstr ""
 
-#: src/exec_set.cpp:779
+#: src/exec_set.cpp:787
 msgid "Change current directory"
 msgstr ""
 
@@ -977,7 +978,7 @@ msgstr ""
 msgid "Change font"
 msgstr ""
 
-#: src/exec_set.cpp:829
+#: src/exec_set.cpp:838
 msgid "Change view angles - use 'rotate' for plot rotation"
 msgstr ""
 
@@ -989,16 +990,16 @@ msgstr ""
 msgid "Clear all"
 msgstr ""
 
-#: src/exec_set.cpp:780
+#: src/exec_set.cpp:788
 msgid "Clear legend entries"
 msgstr ""
 
-#: src/exec_set.cpp:781
+#: src/exec_set.cpp:789
 msgid "Clear picture"
 msgstr ""
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
-#: widgets/qt.cpp:1095 udav/find_dlg.cpp:52 udav/hint_dlg.cpp:70
+#: widgets/qt.cpp:1102 udav/find_dlg.cpp:52 udav/hint_dlg.cpp:70
 #: mgllab/editor.cpp:565 mgllab/help.cpp:308 mgllab/help.cpp:368
 #: mgllab/help.cpp:484
 msgid "Close"
@@ -1105,19 +1106,19 @@ msgstr ""
 msgid "Copy data from another variable"
 msgstr ""
 
-#: widgets/fltk.cpp:812
+#: widgets/fltk.cpp:820
 msgid "Copy graphics"
 msgstr ""
 
-#: widgets/qt.cpp:1149 udav/plot_pnl.cpp:354
+#: widgets/qt.cpp:1156 udav/plot_pnl.cpp:354
 msgid "Copy graphics to clipboard (Ctrl+Shift+G)."
 msgstr ""
 
-#: widgets/fltk.cpp:856
+#: widgets/fltk.cpp:864
 msgid "Copy image to clipboard"
 msgstr ""
 
-#: widgets/qt.cpp:1147 udav/plot_pnl.cpp:352
+#: widgets/qt.cpp:1154 udav/plot_pnl.cpp:352
 msgid "Copy plot"
 msgstr ""
 
@@ -1993,7 +1994,7 @@ msgstr ""
 msgid "Enter number for subtraction from data values"
 msgstr ""
 
-#: widgets/qt.cpp:940
+#: widgets/qt.cpp:947
 msgid "Enter number of vertexes"
 msgstr ""
 
@@ -2019,7 +2020,7 @@ msgid ""
 "point, '3' save each 3d and so on."
 msgstr ""
 
-#: widgets/qt.cpp:949
+#: widgets/qt.cpp:956
 msgid "Enter text"
 msgstr ""
 
@@ -2069,7 +2070,7 @@ msgstr ""
 msgid "Execute script after loading"
 msgstr ""
 
-#: widgets/qt.cpp:1136 udav/plot_pnl.cpp:333
+#: widgets/qt.cpp:1143 udav/plot_pnl.cpp:333
 msgid "Execute script and redraw graphics (F5)."
 msgstr ""
 
@@ -2097,15 +2098,15 @@ msgstr ""
 msgid "Export Data?"
 msgstr ""
 
-#: widgets/fltk.cpp:790
+#: widgets/fltk.cpp:798
 msgid "Export as ..."
 msgstr ""
 
-#: widgets/qt.cpp:1071 udav/plot_pnl.cpp:474
+#: widgets/qt.cpp:1078 udav/plot_pnl.cpp:474
 msgid "Export as 2D ..."
 msgstr ""
 
-#: widgets/qt.cpp:1080 udav/plot_pnl.cpp:484
+#: widgets/qt.cpp:1087 udav/plot_pnl.cpp:484
 msgid "Export as 3D ..."
 msgstr ""
 
@@ -2143,7 +2144,7 @@ msgid "Factor"
 msgstr ""
 
 #. file menu
-#: widgets/qt.cpp:1070 udav/udav_wnd.cpp:281 udav/dat_pnl.cpp:681
+#: widgets/qt.cpp:1077 udav/udav_wnd.cpp:281 udav/dat_pnl.cpp:681
 #: mgllab/mgllab.cpp:274 mgllab/table.cpp:748
 msgid "File"
 msgstr ""
@@ -2425,7 +2426,7 @@ msgstr ""
 msgid "Go to the specified slice for 3D data."
 msgstr ""
 
-#: widgets/qt.cpp:1099 widgets/qt.cpp:1101 udav/plot_pnl.cpp:66
+#: widgets/qt.cpp:1106 widgets/qt.cpp:1108 udav/plot_pnl.cpp:66
 #: mgllab/mgllab.cpp:316
 msgid "Graphics"
 msgstr ""
@@ -2435,7 +2436,7 @@ msgstr ""
 msgid "Graphics setup"
 msgstr "14 - configurar eje"
 
-#: widgets/fltk.cpp:928
+#: widgets/fltk.cpp:936
 msgid "Graphics/Adjust size"
 msgstr ""
 
@@ -2444,15 +2445,15 @@ msgstr ""
 #. /< Callback function for prev frame
 #. /< Callback function for delay
 #. /< Callback function for reloading
-#: widgets/fltk.cpp:922 include/mgl2/Fl_MathGL.h:150
+#: widgets/fltk.cpp:930 include/mgl2/Fl_MathGL.h:152
 msgid "Graphics/Alpha"
 msgstr ""
 
-#: widgets/fltk.cpp:957
+#: widgets/fltk.cpp:965
 msgid "Graphics/Animation/Next frame"
 msgstr ""
 
-#: widgets/fltk.cpp:958
+#: widgets/fltk.cpp:966
 msgid "Graphics/Animation/Prev frame"
 msgstr ""
 
@@ -2460,83 +2461,83 @@ msgstr ""
 msgid "Graphics/Animation/Setup animation"
 msgstr ""
 
-#: widgets/fltk.cpp:956 include/mgl2/Fl_MathGL.h:152
+#: widgets/fltk.cpp:964 include/mgl2/Fl_MathGL.h:154
 msgid "Graphics/Animation/Slideshow"
 msgstr ""
 
-#: widgets/fltk.cpp:932
+#: widgets/fltk.cpp:940
 msgid "Graphics/Copy click coor."
 msgstr ""
 
-#: widgets/fltk.cpp:931
+#: widgets/fltk.cpp:939
 msgid "Graphics/Copy graphics"
 msgstr ""
 
-#: widgets/fltk.cpp:945
+#: widgets/fltk.cpp:953
 msgid "Graphics/Export/as BMP"
 msgstr ""
 
-#: widgets/fltk.cpp:943
+#: widgets/fltk.cpp:951
 msgid "Graphics/Export/as GIF"
 msgstr ""
 
-#: widgets/fltk.cpp:940
+#: widgets/fltk.cpp:948
 msgid "Graphics/Export/as JPEG"
 msgstr ""
 
-#: widgets/fltk.cpp:951
+#: widgets/fltk.cpp:959
 msgid "Graphics/Export/as OBJ"
 msgstr ""
 
-#: widgets/fltk.cpp:952
+#: widgets/fltk.cpp:960
 msgid "Graphics/Export/as OFF"
 msgstr ""
 
-#: widgets/fltk.cpp:936
+#: widgets/fltk.cpp:944
 msgid "Graphics/Export/as PNG"
 msgstr ""
 
-#: widgets/fltk.cpp:950
+#: widgets/fltk.cpp:958
 msgid "Graphics/Export/as PRC"
 msgstr ""
 
-#: widgets/fltk.cpp:953
+#: widgets/fltk.cpp:961
 msgid "Graphics/Export/as STL"
 msgstr ""
 
-#: widgets/fltk.cpp:946
+#: widgets/fltk.cpp:954
 msgid "Graphics/Export/as SVG"
 msgstr ""
 
-#: widgets/fltk.cpp:949
+#: widgets/fltk.cpp:957
 msgid "Graphics/Export/as TeX"
 msgstr ""
 
-#: widgets/fltk.cpp:954
+#: widgets/fltk.cpp:962
 msgid "Graphics/Export/as XYZ"
 msgstr ""
 
-#: widgets/fltk.cpp:948
+#: widgets/fltk.cpp:956
 msgid "Graphics/Export/as bitmap EPS"
 msgstr ""
 
-#: widgets/fltk.cpp:937
+#: widgets/fltk.cpp:945
 msgid "Graphics/Export/as solid PNG"
 msgstr ""
 
-#: widgets/fltk.cpp:947
+#: widgets/fltk.cpp:955
 msgid "Graphics/Export/as vector EPS"
 msgstr ""
 
-#: widgets/fltk.cpp:924 include/mgl2/Fl_MathGL.h:153
+#: widgets/fltk.cpp:932 include/mgl2/Fl_MathGL.h:155
 msgid "Graphics/Grid"
 msgstr ""
 
-#: widgets/fltk.cpp:923 include/mgl2/Fl_MathGL.h:151
+#: widgets/fltk.cpp:931 include/mgl2/Fl_MathGL.h:153
 msgid "Graphics/Light"
 msgstr ""
 
-#: widgets/fltk.cpp:933 include/mgl2/Fl_MathGL.h:159 mgllab/mgllab.cpp:369
+#: widgets/fltk.cpp:941 include/mgl2/Fl_MathGL.h:161 mgllab/mgllab.cpp:369
 msgid "Graphics/Pause calc"
 msgstr ""
 
@@ -2544,43 +2545,43 @@ msgstr ""
 msgid "Graphics/Primitive"
 msgstr ""
 
-#: widgets/fltk.cpp:927
+#: widgets/fltk.cpp:935
 msgid "Graphics/Redraw"
 msgstr ""
 
-#: widgets/fltk.cpp:929
+#: widgets/fltk.cpp:937
 msgid "Graphics/Reload data"
 msgstr ""
 
-#: widgets/fltk.cpp:926
+#: widgets/fltk.cpp:934
 msgid "Graphics/Restore"
 msgstr ""
 
-#: widgets/fltk.cpp:930
+#: widgets/fltk.cpp:938
 msgid "Graphics/Stop"
 msgstr ""
 
-#: widgets/fltk.cpp:964
+#: widgets/fltk.cpp:972
 msgid "Graphics/Transform/Move down"
 msgstr ""
 
-#: widgets/fltk.cpp:960
+#: widgets/fltk.cpp:968
 msgid "Graphics/Transform/Move left"
 msgstr ""
 
-#: widgets/fltk.cpp:965
+#: widgets/fltk.cpp:973
 msgid "Graphics/Transform/Move right"
 msgstr ""
 
-#: widgets/fltk.cpp:961
+#: widgets/fltk.cpp:969
 msgid "Graphics/Transform/Move up"
 msgstr ""
 
-#: widgets/fltk.cpp:962
+#: widgets/fltk.cpp:970
 msgid "Graphics/Transform/Zoom in"
 msgstr ""
 
-#: widgets/fltk.cpp:963
+#: widgets/fltk.cpp:971
 msgid "Graphics/Transform/Zoom out"
 msgstr ""
 
@@ -2622,7 +2623,7 @@ msgstr ""
 msgid "Height of selected cells"
 msgstr ""
 
-#: widgets/qt.cpp:1280 udav/help_pnl.cpp:57 udav/udav_wnd.cpp:231
+#: widgets/qt.cpp:1287 udav/help_pnl.cpp:57 udav/udav_wnd.cpp:231
 #: udav/udav_wnd.cpp:323 mgllab/mgllab.cpp:326 mgllab/mgllab.cpp:327
 #: mgllab/mgllab.cpp:355
 msgid "Help"
@@ -2799,7 +2800,7 @@ msgstr ""
 msgid "Italic style"
 msgstr ""
 
-#: widgets/qt.cpp:1074 udav/plot_pnl.cpp:477
+#: widgets/qt.cpp:1081 udav/plot_pnl.cpp:477
 msgid "JPEG"
 msgstr ""
 
@@ -2853,7 +2854,7 @@ msgstr ""
 msgid "L - seagreen"
 msgstr ""
 
-#: widgets/qt.cpp:1078 udav/plot_pnl.cpp:481
+#: widgets/qt.cpp:1085 udav/plot_pnl.cpp:481
 msgid "LaTeX"
 msgstr ""
 
@@ -2893,7 +2894,7 @@ msgstr ""
 msgid "Legend"
 msgstr ""
 
-#: widgets/qt.cpp:1108 udav/opt_dlg.cpp:64 udav/setup_dlg.cpp:110
+#: widgets/qt.cpp:1115 udav/opt_dlg.cpp:64 udav/setup_dlg.cpp:110
 #: udav/plot_pnl.cpp:297 mgllab/dialogs.cpp:115
 msgid "Light"
 msgstr ""
@@ -2934,7 +2935,7 @@ msgstr ""
 msgid "Load Data?"
 msgstr ""
 
-#: src/exec_set.cpp:796
+#: src/exec_set.cpp:804
 msgid "Load commands from external DLL"
 msgstr ""
 
@@ -2953,7 +2954,7 @@ msgid ""
 "at exit but UDAV will not ask to save it (Ctrl+Shift+O)."
 msgstr ""
 
-#: src/exec_set.cpp:797
+#: src/exec_set.cpp:805
 msgid "Load fontfaces"
 msgstr ""
 
@@ -3040,7 +3041,7 @@ msgid ""
 "All files (*.*)"
 msgstr ""
 
-#: widgets/qt.cpp:1081 udav/plot_pnl.cpp:485
+#: widgets/qt.cpp:1088 udav/plot_pnl.cpp:485
 msgid "MGLD"
 msgstr ""
 
@@ -3094,7 +3095,7 @@ msgstr "Ajustar tamano"
 msgid "Match case"
 msgstr ""
 
-#: widgets/qt.cpp:864
+#: widgets/qt.cpp:871
 msgid "MathGL - about"
 msgstr ""
 
@@ -3103,7 +3104,7 @@ msgstr ""
 msgid "MathGL message - %s\n"
 msgstr ""
 
-#: widgets/qt.cpp:863
+#: widgets/qt.cpp:870
 msgid "MathGL v. 2."
 msgstr ""
 
@@ -3237,27 +3238,27 @@ msgstr ""
 msgid "Momentum along 'z' for function"
 msgstr ""
 
-#: widgets/qt.cpp:1237 udav/plot_pnl.cpp:527
+#: widgets/qt.cpp:1244 udav/plot_pnl.cpp:527
 msgid "Move down"
 msgstr ""
 
-#: widgets/qt.cpp:1223 udav/plot_pnl.cpp:506
+#: widgets/qt.cpp:1230 udav/plot_pnl.cpp:506
 msgid "Move graphics left by 1/3 of its width."
 msgstr ""
 
-#: widgets/qt.cpp:1243 udav/plot_pnl.cpp:536
+#: widgets/qt.cpp:1250 udav/plot_pnl.cpp:536
 msgid "Move graphics right by 1/3 of its width."
 msgstr ""
 
-#: widgets/qt.cpp:1227 udav/plot_pnl.cpp:512
+#: widgets/qt.cpp:1234 udav/plot_pnl.cpp:512
 msgid "Move graphics up by 1/3 of its height."
 msgstr ""
 
-#: widgets/qt.cpp:1239 udav/plot_pnl.cpp:530
+#: widgets/qt.cpp:1246 udav/plot_pnl.cpp:530
 msgid "Move graphics up down 1/3 of its height."
 msgstr ""
 
-#: widgets/qt.cpp:1221 udav/plot_pnl.cpp:503
+#: widgets/qt.cpp:1228 udav/plot_pnl.cpp:503
 msgid "Move left"
 msgstr ""
 
@@ -3273,7 +3274,7 @@ msgstr ""
 msgid "Move plot up"
 msgstr ""
 
-#: widgets/qt.cpp:1241 udav/plot_pnl.cpp:533
+#: widgets/qt.cpp:1248 udav/plot_pnl.cpp:533
 msgid "Move right"
 msgstr ""
 
@@ -3285,7 +3286,7 @@ msgstr ""
 msgid "Move selected plot up to previous subplot."
 msgstr ""
 
-#: widgets/qt.cpp:1225 udav/plot_pnl.cpp:509
+#: widgets/qt.cpp:1232 udav/plot_pnl.cpp:509
 msgid "Move up"
 msgstr ""
 
@@ -3371,7 +3372,7 @@ msgstr ""
 msgid "Next slice"
 msgstr ""
 
-#: widgets/qt.cpp:1251 udav/plot_pnl.cpp:560
+#: widgets/qt.cpp:1258 udav/plot_pnl.cpp:560
 msgid "Next slide"
 msgstr ""
 
@@ -3394,10 +3395,10 @@ msgstr ""
 msgid "No direction/formula is entered. Do nothing."
 msgstr ""
 
-#: widgets/qt.cpp:683 widgets/qt.cpp:695 widgets/qt.cpp:707 widgets/qt.cpp:719
-#: widgets/qt.cpp:731 widgets/qt.cpp:739 widgets/qt.cpp:747 widgets/qt.cpp:755
-#: widgets/qt.cpp:763 widgets/qt.cpp:771 widgets/qt.cpp:779 widgets/qt.cpp:787
-#: widgets/qt.cpp:803 widgets/qt.cpp:811 widgets/qt.cpp:819
+#: widgets/qt.cpp:690 widgets/qt.cpp:702 widgets/qt.cpp:714 widgets/qt.cpp:726
+#: widgets/qt.cpp:738 widgets/qt.cpp:746 widgets/qt.cpp:754 widgets/qt.cpp:762
+#: widgets/qt.cpp:770 widgets/qt.cpp:778 widgets/qt.cpp:786 widgets/qt.cpp:794
+#: widgets/qt.cpp:810 widgets/qt.cpp:818 widgets/qt.cpp:826
 msgid "No filename."
 msgstr ""
 
@@ -3418,7 +3419,7 @@ msgstr ""
 msgid "No text rotation"
 msgstr ""
 
-#: widgets/fltk.cpp:813
+#: widgets/fltk.cpp:821
 msgid "Normal view"
 msgstr ""
 
@@ -3478,19 +3479,19 @@ msgstr ""
 msgid "Nz"
 msgstr ""
 
-#: widgets/qt.cpp:1083 udav/plot_pnl.cpp:487
+#: widgets/qt.cpp:1090 udav/plot_pnl.cpp:487
 msgid "OBJ"
 msgstr ""
 
-#: udav/anim_dlg.cpp:69 udav/prop_dlg.cpp:182 udav/args_dlg.cpp:65
-#: udav/newcmd_dlg.cpp:80 udav/open_dlg.cpp:92 udav/dat_pnl.cpp:462
-#: udav/dat_pnl.cpp:512 udav/dat_pnl.cpp:554 udav/dat_pnl.cpp:631
-#: udav/opt_dlg.cpp:80 udav/files_dlg.cpp:60 udav/style_dlg.cpp:208
-#: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221 mgllab/mathgl.cpp:196
-#: mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165 mgllab/dialogs.cpp:411
-#: mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750 mgllab/dialogs.cpp:1072
-#: mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474 mgllab/mgllab.cpp:479
-#: mgllab/table.cpp:621
+#: widgets/fltk.cpp:1104 udav/anim_dlg.cpp:69 udav/prop_dlg.cpp:182
+#: udav/args_dlg.cpp:65 udav/newcmd_dlg.cpp:80 udav/open_dlg.cpp:92
+#: udav/dat_pnl.cpp:462 udav/dat_pnl.cpp:512 udav/dat_pnl.cpp:554
+#: udav/dat_pnl.cpp:631 udav/opt_dlg.cpp:80 udav/files_dlg.cpp:60
+#: udav/style_dlg.cpp:208 udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221
+#: mgllab/mathgl.cpp:196 mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165
+#: mgllab/dialogs.cpp:411 mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750
+#: mgllab/dialogs.cpp:1072 mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474
+#: mgllab/mgllab.cpp:479 mgllab/table.cpp:621
 msgid "OK"
 msgstr ""
 
@@ -3524,7 +3525,7 @@ msgstr ""
 msgid "Open file ..."
 msgstr ""
 
-#: widgets/qt.cpp:1092 udav/udav_wnd.cpp:298
+#: widgets/qt.cpp:1099 udav/udav_wnd.cpp:298
 msgid "Open printer dialog and print graphics (Ctrl+P)"
 msgstr ""
 
@@ -3584,7 +3585,7 @@ msgstr ""
 msgid "PDF support was disabled. Please, enable it and rebuild MathGL."
 msgstr ""
 
-#: widgets/qt.cpp:1072 udav/plot_pnl.cpp:475
+#: widgets/qt.cpp:1079 udav/plot_pnl.cpp:475
 msgid "PNG"
 msgstr ""
 
@@ -3597,7 +3598,7 @@ msgstr ""
 msgid "PNG support was disabled. Please, enable it and rebuild MathGL."
 msgstr ""
 
-#: widgets/qt.cpp:1082 udav/plot_pnl.cpp:486
+#: widgets/qt.cpp:1089 udav/plot_pnl.cpp:486
 msgid "PRC"
 msgstr ""
 
@@ -3641,12 +3642,12 @@ msgstr ""
 msgid "Path for user MathGL font files"
 msgstr ""
 
-#: widgets/qt.cpp:1269
+#: widgets/qt.cpp:1276
 msgid "Pause calculation"
 msgstr ""
 
 #. Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
-#: widgets/fltk.cpp:892 widgets/qt.cpp:1274
+#: widgets/fltk.cpp:900 widgets/qt.cpp:1281
 msgid "Pause on/off external calculations"
 msgstr ""
 
@@ -3654,7 +3655,7 @@ msgstr ""
 msgid "Perform Runge-Kutta step"
 msgstr ""
 
-#: widgets/fltk.cpp:865
+#: widgets/fltk.cpp:873
 msgid "Phi angle (rotate in x*y plane)"
 msgstr ""
 
@@ -3710,7 +3711,7 @@ msgstr ""
 msgid "Prev slice"
 msgstr ""
 
-#: widgets/qt.cpp:1260 udav/plot_pnl.cpp:575
+#: widgets/qt.cpp:1267 udav/plot_pnl.cpp:575
 msgid "Prev slide"
 msgstr ""
 
@@ -3727,11 +3728,11 @@ msgstr ""
 msgid "Primitives"
 msgstr "13 - primitivas"
 
-#: widgets/qt.cpp:1154 udav/plot_pnl.cpp:365
+#: widgets/qt.cpp:1161 udav/plot_pnl.cpp:365
 msgid "Primitives ..."
 msgstr ""
 
-#: src/exec_set.cpp:828
+#: src/exec_set.cpp:837
 msgid "Print MathGL version or check if it is valid"
 msgstr ""
 
@@ -3743,7 +3744,7 @@ msgstr ""
 msgid "Print fitted formula"
 msgstr ""
 
-#: widgets/qt.cpp:1090 udav/udav_wnd.cpp:296
+#: widgets/qt.cpp:1097 udav/udav_wnd.cpp:296
 msgid "Print graphics"
 msgstr ""
 
@@ -3836,7 +3837,7 @@ msgstr ""
 msgid "R - maroon"
 msgstr ""
 
-#: src/exec_set.cpp:810
+#: src/exec_set.cpp:818
 msgid "Rasterize plot and save to background"
 msgstr ""
 
@@ -3880,7 +3881,7 @@ msgstr ""
 msgid "Redo editor change (Ctrl+Shift+Z)."
 msgstr ""
 
-#: widgets/qt.cpp:1134 udav/plot_pnl.cpp:331
+#: widgets/qt.cpp:1141 udav/plot_pnl.cpp:331
 msgid "Redraw"
 msgstr ""
 
@@ -3888,7 +3889,7 @@ msgstr ""
 msgid "Redraw picture for $0 equal to"
 msgstr ""
 
-#: widgets/fltk.cpp:814
+#: widgets/fltk.cpp:822
 msgid "Redraw plot"
 msgstr ""
 
@@ -3896,7 +3897,7 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: widgets/fltk.cpp:848
+#: widgets/fltk.cpp:856
 msgid "Refresh the picture"
 msgstr ""
 
@@ -3908,11 +3909,11 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: widgets/fltk.cpp:816
+#: widgets/fltk.cpp:824
 msgid "Reload data"
 msgstr ""
 
-#: widgets/fltk.cpp:854
+#: widgets/fltk.cpp:862
 msgid "Reload data and refresh the picture"
 msgstr ""
 
@@ -3974,7 +3975,7 @@ msgstr ""
 msgid "Reserve space for labels at top side (style '^')"
 msgstr ""
 
-#: src/exec_set.cpp:811
+#: src/exec_set.cpp:819
 msgid "Reset settings and clear picture"
 msgstr ""
 
@@ -3994,15 +3995,15 @@ msgstr ""
 msgid "Resize data with smoothing"
 msgstr ""
 
-#: widgets/qt.cpp:1127 udav/plot_pnl.cpp:325
+#: widgets/qt.cpp:1134 udav/plot_pnl.cpp:325
 msgid "Restore"
 msgstr ""
 
-#: widgets/fltk.cpp:845
+#: widgets/fltk.cpp:853
 msgid "Restore default graphics rotation, zoom and perspective"
 msgstr ""
 
-#: widgets/qt.cpp:1129
+#: widgets/qt.cpp:1136
 msgid "Restore default graphics rotation, zoom and perspective (Alt+Space)."
 msgstr ""
 
@@ -4052,7 +4053,7 @@ msgstr ""
 msgid "Rotate"
 msgstr ""
 
-#: widgets/qt.cpp:1114 udav/plot_pnl.cpp:310
+#: widgets/qt.cpp:1121 udav/plot_pnl.cpp:310
 msgid "Rotate by mouse"
 msgstr ""
 
@@ -4068,11 +4069,11 @@ msgstr ""
 msgid "Rotate on"
 msgstr ""
 
-#: widgets/fltk.cpp:841
+#: widgets/fltk.cpp:849
 msgid "Rotate picture by holding left mouse button"
 msgstr ""
 
-#: src/exec_set.cpp:812
+#: src/exec_set.cpp:820
 msgid "Rotate plot"
 msgstr ""
 
@@ -4089,7 +4090,7 @@ msgstr ""
 msgid "Rotation"
 msgstr ""
 
-#: widgets/qt.cpp:1258
+#: widgets/qt.cpp:1265
 msgid "Run slideshow (CTRl+F5)."
 msgstr ""
 
@@ -4099,7 +4100,7 @@ msgid ""
 "then the dialog with slideshow options will appear."
 msgstr ""
 
-#: widgets/fltk.cpp:886
+#: widgets/fltk.cpp:894
 msgid "Run/Stop slideshow (graphics animation)"
 msgstr ""
 
@@ -4107,11 +4108,11 @@ msgstr ""
 msgid "Russian"
 msgstr ""
 
-#: widgets/qt.cpp:1084 udav/plot_pnl.cpp:488
+#: widgets/qt.cpp:1091 udav/plot_pnl.cpp:488
 msgid "STL"
 msgstr ""
 
-#: widgets/qt.cpp:1077 udav/plot_pnl.cpp:480
+#: widgets/qt.cpp:1084 udav/plot_pnl.cpp:480
 msgid "SVG"
 msgstr ""
 
@@ -4128,7 +4129,7 @@ msgstr " Guardar"
 msgid "Save Data?"
 msgstr ""
 
-#: widgets/fltk.cpp:573 mgllab/mgllab.cpp:211
+#: widgets/fltk.cpp:581 mgllab/mgllab.cpp:211
 msgid "Save File As?"
 msgstr ""
 
@@ -4236,7 +4237,7 @@ msgstr ""
 msgid "Select kind of plot"
 msgstr ""
 
-#: src/exec_set.cpp:827
+#: src/exec_set.cpp:836
 msgid "Select variant of plot style(s)"
 msgstr ""
 
@@ -4244,15 +4245,15 @@ msgstr ""
 msgid "Set"
 msgstr ""
 
-#: src/exec_set.cpp:823
+#: src/exec_set.cpp:832
 msgid "Set additional tick and axis labels shift"
 msgstr ""
 
-#: src/exec_set.cpp:772
+#: src/exec_set.cpp:780
 msgid "Set ambient light brightness"
 msgstr ""
 
-#: src/exec_set.cpp:793
+#: src/exec_set.cpp:801
 msgid "Set arbitrary position of plot in picture"
 msgstr ""
 
@@ -4261,35 +4262,35 @@ msgstr ""
 msgid "Set arguments"
 msgstr "Argumentos"
 
-#: src/exec_set.cpp:774
+#: src/exec_set.cpp:782
 msgid "Set aspect ration"
 msgstr ""
 
-#: src/exec_set.cpp:776
+#: src/exec_set.cpp:784
 msgid "Set axis and tick style"
 msgstr ""
 
-#: src/exec_set.cpp:802
+#: src/exec_set.cpp:810
 msgid "Set axis origin"
 msgstr ""
 
-#: src/exec_set.cpp:809
+#: src/exec_set.cpp:817
 msgid "Set axis ranges"
 msgstr ""
 
-#: src/exec_set.cpp:816
+#: src/exec_set.cpp:825
 msgid "Set bit-flags (for advanced users only)"
 msgstr ""
 
-#: src/exec_set.cpp:778
+#: src/exec_set.cpp:786
 msgid "Set bounding box for 2d export"
 msgstr ""
 
-#: src/exec_set.cpp:799
+#: src/exec_set.cpp:807
 msgid "Set brush for given mask id"
 msgstr ""
 
-#: src/exec_set.cpp:783
+#: src/exec_set.cpp:791
 msgid "Set color range"
 msgstr ""
 
@@ -4305,23 +4306,23 @@ msgstr ""
 msgid "Set data sizes manually"
 msgstr ""
 
-#: src/exec_set.cpp:777
+#: src/exec_set.cpp:785
 msgid "Set default bars width"
 msgstr ""
 
-#: src/exec_set.cpp:807
+#: src/exec_set.cpp:815
 msgid "Set default filename"
 msgstr ""
 
-#: src/exec_set.cpp:771
+#: src/exec_set.cpp:779
 msgid "Set default transparency"
 msgstr ""
 
-#: src/exec_set.cpp:786
+#: src/exec_set.cpp:794
 msgid "Set diffusive light brightness"
 msgstr ""
 
-#: src/exec_set.cpp:787
+#: src/exec_set.cpp:795
 msgid "Set draw region for quality&4"
 msgstr ""
 
@@ -4345,71 +4346,75 @@ msgstr ""
 msgid "Set lighting off/on for particular plot"
 msgstr ""
 
-#: src/exec_set.cpp:800
+#: src/exec_set.cpp:808
 msgid "Set number of lines in mesh/fall/vect and so on"
 msgstr ""
 
-#: src/exec_set.cpp:794
+#: src/exec_set.cpp:802
 msgid "Set number of marks in the legend"
 msgstr ""
 
-#: src/exec_set.cpp:788
+#: src/exec_set.cpp:796
 msgid "Set number of visible faces"
 msgstr ""
 
-#: src/exec_set.cpp:804
+#: src/exec_set.cpp:812
 msgid "Set palette for 1D plots"
 msgstr ""
 
-#: src/exec_set.cpp:806
+#: src/exec_set.cpp:814
 msgid "Set perspective"
 msgstr ""
 
-#: src/exec_set.cpp:814
+#: src/exec_set.cpp:823
 msgid "Set picture size"
 msgstr ""
 
-#: src/exec_set.cpp:808
+#: src/exec_set.cpp:816
 msgid "Set plot quality"
 msgstr ""
 
-#: src/exec_set.cpp:820
+#: src/exec_set.cpp:829
 msgid "Set position of plot as cell of matrix"
 msgstr ""
 
-#: src/exec_set.cpp:801
+#: src/exec_set.cpp:809
 msgid "Set position of plot block in matrix"
 msgstr ""
 
-#: src/exec_set.cpp:782
+#: src/exec_set.cpp:790
 msgid "Set position of plot inside cell of column"
 msgstr ""
 
-#: src/exec_set.cpp:792
+#: src/exec_set.cpp:800
 msgid "Set position of plot inside cell of matrix"
 msgstr ""
 
-#: src/exec_set.cpp:819
+#: src/exec_set.cpp:828
 msgid "Set position of plot inside cell of rotated stick"
 msgstr ""
 
-#: src/exec_set.cpp:818
+#: src/exec_set.cpp:827
 msgid "Set position of plot inside cell of sheared stick"
 msgstr ""
 
-#: src/exec_set.cpp:831
+#: src/exec_set.cpp:840
 msgid "Set range for x-axis"
 msgstr ""
 
-#: src/exec_set.cpp:833
+#: src/exec_set.cpp:842
 msgid "Set range for y-axis"
 msgstr ""
 
-#: src/exec_set.cpp:837
+#: src/exec_set.cpp:846
 msgid "Set range for z-axis"
 msgstr ""
 
-#: src/exec_set.cpp:815
+#: src/exec_set.cpp:822
+msgid "Set scale text in relative subplots too"
+msgstr ""
+
+#: src/exec_set.cpp:824
 msgid "Set scaling factor for further setsize"
 msgstr ""
 
@@ -4421,51 +4426,51 @@ msgstr ""
 msgid "Set size for text, marks and others"
 msgstr ""
 
-#: src/exec_set.cpp:773
+#: src/exec_set.cpp:781
 msgid "Set size of arrows"
 msgstr ""
 
-#: src/exec_set.cpp:798
+#: src/exec_set.cpp:806
 msgid "Set size of markers"
 msgstr ""
 
-#: src/exec_set.cpp:805
+#: src/exec_set.cpp:813
 msgid "Set size of semi-transparent area around line"
 msgstr ""
 
-#: src/exec_set.cpp:803
+#: src/exec_set.cpp:811
 msgid "Set tick labels drawing at origin"
 msgstr ""
 
-#: src/exec_set.cpp:822
+#: src/exec_set.cpp:831
 msgid "Set tick length"
 msgstr ""
 
-#: src/exec_set.cpp:784
+#: src/exec_set.cpp:792
 msgid "Set ticks for colorbar"
 msgstr ""
 
-#: src/exec_set.cpp:832
+#: src/exec_set.cpp:841
 msgid "Set ticks for x-axis"
 msgstr ""
 
-#: src/exec_set.cpp:834
+#: src/exec_set.cpp:843
 msgid "Set ticks for y-axis"
 msgstr ""
 
-#: src/exec_set.cpp:838
+#: src/exec_set.cpp:847
 msgid "Set ticks for z-axis"
 msgstr ""
 
-#: src/exec_set.cpp:824
+#: src/exec_set.cpp:833
 msgid "Set ticks in time format"
 msgstr ""
 
-#: src/exec_set.cpp:826
+#: src/exec_set.cpp:835
 msgid "Set ticks tuning"
 msgstr ""
 
-#: src/exec_set.cpp:813
+#: src/exec_set.cpp:821
 msgid "Set to auto rotate text or not"
 msgstr ""
 
@@ -4473,11 +4478,11 @@ msgstr ""
 msgid "Set to use whole area (style '#')"
 msgstr ""
 
-#: src/exec_set.cpp:825
+#: src/exec_set.cpp:834
 msgid "Set type transparency"
 msgstr ""
 
-#: widgets/qt.cpp:1213
+#: widgets/qt.cpp:1220
 msgid "Set value of \\phi angle."
 msgstr ""
 
@@ -4487,7 +4492,7 @@ msgid ""
 "You can use keys (Shift+Meta+Left or Shift+Meta+Right)."
 msgstr ""
 
-#: widgets/qt.cpp:1207
+#: widgets/qt.cpp:1214
 msgid "Set value of \\theta angle."
 msgstr ""
 
@@ -4514,11 +4519,11 @@ msgstr "Animacion"
 msgid "Setup colors for:"
 msgstr ""
 
-#: src/exec_set.cpp:790
+#: src/exec_set.cpp:798
 msgid "Setup font"
 msgstr ""
 
-#: src/exec_set.cpp:795
+#: src/exec_set.cpp:803
 msgid "Setup light"
 msgstr ""
 
@@ -4526,7 +4531,7 @@ msgstr ""
 msgid "Setup or draw axis"
 msgstr ""
 
-#: src/exec_set.cpp:785
+#: src/exec_set.cpp:793
 msgid "Setup plot points cutting"
 msgstr ""
 
@@ -4550,23 +4555,23 @@ msgstr ""
 msgid "Sharp colors"
 msgstr ""
 
-#: src/exec_set.cpp:817
+#: src/exec_set.cpp:826
 msgid "Shear plot"
 msgstr ""
 
-#: widgets/fltk.cpp:879
+#: widgets/fltk.cpp:887
 msgid "Shift the picture down"
 msgstr ""
 
-#: widgets/fltk.cpp:871
+#: widgets/fltk.cpp:879
 msgid "Shift the picture left"
 msgstr ""
 
-#: widgets/fltk.cpp:877
+#: widgets/fltk.cpp:885
 msgid "Shift the picture right"
 msgstr ""
 
-#: widgets/fltk.cpp:869
+#: widgets/fltk.cpp:877
 msgid "Shift the picture up"
 msgstr ""
 
@@ -4652,19 +4657,19 @@ msgstr ""
 msgid "Show lines"
 msgstr "'-' lineas"
 
-#: widgets/fltk.cpp:887
+#: widgets/fltk.cpp:895
 msgid "Show next frame in slideshow"
 msgstr ""
 
-#: widgets/qt.cpp:1253 udav/plot_pnl.cpp:563
+#: widgets/qt.cpp:1260 udav/plot_pnl.cpp:563
 msgid "Show next slide (Ctrl+.)."
 msgstr ""
 
-#: widgets/fltk.cpp:882
+#: widgets/fltk.cpp:890
 msgid "Show previous frame in slideshow"
 msgstr ""
 
-#: widgets/qt.cpp:1262 udav/plot_pnl.cpp:578
+#: widgets/qt.cpp:1269 udav/plot_pnl.cpp:578
 msgid "Show previous slide (Ctrl+,)."
 msgstr ""
 
@@ -4706,7 +4711,7 @@ msgstr ""
 msgid "Skip commands and iterate for-loop again"
 msgstr ""
 
-#: widgets/qt.cpp:1255 udav/plot_pnl.cpp:566
+#: widgets/qt.cpp:1262 udav/plot_pnl.cpp:566
 msgid "Slideshow"
 msgstr ""
 
@@ -4816,11 +4821,11 @@ msgstr ""
 msgid "Step for pulse diffraction"
 msgstr ""
 
-#: widgets/qt.cpp:1139 udav/plot_pnl.cpp:347
+#: widgets/qt.cpp:1146 udav/plot_pnl.cpp:347
 msgid "Stop"
 msgstr ""
 
-#: widgets/fltk.cpp:850
+#: widgets/fltk.cpp:858
 msgid "Stop drawing"
 msgstr ""
 
@@ -4961,15 +4966,15 @@ msgstr ""
 msgid "Swap parts"
 msgstr ""
 
-#: src/exec_set.cpp:789
+#: src/exec_set.cpp:797
 msgid "Switch on/off fog"
 msgstr ""
 
-#: src/exec_set.cpp:791
+#: src/exec_set.cpp:799
 msgid "Switch on/off gray-scale mode"
 msgstr ""
 
-#: widgets/fltk.cpp:837
+#: widgets/fltk.cpp:845
 msgid "Switch on/off grid drawing"
 msgstr ""
 
@@ -4977,7 +4982,7 @@ msgstr ""
 msgid "Switch on/off grid of absolute coordinates (Ctrl+G)."
 msgstr ""
 
-#: widgets/qt.cpp:1112
+#: widgets/qt.cpp:1119
 msgid "Switch on/off lightning for the graphics (Alt+L)."
 msgstr ""
 
@@ -4985,29 +4990,29 @@ msgstr ""
 msgid "Switch on/off lightning for the graphics (Ctrl+L)."
 msgstr ""
 
-#: widgets/fltk.cpp:834
+#: widgets/fltk.cpp:842
 msgid "Switch on/off lightning in the picture"
 msgstr ""
 
-#: widgets/qt.cpp:1118 udav/plot_pnl.cpp:314
+#: widgets/qt.cpp:1125 udav/plot_pnl.cpp:314
 msgid ""
 "Switch on/off mouse handling of the graphics\n"
 "(rotation, shifting, zooming and perspective)."
 msgstr ""
 
-#: widgets/qt.cpp:1124
+#: widgets/qt.cpp:1131
 msgid "Switch on/off mouse zoom of selected region."
 msgstr ""
 
-#: src/exec_set.cpp:821
+#: src/exec_set.cpp:830
 msgid "Switch on/off to use ternary axis"
 msgstr ""
 
-#: src/exec_set.cpp:770
+#: src/exec_set.cpp:778
 msgid "Switch on/off transparency"
 msgstr ""
 
-#: widgets/qt.cpp:1106
+#: widgets/qt.cpp:1113
 msgid "Switch on/off transparency for the graphics (Alt+T)."
 msgstr ""
 
@@ -5015,7 +5020,7 @@ msgstr ""
 msgid "Switch on/off transparency for the graphics (Ctrl+T)."
 msgstr ""
 
-#: widgets/fltk.cpp:831
+#: widgets/fltk.cpp:839
 msgid "Switch on/off transparency in the picture"
 msgstr ""
 
@@ -5027,7 +5032,7 @@ msgstr ""
 msgid "Symmetrical?"
 msgstr ""
 
-#: src/addon.cpp:111 src/base_cf.cpp:266
+#: src/addon.cpp:111 src/base_cf.cpp:268
 #, c-format
 msgid "TEST: %s\n"
 msgstr ""
@@ -5149,8 +5154,12 @@ msgstr ""
 msgid "There is wrong command(s) in script"
 msgstr ""
 
-#: widgets/fltk.cpp:863
+#: widgets/fltk.cpp:871
 msgid "Theta angle (tilt z-axis)"
+msgstr ""
+
+#: widgets/fltk.cpp:1175
+msgid "This is for parameter"
 msgstr ""
 
 #: mgllab/table.cpp:494
@@ -5575,7 +5584,7 @@ msgstr ""
 msgid "Wire style"
 msgstr ""
 
-#: src/exec_set.cpp:830
+#: src/exec_set.cpp:839
 msgid "Write current image to graphical file"
 msgstr ""
 
@@ -5613,7 +5622,7 @@ msgstr ""
 msgid "X/Z"
 msgstr ""
 
-#: widgets/qt.cpp:1085 udav/plot_pnl.cpp:489
+#: widgets/qt.cpp:1092 udav/plot_pnl.cpp:489
 msgid "XYZ"
 msgstr ""
 
@@ -5818,27 +5827,27 @@ msgstr ""
 msgid "Z-slice from"
 msgstr ""
 
-#: src/exec_set.cpp:836
+#: src/exec_set.cpp:845
 msgid "Zoom axis range"
 msgstr ""
 
-#: widgets/qt.cpp:1120
+#: widgets/qt.cpp:1127
 msgid "Zoom by mouse"
 msgstr ""
 
-#: widgets/qt.cpp:1219
+#: widgets/qt.cpp:1226
 msgid "Zoom graphics"
 msgstr ""
 
-#: widgets/qt.cpp:1229 udav/plot_pnl.cpp:515
+#: widgets/qt.cpp:1236 udav/plot_pnl.cpp:515
 msgid "Zoom in"
 msgstr ""
 
-#: widgets/qt.cpp:1231 udav/plot_pnl.cpp:518
+#: widgets/qt.cpp:1238 udav/plot_pnl.cpp:518
 msgid "Zoom in graphics."
 msgstr ""
 
-#: widgets/fltk.cpp:844
+#: widgets/fltk.cpp:852
 msgid "Zoom in selected region of the picture"
 msgstr ""
 
@@ -5847,15 +5856,15 @@ msgstr ""
 msgid "Zoom in text"
 msgstr ""
 
-#: widgets/fltk.cpp:873
+#: widgets/fltk.cpp:881
 msgid "Zoom in the picture"
 msgstr ""
 
-#: widgets/qt.cpp:1233 udav/plot_pnl.cpp:521
+#: widgets/qt.cpp:1240 udav/plot_pnl.cpp:521
 msgid "Zoom out"
 msgstr ""
 
-#: widgets/qt.cpp:1235 udav/plot_pnl.cpp:524
+#: widgets/qt.cpp:1242 udav/plot_pnl.cpp:524
 msgid "Zoom out graphics."
 msgstr ""
 
@@ -5863,16 +5872,16 @@ msgstr ""
 msgid "Zoom out text"
 msgstr ""
 
-#: widgets/fltk.cpp:875
+#: widgets/fltk.cpp:883
 msgid "Zoom out the picture"
 msgstr ""
 
-#: src/exec_set.cpp:835
+#: src/exec_set.cpp:844
 msgid "Zoom plot region"
 msgstr ""
 
 #. zooming menu
-#: widgets/qt.cpp:1218 udav/plot_pnl.cpp:502
+#: widgets/qt.cpp:1225 udav/plot_pnl.cpp:502
 msgid "Zoom/move"
 msgstr ""
 
@@ -5950,7 +5959,7 @@ msgstr ""
 msgid "bars"
 msgstr ""
 
-#: widgets/qt.cpp:1075 udav/plot_pnl.cpp:478
+#: widgets/qt.cpp:1082 udav/plot_pnl.cpp:478
 msgid "bitmap EPS"
 msgstr ""
 
@@ -5973,7 +5982,7 @@ msgstr ""
 msgid "center"
 msgstr "en el centro"
 
-#: widgets/fltk.cpp:769
+#: widgets/fltk.cpp:777
 #, c-format
 msgid "click at %g, %g, %g"
 msgstr ""
@@ -6346,7 +6355,7 @@ msgstr ""
 msgid "solid"
 msgstr "'-' solido"
 
-#: widgets/qt.cpp:1073 udav/plot_pnl.cpp:476
+#: widgets/qt.cpp:1080 udav/plot_pnl.cpp:476
 msgid "solid PNG"
 msgstr ""
 
@@ -6417,7 +6426,7 @@ msgstr ""
 msgid "values"
 msgstr ""
 
-#: widgets/qt.cpp:1076 udav/plot_pnl.cpp:479
+#: widgets/qt.cpp:1083 udav/plot_pnl.cpp:479
 msgid "vector EPS"
 msgstr ""
 

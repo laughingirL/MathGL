@@ -615,6 +615,13 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 			refresh();	x0 = xe;	y0 = ye;
 		}
 	}
+/*	else if(mgl_get_flag(gr,MGL_SHOW_POS) && !(ev->button()&Qt::LeftButton))
+	{
+		mglPoint p = gr->CalcXYZ(ev->x(), ev->y(), true);
+		if(mgl_isnan(p.x))	mousePos = "";
+		else	mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
+		emit posChanged(mousePos);
+	}*/
 	ev->accept();
 }
 //-----------------------------------------------------------------------------

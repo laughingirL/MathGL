@@ -30,6 +30,7 @@
 3. Read WFM files ?!!
 4. "latex on" option ?!?
 
+5. Add mgl_progres(int val, void *par); -- to show progress of sth. Negative val -- set range [0,-val]. Add MGL command 'progress val'.
 6. Extend 'ask' as:
 	ask $N1 'text|kind:arg1:arg2:...' $N2 'text|kind:arg1:arg2:...' ...
 	where kind={default=edit,spin,choice,check,slider,float?}
@@ -61,8 +62,9 @@ D. Docs about JS interface
 4. Docs and example about 'roots' for system of equations
 5. Docs about mgl_bsize()
 7. Update installation (dll from mgl_script + Qt plugins/ + Win10)
+8. Docs about 'scaletext'
 
-8. Add more samples:
+9. Add more samples:
 	* Example of 'flow' and '.' style.
 	* Example of 'contp', 'flowp'
 	* Example of frame manipulation
@@ -110,10 +112,11 @@ ZZ. Update time.texi {before release!!!}
 * Progress bar for external loop ?!!
 * 1d view -- over longer size + y-size for current slice only
 * info about used memory for graphics
-* coordinates under mouse
 * abort saving shouldn't switch off "modified" flag (check!)
 * "debug" mode?!? or breakpoints?!
 * something strange with highlighting
+* collect mouse clicks to draw line(s) and save it into data
+* select 'bbox' by mouse
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???
@@ -141,6 +144,7 @@ Z. Flat toolbuttons ???
 12. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
 13. Substitute correct name for font files in PropDlg
 * "debug" mode?!? or breakpoints?!
+* collect mouse clicks to draw line(s) and save it into data
 
 ============= UNSURE ===========
 

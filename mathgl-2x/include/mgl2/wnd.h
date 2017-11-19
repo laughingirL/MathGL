@@ -31,6 +31,7 @@ class MGL_EXPORT mglDraw
 public:
 	virtual int Draw(mglGraph *)=0;	///< Function for drawing
 	virtual void Reload(){}		///< Function for reloading data
+	virtual void Param(char id, const char *val){}	///< Function for setting parameter
 	virtual void Click() {}		///< Callback function on mouse click
 #if MGL_HAVE_PTHR_WIDGET
 	mglDraw()	{	running=false;	pthread_mutex_init(&mutex,NULL);	thr=0;	}

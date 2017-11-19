@@ -202,6 +202,7 @@ void MGL_EXPORT mgl_set_tick_rotate_(uintptr_t *gr,int *enable){	_GR_->SetTickRo
 void MGL_EXPORT mgl_set_tick_skip_(uintptr_t *gr, int *enable)	{	_GR_->SetTickSkip(*enable);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_rotated_text(HMGL gr, int enable)	{	gr->SetRotatedText(enable);	}
+void MGL_EXPORT mgl_set_scale_text(HMGL gr, int enable)		{	gr->set(!enable, MGL_NO_SCALE_REL);	}
 void MGL_EXPORT mgl_set_mark_size(HMGL gr, double size)		{	gr->SetMarkSize(size);	}
 void MGL_EXPORT mgl_set_arrow_size(HMGL gr, double size)	{	gr->SetArrowSize(size);	}
 void MGL_EXPORT mgl_set_font_size(HMGL gr, double size)		{	gr->SetFontSize(size);	}
@@ -213,7 +214,8 @@ void MGL_EXPORT mgl_restore_font(HMGL gr)	{	gr->RestoreFont();	}
 void MGL_EXPORT mgl_define_symbol(HMGL gr, char id, HCDT x, HCDT y)	{	gr->DefineGlyph(x,y,id);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_bar_width_(uintptr_t *gr, mreal *width)	{	_GR_->SetBarWidth(*width);	}
-void MGL_EXPORT mgl_set_rotated_text_(uintptr_t *gr, int *rotated)	{	_GR_->SetRotatedText(*rotated);	}
+void MGL_EXPORT mgl_set_rotated_text_(uintptr_t *gr, int *enable)	{	_GR_->SetRotatedText(*enable);	}
+void MGL_EXPORT mgl_set_scale_text_(uintptr_t *gr, int *enable)	{	mgl_set_scale_text(_GR_,*enable);	}
 void MGL_EXPORT mgl_set_mark_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetMarkSize(*size);	}
 void MGL_EXPORT mgl_set_arrow_size_(uintptr_t *gr, mreal *size)	{	_GR_->SetArrowSize(*size);	}
 void MGL_EXPORT mgl_set_font_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetFontSize(*size);	}

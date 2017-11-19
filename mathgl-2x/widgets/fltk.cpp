@@ -22,6 +22,7 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_Native_File_Chooser.H>
+#include <FL/Fl_Hor_Value_Slider.H>
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/Fl_MathGL.h"
@@ -145,6 +146,7 @@ void Fl_MathGL::draw()
 			fl_rectf(x()+p.x-d/2, y()+p.y-d/2-1, d,d, fl_rgb_color(127,255,63));
 			fl_rect(x()+p.x-d/2, y()+p.y-d/2-1, d,d, FL_BLACK);
 		}
+		fl_color(FL_BLACK);		fl_draw(mouse_pos,40,70);
 		mgl_set_flag(gr,1,MGL_SHOW_POS);
 	}
 	else	mgl_set_flag(gr,0,MGL_SHOW_POS);
@@ -307,9 +309,8 @@ int Fl_MathGL::handle(int code)
 			{
 				mglPoint p = gr->CalcXYZ(xx, yy);
 				if(g)	g->LastMousePos = p;
-				char s[128];
-				snprintf(s,128,"x=%g, y=%g, z=%g",p.x,p.y,p.z);	s[127]=0;
-				draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
+				snprintf(mouse_pos,128,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
+				mouse_pos[127]=0;	draw();
 			}
 			if(Fl::event_clicks())
 			{
@@ -469,6 +470,13 @@ int Fl_MathGL::handle(int code)
 		}
 		redraw();	return 1;
 	}
+/*	else if(code==FL_MOVE && mgl_get_flag(gr,MGL_SHOW_POS))
+	{
+		mglPoint p = gr->CalcXYZ(x0-x(), y0-y());
+		snprintf(mouse_pos,128,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
+		mouse_pos[127]=0;	draw();
+		return 1;
+	}*/
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -724,7 +732,7 @@ void mglCanvasFL::Adjust()	{	mgl_adjust_cb(0,mgl);	}
 void static mgl_oncemore_cb(Fl_Widget*, void*v)
 {	Fl_MGLView *e = (Fl_MGLView*)v;	if(e && e->reload)	e->reload(e->par);	}
 //-----------------------------------------------------------------------------
-void static mgl_quit_cb(Fl_Widget*, void*)	{	Fl::first_window()->hide();	}
+//void static mgl_quit_cb(Fl_Widget*, void*)	{	Fl::first_window()->hide();	}
 //-----------------------------------------------------------------------------
 void static mgl_snext_cb(Fl_Widget*, void* v)
 {	Fl_MGLView *e = (Fl_MGLView*)v;	if(e && e->next)	e->next(e->par);	}
@@ -1032,5 +1040,140 @@ int MGL_EXPORT mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary th
 	pthread_detach(thr);
 #endif
 	return 0;	// stupid, but I don't want keep result returned by Fl::Run()
+}
+//-----------------------------------------------------------------------------
+//
+//		class Fl_MGLDlg
+//
+//-----------------------------------------------------------------------------
+struct Fl_MGLDlg
+{
+protected:
+	Fl_Window *wnd;	///< window itself
+	bool done;		///< Dialog is created
+	bool upd;		///< Send value at any change
+	int ind;		///< Current index of widget
+	std::vector<char> kind;			///< kind of elements
+	std::vector<Fl_Widget*> wdgt;	///< list of widgets
+	void finish();	///< Finish window creation
+public:
+	Fl_MathGL *par;				///< Widget to draw
+	std::vector<char> ids;			///< Id of elements
+	std::vector<std::string> vals;	///< resulting strings
+	Fl_MGLDlg()		{	wnd=NULL;	upd=done=false;	}
+	~Fl_MGLDlg()	{	wnd->hide();	}
+	void show()		{	finish();	wnd->show();	}	///< Show window
+	void hide()		{	wnd->hide();	}	///< Close window
+	void update(bool u)	{	upd = u;	}	///< Call value at any change
+	void window(const char *title="");	///< Create/label window
+	void get_values();				///< Get all values
+	void add_widget(char id, const char *args);	///< Add widget
+};
+//-----------------------------------------------------------------------------
+static void mgl_upd_vals(Fl_Widget *, void *p)	{	((Fl_MGLDlg *)p)->get_values();	}
+//-----------------------------------------------------------------------------
+static void mgl_dlg_hide(Fl_Widget *, void *p)	{	((Fl_MGLDlg *)p)->hide();	}
+//-----------------------------------------------------------------------------
+void mgl_dialog_fltk(Fl_MathGL *par, bool upd, const char *ids, char const * const *args, const char *title)
+{
+	static Fl_MGLDlg *dlg = 0;
+	if(!par || !ids || *ids==0)	return;	
+	if(!dlg)	dlg = new Fl_MGLDlg;
+	dlg->window(title);	dlg->update(upd);	dlg->par = par;
+	for(int i=0;ids[i];i++)	dlg->add_widget(ids[i], args[i]);
+}
+//-----------------------------------------------------------------------------
+void Fl_MGLDlg::window(const char *title)
+{
+	if(!title || *title==0)	title = "MGL dialog";
+	if(!wnd)
+	{	wnd = new Fl_Double_Window(210,50,title);	ind = 0;	}
+	else
+	{	wnd->hide();	wnd->label(title);	wnd->clear();	wnd->begin();	}
+}
+//-----------------------------------------------------------------------------
+void Fl_MGLDlg::finish()
+{
+	if(!wnd)	window();
+	if(!done)
+	{
+		wnd->end();	wnd->size(210,ids.size()*45+50);
+		Fl_Button *b;
+		b = new Fl_Button(5, 20+45*ind, 80, 25, _("Cancel"));
+		b->callback(mgl_dlg_hide,this);
+		b = new Fl_Button(125, 20+45*ind, 80, 25, _("OK"));
+		b->callback(mgl_upd_vals,this);
+	}
+}
+//-----------------------------------------------------------------------------
+void Fl_MGLDlg::get_values()
+{
+	if(!wnd || !done || !par)	return;
+	for(unsigned i=0;i<ids.size();i++)
+	{
+		std::string s;
+		Fl_Widget *w=wdgt[i];
+		switch(kind[i])
+		{
+		case 'e':	//	input
+		{	Fl_Input* o = (Fl_Input*)w;	s = o->value();	break;	}
+		case 'v':	// spinner|counter
+		case 's':	// slider
+		{	Fl_Valuator* o = (Fl_Valuator*)w;	s = o->value();	break;	}
+		case 'b':	// check_box
+		{	Fl_Check_Button* o = (Fl_Check_Button*)w;	s = o->value()?"1":"0";	break;	}
+		case 'c':	// choice
+		{	Fl_Choice* o = (Fl_Choice*)w;	s = o->text();	break;	}
+		}
+		par->set_param(ids[i], s.c_str());
+	}
+	par->update();
+}
+//-----------------------------------------------------------------------------
+void Fl_MGLDlg::add_widget(char id, const char *args)
+{
+	if(!wnd)	window();
+	if(args[1]!='|')	return;	// wrong format
+	char type = *args;
+	args += 2;
+	Fl_Widget *w=NULL;
+	std::string lbl;
+	for(size_t i=0;args[i];i++)	if(args[i]=='|')	// find label
+	{	lbl = std::string(args,0,i);	args += i;	break;	}
+	if(lbl.empty())	{	lbl.push_back('$');	lbl.push_back(id);	}
+	switch(type)
+	{
+	case 'e':	//	input
+	{	Fl_Input* o = new Fl_Input(5, 20+45*ind, 200, 25, lbl.c_str());	w=o;
+		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));	o->value(args);
+		break;	}
+	case 'v':	// spinner|counter
+	{	Fl_Counter* o = new Fl_Counter(5, 20+45*ind, 200, 25, lbl.c_str());
+		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		float v=0,v1=-1,v2=1,s1=1,s2=0;
+		sscanf(args,"%g|%g|%g|%g|%g",&v,&v1,&v2,&s1,&s2);
+		if(s2==0)	s2 = s1/10.;
+		o->step(s2,s1);	o->bounds(v1,v2);	o->value(v);
+		break;	}
+	case 's':	// slider
+	{	Fl_Hor_Value_Slider* o = new Fl_Hor_Value_Slider(5, 20+45*ind, 25, 105, lbl.c_str());
+		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		float v=0,v1=-1,v2=1,s=0;
+		sscanf(args,"%g|%g|%g|%g",&v,&v1,&v2,&s);
+		o->step(s);	o->bounds(v1,v2);	o->value(v);
+		break;	}
+	case 'b':	// check_box
+	{	Fl_Check_Button* o = new Fl_Check_Button(5, 10+45*ind, 200, 25, lbl.c_str());	w=o;
+		int v = atoi(args);	o->value(v!=0 || !strcmp(args,"on"));
+		break;	}
+	case 'c':	// choice
+	{	Fl_Choice* o = new Fl_Choice(5, 20+45*ind, 200, 25, lbl.c_str());
+		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));	o->add(args);
+		break;	}
+	}
+	if(w)
+	{	std::string tip = _("This is for parameter");	tip.push_back(id);
+		w->tooltip(tip.c_str());	ind++;	w->callback(mgl_upd_vals, this);
+		wdgt.push_back(w);	ids.push_back(id);	kind.push_back(*args);	}
 }
 //-----------------------------------------------------------------------------

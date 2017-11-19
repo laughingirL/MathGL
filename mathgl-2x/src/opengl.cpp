@@ -46,6 +46,16 @@ void mglCanvasGL::Finish()
 #define MGL_GL_TYPE	GL_FLOAT
 #endif
 
+	// Try to add smoothing
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POLYGON_SMOOTH);
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+	glEnable(GL_BLEND);
+	if((Flag&3)==1)	glBlendFunc(GL_DST_COLOR, GL_ZERO);
+	else if((Flag&3)==2) glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	else glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	if(Prm.size()>0)
 	{
 		PreparePrim(0);
@@ -99,7 +109,7 @@ bool mglCanvasGL::Alpha(bool enable)
 		clr(MGL_ENABLE_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_ALPHA_TEST);
-		glDisable(GL_BLEND);
+//		glDisable(GL_BLEND);
 	}
 	return mglCanvas::Alpha(enable);
 }

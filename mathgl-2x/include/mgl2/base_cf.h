@@ -213,6 +213,9 @@ void MGL_EXPORT mgl_set_font_def_(uintptr_t *gr, const char *fnt, int);
 /// Set to use or not text rotation
 void MGL_EXPORT mgl_set_rotated_text(HMGL gr, int enable);
 void MGL_EXPORT mgl_set_rotated_text_(uintptr_t *gr, int *enable);
+/// Set to scale text in relative subplots too
+void MGL_EXPORT mgl_set_scale_text(HMGL gr, int enable);
+void MGL_EXPORT mgl_set_scale_text_(uintptr_t *gr, int *enable);
 /// Load font from file
 void MGL_EXPORT mgl_load_font(HMGL gr, const char *name, const char *path);
 void MGL_EXPORT mgl_load_font_(uintptr_t *gr, char *name, char *path, int l, int n);

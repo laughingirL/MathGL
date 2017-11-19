@@ -136,7 +136,9 @@ public:
 	/// Restore font (load default font for new HMGL objects)
 	inline void RestoreFont()				{	mgl_restore_font(gr);	}
 	/// Set to use or not text rotation
-	inline void SetRotatedText(bool rotated)	{	mgl_set_rotated_text(gr, rotated);	}
+	inline void SetRotatedText(bool enable)	{	mgl_set_rotated_text(gr, enable);	}
+	/// Set to scale text in relative subplots too
+	inline void SetScaleText(bool enable)	{	mgl_set_scale_text(gr, enable);	}
 	/// Set default font for all new HMGL and mglGraph objects
 	static inline void SetDefFont(const char *name, const char *path=NULL)	{	mgl_def_font(name,path);	}
 	/// Add user-defined glyph for symbol and set its optional id

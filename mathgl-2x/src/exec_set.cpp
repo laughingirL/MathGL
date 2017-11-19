@@ -464,6 +464,14 @@ int static mgls_rotatetext(mglGraph *gr, long , mglArg *a, const char *k, const 
 	return res;
 }
 //-----------------------------------------------------------------------------
+int static mgls_scaletext(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"n"))	gr->SetScaleText(a[0].v!=0);
+	else res = 1;
+	return res;
+}
+//-----------------------------------------------------------------------------
 int static mgls_setsize(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -811,6 +819,7 @@ mglCommand mgls_set_cmd[] = {
 	{"reset",_("Reset settings and clear picture"),"reset", mgls_reset ,12},
 	{"rotate",_("Rotate plot"),"rotate tetz tetx [tety]|tet x y z", mgls_rotate ,5},
 	{"rotatetext",_("Set to auto rotate text or not"),"rotatetext val", mgls_rotatetext ,15},
+	{"scaletext",_("Set scale text in relative subplots too"),"scaletext val", mgls_scaletext ,15},
 	{"setsize",_("Set picture size"),"setsize width height", mgls_setsize ,2},
 	{"setsizescl",_("Set scaling factor for further setsize"),"setsizescl val", mgls_setsizescl ,2},
 	{"setup",_("Set bit-flags (for advanced users only)"),"setup val flag", mgls_setup ,2},

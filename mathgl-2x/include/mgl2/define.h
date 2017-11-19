@@ -260,31 +260,32 @@ extern MGL_EXPORT uint64_t mgl_mask_val[16];
 #define MGL_MASK_ID		"-+=;oOsS~<>jdD*^"
 #define MGL_SOLID_MASK	0xffffffffffffffff
 //-----------------------------------------------------------------------------
-#define MGL_TRANSP_NORM		0x000000
-#define MGL_TRANSP_GLASS 	0x000001
-#define MGL_TRANSP_LAMP		0x000002
-#define MGL_ENABLE_CUT		0x000004 	///< Flag which determines how points outside bounding box are drown.
-#define MGL_ENABLE_RTEXT 	0x000008 	///< Use text rotation along axis
-#define MGL_AUTO_FACTOR		0x000010 	///< Enable autochange PlotFactor
-#define MGL_ENABLE_ALPHA 	0x000020 	///< Flag that Alpha is used
-#define MGL_ENABLE_LIGHT 	0x000040 	///< Flag of using lightning
-#define MGL_TICKS_ROTATE 	0x000080 	///< Allow ticks rotation
-#define MGL_TICKS_SKIP		0x000100 	///< Allow ticks rotation
+#define MGL_TRANSP_NORM		0x00000000
+#define MGL_TRANSP_GLASS 	0x00000001
+#define MGL_TRANSP_LAMP		0x00000002
+#define MGL_ENABLE_CUT		0x00000004 	///< Flag which determines how points outside bounding box are drown.
+#define MGL_ENABLE_RTEXT 	0x00000008 	///< Use text rotation along axis
+#define MGL_AUTO_FACTOR		0x00000010 	///< Enable autochange PlotFactor
+#define MGL_ENABLE_ALPHA 	0x00000020 	///< Flag that Alpha is used
+#define MGL_ENABLE_LIGHT 	0x00000040 	///< Flag of using lightning
+#define MGL_TICKS_ROTATE 	0x00000080 	///< Allow ticks rotation
+#define MGL_TICKS_SKIP		0x00000100 	///< Allow ticks rotation
 // flags for internal use only
-#define MGL_DISABLE_SCALE	0x000200 	///< Temporary flag for disable scaling (used for axis)
-#define MGL_FINISHED 		0x000400 	///< Flag that final picture (i.e. mglCanvas::G) is ready
-#define MGL_USE_GMTIME		0x000800 	///< Use gmtime instead of localtime
-#define MGL_SHOW_POS		0x001000 	///< Switch to show or not mouse click position
-#define MGL_CLF_ON_UPD		0x002000 	///< Clear plot before Update()
-#define MGL_NOSUBTICKS		0x004000 	///< Disable subticks drawing (for bounding box)
-#define MGL_LOCAL_LIGHT		0x008000 	///< Keep light sources for each inplot
-#define MGL_VECT_FRAME		0x010000 	///< Use DrwDat to remember all data of frames
-#define MGL_REDUCEACC		0x020000 	///< Reduce accuracy of points (to reduc size of output files)
-#define MGL_PREFERVC 		0x040000 	///< Prefer vertex color instead of texture if output format supports
-#define MGL_ONESIDED 		0x080000 	///< Render only front side of surfaces if output format supports (for debugging)
-#define MGL_NO_ORIGIN 		0x100000 	///< Don't draw tick labels at axis origin
-#define MGL_GRAY_MODE 		0x200000 	///< Convert all colors to gray ones
-#define MGL_FULL_CURV 		0x400000 	///< Disable omitting points in straight-line part(s).
+#define MGL_DISABLE_SCALE	0x00000200 	///< Temporary flag for disable scaling (used for axis)
+#define MGL_FINISHED 		0x00000400 	///< Flag that final picture (i.e. mglCanvas::G) is ready
+#define MGL_USE_GMTIME		0x00000800 	///< Use gmtime instead of localtime
+#define MGL_SHOW_POS		0x00001000 	///< Switch to show or not mouse click position
+#define MGL_CLF_ON_UPD		0x00002000 	///< Clear plot before Update()
+#define MGL_NOSUBTICKS		0x00004000 	///< Disable subticks drawing (for bounding box)
+#define MGL_LOCAL_LIGHT		0x00008000 	///< Keep light sources for each inplot
+#define MGL_VECT_FRAME		0x00010000 	///< Use DrwDat to remember all data of frames
+#define MGL_REDUCEACC		0x00020000 	///< Reduce accuracy of points (to reduc size of output files)
+#define MGL_PREFERVC 		0x00040000 	///< Prefer vertex color instead of texture if output format supports
+#define MGL_ONESIDED 		0x00080000 	///< Render only front side of surfaces if output format supports (for debugging)
+#define MGL_NO_ORIGIN 		0x00100000 	///< Don't draw tick labels at axis origin
+#define MGL_GRAY_MODE 		0x00200000 	///< Convert all colors to gray ones
+#define MGL_FULL_CURV 		0x00400000 	///< Disable omitting points in straight-line part(s).
+#define MGL_NO_SCALE_REL 	0x00800000 	///< Disable omitting points in straight-line part(s).
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_C99_COMPLEX
 #include <complex.h>

@@ -669,7 +669,7 @@ void mglCanvas::InPlot(mglMatrix &M,mreal x1,mreal x2,mreal y1,mreal y2, bool re
 	}
 	inW=M.b[0];	inH=M.b[4];	ZMin=1;
 	inX=Width*x1;	inY=Height*y1;
-	font_factor = M.b[0] < M.b[4] ? M.b[0] : M.b[4];
+	if(!rel || !get(MGL_NO_SCALE_REL))	font_factor = M.b[0] < M.b[4] ? M.b[0] : M.b[4];
 
 	mglBlock p;	p.AmbBr = AmbBr;	p.DifBr = DifBr;	p.B = M;
 	for(int i=0;i<10;i++)	p.light[i] = light[i];

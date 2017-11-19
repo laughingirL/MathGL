@@ -90,6 +90,8 @@ public:
 		if(draw_func==mgl_draw_class)	d = (mglDraw*)draw_par;
 		if(draw_cl)	d = draw_cl;
 		return d;	}
+	inline void set_param(char id, const char *val)
+	{	mglDraw *d=get_class();	if(d)	d->Param(id,val);	}
 	
 	/// Show window with warnings after script parsing
 	inline void set_show_warn(bool s)	{	show_warn=s;	}
@@ -108,7 +110,7 @@ protected:
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
 	mglDraw *draw_cl;
-	int last_id;					///< last selected object id
+	int last_id;				///< last selected object id
 
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu
@@ -122,7 +124,7 @@ protected:
 	double x1,x2,y1,y2;			///< zoom region
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
-	char pos[128];
+	char mouse_pos[128];
 	bool run;					///< flag that drawing in progress
 	const unsigned char *img;	///< image for drawing
 #if (MGL_HAVE_PTHREAD|MGL_HAVE_PTHR_WIDGET)
