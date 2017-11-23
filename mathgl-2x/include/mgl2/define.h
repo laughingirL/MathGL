@@ -34,6 +34,10 @@
 #pragma warning(disable: 4190 4996 4786 4800 4244 4267 4305 4251)
 #endif
 
+#if defined(_WIN32) && !defined(WIN32)
+#define WIN32 1
+#endif
+
 #include "mgl2/config.h"
 #ifndef SWIG
 
