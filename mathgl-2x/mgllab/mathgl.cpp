@@ -61,6 +61,9 @@ Fl_MGL::Fl_MGL(Fl_MGLView *GR)
 //-----------------------------------------------------------------------------
 Fl_MGL::~Fl_MGL()	{}
 //-----------------------------------------------------------------------------
+void Fl_MGL::Param(char id, const char *val)
+{	Parse->AddParam(id<='9' ? id-'0' : id-'a'+10, val);	}
+//-----------------------------------------------------------------------------
 void Fl_MGL::Reload()
 {
 	Parse->RestoreOnce();
@@ -343,6 +346,29 @@ void fill_animate(const char *text, Fl_MGL *dr)
 		}
 		str = strstr(str, "##a");
 	}
+	str = strstr(text, "##d");	// custom dialog
+	std::string ids;
+	std::vector<std::string> par;
+	while(str)
+	{
+		str = strchr(str,'$');
+		if(str)
+		{
+			char id = str[1];	str += 2;
+			while(*str>0 && *str<=' ' && *str!='\n')	str++;
+			if(*str>' ')
+			{
+				long j=0;	while(str[j]!='\n')	j++;
+				while(str[j-1]<=' ')	j--;
+				
+				ids.push_back(id);
+				std::string val(str,j);
+				par.push_back(val);
+			}
+		}
+		str = strstr(str, "##d");
+	}
+	if(!ids.empty())	dr->gr->dialog(ids,par);
 }
 //-----------------------------------------------------------------------------
 Fl_Text_Display::Style_Table_Entry stylemess[2] = {	// Style table

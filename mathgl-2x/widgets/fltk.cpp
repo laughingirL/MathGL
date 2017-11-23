@@ -725,6 +725,9 @@ void static mgl_so_cb(Fl_Widget*, void* v)
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
+void static mgl_dialog_cb(Fl_Widget*, void*v)
+{	Fl_MGLView *e = (Fl_MGLView*)v;	if(e)	e->dlg_show();	}
+//-----------------------------------------------------------------------------
 void static mgl_adjust_cb(Fl_Widget*, void*v)
 {	Fl_MGLView *e = (Fl_MGLView*)v;	if(e)	e->adjust();	}
 void mglCanvasFL::Adjust()	{	mgl_adjust_cb(0,mgl);	}
@@ -873,7 +876,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	phi->tooltip(_("Phi angle (rotate in x*y plane)"));
 	g->end();	g->resizable(0);
 
-	g = new Fl_Group(0,0,30,285);
+	g = new Fl_Group(0,0,30,315);
 	o = new Fl_Button(1, 30, 25, 25);		o->tooltip(_("Shift the picture up"));
 	o->image(img_goU);		o->callback(mgl_su_cb,this);
 	o = new Fl_Button(1, 55, 25, 25);		o->tooltip(_("Shift the picture left"));
@@ -894,8 +897,11 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	anim_bt->tooltip(_("Run/Stop slideshow (graphics animation)"));
 	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(_("Show next frame in slideshow"));
 	o->image(img_next);	o->callback(mgl_snext_cb,this);
+
+	o = new Fl_Button(1, 265, 25, 25);		o->tooltip(_("Show custom dialog for plot setup"));
+	o->image(img_form);	o->callback(mgl_dialog_cb,this);
 #if MGL_HAVE_PTHR_WIDGET
-	pause_bt = new Fl_Button(1, 260, 25, 25);	pause_bt->type(FL_TOGGLE_BUTTON);
+	pause_bt = new Fl_Button(1, 290, 25, 25);	pause_bt->type(FL_TOGGLE_BUTTON);
 	pause_bt->image(img_pause);	pause_bt->callback(mgl_pause_cb,this);
 	pause_bt->tooltip(_("Pause on/off external calculations"));
 #endif
@@ -907,8 +913,14 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	FMGL->phi_val = phi;
 	FMGL->set_popup(pop_graph,FMGL,this);
 	scroll->end();	resizable(scroll);	end();	par=0;
+	dlg_wnd = NULL;	dlg_upd = dlg_done = false;
 }
-Fl_MGLView::~Fl_MGLView()	{}
+Fl_MGLView::~Fl_MGLView()
+{
+	dlg_wnd->hide();
+	for(size_t i=0;i<strs.size();i++)	free(strs[i]);
+	strs.clear();	
+}
 //-----------------------------------------------------------------------------
 //
 //		class mglCanvasFL
@@ -1043,137 +1055,120 @@ int MGL_EXPORT mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary th
 }
 //-----------------------------------------------------------------------------
 //
-//		class Fl_MGLDlg
+//		Custom dialog
 //
 //-----------------------------------------------------------------------------
-struct Fl_MGLDlg
-{
-protected:
-	Fl_Window *wnd;	///< window itself
-	bool done;		///< Dialog is created
-	bool upd;		///< Send value at any change
-	int ind;		///< Current index of widget
-	std::vector<char> kind;			///< kind of elements
-	std::vector<Fl_Widget*> wdgt;	///< list of widgets
-	void finish();	///< Finish window creation
-public:
-	Fl_MathGL *par;				///< Widget to draw
-	std::vector<char> ids;			///< Id of elements
-	std::vector<std::string> vals;	///< resulting strings
-	Fl_MGLDlg()		{	wnd=NULL;	upd=done=false;	}
-	~Fl_MGLDlg()	{	wnd->hide();	}
-	void show()		{	finish();	wnd->show();	}	///< Show window
-	void hide()		{	wnd->hide();	}	///< Close window
-	void update(bool u)	{	upd = u;	}	///< Call value at any change
-	void window(const char *title="");	///< Create/label window
-	void get_values();				///< Get all values
-	void add_widget(char id, const char *args);	///< Add widget
-};
+static void mgl_upd_vals(Fl_Widget *, void *p)	{	((Fl_MGLView *)p)->get_values();	}
 //-----------------------------------------------------------------------------
-static void mgl_upd_vals(Fl_Widget *, void *p)	{	((Fl_MGLDlg *)p)->get_values();	}
+static void mgl_dlg_hide(Fl_Widget *, void *p)	{	((Fl_MGLView *)p)->dlg_hide();	}
 //-----------------------------------------------------------------------------
-static void mgl_dlg_hide(Fl_Widget *, void *p)	{	((Fl_MGLDlg *)p)->hide();	}
-//-----------------------------------------------------------------------------
-void mgl_dialog_fltk(Fl_MathGL *par, bool upd, const char *ids, char const * const *args, const char *title)
-{
-	static Fl_MGLDlg *dlg = 0;
-	if(!par || !ids || *ids==0)	return;	
-	if(!dlg)	dlg = new Fl_MGLDlg;
-	dlg->window(title);	dlg->update(upd);	dlg->par = par;
-	for(int i=0;ids[i];i++)	dlg->add_widget(ids[i], args[i]);
-}
-//-----------------------------------------------------------------------------
-void Fl_MGLDlg::window(const char *title)
+void Fl_MGLView::dlg_window(const char *title)
 {
 	if(!title || *title==0)	title = "MGL dialog";
-	if(!wnd)
-	{	wnd = new Fl_Double_Window(210,50,title);	ind = 0;	}
+	if(!dlg_wnd)
+	{	dlg_wnd = new Fl_Double_Window(210,50,title);	}
 	else
-	{	wnd->hide();	wnd->label(title);	wnd->clear();	wnd->begin();	}
+	{	dlg_wnd->hide();	dlg_wnd->label(title);
+		dlg_wnd->clear();	dlg_wnd->begin();	}
+	for(size_t i=0;i<strs.size();i++)	free(strs[i]);
+	strs.clear();	dlg_ind = 0;
 }
 //-----------------------------------------------------------------------------
-void Fl_MGLDlg::finish()
+void Fl_MGLView::dlg_finish()
 {
-	if(!wnd)	window();
-	if(!done)
+	if(!dlg_wnd)	dlg_window();
+	if(!dlg_done)
 	{
-		wnd->end();	wnd->size(210,ids.size()*45+50);
-		Fl_Button *b;
-		b = new Fl_Button(5, 20+45*ind, 80, 25, _("Cancel"));
+		Fl_Button *b;	dlg_wnd->size(210,dlg_ind*45+50);
+		b = new Fl_Button(5, 20+45*dlg_ind, 80, 25, _("Cancel"));
 		b->callback(mgl_dlg_hide,this);
-		b = new Fl_Button(125, 20+45*ind, 80, 25, _("OK"));
+		b = new Fl_Button(125, 20+45*dlg_ind, 80, 25, _("OK"));
 		b->callback(mgl_upd_vals,this);
+		dlg_wnd->end();	dlg_done=true;
 	}
 }
 //-----------------------------------------------------------------------------
-void Fl_MGLDlg::get_values()
+void Fl_MGLView::get_values()
 {
-	if(!wnd || !done || !par)	return;
-	for(unsigned i=0;i<ids.size();i++)
+	if(!dlg_wnd || !dlg_done)	return;
+	for(unsigned i=0;i<dlg_ids.size();i++)
 	{
 		std::string s;
-		Fl_Widget *w=wdgt[i];
-		switch(kind[i])
+		Fl_Widget *w=dlg_wdgt[i];
+		switch(dlg_kind[i])
 		{
 		case 'e':	//	input
 		{	Fl_Input* o = (Fl_Input*)w;	s = o->value();	break;	}
 		case 'v':	// spinner|counter
 		case 's':	// slider
-		{	Fl_Valuator* o = (Fl_Valuator*)w;	s = o->value();	break;	}
+		{	Fl_Valuator* o = (Fl_Valuator*)w;
+			double v = o->value();	char buf[32];
+			sprintf(buf,"%g",v);	s = buf;	break;	}
 		case 'b':	// check_box
 		{	Fl_Check_Button* o = (Fl_Check_Button*)w;	s = o->value()?"1":"0";	break;	}
 		case 'c':	// choice
 		{	Fl_Choice* o = (Fl_Choice*)w;	s = o->text();	break;	}
 		}
-		par->set_param(ids[i], s.c_str());
+		FMGL->set_param(dlg_ids[i], s.c_str());
 	}
-	par->update();
+	FMGL->update();
 }
 //-----------------------------------------------------------------------------
-void Fl_MGLDlg::add_widget(char id, const char *args)
+void Fl_MGLView::add_widget(char id, const char *args)
 {
-	if(!wnd)	window();
+	static std::vector<std::string> buf;
+	if(!dlg_wnd)	dlg_window();
 	if(args[1]!='|')	return;	// wrong format
 	char type = *args;
+	if(!strchr("esvbc",type))	return;
 	args += 2;
 	Fl_Widget *w=NULL;
-	std::string lbl;
+	char *lbl=0;
 	for(size_t i=0;args[i];i++)	if(args[i]=='|')	// find label
-	{	lbl = std::string(args,0,i);	args += i;	break;	}
-	if(lbl.empty())	{	lbl.push_back('$');	lbl.push_back(id);	}
+	{	lbl = (char*)malloc(i);	lbl[i]=0;
+		for(size_t j=0;j<i;j++)	lbl[j] = args[j];
+		args += i;	break;	}
+	if(!lbl)
+	{	lbl = (char*)malloc(3);	lbl[0]='$';	lbl[1]=id;	lbl[2]=0;	}
+	else	args++;
+	strs.push_back(lbl);	dlg_wnd->size(210,dlg_ind*45+50);
 	switch(type)
 	{
 	case 'e':	//	input
-	{	Fl_Input* o = new Fl_Input(5, 20+45*ind, 200, 25, lbl.c_str());	w=o;
+	{	Fl_Input* o = new Fl_Input(5, 20+45*dlg_ind, 200, 25, lbl);	w=o;
 		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));	o->value(args);
 		break;	}
 	case 'v':	// spinner|counter
-	{	Fl_Counter* o = new Fl_Counter(5, 20+45*ind, 200, 25, lbl.c_str());
-		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-		float v=0,v1=-1,v2=1,s1=1,s2=0;
-		sscanf(args,"%g|%g|%g|%g|%g",&v,&v1,&v2,&s1,&s2);
-		if(s2==0)	s2 = s1/10.;
-		o->step(s2,s1);	o->bounds(v1,v2);	o->value(v);
+	{	Fl_Counter* o = new Fl_Counter(5, 20+45*dlg_ind, 200, 25, lbl);	w=o;
+		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));	o->type(FL_SIMPLE_COUNTER);
+		float v=0,v1=-1,v2=1,s1=1;
+		sscanf(args,"%g|%g|%g|%g",&v,&v1,&v2,&s1);
+		o->step(s1);	o->bounds(v1,v2);	o->value(v);
 		break;	}
 	case 's':	// slider
-	{	Fl_Hor_Value_Slider* o = new Fl_Hor_Value_Slider(5, 20+45*ind, 25, 105, lbl.c_str());
-		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+	{	Fl_Slider* o = new Fl_Slider(5, 20+45*dlg_ind, 200, 25, lbl);	w=o;
+		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));	o->type(FL_HORIZONTAL);
 		float v=0,v1=-1,v2=1,s=0;
 		sscanf(args,"%g|%g|%g|%g",&v,&v1,&v2,&s);
 		o->step(s);	o->bounds(v1,v2);	o->value(v);
 		break;	}
 	case 'b':	// check_box
-	{	Fl_Check_Button* o = new Fl_Check_Button(5, 10+45*ind, 200, 25, lbl.c_str());	w=o;
+	{	Fl_Check_Button* o = new Fl_Check_Button(5, 10+45*dlg_ind, 200, 25, lbl);	w=o;
 		int v = atoi(args);	o->value(v!=0 || !strcmp(args,"on"));
 		break;	}
 	case 'c':	// choice
-	{	Fl_Choice* o = new Fl_Choice(5, 20+45*ind, 200, 25, lbl.c_str());
-		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));	o->add(args);
+	{	Fl_Choice* o = new Fl_Choice(5, 20+45*dlg_ind, 200, 25, lbl);	w=o;
+		lbl = (char*)malloc(strlen(args)+1);
+		strcpy(lbl,args);	strs.push_back(lbl);
+		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+		o->add(lbl);	o->value(0);
 		break;	}
 	}
 	if(w)
-	{	std::string tip = _("This is for parameter");	tip.push_back(id);
-		w->tooltip(tip.c_str());	ind++;	w->callback(mgl_upd_vals, this);
-		wdgt.push_back(w);	ids.push_back(id);	kind.push_back(*args);	}
+	{	const char *tip = _("This is for parameter ");
+		lbl = (char*)malloc(strlen(tip)+2);
+		sprintf(lbl,"%s%c",tip,id);	strs.push_back(lbl);	w->tooltip(lbl);
+		dlg_ind++;	dlg_done=false;	w->callback(mgl_upd_vals, this);
+		dlg_wdgt.push_back(w);	dlg_ids.push_back(id);	dlg_kind.push_back(type);	}
 }
 //-----------------------------------------------------------------------------

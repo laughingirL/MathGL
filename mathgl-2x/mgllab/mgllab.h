@@ -119,6 +119,7 @@ struct Fl_MGL : public mglDraw
 	void Reload();			///< Function for reloading data
 	void Click();			///< Callback function on mouse click
 	int Draw(mglGraph *);	///< Drawing itself
+	void Param(char id, const char *val);	///< Function for setting parameter
 	void update();			///< Update (redraw) plot
 	void next_frame();		///< Show next frame
 	void prev_frame();		///< Show prev frame

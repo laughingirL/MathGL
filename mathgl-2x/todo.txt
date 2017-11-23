@@ -94,6 +94,14 @@ D. Docs about JS interface
 	* Example of Step, Bars for x.nx = y.nx+1
 	* Example of `dat <==> Transpose(dat).
 
+10. Special comment "##d $I kind|label|par1|par2|..." will create custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
+	'e' for editor or input line (parameter is initial value) , 
+	'v' for spinner or counter (parameters are "ini|min|max|step|big_step"), 
+	's' for slider (parameters are "ini|min|max|step"), 
+	'b' for check box (parameter is "ini"; also understand "on"=1), 
+	'c' for choice (parameters are possible choices).
+Now, it work in mgllab only. Note, only single entry per line is allowed.
+
 ZZ. Update time.texi {before release!!!}
 
 как начать пользоваться (quickstart)
@@ -117,6 +125,7 @@ ZZ. Update time.texi {before release!!!}
 * something strange with highlighting
 * collect mouse clicks to draw line(s) and save it into data
 * select 'bbox' by mouse
+* dialog to visual construct "custom dialog" + read/add "##d" to the end of file.
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???

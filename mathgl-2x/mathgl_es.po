@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 14:50+0300\n"
+"POT-Creation-Date: 2017-11-23 05:04+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -654,11 +654,11 @@ msgstr "Anadir a"
 msgid "Add user-defined symbol"
 msgstr "Anadir simbolo definido por el usuario"
 
-#: widgets/fltk.cpp:860
+#: widgets/fltk.cpp:863
 msgid "Adjust picture size to fill drawing area"
 msgstr "Ajustar tamano de la imagen para llenar el area de grafico"
 
-#: widgets/fltk.cpp:823 widgets/qt.cpp:1150 udav/plot_pnl.cpp:337
+#: widgets/fltk.cpp:826 widgets/qt.cpp:1150 udav/plot_pnl.cpp:337
 msgid "Adjust size"
 msgstr "Ajustar tamano"
 
@@ -707,7 +707,7 @@ msgstr "Angulo alrededor del eje z (en grados)"
 
 #. animation menu
 #: widgets/qt.cpp:1255 widgets/qt.cpp:1256 udav/plot_pnl.cpp:559
-#: mgllab/mathgl.cpp:183
+#: mgllab/mathgl.cpp:186
 msgid "Animation"
 msgstr "Animacion"
 
@@ -917,13 +917,13 @@ msgstr ""
 msgid "Calculator"
 msgstr ""
 
-#: widgets/fltk.cpp:1102 udav/anim_dlg.cpp:67 udav/prop_dlg.cpp:180
+#: widgets/fltk.cpp:1083 udav/anim_dlg.cpp:67 udav/prop_dlg.cpp:180
 #: udav/args_dlg.cpp:63 udav/newcmd_dlg.cpp:78 udav/open_dlg.cpp:90
 #: udav/dat_pnl.cpp:460 udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552
 #: udav/dat_pnl.cpp:629 udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145
 #: udav/files_dlg.cpp:58 udav/style_dlg.cpp:206 udav/data_dlg.cpp:90
-#: udav/subplot_dlg.cpp:219 mgllab/editor.cpp:282 mgllab/mathgl.cpp:164
-#: mgllab/mathgl.cpp:195 mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164
+#: udav/subplot_dlg.cpp:219 mgllab/editor.cpp:282 mgllab/mathgl.cpp:167
+#: mgllab/mathgl.cpp:198 mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164
 #: mgllab/dialogs.cpp:410 mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749
 #: mgllab/dialogs.cpp:1071 mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473
 #: mgllab/mgllab.cpp:478 mgllab/table.cpp:101 mgllab/table.cpp:179
@@ -1106,7 +1106,7 @@ msgstr ""
 msgid "Copy data from another variable"
 msgstr ""
 
-#: widgets/fltk.cpp:820
+#: widgets/fltk.cpp:823
 msgid "Copy graphics"
 msgstr ""
 
@@ -1114,7 +1114,7 @@ msgstr ""
 msgid "Copy graphics to clipboard (Ctrl+Shift+G)."
 msgstr ""
 
-#: widgets/fltk.cpp:864
+#: widgets/fltk.cpp:867
 msgid "Copy image to clipboard"
 msgstr ""
 
@@ -1349,7 +1349,7 @@ msgstr ""
 msgid "Delay (in ms)"
 msgstr ""
 
-#: mgllab/mathgl.cpp:202
+#: mgllab/mathgl.cpp:205
 msgid "Delay (in sec)"
 msgstr ""
 
@@ -2098,7 +2098,7 @@ msgstr ""
 msgid "Export Data?"
 msgstr ""
 
-#: widgets/fltk.cpp:798
+#: widgets/fltk.cpp:801
 msgid "Export as ..."
 msgstr ""
 
@@ -2436,7 +2436,7 @@ msgstr ""
 msgid "Graphics setup"
 msgstr "14 - configurar eje"
 
-#: widgets/fltk.cpp:936
+#: widgets/fltk.cpp:948
 msgid "Graphics/Adjust size"
 msgstr ""
 
@@ -2445,15 +2445,16 @@ msgstr ""
 #. /< Callback function for prev frame
 #. /< Callback function for delay
 #. /< Callback function for reloading
-#: widgets/fltk.cpp:930 include/mgl2/Fl_MathGL.h:152
+#. / Toggle transparency (alpha) button
+#: widgets/fltk.cpp:942 include/mgl2/Fl_MathGL.h:154
 msgid "Graphics/Alpha"
 msgstr ""
 
-#: widgets/fltk.cpp:965
+#: widgets/fltk.cpp:977
 msgid "Graphics/Animation/Next frame"
 msgstr ""
 
-#: widgets/fltk.cpp:966
+#: widgets/fltk.cpp:978
 msgid "Graphics/Animation/Prev frame"
 msgstr ""
 
@@ -2461,83 +2462,87 @@ msgstr ""
 msgid "Graphics/Animation/Setup animation"
 msgstr ""
 
-#: widgets/fltk.cpp:964 include/mgl2/Fl_MathGL.h:154
+#. / Toggle slideshow button
+#: widgets/fltk.cpp:976 include/mgl2/Fl_MathGL.h:158
 msgid "Graphics/Animation/Slideshow"
 msgstr ""
 
-#: widgets/fltk.cpp:940
+#: widgets/fltk.cpp:952
 msgid "Graphics/Copy click coor."
 msgstr ""
 
-#: widgets/fltk.cpp:939
+#: widgets/fltk.cpp:951
 msgid "Graphics/Copy graphics"
 msgstr ""
 
-#: widgets/fltk.cpp:953
+#: widgets/fltk.cpp:965
 msgid "Graphics/Export/as BMP"
 msgstr ""
 
-#: widgets/fltk.cpp:951
+#: widgets/fltk.cpp:963
 msgid "Graphics/Export/as GIF"
 msgstr ""
 
-#: widgets/fltk.cpp:948
+#: widgets/fltk.cpp:960
 msgid "Graphics/Export/as JPEG"
 msgstr ""
 
-#: widgets/fltk.cpp:959
+#: widgets/fltk.cpp:971
 msgid "Graphics/Export/as OBJ"
 msgstr ""
 
-#: widgets/fltk.cpp:960
+#: widgets/fltk.cpp:972
 msgid "Graphics/Export/as OFF"
 msgstr ""
 
-#: widgets/fltk.cpp:944
+#: widgets/fltk.cpp:956
 msgid "Graphics/Export/as PNG"
 msgstr ""
 
-#: widgets/fltk.cpp:958
+#: widgets/fltk.cpp:970
 msgid "Graphics/Export/as PRC"
 msgstr ""
 
-#: widgets/fltk.cpp:961
+#: widgets/fltk.cpp:973
 msgid "Graphics/Export/as STL"
 msgstr ""
 
-#: widgets/fltk.cpp:954
+#: widgets/fltk.cpp:966
 msgid "Graphics/Export/as SVG"
 msgstr ""
 
-#: widgets/fltk.cpp:957
+#: widgets/fltk.cpp:969
 msgid "Graphics/Export/as TeX"
 msgstr ""
 
-#: widgets/fltk.cpp:962
+#: widgets/fltk.cpp:974
 msgid "Graphics/Export/as XYZ"
 msgstr ""
 
-#: widgets/fltk.cpp:956
+#: widgets/fltk.cpp:968
 msgid "Graphics/Export/as bitmap EPS"
 msgstr ""
 
-#: widgets/fltk.cpp:945
+#: widgets/fltk.cpp:957
 msgid "Graphics/Export/as solid PNG"
 msgstr ""
 
-#: widgets/fltk.cpp:955
+#: widgets/fltk.cpp:967
 msgid "Graphics/Export/as vector EPS"
 msgstr ""
 
-#: widgets/fltk.cpp:932 include/mgl2/Fl_MathGL.h:155
+#. / Toggle grid drawing button
+#: widgets/fltk.cpp:944 include/mgl2/Fl_MathGL.h:160
 msgid "Graphics/Grid"
 msgstr ""
 
-#: widgets/fltk.cpp:931 include/mgl2/Fl_MathGL.h:153
+#. / Toggle lighting button
+#: widgets/fltk.cpp:943 include/mgl2/Fl_MathGL.h:156
 msgid "Graphics/Light"
 msgstr ""
 
-#: widgets/fltk.cpp:941 include/mgl2/Fl_MathGL.h:161 mgllab/mgllab.cpp:369
+#. / Toggle pause calculation button
+#: widgets/fltk.cpp:953 include/mgl2/Fl_MathGL.h:172 mgllab/mgllab.cpp:369
 msgid "Graphics/Pause calc"
 msgstr ""
 
@@ -2545,43 +2550,43 @@ msgstr ""
 msgid "Graphics/Primitive"
 msgstr ""
 
-#: widgets/fltk.cpp:935
+#: widgets/fltk.cpp:947
 msgid "Graphics/Redraw"
 msgstr ""
 
-#: widgets/fltk.cpp:937
+#: widgets/fltk.cpp:949
 msgid "Graphics/Reload data"
 msgstr ""
 
-#: widgets/fltk.cpp:934
+#: widgets/fltk.cpp:946
 msgid "Graphics/Restore"
 msgstr ""
 
-#: widgets/fltk.cpp:938
+#: widgets/fltk.cpp:950
 msgid "Graphics/Stop"
 msgstr ""
 
-#: widgets/fltk.cpp:972
+#: widgets/fltk.cpp:984
 msgid "Graphics/Transform/Move down"
 msgstr ""
 
-#: widgets/fltk.cpp:968
+#: widgets/fltk.cpp:980
 msgid "Graphics/Transform/Move left"
 msgstr ""
 
-#: widgets/fltk.cpp:973
+#: widgets/fltk.cpp:985
 msgid "Graphics/Transform/Move right"
 msgstr ""
 
-#: widgets/fltk.cpp:969
+#: widgets/fltk.cpp:981
 msgid "Graphics/Transform/Move up"
 msgstr ""
 
-#: widgets/fltk.cpp:970
+#: widgets/fltk.cpp:982
 msgid "Graphics/Transform/Zoom in"
 msgstr ""
 
-#: widgets/fltk.cpp:971
+#: widgets/fltk.cpp:983
 msgid "Graphics/Transform/Zoom out"
 msgstr ""
 
@@ -2708,7 +2713,7 @@ msgstr ""
 msgid "In-place Fourier transform"
 msgstr ""
 
-#: mgllab/mathgl.cpp:245
+#: mgllab/mathgl.cpp:248
 msgid "Incompatible loop parameters!"
 msgstr ""
 
@@ -2824,7 +2829,7 @@ msgstr ""
 msgid "Keep only each n-th element of the data array."
 msgstr ""
 
-#: mgllab/mathgl.cpp:198
+#: mgllab/mathgl.cpp:201
 msgid "Keep slides in memory (faster animation but require more memory)"
 msgstr ""
 
@@ -3017,7 +3022,7 @@ msgstr ""
 msgid "MGL help"
 msgstr ""
 
-#: mgllab/mathgl.cpp:421
+#: mgllab/mathgl.cpp:447
 msgid "MGL messages"
 msgstr ""
 
@@ -3407,7 +3412,7 @@ msgstr ""
 msgid "No occurrences of '%s' found!"
 msgstr ""
 
-#: mgllab/mathgl.cpp:260
+#: mgllab/mathgl.cpp:263
 msgid "No selection. So nothing to do"
 msgstr ""
 
@@ -3419,7 +3424,7 @@ msgstr ""
 msgid "No text rotation"
 msgstr ""
 
-#: widgets/fltk.cpp:821
+#: widgets/fltk.cpp:824
 msgid "Normal view"
 msgstr ""
 
@@ -3483,12 +3488,12 @@ msgstr ""
 msgid "OBJ"
 msgstr ""
 
-#: widgets/fltk.cpp:1104 udav/anim_dlg.cpp:69 udav/prop_dlg.cpp:182
+#: widgets/fltk.cpp:1085 udav/anim_dlg.cpp:69 udav/prop_dlg.cpp:182
 #: udav/args_dlg.cpp:65 udav/newcmd_dlg.cpp:80 udav/open_dlg.cpp:92
 #: udav/dat_pnl.cpp:462 udav/dat_pnl.cpp:512 udav/dat_pnl.cpp:554
 #: udav/dat_pnl.cpp:631 udav/opt_dlg.cpp:80 udav/files_dlg.cpp:60
 #: udav/style_dlg.cpp:208 udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221
-#: mgllab/mathgl.cpp:196 mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165
+#: mgllab/mathgl.cpp:199 mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165
 #: mgllab/dialogs.cpp:411 mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750
 #: mgllab/dialogs.cpp:1072 mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474
 #: mgllab/mgllab.cpp:479 mgllab/table.cpp:621
@@ -3647,7 +3652,7 @@ msgid "Pause calculation"
 msgstr ""
 
 #. Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
-#: widgets/fltk.cpp:900 widgets/qt.cpp:1281
+#: widgets/fltk.cpp:906 widgets/qt.cpp:1281
 msgid "Pause on/off external calculations"
 msgstr ""
 
@@ -3655,7 +3660,7 @@ msgstr ""
 msgid "Perform Runge-Kutta step"
 msgstr ""
 
-#: widgets/fltk.cpp:873
+#: widgets/fltk.cpp:876
 msgid "Phi angle (rotate in x*y plane)"
 msgstr ""
 
@@ -3815,7 +3820,7 @@ msgstr " - Variable de UDAV"
 msgid "Put into this data array"
 msgstr ""
 
-#: udav/anim_dlg.cpp:74 mgllab/mathgl.cpp:201
+#: udav/anim_dlg.cpp:74 mgllab/mathgl.cpp:204
 msgid "Put to script"
 msgstr ""
 
@@ -3885,11 +3890,11 @@ msgstr ""
 msgid "Redraw"
 msgstr ""
 
-#: udav/anim_dlg.cpp:41 mgllab/mathgl.cpp:184
+#: udav/anim_dlg.cpp:41 mgllab/mathgl.cpp:187
 msgid "Redraw picture for $0 equal to"
 msgstr ""
 
-#: widgets/fltk.cpp:822
+#: widgets/fltk.cpp:825
 msgid "Redraw plot"
 msgstr ""
 
@@ -3897,7 +3902,7 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: widgets/fltk.cpp:856
+#: widgets/fltk.cpp:859
 msgid "Refresh the picture"
 msgstr ""
 
@@ -3909,11 +3914,11 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: widgets/fltk.cpp:824
+#: widgets/fltk.cpp:827
 msgid "Reload data"
 msgstr ""
 
-#: widgets/fltk.cpp:862
+#: widgets/fltk.cpp:865
 msgid "Reload data and refresh the picture"
 msgstr ""
 
@@ -3999,7 +4004,7 @@ msgstr ""
 msgid "Restore"
 msgstr ""
 
-#: widgets/fltk.cpp:853
+#: widgets/fltk.cpp:856
 msgid "Restore default graphics rotation, zoom and perspective"
 msgstr ""
 
@@ -4069,7 +4074,7 @@ msgstr ""
 msgid "Rotate on"
 msgstr ""
 
-#: widgets/fltk.cpp:849
+#: widgets/fltk.cpp:852
 msgid "Rotate picture by holding left mouse button"
 msgstr ""
 
@@ -4100,7 +4105,7 @@ msgid ""
 "then the dialog with slideshow options will appear."
 msgstr ""
 
-#: widgets/fltk.cpp:894
+#: widgets/fltk.cpp:897
 msgid "Run/Stop slideshow (graphics animation)"
 msgstr ""
 
@@ -4241,7 +4246,7 @@ msgstr ""
 msgid "Select variant of plot style(s)"
 msgstr ""
 
-#: mgllab/mathgl.cpp:166
+#: mgllab/mathgl.cpp:169
 msgid "Set"
 msgstr ""
 
@@ -4418,7 +4423,7 @@ msgstr ""
 msgid "Set scaling factor for further setsize"
 msgstr ""
 
-#: mgllab/mathgl.cpp:143
+#: mgllab/mathgl.cpp:146
 msgid "Set script arguments"
 msgstr ""
 
@@ -4559,19 +4564,19 @@ msgstr ""
 msgid "Shear plot"
 msgstr ""
 
-#: widgets/fltk.cpp:887
+#: widgets/fltk.cpp:890
 msgid "Shift the picture down"
 msgstr ""
 
-#: widgets/fltk.cpp:879
+#: widgets/fltk.cpp:882
 msgid "Shift the picture left"
 msgstr ""
 
-#: widgets/fltk.cpp:885
+#: widgets/fltk.cpp:888
 msgid "Shift the picture right"
 msgstr ""
 
-#: widgets/fltk.cpp:877
+#: widgets/fltk.cpp:880
 msgid "Shift the picture up"
 msgstr ""
 
@@ -4596,6 +4601,10 @@ msgstr ""
 
 #: mgllab/editor.cpp:525 mgllab/editor.cpp:527
 msgid "Show calculator window"
+msgstr ""
+
+#: widgets/fltk.cpp:901
+msgid "Show custom dialog for plot setup"
 msgstr ""
 
 #: udav/udav_wnd.cpp:314
@@ -4657,7 +4666,7 @@ msgstr ""
 msgid "Show lines"
 msgstr "'-' lineas"
 
-#: widgets/fltk.cpp:895
+#: widgets/fltk.cpp:898
 msgid "Show next frame in slideshow"
 msgstr ""
 
@@ -4665,7 +4674,7 @@ msgstr ""
 msgid "Show next slide (Ctrl+.)."
 msgstr ""
 
-#: widgets/fltk.cpp:890
+#: widgets/fltk.cpp:893
 msgid "Show previous frame in slideshow"
 msgstr ""
 
@@ -4825,7 +4834,7 @@ msgstr ""
 msgid "Stop"
 msgstr ""
 
-#: widgets/fltk.cpp:858
+#: widgets/fltk.cpp:861
 msgid "Stop drawing"
 msgstr ""
 
@@ -4837,43 +4846,43 @@ msgstr ""
 msgid "Stop script execution (F7)."
 msgstr ""
 
-#: udav/args_dlg.cpp:59 mgllab/mathgl.cpp:162
+#: udav/args_dlg.cpp:59 mgllab/mathgl.cpp:165
 msgid "String for $0"
 msgstr ""
 
-#: udav/args_dlg.cpp:41 mgllab/mathgl.cpp:144
+#: udav/args_dlg.cpp:41 mgllab/mathgl.cpp:147
 msgid "String for $1"
 msgstr ""
 
-#: udav/args_dlg.cpp:43 mgllab/mathgl.cpp:146
+#: udav/args_dlg.cpp:43 mgllab/mathgl.cpp:149
 msgid "String for $2"
 msgstr ""
 
-#: udav/args_dlg.cpp:45 mgllab/mathgl.cpp:148
+#: udav/args_dlg.cpp:45 mgllab/mathgl.cpp:151
 msgid "String for $3"
 msgstr ""
 
-#: udav/args_dlg.cpp:47 mgllab/mathgl.cpp:150
+#: udav/args_dlg.cpp:47 mgllab/mathgl.cpp:153
 msgid "String for $4"
 msgstr ""
 
-#: udav/args_dlg.cpp:49 mgllab/mathgl.cpp:152
+#: udav/args_dlg.cpp:49 mgllab/mathgl.cpp:155
 msgid "String for $5"
 msgstr ""
 
-#: udav/args_dlg.cpp:51 mgllab/mathgl.cpp:154
+#: udav/args_dlg.cpp:51 mgllab/mathgl.cpp:157
 msgid "String for $6"
 msgstr ""
 
-#: udav/args_dlg.cpp:53 mgllab/mathgl.cpp:156
+#: udav/args_dlg.cpp:53 mgllab/mathgl.cpp:159
 msgid "String for $7"
 msgstr ""
 
-#: udav/args_dlg.cpp:55 mgllab/mathgl.cpp:158
+#: udav/args_dlg.cpp:55 mgllab/mathgl.cpp:161
 msgid "String for $8"
 msgstr ""
 
-#: udav/args_dlg.cpp:57 mgllab/mathgl.cpp:160
+#: udav/args_dlg.cpp:57 mgllab/mathgl.cpp:163
 msgid "String for $9"
 msgstr ""
 
@@ -4974,7 +4983,7 @@ msgstr ""
 msgid "Switch on/off gray-scale mode"
 msgstr ""
 
-#: widgets/fltk.cpp:845
+#: widgets/fltk.cpp:848
 msgid "Switch on/off grid drawing"
 msgstr ""
 
@@ -4990,7 +4999,7 @@ msgstr ""
 msgid "Switch on/off lightning for the graphics (Ctrl+L)."
 msgstr ""
 
-#: widgets/fltk.cpp:842
+#: widgets/fltk.cpp:845
 msgid "Switch on/off lightning in the picture"
 msgstr ""
 
@@ -5020,7 +5029,7 @@ msgstr ""
 msgid "Switch on/off transparency for the graphics (Ctrl+T)."
 msgstr ""
 
-#: widgets/fltk.cpp:839
+#: widgets/fltk.cpp:842
 msgid "Switch on/off transparency in the picture"
 msgstr ""
 
@@ -5154,12 +5163,12 @@ msgstr ""
 msgid "There is wrong command(s) in script"
 msgstr ""
 
-#: widgets/fltk.cpp:871
+#: widgets/fltk.cpp:874
 msgid "Theta angle (tilt z-axis)"
 msgstr ""
 
-#: widgets/fltk.cpp:1175
-msgid "This is for parameter"
+#: widgets/fltk.cpp:1168
+msgid "This is for parameter "
 msgstr ""
 
 #: mgllab/table.cpp:494
@@ -5847,7 +5856,7 @@ msgstr ""
 msgid "Zoom in graphics."
 msgstr ""
 
-#: widgets/fltk.cpp:852
+#: widgets/fltk.cpp:855
 msgid "Zoom in selected region of the picture"
 msgstr ""
 
@@ -5856,7 +5865,7 @@ msgstr ""
 msgid "Zoom in text"
 msgstr ""
 
-#: widgets/fltk.cpp:881
+#: widgets/fltk.cpp:884
 msgid "Zoom in the picture"
 msgstr ""
 
@@ -5872,7 +5881,7 @@ msgstr ""
 msgid "Zoom out text"
 msgstr ""
 
-#: widgets/fltk.cpp:883
+#: widgets/fltk.cpp:886
 msgid "Zoom out the picture"
 msgstr ""
 
@@ -5982,7 +5991,7 @@ msgstr ""
 msgid "center"
 msgstr "en el centro"
 
-#: widgets/fltk.cpp:777
+#: widgets/fltk.cpp:780
 #, c-format
 msgid "click at %g, %g, %g"
 msgstr ""
@@ -6053,7 +6062,7 @@ msgstr ""
 msgid "frame"
 msgstr ""
 
-#: udav/anim_dlg.cpp:55 mgllab/mathgl.cpp:190
+#: udav/anim_dlg.cpp:55 mgllab/mathgl.cpp:193
 msgid "from"
 msgstr ""
 
@@ -6332,7 +6341,7 @@ msgstr ""
 msgid "rotate text"
 msgstr ""
 
-#: mgllab/mathgl.cpp:197
+#: mgllab/mathgl.cpp:200
 msgid "save slides"
 msgstr ""
 
@@ -6359,7 +6368,7 @@ msgstr "'-' solido"
 msgid "solid PNG"
 msgstr ""
 
-#: udav/anim_dlg.cpp:45 mgllab/mathgl.cpp:185
+#: udav/anim_dlg.cpp:45 mgllab/mathgl.cpp:188
 msgid "strings"
 msgstr ""
 
@@ -6384,7 +6393,7 @@ msgstr "Anadir texto"
 msgid "ticks"
 msgstr ""
 
-#: udav/anim_dlg.cpp:59 mgllab/mathgl.cpp:191 mgllab/dialogs.cpp:569
+#: udav/anim_dlg.cpp:59 mgllab/mathgl.cpp:194 mgllab/dialogs.cpp:569
 #: mgllab/dialogs.cpp:572 mgllab/dialogs.cpp:575
 msgid "to"
 msgstr ""
@@ -6422,7 +6431,7 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: udav/anim_dlg.cpp:52 mgllab/mathgl.cpp:187
+#: udav/anim_dlg.cpp:52 mgllab/mathgl.cpp:190
 msgid "values"
 msgstr ""
 
@@ -6443,7 +6452,7 @@ msgstr ""
 msgid "wire"
 msgstr ""
 
-#: udav/anim_dlg.cpp:63 mgllab/mathgl.cpp:192
+#: udav/anim_dlg.cpp:63 mgllab/mathgl.cpp:195
 msgid "with step"
 msgstr ""
 

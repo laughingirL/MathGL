@@ -68,4 +68,6 @@ extern MGL_EXPORT Fl_RGB_Image img_reload;
 extern MGL_EXPORT Fl_RGB_Image img_zoom12;
 extern MGL_EXPORT Fl_RGB_Image img_zoom21;
 extern MGL_EXPORT Fl_RGB_Image img_pause;
+extern MGL_EXPORT Fl_RGB_Image img_icons;
+extern MGL_EXPORT Fl_RGB_Image img_form;
 #endif
