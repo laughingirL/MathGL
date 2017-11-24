@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-23 05:04+0300\n"
+"POT-Creation-Date: 2017-11-24 14:01+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2446,7 +2446,7 @@ msgstr ""
 #. /< Callback function for delay
 #. /< Callback function for reloading
 #. / Toggle transparency (alpha) button
-#: widgets/fltk.cpp:942 include/mgl2/Fl_MathGL.h:154
+#: widgets/fltk.cpp:942 include/mgl2/Fl_MathGL.h:153
 msgid "Graphics/Alpha"
 msgstr ""
 
@@ -2463,7 +2463,7 @@ msgid "Graphics/Animation/Setup animation"
 msgstr ""
 
 #. / Toggle slideshow button
-#: widgets/fltk.cpp:976 include/mgl2/Fl_MathGL.h:158
+#: widgets/fltk.cpp:976 include/mgl2/Fl_MathGL.h:157
 msgid "Graphics/Animation/Slideshow"
 msgstr ""
 
@@ -2532,17 +2532,17 @@ msgid "Graphics/Export/as vector EPS"
 msgstr ""
 
 #. / Toggle grid drawing button
-#: widgets/fltk.cpp:944 include/mgl2/Fl_MathGL.h:160
+#: widgets/fltk.cpp:944 include/mgl2/Fl_MathGL.h:159
 msgid "Graphics/Grid"
 msgstr ""
 
 #. / Toggle lighting button
-#: widgets/fltk.cpp:943 include/mgl2/Fl_MathGL.h:156
+#: widgets/fltk.cpp:943 include/mgl2/Fl_MathGL.h:155
 msgid "Graphics/Light"
 msgstr ""
 
 #. / Toggle pause calculation button
-#: widgets/fltk.cpp:953 include/mgl2/Fl_MathGL.h:172 mgllab/mgllab.cpp:369
+#: widgets/fltk.cpp:953 include/mgl2/Fl_MathGL.h:171 mgllab/mgllab.cpp:369
 msgid "Graphics/Pause calc"
 msgstr ""
 

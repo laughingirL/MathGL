@@ -1656,26 +1656,18 @@ void mglBase::curve_plot(size_t num, size_t k0, size_t step)
 		}
 		if(i+1>=num)	break;
 
-		size_t k=i+2;
-		while(k<num)	// TODO change to half-division?!?
+		float t1=-100, t2=100;	// angle boundary
+		size_t k;
+		for(k=i+1;k<num;k++)
 		{
 			const mglPoint p2(GetPntP(k0+k*step));
 			if(mgl_isnan(p2.x))	break;
 			const mglColor c2(GetPntC(k0+k*step)-c1);
 			float dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z, dd=dx*dx+dy*dy+dz*dz;
-			if(dd<=0)	break;
-			bool ops=false;
-			for(size_t ii=i+1;ii<k;ii++)
-			{
-				const mglPoint p(GetPntP(k0+ii*step));
-				mreal v = (dx*(p.x-p1.x)+dy*(p.y-p1.y)+dz*(p.y-p1.y))/dd;
-				mglPoint q(p-p1-v*(p2-p1));
-				if(q.norm()>0.1)	{	ops = true;	break;	}
-				const mglColor c(GetPntC(k0+ii*step)-c1-(v/dd)*c2);
-				if(c.NormS()>1e-4)	{	ops = true;	break;	}
-			}
-			if(ops)	break;
-			k++;
+			if(dd<=0)	continue;	// the same point (micro-loop? :) )
+			float t = atan2(dy,dx), d = atan(0.5/dd);
+			if(t1 > t+d || t2 < t-d)	break;		// too curved
+			t1 = t1<t-d?t-d:t1;	t2 = t2>t+d?t+d:t2;	// new range
 		}
 		k--;	line_plot(k0+i*step,k0+k*step);	i = k-1;
 	}

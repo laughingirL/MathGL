@@ -149,7 +149,6 @@ public:
 	mreal (*delay)(void*);	///< Callback function for delay
 	void (*reload)(void*);	///< Callback function for reloading
 
-
 	/// Toggle transparency (alpha) button
 	void toggle_alpha()	{	toggle(alpha, alpha_bt, _("Graphics/Alpha"));	}
 	/// Toggle lighting button
@@ -198,7 +197,6 @@ public:
 	void dlg_show()	{	dlg_finish();	dlg_wnd->show();	}	///< Show window
 	void dlg_hide()	{	dlg_wnd->hide();	}	///< Close window
 	void get_values();	///< Get all values from dialog window
-
 
 	Fl_MGLView(int x, int y, int w, int h, const char *label=0);
 	virtual ~Fl_MGLView();

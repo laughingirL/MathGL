@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-23 05:04+0300\n"
+"POT-Creation-Date: 2017-11-24 14:01+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -2476,7 +2476,7 @@ msgstr "Графика/Подогнать размер"
 #. /< Callback function for delay
 #. /< Callback function for reloading
 #. / Toggle transparency (alpha) button
-#: widgets/fltk.cpp:942 include/mgl2/Fl_MathGL.h:154
+#: widgets/fltk.cpp:942 include/mgl2/Fl_MathGL.h:153
 msgid "Graphics/Alpha"
 msgstr "Графика/Прозрачность"
 
@@ -2493,7 +2493,7 @@ msgid "Graphics/Animation/Setup animation"
 msgstr "Графика/Анимация/Настройка"
 
 #. / Toggle slideshow button
-#: widgets/fltk.cpp:976 include/mgl2/Fl_MathGL.h:158
+#: widgets/fltk.cpp:976 include/mgl2/Fl_MathGL.h:157
 msgid "Graphics/Animation/Slideshow"
 msgstr "Графика/Анимация/Запустить"
 
@@ -2562,17 +2562,17 @@ msgid "Graphics/Export/as vector EPS"
 msgstr "Графика/Экспорт/как EPS"
 
 #. / Toggle grid drawing button
-#: widgets/fltk.cpp:944 include/mgl2/Fl_MathGL.h:160
+#: widgets/fltk.cpp:944 include/mgl2/Fl_MathGL.h:159
 msgid "Graphics/Grid"
 msgstr "Графика/Сетка"
 
 #. / Toggle lighting button
-#: widgets/fltk.cpp:943 include/mgl2/Fl_MathGL.h:156
+#: widgets/fltk.cpp:943 include/mgl2/Fl_MathGL.h:155
 msgid "Graphics/Light"
 msgstr "Графика/Освещение"
 
 #. / Toggle pause calculation button
-#: widgets/fltk.cpp:953 include/mgl2/Fl_MathGL.h:172 mgllab/mgllab.cpp:369
+#: widgets/fltk.cpp:953 include/mgl2/Fl_MathGL.h:171 mgllab/mgllab.cpp:369
 msgid "Graphics/Pause calc"
 msgstr "Графика/Пауза расчета"
 

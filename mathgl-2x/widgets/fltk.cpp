@@ -1065,11 +1065,11 @@ static void mgl_dlg_hide(Fl_Widget *, void *p)	{	((Fl_MGLView *)p)->dlg_hide();	
 void Fl_MGLView::dlg_window(const char *title)
 {
 	if(!title || *title==0)	title = "MGL dialog";
-	if(!dlg_wnd)
-	{	dlg_wnd = new Fl_Double_Window(210,50,title);	}
-	else
-	{	dlg_wnd->hide();	dlg_wnd->label(title);
-		dlg_wnd->clear();	dlg_wnd->begin();	}
+	if(!dlg_wnd)	delete dlg_wnd;
+	dlg_wnd = new Fl_Double_Window(210,50,title);
+// 	else
+// 	{	dlg_wnd->hide();	dlg_wnd->label(title);
+// 		dlg_wnd->clear();	dlg_wnd->begin();	}
 	for(size_t i=0;i<strs.size();i++)	free(strs[i]);
 	strs.clear();	dlg_ind = 0;
 }
@@ -1146,7 +1146,7 @@ void Fl_MGLView::add_widget(char id, const char *args)
 		o->step(s1);	o->bounds(v1,v2);	o->value(v);
 		break;	}
 	case 's':	// slider
-	{	Fl_Slider* o = new Fl_Slider(5, 20+45*dlg_ind, 200, 25, lbl);	w=o;
+	{	Fl_Slider* o = new Fl_Value_Slider(5, 20+45*dlg_ind, 200, 25, lbl);	w=o;
 		o->align(Fl_Align(FL_ALIGN_TOP_LEFT));	o->type(FL_HORIZONTAL);
 		float v=0,v1=-1,v2=1,s=0;
 		sscanf(args,"%g|%g|%g|%g",&v,&v1,&v2,&s);
