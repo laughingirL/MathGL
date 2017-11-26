@@ -99,6 +99,8 @@ int main(int argc, char **argv)
 
 #if USE_FLTK
 	mgl_ask_func = mgl_ask_fltk;
+	mgl_progress_func = mgl_progress_fltk;
+	mgl_progress_fltk(0,0);
 	Fl_Preferences pref(Fl_Preferences::USER,"abalakin","mgllab");
 	static const char *sch[4]={"base","gtk+","plastic","gleam"};
 	int scheme;	pref.get("scheme",scheme,2);

@@ -202,6 +202,14 @@ mdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
 //-----------------------------------------------------------------------------
 /// Callback function for asking user a question. Result shouldn't exceed 1024.
 extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
+/// Console function for asking user a question. Result shouldn't exceed 1024.
+void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
+/// Callback function for displaying progress of something.
+extern MGL_EXPORT void (*mgl_progress_func)(int value, int maximal);
+/// Console function for displaying progress of something.
+void MGL_EXPORT mgl_progress_txt(int value, int maximal);
+/// Display progress of something.
+void MGL_EXPORT mgl_progress(int value, int maximal);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }

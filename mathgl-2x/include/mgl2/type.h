@@ -42,9 +42,9 @@ struct MGL_EXPORT mglPoint
 	mglPoint(mglPoint &&d):x(d.x),y(d.y),z(d.z),c(d.c)	{}
 #endif
 	inline void Set(mreal X=0,mreal Y=0,mreal Z=0,mreal C=0)	{x=X;y=Y;z=Z;c=C;}
-	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
-	inline mreal val(int i)	{	mreal dat[4]={x,y,z,c};	return dat[i];	}
-	inline mreal norm()		{	return sqrt(x*x+y*y+z*z);	}
+	inline bool IsNAN() const		{	return (x!=x || y!=y || z!=z || c!=c);	}
+	inline mreal val(int i) const	{	mreal dat[4]={x,y,z,c};	return dat[i];	}
+	inline mreal norm() const		{	return sqrt(x*x+y*y+z*z);	}
 	inline void Normalize()	{	mreal v=norm();	x/=v;	y/=v;	z/=v;	}
 
 	inline const mglPoint &operator=(const mglPoint &p)

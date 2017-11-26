@@ -3,7 +3,7 @@
 ============= FAR FUTURE ================
 
 1. Export to COLLADA or X3D !!!
-2. Use mglDataV in 'var' ?!?
+2. Read DICOM, MAT, WFM files
 
 3. Contour lines for bilinear interpolation (strong saddle-like faces) -- best way by adding curve primitive (type=5)?!?
 4. 3D text (with depth), and text along 3D curve (for Quality=3) ???
@@ -22,26 +22,24 @@
 
 11. Parallel drawing in QMathGL (looks to complicated -- FLTK is better!)
 12. \overline{\overline{a}} ???
+13. Use arrow_plot_3d ???
 
 ============= NEW FEATURES =============
 
 1. Centered curved text (see text2)
-2. Read MAT files ?!!
-3. Read WFM files ?!!
+2. Quality=3 for mirror+shadows? Couldn't be in bitmap only mode
 4. "latex on" option ?!?
 
 5. Add mgl_progres(int val, void *par); -- to show progress of sth. Negative val -- set range [0,-val]. Add MGL command 'progress val'.
-6. Extend 'ask' as:
-	ask $N1 'text|kind:arg1:arg2:...' $N2 'text|kind:arg1:arg2:...' ...
-	where kind={default=edit,spin,choice,check,slider,float?}
-7. Add ##d comment(s) -- analogue of 'ask' but update figure after each change ???
-8. Add "mgl_zoomview(int x, int y)" for zoom circle around image point {x,y}
+6. Custom dialog in QMathGL
+7. Add "text3d x y z lx ly lz nx ny nz 'txt' ['stl'='' depth=0.1 depth2=nan]"
+8. Add "mgl_zoomview(int x, int y)" for zoom circle/square around image point {x,y}
 9. Mask in EPS/SVG
-10. Add momentum dat vdat ... where vdat is corresponding coordinate ???
-15. Use arrow_plot_3d ???
+10. Animation and custom dialog in mglview
+11. Animation in UDAV from ##c, ##a + remove old entries at "Put to script" (the same in mgllab)
+12. Set initial arguments from ##d everywhere (including mglconv)
 16. Check Title "size" -- see 'primitives' sample
 17. Optimize '.' style of Flow.
-18. Show mouse position at widgets constantly.
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -101,6 +99,7 @@ D. Docs about JS interface
 	'b' for check box (parameter is "ini"; also understand "on"=1), 
 	'c' for choice (parameters are possible choices).
 Now, it work in mgllab only. Note, only single entry per line is allowed.
+11. Docs about 'progress'
 
 ZZ. Update time.texi {before release!!!}
 
@@ -159,7 +158,6 @@ Z. Flat toolbuttons ???
 
 1. GTK window/widgets ???
 2. "Cut off" curves if text is printed inside it (for contour labels) ?!?
-4. Read DICOM files
 5. Check RunThr() in python/octave
 6. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
 7. Use Hershey as built-in font ??? -- for smaller size only

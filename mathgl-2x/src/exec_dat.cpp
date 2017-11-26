@@ -905,6 +905,15 @@ int static mgls_print(mglGraph *, long , mglArg *a, const char *k, const char *)
 	fflush(stdout);	return res;
 }
 //-----------------------------------------------------------------------------
+int static mgls_progress(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"nn") && mgl_progress_func)
+		mgl_progress_func(mgl_int(a[0].v), mgl_int(a[1].v));
+	else res = 1;
+	return res;
+}
+//-----------------------------------------------------------------------------
 int static mgls_pulse(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -1677,6 +1686,7 @@ mglCommand mgls_dat_cmd[] = {
 	{"openhdf",_("Open all data arrays from HDF file"),"openhdf 'fname'", mgls_openhdf ,3},
 	{"pde",_("Solve PDE"),"pde Res 'ham' IniRe IniIm [dz k0]", mgls_pde ,4},
 	{"print",_("Immediately print the message"),"print 'message'|Dat|const", mgls_print ,3},
+	{"progress",_("Immediately display the progress of calculation"),"progress value maximal", mgls_progress ,3},
 	{"pulse",_("Get pulse properties"),"pulse Res Dat 'dir'", mgls_pulse ,4},
 	{"put",_("Put value (numeric or array) to given data element"),"put Dat val [i j k]|Dat Val [i j k]", mgls_put ,3},
 	{"putsfit",_("Print fitted formula"),"putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit ,15},

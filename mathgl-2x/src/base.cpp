@@ -1656,17 +1656,26 @@ void mglBase::curve_plot(size_t num, size_t k0, size_t step)
 		}
 		if(i+1>=num)	break;
 
-		float t1=-100, t2=100;	// angle boundary
+		float t1=-100, t2=100;		// XY angle boundary
+		float rg1=-100, rg2=100;	// RG angle boundary
+		float gb1=-100, gb2=100;	// GB angle boundary
 		size_t k;
 		for(k=i+1;k<num;k++)
 		{
-			const mglPoint p2(GetPntP(k0+k*step));
+			const mglPoint p2(GetPntP(k0+k*step)-p1);
 			if(mgl_isnan(p2.x))	break;
-			const mglColor c2(GetPntC(k0+k*step)-c1);
-			float dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z, dd=dx*dx+dy*dy+dz*dz;
+			float dd=p2.x*p2.x+p2.y*p2.y+p2.z*p2.z;
 			if(dd<=0)	continue;	// the same point (micro-loop? :) )
-			float t = atan2(dy,dx), d = atan(0.5/dd);
+			float t = atan2(p2.y,p2.x), d = atan(0.5/dd);
 			if(t1 > t+d || t2 < t-d)	break;		// too curved
+			const mglColor c2(GetPntC(k0+(k-1)*step)-c1);	dd = c2.NormS();
+			if(dd>0)	// color are different
+			{
+				float rg = atan2(c2.r,c2.g), gb = atan2(c2.g,c2.b);	d = atan(1e-4/dd);
+				if(rg1 > rg+d || rg2 < rg-d || gb1 > gb+d || gb2 < gb-d)	break;		// too curved
+				rg1 = rg1<rg-d?rg-d:rg1;	rg2 = rg2>rg+d?rg+d:rg2;	// new RG range
+				gb1 = gb1<gb-d?gb-d:gb1;	gb2 = gb2>gb+d?gb+d:gb2;	// new GB range
+			}
 			t1 = t1<t-d?t-d:t1;	t2 = t2>t+d?t+d:t2;	// new range
 		}
 		k--;	line_plot(k0+i*step,k0+k*step);	i = k-1;

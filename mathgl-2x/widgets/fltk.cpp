@@ -22,7 +22,8 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_Native_File_Chooser.H>
-#include <FL/Fl_Hor_Value_Slider.H>
+#include <FL/Fl_Value_Slider.H>
+#include <FL/Fl_Progress.H>
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/Fl_MathGL.h"
@@ -70,6 +71,23 @@ void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res)
 	const char *str = fl_input("%s",buf,"");
 	MGL_TO_WCS(str,wcscpy(res,str));
 #endif
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_progress_fltk(int value, int maximal)
+{
+	static Fl_Double_Window *wnd = 0;
+	static Fl_Progress *pr=0;
+	if(!wnd)
+	{
+		wnd = new Fl_Double_Window(210, 35, gettext("Progress ..."));
+		pr = new Fl_Progress(5, 5, 200, 25);	wnd->end();
+	}
+	if(value>=0 && value<maximal)
+	{
+		pr->maximum(maximal);	pr->value(value);	wnd->show();
+	}
+	else	if(wnd)	wnd->hide();
+	Fl::awake();
 }
 //-----------------------------------------------------------------------------
 //
@@ -917,7 +935,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 }
 Fl_MGLView::~Fl_MGLView()
 {
-	dlg_wnd->hide();
+	delete dlg_wnd;
 	for(size_t i=0;i<strs.size();i++)	free(strs[i]);
 	strs.clear();	
 }
@@ -1080,9 +1098,9 @@ void Fl_MGLView::dlg_finish()
 	if(!dlg_done)
 	{
 		Fl_Button *b;	dlg_wnd->size(210,dlg_ind*45+50);
-		b = new Fl_Button(5, 20+45*dlg_ind, 80, 25, _("Cancel"));
+		b = new Fl_Button(5, 20+45*dlg_ind, 80, 25, _("Close"));
 		b->callback(mgl_dlg_hide,this);
-		b = new Fl_Button(125, 20+45*dlg_ind, 80, 25, _("OK"));
+		b = new Fl_Button(125, 20+45*dlg_ind, 80, 25, _("Update"));
 		b->callback(mgl_upd_vals,this);
 		dlg_wnd->end();	dlg_done=true;
 	}

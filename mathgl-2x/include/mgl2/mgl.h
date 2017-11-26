@@ -173,6 +173,8 @@ public:
 	static inline void SuppressWarn(bool on)	{	mgl_suppress_warn(on);	}
 	/// Check if MathGL version is valid (return false) or not (return true)
 	static inline bool CheckVersion(const char *ver)	{	return mgl_check_version(ver);	}
+	/// Display progress of something.
+	static inline void Progress(int value, int maximal)	{	mgl_progress(value, maximal);	}
 
 	/// Set axis range scaling -- simplified way to shift/zoom axis range -- need to replot whole image!
 	inline void ZoomAxis(mglPoint p1=mglPoint(0,0,0,0), mglPoint p2=mglPoint(1,1,1,1))

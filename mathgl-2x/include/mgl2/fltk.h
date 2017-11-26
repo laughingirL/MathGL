@@ -33,8 +33,10 @@ int MGL_EXPORT mgl_fltk_run();
 int MGL_EXPORT mgl_fltk_run_();
 /// Run main FLTK loop for event handling in separate thread.
 int MGL_EXPORT mgl_fltk_thr();
-/// Callback function for asking user.
+/// FLTK function for asking user.
 void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
+/// FLTK function for displaying progress of something.
+void MGL_EXPORT mgl_progress_fltk(int value, int maximal);
 /// Return pointer to widget (Fl_MGLView*) used for plotting
 MGL_EXPORT void *mgl_fltk_widget(HMGL gr);
 #ifdef __cplusplus

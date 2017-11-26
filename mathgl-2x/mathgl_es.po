@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-24 14:01+0300\n"
+"POT-Creation-Date: 2017-11-27 00:08+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: mgllab/mgllab.cpp:414
+#: mgllab/mgllab.cpp:416
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -70,7 +70,7 @@ msgid ""
 "http://mathgl.sourceforge.net/"
 msgstr ""
 
-#: src/parser.cpp:1054
+#: src/parser.cpp:1065
 #, c-format
 msgid ""
 "\n"
@@ -79,7 +79,7 @@ msgstr ""
 "\n"
 "Cambiar datos temporales en linea %ld"
 
-#: src/parser.cpp:1052
+#: src/parser.cpp:1063
 #, c-format
 msgid ""
 "\n"
@@ -88,14 +88,14 @@ msgstr ""
 "\n"
 "Cadena de caracteres demasiado larga en linea %ld"
 
-#: src/parser.cpp:1053
+#: src/parser.cpp:1064
 #, c-format
 msgid ""
 "\n"
 "Unbalanced ' in line %ld"
 msgstr ""
 
-#: src/parser.cpp:1050
+#: src/parser.cpp:1061
 #, c-format
 msgid ""
 "\n"
@@ -104,7 +104,7 @@ msgstr ""
 "\n"
 "Argumento(s) incorrecto(s) en linea %ld"
 
-#: src/parser.cpp:1051
+#: src/parser.cpp:1062
 #, c-format
 msgid ""
 "\n"
@@ -559,7 +559,7 @@ msgid "Add curve which properties can be changed later by mouse."
 msgstr ""
 "Anadir curva cuyas propiedades pueden ser cambiadas luego con el mouse."
 
-#: src/exec_dat.cpp:1625
+#: src/exec_dat.cpp:1634
 msgid "Add data or number"
 msgstr "Anadir datos o numero"
 
@@ -654,11 +654,11 @@ msgstr "Anadir a"
 msgid "Add user-defined symbol"
 msgstr "Anadir simbolo definido por el usuario"
 
-#: widgets/fltk.cpp:863
+#: widgets/fltk.cpp:881
 msgid "Adjust picture size to fill drawing area"
 msgstr "Ajustar tamano de la imagen para llenar el area de grafico"
 
-#: widgets/fltk.cpp:826 widgets/qt.cpp:1150 udav/plot_pnl.cpp:337
+#: widgets/fltk.cpp:844 widgets/qt.cpp:1150 udav/plot_pnl.cpp:337
 msgid "Adjust size"
 msgstr "Ajustar tamano"
 
@@ -831,7 +831,7 @@ msgstr ""
 msgid "Bad '%ls' at %zu\n"
 msgstr ""
 
-#: src/parser.cpp:757
+#: src/parser.cpp:768
 #, c-format
 msgid "Bad arguments for %ls: %ld instead of %d\n"
 msgstr ""
@@ -848,7 +848,7 @@ msgstr ""
 msgid "Begin"
 msgstr ""
 
-#: src/parser.cpp:1471
+#: src/parser.cpp:1482
 msgid "Begin of do-while loop"
 msgstr ""
 
@@ -876,7 +876,7 @@ msgstr ""
 msgid "Both fields in zrange must be filled"
 msgstr ""
 
-#: src/parser.cpp:1468
+#: src/parser.cpp:1479
 msgid "Break for-loop"
 msgstr ""
 
@@ -913,22 +913,21 @@ msgstr ""
 #. TODO
 #. connect(hidden,SIGNAL(cursorPositionChanged()),this,SLOT(hiddenClicked()));
 #: udav/udav_wnd.cpp:194 udav/udav_wnd.cpp:206 mgllab/mgllab.cpp:323
-#: mgllab/mgllab.cpp:553
+#: mgllab/mgllab.cpp:555
 msgid "Calculator"
 msgstr ""
 
-#: widgets/fltk.cpp:1083 udav/anim_dlg.cpp:67 udav/prop_dlg.cpp:180
-#: udav/args_dlg.cpp:63 udav/newcmd_dlg.cpp:78 udav/open_dlg.cpp:90
-#: udav/dat_pnl.cpp:460 udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552
-#: udav/dat_pnl.cpp:629 udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145
-#: udav/files_dlg.cpp:58 udav/style_dlg.cpp:206 udav/data_dlg.cpp:90
-#: udav/subplot_dlg.cpp:219 mgllab/editor.cpp:282 mgllab/mathgl.cpp:167
-#: mgllab/mathgl.cpp:198 mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164
-#: mgllab/dialogs.cpp:410 mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749
-#: mgllab/dialogs.cpp:1071 mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473
-#: mgllab/mgllab.cpp:478 mgllab/table.cpp:101 mgllab/table.cpp:179
-#: mgllab/table.cpp:353 mgllab/table.cpp:556 mgllab/table.cpp:619
-#: mgllab/table.cpp:674
+#: udav/anim_dlg.cpp:67 udav/prop_dlg.cpp:180 udav/args_dlg.cpp:63
+#: udav/newcmd_dlg.cpp:78 udav/open_dlg.cpp:90 udav/dat_pnl.cpp:460
+#: udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552 udav/dat_pnl.cpp:629
+#: udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145 udav/files_dlg.cpp:58
+#: udav/style_dlg.cpp:206 udav/data_dlg.cpp:90 udav/subplot_dlg.cpp:219
+#: mgllab/editor.cpp:282 mgllab/mathgl.cpp:167 mgllab/mathgl.cpp:198
+#: mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164 mgllab/dialogs.cpp:410
+#: mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749 mgllab/dialogs.cpp:1071
+#: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:480
+#: mgllab/table.cpp:101 mgllab/table.cpp:179 mgllab/table.cpp:353
+#: mgllab/table.cpp:556 mgllab/table.cpp:619 mgllab/table.cpp:674
 msgid "Cancel"
 msgstr ""
 
@@ -999,9 +998,9 @@ msgid "Clear picture"
 msgstr ""
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
-#: widgets/qt.cpp:1102 udav/find_dlg.cpp:52 udav/hint_dlg.cpp:70
-#: mgllab/editor.cpp:565 mgllab/help.cpp:308 mgllab/help.cpp:368
-#: mgllab/help.cpp:484
+#: widgets/fltk.cpp:1101 widgets/qt.cpp:1102 udav/find_dlg.cpp:52
+#: udav/hint_dlg.cpp:70 mgllab/editor.cpp:565 mgllab/help.cpp:308
+#: mgllab/help.cpp:368 mgllab/help.cpp:484
 msgid "Close"
 msgstr ""
 
@@ -1082,11 +1081,11 @@ msgstr ""
 msgid "Computes the flame fractal"
 msgstr ""
 
-#: src/parser.cpp:1487
+#: src/parser.cpp:1498
 msgid "Condition of do-while loop"
 msgstr ""
 
-#: src/parser.cpp:1477 src/parser.cpp:1481
+#: src/parser.cpp:1488 src/parser.cpp:1492
 msgid "Conditional operator"
 msgstr ""
 
@@ -1102,11 +1101,11 @@ msgstr ""
 msgid "Copy data"
 msgstr ""
 
-#: src/exec_dat.cpp:1631
+#: src/exec_dat.cpp:1640
 msgid "Copy data from another variable"
 msgstr ""
 
-#: widgets/fltk.cpp:823
+#: widgets/fltk.cpp:841
 msgid "Copy graphics"
 msgstr ""
 
@@ -1114,7 +1113,7 @@ msgstr ""
 msgid "Copy graphics to clipboard (Ctrl+Shift+G)."
 msgstr ""
 
-#: widgets/fltk.cpp:867
+#: widgets/fltk.cpp:885
 msgid "Copy image to clipboard"
 msgstr ""
 
@@ -1146,7 +1145,7 @@ msgstr ""
 msgid "Cos-Fourier transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1633
+#: src/exec_dat.cpp:1642
 msgid "Cos-Fourier transform at some direction"
 msgstr ""
 
@@ -1183,7 +1182,7 @@ msgstr ""
 msgid "Create data and IO"
 msgstr ""
 
-#: src/exec_dat.cpp:1658
+#: src/exec_dat.cpp:1667
 msgid "Create histogram (distribution) of data values"
 msgstr ""
 
@@ -1191,11 +1190,11 @@ msgstr ""
 msgid "Create new"
 msgstr ""
 
-#: src/exec_dat.cpp:1717
+#: src/exec_dat.cpp:1727
 msgid "Create new 1D data and fill it in range"
 msgstr ""
 
-#: src/exec_dat.cpp:1673
+#: src/exec_dat.cpp:1682
 msgid "Create new data"
 msgstr ""
 
@@ -1212,7 +1211,7 @@ msgstr "Datos 3D con tamaños de archivo"
 msgid "Create new empty script window (Ctrl+N)."
 msgstr ""
 
-#: src/parser.cpp:1482
+#: src/parser.cpp:1493
 msgid "Creates new variable from list of numbers or data"
 msgstr ""
 
@@ -1228,7 +1227,7 @@ msgstr ""
 msgid "Crop data"
 msgstr ""
 
-#: src/exec_dat.cpp:1634
+#: src/exec_dat.cpp:1643
 msgid "Crop edge of data"
 msgstr ""
 
@@ -1240,7 +1239,7 @@ msgstr ""
 msgid "CumSum"
 msgstr ""
 
-#: src/exec_dat.cpp:1635
+#: src/exec_dat.cpp:1644
 msgid "Cumulative summation along direction(s)"
 msgstr ""
 
@@ -1329,19 +1328,19 @@ msgstr ""
 msgid "Decrease font size"
 msgstr ""
 
-#: src/parser.cpp:1473
+#: src/parser.cpp:1484
 msgid "Define constant or parameter"
 msgstr ""
 
-#: src/parser.cpp:1472
+#: src/parser.cpp:1483
 msgid "Define parameter as character"
 msgstr ""
 
-#: src/parser.cpp:1474
+#: src/parser.cpp:1485
 msgid "Define parameter as numerical value"
 msgstr ""
 
-#: src/parser.cpp:1467
+#: src/parser.cpp:1478
 msgid "Define parameter from user input"
 msgstr ""
 
@@ -1361,7 +1360,7 @@ msgstr ""
 msgid "Delete ALL data arrays"
 msgstr ""
 
-#: src/exec_dat.cpp:1638
+#: src/exec_dat.cpp:1647
 msgid "Delete data or slice of data"
 msgstr ""
 
@@ -1385,7 +1384,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/exec_dat.cpp:1639
+#: src/exec_dat.cpp:1648
 msgid "Detect curves for maximums of data array"
 msgstr ""
 
@@ -1401,11 +1400,11 @@ msgstr ""
 msgid "Diffuse"
 msgstr ""
 
-#: src/exec_dat.cpp:1643
+#: src/exec_dat.cpp:1652
 msgid "Dilate data larger val"
 msgstr ""
 
-#: src/exec_dat.cpp:1630
+#: src/exec_dat.cpp:1639
 msgid "Direct multiplication of arrays"
 msgstr ""
 
@@ -1426,7 +1425,7 @@ msgstr ""
 msgid "Divide by"
 msgstr ""
 
-#: src/exec_dat.cpp:1644
+#: src/exec_dat.cpp:1653
 msgid "Divide by data or number"
 msgstr ""
 
@@ -1434,11 +1433,11 @@ msgstr ""
 msgid "Do"
 msgstr ""
 
-#: src/exec_dat.cpp:1706
+#: src/exec_dat.cpp:1716
 msgid "Do STFA transform"
 msgstr ""
 
-#: src/exec_dat.cpp:1712 src/exec_dat.cpp:1713
+#: src/exec_dat.cpp:1722 src/exec_dat.cpp:1723
 msgid "Do integral transform of data"
 msgstr ""
 
@@ -1928,13 +1927,13 @@ msgstr ""
 msgid "Elliptic"
 msgstr ""
 
-#: udav/prop_dlg.cpp:171 mgllab/mgllab.cpp:470
+#: udav/prop_dlg.cpp:171 mgllab/mgllab.cpp:472
 msgid "Enable keywords completion"
 msgstr ""
 
 #. pure = new QCheckBox(_("Disable face drawing (faster) for mouse rotation/shift/zoom."), this);
 #. pure->setChecked(mglAutoPure);	v->addWidget(pure);	pure->setEnabled(false);
-#: udav/prop_dlg.cpp:169 mgllab/mgllab.cpp:472
+#: udav/prop_dlg.cpp:169 mgllab/mgllab.cpp:474
 msgid "Enable mouse wheel for zooming"
 msgstr ""
 
@@ -2033,7 +2032,7 @@ msgstr ""
 msgid "Envelop"
 msgstr ""
 
-#: src/exec_dat.cpp:1647
+#: src/exec_dat.cpp:1656
 msgid "Erode data larger val"
 msgstr ""
 
@@ -2056,17 +2055,17 @@ msgid ""
 "%s."
 msgstr ""
 
-#: src/exec_dat.cpp:1648
+#: src/exec_dat.cpp:1657
 msgid ""
 "Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat"
 msgstr ""
 
 #. {"defpal",_("Define parameter as palette color"),"defpal $N val", 0, 6},
-#: src/parser.cpp:1476
+#: src/parser.cpp:1487
 msgid "Execute if condition is false"
 msgstr ""
 
-#: mgllab/mgllab.cpp:468
+#: mgllab/mgllab.cpp:470
 msgid "Execute script after loading"
 msgstr ""
 
@@ -2074,7 +2073,7 @@ msgstr ""
 msgid "Execute script and redraw graphics (F5)."
 msgstr ""
 
-#: src/parser.cpp:1469
+#: src/parser.cpp:1480
 msgid "Execute script in external file"
 msgstr ""
 
@@ -2098,7 +2097,7 @@ msgstr ""
 msgid "Export Data?"
 msgstr ""
 
-#: widgets/fltk.cpp:801
+#: widgets/fltk.cpp:819
 msgid "Export as ..."
 msgstr ""
 
@@ -2110,7 +2109,7 @@ msgstr ""
 msgid "Export as 3D ..."
 msgstr ""
 
-#: src/exec_dat.cpp:1649 mgllab/table.cpp:844
+#: src/exec_dat.cpp:1658 mgllab/table.cpp:844
 msgid "Export data to PNG file"
 msgstr ""
 
@@ -2123,7 +2122,7 @@ msgstr ""
 msgid "Export to PNG"
 msgstr ""
 
-#: src/exec_dat.cpp:1650
+#: src/exec_dat.cpp:1659
 msgid "Extend data array"
 msgstr ""
 
@@ -2131,11 +2130,11 @@ msgstr ""
 msgid "Extract data"
 msgstr ""
 
-#: src/exec_dat.cpp:1707
+#: src/exec_dat.cpp:1717
 msgid "Extract sub-array"
 msgstr ""
 
-#: src/exec_dat.cpp:1699
+#: src/exec_dat.cpp:1709
 msgid "Extract sub-array between values"
 msgstr ""
 
@@ -2169,7 +2168,7 @@ msgstr ""
 msgid "File to export"
 msgstr ""
 
-#: mgllab/editor.cpp:267 mgllab/mgllab.cpp:393
+#: mgllab/editor.cpp:267 mgllab/mgllab.cpp:395
 msgid "File/Recent files"
 msgstr ""
 
@@ -2181,19 +2180,19 @@ msgstr ""
 msgid "Fill data by formula"
 msgstr ""
 
-#: src/exec_dat.cpp:1656
+#: src/exec_dat.cpp:1665
 msgid "Fill data by global spline of Vdat"
 msgstr ""
 
-#: src/exec_dat.cpp:1691
+#: src/exec_dat.cpp:1701
 msgid "Fill data by interpolation of Vdat"
 msgstr ""
 
-#: src/exec_dat.cpp:1636
+#: src/exec_dat.cpp:1645
 msgid "Fill data by triangulated values"
 msgstr ""
 
-#: src/exec_dat.cpp:1651
+#: src/exec_dat.cpp:1660
 msgid "Fill data linearly in range [v1, v2]"
 msgstr ""
 
@@ -2201,7 +2200,7 @@ msgstr ""
 msgid "Fill in range"
 msgstr ""
 
-#: src/exec_dat.cpp:1652
+#: src/exec_dat.cpp:1661
 msgid "Fill x-,k-samples for transforms"
 msgstr ""
 
@@ -2209,11 +2208,11 @@ msgstr ""
 msgid "Find"
 msgstr ""
 
-#: src/exec_dat.cpp:1632
+#: src/exec_dat.cpp:1641
 msgid "Find correlation between data arrays"
 msgstr ""
 
-#: src/exec_dat.cpp:1646
+#: src/exec_dat.cpp:1655
 msgid "Find envelop for the data"
 msgstr ""
 
@@ -2225,11 +2224,11 @@ msgstr ""
 msgid "Find histogram of data."
 msgstr ""
 
-#: src/exec_dat.cpp:1667
+#: src/exec_dat.cpp:1676
 msgid "Find maximal value over direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1668
+#: src/exec_dat.cpp:1677
 msgid "Find minimal value over direction"
 msgstr ""
 
@@ -2241,19 +2240,19 @@ msgstr ""
 msgid "Find or replace text"
 msgstr ""
 
-#: src/exec_dat.cpp:1703
+#: src/exec_dat.cpp:1713
 msgid "Find root Dat[i,j,k]=val (inverse evaluate)"
 msgstr ""
 
-#: src/exec_dat.cpp:1695
+#: src/exec_dat.cpp:1705
 msgid "Find roots using data as initial values"
 msgstr ""
 
-#: src/exec_dat.cpp:1709
+#: src/exec_dat.cpp:1719
 msgid "Find summation over direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1715
+#: src/exec_dat.cpp:1725
 msgid "Find triangles of randomly placed points"
 msgstr ""
 
@@ -2269,7 +2268,7 @@ msgstr ""
 msgid "Find|Replace"
 msgstr ""
 
-#: src/parser.cpp:1478
+#: src/parser.cpp:1489
 msgid "Finish if/else block"
 msgstr ""
 
@@ -2281,7 +2280,7 @@ msgstr ""
 msgid "First slice"
 msgstr ""
 
-#: src/exec_dat.cpp:1653 src/exec_dat.cpp:1654
+#: src/exec_dat.cpp:1662 src/exec_dat.cpp:1663
 msgid "Fit data to formula"
 msgstr ""
 
@@ -2301,7 +2300,7 @@ msgstr ""
 msgid "Fog dist."
 msgstr ""
 
-#: mgllab/mgllab.cpp:529
+#: mgllab/mgllab.cpp:531
 msgid "Folder for help files"
 msgstr ""
 
@@ -2313,7 +2312,7 @@ msgstr ""
 msgid "Font"
 msgstr ""
 
-#: mgllab/mgllab.cpp:520
+#: mgllab/mgllab.cpp:522
 msgid "Font file name"
 msgstr ""
 
@@ -2321,11 +2320,11 @@ msgstr ""
 msgid "Font files (*.vfm)"
 msgstr ""
 
-#: mgllab/mgllab.cpp:459
+#: mgllab/mgllab.cpp:461
 msgid "Font kind"
 msgstr ""
 
-#: mgllab/mgllab.cpp:461
+#: mgllab/mgllab.cpp:463
 #, fuzzy
 msgid "Font size"
 msgstr "Ajustar tamano"
@@ -2338,7 +2337,7 @@ msgstr ""
 msgid "FontSize"
 msgstr ""
 
-#: src/parser.cpp:1479
+#: src/parser.cpp:1490
 msgid "For loop"
 msgstr ""
 
@@ -2355,7 +2354,7 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: mgllab/mgllab.cpp:588
+#: mgllab/mgllab.cpp:590
 msgid "Function"
 msgstr ""
 
@@ -2373,27 +2372,27 @@ msgstr ""
 msgid "General setup"
 msgstr ""
 
-#: src/exec_dat.cpp:1664
+#: src/exec_dat.cpp:1673
 msgid "Get Jacobian"
 msgstr ""
 
-#: src/exec_dat.cpp:1629
+#: src/exec_dat.cpp:1638
 msgid "Get data column filled by formula on column ids"
 msgstr ""
 
-#: src/exec_dat.cpp:1698
+#: src/exec_dat.cpp:1708
 msgid "Get formated data from file"
 msgstr ""
 
-#: src/exec_dat.cpp:1671
+#: src/exec_dat.cpp:1680
 msgid "Get momentum along direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1680
+#: src/exec_dat.cpp:1690
 msgid "Get pulse properties"
 msgstr ""
 
-#: src/exec_dat.cpp:1711
+#: src/exec_dat.cpp:1721
 msgid "Get trace of array"
 msgstr ""
 
@@ -2436,7 +2435,7 @@ msgstr ""
 msgid "Graphics setup"
 msgstr "14 - configurar eje"
 
-#: widgets/fltk.cpp:948
+#: widgets/fltk.cpp:966
 msgid "Graphics/Adjust size"
 msgstr ""
 
@@ -2446,15 +2445,15 @@ msgstr ""
 #. /< Callback function for delay
 #. /< Callback function for reloading
 #. / Toggle transparency (alpha) button
-#: widgets/fltk.cpp:942 include/mgl2/Fl_MathGL.h:153
+#: widgets/fltk.cpp:960 include/mgl2/Fl_MathGL.h:153
 msgid "Graphics/Alpha"
 msgstr ""
 
-#: widgets/fltk.cpp:977
+#: widgets/fltk.cpp:995
 msgid "Graphics/Animation/Next frame"
 msgstr ""
 
-#: widgets/fltk.cpp:978
+#: widgets/fltk.cpp:996
 msgid "Graphics/Animation/Prev frame"
 msgstr ""
 
@@ -2463,86 +2462,86 @@ msgid "Graphics/Animation/Setup animation"
 msgstr ""
 
 #. / Toggle slideshow button
-#: widgets/fltk.cpp:976 include/mgl2/Fl_MathGL.h:157
+#: widgets/fltk.cpp:994 include/mgl2/Fl_MathGL.h:157
 msgid "Graphics/Animation/Slideshow"
 msgstr ""
 
-#: widgets/fltk.cpp:952
+#: widgets/fltk.cpp:970
 msgid "Graphics/Copy click coor."
 msgstr ""
 
-#: widgets/fltk.cpp:951
+#: widgets/fltk.cpp:969
 msgid "Graphics/Copy graphics"
 msgstr ""
 
-#: widgets/fltk.cpp:965
+#: widgets/fltk.cpp:983
 msgid "Graphics/Export/as BMP"
 msgstr ""
 
-#: widgets/fltk.cpp:963
+#: widgets/fltk.cpp:981
 msgid "Graphics/Export/as GIF"
 msgstr ""
 
-#: widgets/fltk.cpp:960
+#: widgets/fltk.cpp:978
 msgid "Graphics/Export/as JPEG"
 msgstr ""
 
-#: widgets/fltk.cpp:971
+#: widgets/fltk.cpp:989
 msgid "Graphics/Export/as OBJ"
 msgstr ""
 
-#: widgets/fltk.cpp:972
+#: widgets/fltk.cpp:990
 msgid "Graphics/Export/as OFF"
 msgstr ""
 
-#: widgets/fltk.cpp:956
+#: widgets/fltk.cpp:974
 msgid "Graphics/Export/as PNG"
 msgstr ""
 
-#: widgets/fltk.cpp:970
+#: widgets/fltk.cpp:988
 msgid "Graphics/Export/as PRC"
 msgstr ""
 
-#: widgets/fltk.cpp:973
+#: widgets/fltk.cpp:991
 msgid "Graphics/Export/as STL"
 msgstr ""
 
-#: widgets/fltk.cpp:966
+#: widgets/fltk.cpp:984
 msgid "Graphics/Export/as SVG"
 msgstr ""
 
-#: widgets/fltk.cpp:969
+#: widgets/fltk.cpp:987
 msgid "Graphics/Export/as TeX"
 msgstr ""
 
-#: widgets/fltk.cpp:974
+#: widgets/fltk.cpp:992
 msgid "Graphics/Export/as XYZ"
 msgstr ""
 
-#: widgets/fltk.cpp:968
+#: widgets/fltk.cpp:986
 msgid "Graphics/Export/as bitmap EPS"
 msgstr ""
 
-#: widgets/fltk.cpp:957
+#: widgets/fltk.cpp:975
 msgid "Graphics/Export/as solid PNG"
 msgstr ""
 
-#: widgets/fltk.cpp:967
+#: widgets/fltk.cpp:985
 msgid "Graphics/Export/as vector EPS"
 msgstr ""
 
 #. / Toggle grid drawing button
-#: widgets/fltk.cpp:944 include/mgl2/Fl_MathGL.h:159
+#: widgets/fltk.cpp:962 include/mgl2/Fl_MathGL.h:159
 msgid "Graphics/Grid"
 msgstr ""
 
 #. / Toggle lighting button
-#: widgets/fltk.cpp:943 include/mgl2/Fl_MathGL.h:155
+#: widgets/fltk.cpp:961 include/mgl2/Fl_MathGL.h:155
 msgid "Graphics/Light"
 msgstr ""
 
 #. / Toggle pause calculation button
-#: widgets/fltk.cpp:953 include/mgl2/Fl_MathGL.h:171 mgllab/mgllab.cpp:369
+#: widgets/fltk.cpp:971 include/mgl2/Fl_MathGL.h:171 mgllab/mgllab.cpp:369
 msgid "Graphics/Pause calc"
 msgstr ""
 
@@ -2550,43 +2549,43 @@ msgstr ""
 msgid "Graphics/Primitive"
 msgstr ""
 
-#: widgets/fltk.cpp:947
+#: widgets/fltk.cpp:965
 msgid "Graphics/Redraw"
 msgstr ""
 
-#: widgets/fltk.cpp:949
+#: widgets/fltk.cpp:967
 msgid "Graphics/Reload data"
 msgstr ""
 
-#: widgets/fltk.cpp:946
+#: widgets/fltk.cpp:964
 msgid "Graphics/Restore"
 msgstr ""
 
-#: widgets/fltk.cpp:950
+#: widgets/fltk.cpp:968
 msgid "Graphics/Stop"
 msgstr ""
 
-#: widgets/fltk.cpp:984
+#: widgets/fltk.cpp:1002
 msgid "Graphics/Transform/Move down"
 msgstr ""
 
-#: widgets/fltk.cpp:980
+#: widgets/fltk.cpp:998
 msgid "Graphics/Transform/Move left"
 msgstr ""
 
-#: widgets/fltk.cpp:985
+#: widgets/fltk.cpp:1003
 msgid "Graphics/Transform/Move right"
 msgstr ""
 
-#: widgets/fltk.cpp:981
+#: widgets/fltk.cpp:999
 msgid "Graphics/Transform/Move up"
 msgstr ""
 
-#: widgets/fltk.cpp:982
+#: widgets/fltk.cpp:1000
 msgid "Graphics/Transform/Zoom in"
 msgstr ""
 
-#: widgets/fltk.cpp:983
+#: widgets/fltk.cpp:1001
 msgid "Graphics/Transform/Zoom out"
 msgstr ""
 
@@ -2620,7 +2619,7 @@ msgstr ""
 msgid "Hankel transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1657
+#: src/exec_dat.cpp:1666
 msgid "Hankel transform at some direction"
 msgstr ""
 
@@ -2653,7 +2652,7 @@ msgstr ""
 msgid "Hide selected plots."
 msgstr ""
 
-#: udav/prop_dlg.cpp:173 mgllab/mgllab.cpp:471
+#: udav/prop_dlg.cpp:173 mgllab/mgllab.cpp:473
 msgid "Highlight current object(s)"
 msgstr ""
 
@@ -2689,7 +2688,11 @@ msgstr ""
 msgid "Image size"
 msgstr ""
 
-#: src/exec_dat.cpp:1679
+#: src/exec_dat.cpp:1689
+msgid "Immediately display the progress of calculation"
+msgstr ""
+
+#: src/exec_dat.cpp:1688
 msgid "Immediately print the message"
 msgstr ""
 
@@ -2697,7 +2700,7 @@ msgstr ""
 msgid "Import Data?"
 msgstr ""
 
-#: src/exec_dat.cpp:1660 mgllab/table.cpp:840
+#: src/exec_dat.cpp:1669 mgllab/table.cpp:840
 msgid "Import data from PNG file"
 msgstr ""
 
@@ -2709,7 +2712,7 @@ msgstr ""
 msgid "In range"
 msgstr ""
 
-#: src/exec_dat.cpp:1655
+#: src/exec_dat.cpp:1664
 msgid "In-place Fourier transform"
 msgstr ""
 
@@ -2781,7 +2784,7 @@ msgstr ""
 msgid "Insert last fitted formula with found coefficients."
 msgstr ""
 
-#: src/exec_dat.cpp:1662
+#: src/exec_dat.cpp:1671
 msgid "Insert slice of data"
 msgstr ""
 
@@ -2793,7 +2796,7 @@ msgstr ""
 msgid "Integrate"
 msgstr ""
 
-#: src/exec_dat.cpp:1663 udav/dat_pnl.cpp:615
+#: src/exec_dat.cpp:1672 udav/dat_pnl.cpp:615
 msgid "Integrate data along direction(s)"
 msgstr ""
 
@@ -2817,7 +2820,7 @@ msgstr ""
 msgid "Jacobi"
 msgstr ""
 
-#: src/exec_dat.cpp:1665
+#: src/exec_dat.cpp:1674
 msgid "Join data arrays"
 msgstr ""
 
@@ -2871,7 +2874,7 @@ msgstr ""
 msgid "Language for UDAV"
 msgstr ""
 
-#: mgllab/mgllab.cpp:474
+#: mgllab/mgllab.cpp:476
 msgid "Language for mgllab"
 msgstr ""
 
@@ -2912,7 +2915,7 @@ msgstr ""
 msgid "Light settings"
 msgstr ""
 
-#: src/exec_dat.cpp:1666
+#: src/exec_dat.cpp:1675
 msgid "Limit data to be inside [-v,v]"
 msgstr ""
 
@@ -2996,7 +2999,7 @@ msgstr ""
 msgid "M - purple"
 msgstr ""
 
-#: src/parser.cpp:1062
+#: src/parser.cpp:1073
 msgid "MGL Parser"
 msgstr ""
 
@@ -3223,11 +3226,11 @@ msgstr ""
 msgid "Mirror data along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1669
+#: src/exec_dat.cpp:1678
 msgid "Mirror data at some direction"
 msgstr ""
 
-#: src/exec_dat.cpp:1670
+#: src/exec_dat.cpp:1679
 msgid "Modify data values by formula"
 msgstr ""
 
@@ -3299,7 +3302,7 @@ msgstr ""
 msgid "Multiply by"
 msgstr ""
 
-#: src/exec_dat.cpp:1672
+#: src/exec_dat.cpp:1681
 msgid "Multiply by data or number"
 msgstr ""
 
@@ -3424,7 +3427,7 @@ msgstr ""
 msgid "No text rotation"
 msgstr ""
 
-#: widgets/fltk.cpp:824
+#: widgets/fltk.cpp:842
 msgid "Normal view"
 msgstr ""
 
@@ -3432,11 +3435,11 @@ msgstr ""
 msgid "Normalize"
 msgstr ""
 
-#: src/exec_dat.cpp:1674
+#: src/exec_dat.cpp:1683
 msgid "Normalize data"
 msgstr ""
 
-#: src/exec_dat.cpp:1675
+#: src/exec_dat.cpp:1684
 msgid "Normalize data slice by slice"
 msgstr ""
 
@@ -3464,11 +3467,11 @@ msgstr ""
 msgid "Numeric value"
 msgstr ""
 
-#: src/exec_dat.cpp:1640
+#: src/exec_dat.cpp:1649
 msgid "Numerically differentiate data"
 msgstr ""
 
-#: src/exec_dat.cpp:1641
+#: src/exec_dat.cpp:1650
 msgid "Numerically double differentiate data"
 msgstr ""
 
@@ -3488,15 +3491,15 @@ msgstr ""
 msgid "OBJ"
 msgstr ""
 
-#: widgets/fltk.cpp:1085 udav/anim_dlg.cpp:69 udav/prop_dlg.cpp:182
-#: udav/args_dlg.cpp:65 udav/newcmd_dlg.cpp:80 udav/open_dlg.cpp:92
-#: udav/dat_pnl.cpp:462 udav/dat_pnl.cpp:512 udav/dat_pnl.cpp:554
-#: udav/dat_pnl.cpp:631 udav/opt_dlg.cpp:80 udav/files_dlg.cpp:60
-#: udav/style_dlg.cpp:208 udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221
-#: mgllab/mathgl.cpp:199 mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165
-#: mgllab/dialogs.cpp:411 mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750
-#: mgllab/dialogs.cpp:1072 mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474
-#: mgllab/mgllab.cpp:479 mgllab/table.cpp:621
+#: udav/anim_dlg.cpp:69 udav/prop_dlg.cpp:182 udav/args_dlg.cpp:65
+#: udav/newcmd_dlg.cpp:80 udav/open_dlg.cpp:92 udav/dat_pnl.cpp:462
+#: udav/dat_pnl.cpp:512 udav/dat_pnl.cpp:554 udav/dat_pnl.cpp:631
+#: udav/opt_dlg.cpp:80 udav/files_dlg.cpp:60 udav/style_dlg.cpp:208
+#: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221 mgllab/mathgl.cpp:199
+#: mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165 mgllab/dialogs.cpp:411
+#: mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750 mgllab/dialogs.cpp:1072
+#: mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474 mgllab/mgllab.cpp:481
+#: mgllab/table.cpp:621
 msgid "OK"
 msgstr ""
 
@@ -3508,7 +3511,7 @@ msgstr ""
 msgid "Open File?"
 msgstr ""
 
-#: src/exec_dat.cpp:1677
+#: src/exec_dat.cpp:1686
 msgid "Open all data arrays from HDF file"
 msgstr ""
 
@@ -3635,11 +3638,11 @@ msgstr ""
 msgid "Paste text or data from clipboard (Ctrl+V)."
 msgstr ""
 
-#: mgllab/mgllab.cpp:465
+#: mgllab/mgllab.cpp:467
 msgid "Path for MathGL font (without extension)"
 msgstr ""
 
-#: udav/prop_dlg.cpp:110 mgllab/mgllab.cpp:462
+#: udav/prop_dlg.cpp:110 mgllab/mgllab.cpp:464
 msgid "Path for help files"
 msgstr ""
 
@@ -3652,15 +3655,15 @@ msgid "Pause calculation"
 msgstr ""
 
 #. Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
-#: widgets/fltk.cpp:906 widgets/qt.cpp:1281
+#: widgets/fltk.cpp:924 widgets/qt.cpp:1281
 msgid "Pause on/off external calculations"
 msgstr ""
 
-#: src/exec_dat.cpp:1693
+#: src/exec_dat.cpp:1703
 msgid "Perform Runge-Kutta step"
 msgstr ""
 
-#: widgets/fltk.cpp:876
+#: widgets/fltk.cpp:894
 msgid "Phi angle (rotate in x*y plane)"
 msgstr ""
 
@@ -3724,7 +3727,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: mgllab/mgllab.cpp:562
+#: mgllab/mgllab.cpp:564
 msgid "Previous expressions"
 msgstr ""
 
@@ -3741,11 +3744,11 @@ msgstr ""
 msgid "Print MathGL version or check if it is valid"
 msgstr ""
 
-#: src/exec_dat.cpp:1645
+#: src/exec_dat.cpp:1654
 msgid "Print content of the data"
 msgstr ""
 
-#: src/exec_dat.cpp:1682
+#: src/exec_dat.cpp:1692
 msgid "Print fitted formula"
 msgstr ""
 
@@ -3753,11 +3756,11 @@ msgstr ""
 msgid "Print graphics"
 msgstr ""
 
-#: src/exec_dat.cpp:1637
+#: src/exec_dat.cpp:1646
 msgid "Print list of data names in HDF file"
 msgstr ""
 
-#: src/exec_dat.cpp:1661
+#: src/exec_dat.cpp:1670
 msgid "Print message or information about the data"
 msgstr ""
 
@@ -3791,11 +3794,15 @@ msgstr ""
 msgid "Program flow"
 msgstr "6 - flujo de programa"
 
-#: src/exec_dat.cpp:1628
+#: widgets/fltk.cpp:82
+msgid "Progress ..."
+msgstr ""
+
+#: src/exec_dat.cpp:1637
 msgid "Project periodical data in [v1,v2]"
 msgstr ""
 
-#: udav/udav_wnd.cpp:312 mgllab/mgllab.cpp:319 mgllab/mgllab.cpp:457
+#: udav/udav_wnd.cpp:312 mgllab/mgllab.cpp:319 mgllab/mgllab.cpp:459
 msgid "Properties"
 msgstr ""
 
@@ -3807,7 +3814,7 @@ msgstr ""
 msgid "Pulse prop."
 msgstr ""
 
-#: udav/calc_dlg.cpp:127 mgllab/mgllab.cpp:596
+#: udav/calc_dlg.cpp:127 mgllab/mgllab.cpp:598
 msgid "Put function"
 msgstr ""
 
@@ -3824,7 +3831,7 @@ msgstr ""
 msgid "Put to script"
 msgstr ""
 
-#: src/exec_dat.cpp:1681
+#: src/exec_dat.cpp:1691
 msgid "Put value (numeric or array) to given data element"
 msgstr ""
 
@@ -3846,19 +3853,19 @@ msgstr ""
 msgid "Rasterize plot and save to background"
 msgstr ""
 
-#: src/exec_dat.cpp:1687
+#: src/exec_dat.cpp:1697
 msgid "Read and join data from several files"
 msgstr ""
 
-#: src/exec_dat.cpp:1686
+#: src/exec_dat.cpp:1696
 msgid "Read data from file"
 msgstr ""
 
-#: src/exec_dat.cpp:1689
+#: src/exec_dat.cpp:1699
 msgid "Read data from file with sizes specified in first row"
 msgstr ""
 
-#: src/exec_dat.cpp:1688
+#: src/exec_dat.cpp:1698
 msgid "Read data with name 'id' from HDF file"
 msgstr ""
 
@@ -3866,7 +3873,7 @@ msgstr ""
 msgid "Ready"
 msgstr ""
 
-#: src/exec_dat.cpp:1690
+#: src/exec_dat.cpp:1700
 msgid "Rearrange data dimensions"
 msgstr ""
 
@@ -3894,7 +3901,7 @@ msgstr ""
 msgid "Redraw picture for $0 equal to"
 msgstr ""
 
-#: widgets/fltk.cpp:825
+#: widgets/fltk.cpp:843
 msgid "Redraw plot"
 msgstr ""
 
@@ -3902,7 +3909,7 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: widgets/fltk.cpp:859
+#: widgets/fltk.cpp:877
 msgid "Refresh the picture"
 msgstr ""
 
@@ -3914,19 +3921,19 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: widgets/fltk.cpp:827
+#: widgets/fltk.cpp:845
 msgid "Reload data"
 msgstr ""
 
-#: widgets/fltk.cpp:865
+#: widgets/fltk.cpp:883
 msgid "Reload data and refresh the picture"
 msgstr ""
 
-#: src/exec_dat.cpp:1627
+#: src/exec_dat.cpp:1636
 msgid "Remove duplicate rows"
 msgstr ""
 
-#: src/exec_dat.cpp:1700
+#: src/exec_dat.cpp:1710
 msgid "Remove jump into the data, like phase jumps"
 msgstr ""
 
@@ -3992,7 +3999,7 @@ msgstr ""
 msgid "Resize (interpolate) the data to specified sizes (Ctrl+Shift+R)."
 msgstr ""
 
-#: src/exec_dat.cpp:1692
+#: src/exec_dat.cpp:1702
 msgid "Resize data array"
 msgstr ""
 
@@ -4004,7 +4011,7 @@ msgstr ""
 msgid "Restore"
 msgstr ""
 
-#: widgets/fltk.cpp:856
+#: widgets/fltk.cpp:874
 msgid "Restore default graphics rotation, zoom and perspective"
 msgstr ""
 
@@ -4033,7 +4040,7 @@ msgstr ""
 msgid "Resulting string"
 msgstr ""
 
-#: src/parser.cpp:1485
+#: src/parser.cpp:1496
 msgid "Return from function"
 msgstr ""
 
@@ -4049,7 +4056,7 @@ msgstr ""
 msgid "Roll"
 msgstr ""
 
-#: src/exec_dat.cpp:1694
+#: src/exec_dat.cpp:1704
 msgid "Roll data along direction(s)"
 msgstr ""
 
@@ -4074,7 +4081,7 @@ msgstr ""
 msgid "Rotate on"
 msgstr ""
 
-#: widgets/fltk.cpp:852
+#: widgets/fltk.cpp:870
 msgid "Rotate picture by holding left mouse button"
 msgstr ""
 
@@ -4105,7 +4112,7 @@ msgid ""
 "then the dialog with slideshow options will appear."
 msgstr ""
 
-#: widgets/fltk.cpp:897
+#: widgets/fltk.cpp:915
 msgid "Run/Stop slideshow (graphics animation)"
 msgstr ""
 
@@ -4134,7 +4141,7 @@ msgstr " Guardar"
 msgid "Save Data?"
 msgstr ""
 
-#: widgets/fltk.cpp:581 mgllab/mgllab.cpp:211
+#: widgets/fltk.cpp:599 mgllab/mgllab.cpp:211
 msgid "Save File As?"
 msgstr ""
 
@@ -4150,7 +4157,7 @@ msgstr ""
 msgid "Save data"
 msgstr ""
 
-#: src/exec_dat.cpp:1697
+#: src/exec_dat.cpp:1707
 msgid "Save data to HDF5 file"
 msgstr ""
 
@@ -4158,7 +4165,7 @@ msgstr ""
 msgid "Save data to a file (Ctrl+Shift+S)."
 msgstr ""
 
-#: src/exec_dat.cpp:1696 mgllab/table.cpp:842
+#: src/exec_dat.cpp:1706 mgllab/table.cpp:842
 msgid "Save data to file"
 msgstr ""
 
@@ -4166,7 +4173,7 @@ msgstr ""
 msgid "Save file"
 msgstr ""
 
-#: mgllab/mgllab.cpp:469
+#: mgllab/mgllab.cpp:471
 msgid "Save file before redrawing"
 msgstr ""
 
@@ -4299,7 +4306,7 @@ msgstr ""
 msgid "Set color range"
 msgstr ""
 
-#: src/exec_dat.cpp:1659
+#: src/exec_dat.cpp:1668
 msgid "Set column id for data"
 msgstr ""
 
@@ -4564,19 +4571,19 @@ msgstr ""
 msgid "Shear plot"
 msgstr ""
 
-#: widgets/fltk.cpp:890
+#: widgets/fltk.cpp:908
 msgid "Shift the picture down"
 msgstr ""
 
-#: widgets/fltk.cpp:882
+#: widgets/fltk.cpp:900
 msgid "Shift the picture left"
 msgstr ""
 
-#: widgets/fltk.cpp:888
+#: widgets/fltk.cpp:906
 msgid "Shift the picture right"
 msgstr ""
 
-#: widgets/fltk.cpp:880
+#: widgets/fltk.cpp:898
 msgid "Shift the picture up"
 msgstr ""
 
@@ -4603,7 +4610,7 @@ msgstr ""
 msgid "Show calculator window"
 msgstr ""
 
-#: widgets/fltk.cpp:901
+#: widgets/fltk.cpp:919
 msgid "Show custom dialog for plot setup"
 msgstr ""
 
@@ -4666,7 +4673,7 @@ msgstr ""
 msgid "Show lines"
 msgstr "'-' lineas"
 
-#: widgets/fltk.cpp:898
+#: widgets/fltk.cpp:916
 msgid "Show next frame in slideshow"
 msgstr ""
 
@@ -4674,7 +4681,7 @@ msgstr ""
 msgid "Show next slide (Ctrl+.)."
 msgstr ""
 
-#: widgets/fltk.cpp:893
+#: widgets/fltk.cpp:911
 msgid "Show previous frame in slideshow"
 msgstr ""
 
@@ -4690,7 +4697,7 @@ msgstr ""
 msgid "Sin-Fourier transform along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1701
+#: src/exec_dat.cpp:1711
 msgid "Sin-Fourier transform at some direction"
 msgstr ""
 
@@ -4716,7 +4723,7 @@ msgstr ""
 msgid "Sizes"
 msgstr ""
 
-#: src/parser.cpp:1470
+#: src/parser.cpp:1481
 msgid "Skip commands and iterate for-loop again"
 msgstr ""
 
@@ -4728,7 +4735,7 @@ msgstr ""
 msgid "Smooth"
 msgstr ""
 
-#: src/exec_dat.cpp:1702
+#: src/exec_dat.cpp:1712
 msgid "Smooth data"
 msgstr ""
 
@@ -4736,35 +4743,35 @@ msgstr ""
 msgid "Smooth data along direction(s)"
 msgstr ""
 
-#: src/exec_dat.cpp:1685
+#: src/exec_dat.cpp:1695
 msgid "Solve Hamiltonian ODE (find GO ray or trajectory)"
 msgstr ""
 
-#: src/exec_dat.cpp:1676
+#: src/exec_dat.cpp:1685
 msgid "Solve ODE"
 msgstr ""
 
-#: src/exec_dat.cpp:1678
+#: src/exec_dat.cpp:1687
 msgid "Solve PDE"
 msgstr ""
 
-#: src/exec_dat.cpp:1683
+#: src/exec_dat.cpp:1693
 msgid "Solve PDE in accompanied coordinates for 2d case"
 msgstr ""
 
-#: src/exec_dat.cpp:1684
+#: src/exec_dat.cpp:1694
 msgid "Solve PDE in accompanied coordinates for 3d case"
 msgstr ""
 
-#: src/exec_dat.cpp:1626
+#: src/exec_dat.cpp:1635
 msgid "Solve PDE using advanced method (X-Y only)"
 msgstr ""
 
-#: src/exec_dat.cpp:1716
+#: src/exec_dat.cpp:1726
 msgid "Solve tridiagonal matrix"
 msgstr ""
 
-#: src/exec_dat.cpp:1704
+#: src/exec_dat.cpp:1714
 msgid "Sort data by values in column"
 msgstr ""
 
@@ -4798,7 +4805,7 @@ msgstr ""
 msgid "Squeeze"
 msgstr ""
 
-#: src/exec_dat.cpp:1705
+#: src/exec_dat.cpp:1715
 msgid "Squeeze data"
 msgstr ""
 
@@ -4806,15 +4813,15 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: src/parser.cpp:1480
+#: src/parser.cpp:1491
 msgid "Start function definition and stop execution of main script"
 msgstr ""
 
-#: src/parser.cpp:1483
+#: src/parser.cpp:1494
 msgid "Start next for-loop iteration"
 msgstr ""
 
-#: src/parser.cpp:1484
+#: src/parser.cpp:1495
 msgid "Start/close commands which should executed only once"
 msgstr ""
 
@@ -4826,7 +4833,7 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-#: src/exec_dat.cpp:1642
+#: src/exec_dat.cpp:1651
 msgid "Step for pulse diffraction"
 msgstr ""
 
@@ -4834,11 +4841,11 @@ msgstr ""
 msgid "Stop"
 msgstr ""
 
-#: widgets/fltk.cpp:861
+#: widgets/fltk.cpp:879
 msgid "Stop drawing"
 msgstr ""
 
-#: src/parser.cpp:1486
+#: src/parser.cpp:1497
 msgid "Stop execution"
 msgstr ""
 
@@ -4938,7 +4945,7 @@ msgstr ""
 msgid "Subticks"
 msgstr ""
 
-#: src/exec_dat.cpp:1708
+#: src/exec_dat.cpp:1718
 msgid "Subtract data or number"
 msgstr ""
 
@@ -4963,7 +4970,7 @@ msgstr ""
 msgid "Summation of"
 msgstr ""
 
-#: src/exec_dat.cpp:1710
+#: src/exec_dat.cpp:1720
 msgid "Swap data (useful after Fourier transform)"
 msgstr ""
 
@@ -4983,7 +4990,7 @@ msgstr ""
 msgid "Switch on/off gray-scale mode"
 msgstr ""
 
-#: widgets/fltk.cpp:848
+#: widgets/fltk.cpp:866
 msgid "Switch on/off grid drawing"
 msgstr ""
 
@@ -4999,7 +5006,7 @@ msgstr ""
 msgid "Switch on/off lightning for the graphics (Ctrl+L)."
 msgstr ""
 
-#: widgets/fltk.cpp:845
+#: widgets/fltk.cpp:863
 msgid "Switch on/off lightning in the picture"
 msgstr ""
 
@@ -5029,7 +5036,7 @@ msgstr ""
 msgid "Switch on/off transparency for the graphics (Ctrl+T)."
 msgstr ""
 
-#: widgets/fltk.cpp:842
+#: widgets/fltk.cpp:860
 msgid "Switch on/off transparency in the picture"
 msgstr ""
 
@@ -5163,11 +5170,11 @@ msgstr ""
 msgid "There is wrong command(s) in script"
 msgstr ""
 
-#: widgets/fltk.cpp:874
+#: widgets/fltk.cpp:892
 msgid "Theta angle (tilt z-axis)"
 msgstr ""
 
-#: widgets/fltk.cpp:1168
+#: widgets/fltk.cpp:1186
 msgid "This is for parameter "
 msgstr ""
 
@@ -5228,7 +5235,7 @@ msgstr ""
 msgid "Transpose data"
 msgstr ""
 
-#: src/exec_dat.cpp:1714
+#: src/exec_dat.cpp:1724
 msgid "Transpose data array"
 msgstr ""
 
@@ -5462,6 +5469,10 @@ msgstr ""
 msgid "Untitled - mgllab"
 msgstr ""
 
+#: widgets/fltk.cpp:1103
+msgid "Update"
+msgstr ""
+
 #: udav/mem_pnl.cpp:62
 msgid "Update list of data arrays"
 msgstr ""
@@ -5475,7 +5486,7 @@ msgstr ""
 msgid "Usage:\tmglconv [parameter(s)] scriptfile\n"
 msgstr ""
 
-#: mgllab/mgllab.cpp:413
+#: mgllab/mgllab.cpp:415
 #, c-format
 msgid "Usage:\tmgllab [parameter(s)] scriptfile\n"
 msgstr ""
@@ -5511,7 +5522,7 @@ msgstr ""
 msgid "Use dots plot for preview"
 msgstr ""
 
-#: mgllab/mgllab.cpp:473
+#: mgllab/mgllab.cpp:475
 msgid "Use multi-threading for drawing"
 msgstr ""
 
@@ -5554,7 +5565,7 @@ msgstr ""
 msgid "W - lightgray"
 msgstr ""
 
-#: src/exec_dat.cpp:1718
+#: src/exec_dat.cpp:1728
 msgid "Wavelet transform at some direction"
 msgstr ""
 
@@ -5562,7 +5573,7 @@ msgstr ""
 msgid "Whole area"
 msgstr ""
 
-#: mgllab/mgllab.cpp:476
+#: mgllab/mgllab.cpp:478
 msgid "Widget scheme"
 msgstr ""
 
@@ -5856,7 +5867,7 @@ msgstr ""
 msgid "Zoom in graphics."
 msgstr ""
 
-#: widgets/fltk.cpp:855
+#: widgets/fltk.cpp:873
 msgid "Zoom in selected region of the picture"
 msgstr ""
 
@@ -5865,7 +5876,7 @@ msgstr ""
 msgid "Zoom in text"
 msgstr ""
 
-#: widgets/fltk.cpp:884
+#: widgets/fltk.cpp:902
 msgid "Zoom in the picture"
 msgstr ""
 
@@ -5881,7 +5892,7 @@ msgstr ""
 msgid "Zoom out text"
 msgstr ""
 
-#: widgets/fltk.cpp:886
+#: widgets/fltk.cpp:904
 msgid "Zoom out the picture"
 msgstr ""
 
@@ -5991,7 +6002,7 @@ msgstr ""
 msgid "center"
 msgstr "en el centro"
 
-#: widgets/fltk.cpp:780
+#: widgets/fltk.cpp:798
 #, c-format
 msgid "click at %g, %g, %g"
 msgstr ""
@@ -6084,7 +6095,7 @@ msgstr ""
 msgid "h - gray"
 msgstr ""
 
-#: src/parser.cpp:1055
+#: src/parser.cpp:1066
 #, c-format
 msgid "in line %ld"
 msgstr ""
@@ -6177,7 +6188,7 @@ msgid ""
 "Current version is 2.%g\n"
 msgstr ""
 
-#: mgllab/mgllab.cpp:412
+#: mgllab/mgllab.cpp:414
 #, c-format
 msgid ""
 "mgllab draw mgl script interactively.\n"
@@ -6398,7 +6409,7 @@ msgstr ""
 msgid "to"
 msgstr ""
 
-#: mgllab/mgllab.cpp:560
+#: mgllab/mgllab.cpp:562
 msgid "to script"
 msgstr ""
 

@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 	mglGraph gr;
 	mglParse p(true);
 
-	mgl_ask_func = 0;
+	mgl_ask_func = 0;	mgl_progress_func = 0;
 	// read script
 	char *str, *buf;
 	const char *method = getenv("REQUEST_METHOD");
