@@ -30,13 +30,24 @@
 #endif
 //-----------------------------------------------------------------------------
 std::wstring str, opt;
+std::vector<std::string> anim;
 mglParse p(true);
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr)
 {
-	p.Execute(gr,str.c_str());
-	printf("%s\n",gr->Message());
-	return 0;
+	if(anim.size()>0)	for(size_t i=0;i<anim.size();i++)
+	{
+		gr->Clf();	gr->NewFrame();
+		p.AddParam(0,anim[i].c_str());
+		p.Execute(gr,str.c_str());
+		gr->EndFrame();
+	}
+	else
+	{
+		p.Execute(gr,str.c_str());
+		printf("%s\n",gr->Message());
+	}
+	return anim.size();
 }
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
@@ -83,6 +94,8 @@ int main(int argc, char **argv)
 		{	mgl_strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
 	}
 
+	std::string ids;
+	std::vector<std::string> par;
 	bool mgld=(*iname && iname[strlen(iname)-1]=='d');
 	if(!mgld)
 	{
@@ -91,8 +104,14 @@ int main(int argc, char **argv)
 		if(fp)
 		{
 			wchar_t ch;
-			while(!feof(fp) && size_t(ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
+			std::string text;
+			while(!feof(fp) && size_t(ch=fgetwc(fp))!=WEOF)
+			{	str.push_back(ch);	text.push_back(ch);	}
 			fclose(fp);
+
+			double a1, a2, da;
+			mgl_parse_comments(text.c_str(), a1, a2, da, anim, ids, par);
+//			if(!ids.empty())	dr->gr->dialog(ids,par);
 		}
 		else	{	printf("No file for MGL script\n");	return 0;	}
 	}
@@ -100,7 +119,6 @@ int main(int argc, char **argv)
 #if USE_FLTK
 	mgl_ask_func = mgl_ask_fltk;
 	mgl_progress_func = mgl_progress_fltk;
-	mgl_progress_fltk(0,0);
 	Fl_Preferences pref(Fl_Preferences::USER,"abalakin","mgllab");
 	static const char *sch[4]={"base","gtk+","plastic","gleam"};
 	int scheme;	pref.get("scheme",scheme,2);

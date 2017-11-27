@@ -23,7 +23,6 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_Value_Slider.H>
-#include <FL/Fl_Progress.H>
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/Fl_MathGL.h"
@@ -57,6 +56,8 @@ using mglCanvasWnd::Window;
 	void Adjust();			///< Adjust size of bitmap to window size
 	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
 	void Animation();	///< Run animation (I'm too lasy to change it)
+	void MakeDialog(const char *ids, char const * const *args, const char *title="")
+	{	mgl->dialog(ids,args,title);	}
 };
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res)
@@ -71,23 +72,6 @@ void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res)
 	const char *str = fl_input("%s",buf,"");
 	MGL_TO_WCS(str,wcscpy(res,str));
 #endif
-}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_progress_fltk(int value, int maximal)
-{
-	static Fl_Double_Window *wnd = 0;
-	static Fl_Progress *pr=0;
-	if(!wnd)
-	{
-		wnd = new Fl_Double_Window(210, 35, gettext("Progress ..."));
-		pr = new Fl_Progress(5, 5, 200, 25);	wnd->end();
-	}
-	if(value>=0 && value<maximal)
-	{
-		pr->maximum(maximal);	pr->value(value);	wnd->show();
-	}
-	else	if(wnd)	wnd->hide();
-	Fl::awake();
 }
 //-----------------------------------------------------------------------------
 //
@@ -854,7 +838,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	grid = alpha = light = sshow = pauseC = rotate = zoom = 0;
 	menu = NULL;	next = prev = reload = NULL;	delay = NULL;
 
-	Fl_Group *g = new Fl_Group(0,0,480,30);
+	Fl_Group *g = new Fl_Group(0,0,ww,30);
 	alpha_bt = new Fl_Button(0, 1, 25, 25);	alpha_bt->type(FL_TOGGLE_BUTTON);
 	alpha_bt->image(img_alpha);	alpha_bt->callback(mgl_alpha_cb,this);
 	alpha_bt->tooltip(_("Switch on/off transparency in the picture"));
@@ -892,7 +876,8 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	tet->tooltip(_("Theta angle (tilt z-axis)"));
 	phi->lstep(10);	phi->step(1);	phi->range(-180,180);
 	phi->tooltip(_("Phi angle (rotate in x*y plane)"));
-	g->end();	g->resizable(0);
+	progress = new Fl_Progress(485,0,ww-490,30);
+	g->end();	g->resizable(progress);
 
 	g = new Fl_Group(0,0,30,315);
 	o = new Fl_Button(1, 30, 25, 25);		o->tooltip(_("Shift the picture up"));
@@ -927,11 +912,12 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 
 	scroll = new Fl_Scroll(30, 30, ww-30, hh-30);
 	FMGL = new Fl_MathGL(30, 30, 800, 600);
-	FMGL->tet_val = tet;
-	FMGL->phi_val = phi;
+	FMGL->tet_val = tet;	FMGL->phi_val = phi;
 	FMGL->set_popup(pop_graph,FMGL,this);
+	mglCanvasFL *gr = new mglCanvasFL;	gr->mgl = this;
+	FMGL->set_graph(gr);
 	scroll->end();	resizable(scroll);	end();	par=0;
-	dlg_wnd = NULL;	dlg_upd = dlg_done = false;
+	dlg_wnd = NULL;	dlg_done = false;
 }
 Fl_MGLView::~Fl_MGLView()
 {
@@ -1020,6 +1006,7 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	mgl->prev = mgl_fl_prev;	mgl->delay= mgl_fl_delay;
 	mgl->FMGL->set_graph(this);
 	mgl->FMGL->set_draw(draw, par);
+	mgl->FMGL->set_prop(mgl_prop_func, this);
 
 	Wnd->end();
 	Wnd->resizable(mgl);
@@ -1188,5 +1175,18 @@ void Fl_MGLView::add_widget(char id, const char *args)
 		sprintf(lbl,"%s%c",tip,id);	strs.push_back(lbl);	w->tooltip(lbl);
 		dlg_ind++;	dlg_done=false;	w->callback(mgl_upd_vals, this);
 		dlg_wdgt.push_back(w);	dlg_ids.push_back(id);	dlg_kind.push_back(type);	}
+}
+//-----------------------------------------------------------------------------
+void Fl_MGLView::set_progress(int value, int maximal)
+{
+	progress->maximum(maximal);
+	progress->value(value);
+	Fl::awake();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_progress_fltk(int value, int maximal, HMGL gr)
+{
+	mglCanvasFL *g = dynamic_cast<mglCanvasFL *>(gr);
+	if(g && g->mgl)	g->mgl->set_progress(value,maximal);
 }
 //-----------------------------------------------------------------------------

@@ -541,8 +541,12 @@ void MGL_EXPORT mgl_set_click_func(HMGL gr, void (*func)(void *p));
 void MGL_EXPORT mgl_wnd_set_mutex(HMGL gr, pthread_mutex_t *mutex);
 #endif
 
+/// Make custom dialog for parameters ids of element properties defined by args
+void MGL_EXPORT mgl_wnd_make_dialog(HMGL gr, const char *ids, char const * const *args, const char *title);
 /// Set callback functions for drawing and data reloading
 void MGL_EXPORT mgl_wnd_set_func(HMGL gr, int (*draw)(HMGL gr, void *p), void *par, void (*reload)(void *p));
+/// Set callback functions for setting properties
+void MGL_EXPORT mgl_wnd_set_prop(HMGL gr, void (*prop)(char id, const char *val, void *p), void *par);
 /// Set delay for animation in seconds
 void MGL_EXPORT mgl_wnd_set_delay(HMGL gr, double dt);
 void MGL_EXPORT mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt);

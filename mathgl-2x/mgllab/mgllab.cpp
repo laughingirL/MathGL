@@ -383,7 +383,6 @@ int main(int argc, char **argv)
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
 	mgl_progress_func = mgl_progress_fltk;
-	mgl_progress_fltk(0,0);
 	load_pref(NULL);
 
 	textbuf = new Fl_Text_Buffer;

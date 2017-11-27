@@ -134,8 +134,14 @@ void mglCanvasWnd::ReLoad()
 	}
 }
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_prop_func(char id, const char *val, void *p)
+{	mglCanvasWnd *g = (mglCanvasWnd *)(p);	if(g)	g->SetParam(id, val);	}
+void MGL_EXPORT mgl_wnd_make_dialog(HMGL gr, const char *ids, char const * const *args, const char *title)
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->MakeDialog(ids, args, title);	}
 void MGL_EXPORT mgl_wnd_set_func(HMGL gr, int (*draw)(HMGL gr, void *p), void *par, void (*reload)(void *p))
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->SetDrawFunc(draw, par, reload);	}
+void MGL_EXPORT mgl_wnd_set_prop(HMGL gr, void (*prop)(char id, const char *val, void *p), void *par)
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->SetPropFunc(prop, par);	}
 void MGL_EXPORT mgl_wnd_toggle_alpha(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleAlpha();	}
 void MGL_EXPORT mgl_wnd_toggle_light(HMGL gr)
@@ -233,6 +239,8 @@ void MGL_EXPORT mgl_reload_class(void *p)
 {	mglDraw *dr = (mglDraw *)p;	if(dr)	dr->Reload();	}
 void MGL_EXPORT mgl_click_class(void *p)
 {	mglDraw *dr = (mglDraw *)p;	if(dr)	dr->Click();		}
+void MGL_EXPORT mgl_prop_class(char id, const char *val, void *p)
+{	mglDraw *dr = (mglDraw *)p;	if(dr)	dr->Param(id,val);	}
 //-----------------------------------------------------------------------------
 typedef int (*draw_func)(mglGraph *gr);
 int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p)
@@ -249,5 +257,66 @@ MGL_EXPORT void *mgl_draw_calc(void *p)
 	d->Calc();	d->running = false;
 #endif
 	return 0;
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_parse_comments(const char *text, double &a1, double &a2, double &da, std::vector<std::string> &anim, std::string &ids, std::vector<std::string> &par)
+{
+	a1=0;	a2=0;	da=1;
+	const char *str = strstr(text, "##c");
+	if(str)	// this is animation loop
+	{
+		int res=sscanf(str+3, "%lg%lg%lg", &a1, &a2, &da);
+		da = res<3?1:da;
+		if(res>2 && da*(a2-a1)>0)
+		{
+			for(double a=a1;da*(a2-a)>=0;a+=da)
+			{
+				char buf[128];	snprintf(buf,128,"%g",a);
+				anim.push_back(buf);
+			}
+			return;
+		}
+	}
+	str = strstr(text, "##a");
+	while(str)
+	{
+		str += 3;
+		while(*str>0 && *str<=' ' && *str!='\n')	str++;
+		if(*str>' ')
+		{
+			size_t j=0;	while(str[j]>' ')	j++;
+			std::string val(str,j);
+			anim.push_back(val);
+		}
+		str = strstr(str, "##a");
+	}
+	str = strstr(text, "##d");	// custom dialog
+	while(str)
+	{
+		str = strchr(str,'$');
+		if(str)
+		{
+			char id = str[1];	str += 2;
+			while(*str>0 && *str<=' ' && *str!='\n')	str++;
+			if(*str>' ')
+			{
+				long j=0;	while(str[j]!='\n')	j++;
+				while(str[j-1]<=' ')	j--;
+				
+				ids.push_back(id);
+				std::string val(str,j);
+				par.push_back(val);
+			}
+		}
+		str = strstr(str, "##d");
+	}
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_parse_animation(const char *text, std::vector<std::string> &anim)
+{
+	std::string ids;
+	std::vector<std::string> par;
+	double a1, a2, da;
+	mgl_parse_comments(text, a1, a2, da, anim, ids, par);
 }
 //-----------------------------------------------------------------------------

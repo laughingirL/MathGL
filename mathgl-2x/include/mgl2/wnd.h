@@ -23,6 +23,8 @@
 #include "mgl2/mgl.h"
 //-----------------------------------------------------------------------------
 MGL_EXPORT void *mgl_draw_calc(void *p);
+void MGL_EXPORT mgl_parse_comments(const char *text, double &a1, double &a2, double &da, std::vector<std::string> &anim, std::string &dlg_ids, std::vector<std::string> &dlg_par);
+void MGL_EXPORT mgl_parse_animation(const char *text, std::vector<std::string> &anim);
 //-----------------------------------------------------------------------------
 /// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
@@ -70,6 +72,8 @@ int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p);
 int MGL_EXPORT mgl_draw_class(HMGL gr, void *p);
 void MGL_EXPORT mgl_click_class(void *p);
 void MGL_EXPORT mgl_reload_class(void *p);
+void MGL_EXPORT mgl_prop_class(char id, const char *val, void *p);
+void MGL_EXPORT mgl_prop_func(char id, const char *val, void *p);
 }
 //-----------------------------------------------------------------------------
 /// Abstract class for windows displaying graphics
@@ -108,6 +112,12 @@ public:
 	{	mgl_wnd_animation(gr);	}
 	inline void SetClickFunc(void (*func)(void *p))	///< Callback function for mouse click
 	{	mgl_set_click_func(gr,func);	}
+	/// Set callback function for properties setup
+	void SetPropFunc(void (*prop)(char id, const char *val, void *p), void *par=NULL)
+	{	mgl_wnd_set_prop(gr,prop,par);	}
+	/// Make custom dialog for parameters ids of element properties defined by args
+	inline void MakeDialog(const char *ids, char const * const *args, const char *title)
+	{	mgl_wnd_make_dialog(gr, ids, args, title);	}
 	/// Set callback functions for drawing and data reloading
 	inline void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL)
 	{	mgl_wnd_set_func(gr,draw,par,reload);	}

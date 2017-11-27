@@ -315,59 +315,10 @@ void fill_animate(const char *text, Fl_MGL *dr)
 			}
 		}
 	}
-	dr->anim.clear();	dr->a1=dr->a2=0;	dr->da=1;	// reset animation
-	const char *str = strstr(text, "##c");
-	if(str)	// this is animation loop
-	{
-		double a1=0, a2=0, da=1;
-		int res=sscanf(str+3, "%lg%lg%lg", &a1, &a2, &da);
-		da = res<3?1:da;
-		if(res>2 && da*(a2-a1)>0)
-		{
-			dr->a1=a1;	dr->a2=a2;	dr->da=da;
-			for(double a=a1;da*(a2-a)>=0;a+=da)
-			{
-				char buf[128];	snprintf(buf,128,"%g",a);
-				dr->anim.push_back(buf);
-			}
-			return;
-		}
-	}
-	str = strstr(text, "##a");
-	while(str)
-	{
-		str += 3;
-		while(*str>0 && *str<=' ' && *str!='\n')	str++;
-		if(*str>' ')
-		{
-			size_t j=0;	while(str[j]>' ')	j++;
-			std::string val(str,j);
-			dr->anim.push_back(val);
-		}
-		str = strstr(str, "##a");
-	}
-	str = strstr(text, "##d");	// custom dialog
+	dr->anim.clear();
 	std::string ids;
 	std::vector<std::string> par;
-	while(str)
-	{
-		str = strchr(str,'$');
-		if(str)
-		{
-			char id = str[1];	str += 2;
-			while(*str>0 && *str<=' ' && *str!='\n')	str++;
-			if(*str>' ')
-			{
-				long j=0;	while(str[j]!='\n')	j++;
-				while(str[j-1]<=' ')	j--;
-				
-				ids.push_back(id);
-				std::string val(str,j);
-				par.push_back(val);
-			}
-		}
-		str = strstr(str, "##d");
-	}
+	mgl_parse_comments(text, dr->a1, dr->a2, dr->da, dr->anim, ids, par);
 	if(!ids.empty())	dr->gr->dialog(ids,par);
 }
 //-----------------------------------------------------------------------------

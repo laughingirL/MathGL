@@ -72,6 +72,8 @@ using mglCanvasWnd::Window;
 	void Adjust();		///< Adjust size of bitmap to window size
 	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
 	void Animation();		///< Run slideshow (animation) of frames
+	void MakeDialog(const char *ids, char const * const *args, const char *title=""){}	// TODO
+
 
 protected:
 	QScrollArea *scroll;	///< Scrolling area

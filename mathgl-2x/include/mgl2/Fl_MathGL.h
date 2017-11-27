@@ -30,6 +30,7 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Progress.H>
 #include <mgl2/fltk.h>
 class mglCanvas;
 //-----------------------------------------------------------------------------
@@ -54,7 +55,11 @@ public:
 	inline void set_draw(int (*dr)(mglGraph *gr))
 	{	set_draw(dr?mgl_draw_graph:0,(void*)dr);	}
 	/// Set drawing based on instance of mglDraw class
-	inline void set_draw(mglDraw *dr)	{	if(draw_cl)	delete draw_cl;	draw_cl=dr;	draw_func=0;	}
+	inline void set_draw(mglDraw *dr)
+	{	if(draw_cl)	delete draw_cl;	draw_cl=dr;	draw_func=0;	}
+	/// Set function for parameters
+	inline void set_prop(void (*func)(char id, const char *val, void *par), void *par)
+	{	prop_func=func;	prop_par=par;	}
 
 	/// Update (redraw) plot
 	virtual void update();
@@ -63,7 +68,8 @@ public:
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)
 	inline void set_flag(int f)	{	flag = f;	}
 	/// Set flags for handling mouse
-	void set_state(bool z, bool r, bool g=false)	{	zoom = z;	rotate = r;	grid = g;	}
+	void set_state(bool z, bool r, bool g=false)
+	{	zoom = z;	rotate = r;	grid = g;	}
 	/// Set zoom in/out region
 	inline void set_zoom(double X1, double Y1, double X2, double Y2)
 	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	update();	}
@@ -91,7 +97,7 @@ public:
 		if(draw_cl)	d = draw_cl;
 		return d;	}
 	inline void set_param(char id, const char *val)
-	{	mglDraw *d=get_class();	if(d)	d->Param(id,val);	}
+	{	mglDraw *d=get_class();	if(d)	d->Param(id,val);	else	prop_func(id,val,prop_par);	}
 	
 	/// Show window with warnings after script parsing
 	inline void set_show_warn(bool s)	{	show_warn=s;	}
@@ -106,9 +112,12 @@ public:
 	inline bool running()	{	return run;	}
 
 protected:
-	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
+	void *draw_par;		///< Parameters for drawing function draw_func().
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
+	void *prop_par;	///< Parameters for prop_func().
+	/// Function for setting properties.
+	void (*prop_func)(char id, const char *val, void *par);
 	mglDraw *draw_cl;
 	int last_id;				///< last selected object id
 
@@ -178,31 +187,31 @@ public:
 	void update();
 	
 	/// Create and show custom dialog 
-	void dialog(const char *ids, char const * const *args, bool upd=true, const char *title="")
+	void dialog(const char *ids, char const * const *args, const char *title="")
 	{
-		if(!ids || *ids==0)	return;	
-		dlg_window(title);	dlg_update(upd);
+		if(!ids || *ids==0)	return;
+		dlg_window(title);
 		for(int i=0;ids[i];i++)	add_widget(ids[i], args[i]);
 		dlg_finish();	dlg_wnd->show();
 	}
-	void dialog(const std::string &ids, const std::vector<std::string> &args, bool upd=true, const char *title="")
+	void dialog(const std::string &ids, const std::vector<std::string> &args, const char *title="")
 	{
-		dlg_window(title);	dlg_update(upd);
+		dlg_window(title);
 		for(size_t i=0;i<ids.length();i++)	add_widget(ids[i], args[i].c_str());
 		dlg_finish();	dlg_wnd->show();
 	}
 	void dlg_window(const char *title="");	///< Create/label dialog window
 	void add_widget(char id, const char *args);	///< Add widget to dialog
-	void dlg_update(bool u)	{	dlg_upd = u;	}	///< Call get_values() at any change
 	void dlg_show()	{	dlg_finish();	dlg_wnd->show();	}	///< Show window
 	void dlg_hide()	{	dlg_wnd->hide();	}	///< Close window
 	void get_values();	///< Get all values from dialog window
+	void set_progress(int value, int maximal);	///< Set progress
 
 	Fl_MGLView(int x, int y, int w, int h, const char *label=0);
 	virtual ~Fl_MGLView();
 protected:
 	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt, *grid_bt, *pause_bt;
-//	Fl_Counter *tet, *phi;
+	Fl_Progress *progress;
 
 	int grid, alpha, light;	///< Current states of wire, alpha, light switches (toggle buttons)
 	int sshow, rotate, zoom;///< Current states of slideshow, rotate, zoom switches (toggle buttons)
@@ -215,7 +224,6 @@ protected:
 	Fl_Double_Window *dlg_wnd;	///< Dialog window itself
 	std::vector<char*> strs;	///< Strings for widget labels
 	bool dlg_done;		///< Dialog is created
-	bool dlg_upd;		///< Send value at any change
 	int dlg_ind;		///< Current index of widget
 	std::vector<char> dlg_kind;			///< Kind of elements
 	std::vector<Fl_Widget*> dlg_wdgt;	///< List of widgets

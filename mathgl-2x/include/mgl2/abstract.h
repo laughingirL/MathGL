@@ -205,11 +205,11 @@ extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 /// Console function for asking user a question. Result shouldn't exceed 1024.
 void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 /// Callback function for displaying progress of something.
-extern MGL_EXPORT void (*mgl_progress_func)(int value, int maximal);
+extern MGL_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL gr);
 /// Console function for displaying progress of something.
-void MGL_EXPORT mgl_progress_txt(int value, int maximal);
+void MGL_EXPORT mgl_progress_txt(int value, int maximal, HMGL gr);
 /// Display progress of something.
-void MGL_EXPORT mgl_progress(int value, int maximal);
+void MGL_EXPORT mgl_progress(int value, int maximal, HMGL gr);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }

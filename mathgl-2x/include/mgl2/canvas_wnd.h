@@ -68,6 +68,13 @@ public:
 						const char *title, void *par=NULL,
 						void (*reload)(void *p)=NULL, bool maximize=false)=0;
 	void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL);
+	/// Set callback function for properties setup
+	void SetPropFunc(void (*prop)(char id, const char *val, void *p), void *par=NULL)
+	{	PropFunc = prop;	PropPar = par;	}
+	inline void SetParam(char id, const char *val)	///< Set parameter (usually from custom dialog)
+	{	if(PropFunc)	PropFunc(id,val,PropPar);	}
+	///< Make custom dialog
+	virtual void MakeDialog(const char *ids, char const * const *args, const char *title="")=0;
 
 private:
 	int CurFig;			///< Current figure in the list.
@@ -78,6 +85,9 @@ private:
 	void *FuncPar;		///< Parameters for drawing function mglCanvas::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*DrawFunc)(mglBase *gr, void *par);
+	void *PropPar;	///< Parameters for prop_func().
+	/// Function for setting properties.
+	void (*PropFunc)(char id, const char *val, void *par);
 };
 //-----------------------------------------------------------------------------
 #endif

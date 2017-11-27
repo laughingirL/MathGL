@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-27 00:08+0300\n"
+"POT-Creation-Date: 2017-11-27 17:18+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: mgllab/mgllab.cpp:416
+#: mgllab/mgllab.cpp:415
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -71,7 +71,7 @@ msgstr ""
 "\t-            загрузить скрипт из стандартного ввода\n"
 "\t-h           показать справку\n"
 
-#: utils/mglview.cpp:71
+#: utils/mglview.cpp:82
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -94,7 +94,7 @@ msgstr ""
 "\t-            загрузить скрипт из стандартного ввода\n"
 "\t-h           показать справку\n"
 
-#: widgets/qt.cpp:870
+#: widgets/qt.cpp:872
 msgid ""
 "\n"
 "(c) Alexey Balakin, 2007\n"
@@ -560,21 +560,21 @@ msgstr ""
 msgid "@<-  Prev"
 msgstr "@<-  Пред."
 
-#: widgets/qt.cpp:1288 udav/udav_wnd.cpp:331 mgllab/mgllab.cpp:329
+#: widgets/qt.cpp:1290 udav/udav_wnd.cpp:331 mgllab/mgllab.cpp:329
 msgid "About"
 msgstr "О программе"
 
 #. -----------------------------------------------------------------------------
-#: widgets/qt.cpp:874 widgets/qt.cpp:1289 udav/udav_wnd.cpp:332
+#: widgets/qt.cpp:876 widgets/qt.cpp:1291 udav/udav_wnd.cpp:332
 #: udav/udav_wnd.cpp:460
 msgid "About Qt"
 msgstr "О версии Qt"
 
-#: widgets/qt.cpp:1167 udav/plot_pnl.cpp:372
+#: widgets/qt.cpp:1169 udav/plot_pnl.cpp:372
 msgid "Add arc"
 msgstr "Добавить дугу"
 
-#: widgets/qt.cpp:1170 udav/plot_pnl.cpp:375
+#: widgets/qt.cpp:1172 udav/plot_pnl.cpp:375
 msgid "Add arc which properties can be changed later by mouse."
 msgstr "Добавить дугу. Ее свойства можно изменить позже мышью."
 
@@ -582,11 +582,11 @@ msgstr "Добавить дугу. Ее свойства можно измени
 msgid "Add command option(s)"
 msgstr "Добавить опции команды"
 
-#: widgets/qt.cpp:1172 udav/plot_pnl.cpp:378
+#: widgets/qt.cpp:1174 udav/plot_pnl.cpp:378
 msgid "Add curve"
 msgstr "Добавить кривую"
 
-#: widgets/qt.cpp:1175 udav/plot_pnl.cpp:381
+#: widgets/qt.cpp:1177 udav/plot_pnl.cpp:381
 msgid "Add curve which properties can be changed later by mouse."
 msgstr "Добавить кривую. Ее свойства можно изменить позже мышью."
 
@@ -594,11 +594,11 @@ msgstr "Добавить кривую. Ее свойства можно изме
 msgid "Add data or number"
 msgstr "Прибавить массив или число"
 
-#: widgets/qt.cpp:1187 udav/plot_pnl.cpp:396
+#: widgets/qt.cpp:1189 udav/plot_pnl.cpp:396
 msgid "Add ellipse"
 msgstr "Добавить эллипс"
 
-#: widgets/qt.cpp:1190 udav/plot_pnl.cpp:399 udav/plot_pnl.cpp:405
+#: widgets/qt.cpp:1192 udav/plot_pnl.cpp:399 udav/plot_pnl.cpp:405
 msgid "Add ellipse which properties can be changed later by mouse."
 msgstr "Добавить эллипс. Его свойства можно изменить позже мышью."
 
@@ -614,27 +614,27 @@ msgstr "Добавить запись легенды"
 msgid "Add legend entry for the plot"
 msgstr "Добавить запись легенды для графика"
 
-#: widgets/qt.cpp:1162 udav/plot_pnl.cpp:366
+#: widgets/qt.cpp:1164 udav/plot_pnl.cpp:366
 msgid "Add line"
 msgstr "Добавить линию"
 
-#: widgets/qt.cpp:1165 udav/plot_pnl.cpp:369
+#: widgets/qt.cpp:1167 udav/plot_pnl.cpp:369
 msgid "Add line which properties can be changed later by mouse."
 msgstr "Добавить линию. Ее свойства можно изменить позже мышью."
 
-#: widgets/qt.cpp:1197 udav/plot_pnl.cpp:408
+#: widgets/qt.cpp:1199 udav/plot_pnl.cpp:408
 msgid "Add mark"
 msgstr "Добавить маркер"
 
-#: widgets/qt.cpp:1200 udav/plot_pnl.cpp:411
+#: widgets/qt.cpp:1202 udav/plot_pnl.cpp:411
 msgid "Add marker which properties can be changed later by mouse."
 msgstr "Добавить маркер. Его свойства можно изменить позже мышью."
 
-#: widgets/qt.cpp:1192 udav/plot_pnl.cpp:402
+#: widgets/qt.cpp:1194 udav/plot_pnl.cpp:402
 msgid "Add polygon"
 msgstr "Добавить полигон"
 
-#: widgets/qt.cpp:1195
+#: widgets/qt.cpp:1197
 msgid "Add polygon which properties can be changed later by mouse."
 msgstr "Добавить полигон. Его свойства можно изменить позже мышью."
 
@@ -642,27 +642,27 @@ msgstr "Добавить полигон. Его свойства можно из
 msgid "Add primitive"
 msgstr "Добавить примитивы"
 
-#: widgets/qt.cpp:1177 udav/plot_pnl.cpp:384
+#: widgets/qt.cpp:1179 udav/plot_pnl.cpp:384
 msgid "Add rect"
 msgstr "Добавить прямоугольник"
 
-#: widgets/qt.cpp:1180 udav/plot_pnl.cpp:387
+#: widgets/qt.cpp:1182 udav/plot_pnl.cpp:387
 msgid "Add rectangle which properties can be changed later by mouse."
 msgstr "Добавить прямоугольник. Его свойства можно изменить позже мышью."
 
-#: widgets/qt.cpp:1182 udav/plot_pnl.cpp:390
+#: widgets/qt.cpp:1184 udav/plot_pnl.cpp:390
 msgid "Add rhombus"
 msgstr "Добавить ромб"
 
-#: widgets/qt.cpp:1185 udav/plot_pnl.cpp:393
+#: widgets/qt.cpp:1187 udav/plot_pnl.cpp:393
 msgid "Add rhombus which properties can be changed later by mouse."
 msgstr "Добавить ромб. Его свойства можно изменить позже мышью."
 
-#: widgets/qt.cpp:1202 udav/plot_pnl.cpp:414
+#: widgets/qt.cpp:1204 udav/plot_pnl.cpp:414
 msgid "Add text"
 msgstr "Добавить текст"
 
-#: widgets/qt.cpp:1205 udav/plot_pnl.cpp:417
+#: widgets/qt.cpp:1207 udav/plot_pnl.cpp:417
 msgid "Add text which properties can be changed later by mouse."
 msgstr "Добавить текст. Его свойства можно изменить позже мышью."
 
@@ -678,11 +678,11 @@ msgstr "Добавить к"
 msgid "Add user-defined symbol"
 msgstr "Добавить пользовательский символ"
 
-#: widgets/fltk.cpp:881
+#: widgets/fltk.cpp:865
 msgid "Adjust picture size to fill drawing area"
 msgstr "Подогнать размер картинки под область окна"
 
-#: widgets/fltk.cpp:844 widgets/qt.cpp:1150 udav/plot_pnl.cpp:337
+#: widgets/fltk.cpp:828 widgets/qt.cpp:1152 udav/plot_pnl.cpp:337
 msgid "Adjust size"
 msgstr "Подогнать размер"
 
@@ -700,7 +700,7 @@ msgid ""
 msgstr "Все индексы (данных, под-графиков и пр.) всегда начинаются с 0."
 
 #. graphics menu
-#: widgets/qt.cpp:1109 udav/opt_dlg.cpp:51 udav/setup_dlg.cpp:109
+#: widgets/qt.cpp:1111 udav/opt_dlg.cpp:51 udav/setup_dlg.cpp:109
 #: udav/plot_pnl.cpp:290 mgllab/dialogs.cpp:109
 msgid "Alpha"
 msgstr ""
@@ -727,7 +727,7 @@ msgid "Angle around z axis (in degrees)"
 msgstr "Угол относительно оси z (в градусах)"
 
 #. animation menu
-#: widgets/qt.cpp:1255 widgets/qt.cpp:1256 udav/plot_pnl.cpp:559
+#: widgets/qt.cpp:1257 widgets/qt.cpp:1258 udav/plot_pnl.cpp:559
 #: mgllab/mathgl.cpp:186
 msgid "Animation"
 msgstr "Анимация"
@@ -767,7 +767,7 @@ msgstr "Стрелка кон."
 msgid "Arrow at start"
 msgstr "Стрелка нач."
 
-#: widgets/qt.cpp:1148
+#: widgets/qt.cpp:1150
 msgid "Ask to stop plot drawing (F7)."
 msgstr "Запрос на остановку рисования (F7)"
 
@@ -926,14 +926,14 @@ msgstr "Цв. ось"
 msgid "C-range"
 msgstr "Цв.диапазон"
 
-#: widgets/qt.cpp:1274
+#: widgets/qt.cpp:1276
 msgid "Calculations"
 msgstr "Вычисления"
 
 #. TODO
 #. connect(hidden,SIGNAL(cursorPositionChanged()),this,SLOT(hiddenClicked()));
 #: udav/udav_wnd.cpp:194 udav/udav_wnd.cpp:206 mgllab/mgllab.cpp:323
-#: mgllab/mgllab.cpp:555
+#: mgllab/mgllab.cpp:554
 msgid "Calculator"
 msgstr "Калькулятор"
 
@@ -945,7 +945,7 @@ msgstr "Калькулятор"
 #: mgllab/editor.cpp:282 mgllab/mathgl.cpp:167 mgllab/mathgl.cpp:198
 #: mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164 mgllab/dialogs.cpp:410
 #: mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749 mgllab/dialogs.cpp:1071
-#: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:480
+#: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:479
 #: mgllab/table.cpp:101 mgllab/table.cpp:179 mgllab/table.cpp:353
 #: mgllab/table.cpp:556 mgllab/table.cpp:619 mgllab/table.cpp:674
 msgid "Cancel"
@@ -972,7 +972,7 @@ msgstr "Изменить"
 msgid "Change (resize) data"
 msgstr "Изменить размер данных"
 
-#: widgets/qt.cpp:1152 udav/plot_pnl.cpp:339
+#: widgets/qt.cpp:1154 udav/plot_pnl.cpp:339
 msgid "Change canvas size to fill whole region (F6)."
 msgstr "Подогнать размер рисунка под размер окна (F6)."
 
@@ -1017,7 +1017,7 @@ msgid "Clear picture"
 msgstr "Очистить рисунок"
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
-#: widgets/fltk.cpp:1101 widgets/qt.cpp:1102 udav/find_dlg.cpp:52
+#: widgets/fltk.cpp:1088 widgets/qt.cpp:1104 udav/find_dlg.cpp:52
 #: udav/hint_dlg.cpp:70 mgllab/editor.cpp:565 mgllab/help.cpp:308
 #: mgllab/help.cpp:368 mgllab/help.cpp:484
 msgid "Close"
@@ -1130,19 +1130,19 @@ msgstr "Копировать данные"
 msgid "Copy data from another variable"
 msgstr "Копировать данные из другой переменной"
 
-#: widgets/fltk.cpp:841
+#: widgets/fltk.cpp:825
 msgid "Copy graphics"
 msgstr "Копировать рисунок"
 
-#: widgets/qt.cpp:1156 udav/plot_pnl.cpp:354
+#: widgets/qt.cpp:1158 udav/plot_pnl.cpp:354
 msgid "Copy graphics to clipboard (Ctrl+Shift+G)."
 msgstr "Копировать рисунок в буфер обмена (Ctrl+Shift+G)."
 
-#: widgets/fltk.cpp:885
+#: widgets/fltk.cpp:869
 msgid "Copy image to clipboard"
 msgstr "Копировать рисунок в буфер обмена"
 
-#: widgets/qt.cpp:1154 udav/plot_pnl.cpp:352
+#: widgets/qt.cpp:1156 udav/plot_pnl.cpp:352
 msgid "Copy plot"
 msgstr "Копировать рисунок"
 
@@ -1953,13 +1953,13 @@ msgstr "Редактировать выбранный массив данных"
 msgid "Elliptic"
 msgstr "Эллиптические"
 
-#: udav/prop_dlg.cpp:171 mgllab/mgllab.cpp:472
+#: udav/prop_dlg.cpp:171 mgllab/mgllab.cpp:471
 msgid "Enable keywords completion"
 msgstr "Разрешить дополнение команд"
 
 #. pure = new QCheckBox(_("Disable face drawing (faster) for mouse rotation/shift/zoom."), this);
 #. pure->setChecked(mglAutoPure);	v->addWidget(pure);	pure->setEnabled(false);
-#: udav/prop_dlg.cpp:169 mgllab/mgllab.cpp:474
+#: udav/prop_dlg.cpp:169 mgllab/mgllab.cpp:473
 msgid "Enable mouse wheel for zooming"
 msgstr "Колесо мыши приближает график"
 
@@ -2019,7 +2019,7 @@ msgstr "Введите число для умножения"
 msgid "Enter number for subtraction from data values"
 msgstr "Введите число для вычитания"
 
-#: widgets/qt.cpp:947
+#: widgets/qt.cpp:949
 msgid "Enter number of vertexes"
 msgstr "Введите число вершин"
 
@@ -2047,7 +2047,7 @@ msgstr ""
 "Введите шаг сохранения. Например, '1' - все точки, '2' - каждая вторая, и т."
 "д."
 
-#: widgets/qt.cpp:956
+#: widgets/qt.cpp:958
 msgid "Enter text"
 msgstr "Введите текст"
 
@@ -2097,11 +2097,11 @@ msgstr "Интерполирует значения в точках i=idat,j=jda
 msgid "Execute if condition is false"
 msgstr "Выполнить если условие ложно"
 
-#: mgllab/mgllab.cpp:470
+#: mgllab/mgllab.cpp:469
 msgid "Execute script after loading"
 msgstr "Выполнить скрипт после загрузки"
 
-#: widgets/qt.cpp:1143 udav/plot_pnl.cpp:333
+#: widgets/qt.cpp:1145 udav/plot_pnl.cpp:333
 msgid "Execute script and redraw graphics (F5)."
 msgstr "Выполнить скрипт и обновить рисунок (F5)."
 
@@ -2129,15 +2129,15 @@ msgstr "Exp-интегралы"
 msgid "Export Data?"
 msgstr "Экспорт данных?"
 
-#: widgets/fltk.cpp:819
+#: widgets/fltk.cpp:803
 msgid "Export as ..."
 msgstr "Экспорт как ..."
 
-#: widgets/qt.cpp:1078 udav/plot_pnl.cpp:474
+#: widgets/qt.cpp:1080 udav/plot_pnl.cpp:474
 msgid "Export as 2D ..."
 msgstr "Экспорт как 2D ..."
 
-#: widgets/qt.cpp:1087 udav/plot_pnl.cpp:484
+#: widgets/qt.cpp:1089 udav/plot_pnl.cpp:484
 msgid "Export as 3D ..."
 msgstr "Экспорт как 3D ..."
 
@@ -2175,7 +2175,7 @@ msgid "Factor"
 msgstr "Фактор"
 
 #. file menu
-#: widgets/qt.cpp:1077 udav/udav_wnd.cpp:281 udav/dat_pnl.cpp:681
+#: widgets/qt.cpp:1079 udav/udav_wnd.cpp:281 udav/dat_pnl.cpp:681
 #: mgllab/mgllab.cpp:274 mgllab/table.cpp:748
 msgid "File"
 msgstr "Файл"
@@ -2200,7 +2200,7 @@ msgstr "Путь к файлу"
 msgid "File to export"
 msgstr "Экспорт в файл"
 
-#: mgllab/editor.cpp:267 mgllab/mgllab.cpp:395
+#: mgllab/editor.cpp:267 mgllab/mgllab.cpp:394
 msgid "File/Recent files"
 msgstr "Файл/Последние файлы"
 
@@ -2332,7 +2332,7 @@ msgstr "Туман"
 msgid "Fog dist."
 msgstr "глубина"
 
-#: mgllab/mgllab.cpp:531
+#: mgllab/mgllab.cpp:530
 msgid "Folder for help files"
 msgstr "Папка для файлов справки"
 
@@ -2344,7 +2344,7 @@ msgstr "Путь к папке"
 msgid "Font"
 msgstr "Шрифт"
 
-#: mgllab/mgllab.cpp:522
+#: mgllab/mgllab.cpp:521
 msgid "Font file name"
 msgstr "Имя файла шрифта"
 
@@ -2352,11 +2352,11 @@ msgstr "Имя файла шрифта"
 msgid "Font files (*.vfm)"
 msgstr "Файлы шрифтов (*.vfm)"
 
-#: mgllab/mgllab.cpp:461
+#: mgllab/mgllab.cpp:460
 msgid "Font kind"
 msgstr "Шрифт"
 
-#: mgllab/mgllab.cpp:463
+#: mgllab/mgllab.cpp:462
 msgid "Font size"
 msgstr "Размер"
 
@@ -2385,7 +2385,7 @@ msgstr "Кадр %1 из %2"
 msgid "From"
 msgstr "от"
 
-#: mgllab/mgllab.cpp:590
+#: mgllab/mgllab.cpp:589
 msgid "Function"
 msgstr "Функция"
 
@@ -2456,7 +2456,7 @@ msgstr "Перейти к предыдущему срезу 3D данных"
 msgid "Go to the specified slice for 3D data."
 msgstr "Перейти к указанному срезу 3D данных"
 
-#: widgets/qt.cpp:1106 widgets/qt.cpp:1108 udav/plot_pnl.cpp:66
+#: widgets/qt.cpp:1108 widgets/qt.cpp:1110 udav/plot_pnl.cpp:66
 #: mgllab/mgllab.cpp:316
 msgid "Graphics"
 msgstr "Графика"
@@ -2465,7 +2465,7 @@ msgstr "Графика"
 msgid "Graphics setup"
 msgstr "Настройка графика"
 
-#: widgets/fltk.cpp:966
+#: widgets/fltk.cpp:952
 msgid "Graphics/Adjust size"
 msgstr "Графика/Подогнать размер"
 
@@ -2475,15 +2475,15 @@ msgstr "Графика/Подогнать размер"
 #. /< Callback function for delay
 #. /< Callback function for reloading
 #. / Toggle transparency (alpha) button
-#: widgets/fltk.cpp:960 include/mgl2/Fl_MathGL.h:153
+#: widgets/fltk.cpp:946 include/mgl2/Fl_MathGL.h:162
 msgid "Graphics/Alpha"
 msgstr "Графика/Прозрачность"
 
-#: widgets/fltk.cpp:995
+#: widgets/fltk.cpp:981
 msgid "Graphics/Animation/Next frame"
 msgstr "Графика/Анимация/Следующий"
 
-#: widgets/fltk.cpp:996
+#: widgets/fltk.cpp:982
 msgid "Graphics/Animation/Prev frame"
 msgstr "Графика/Анимация/Предыдущий"
 
@@ -2492,86 +2492,86 @@ msgid "Graphics/Animation/Setup animation"
 msgstr "Графика/Анимация/Настройка"
 
 #. / Toggle slideshow button
-#: widgets/fltk.cpp:994 include/mgl2/Fl_MathGL.h:157
+#: widgets/fltk.cpp:980 include/mgl2/Fl_MathGL.h:166
 msgid "Graphics/Animation/Slideshow"
 msgstr "Графика/Анимация/Запустить"
 
-#: widgets/fltk.cpp:970
+#: widgets/fltk.cpp:956
 msgid "Graphics/Copy click coor."
 msgstr "Графика/Копировать коор."
 
-#: widgets/fltk.cpp:969
+#: widgets/fltk.cpp:955
 msgid "Graphics/Copy graphics"
 msgstr "Графика/Копировать рисунок"
 
-#: widgets/fltk.cpp:983
+#: widgets/fltk.cpp:969
 msgid "Graphics/Export/as BMP"
 msgstr "Графика/Экспорт/как BMP"
 
-#: widgets/fltk.cpp:981
+#: widgets/fltk.cpp:967
 msgid "Graphics/Export/as GIF"
 msgstr "Графика/Экспорт/как GIF"
 
-#: widgets/fltk.cpp:978
+#: widgets/fltk.cpp:964
 msgid "Graphics/Export/as JPEG"
 msgstr "Графика/Экспорт/как JPEG"
 
-#: widgets/fltk.cpp:989
+#: widgets/fltk.cpp:975
 msgid "Graphics/Export/as OBJ"
 msgstr "Графика/Экспорт/как OBJ"
 
-#: widgets/fltk.cpp:990
+#: widgets/fltk.cpp:976
 msgid "Graphics/Export/as OFF"
 msgstr "Графика/Экспорт/как OFF"
 
-#: widgets/fltk.cpp:974
+#: widgets/fltk.cpp:960
 msgid "Graphics/Export/as PNG"
 msgstr "Графика/Экспорт/как PNG"
 
-#: widgets/fltk.cpp:988
+#: widgets/fltk.cpp:974
 msgid "Graphics/Export/as PRC"
 msgstr "Графика/Экспорт/как PRC"
 
-#: widgets/fltk.cpp:991
+#: widgets/fltk.cpp:977
 msgid "Graphics/Export/as STL"
 msgstr "Графика/Экспорт/как STL"
 
-#: widgets/fltk.cpp:984
+#: widgets/fltk.cpp:970
 msgid "Graphics/Export/as SVG"
 msgstr "Графика/Экспорт/как SVG"
 
-#: widgets/fltk.cpp:987
+#: widgets/fltk.cpp:973
 msgid "Graphics/Export/as TeX"
 msgstr "Графика/Экспорт/как TeX"
 
-#: widgets/fltk.cpp:992
+#: widgets/fltk.cpp:978
 msgid "Graphics/Export/as XYZ"
 msgstr "Графика/Экспорт/как XYZ"
 
-#: widgets/fltk.cpp:986
+#: widgets/fltk.cpp:972
 msgid "Graphics/Export/as bitmap EPS"
 msgstr "Графика/Экспорт/как растровый EPS"
 
-#: widgets/fltk.cpp:975
+#: widgets/fltk.cpp:961
 msgid "Graphics/Export/as solid PNG"
 msgstr "Графика/Экспорт/как PNG с заливкой"
 
-#: widgets/fltk.cpp:985
+#: widgets/fltk.cpp:971
 msgid "Graphics/Export/as vector EPS"
 msgstr "Графика/Экспорт/как EPS"
 
 #. / Toggle grid drawing button
-#: widgets/fltk.cpp:962 include/mgl2/Fl_MathGL.h:159
+#: widgets/fltk.cpp:948 include/mgl2/Fl_MathGL.h:168
 msgid "Graphics/Grid"
 msgstr "Графика/Сетка"
 
 #. / Toggle lighting button
-#: widgets/fltk.cpp:961 include/mgl2/Fl_MathGL.h:155
+#: widgets/fltk.cpp:947 include/mgl2/Fl_MathGL.h:164
 msgid "Graphics/Light"
 msgstr "Графика/Освещение"
 
 #. / Toggle pause calculation button
-#: widgets/fltk.cpp:971 include/mgl2/Fl_MathGL.h:171 mgllab/mgllab.cpp:369
+#: widgets/fltk.cpp:957 include/mgl2/Fl_MathGL.h:180 mgllab/mgllab.cpp:369
 msgid "Graphics/Pause calc"
 msgstr "Графика/Пауза расчета"
 
@@ -2579,43 +2579,43 @@ msgstr "Графика/Пауза расчета"
 msgid "Graphics/Primitive"
 msgstr "Графика/Примитивы"
 
-#: widgets/fltk.cpp:965
+#: widgets/fltk.cpp:951
 msgid "Graphics/Redraw"
 msgstr "Графика/Перерисовать"
 
-#: widgets/fltk.cpp:967
+#: widgets/fltk.cpp:953
 msgid "Graphics/Reload data"
 msgstr "Графика/Перезагрузить"
 
-#: widgets/fltk.cpp:964
+#: widgets/fltk.cpp:950
 msgid "Graphics/Restore"
 msgstr "Графика/Восстановить"
 
-#: widgets/fltk.cpp:968
+#: widgets/fltk.cpp:954
 msgid "Graphics/Stop"
 msgstr "Графика/Стоп"
 
-#: widgets/fltk.cpp:1002
+#: widgets/fltk.cpp:988
 msgid "Graphics/Transform/Move down"
 msgstr "Графика/Сдвиг/Вниз"
 
-#: widgets/fltk.cpp:998
+#: widgets/fltk.cpp:984
 msgid "Graphics/Transform/Move left"
 msgstr "Графика/Сдвиг/Влево"
 
-#: widgets/fltk.cpp:1003
+#: widgets/fltk.cpp:989
 msgid "Graphics/Transform/Move right"
 msgstr "Графика/Сдвиг/Вправо"
 
-#: widgets/fltk.cpp:999
+#: widgets/fltk.cpp:985
 msgid "Graphics/Transform/Move up"
 msgstr "Графика/Сдвиг/Вверх"
 
-#: widgets/fltk.cpp:1000
+#: widgets/fltk.cpp:986
 msgid "Graphics/Transform/Zoom in"
 msgstr "Графика/Сдвиг/Приблизить"
 
-#: widgets/fltk.cpp:1001
+#: widgets/fltk.cpp:987
 msgid "Graphics/Transform/Zoom out"
 msgstr "Графика/Сдвиг/Отдалить"
 
@@ -2657,7 +2657,7 @@ msgstr "Преобразование Ханкеля по направлению"
 msgid "Height of selected cells"
 msgstr "Высота выбранных ячеек"
 
-#: widgets/qt.cpp:1287 udav/help_pnl.cpp:57 udav/udav_wnd.cpp:231
+#: widgets/qt.cpp:1289 udav/help_pnl.cpp:57 udav/udav_wnd.cpp:231
 #: udav/udav_wnd.cpp:323 mgllab/mgllab.cpp:326 mgllab/mgllab.cpp:327
 #: mgllab/mgllab.cpp:355
 msgid "Help"
@@ -2683,7 +2683,7 @@ msgstr "Скрыть выделенное"
 msgid "Hide selected plots."
 msgstr "Скрыть выделенные графики"
 
-#: udav/prop_dlg.cpp:173 mgllab/mgllab.cpp:473
+#: udav/prop_dlg.cpp:173 mgllab/mgllab.cpp:472
 msgid "Highlight current object(s)"
 msgstr "Выделить текущие графики"
 
@@ -2836,7 +2836,7 @@ msgstr "Интенсивность рассеянного света"
 msgid "Italic style"
 msgstr "Курсив"
 
-#: widgets/qt.cpp:1081 udav/plot_pnl.cpp:477
+#: widgets/qt.cpp:1083 udav/plot_pnl.cpp:477
 msgid "JPEG"
 msgstr ""
 
@@ -2895,7 +2895,7 @@ msgstr "Тип графика: кривые для 1D, график плотно
 msgid "L - seagreen"
 msgstr "L - морской волны"
 
-#: widgets/qt.cpp:1085 udav/plot_pnl.cpp:481
+#: widgets/qt.cpp:1087 udav/plot_pnl.cpp:481
 msgid "LaTeX"
 msgstr ""
 
@@ -2907,7 +2907,7 @@ msgstr "Надпись"
 msgid "Language for UDAV"
 msgstr "Язык для UDAV"
 
-#: mgllab/mgllab.cpp:476
+#: mgllab/mgllab.cpp:475
 msgid "Language for mgllab"
 msgstr "Язык для mgllab"
 
@@ -2935,7 +2935,7 @@ msgstr "Левый верхний угол"
 msgid "Legend"
 msgstr "Легенда"
 
-#: widgets/qt.cpp:1115 udav/opt_dlg.cpp:64 udav/setup_dlg.cpp:110
+#: widgets/qt.cpp:1117 udav/opt_dlg.cpp:64 udav/setup_dlg.cpp:110
 #: udav/plot_pnl.cpp:297 mgllab/dialogs.cpp:115
 msgid "Light"
 msgstr "Свет"
@@ -3061,7 +3061,7 @@ msgstr "MGL файлы (*.mgl)"
 msgid "MGL help"
 msgstr "Справка MGL"
 
-#: mgllab/mathgl.cpp:447
+#: mgllab/mathgl.cpp:398
 msgid "MGL messages"
 msgstr "Сообщение MGL"
 
@@ -3093,7 +3093,7 @@ msgstr ""
 "Data файлы (*.dat)\n"
 "Все файлы (*.*)"
 
-#: widgets/qt.cpp:1088 udav/plot_pnl.cpp:485
+#: widgets/qt.cpp:1090 udav/plot_pnl.cpp:485
 msgid "MGLD"
 msgstr ""
 
@@ -3145,7 +3145,7 @@ msgstr "Размер маски"
 msgid "Match case"
 msgstr "Учитывать регистр"
 
-#: widgets/qt.cpp:871
+#: widgets/qt.cpp:873
 msgid "MathGL - about"
 msgstr "MathGL - о программе"
 
@@ -3154,7 +3154,7 @@ msgstr "MathGL - о программе"
 msgid "MathGL message - %s\n"
 msgstr "Сообщение MathGL - %s\n"
 
-#: widgets/qt.cpp:870
+#: widgets/qt.cpp:872
 msgid "MathGL v. 2."
 msgstr ""
 
@@ -3285,27 +3285,27 @@ msgstr "Момент вдоль 'y' для функции"
 msgid "Momentum along 'z' for function"
 msgstr "Момент вдоль 'z' для функции"
 
-#: widgets/qt.cpp:1244 udav/plot_pnl.cpp:527
+#: widgets/qt.cpp:1246 udav/plot_pnl.cpp:527
 msgid "Move down"
 msgstr "Сдвиг вниз"
 
-#: widgets/qt.cpp:1230 udav/plot_pnl.cpp:506
+#: widgets/qt.cpp:1232 udav/plot_pnl.cpp:506
 msgid "Move graphics left by 1/3 of its width."
 msgstr "Сдвинуть графику влево на 1/3 ширины"
 
-#: widgets/qt.cpp:1250 udav/plot_pnl.cpp:536
+#: widgets/qt.cpp:1252 udav/plot_pnl.cpp:536
 msgid "Move graphics right by 1/3 of its width."
 msgstr "Сдвинуть графику вправо на 1/3 ширины"
 
-#: widgets/qt.cpp:1234 udav/plot_pnl.cpp:512
+#: widgets/qt.cpp:1236 udav/plot_pnl.cpp:512
 msgid "Move graphics up by 1/3 of its height."
 msgstr "Сдвинуть графику вверх на 1/3 высоты"
 
-#: widgets/qt.cpp:1246 udav/plot_pnl.cpp:530
+#: widgets/qt.cpp:1248 udav/plot_pnl.cpp:530
 msgid "Move graphics up down 1/3 of its height."
 msgstr "Сдвинуть графику вниз на 1/3 высоты"
 
-#: widgets/qt.cpp:1228 udav/plot_pnl.cpp:503
+#: widgets/qt.cpp:1230 udav/plot_pnl.cpp:503
 msgid "Move left"
 msgstr "Сдвиг влево"
 
@@ -3321,7 +3321,7 @@ msgstr "Сдвинуть график вниз"
 msgid "Move plot up"
 msgstr "Сдвинуть график вверх"
 
-#: widgets/qt.cpp:1248 udav/plot_pnl.cpp:533
+#: widgets/qt.cpp:1250 udav/plot_pnl.cpp:533
 msgid "Move right"
 msgstr "Сдвиг вправо"
 
@@ -3333,7 +3333,7 @@ msgstr "Переместить выбранное в следующий под-�
 msgid "Move selected plot up to previous subplot."
 msgstr "Переместить выбранное в предыдущий под-график."
 
-#: widgets/qt.cpp:1232 udav/plot_pnl.cpp:509
+#: widgets/qt.cpp:1234 udav/plot_pnl.cpp:509
 msgid "Move up"
 msgstr "Сдвиг вверх"
 
@@ -3417,7 +3417,7 @@ msgstr "Следующий @->"
 msgid "Next slice"
 msgstr "Следующий срез"
 
-#: widgets/qt.cpp:1258 udav/plot_pnl.cpp:560
+#: widgets/qt.cpp:1260 udav/plot_pnl.cpp:560
 msgid "Next slide"
 msgstr "Следующий кадр"
 
@@ -3437,10 +3437,10 @@ msgstr "Аргумент не выбран"
 msgid "No direction/formula is entered. Do nothing."
 msgstr "Не введено направление/формула"
 
-#: widgets/qt.cpp:690 widgets/qt.cpp:702 widgets/qt.cpp:714 widgets/qt.cpp:726
-#: widgets/qt.cpp:738 widgets/qt.cpp:746 widgets/qt.cpp:754 widgets/qt.cpp:762
-#: widgets/qt.cpp:770 widgets/qt.cpp:778 widgets/qt.cpp:786 widgets/qt.cpp:794
-#: widgets/qt.cpp:810 widgets/qt.cpp:818 widgets/qt.cpp:826
+#: widgets/qt.cpp:692 widgets/qt.cpp:704 widgets/qt.cpp:716 widgets/qt.cpp:728
+#: widgets/qt.cpp:740 widgets/qt.cpp:748 widgets/qt.cpp:756 widgets/qt.cpp:764
+#: widgets/qt.cpp:772 widgets/qt.cpp:780 widgets/qt.cpp:788 widgets/qt.cpp:796
+#: widgets/qt.cpp:812 widgets/qt.cpp:820 widgets/qt.cpp:828
 msgid "No filename."
 msgstr "Отсутствует имя файла."
 
@@ -3461,7 +3461,7 @@ msgstr "Вхождения не найдены"
 msgid "No text rotation"
 msgstr "Не вращать текст"
 
-#: widgets/fltk.cpp:842
+#: widgets/fltk.cpp:826
 msgid "Normal view"
 msgstr "Обычный вид"
 
@@ -3522,7 +3522,7 @@ msgstr ""
 msgid "Nz"
 msgstr ""
 
-#: widgets/qt.cpp:1090 udav/plot_pnl.cpp:487
+#: widgets/qt.cpp:1092 udav/plot_pnl.cpp:487
 msgid "OBJ"
 msgstr ""
 
@@ -3533,7 +3533,7 @@ msgstr ""
 #: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221 mgllab/mathgl.cpp:199
 #: mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165 mgllab/dialogs.cpp:411
 #: mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750 mgllab/dialogs.cpp:1072
-#: mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474 mgllab/mgllab.cpp:481
+#: mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474 mgllab/mgllab.cpp:480
 #: mgllab/table.cpp:621
 msgid "OK"
 msgstr ""
@@ -3570,7 +3570,7 @@ msgstr "Открыть файл"
 msgid "Open file ..."
 msgstr "Открыть файл ..."
 
-#: widgets/qt.cpp:1099 udav/udav_wnd.cpp:298
+#: widgets/qt.cpp:1101 udav/udav_wnd.cpp:298
 msgid "Open printer dialog and print graphics (Ctrl+P)"
 msgstr "Открыть диалог и напечатать график (CTRl+P)"
 
@@ -3628,7 +3628,7 @@ msgstr "P - багровый"
 msgid "PDF support was disabled. Please, enable it and rebuild MathGL."
 msgstr "PDF поддержка отключена. Включите ее и пересоберите MathGL."
 
-#: widgets/qt.cpp:1079 udav/plot_pnl.cpp:475
+#: widgets/qt.cpp:1081 udav/plot_pnl.cpp:475
 msgid "PNG"
 msgstr ""
 
@@ -3641,7 +3641,7 @@ msgstr "PNG файлы \t*.png"
 msgid "PNG support was disabled. Please, enable it and rebuild MathGL."
 msgstr "PNG поддержка отключена. Включите ее и пересоберите MathGL."
 
-#: widgets/qt.cpp:1089 udav/plot_pnl.cpp:486
+#: widgets/qt.cpp:1091 udav/plot_pnl.cpp:486
 msgid "PRC"
 msgstr ""
 
@@ -3673,11 +3673,11 @@ msgstr "Вставить текст из буфера обмена"
 msgid "Paste text or data from clipboard (Ctrl+V)."
 msgstr "Вставить текст из буфера обмена (Ctrl+V)."
 
-#: mgllab/mgllab.cpp:467
+#: mgllab/mgllab.cpp:466
 msgid "Path for MathGL font (without extension)"
 msgstr "Путь к шрифтам MathGL (без расширения)"
 
-#: udav/prop_dlg.cpp:110 mgllab/mgllab.cpp:464
+#: udav/prop_dlg.cpp:110 mgllab/mgllab.cpp:463
 msgid "Path for help files"
 msgstr "Путь к файлам справки"
 
@@ -3685,12 +3685,12 @@ msgstr "Путь к файлам справки"
 msgid "Path for user MathGL font files"
 msgstr "Путь к шрифтам MathGL"
 
-#: widgets/qt.cpp:1276
+#: widgets/qt.cpp:1278
 msgid "Pause calculation"
 msgstr "Пауза вычислений"
 
 #. Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
-#: widgets/fltk.cpp:924 widgets/qt.cpp:1281
+#: widgets/fltk.cpp:909 widgets/qt.cpp:1283
 msgid "Pause on/off external calculations"
 msgstr "Пауза вкл/выкл для внешних вычислений"
 
@@ -3698,7 +3698,7 @@ msgstr "Пауза вкл/выкл для внешних вычислений"
 msgid "Perform Runge-Kutta step"
 msgstr "Выполнить шаг Рунге-Кутта"
 
-#: widgets/fltk.cpp:894
+#: widgets/fltk.cpp:878
 msgid "Phi angle (rotate in x*y plane)"
 msgstr "Угол Phi (вращать в плоскости x*y)"
 
@@ -3755,7 +3755,7 @@ msgstr "Предыдущий"
 msgid "Prev slice"
 msgstr "Предыдущий срез"
 
-#: widgets/qt.cpp:1267 udav/plot_pnl.cpp:575
+#: widgets/qt.cpp:1269 udav/plot_pnl.cpp:575
 msgid "Prev slide"
 msgstr "Предыдущий кадр"
 
@@ -3763,7 +3763,7 @@ msgstr "Предыдущий кадр"
 msgid "Preview"
 msgstr "Просмотр"
 
-#: mgllab/mgllab.cpp:564
+#: mgllab/mgllab.cpp:563
 msgid "Previous expressions"
 msgstr "Предыдущее выражение"
 
@@ -3771,7 +3771,7 @@ msgstr "Предыдущее выражение"
 msgid "Primitives"
 msgstr "Примитивы"
 
-#: widgets/qt.cpp:1161 udav/plot_pnl.cpp:365
+#: widgets/qt.cpp:1163 udav/plot_pnl.cpp:365
 msgid "Primitives ..."
 msgstr "Примитивы ..."
 
@@ -3787,7 +3787,7 @@ msgstr "Вывести содержимое массива данных"
 msgid "Print fitted formula"
 msgstr "Вывести подобранную формулу"
 
-#: widgets/qt.cpp:1097 udav/udav_wnd.cpp:296
+#: widgets/qt.cpp:1099 udav/udav_wnd.cpp:296
 msgid "Print graphics"
 msgstr "Напечатать график"
 
@@ -3827,16 +3827,11 @@ msgstr "Печатаю ..."
 msgid "Program flow"
 msgstr "Команды управления"
 
-#: widgets/fltk.cpp:82
-#, fuzzy
-msgid "Progress ..."
-msgstr "Примитивы ..."
-
 #: src/exec_dat.cpp:1637
 msgid "Project periodical data in [v1,v2]"
 msgstr ""
 
-#: udav/udav_wnd.cpp:312 mgllab/mgllab.cpp:319 mgllab/mgllab.cpp:459
+#: udav/udav_wnd.cpp:312 mgllab/mgllab.cpp:319 mgllab/mgllab.cpp:458
 msgid "Properties"
 msgstr "Свойства"
 
@@ -3848,7 +3843,7 @@ msgstr "Свойства выбранного массива данных"
 msgid "Pulse prop."
 msgstr "Свойства импульса"
 
-#: udav/calc_dlg.cpp:127 mgllab/mgllab.cpp:598
+#: udav/calc_dlg.cpp:127 mgllab/mgllab.cpp:597
 msgid "Put function"
 msgstr "Поместить"
 
@@ -3926,7 +3921,7 @@ msgstr "Отменить"
 msgid "Redo editor change (Ctrl+Shift+Z)."
 msgstr "Отменить правку в редакторе (Ctrl+Shift+Z)."
 
-#: widgets/qt.cpp:1141 udav/plot_pnl.cpp:331
+#: widgets/qt.cpp:1143 udav/plot_pnl.cpp:331
 msgid "Redraw"
 msgstr "Перерисовать"
 
@@ -3934,7 +3929,7 @@ msgstr "Перерисовать"
 msgid "Redraw picture for $0 equal to"
 msgstr "Перерисовать для $0 равного"
 
-#: widgets/fltk.cpp:843
+#: widgets/fltk.cpp:827
 msgid "Redraw plot"
 msgstr "Перерисовать график"
 
@@ -3942,7 +3937,7 @@ msgstr "Перерисовать график"
 msgid "Refresh"
 msgstr "Обновить"
 
-#: widgets/fltk.cpp:877
+#: widgets/fltk.cpp:861
 msgid "Refresh the picture"
 msgstr "Обновить рисунок"
 
@@ -3954,11 +3949,11 @@ msgstr "Положение i-го цвета"
 msgid "Reload"
 msgstr "Перезагрузить"
 
-#: widgets/fltk.cpp:845
+#: widgets/fltk.cpp:829
 msgid "Reload data"
 msgstr "Перезагрузить"
 
-#: widgets/fltk.cpp:883
+#: widgets/fltk.cpp:867
 msgid "Reload data and refresh the picture"
 msgstr "Перезагрузить данные и обновить рисунок"
 
@@ -4040,15 +4035,15 @@ msgstr "Изменить размер массива данных"
 msgid "Resize data with smoothing"
 msgstr "Изменить размер массива данных со сглаживанием"
 
-#: widgets/qt.cpp:1134 udav/plot_pnl.cpp:325
+#: widgets/qt.cpp:1136 udav/plot_pnl.cpp:325
 msgid "Restore"
 msgstr "Восстановить"
 
-#: widgets/fltk.cpp:874
+#: widgets/fltk.cpp:858
 msgid "Restore default graphics rotation, zoom and perspective"
 msgstr "Восстановить вращение, приближение и перспективу графика"
 
-#: widgets/qt.cpp:1136
+#: widgets/qt.cpp:1138
 msgid "Restore default graphics rotation, zoom and perspective (Alt+Space)."
 msgstr "Восстановить вращение, приближение и перспективу графика (Alt+Space)."
 
@@ -4098,7 +4093,7 @@ msgstr "Сдвинуть данные по направлению"
 msgid "Rotate"
 msgstr "Вращать"
 
-#: widgets/qt.cpp:1121 udav/plot_pnl.cpp:310
+#: widgets/qt.cpp:1123 udav/plot_pnl.cpp:310
 msgid "Rotate by mouse"
 msgstr "Вращать мышкой"
 
@@ -4114,7 +4109,7 @@ msgstr "Вращать влево"
 msgid "Rotate on"
 msgstr "Поворот"
 
-#: widgets/fltk.cpp:870
+#: widgets/fltk.cpp:854
 msgid "Rotate picture by holding left mouse button"
 msgstr "Вращать рисунок при удержании кнопок мыши"
 
@@ -4134,7 +4129,7 @@ msgstr "Вращать вверх"
 msgid "Rotation"
 msgstr "Вращение"
 
-#: widgets/qt.cpp:1265
+#: widgets/qt.cpp:1267
 msgid "Run slideshow (CTRl+F5)."
 msgstr "Запустить анимацию (CTRl+F5)."
 
@@ -4146,7 +4141,7 @@ msgstr ""
 "Запустить анимацию (CTRl+F5). Если ее параметры\n"
 "не заданы, то будет показан диалог настройки."
 
-#: widgets/fltk.cpp:915
+#: widgets/fltk.cpp:900
 msgid "Run/Stop slideshow (graphics animation)"
 msgstr "Запустить/остановить анимацию"
 
@@ -4154,11 +4149,11 @@ msgstr "Запустить/остановить анимацию"
 msgid "Russian"
 msgstr "Русский"
 
-#: widgets/qt.cpp:1091 udav/plot_pnl.cpp:488
+#: widgets/qt.cpp:1093 udav/plot_pnl.cpp:488
 msgid "STL"
 msgstr ""
 
-#: widgets/qt.cpp:1084 udav/plot_pnl.cpp:480
+#: widgets/qt.cpp:1086 udav/plot_pnl.cpp:480
 msgid "SVG"
 msgstr ""
 
@@ -4174,7 +4169,7 @@ msgstr "Сохранить"
 msgid "Save Data?"
 msgstr "Сохранить данные?"
 
-#: widgets/fltk.cpp:599 mgllab/mgllab.cpp:211
+#: widgets/fltk.cpp:583 mgllab/mgllab.cpp:211
 msgid "Save File As?"
 msgstr "Сохранить файл?"
 
@@ -4206,7 +4201,7 @@ msgstr "Сохранить данные в файл"
 msgid "Save file"
 msgstr "Сохранить файл"
 
-#: mgllab/mgllab.cpp:471
+#: mgllab/mgllab.cpp:470
 msgid "Save file before redrawing"
 msgstr "Сохранить файл перед рисованием"
 
@@ -4526,7 +4521,7 @@ msgstr "Задать использование всей области (сти�
 msgid "Set type transparency"
 msgstr "Задать тип прозрачности"
 
-#: widgets/qt.cpp:1220
+#: widgets/qt.cpp:1222
 msgid "Set value of \\phi angle."
 msgstr "Задать значени угла φ"
 
@@ -4538,7 +4533,7 @@ msgstr ""
 "Задать значени угла φ.\n"
 "Вы можете использовать клавиши (Shift+Meta+Left или Shift+Meta+Right)."
 
-#: widgets/qt.cpp:1214
+#: widgets/qt.cpp:1216
 msgid "Set value of \\theta angle."
 msgstr "Задать значени угла θ"
 
@@ -4606,19 +4601,19 @@ msgstr "Контрастные"
 msgid "Shear plot"
 msgstr "Наклон графика"
 
-#: widgets/fltk.cpp:908
+#: widgets/fltk.cpp:893
 msgid "Shift the picture down"
 msgstr "Сдвинуть рисунок вниз"
 
-#: widgets/fltk.cpp:900
+#: widgets/fltk.cpp:885
 msgid "Shift the picture left"
 msgstr "Сдвинуть рисунок слево"
 
-#: widgets/fltk.cpp:906
+#: widgets/fltk.cpp:891
 msgid "Shift the picture right"
 msgstr "Сдвинуть рисунок вправо"
 
-#: widgets/fltk.cpp:898
+#: widgets/fltk.cpp:883
 msgid "Shift the picture up"
 msgstr "Сдвинуть рисунок вверх"
 
@@ -4646,7 +4641,7 @@ msgstr ""
 msgid "Show calculator window"
 msgstr "Показать окно калькулятора"
 
-#: widgets/fltk.cpp:919
+#: widgets/fltk.cpp:904
 #, fuzzy
 msgid "Show custom dialog for plot setup"
 msgstr "Показать диалог настроек UDAV"
@@ -4713,19 +4708,19 @@ msgstr "Показать информацию"
 msgid "Show lines"
 msgstr "Показать строки"
 
-#: widgets/fltk.cpp:916
+#: widgets/fltk.cpp:901
 msgid "Show next frame in slideshow"
 msgstr "Показать следующий кадр"
 
-#: widgets/qt.cpp:1260 udav/plot_pnl.cpp:563
+#: widgets/qt.cpp:1262 udav/plot_pnl.cpp:563
 msgid "Show next slide (Ctrl+.)."
 msgstr "Показать следующий кадр (Ctrl+.)."
 
-#: widgets/fltk.cpp:911
+#: widgets/fltk.cpp:896
 msgid "Show previous frame in slideshow"
 msgstr "Показать предыдущий кадр"
 
-#: widgets/qt.cpp:1269 udav/plot_pnl.cpp:578
+#: widgets/qt.cpp:1271 udav/plot_pnl.cpp:578
 msgid "Show previous slide (Ctrl+,)."
 msgstr "Показать предыдущий кадр (Ctrl+,)."
 
@@ -4767,7 +4762,7 @@ msgstr "Размеры"
 msgid "Skip commands and iterate for-loop again"
 msgstr "Пропустить команды до конца цикла for"
 
-#: widgets/qt.cpp:1262 udav/plot_pnl.cpp:566
+#: widgets/qt.cpp:1264 udav/plot_pnl.cpp:566
 msgid "Slideshow"
 msgstr "Анимация"
 
@@ -4883,11 +4878,11 @@ msgstr "Состояние"
 msgid "Step for pulse diffraction"
 msgstr "Шаг для расчета дифракции импульса"
 
-#: widgets/qt.cpp:1146 udav/plot_pnl.cpp:347
+#: widgets/qt.cpp:1148 udav/plot_pnl.cpp:347
 msgid "Stop"
 msgstr "Стоп"
 
-#: widgets/fltk.cpp:879
+#: widgets/fltk.cpp:863
 msgid "Stop drawing"
 msgstr "Остановить рисование"
 
@@ -5036,7 +5031,7 @@ msgstr "Вкл/выкл туман"
 msgid "Switch on/off gray-scale mode"
 msgstr "Вкл/выкл режим оттенков серого"
 
-#: widgets/fltk.cpp:866
+#: widgets/fltk.cpp:850
 msgid "Switch on/off grid drawing"
 msgstr "Вкл/выкл рисование сетки"
 
@@ -5044,7 +5039,7 @@ msgstr "Вкл/выкл рисование сетки"
 msgid "Switch on/off grid of absolute coordinates (Ctrl+G)."
 msgstr "Вкл/выкл сетку абсолютных координат (Ctrl+G)."
 
-#: widgets/qt.cpp:1119
+#: widgets/qt.cpp:1121
 msgid "Switch on/off lightning for the graphics (Alt+L)."
 msgstr "Вкл/выкл освещение графика (Alt+L)."
 
@@ -5052,11 +5047,11 @@ msgstr "Вкл/выкл освещение графика (Alt+L)."
 msgid "Switch on/off lightning for the graphics (Ctrl+L)."
 msgstr "Вкл/выкл освещение графика (Ctrl+L)."
 
-#: widgets/fltk.cpp:863
+#: widgets/fltk.cpp:847
 msgid "Switch on/off lightning in the picture"
 msgstr "Вкл/выкл освещение графика"
 
-#: widgets/qt.cpp:1125 udav/plot_pnl.cpp:314
+#: widgets/qt.cpp:1127 udav/plot_pnl.cpp:314
 msgid ""
 "Switch on/off mouse handling of the graphics\n"
 "(rotation, shifting, zooming and perspective)."
@@ -5064,7 +5059,7 @@ msgstr ""
 "Вкл/выкл изменение графика мышью\n"
 "(вращение, сдвиг, приближение и перспективу)."
 
-#: widgets/qt.cpp:1131
+#: widgets/qt.cpp:1133
 msgid "Switch on/off mouse zoom of selected region."
 msgstr "Вкл/выкл приближение мышью выбранной области."
 
@@ -5076,7 +5071,7 @@ msgstr "Указать тип тернарных координат или пр�
 msgid "Switch on/off transparency"
 msgstr "Вкл/выкл прозрачность"
 
-#: widgets/qt.cpp:1113
+#: widgets/qt.cpp:1115
 msgid "Switch on/off transparency for the graphics (Alt+T)."
 msgstr "Вкл/выкл прозрачность рисунка (Alt+T)."
 
@@ -5084,7 +5079,7 @@ msgstr "Вкл/выкл прозрачность рисунка (Alt+T)."
 msgid "Switch on/off transparency for the graphics (Ctrl+T)."
 msgstr "Вкл/выкл прозрачность рисунка (Ctrl+T)."
 
-#: widgets/fltk.cpp:860
+#: widgets/fltk.cpp:844
 msgid "Switch on/off transparency in the picture"
 msgstr "Вкл/выкл прозрачность рисунка"
 
@@ -5226,11 +5221,11 @@ msgstr "Неправильные аргументы команды в скрип
 msgid "There is wrong command(s) in script"
 msgstr "В скрипте неправильная команд(ы)"
 
-#: widgets/fltk.cpp:892
+#: widgets/fltk.cpp:876
 msgid "Theta angle (tilt z-axis)"
 msgstr "Угол Theta (наклон оси z)"
 
-#: widgets/fltk.cpp:1186
+#: widgets/fltk.cpp:1173
 #, fuzzy
 msgid "This is for parameter "
 msgstr "Определит постоянную или параметр"
@@ -5522,7 +5517,7 @@ msgstr "без имени"
 msgid "Untitled - mgllab"
 msgstr "без имени - mgllab"
 
-#: widgets/fltk.cpp:1103
+#: widgets/fltk.cpp:1090
 msgid "Update"
 msgstr ""
 
@@ -5539,12 +5534,12 @@ msgstr "Верхняя граница для цвета или прозрачн�
 msgid "Usage:\tmglconv [parameter(s)] scriptfile\n"
 msgstr "Использование:\tmglconv [параметр(ы)] имя_скрипта\n"
 
-#: mgllab/mgllab.cpp:415
+#: mgllab/mgllab.cpp:414
 #, c-format
 msgid "Usage:\tmgllab [parameter(s)] scriptfile\n"
 msgstr "Использование:\tmgllab [параметр(ы)] имя_скрипта\n"
 
-#: utils/mglview.cpp:69
+#: utils/mglview.cpp:80
 #, c-format
 msgid "Usage:\tmglview [parameter(s)] scriptfile\n"
 msgstr "Использование:\tmglview [параметр(ы)] имя_скрипта\n"
@@ -5588,7 +5583,7 @@ msgstr "Использовать цветовую схему"
 msgid "Use dots plot for preview"
 msgstr "Использовать точки для просмотра"
 
-#: mgllab/mgllab.cpp:475
+#: mgllab/mgllab.cpp:474
 msgid "Use multi-threading for drawing"
 msgstr "Рисование в отдельном потоке"
 
@@ -5643,7 +5638,7 @@ msgstr "Wavelet преобразование вдоль направления"
 msgid "Whole area"
 msgstr "Вся область"
 
-#: mgllab/mgllab.cpp:478
+#: mgllab/mgllab.cpp:477
 msgid "Widget scheme"
 msgstr ""
 
@@ -5710,7 +5705,7 @@ msgstr "Х срез от"
 msgid "X/Z"
 msgstr ""
 
-#: widgets/qt.cpp:1092 udav/plot_pnl.cpp:489
+#: widgets/qt.cpp:1094 udav/plot_pnl.cpp:489
 msgid "XYZ"
 msgstr ""
 
@@ -5943,23 +5938,23 @@ msgstr "Z срез от"
 msgid "Zoom axis range"
 msgstr "Увеличить диапазон осей координат"
 
-#: widgets/qt.cpp:1127
+#: widgets/qt.cpp:1129
 msgid "Zoom by mouse"
 msgstr "Приблизить мышкой"
 
-#: widgets/qt.cpp:1226
+#: widgets/qt.cpp:1228
 msgid "Zoom graphics"
 msgstr "Приблизить рисунок"
 
-#: widgets/qt.cpp:1236 udav/plot_pnl.cpp:515
+#: widgets/qt.cpp:1238 udav/plot_pnl.cpp:515
 msgid "Zoom in"
 msgstr "Приблизить"
 
-#: widgets/qt.cpp:1238 udav/plot_pnl.cpp:518
+#: widgets/qt.cpp:1240 udav/plot_pnl.cpp:518
 msgid "Zoom in graphics."
 msgstr "Приблизить рисунок"
 
-#: widgets/fltk.cpp:873
+#: widgets/fltk.cpp:857
 msgid "Zoom in selected region of the picture"
 msgstr "Приблизить выбранную область рисунка"
 
@@ -5968,15 +5963,15 @@ msgstr "Приблизить выбранную область рисунка"
 msgid "Zoom in text"
 msgstr "Увеличить текст"
 
-#: widgets/fltk.cpp:902
+#: widgets/fltk.cpp:887
 msgid "Zoom in the picture"
 msgstr "Приблизить рисунок"
 
-#: widgets/qt.cpp:1240 udav/plot_pnl.cpp:521
+#: widgets/qt.cpp:1242 udav/plot_pnl.cpp:521
 msgid "Zoom out"
 msgstr "Отдалить"
 
-#: widgets/qt.cpp:1242 udav/plot_pnl.cpp:524
+#: widgets/qt.cpp:1244 udav/plot_pnl.cpp:524
 msgid "Zoom out graphics."
 msgstr "Отдалить рисунок"
 
@@ -5984,7 +5979,7 @@ msgstr "Отдалить рисунок"
 msgid "Zoom out text"
 msgstr "Уменьшить текст"
 
-#: widgets/fltk.cpp:904
+#: widgets/fltk.cpp:889
 msgid "Zoom out the picture"
 msgstr "Отдалить рисунок"
 
@@ -5993,7 +5988,7 @@ msgid "Zoom plot region"
 msgstr "Приблизить область рисунка"
 
 #. zooming menu
-#: widgets/qt.cpp:1225 udav/plot_pnl.cpp:502
+#: widgets/qt.cpp:1227 udav/plot_pnl.cpp:502
 msgid "Zoom/move"
 msgstr "Приближение/сдвиг"
 
@@ -6071,7 +6066,7 @@ msgstr "b - синий"
 msgid "bars"
 msgstr ""
 
-#: widgets/qt.cpp:1082 udav/plot_pnl.cpp:478
+#: widgets/qt.cpp:1084 udav/plot_pnl.cpp:478
 msgid "bitmap EPS"
 msgstr "растровый EPS"
 
@@ -6093,7 +6088,7 @@ msgstr "c - голубой"
 msgid "center"
 msgstr "центр"
 
-#: widgets/fltk.cpp:798
+#: widgets/fltk.cpp:782
 #, c-format
 msgid "click at %g, %g, %g"
 msgstr "клик в %g, %g, %g"
@@ -6277,7 +6272,7 @@ msgstr ""
 "mglconv конвертирует mgl скрипт в рисунок (по умолчанию PNG).\n"
 "Текущая версия 2.%g\n"
 
-#: mgllab/mgllab.cpp:414
+#: mgllab/mgllab.cpp:413
 #, c-format
 msgid ""
 "mgllab draw mgl script interactively.\n"
@@ -6297,7 +6292,7 @@ msgstr ""
 "(c) Алексей Балакин, 2017\n"
 "http://mathgl.sf.net/"
 
-#: utils/mglview.cpp:68
+#: utils/mglview.cpp:79
 #, c-format
 msgid ""
 "mglview show plot from MGL script or MGLD file.\n"
@@ -6466,7 +6461,7 @@ msgstr "сгладить"
 msgid "solid"
 msgstr "сплош."
 
-#: widgets/qt.cpp:1080 udav/plot_pnl.cpp:476
+#: widgets/qt.cpp:1082 udav/plot_pnl.cpp:476
 msgid "solid PNG"
 msgstr "PNG с заливкой"
 
@@ -6499,7 +6494,7 @@ msgstr "метки"
 msgid "to"
 msgstr "до"
 
-#: mgllab/mgllab.cpp:562
+#: mgllab/mgllab.cpp:561
 msgid "to script"
 msgstr "в скрипт"
 
@@ -6536,7 +6531,7 @@ msgstr "символ"
 msgid "values"
 msgstr "значения"
 
-#: widgets/qt.cpp:1083 udav/plot_pnl.cpp:479
+#: widgets/qt.cpp:1085 udav/plot_pnl.cpp:479
 msgid "vector EPS"
 msgstr "векторный EPS"
 
@@ -6561,6 +6556,10 @@ msgstr "с шагом"
 #: udav/style_dlg.cpp:227 mgllab/dialogs.cpp:34
 msgid "y - yellow"
 msgstr "y - желтый"
+
+#, fuzzy
+#~ msgid "Progress ..."
+#~ msgstr "Примитивы ..."
 
 #~ msgid "Lower bound"
 #~ msgstr "Нижняя граница"

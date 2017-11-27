@@ -905,11 +905,11 @@ int static mgls_print(mglGraph *, long , mglArg *a, const char *k, const char *)
 	fflush(stdout);	return res;
 }
 //-----------------------------------------------------------------------------
-int static mgls_progress(mglGraph *, long , mglArg *a, const char *k, const char *)
+int static mgls_progress(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"nn") && mgl_progress_func)
-		mgl_progress_func(mgl_int(a[0].v), mgl_int(a[1].v));
+		mgl_progress_func(mgl_int(a[0].v), mgl_int(a[1].v), gr->Self());
 	else res = 1;
 	return res;
 }

@@ -62,16 +62,16 @@ MGL_EXPORT void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
 void MGL_EXPORT mgl_ask_gets(const wchar_t *quest, wchar_t *res)
 {	printf("%ls\n",quest);	if(!fgetws(res,1024,stdin))	*res=0;	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_progress_txt(int value, int maximal)
+void MGL_EXPORT mgl_progress_txt(int value, int maximal, HMGL)
 {
 	static int prev = 0;
 	if(value<=0 || value>=maximal)	{	printf("\n");	value=0;	}
 	else	for(int i=prev;i<value;i++)	printf("#");
 	prev = value;	fflush(stdout);
 }
-MGL_EXPORT void (*mgl_progress_func)(int value, int maximal)=mgl_progress_txt;
-void MGL_EXPORT mgl_progress(int value, int maximal)
-{	mgl_progress_func(value, maximal);	}
+MGL_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL)=mgl_progress_txt;
+void MGL_EXPORT mgl_progress(int value, int maximal, HMGL gr)
+{	mgl_progress_func(value, maximal, gr);	}
 //-----------------------------------------------------------------------------
 mglFunc::mglFunc(long p, const wchar_t *f)
 {
