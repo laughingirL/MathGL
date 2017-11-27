@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-27 17:18+0300\n"
+"POT-Creation-Date: 2017-11-28 01:07+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -71,7 +71,7 @@ msgstr ""
 "\t-            загрузить скрипт из стандартного ввода\n"
 "\t-h           показать справку\n"
 
-#: utils/mglview.cpp:82
+#: utils/mglview.cpp:84
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -5539,7 +5539,7 @@ msgstr "Использование:\tmglconv [параметр(ы)] имя_ск�
 msgid "Usage:\tmgllab [parameter(s)] scriptfile\n"
 msgstr "Использование:\tmgllab [параметр(ы)] имя_скрипта\n"
 
-#: utils/mglview.cpp:80
+#: utils/mglview.cpp:82
 #, c-format
 msgid "Usage:\tmglview [parameter(s)] scriptfile\n"
 msgstr "Использование:\tmglview [параметр(ы)] имя_скрипта\n"
@@ -6292,7 +6292,7 @@ msgstr ""
 "(c) Алексей Балакин, 2017\n"
 "http://mathgl.sf.net/"
 
-#: utils/mglview.cpp:79
+#: utils/mglview.cpp:81
 #, c-format
 msgid ""
 "mglview show plot from MGL script or MGLD file.\n"

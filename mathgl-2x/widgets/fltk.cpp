@@ -57,7 +57,7 @@ using mglCanvasWnd::Window;
 	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
 	void Animation();	///< Run animation (I'm too lasy to change it)
 	void MakeDialog(const char *ids, char const * const *args, const char *title="")
-	{	mgl->dialog(ids,args,title);	}
+	{	if(GetNumFig()==1)	mgl->dialog(ids,args,title);	}
 };
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res)

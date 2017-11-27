@@ -72,7 +72,7 @@ public:
 	void SetPropFunc(void (*prop)(char id, const char *val, void *p), void *par=NULL)
 	{	PropFunc = prop;	PropPar = par;	}
 	inline void SetParam(char id, const char *val)	///< Set parameter (usually from custom dialog)
-	{	if(PropFunc)	PropFunc(id,val,PropPar);	}
+	{	if(PropFunc)	{	PropFunc(id,val,PropPar);	Update();	}	}
 	///< Make custom dialog
 	virtual void MakeDialog(const char *ids, char const * const *args, const char *title="")=0;
 

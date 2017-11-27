@@ -32,12 +32,14 @@
 std::wstring str, opt;
 std::vector<std::string> anim;
 mglParse p(true);
+void prop_func(char id, const char *val, void *)
+{	p.AddParam(id<='9' ? id-'0' : id-'a'+10, val);	}
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr)
 {
 	if(anim.size()>0)	for(size_t i=0;i<anim.size();i++)
 	{
-		gr->Clf();	gr->NewFrame();
+		gr->NewFrame();
 		p.AddParam(0,anim[i].c_str());
 		p.Execute(gr,str.c_str());
 		gr->EndFrame();
@@ -124,6 +126,8 @@ int main(int argc, char **argv)
 	int scheme;	pref.get("scheme",scheme,2);
 	Fl::scheme(sch[scheme]);
 	mglFLTK gr(mgld?NULL:show, *iname?iname:"mglview");
+	gr.SetPropFunc(prop_func,NULL);
+	gr.MakeDialog(ids, par);
 #else
 	mgl_ask_func = mgl_ask_qt;
 	mglQT gr(mgld?NULL:show, *iname?iname:"mglview");

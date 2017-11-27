@@ -196,9 +196,12 @@ public:
 	}
 	void dialog(const std::string &ids, const std::vector<std::string> &args, const char *title="")
 	{
-		dlg_window(title);
-		for(size_t i=0;i<ids.length();i++)	add_widget(ids[i], args[i].c_str());
-		dlg_finish();	dlg_wnd->show();
+		std::vector<const char *> buf;	buf.reserve(args.size());
+		for(size_t i=0;i<args.size();i++)	buf.push_back(args[i].c_str());
+		dialog(ids.c_str(), &(buf[0]), title);
+// 		dlg_window(title);
+// 		for(size_t i=0;i<ids.length();i++)	add_widget(ids[i], args[i].c_str());
+// 		dlg_finish();	dlg_wnd->show();
 	}
 	void dlg_window(const char *title="");	///< Create/label dialog window
 	void add_widget(char id, const char *args);	///< Add widget to dialog

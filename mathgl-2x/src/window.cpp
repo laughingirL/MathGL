@@ -22,7 +22,7 @@
 mglCanvasWnd::mglCanvasWnd() : mglCanvas()
 {
 	Setup();	LoadFunc=0;	FuncPar=0;	DrawFunc=0;	ClickFunc=0;
-	GG = 0;		NumFig = 0;	CurFig = -1;
+	GG = 0;		NumFig = 0;	CurFig=-1;	PropFunc=0;	PropPar=0;
 #if MGL_HAVE_PTHR_WIDGET
 	mutex=0;
 #endif
