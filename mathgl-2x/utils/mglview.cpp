@@ -37,19 +37,20 @@ void prop_func(char id, const char *val, void *)
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr)
 {
-	if(anim.size()>0)	for(size_t i=0;i<anim.size();i++)
+	if(anim.size()>0)
 	{
-		gr->NewFrame();
-		p.AddParam(0,anim[i].c_str());
-		p.Execute(gr,str.c_str());
-		gr->EndFrame();
+		for(size_t i=0;i<anim.size();i++)
+		{
+			gr->NewFrame();
+			p.AddParam(0,anim[i].c_str());
+			p.Execute(gr,str.c_str());
+			gr->EndFrame();
+		}
+		return gr->GetNumFrame();
 	}
-	else
-	{
-		p.Execute(gr,str.c_str());
-		printf("%s\n",gr->Message());
-	}
-	return anim.size();
+	p.Execute(gr,str.c_str());
+	printf("%s\n",gr->Message());
+	return 0;
 }
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
@@ -121,17 +122,13 @@ int main(int argc, char **argv)
 #if USE_FLTK
 	mgl_ask_func = mgl_ask_fltk;
 	mgl_progress_func = mgl_progress_fltk;
-	Fl_Preferences pref(Fl_Preferences::USER,"abalakin","mgllab");
-	static const char *sch[4]={"base","gtk+","plastic","gleam"};
-	int scheme;	pref.get("scheme",scheme,2);
-	Fl::scheme(sch[scheme]);
 	mglFLTK gr(mgld?NULL:show, *iname?iname:"mglview");
-	gr.SetPropFunc(prop_func,NULL);
-	gr.MakeDialog(ids, par);
 #else
 	mgl_ask_func = mgl_ask_qt;
 	mglQT gr(mgld?NULL:show, *iname?iname:"mglview");
 #endif
+	gr.SetPropFunc(prop_func,NULL);
+	gr.MakeDialog(ids, par);
 	if(gray)	gr.Gray(gray);
 
 	if(mgld)

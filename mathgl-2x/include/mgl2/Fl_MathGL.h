@@ -61,6 +61,8 @@ public:
 	inline void set_prop(void (*func)(char id, const char *val, void *par), void *par)
 	{	prop_func=func;	prop_par=par;	}
 
+	/// Refresh image (without executing update)
+	void refresh();
 	/// Update (redraw) plot
 	virtual void update();
 	/// Set angles for additional plot rotation

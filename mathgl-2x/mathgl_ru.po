@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-28 01:07+0300\n"
+"POT-Creation-Date: 2017-11-28 10:13+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -71,7 +71,7 @@ msgstr ""
 "\t-            загрузить скрипт из стандартного ввода\n"
 "\t-h           показать справку\n"
 
-#: utils/mglview.cpp:84
+#: utils/mglview.cpp:85
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -678,11 +678,11 @@ msgstr "Добавить к"
 msgid "Add user-defined symbol"
 msgstr "Добавить пользовательский символ"
 
-#: widgets/fltk.cpp:865
+#: widgets/fltk.cpp:867
 msgid "Adjust picture size to fill drawing area"
 msgstr "Подогнать размер картинки под область окна"
 
-#: widgets/fltk.cpp:828 widgets/qt.cpp:1152 udav/plot_pnl.cpp:337
+#: widgets/fltk.cpp:830 widgets/qt.cpp:1152 udav/plot_pnl.cpp:337
 msgid "Adjust size"
 msgstr "Подогнать размер"
 
@@ -1017,7 +1017,7 @@ msgid "Clear picture"
 msgstr "Очистить рисунок"
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
-#: widgets/fltk.cpp:1088 widgets/qt.cpp:1104 udav/find_dlg.cpp:52
+#: widgets/fltk.cpp:1096 widgets/qt.cpp:1104 udav/find_dlg.cpp:52
 #: udav/hint_dlg.cpp:70 mgllab/editor.cpp:565 mgllab/help.cpp:308
 #: mgllab/help.cpp:368 mgllab/help.cpp:484
 msgid "Close"
@@ -1130,7 +1130,7 @@ msgstr "Копировать данные"
 msgid "Copy data from another variable"
 msgstr "Копировать данные из другой переменной"
 
-#: widgets/fltk.cpp:825
+#: widgets/fltk.cpp:827
 msgid "Copy graphics"
 msgstr "Копировать рисунок"
 
@@ -1138,7 +1138,7 @@ msgstr "Копировать рисунок"
 msgid "Copy graphics to clipboard (Ctrl+Shift+G)."
 msgstr "Копировать рисунок в буфер обмена (Ctrl+Shift+G)."
 
-#: widgets/fltk.cpp:869
+#: widgets/fltk.cpp:871
 msgid "Copy image to clipboard"
 msgstr "Копировать рисунок в буфер обмена"
 
@@ -2129,7 +2129,7 @@ msgstr "Exp-интегралы"
 msgid "Export Data?"
 msgstr "Экспорт данных?"
 
-#: widgets/fltk.cpp:803
+#: widgets/fltk.cpp:805
 msgid "Export as ..."
 msgstr "Экспорт как ..."
 
@@ -2465,7 +2465,7 @@ msgstr "Графика"
 msgid "Graphics setup"
 msgstr "Настройка графика"
 
-#: widgets/fltk.cpp:952
+#: widgets/fltk.cpp:954
 msgid "Graphics/Adjust size"
 msgstr "Графика/Подогнать размер"
 
@@ -2475,15 +2475,15 @@ msgstr "Графика/Подогнать размер"
 #. /< Callback function for delay
 #. /< Callback function for reloading
 #. / Toggle transparency (alpha) button
-#: widgets/fltk.cpp:946 include/mgl2/Fl_MathGL.h:162
+#: widgets/fltk.cpp:948 include/mgl2/Fl_MathGL.h:164
 msgid "Graphics/Alpha"
 msgstr "Графика/Прозрачность"
 
-#: widgets/fltk.cpp:981
+#: widgets/fltk.cpp:983
 msgid "Graphics/Animation/Next frame"
 msgstr "Графика/Анимация/Следующий"
 
-#: widgets/fltk.cpp:982
+#: widgets/fltk.cpp:984
 msgid "Graphics/Animation/Prev frame"
 msgstr "Графика/Анимация/Предыдущий"
 
@@ -2492,86 +2492,86 @@ msgid "Graphics/Animation/Setup animation"
 msgstr "Графика/Анимация/Настройка"
 
 #. / Toggle slideshow button
-#: widgets/fltk.cpp:980 include/mgl2/Fl_MathGL.h:166
+#: widgets/fltk.cpp:982 include/mgl2/Fl_MathGL.h:168
 msgid "Graphics/Animation/Slideshow"
 msgstr "Графика/Анимация/Запустить"
 
-#: widgets/fltk.cpp:956
+#: widgets/fltk.cpp:958
 msgid "Graphics/Copy click coor."
 msgstr "Графика/Копировать коор."
 
-#: widgets/fltk.cpp:955
+#: widgets/fltk.cpp:957
 msgid "Graphics/Copy graphics"
 msgstr "Графика/Копировать рисунок"
 
-#: widgets/fltk.cpp:969
+#: widgets/fltk.cpp:971
 msgid "Graphics/Export/as BMP"
 msgstr "Графика/Экспорт/как BMP"
 
-#: widgets/fltk.cpp:967
+#: widgets/fltk.cpp:969
 msgid "Graphics/Export/as GIF"
 msgstr "Графика/Экспорт/как GIF"
 
-#: widgets/fltk.cpp:964
+#: widgets/fltk.cpp:966
 msgid "Graphics/Export/as JPEG"
 msgstr "Графика/Экспорт/как JPEG"
 
-#: widgets/fltk.cpp:975
+#: widgets/fltk.cpp:977
 msgid "Graphics/Export/as OBJ"
 msgstr "Графика/Экспорт/как OBJ"
 
-#: widgets/fltk.cpp:976
+#: widgets/fltk.cpp:978
 msgid "Graphics/Export/as OFF"
 msgstr "Графика/Экспорт/как OFF"
 
-#: widgets/fltk.cpp:960
+#: widgets/fltk.cpp:962
 msgid "Graphics/Export/as PNG"
 msgstr "Графика/Экспорт/как PNG"
 
-#: widgets/fltk.cpp:974
+#: widgets/fltk.cpp:976
 msgid "Graphics/Export/as PRC"
 msgstr "Графика/Экспорт/как PRC"
 
-#: widgets/fltk.cpp:977
+#: widgets/fltk.cpp:979
 msgid "Graphics/Export/as STL"
 msgstr "Графика/Экспорт/как STL"
 
-#: widgets/fltk.cpp:970
+#: widgets/fltk.cpp:972
 msgid "Graphics/Export/as SVG"
 msgstr "Графика/Экспорт/как SVG"
 
-#: widgets/fltk.cpp:973
+#: widgets/fltk.cpp:975
 msgid "Graphics/Export/as TeX"
 msgstr "Графика/Экспорт/как TeX"
 
-#: widgets/fltk.cpp:978
+#: widgets/fltk.cpp:980
 msgid "Graphics/Export/as XYZ"
 msgstr "Графика/Экспорт/как XYZ"
 
-#: widgets/fltk.cpp:972
+#: widgets/fltk.cpp:974
 msgid "Graphics/Export/as bitmap EPS"
 msgstr "Графика/Экспорт/как растровый EPS"
 
-#: widgets/fltk.cpp:961
+#: widgets/fltk.cpp:963
 msgid "Graphics/Export/as solid PNG"
 msgstr "Графика/Экспорт/как PNG с заливкой"
 
-#: widgets/fltk.cpp:971
+#: widgets/fltk.cpp:973
 msgid "Graphics/Export/as vector EPS"
 msgstr "Графика/Экспорт/как EPS"
 
 #. / Toggle grid drawing button
-#: widgets/fltk.cpp:948 include/mgl2/Fl_MathGL.h:168
+#: widgets/fltk.cpp:950 include/mgl2/Fl_MathGL.h:170
 msgid "Graphics/Grid"
 msgstr "Графика/Сетка"
 
 #. / Toggle lighting button
-#: widgets/fltk.cpp:947 include/mgl2/Fl_MathGL.h:164
+#: widgets/fltk.cpp:949 include/mgl2/Fl_MathGL.h:166
 msgid "Graphics/Light"
 msgstr "Графика/Освещение"
 
 #. / Toggle pause calculation button
-#: widgets/fltk.cpp:957 include/mgl2/Fl_MathGL.h:180 mgllab/mgllab.cpp:369
+#: widgets/fltk.cpp:959 include/mgl2/Fl_MathGL.h:182 mgllab/mgllab.cpp:369
 msgid "Graphics/Pause calc"
 msgstr "Графика/Пауза расчета"
 
@@ -2579,43 +2579,43 @@ msgstr "Графика/Пауза расчета"
 msgid "Graphics/Primitive"
 msgstr "Графика/Примитивы"
 
-#: widgets/fltk.cpp:951
+#: widgets/fltk.cpp:953
 msgid "Graphics/Redraw"
 msgstr "Графика/Перерисовать"
 
-#: widgets/fltk.cpp:953
+#: widgets/fltk.cpp:955
 msgid "Graphics/Reload data"
 msgstr "Графика/Перезагрузить"
 
-#: widgets/fltk.cpp:950
+#: widgets/fltk.cpp:952
 msgid "Graphics/Restore"
 msgstr "Графика/Восстановить"
 
-#: widgets/fltk.cpp:954
+#: widgets/fltk.cpp:956
 msgid "Graphics/Stop"
 msgstr "Графика/Стоп"
 
-#: widgets/fltk.cpp:988
+#: widgets/fltk.cpp:990
 msgid "Graphics/Transform/Move down"
 msgstr "Графика/Сдвиг/Вниз"
 
-#: widgets/fltk.cpp:984
+#: widgets/fltk.cpp:986
 msgid "Graphics/Transform/Move left"
 msgstr "Графика/Сдвиг/Влево"
 
-#: widgets/fltk.cpp:989
+#: widgets/fltk.cpp:991
 msgid "Graphics/Transform/Move right"
 msgstr "Графика/Сдвиг/Вправо"
 
-#: widgets/fltk.cpp:985
+#: widgets/fltk.cpp:987
 msgid "Graphics/Transform/Move up"
 msgstr "Графика/Сдвиг/Вверх"
 
-#: widgets/fltk.cpp:986
+#: widgets/fltk.cpp:988
 msgid "Graphics/Transform/Zoom in"
 msgstr "Графика/Сдвиг/Приблизить"
 
-#: widgets/fltk.cpp:987
+#: widgets/fltk.cpp:989
 msgid "Graphics/Transform/Zoom out"
 msgstr "Графика/Сдвиг/Отдалить"
 
@@ -3461,7 +3461,7 @@ msgstr "Вхождения не найдены"
 msgid "No text rotation"
 msgstr "Не вращать текст"
 
-#: widgets/fltk.cpp:826
+#: widgets/fltk.cpp:828
 msgid "Normal view"
 msgstr "Обычный вид"
 
@@ -3690,7 +3690,7 @@ msgid "Pause calculation"
 msgstr "Пауза вычислений"
 
 #. Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
-#: widgets/fltk.cpp:909 widgets/qt.cpp:1283
+#: widgets/fltk.cpp:911 widgets/qt.cpp:1283
 msgid "Pause on/off external calculations"
 msgstr "Пауза вкл/выкл для внешних вычислений"
 
@@ -3698,7 +3698,7 @@ msgstr "Пауза вкл/выкл для внешних вычислений"
 msgid "Perform Runge-Kutta step"
 msgstr "Выполнить шаг Рунге-Кутта"
 
-#: widgets/fltk.cpp:878
+#: widgets/fltk.cpp:880
 msgid "Phi angle (rotate in x*y plane)"
 msgstr "Угол Phi (вращать в плоскости x*y)"
 
@@ -3929,7 +3929,7 @@ msgstr "Перерисовать"
 msgid "Redraw picture for $0 equal to"
 msgstr "Перерисовать для $0 равного"
 
-#: widgets/fltk.cpp:827
+#: widgets/fltk.cpp:829
 msgid "Redraw plot"
 msgstr "Перерисовать график"
 
@@ -3937,7 +3937,7 @@ msgstr "Перерисовать график"
 msgid "Refresh"
 msgstr "Обновить"
 
-#: widgets/fltk.cpp:861
+#: widgets/fltk.cpp:863
 msgid "Refresh the picture"
 msgstr "Обновить рисунок"
 
@@ -3949,11 +3949,11 @@ msgstr "Положение i-го цвета"
 msgid "Reload"
 msgstr "Перезагрузить"
 
-#: widgets/fltk.cpp:829
+#: widgets/fltk.cpp:831
 msgid "Reload data"
 msgstr "Перезагрузить"
 
-#: widgets/fltk.cpp:867
+#: widgets/fltk.cpp:869
 msgid "Reload data and refresh the picture"
 msgstr "Перезагрузить данные и обновить рисунок"
 
@@ -4039,7 +4039,7 @@ msgstr "Изменить размер массива данных со сгла�
 msgid "Restore"
 msgstr "Восстановить"
 
-#: widgets/fltk.cpp:858
+#: widgets/fltk.cpp:860
 msgid "Restore default graphics rotation, zoom and perspective"
 msgstr "Восстановить вращение, приближение и перспективу графика"
 
@@ -4109,7 +4109,7 @@ msgstr "Вращать влево"
 msgid "Rotate on"
 msgstr "Поворот"
 
-#: widgets/fltk.cpp:854
+#: widgets/fltk.cpp:856
 msgid "Rotate picture by holding left mouse button"
 msgstr "Вращать рисунок при удержании кнопок мыши"
 
@@ -4141,7 +4141,7 @@ msgstr ""
 "Запустить анимацию (CTRl+F5). Если ее параметры\n"
 "не заданы, то будет показан диалог настройки."
 
-#: widgets/fltk.cpp:900
+#: widgets/fltk.cpp:902
 msgid "Run/Stop slideshow (graphics animation)"
 msgstr "Запустить/остановить анимацию"
 
@@ -4169,7 +4169,7 @@ msgstr "Сохранить"
 msgid "Save Data?"
 msgstr "Сохранить данные?"
 
-#: widgets/fltk.cpp:583 mgllab/mgllab.cpp:211
+#: widgets/fltk.cpp:585 mgllab/mgllab.cpp:211
 msgid "Save File As?"
 msgstr "Сохранить файл?"
 
@@ -4601,19 +4601,19 @@ msgstr "Контрастные"
 msgid "Shear plot"
 msgstr "Наклон графика"
 
-#: widgets/fltk.cpp:893
+#: widgets/fltk.cpp:895
 msgid "Shift the picture down"
 msgstr "Сдвинуть рисунок вниз"
 
-#: widgets/fltk.cpp:885
+#: widgets/fltk.cpp:887
 msgid "Shift the picture left"
 msgstr "Сдвинуть рисунок слево"
 
-#: widgets/fltk.cpp:891
+#: widgets/fltk.cpp:893
 msgid "Shift the picture right"
 msgstr "Сдвинуть рисунок вправо"
 
-#: widgets/fltk.cpp:883
+#: widgets/fltk.cpp:885
 msgid "Shift the picture up"
 msgstr "Сдвинуть рисунок вверх"
 
@@ -4641,7 +4641,7 @@ msgstr ""
 msgid "Show calculator window"
 msgstr "Показать окно калькулятора"
 
-#: widgets/fltk.cpp:904
+#: widgets/fltk.cpp:906
 #, fuzzy
 msgid "Show custom dialog for plot setup"
 msgstr "Показать диалог настроек UDAV"
@@ -4708,7 +4708,7 @@ msgstr "Показать информацию"
 msgid "Show lines"
 msgstr "Показать строки"
 
-#: widgets/fltk.cpp:901
+#: widgets/fltk.cpp:903
 msgid "Show next frame in slideshow"
 msgstr "Показать следующий кадр"
 
@@ -4716,7 +4716,7 @@ msgstr "Показать следующий кадр"
 msgid "Show next slide (Ctrl+.)."
 msgstr "Показать следующий кадр (Ctrl+.)."
 
-#: widgets/fltk.cpp:896
+#: widgets/fltk.cpp:898
 msgid "Show previous frame in slideshow"
 msgstr "Показать предыдущий кадр"
 
@@ -4882,7 +4882,7 @@ msgstr "Шаг для расчета дифракции импульса"
 msgid "Stop"
 msgstr "Стоп"
 
-#: widgets/fltk.cpp:863
+#: widgets/fltk.cpp:865
 msgid "Stop drawing"
 msgstr "Остановить рисование"
 
@@ -5031,7 +5031,7 @@ msgstr "Вкл/выкл туман"
 msgid "Switch on/off gray-scale mode"
 msgstr "Вкл/выкл режим оттенков серого"
 
-#: widgets/fltk.cpp:850
+#: widgets/fltk.cpp:852
 msgid "Switch on/off grid drawing"
 msgstr "Вкл/выкл рисование сетки"
 
@@ -5047,7 +5047,7 @@ msgstr "Вкл/выкл освещение графика (Alt+L)."
 msgid "Switch on/off lightning for the graphics (Ctrl+L)."
 msgstr "Вкл/выкл освещение графика (Ctrl+L)."
 
-#: widgets/fltk.cpp:847
+#: widgets/fltk.cpp:849
 msgid "Switch on/off lightning in the picture"
 msgstr "Вкл/выкл освещение графика"
 
@@ -5079,7 +5079,7 @@ msgstr "Вкл/выкл прозрачность рисунка (Alt+T)."
 msgid "Switch on/off transparency for the graphics (Ctrl+T)."
 msgstr "Вкл/выкл прозрачность рисунка (Ctrl+T)."
 
-#: widgets/fltk.cpp:844
+#: widgets/fltk.cpp:846
 msgid "Switch on/off transparency in the picture"
 msgstr "Вкл/выкл прозрачность рисунка"
 
@@ -5221,11 +5221,11 @@ msgstr "Неправильные аргументы команды в скрип
 msgid "There is wrong command(s) in script"
 msgstr "В скрипте неправильная команд(ы)"
 
-#: widgets/fltk.cpp:876
+#: widgets/fltk.cpp:878
 msgid "Theta angle (tilt z-axis)"
 msgstr "Угол Theta (наклон оси z)"
 
-#: widgets/fltk.cpp:1173
+#: widgets/fltk.cpp:1181
 #, fuzzy
 msgid "This is for parameter "
 msgstr "Определит постоянную или параметр"
@@ -5517,7 +5517,7 @@ msgstr "без имени"
 msgid "Untitled - mgllab"
 msgstr "без имени - mgllab"
 
-#: widgets/fltk.cpp:1090
+#: widgets/fltk.cpp:1098
 msgid "Update"
 msgstr ""
 
@@ -5539,7 +5539,7 @@ msgstr "Использование:\tmglconv [параметр(ы)] имя_ск�
 msgid "Usage:\tmgllab [parameter(s)] scriptfile\n"
 msgstr "Использование:\tmgllab [параметр(ы)] имя_скрипта\n"
 
-#: utils/mglview.cpp:82
+#: utils/mglview.cpp:83
 #, c-format
 msgid "Usage:\tmglview [parameter(s)] scriptfile\n"
 msgstr "Использование:\tmglview [параметр(ы)] имя_скрипта\n"
@@ -5954,7 +5954,7 @@ msgstr "Приблизить"
 msgid "Zoom in graphics."
 msgstr "Приблизить рисунок"
 
-#: widgets/fltk.cpp:857
+#: widgets/fltk.cpp:859
 msgid "Zoom in selected region of the picture"
 msgstr "Приблизить выбранную область рисунка"
 
@@ -5963,7 +5963,7 @@ msgstr "Приблизить выбранную область рисунка"
 msgid "Zoom in text"
 msgstr "Увеличить текст"
 
-#: widgets/fltk.cpp:887
+#: widgets/fltk.cpp:889
 msgid "Zoom in the picture"
 msgstr "Приблизить рисунок"
 
@@ -5979,7 +5979,7 @@ msgstr "Отдалить рисунок"
 msgid "Zoom out text"
 msgstr "Уменьшить текст"
 
-#: widgets/fltk.cpp:889
+#: widgets/fltk.cpp:891
 msgid "Zoom out the picture"
 msgstr "Отдалить рисунок"
 
@@ -6088,7 +6088,7 @@ msgstr "c - голубой"
 msgid "center"
 msgstr "центр"
 
-#: widgets/fltk.cpp:782
+#: widgets/fltk.cpp:784
 #, c-format
 msgid "click at %g, %g, %g"
 msgstr "клик в %g, %g, %g"
@@ -6292,7 +6292,7 @@ msgstr ""
 "(c) Алексей Балакин, 2017\n"
 "http://mathgl.sf.net/"
 
-#: utils/mglview.cpp:81
+#: utils/mglview.cpp:82
 #, c-format
 msgid ""
 "mglview show plot from MGL script or MGLD file.\n"

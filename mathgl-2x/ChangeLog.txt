@@ -1,5 +1,14 @@
 
 2.4.2 
+* Add custom dialog for FLTK widgets. This can be constructed from C/C++ code, or from MGL script using special comments "##d##d $I kind|label|par1|par2|..." will create an entry in custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
+	'e' for editor or input line (parameter is initial value) , 
+	'v' for spinner or counter (parameters are "ini|min|max|step|big_step"), 
+	's' for slider (parameters are "ini|min|max|step"), 
+	'b' for check box (parameter is "ini"; also understand "on"=1), 
+	'c' for choice (parameters are possible choices).
+* Add 'progress' for displaying the progress of execution (by '#' symbols in console, or by progress-bar widget).
+* Add 'scaletext' for disabling text size scaling in relative inplots (like columnplot, ...).
+
 * Add 'contp' for contour lines on parametrically specified surface.
 * Add 'flowp' for flow threads on parametrically specified surface.
 * Add 'flow3' for flow threads of 3D vector field, which start from the plain.
@@ -11,7 +20,7 @@
 * Crop output of 'ode' if NAN or INFINITY value occurs.
 * Add option 'value' in 'tube' for setting number of edges manually.
 * Remove style '~' for 'plot' and 'tens'. Now, all curves try to omit points.
-* Add setup flag MGL_FULL_CURV which disable omitting points of curve. Enable it for output in 3D formats!
+* Add setup flag MGL_FULL_CURV which disable omitting points of curve.
 * Samples in documentation are generated automatically now (from sample.cpp).
 * Increase the number of samples.
 * Shift axis labels closer to axis.

@@ -125,6 +125,8 @@ void Fl_MathGL::set_graph(HMGL GR)
 	gr->SetEventFunc(mgl_fltk_event_func, NULL);
 }
 //-----------------------------------------------------------------------------
+void Fl_MathGL::refresh()	{	img = mgl_get_rgb(gr);	redraw();	}
+//-----------------------------------------------------------------------------
 void Fl_MathGL::draw()
 {
 	if(!img)	img = mgl_get_rgb(gr);
@@ -938,7 +940,7 @@ void mglCanvasFL::GotoFrame(int d)
 	int f = GetCurFig()+d;
 	if(f>=GetNumFig())	f = 0;
 	if(f<0)	f = GetNumFig()-1;
-	if(GetNumFig()>0 && d)	{	SetCurFig(f);	mgl->FMGL->redraw();	}
+	if(GetNumFig()>0 && d)	{	SetCurFig(f);	mgl->FMGL->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
@@ -992,6 +994,12 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)
 {
 	static bool first=true;
+
+	Fl_Preferences pref(Fl_Preferences::USER,"abalakin","mgllab");
+	static const char *sch[4]={"base","gtk+","plastic","gleam"};
+	int scheme;	pref.get("scheme",scheme,2);
+	Fl::scheme(sch[scheme]);
+
 	if(first)	{	Fl::lock();	first=false;	}
 
 	SetDrawFunc(draw, par, reload);
