@@ -464,7 +464,8 @@ using mglDataA::Momentum;
 	inline void operator-=(dual d)		{	mgl_datac_sub_num(this,d);	}
 #ifndef SWIG
 	/// Direct access to the data cell
-	inline dual &operator[](long i)	{	return a[i];	}
+	inline dual operator[](long i) const	{	return a[i];	}
+	inline dual &operator[](long i)			{	return a[i];	}
 #endif
 
 

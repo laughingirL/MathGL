@@ -447,8 +447,8 @@ using mglDataA::Momentum;
 	inline void operator-=(mreal d)		{	mgl_data_sub_num(this,d);	}
 #ifndef SWIG
 	/// Direct access to the data cell
-	inline mreal &operator[](long i)	{	return a[i];	}
-	// NOTE see 13.10 for operator(), operator[] -- m.b. I should add it ???
+	inline mreal operator[](long i) const	{	return a[i];	}
+	inline mreal &operator[](long i)		{	return a[i];	}
 #endif
 
 #ifndef DEBUG

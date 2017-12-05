@@ -43,7 +43,8 @@ if(enable-python)
 		OUTPUT_VARIABLE MGL_PYTHON_SITE_PACKAGES
 		OUTPUT_STRIP_TRAILING_WHITESPACE)
 	set(SWIG_MODULE_mathgl_EXTRA_DEPS numpy.i ${src_imp_dep})
-	SWIG_ADD_MODULE(mathgl python mathgl.i)
+#	SWIG_ADD_MODULE(mathgl python mathgl.i)
+	SWIG_ADD_LIBRARY(mathgl LANGUAGE python SOURCES mathgl.i)
 	SWIG_LINK_LIBRARIES(mathgl mgl ${PYTHON_LIBRARIES})
 	set_target_properties(_mathgl PROPERTIES BUILD_WITH_INSTALL_RPATH ON)
 	add_custom_command(OUTPUT mathgl.pyc
@@ -67,7 +68,8 @@ if(enable-lua)
 
 	include_directories(${LUA_INCLUDE_DIR})
 	set(SWIG_MODULE_mgl-lua_EXTRA_DEPS numpy.i ${src_imp_dep})
-	SWIG_ADD_MODULE(mgl-lua lua mathgl.i)
+#	SWIG_ADD_MODULE(mgl-lua lua mathgl.i)
+	SWIG_ADD_LIBRARY(mgl-lua LANGUAGE lua SOURCES mathgl.i)
 	SWIG_LINK_LIBRARIES(mgl-lua mgl ${LUA_LIBRARIES})
 	set_target_properties(mgl-lua PROPERTIES PREFIX "" BUILD_WITH_INSTALL_RPATH ON)
 
@@ -109,7 +111,8 @@ message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 
 	add_compile_options(${oct_inc})
 	SET(SWIG_MODULE_mgl-oct_EXTRA_DEPS numpy.i ${src_imp_dep})
-	SWIG_ADD_MODULE(mgl-oct octave mathgl.i)
+#	SWIG_ADD_MODULE(mgl-oct octave mathgl.i)
+	SWIG_ADD_LIBRARY(mgl-oct LANGUAGE octave SOURCES mathgl.i)
 	SWIG_LINK_LIBRARIES(mgl-oct mgl)
 	set_target_properties(mgl-oct PROPERTIES OUTPUT_NAME mathgl PREFIX "" SUFFIX ".oct" BUILD_WITH_INSTALL_RPATH ON)
 	add_custom_command(OUTPUT mathgl.tar.gz
