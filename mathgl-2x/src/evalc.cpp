@@ -293,7 +293,7 @@ dual mglFormulaC::CalcIn(const dual *a1) const
 	if(mgl_isfin(a))
 	{
 		if(Kod<EQ_SIN)
-			return f2[Kod-EQ_LT](a,Right->CalcIn(a1));
+			return Right?f2[Kod-EQ_LT](a,Right->CalcIn(a1)):NAN;
 		else
 			return f1[Kod-EQ_SIN](a);
 	}

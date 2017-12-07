@@ -563,7 +563,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 		{
 			// try to bypass calc b if a==0
 			if(a==0 && z2[Kod-EQ_LT]!=3)	return z2[Kod-EQ_LT];
-			return f2[Kod-EQ_LT](a, Right->CalcIn(a1));
+			return Right?f2[Kod-EQ_LT](a, Right->CalcIn(a1)):NAN;
 		}
 		else if(Kod<EQ_SN)	return f1[Kod-EQ_SIN](a);
 #if MGL_HAVE_GSL
@@ -675,7 +675,8 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 	{
 		if(Kod<EQ_SIN)
 		{
-			double b = Right->CalcIn(a1), c = Right->CalcDIn(id,a1);
+			double b = Right?Right->CalcIn(a1):NAN;
+			double c = Right?Right->CalcDIn(id,a1):NAN;
 //			return mgl_isfin(b) ? (f21[Kod-EQ_LT](a,b)*d + f22[Kod-EQ_LT](a,b)*c) : NAN;
 			return mgl_isfin(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
 		}

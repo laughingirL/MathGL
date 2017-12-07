@@ -1666,7 +1666,7 @@ void mglBase::curve_plot(size_t num, size_t k0, size_t step)
 			if(mgl_isnan(p2.x))	break;
 			float dd=p2.x*p2.x+p2.y*p2.y+p2.z*p2.z;
 			if(dd<=0)	continue;	// the same point (micro-loop? :) )
-			float t = atan2(p2.y,p2.x), d = atan(0.5/dd);
+			float t = atan2(p2.y,p2.x), d = atan(0.03/dd);
 			if(t1 > t+d || t2 < t-d)	break;		// too curved
 			const mglColor c2(GetPntC(k0+(k-1)*step)-c1);	dd = c2.NormS();
 			if(dd>0)	// color are different
