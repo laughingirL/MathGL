@@ -423,14 +423,14 @@ int main ( int argc, char **argv )
 	
     /* Set up some strings with the characters to draw. */
     wchar_t wstring[2];
-    register unsigned int chr;
+    unsigned int chr;
 	
     wstring[1] = '\0';
     
     double ww = 0;    // maximal width
 	
     for ( chr=' '; chr<0xFFFF; chr++ )
-    // for ( chr=' '; chr<0xFF; chr++ )
+//	for ( chr=' '; chr<0xFFFFFF; chr++ )	// NOTE: FTGL don't support more than 0xFFFF symbols
     {
 // #undef SMALL_SET
 // #ifdef SMALL_SET
@@ -481,7 +481,7 @@ int main ( int argc, char **argv )
     sprintf(fname,"%s.vfm",filename);
     fout   = fopen ( fname,"w" );
     // some general comments
-    fprintf ( fout, "# font %s has %u glyphs \n", filename, TriangleFont.size() );
+    fprintf ( fout, "# font %s has %lu glyphs \n", filename, TriangleFont.size() );
     double d1 = 500./fontT->Ascender(), d2 = -500./fontT->Descender(), d3 = 1000./ww, dx;
     dx = d1<d2 ? d1:d2;        dx = dx<d3 ? dx:d3;
     unsigned i, *ids, *posl, *post, len, cur, numg=TriangleFont.size();
