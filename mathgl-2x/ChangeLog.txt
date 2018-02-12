@@ -26,6 +26,7 @@
 * Shift axis labels closer to axis.
 * Change size of LaTeX-like commands \sup, \sub to be the same as \overset, \underset.
 * Noticeable speed up drawing, PDE solving, etc.
+* Change ticks drawing in colorbar.
 
 
 2.4.1 Released 20 July 2017

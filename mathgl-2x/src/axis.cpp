@@ -1107,7 +1107,11 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		line_plot(AddPnt(&M, p1), AddPnt(&M, p2));
+		mglPoint p3(0.75*p1.x+0.25*p2.x, 0.75*p1.y+0.25*p2.y, s3);
+		mglPoint p4(0.25*p1.x+0.75*p2.x, 0.25*p1.y+0.75*p2.y, s3);
+//		line_plot(AddPnt(&M, p1), AddPnt(&M, p2));
+		line_plot(AddPnt(&M, p1), AddPnt(&M, p3));
+		line_plot(AddPnt(&M, p4), AddPnt(&M, p2));
 	}
 	ac.dir.Set(ss*w,ss*h,0);	ac.a.Set(0,0,0);
 	ac.org.Set(w+x,h+y,s3+1);	ac.b.Set(0,0,0);

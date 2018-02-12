@@ -1091,8 +1091,8 @@ public:
 class PRCBoundingBox
 {
 public:
-  PRCBoundingBox() : min(0.0,0.0,0.0), max(0.0,0.0,0.0) {}
-  PRCBoundingBox(const PRCVector3d &m, const PRCVector3d& M) : min(m),max(M) {}
+  PRCBoundingBox()	{min=PRCVector3d(0.0,0.0,0.0); max=PRCVector3d(0.0,0.0,0.0);}
+  PRCBoundingBox(const PRCVector3d &m, const PRCVector3d& M) {min=PRCVector3d(m); max=PRCVector3d(M);}
   void serializeBoundingBox(PRCbitStream &pbs);
   PRCVector3d min;
   PRCVector3d max;
@@ -1109,8 +1109,8 @@ public:
 class PRCInterval
 {
 public:
-  PRCInterval() : min(0), max(0) {}
-  PRCInterval(double m, double M) : min(m), max(M) {}
+  PRCInterval() { min=max=0;}
+  PRCInterval(double m, double M) {min=m;max=M;}
   void serializeInterval(PRCbitStream &pbs);
   double min;
   double max;

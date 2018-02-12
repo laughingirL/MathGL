@@ -8,7 +8,10 @@ project( MathGL2 )
 set(mgl_clean_files )
 set(MGL_DEP_LIBS)
 add_definitions(-DMGL_SRC)
-set(CMAKE_MODULE_PATH ${MathGL2_SOURCE_DIR}/scripts)
+
+add_definitions(-DZLIB_WINAPI)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${MathGL2_SOURCE_DIR}/scripts)
+#set(CMAKE_MODULE_PATH ${MathGL2_SOURCE_DIR}/scripts)
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are:

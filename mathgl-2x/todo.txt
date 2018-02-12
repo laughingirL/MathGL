@@ -30,6 +30,7 @@
 2. Quality=3 for mirror+shadows? Couldn't be in bitmap only mode
 4. "latex on" option ?!?
 
+5. Aspect() for absolute coordinates ("pixels"-like)
 6. Custom dialog in QMathGL
 7. Add "text3d x y z lx ly lz nx ny nz 'txt' ['stl'='' depth=0.1 depth2=nan]"
 8. Add "mgl_zoomview(int x, int y)" for zoom circle/square around image point {x,y}
@@ -88,6 +89,7 @@ D. Docs about JS interface
 	* Example of time-values in formulas (like hh-mm-ss_DD.MM.YYYY or hh-mm-ss or DD.MM.YYYY)
 	* Example of Step, Bars for x.nx = y.nx+1
 	* Example of `dat <==> Transpose(dat).
+	* Title() function -- it change the plot scaling (like SubPlot()) and reset any relative scaling (like, Aspect(), Rotate(), ColumntPlot(), StickPlot() and others).
 
 10. Special comment "##d $I kind|label|par1|par2|..." will create custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
 	'e' for editor or input line (parameter is initial value) , 
