@@ -426,8 +426,8 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	y1 = long(mgl_min(mgl_min(p1.y,p2.y), mgl_min(p3.y,p4.y)));
 	x2 = long(mgl_max(mgl_max(p1.x,p2.x), mgl_max(p3.x,p4.x)));
 	y2 = long(mgl_max(mgl_max(p1.y,p2.y), mgl_max(p3.y,p4.y)));
-	x1=mgl_max(x1,d->x1);	x2=mgl_min(x2,d->x2);
-	y1=mgl_max(y1,d->y1);	y2=mgl_min(y2,d->y2);
+	x1=mgl_imax(x1,d->x1);	x2=mgl_imin(x2,d->x2);
+	y1=mgl_imax(y1,d->y1);	y2=mgl_imin(y2,d->y2);
 	if(x1>x2 || y1>y2)	return;
 
 	const float dd = d1.x*d2.y-d1.y*d2.x;
@@ -512,6 +512,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	if(mgl_isnan(tp.u) && mgl_isnum(tp.v))
 	{	pp.u = nr.x;	pp.v = nr.y;	pp.w = nr.z;
 		d1.u=d1.v=d1.w=d2.u=d2.v=d2.w=0;	}
+
 	if(Quality&MGL_DRAW_NORM)	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 	{
 		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
@@ -1446,8 +1447,8 @@ bool mglCanvas::quad_vis(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, c
 	y1 = long(mgl_min(mgl_min(p1.y,p2.y), mgl_min(p3.y,p4.y)));
 	x2 = long(mgl_max(mgl_max(p1.x,p2.x), mgl_max(p3.x,p4.x)));
 	y2 = long(mgl_max(mgl_max(p1.y,p2.y), mgl_max(p3.y,p4.y)));
-	x1=mgl_max(x1,0);	x2=mgl_min(x2,Width);
-	y1=mgl_max(y1,0);	y2=mgl_min(y2,Height);
+	x1=mgl_imax(x1,0);	x2=mgl_imin(x2,Width);
+	y1=mgl_imax(y1,0);	y2=mgl_imin(y2,Height);
 //	if(x1>x2 || y1>y2)	return;
 
 	const float dd = d1.x*d2.y-d1.y*d2.x;

@@ -2059,8 +2059,8 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 			long yy1 = long(mgl_min( mgl_min(vy0,vy1), mgl_min(vy2,vy3) ));
 			long xx2 = long(mgl_max( mgl_max(vx0,vx1), mgl_max(vx2,vx3) ));
 			long yy2 = long(mgl_max( mgl_max(vy0,vy1), mgl_max(vy2,vy3) ));
-			xx1=mgl_max(xx1,0);	xx2=mgl_min(xx2,nx-1);
-			yy1=mgl_max(yy1,0);	yy2=mgl_min(yy2,ny-1);
+			xx1=mgl_imax(xx1,0);	xx2=mgl_imin(xx2,nx-1);
+			yy1=mgl_imax(yy1,0);	yy2=mgl_imin(yy2,ny-1);
 			if(xx1>xx2 || yy1>yy2)	continue;
 
 			mreal d1x = vx1-vx0, d1y = vy1-vy0;

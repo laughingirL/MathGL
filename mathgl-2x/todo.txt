@@ -115,7 +115,6 @@ ZZ. Update time.texi {before release!!!}
 * Check: "You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."
 * Shift/Zoom/Perspective by mouse!!!
 * Hint about string manipulation
-* Progress bar for external loop ?!!
 * 1d view -- over longer size + y-size for current slice only
 * info about used memory for graphics
 * abort saving shouldn't switch off "modified" flag (check!)
