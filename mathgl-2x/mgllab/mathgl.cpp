@@ -90,9 +90,8 @@ int Fl_MGL::Draw(mglGraph *gr)
 	if(textbuf)
 	{
 		char *text = textbuf->text();
-		if(highlight)	gr->Highlight(e->graph->FMGL->get_last_id());		// TODO check highlight
+		if(highlight)	gr->Highlight(e->graph->FMGL->get_last_id());
 		Parse->Execute(gr,text);
-//		gr->Highlight(-1);
 		free(text);
 	}
 	// TODO go to line with warning?!!

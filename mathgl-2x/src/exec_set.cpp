@@ -821,7 +821,7 @@ mglCommand mgls_set_cmd[] = {
 	{"rotatetext",_("Set to auto rotate text or not"),"rotatetext val", mgls_rotatetext ,15},
 	{"scaletext",_("Set scale text in relative subplots too"),"scaletext val", mgls_scaletext ,15},
 	{"setsize",_("Set picture size"),"setsize width height", mgls_setsize ,2},
-	{"setsizescl",_("Set scaling factor for further setsize"),"setsizescl val", mgls_setsizescl ,2},
+//	{"setsizescl",_("Set scaling factor for further setsize"),"setsizescl val", mgls_setsizescl ,2},
 	{"setup",_("Set bit-flags (for advanced users only)"),"setup val flag", mgls_setup ,2},
 	{"shear",_("Shear plot"),"shear valx valy", mgls_shear ,5},
 	{"shearplot",_("Set position of plot inside cell of sheared stick"), "shearplot num ind sx sy [xd yd]", mgls_shearplot ,5},

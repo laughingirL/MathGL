@@ -290,7 +290,7 @@ void mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id) const
 //	if(!r)	return r;	// NOTE r must be provided!
 	if(p.a<=0)	{	r[0]=r[1]=r[2]=r[3]=0;	return;	}
 	float b0=0,b1=0,b2=0, ar,ag,ab,dif;
-	const size_t nl = p.sub>=0?p.sub:1-p.sub;
+	const size_t nl = p.sub>=0?p.sub:-1-p.sub;
 	const bool glob = !get(MGL_LOCAL_LIGHT);
 	ar = ag = ab = glob?AmbBr:Sub[nl].AmbBr;
 	dif = glob?DifBr:Sub[nl].DifBr;

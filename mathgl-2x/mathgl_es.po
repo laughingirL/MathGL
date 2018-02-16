@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-12 16:42+0300\n"
+"POT-Creation-Date: 2018-02-14 15:50+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -707,7 +707,7 @@ msgstr "Angulo alrededor del eje z (en grados)"
 
 #. animation menu
 #: widgets/qt.cpp:1257 widgets/qt.cpp:1258 udav/plot_pnl.cpp:559
-#: mgllab/mathgl.cpp:186
+#: mgllab/mathgl.cpp:185
 msgid "Animation"
 msgstr "Animacion"
 
@@ -922,7 +922,7 @@ msgstr ""
 #: udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552 udav/dat_pnl.cpp:629
 #: udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145 udav/files_dlg.cpp:58
 #: udav/style_dlg.cpp:206 udav/data_dlg.cpp:90 udav/subplot_dlg.cpp:219
-#: mgllab/editor.cpp:282 mgllab/mathgl.cpp:167 mgllab/mathgl.cpp:198
+#: mgllab/editor.cpp:282 mgllab/mathgl.cpp:166 mgllab/mathgl.cpp:197
 #: mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164 mgllab/dialogs.cpp:410
 #: mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749 mgllab/dialogs.cpp:1071
 #: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:479
@@ -1348,7 +1348,7 @@ msgstr ""
 msgid "Delay (in ms)"
 msgstr ""
 
-#: mgllab/mathgl.cpp:205
+#: mgllab/mathgl.cpp:204
 msgid "Delay (in sec)"
 msgstr ""
 
@@ -2716,7 +2716,7 @@ msgstr ""
 msgid "In-place Fourier transform"
 msgstr ""
 
-#: mgllab/mathgl.cpp:248
+#: mgllab/mathgl.cpp:247
 msgid "Incompatible loop parameters!"
 msgstr ""
 
@@ -2832,7 +2832,7 @@ msgstr ""
 msgid "Keep only each n-th element of the data array."
 msgstr ""
 
-#: mgllab/mathgl.cpp:201
+#: mgllab/mathgl.cpp:200
 msgid "Keep slides in memory (faster animation but require more memory)"
 msgstr ""
 
@@ -3025,7 +3025,7 @@ msgstr ""
 msgid "MGL help"
 msgstr ""
 
-#: mgllab/mathgl.cpp:398
+#: mgllab/mathgl.cpp:397
 msgid "MGL messages"
 msgstr ""
 
@@ -3415,7 +3415,7 @@ msgstr ""
 msgid "No occurrences of '%s' found!"
 msgstr ""
 
-#: mgllab/mathgl.cpp:263
+#: mgllab/mathgl.cpp:262
 msgid "No selection. So nothing to do"
 msgstr ""
 
@@ -3495,7 +3495,7 @@ msgstr ""
 #: udav/newcmd_dlg.cpp:80 udav/open_dlg.cpp:92 udav/dat_pnl.cpp:462
 #: udav/dat_pnl.cpp:512 udav/dat_pnl.cpp:554 udav/dat_pnl.cpp:631
 #: udav/opt_dlg.cpp:80 udav/files_dlg.cpp:60 udav/style_dlg.cpp:208
-#: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221 mgllab/mathgl.cpp:199
+#: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221 mgllab/mathgl.cpp:198
 #: mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165 mgllab/dialogs.cpp:411
 #: mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750 mgllab/dialogs.cpp:1072
 #: mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474 mgllab/mgllab.cpp:480
@@ -3823,7 +3823,7 @@ msgstr " - Variable de UDAV"
 msgid "Put into this data array"
 msgstr ""
 
-#: udav/anim_dlg.cpp:74 mgllab/mathgl.cpp:204
+#: udav/anim_dlg.cpp:74 mgllab/mathgl.cpp:203
 msgid "Put to script"
 msgstr ""
 
@@ -3893,7 +3893,7 @@ msgstr ""
 msgid "Redraw"
 msgstr ""
 
-#: udav/anim_dlg.cpp:41 mgllab/mathgl.cpp:187
+#: udav/anim_dlg.cpp:41 mgllab/mathgl.cpp:186
 msgid "Redraw picture for $0 equal to"
 msgstr ""
 
@@ -4249,7 +4249,7 @@ msgstr ""
 msgid "Select variant of plot style(s)"
 msgstr ""
 
-#: mgllab/mathgl.cpp:169
+#: mgllab/mathgl.cpp:168
 msgid "Set"
 msgstr ""
 
@@ -4286,6 +4286,7 @@ msgstr ""
 msgid "Set axis ranges"
 msgstr ""
 
+#. {"setsizescl",_("Set scaling factor for further setsize"),"setsizescl val", mgls_setsizescl ,2},
 #: src/exec_set.cpp:825
 msgid "Set bit-flags (for advanced users only)"
 msgstr ""
@@ -4422,11 +4423,7 @@ msgstr ""
 msgid "Set scale text in relative subplots too"
 msgstr ""
 
-#: src/exec_set.cpp:824
-msgid "Set scaling factor for further setsize"
-msgstr ""
-
-#: mgllab/mathgl.cpp:146
+#: mgllab/mathgl.cpp:145
 msgid "Set script arguments"
 msgstr ""
 
@@ -4849,43 +4846,43 @@ msgstr ""
 msgid "Stop script execution (F7)."
 msgstr ""
 
-#: udav/args_dlg.cpp:59 mgllab/mathgl.cpp:165
+#: udav/args_dlg.cpp:59 mgllab/mathgl.cpp:164
 msgid "String for $0"
 msgstr ""
 
-#: udav/args_dlg.cpp:41 mgllab/mathgl.cpp:147
+#: udav/args_dlg.cpp:41 mgllab/mathgl.cpp:146
 msgid "String for $1"
 msgstr ""
 
-#: udav/args_dlg.cpp:43 mgllab/mathgl.cpp:149
+#: udav/args_dlg.cpp:43 mgllab/mathgl.cpp:148
 msgid "String for $2"
 msgstr ""
 
-#: udav/args_dlg.cpp:45 mgllab/mathgl.cpp:151
+#: udav/args_dlg.cpp:45 mgllab/mathgl.cpp:150
 msgid "String for $3"
 msgstr ""
 
-#: udav/args_dlg.cpp:47 mgllab/mathgl.cpp:153
+#: udav/args_dlg.cpp:47 mgllab/mathgl.cpp:152
 msgid "String for $4"
 msgstr ""
 
-#: udav/args_dlg.cpp:49 mgllab/mathgl.cpp:155
+#: udav/args_dlg.cpp:49 mgllab/mathgl.cpp:154
 msgid "String for $5"
 msgstr ""
 
-#: udav/args_dlg.cpp:51 mgllab/mathgl.cpp:157
+#: udav/args_dlg.cpp:51 mgllab/mathgl.cpp:156
 msgid "String for $6"
 msgstr ""
 
-#: udav/args_dlg.cpp:53 mgllab/mathgl.cpp:159
+#: udav/args_dlg.cpp:53 mgllab/mathgl.cpp:158
 msgid "String for $7"
 msgstr ""
 
-#: udav/args_dlg.cpp:55 mgllab/mathgl.cpp:161
+#: udav/args_dlg.cpp:55 mgllab/mathgl.cpp:160
 msgid "String for $8"
 msgstr ""
 
-#: udav/args_dlg.cpp:57 mgllab/mathgl.cpp:163
+#: udav/args_dlg.cpp:57 mgllab/mathgl.cpp:162
 msgid "String for $9"
 msgstr ""
 
@@ -6069,7 +6066,7 @@ msgstr ""
 msgid "frame"
 msgstr ""
 
-#: udav/anim_dlg.cpp:55 mgllab/mathgl.cpp:193
+#: udav/anim_dlg.cpp:55 mgllab/mathgl.cpp:192
 msgid "from"
 msgstr ""
 
@@ -6348,7 +6345,7 @@ msgstr ""
 msgid "rotate text"
 msgstr ""
 
-#: mgllab/mathgl.cpp:200
+#: mgllab/mathgl.cpp:199
 msgid "save slides"
 msgstr ""
 
@@ -6375,7 +6372,7 @@ msgstr "'-' solido"
 msgid "solid PNG"
 msgstr ""
 
-#: udav/anim_dlg.cpp:45 mgllab/mathgl.cpp:188
+#: udav/anim_dlg.cpp:45 mgllab/mathgl.cpp:187
 msgid "strings"
 msgstr ""
 
@@ -6400,7 +6397,7 @@ msgstr "Anadir texto"
 msgid "ticks"
 msgstr ""
 
-#: udav/anim_dlg.cpp:59 mgllab/mathgl.cpp:194 mgllab/dialogs.cpp:569
+#: udav/anim_dlg.cpp:59 mgllab/mathgl.cpp:193 mgllab/dialogs.cpp:569
 #: mgllab/dialogs.cpp:572 mgllab/dialogs.cpp:575
 msgid "to"
 msgstr ""
@@ -6438,7 +6435,7 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: udav/anim_dlg.cpp:52 mgllab/mathgl.cpp:190
+#: udav/anim_dlg.cpp:52 mgllab/mathgl.cpp:189
 msgid "values"
 msgstr ""
 
@@ -6459,7 +6456,7 @@ msgstr ""
 msgid "wire"
 msgstr ""
 
-#: udav/anim_dlg.cpp:63 mgllab/mathgl.cpp:195
+#: udav/anim_dlg.cpp:63 mgllab/mathgl.cpp:194
 msgid "with step"
 msgstr ""
 

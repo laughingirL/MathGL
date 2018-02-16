@@ -30,10 +30,8 @@
 2. Quality=3 for mirror+shadows? Couldn't be in bitmap only mode
 4. "latex on" option ?!?
 
-5. Aspect() for absolute coordinates ("pixels"-like)
 6. Custom dialog in QMathGL
 7. Add "text3d x y z lx ly lz nx ny nz 'txt' ['stl'='' depth=0.1 depth2=nan]"
-8. Add "mgl_zoomview(int x, int y)" for zoom circle/square around image point {x,y}
 9. Mask in EPS/SVG
 11. Animation in UDAV from ##c, ##a + remove old entries at "Put to script" (the same in mgllab)
 16. Check Title "size" -- see 'primitives' sample
