@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 15:50+0300\n"
+"POT-Creation-Date: 2018-03-13 17:05+0300\n"
 "PO-Revision-Date: 2017-05-11 23:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4286,7 +4286,6 @@ msgstr ""
 msgid "Set axis ranges"
 msgstr ""
 
-#. {"setsizescl",_("Set scaling factor for further setsize"),"setsizescl val", mgls_setsizescl ,2},
 #: src/exec_set.cpp:825
 msgid "Set bit-flags (for advanced users only)"
 msgstr ""
@@ -4421,6 +4420,10 @@ msgstr ""
 
 #: src/exec_set.cpp:822
 msgid "Set scale text in relative subplots too"
+msgstr ""
+
+#: src/exec_set.cpp:824
+msgid "Set scaling factor for further setsize"
 msgstr ""
 
 #: mgllab/mathgl.cpp:145

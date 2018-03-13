@@ -881,6 +881,16 @@ Gets array which values is indexes (roots) along given direction @var{dir}, wher
 Find roots of equation 'func'=0 for variable @var{var} with initial guess @var{ini}. Secant method is used for root finding. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
+@deftypefn {MGL command} {} roots @sc{res} 'funcs' 'vars' ini
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{mglData} MultiRoots (@code{const char *}funcs, @code{const char *}vars) @code{const}
+@deftypefnx {Method on @code{mglDataC}} @code{mglDataC} MultiRoots (@code{const char *}funcs, @code{const char *}vars) @code{const}
+@deftypefnx {C function} @code{HMDT} mgl_find_roots_txt (@code{const char *}func, @code{const char *}vars, @code{HCDT} ini)
+@deftypefnx {C function} @code{HADT} mgl_find_roots_txt_c (@code{const char *}func, @code{const char *}vars, @code{HCDT} ini)
+@end ifclear
+Find roots of system of equations 'funcs'=0 for variables @var{vars} with initial guesses @var{ini}. Secant method is used for root finding. Function return NULL or create empty data if data cannot be created for given arguments.
+@end deftypefn
+
 @anchor{detect}
 @deftypefn {MGL command} {} detect @sc{res} dat @code{lvl dj [di=0 minlen=0]}
 @ifclear UDAV
@@ -1275,6 +1285,16 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @end ifclear
 Limits the data values to be inside the range [-@var{val},@var{val}], keeping the original sign of the value (phase for complex numbers). This is equivalent to operation @code{a[i] *= abs(a[i])<val?1.:val/abs(a[i]);}.
 @end deftypefn
+
+@anchor{coil}
+@deftypefn {MGL command} {} coil dat @code{v1 v2 [sep=on]}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} Coil (@code{mreal} v1, @code{mreal} v2, @code{bool} sep=@code{true})
+@deftypefnx {C function} @code{void} mgl_data_coil (@code{HMDT} dat, @code{mreal} v1, @code{mreal} v2, @code{int} sep)
+@end ifclear
+Project the periodical data to range [@var{v1},@var{v2}] (like @code{mod()} function). Separate branches by @code{NAN} if @var{sep}=@code{true}.
+@end deftypefn
+
 
 @anchor{dilate}
 @deftypefn {MGL command} {} dilate dat @code{[val=1 step=1]}

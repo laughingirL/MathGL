@@ -868,6 +868,16 @@ Allocate memory and set data from variable argument list of @emph{double} values
 Возвращает массив корней уравнения 'func'=0 для переменной @var{var} с начальными положениями @var{ini}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
+@deftypefn {Команда MGL} {} roots @sc{res} 'funcs' 'vars' ini
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} MultiRoots (@code{const char *}funcs, @code{const char *}vars) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglDataC} MultiRoots (@code{const char *}funcs, @code{const char *}vars) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_find_roots_txt (@code{const char *}func, @code{const char *}vars, @code{HCDT} ini)
+@deftypefnx {Функция С} @code{HADT} mgl_find_roots_txt_c (@code{const char *}func, @code{const char *}vars, @code{HCDT} ini)
+@end ifclear
+Возвращает массив корней системы уравнений 'funcs'=0 для переменных @var{vars} с начальными значениями @var{ini}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
+@end deftypefn
+
 @anchor{detect}
 @deftypefn {Команда MGL} {} detect @sc{res} dat @code{lvl dj [di=0 minlen=0]}
 @ifclear UDAV
@@ -1260,6 +1270,15 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Функция С} @code{void} mgl_datac_limit (@code{HADT} dat, @code{mreal} val)
 @end ifclear
 Ограничивает амплитуду данных диапазоном [-@var{val},@var{val}]. При этом сохраняется исходный знак (фаза для комплексных чисел). Эквивалентно операции @code{a[i] *= abs(a[i])<val?1.:val/abs(a[i]);}.
+@end deftypefn
+
+@anchor{coil}
+@deftypefn {Команда MGL} {} coil dat @code{v1 v2 [sep=on]}
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Coil (@code{mreal} v1, @code{mreal} v2, @code{bool} sep=@code{true})
+@deftypefnx {Функция С} @code{void} mgl_data_coil (@code{HMDT} dat, @code{mreal} v1, @code{mreal} v2, @code{int} sep)
+@end ifclear
+Проецирует периодические данные на диапазон [@var{v1},@var{v2}] (аналогично функции @code{mod()}). Разделяет ветки по значениям равным @code{NAN} если @var{sep}=@code{true}.
 @end deftypefn
 
 @anchor{dilate}

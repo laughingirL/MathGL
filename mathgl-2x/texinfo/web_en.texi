@@ -53,8 +53,9 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 @strong{Latest news}
 @itemize
 
-@item @strong{20 July 2017.}
-New version (v.2.4.1) with bugfixes of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released.
+@item @strong{18 March 2018.}
+New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There area custom dialog for FLTK widgets; display of execution progress; new plots @ref{contp}, @ref{flowp}, @ref{flow3}; style of plots @ref{cont}, @ref{flow}, @ref{tube}; change drawing for @ref{axis}, @ref{colorbar}; data handling (@ref{coil}) and setup (@ref{scaletext}, @ref{setup}) functions; modulo operation @samp{@code{%}} in formulas; automatic omit points for all curves; new section @ref{All samples} of documentation; speeding up and bugfixes.
+
 @item @emph{17 May 2017.}
 New version (v.2.4) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are @code{mgllab} executable, string manipulation in MGL, new functions, plot types and styles, translation to Russian using @code{gettext} and bugfixes, which denoted @ref{News, here}.
 @end itemize
@@ -75,6 +76,43 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @nav{}
 
 @itemize
+
+@item @strong{18 March 2018.}
+New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released.
+@itemize @bullet
+
+@item Add custom dialog for FLTK widgets. This can be constructed from C/C++ code, or from MGL script using special comments "##d##d $I kind|label|par1|par2|..." will create an entry in custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
+	'e' for editor or input line (parameter is initial value) , 
+	'v' for spinner or counter (parameters are "ini|min|max|step|big_step"), 
+	's' for slider (parameters are "ini|min|max|step"), 
+	'b' for check box (parameter is "ini"; also understand "on"=1), 
+	'c' for choice (parameters are possible choices).
+@item Add 'progress' for displaying the progress of execution (by '#' symbols in console, or by progress-bar widget). @c TODO
+@item Add @ref{scaletext} for disabling text size scaling in relative @ref{inplot}-s (like @ref{columnplot}, ...).
+@item Add @ref{contp} for contour lines on parametrically specified surface.
+@item Add @ref{flowp} for flow threads on parametrically specified surface.
+@item Add @ref{flow3} for flow threads of 3D vector field, which start from the plain.
+@item Add @ref{setup} for setting all low-level flags.
+@item Add @ref{coil} for projecting periodical data.
+@item Add modulo operation @samp{@code{%}} (@code{x%y=fmod(x,y)}) to the list of known operations in real-valued formulas.
+@item Add style @samp{.} for @ref{cont} to draw contour lines from saddle points.
+@item Add style @samp{.} for @ref{flow} to draw flow thread from saddle points.
+@item Crop output of @ref{ode} if NAN or INFINITY value occurs.
+@item Add option @code{value} in @ref{tube} for setting number of edges manually.
+@item Remove style @samp{~} for @ref{plot} and @ref{tens}. Now, all curves try to omit points.
+@item Add setup flag @code{MGL_FULL_CURV} which disable omitting points of curve.
+@item Samples in documentation are generated automatically now (from @code{sample.cpp}).
+@item Increase the number of samples.
+@item Shift axis labels closer to @ref{axis}.
+@item Change size of LaTeX-like commands @code{\sup, \sub} to be the same as @code{\overset, \underset}.
+@item Noticeable speed up drawing, PDE solving, etc.
+@item Change ticks drawing in @ref{colorbar}.
+@item Add new section @ref{All samples} of documentation with large set of samples for most of MathGL features.
+@item @strong{INCOMPATIBLE:} Make obsolete MGL command @ref{setsizescl}. At this, the similar C/C++/Fortran/... functions still working.
+@item Bugfixes.
+
+@end itemize
+
 
 @item @strong{20 July 2017.}
 New version (v.2.4.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released.

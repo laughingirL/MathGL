@@ -30,12 +30,10 @@
 2. Quality=3 for mirror+shadows? Couldn't be in bitmap only mode
 4. "latex on" option ?!?
 
-6. Custom dialog in QMathGL
-7. Add "text3d x y z lx ly lz nx ny nz 'txt' ['stl'='' depth=0.1 depth2=nan]"
-9. Mask in EPS/SVG
-11. Animation in UDAV from ##c, ##a + remove old entries at "Put to script" (the same in mgllab)
-16. Check Title "size" -- see 'primitives' sample
-17. Optimize '.' style of Flow.
+5. Custom dialog in QMathGL
+6. Add "text3d x y z lx ly lz nx ny nz 'txt' ['stl'='' depth=0.1 depth2=nan]"
+7. Mask in EPS/SVG
+8. Animation in UDAV from ##c, ##a + remove old entries at "Put to script" (the same in mgllab)
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -49,17 +47,9 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 0. Update Qt and UDAV figures
+1. Update installation (dll from mgl_script + Qt plugins/ + Win10)
 
-1. Docs about 'setup' + inline void SetFlagAdv(int val, uint32_t flag)
-2. Docs about 'coil'
-3. Update flags
-4. Docs and example about 'roots' for system of equations
-5. Docs about mgl_bsize()
-7. Update installation (dll from mgl_script + Qt plugins/ + Win10)
-8. Docs about 'scaletext'
-
-9. Add more samples:
-	* Example of 'flow' and '.' style.
+2. Add more samples:
 	* Example of 'contp', 'flowp'
 	* Example of frame manipulation
 	* Example of 'title' style '#'
@@ -87,7 +77,8 @@ D. Docs about JS interface
 	* Example of time-values in formulas (like hh-mm-ss_DD.MM.YYYY or hh-mm-ss or DD.MM.YYYY)
 	* Example of Step, Bars for x.nx = y.nx+1
 	* Example of `dat <==> Transpose(dat).
-	* Title() function -- it change the plot scaling (like SubPlot()) and reset any relative scaling (like, Aspect(), Rotate(), ColumntPlot(), StickPlot() and others).
+	* Example of 'coil'
+	* Example of 'roots'
 
 10. Special comment "##d $I kind|label|par1|par2|..." will create custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
 	'e' for editor or input line (parameter is initial value) , 

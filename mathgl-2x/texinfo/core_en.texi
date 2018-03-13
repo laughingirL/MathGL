@@ -90,6 +90,46 @@ Functions and variables in this group influences on overall graphics appearance.
 Restore initial values for all of parameters and clear the image.
 @end deftypefn
 
+@anchor{setup}
+@deftypefn {MGL command} {} setup @code{val flag}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetFlagAdv (@code{int} val, @code{uint32_t} flag)
+@deftypefnx {C function} @code{void} mgl_set_flag (@code{HMGL} gr, @code{int} val, @code{uint32_t} flag)
+@end ifclear
+Sets the value of internal binary @var{flag} to @var{val}. The list of flags can be found at @url{https://sourceforge.net/p/mathgl/code/HEAD/tree/mathgl-2x/include/mgl2/define.h#l267, define.h}. The current list of flags are: 
+@verbatim
+#define MGL_ENABLE_CUT		0x00000004 	///< Flag which determines how points outside bounding box are drown.
+#define MGL_ENABLE_RTEXT 	0x00000008 	///< Use text rotation along axis
+#define MGL_AUTO_FACTOR		0x00000010 	///< Enable autochange PlotFactor
+#define MGL_ENABLE_ALPHA 	0x00000020 	///< Flag that Alpha is used
+#define MGL_ENABLE_LIGHT 	0x00000040 	///< Flag of using lightning
+#define MGL_TICKS_ROTATE 	0x00000080 	///< Allow ticks rotation
+#define MGL_TICKS_SKIP		0x00000100 	///< Allow ticks rotation
+#define MGL_DISABLE_SCALE	0x00000200 	///< Temporary flag for disable scaling (used for axis)
+#define MGL_FINISHED 		0x00000400 	///< Flag that final picture (i.e. mglCanvas::G) is ready
+#define MGL_USE_GMTIME		0x00000800 	///< Use gmtime instead of localtime
+#define MGL_SHOW_POS		0x00001000 	///< Switch to show or not mouse click position
+#define MGL_CLF_ON_UPD		0x00002000 	///< Clear plot before Update()
+#define MGL_NOSUBTICKS		0x00004000 	///< Disable subticks drawing (for bounding box)
+#define MGL_LOCAL_LIGHT		0x00008000 	///< Keep light sources for each inplot
+#define MGL_VECT_FRAME		0x00010000 	///< Use DrwDat to remember all data of frames
+#define MGL_REDUCEACC		0x00020000 	///< Reduce accuracy of points (to reduce size of output files)
+#define MGL_PREFERVC 		0x00040000 	///< Prefer vertex color instead of texture if output format supports
+#define MGL_ONESIDED 		0x00080000 	///< Render only front side of surfaces if output format supports (for debugging)
+#define MGL_NO_ORIGIN 		0x00100000 	///< Don't draw tick labels at axis origin
+#define MGL_GRAY_MODE 		0x00200000 	///< Convert all colors to gray ones
+#define MGL_FULL_CURV 		0x00400000 	///< Disable omitting points in straight-line part(s)
+#define MGL_NO_SCALE_REL 	0x00800000 	///< Disable font scaling in relative inplots
+@end verbatim
+@end deftypefn
+
+@ifclear UDAV
+@deftypefn {C function} @code{void} mgl_bsize (@code{unsigned} bsize)
+Set buffer size for number of primitives as (1<<bsize)^2. I.e. as 10^12 for bsize=20 or 4*10^9 for bsize=16 (default). NOTE: you set it only once before any plotting. The current value is returned.
+@end deftypefn
+@end ifclear
+
+
 @menu
 * Transparency::
 * Lighting::
@@ -402,6 +442,15 @@ Font style for text and labels (see text). Initial style is 'fnt'=':rC' give Rom
 @deftypefnx {C function} @code{void} mgl_set_rotated_text (@code{HMGL} gr, @code{int} val)
 @end ifclear
 Sets to use or not text rotation.
+@end deftypefn
+
+@anchor{scaletext}
+@deftypefn {MGL command} {} scaletext @code{val}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetScaleText (@code{bool} val)
+@deftypefnx {C function} @code{void} mgl_set_scale_text (@code{HMGL} gr, @code{int} val)
+@end ifclear
+Sets to scale text in relative @ref{inplot} (including @ref{columnplot}, @ref{gridplot}, @ref{stickplot}, @ref{shearplot}) or not.
 @end deftypefn
 
 @anchor{loadfont}
@@ -1240,7 +1289,7 @@ Sets size of picture in pixels. This function @strong{should be} called before a
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetSizeScl (@code{double} factor)
 @deftypefnx {C function} @code{void} mgl_set_size_scl (@code{HMGL} gr, @code{double} factor)
 @end ifclear
-Set factor for width and height in all further calls of @ref{setsize}.
+Set factor for width and height in all further calls of @ref{setsize}. This command is @strong{obsolete} since v.2.4.2.
 @end deftypefn
 
 @anchor{quality}

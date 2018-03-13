@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 15:50+0300\n"
+"POT-Creation-Date: 2018-03-13 17:05+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -4317,7 +4317,6 @@ msgstr "Задать начало координат"
 msgid "Set axis ranges"
 msgstr "Задать диапазон осей"
 
-#. {"setsizescl",_("Set scaling factor for further setsize"),"setsizescl val", mgls_setsizescl ,2},
 #: src/exec_set.cpp:825
 msgid "Set bit-flags (for advanced users only)"
 msgstr ""
@@ -4453,6 +4452,10 @@ msgstr "Задать диапазон по z"
 #: src/exec_set.cpp:822
 msgid "Set scale text in relative subplots too"
 msgstr ""
+
+#: src/exec_set.cpp:824
+msgid "Set scaling factor for further setsize"
+msgstr "Задать множитель для всех 'setsize'"
 
 #: mgllab/mathgl.cpp:145
 msgid "Set script arguments"
@@ -6553,9 +6556,6 @@ msgstr "с шагом"
 #: udav/style_dlg.cpp:227 mgllab/dialogs.cpp:34
 msgid "y - yellow"
 msgstr "y - желтый"
-
-#~ msgid "Set scaling factor for further setsize"
-#~ msgstr "Задать множитель для всех 'setsize'"
 
 #, fuzzy
 #~ msgid "Progress ..."

@@ -1,5 +1,6 @@
 
-2.4.2 
+2.4.2 Released 14 March 2018
+
 * Add custom dialog for FLTK widgets. This can be constructed from C/C++ code, or from MGL script using special comments "##d##d $I kind|label|par1|par2|..." will create an entry in custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
 	'e' for editor or input line (parameter is initial value) , 
 	'v' for spinner or counter (parameters are "ini|min|max|step|big_step"), 
@@ -27,8 +28,9 @@
 * Change size of LaTeX-like commands \sup, \sub to be the same as \overset, \underset.
 * Noticeable speed up drawing, PDE solving, etc.
 * Change ticks drawing in colorbar.
+* Add new section "All samples" of documentation with large set of samples for most of MathGL features.
 INCOMPATIBLE:
-* Disable MGL command 'setsizescl'. At this, the similar C/C++/Fortran/... functions still working.
+* Make obsolete MGL command 'setsizescl'. At this, the similar C/C++/Fortran/... functions still working.
 
 
 2.4.1 Released 20 July 2017

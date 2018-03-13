@@ -283,13 +283,13 @@ extern MGL_EXPORT uint64_t mgl_mask_val[16];
 #define MGL_NOSUBTICKS		0x00004000 	///< Disable subticks drawing (for bounding box)
 #define MGL_LOCAL_LIGHT		0x00008000 	///< Keep light sources for each inplot
 #define MGL_VECT_FRAME		0x00010000 	///< Use DrwDat to remember all data of frames
-#define MGL_REDUCEACC		0x00020000 	///< Reduce accuracy of points (to reduc size of output files)
+#define MGL_REDUCEACC		0x00020000 	///< Reduce accuracy of points (to reduce size of output files)
 #define MGL_PREFERVC 		0x00040000 	///< Prefer vertex color instead of texture if output format supports
 #define MGL_ONESIDED 		0x00080000 	///< Render only front side of surfaces if output format supports (for debugging)
 #define MGL_NO_ORIGIN 		0x00100000 	///< Don't draw tick labels at axis origin
 #define MGL_GRAY_MODE 		0x00200000 	///< Convert all colors to gray ones
 #define MGL_FULL_CURV 		0x00400000 	///< Disable omitting points in straight-line part(s).
-#define MGL_NO_SCALE_REL 	0x00800000 	///< Disable omitting points in straight-line part(s).
+#define MGL_NO_SCALE_REL 	0x00800000 	///< Disable font scaling in relative inplots
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_C99_COMPLEX
 #include <complex.h>

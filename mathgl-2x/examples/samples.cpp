@@ -2285,21 +2285,21 @@ void smgl_primitives(mglGraph *gr)	// flag #
 	gr->Ellipse(mglPoint(0,-1),mglPoint(1,-0.6),0.2,"m@");
 	gr->Mark(mglPoint(0,-0.5),"*");	gr->Mark(mglPoint(1,-0.1),"*");
 
-	gr->SubPlot(2,3,1,"");	gr->Title("Arc, Polygon, Symbol","", -1.2);
+	gr->SubPlot(2,3,1,"");	gr->Title("Arc, Polygon, Symbol","", -1.2*2);
 	gr->Arc(mglPoint(-0.6,0), mglPoint(-0.6,0.3), 180, "2kA");	gr->Ball(-0.6,0);
 	gr->Polygon(mglPoint(), mglPoint(0,0.4), 6, "r");
 	mglData x(50), y(50);	gr->Fill(x,"cos(3*pi*x)");	gr->Fill(y,"sin(pi*x)");
 	gr->DefineSymbol('a',x,y);	gr->Symbol(mglPoint(0.7),'a');
 
 	gr->Light(true);
-	gr->SubPlot(2,3,3,"<^>",0,-0.2);	gr->Title("Face[xyz]", "", -1.5);
+	gr->SubPlot(2,3,3,"<^>",0,-0.2);	gr->Title("Face[xyz]", "", -1.5*2);
 	gr->Rotate(50,60);	gr->Box();
 	gr->FaceX(mglPoint(1,0,-1),1,1,"r");
 	gr->FaceY(mglPoint(-1,-1,-1),1,1,"g");
 	gr->FaceZ(mglPoint(1,-1,-1),-1,1,"b");
 	gr->Face(mglPoint(-1,-1,1),mglPoint(-1,1,1),mglPoint(1,-1,0),mglPoint(1,1,1),"bmgr");
 
-	gr->SubPlot(2,3,5,"");	gr->Title("Cone", "", -1.5);
+	gr->SubPlot(2,3,5,"");	gr->Title("Cone", "", -1.5*2);
 	gr->Cone(mglPoint(-0.7,-0.3),mglPoint(-0.7,0.7,0.5),0.2,0.1,"b");
 	gr->Puts(mglPoint(-0.7,-0.7),"no edges\n(default)","", -1.5);
 	gr->Cone(mglPoint(0,-0.3),mglPoint(0,0.7,0.5),0.2,0.1,"g@");
