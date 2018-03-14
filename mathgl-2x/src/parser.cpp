@@ -134,8 +134,9 @@ const mglCommand *mglParser::FindCommand(const char *com) const
 //-----------------------------------------------------------------------------
 const mglCommand *mglParser::FindCommand(const wchar_t *com) const
 {
-	size_t s = 15<mgl_wcslen(com)?15:mgl_wcslen(com);
-	char cmd[16];	wcstombs(cmd,com,s+1);	cmd[s]=0;
+	char cmd[33]="";
+	size_t s = wcstombs(0,com,0);	// NOTE: command name should be less than 32
+	if(s<32)	{	wcstombs(cmd,com,s+1);	cmd[s]=0;	}
 	return FindCommand(cmd);
 }
 //-----------------------------------------------------------------------------
