@@ -1967,6 +1967,25 @@ void smgl_flow(mglGraph *gr)
 	gr->Box();	gr->Flow(ex,ey,ez);
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_flow3="call 'prepare3v'\n"
+"subplot 2 2 0:title 'Flow3 plot (default)':rotate 50 60:box\nflow3 ex ey ez\n"
+"subplot 2 2 1:title '\"v\" style, from boundary':rotate 50 60:box\nflow3 ex ey ez 'v' 0\n"
+"subplot 2 2 2:title '\"t\" style':rotate 50 60:box\nflow3 ex ey ez 't' 0\n"
+"subplot 2 2 3:title 'from \\i z planes':rotate 50 60:box\nflow3 ex ey ez 'z' 0\nflow3 ex ey ez 'z' 9";
+void smgl_flow3(mglGraph *gr)
+{
+	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
+	if(big!=3)	{gr->SubPlot(2,2,0);	gr->Title("Flow3 plot (default)");}
+	gr->Rotate(50,60);	gr->Box();		gr->Flow3(ex,ey,ez);
+	if(big==3)	return;
+	gr->SubPlot(2,2,1);	gr->Title("'v' style, from boundary");
+	gr->Rotate(50,60);	gr->Box();	gr->Flow3(ex,ey,ez,"v",0);
+	gr->SubPlot(2,2,2);	gr->Title("'t' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Flow3(ex,ey,ez,"t",0);
+	gr->SubPlot(2,2,3);	gr->Title("from \\i z planes");
+	gr->Rotate(50,60);	gr->Box();	gr->Flow3(ex,ey,ez,"z",0);	gr->Flow3(ex,ey,ez,"z",9);
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_pipe="call 'prepare2v'\ncall 'prepare3v'\nsubplot 2 2 0 '':title 'Pipe plot (default)':light on:box:pipe a b\n"
 "subplot 2 2 1 '':title '\"i\" style':box:pipe a b 'i'\n"
 "subplot 2 2 2 '':title 'from edges only':box:pipe a b '#'\n"
@@ -3454,6 +3473,7 @@ mglSample samp[] = {
 	{"fit", smgl_fit, mmgl_fit, "Example of nonlinear @ref{fit}."},
 	{"flame2d", smgl_flame2d, mmgl_flame2d, "Function @ref{flame2d} generate points for flame fractals in 2d case."},
 	{"flow", smgl_flow, mmgl_flow, "Function @ref{flow} is another standard way to visualize vector fields -- it draw lines (threads) which is tangent to local vector field direction. MathGL draw threads from edges of bounding box and from central slices. Sometimes it is not most appropriate variant -- you may want to use @code{flowp} to specify manual position of threads. The color scheme is used for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source)."}, // TODO @ref{flowp}
+	{"flow3", smgl_flow3, mmgl_flow3, "Function @ref{flow3} draw flow threads, which start from given plane."},
 	{"fog", smgl_fog, mmgl_fog, "Example of @ref{fog}."},
 	{"fonts", smgl_fonts, mmgl_fonts, "Example of @ref{font} typefaces."},
 	{"grad", smgl_grad, mmgl_grad, "Function @ref{grad} draw gradient lines for matrix."},

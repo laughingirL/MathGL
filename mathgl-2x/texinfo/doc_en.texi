@@ -48,6 +48,7 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 * MGL scripts::
 * UDAV::
 * Other classes::
+* All samples::
 * Symbols and hot-keys::
 * File formats::
 * TeX-like symbols::
@@ -99,17 +100,17 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @end macro
 
 @macro fig {fname,text}
-@center @image{../\fname\, 11cm, , \text\, png}
+@center @image{../\fname\.png, 11cm, , \text\, png}
 @end macro
 @macro pfig {fname,text}
-@center @uref{../pdf/\fname\.pdf, @image{../png/\fname\, 11cm, , \text\, png}}
+@center @uref{../pdf/\fname\.pdf, @image{../png/\fname\.png, 11cm, , \text\, png}}
 @c @center @image{../png/\fname\, 11cm, , \text\. See also @uref{../pdf/\fname\.pdf, 3D PDF} sample, .png}
 @end macro
 @macro ufig {fname,width,text}
-@center @image{../udav/\fname\, \width\cm, , \text\, png}
+@center @image{../udav/\fname\.png, \width\cm, , \text\, png}
 @end macro
 @macro sfig {plot,text}
-@ref{\text\, @image{../small/\plot\-sm,3cm, , , png}}
+@ref{\text\, @image{../small/\plot\-sm.png,3cm, , , png}}
 @end macro
 
 
@@ -144,10 +145,13 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @node UDAV, Other classes, MGL scripts, Top
 @include udav_en.texi
 
-@node Other classes, Symbols and hot-keys, UDAV, Top
+@node Other classes, All samples, UDAV, Top
 @include other_en.texi
 
-@node Symbols and hot-keys, File formats, Other classes, Top
+@node All samples, Symbols and hot-keys, Other classes, Top
+@include samples.texi
+
+@node Symbols and hot-keys, File formats, All samples, Top
 @appendix Symbols and hot-keys
 @include symbols_en.texi
 

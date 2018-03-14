@@ -3415,7 +3415,7 @@ color scheme -- up-half (warm) corresponds to normal flow (like attractor), bott
 @item
 @samp{x}, @samp{z} for drawing tapes of normals in x-y and y-z planes correspondingly.
 @end itemize
-See also @ref{pipe}, @ref{vect}, @ref{tape}, @ref{barwidth}. @sref{flow sample}
+See also @ref{pipe}, @ref{vect}, @ref{tape}, @ref{flow3}, @ref{barwidth}. @sref{flow sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} flow udat vdat wdat ['sch'='']
@@ -3450,6 +3450,30 @@ The same as first one (@ref{flow}) but draws single flow thread starting from po
 @end ifclear
 This is 3D version of the previous functions.
 @end deftypefn
+
+@anchor{flow3}
+@deftypefn {MGL command} {} flow3 udat vdat wdat ['sch'='']
+@deftypefnx {MGL command} {} flow3 xdat ydat zdat udat vdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Flow3 (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{double} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Flow3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{double} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_flow3 (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{double} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_flow3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{double} sVal, @code{const char *}opt)
+@end ifclear
+The function draws flow threads for the 3D vector field @{@var{ax}, @var{ay}, @var{az}@} parametrically depending on coordinates @var{x}, @var{y}, @var{z}. Flow threads starts from given plane. Option @code{value} set the approximate number of threads (default is 5). String @var{sch} may contain:
+@itemize @bullet
+@item
+color scheme -- up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
+@item
+@samp{x}, @samp{z} for normal of starting plane (default is y-direction);
+@item
+@samp{v} for drawing arrows on the threads;
+@item
+@samp{t} for drawing tapes of normals in x-y and y-z planes.
+@end itemize
+See also @ref{flow}, @ref{pipe}, @ref{vect}. @sref{flow3 sample}
+@end deftypefn
+
 
 @anchor{grad}
 @deftypefn {MGL command} {} grad pdat ['sch'='']

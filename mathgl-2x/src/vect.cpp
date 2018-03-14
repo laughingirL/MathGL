@@ -926,7 +926,7 @@ void flow(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HCD
 	} while(!end);
 	if(k>1)	// TODO exclude AddPnt() and use curve_plot()!!!
 	{
-		long j,a=long(gr->GetArrowSize()/fabs(dt));
+		long j,a=long(0.3*gr->GetArrowSize()/fabs(dt));
 		mreal rr = mgl_anorm(gr->Max-gr->Min)*gr->BarWidth/25, ll;
 		mglPoint q1,q2,l;
 		long n1=-1,n2=-1,n3=-1,n4=-1;
@@ -951,9 +951,9 @@ void flow(mglBase *gr, double u, double v, double w, HCDT x, HCDT y, HCDT z, HCD
 			q1 -= l*(l*q1);	q1/= mgl_anorm(q1);	q2 = q1^l;
 			long m1 = n1, m2 = n2, m3 = n3, m4 = n4;
 			if(xo)
-			{	n1 = gr->AddPnt(pp[i],-1,q2);	n2 = gr->AddPnt(pp[i]+rr*q1,-1,q2);	gr->quad_plot(n1,n2,m1,m2);	}
+			{	n1 = gr->AddPnt(pp[i],pp[i].c,q2);	n2 = gr->AddPnt(pp[i]+rr*q1,pp[i].c,q2);	gr->quad_plot(n1,n2,m1,m2);	}
 			if(zo)
-			{	n3 = gr->AddPnt(pp[i],-1,q1);	n4 = gr->AddPnt(pp[i]+rr*q2,-1,q1);	gr->quad_plot(n3,n4,m3,m4);	}
+			{	n3 = gr->AddPnt(pp[i],pp[i].c,q1);	n4 = gr->AddPnt(pp[i]+rr*q2,pp[i].c,q1);	gr->quad_plot(n3,n4,m3,m4);	}
 		}
 		/*	TODO	long a=long(0.3*gr->GetArrowSize()/fabs(dt));
 		gr->Reserve(k);

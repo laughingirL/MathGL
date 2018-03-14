@@ -55,7 +55,6 @@ D. Docs about JS interface
 	* Example of 'title' style '#'
 	* Example of 'triplot'+'quadplot' with colors per-face
 	* Example of 'tricontv'
-	* Example of 'flow3'
 	* Example of 'grad_xyz'
 	* Example of 'flow', 'pipe' style '*'.
 	* Example of 'fsurf'

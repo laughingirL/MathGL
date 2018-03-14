@@ -87,6 +87,7 @@ void test(mglGraph *gr)
 void mgl_generate_texi()
 {
 	FILE *fp = fopen("samples.texi","w");
+	FILE *fq = fopen("samples_list.texi","w");
 	fprintf(fp,"@c ------------------------------------------------------------------\n"
 		"@chapter All samples\n@nav{}\n\n"
 		"This chapter contain alphabetical list of MGL and C++ samples for most of MathGL graphics and features.\n\n@menu\n* initialization sample::\n");
@@ -114,6 +115,7 @@ void mgl_generate_texi()
 	fs = fopen("samples.cpp","r");
 	for(size_t i=0;samp[i].name && samp[i].name[0];i++)
 	{
+		fprintf(fq, "@sfig{%s, %s sample}\n", samp[i].name, samp[i].name);
 		if(samp[i+1].name && samp[i+1].name[0])
 			fprintf(fp,"@c ------------------------------------------------------------------\n"
 				"@node %s sample, %s sample, %s sample, All samples\n@section Sample @samp{%s}\n@nav{}\n",
@@ -137,7 +139,7 @@ void mgl_generate_texi()
 		}
 		fprintf(fp,"}\n@end verbatim\n@end ifclear\n@pfig{%s, Sample @samp{%s}}\n@external{}\n", samp[i].name, samp[i].name);
 	}
-	fclose(fs);	fclose(fp);
+	fclose(fs);	fclose(fp);	fclose(fq);
 }
 
 static struct option longopts[] =
