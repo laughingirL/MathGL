@@ -110,7 +110,10 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widge
 	tet_val = phi_val = 0;
 	draw_par = 0;	draw_func = 0;	draw_cl = 0;
 	last_id = -1;	run = false;
-	popup=0;	vpar=0;	wpar=0;	thr=0;
+	popup=0;	vpar=0;	wpar=0;
+#if (MGL_HAVE_PTHREAD|MGL_HAVE_PTHR_WIDGET)
+	thr=0;
+#endif
 }
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}

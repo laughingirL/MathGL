@@ -120,9 +120,12 @@ public:
 	{	mgl_wnd_make_dialog(gr, ids, args, title);	}
 	inline void MakeDialog(const std::string &ids, const std::vector<std::string> &args, const char *title="")
 	{
-		std::vector<const char *> buf;	buf.reserve(args.size());
-		for(size_t i=0;i<args.size();i++)	buf.push_back(args[i].c_str());
-		MakeDialog(ids.c_str(), &(buf[0]), title);
+		if(args.size()>0)
+		{
+			std::vector<const char *> buf;	buf.reserve(args.size());
+			for(size_t i=0;i<args.size();i++)	buf.push_back(args[i].c_str());
+			MakeDialog(ids.c_str(), &(buf[0]), title);
+		}
 	}
 	/// Set callback functions for drawing and data reloading
 	inline void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL)
