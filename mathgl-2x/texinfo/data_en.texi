@@ -1424,7 +1424,7 @@ Prints all values of the data array @var{dat} as message.
 @deftypefnx {Method on @code{mglGraph}} @code{void} Progress (@code{int} val, @code{int} max)
 @deftypefnx {C function} @code{void} mgl_progress (@code{int} val, @code{int} max)
 @end ifclear
-Display progress of something as filled horizontal bar with relative length @var{val}/@var{max}. Note, it work now only in console and in FLTK-based widgets (like, @code{mgllab} or @code{mglview}).
+Display progress of something as filled horizontal bar with relative length @var{val}/@var{max}. Note, it work now only in console and in FLTK-based applications, including @code{mgllab} and @code{mglview}.
 @end deftypefn
 
 
