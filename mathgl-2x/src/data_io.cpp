@@ -35,7 +35,7 @@
 #endif
 #if MGL_HAVE_HDF4
 #define intf hdf4_intf
-#include <hdf/mfhdf.h>
+#include <mfhdf.h>
 #undef intf
 #endif
 
