@@ -78,15 +78,8 @@ D. Docs about JS interface
 	* Example of `dat <==> Transpose(dat).
 	* Example of 'coil'
 	* Example of 'roots'
-
-10. Special comment "##d $I kind|label|par1|par2|..." will create custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
-	'e' for editor or input line (parameter is initial value) , 
-	'v' for spinner or counter (parameters are "ini|min|max|step|big_step"), 
-	's' for slider (parameters are "ini|min|max|step"), 
-	'b' for check box (parameter is "ini"; also understand "on"=1), 
-	'c' for choice (parameters are possible choices).
-Now, it work in mgllab only. Note, only single entry per line is allowed.
-11. Docs about 'progress val max'
+	* Example of custom dialog
+	* Example of 'progress'
 
 ZZ. Update time.texi {before release!!!}
 

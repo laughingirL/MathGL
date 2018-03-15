@@ -54,7 +54,7 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 @itemize
 
 @item @strong{18 March 2018.}
-New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There area custom dialog for FLTK widgets; display of execution progress; new plots @ref{contp}, @ref{flow3}; style of plots @ref{cont}, @ref{flow}, @ref{tube}; change drawing for @ref{axis}, @ref{colorbar}; data handling (@ref{coil}) and setup (@ref{scaletext}, @ref{setup}) functions; modulo operation @samp{@code{%}} in formulas; automatic omit points for all curves; new section @ref{All samples} of documentation; speeding up and bugfixes.
+New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There area custom dialog for FLTK widgets (see @ref{Special commentaries}); display of execution @ref{progress}; new plots @ref{contp}, @ref{flow3}; style of plots @ref{cont}, @ref{flow}, @ref{tube}; change drawing for @ref{axis}, @ref{colorbar}; data handling (@ref{coil}) and setup (@ref{scaletext}, @ref{setup}) functions; modulo operation @samp{@code{%}} in formulas; automatic omit points for all curves; new section @ref{All samples} of documentation; speeding up and bugfixes.
 
 @item @emph{17 May 2017.}
 New version (v.2.4) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are @code{mgllab} executable, string manipulation in MGL, new functions, plot types and styles, translation to Russian using @code{gettext} and bugfixes, which denoted @ref{News, here}.
@@ -81,13 +81,8 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released.
 @itemize @bullet
 
-@item Add custom dialog for FLTK widgets. This can be constructed from C/C++ code, or from MGL script using special comments "##d##d $I kind|label|par1|par2|..." will create an entry in custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
-	'e' for editor or input line (parameter is initial value) , 
-	'v' for spinner or counter (parameters are "ini|min|max|step|big_step"), 
-	's' for slider (parameters are "ini|min|max|step"), 
-	'b' for check box (parameter is "ini"; also understand "on"=1), 
-	'c' for choice (parameters are possible choices).
-@item Add 'progress' for displaying the progress of execution (by '#' symbols in console, or by progress-bar widget). @c TODO
+@item Add custom dialog for FLTK widgets. This can be constructed from C/C++ code, or from MGL script using @ref{Special commentaries}.
+@item Add @ref{progress} for displaying the progress of execution (by '#' symbols in console, or by progress-bar widget).
 
 @item Add @ref{contp} for contour lines on parametrically specified surface.
 @item Add @ref{flow3} for flow threads of 3D vector field, which start from the plain.

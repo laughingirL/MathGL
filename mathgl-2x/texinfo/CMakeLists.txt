@@ -2,7 +2,8 @@ configure_file(${MathGL2_SOURCE_DIR}/texinfo/version.texi.in ${MathGL2_BINARY_DI
 
 #set(MGL_EXTRA light pendelta)
 set(MGL_EXTRA )
-set(MGL_PNG 3wave alpha apde area aspect axial axis barh bars belt bifurcation box boxplot boxs candle chart cloud colorbar combined cones cont cont_xyz cont3 contd contf contf_xyz contf3 contv correl curvcoor cut dat_diff dat_extra data1 data2 dens dens_xyz dens3 detect dew diffract dilate dots earth error error2 export fall fexport fit flame2d flow flow3 fog fonts grad hist ifs2d ifs3d indirect inplot iris label lamerey legend light loglog map mark mask mesh mirror molecule ode ohlc param1 param2 param3 paramv parser pde pendelta pipe plot pmap primitives projection projection5 pulse qo2d quality0 quality1 quality2 quality4 quality5 quality6 quality8 radar refill region scanfile schemes section several_light solve stem step stereo stfa style surf surf3 surf3a surf3c surf3ca surfa surfc surfca table tape tens ternary text text2 textmark ticks tile tiles torus traj triangulation triplot tube type0 type1 type2 vect vect3 venn )
+set(MGL_PNG_ONLY quality0 quality1 quality2 quality4 quality5 quality6 quality8 pendelta fexport) 
+set(MGL_PNG 3wave alpha apde area aspect axial axis barh bars belt bifurcation box boxplot boxs candle chart cloud colorbar combined cones cont cont_xyz cont3 contd contf contf_xyz contf3 contv correl curvcoor cut dat_diff dat_extra data1 data2 dens dens_xyz dens3 detect dew diffract dilate dots earth error error2 export fall fit flame2d flow flow3 fog fonts grad hist ifs2d ifs3d indirect inplot iris label lamerey legend light loglog map mark mask mesh mirror molecule ode ohlc param1 param2 param3 paramv parser pde pipe plot pmap primitives projection projection5 pulse qo2d radar refill region scanfile schemes section several_light solve stem step stereo stfa style surf surf3 surf3a surf3c surf3ca surfa surfc surfca table tape tens ternary text text2 textmark ticks tile tiles torus traj triangulation triplot tube type0 type1 type2 vect vect3 venn )
 set(MGL_PNG_N )
 set(MGL_PNG_S )
 set(MGL_PNG_J )
@@ -47,6 +48,20 @@ add_custom_command(OUTPUT ${MGL_OUT}/samples.texi
 #	COMMAND mgl_example -time -big
 #	DEPENDS mgl_example
 #	WORKING_DIRECTORY ${MGL_OUT} )
+
+
+foreach(SAMPLE ${MGL_PNG_ONLY})
+	set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)
+	add_custom_command(OUTPUT ${MGL_OUT}/png/${SAMPLE}.png
+		COMMAND mgl_example -kind=${SAMPLE}
+		DEPENDS mgl_example
+		WORKING_DIRECTORY ${MGL_OUT}/png )
+	set(MGL_PNG_S ${MGL_PNG_S} ${MGL_OUT}/small/${SAMPLE}-sm.png)
+	add_custom_command(OUTPUT ${MGL_OUT}/small/${SAMPLE}-sm.png
+		COMMAND mgl_example -kind=${SAMPLE} -mini
+		DEPENDS mgl_example
+		WORKING_DIRECTORY ${MGL_OUT}/small )
+endforeach(SAMPLE)
 
 foreach(SAMPLE ${MGL_PNG})
 	set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)

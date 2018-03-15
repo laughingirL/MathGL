@@ -1403,6 +1403,15 @@ These functions change the data in some direction like differentiations, integra
 Печатает все значения массива @var{dat} как сообщение.
 @end deftypefn
 
+@anchor{progress}
+@deftypefn {Команда MGL} {} progress @code{val max}
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Progress (@code{int} val, @code{int} max)
+@deftypefnx {Функция С} @code{void} mgl_progress (@code{int} val, @code{int} max)
+@end ifclear
+Отображает прогресс чего-либо как заполненную полоску с относительной длиной @var{val}/@var{max}. На данный момент работает только в консоли и основанных на FLTK программах, включая @code{mgllab} и @code{mglview}.
+@end deftypefn
+
 
 @cindex GetNx
 @cindex GetNy
