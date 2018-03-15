@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-14 16:26+0300\n"
+"POT-Creation-Date: 2018-03-15 13:52+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -33,7 +33,7 @@ msgstr ""
 "\t-L loc       изменить локаль на loc\n"
 "\t-h           показать справку \n"
 
-#: utils/mglconv.cpp:87
+#: utils/mglconv.cpp:85
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -5524,7 +5524,7 @@ msgstr "Обновить список массивов данных"
 msgid "Upper border for determining color or alpha"
 msgstr "Верхняя граница для цвета или прозрачности"
 
-#: utils/mglconv.cpp:85
+#: utils/mglconv.cpp:83
 #, c-format
 msgid "Usage:\tmglconv [parameter(s)] scriptfile\n"
 msgstr "Использование:\tmglconv [параметр(ы)] имя_скрипта\n"
@@ -6258,7 +6258,7 @@ msgstr ""
 msgid "mgl_en"
 msgstr "mgl_ru"
 
-#: utils/mglconv.cpp:84
+#: utils/mglconv.cpp:82
 #, c-format
 msgid ""
 "mglconv convert mgl script to image file (default PNG).\n"

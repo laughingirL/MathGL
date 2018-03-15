@@ -26,8 +26,6 @@
 #else
 #define mnpos std::wstring::npos
 #endif
-void mgl_error_print(const char *Message, void *par);
-void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {

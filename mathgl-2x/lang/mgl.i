@@ -34,7 +34,7 @@ public:
 #else
 		else if(kind==1)
 		{	gr=mgl_create_graph(width, height);
-			mglGlobalMess += "OpenGL support was disabled. Please, enable it and rebuild MathGL.\n";	}
+			SetGlobalWarn("OpenGL support was disabled. Please, enable it and rebuild MathGL.");	}
 #endif
 		else	gr=mgl_create_graph(width, height);
 	}
@@ -124,7 +124,9 @@ public:
 	/// Restore font (load default font for new HMGL objects)
 	inline void RestoreFont()				{	mgl_restore_font(gr);	}
 	/// Set to use or not text rotation
-	inline void SetRotatedText(bool rotated)	{	mgl_set_rotated_text(gr, rotated);	}
+	inline void SetRotatedText(bool enable)	{	mgl_set_rotated_text(gr, enable);	}
+	/// Set to scale text in relative subplots too
+	inline void SetScaleText(bool enable)	{	mgl_set_scale_text(gr, enable);	}
 	/// Set default font for all new HMGL and mglGraph objects
 	static inline void SetDefFont(const char *name, const char *path="")	{	mgl_def_font(name,path);	}
 	/// Add user-defined glyph for symbol and set its optional id
@@ -159,6 +161,8 @@ public:
 	static inline void SuppressWarn(bool on)	{	mgl_suppress_warn(on);	}
 	/// Check if MathGL version is valid (return false) or not (return true)
 	static inline bool CheckVersion(const char *ver)	{	return mgl_check_version(ver);	}
+	/// Display progress of something.
+	inline void Progress(int value, int maximal)	{	mgl_progress(value, maximal, gr);	}
 
 	/// Set axis range scaling -- simplified way to shift/zoom axis range -- need to replot whole image!
 	inline void ZoomAxis(mglPoint p1=mglPoint(0,0,0,0), mglPoint p2=mglPoint(1,1,1,1))
@@ -1808,7 +1812,7 @@ public:
 	/// Plot flows from given plain for vector field {ax,ay,az} parametrically depended on coordinate {x,y,z} with color proportional to |a|
 	/** String \a sch may contain:
 	* color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
-	* ‘v’ for drawing arrows on the threads;
+	* 'v' for drawing arrows on the threads;
 	* 't' for drawing tapes of normals in x-y and y-z planes.
 	* Option "value" sets the number of threads (default is 5). */
 	inline void Flow3(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch="", double sVal=-1, const char *opt="")
@@ -1816,7 +1820,7 @@ public:
 	/// Plot flows from given plain for vector field {ax,ay,az} with color proportional to |a|
 	/** String \a sch may contain:
 	* color scheme: up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
-	* ‘v’ for drawing arrows on the threads;
+	* 'v' for drawing arrows on the threads;
 	* 't' for drawing tapes of normals in x-y and y-z planes.
 	* Option "value" sets the number of threads (default is 5). */
 	inline void Flow3(const mglData &ax, const mglData &ay, const mglData &az, const char *sch="", double sVal=-1, const char *opt="")
