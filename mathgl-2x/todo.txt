@@ -80,6 +80,8 @@ D. Docs about JS interface
 	* Example of 'roots'
 	* Example of custom dialog
 	* Example of 'progress'
+	
+3. Docs about mgllab (overview, dialogs, ...)
 
 ZZ. Update time.texi {before release!!!}
 

@@ -1145,8 +1145,8 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 	int align;
 	bool box=mglchr(stl,'#'), col = mglGetStyle(stl,0,&align);
 	align = align&3;
-	mreal y=inY+inH-h;
-	mglPoint p(inX + inW*align/2.,y,3*Depth),q(NAN,NAN,NAN);
+	mreal y=inY+inH-h, zpos = 0;//3*Depth;
+	mglPoint p(inX + inW*align/2.,y,zpos),q(NAN,NAN,NAN);
 	mglMatrix M=B;	M.norot=true;
 	if(title)	text_plot(AddPnt(&M,p,-1,q,-1,0),title,stl,size);
 	if(box)	//	draw boungind box
@@ -1155,10 +1155,10 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 		if((Flag&3)==2 && !col)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
 		else if((Flag&3)==2)	c1=AddTexture('k');
 		long k1,k2,k3,k4;
-		k1=AddPnt(&M,mglPoint(inX,y-h*0.4,3*Depth),c1,q,-1,0);
-		k2=AddPnt(&M,mglPoint(inX+inW,y-h*0.4,3*Depth),c1,q,-1,0);
-		k3=AddPnt(&M,mglPoint(inX,y+h,3*Depth),c1,q,-1,0);
-		k4=AddPnt(&M,mglPoint(inX+inW,y+h,3*Depth),c1,q,-1,0);
+		k1=AddPnt(&M,mglPoint(inX,y-h*0.4,zpos),c1,q,-1,0);
+		k2=AddPnt(&M,mglPoint(inX+inW,y-h*0.4,zpos),c1,q,-1,0);
+		k3=AddPnt(&M,mglPoint(inX,y+h,zpos),c1,q,-1,0);
+		k4=AddPnt(&M,mglPoint(inX+inW,y+h,zpos),c1,q,-1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
