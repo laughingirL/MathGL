@@ -1245,7 +1245,7 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		bb->addAction(a);		oo->addAction(a);
 		a = new QAction(QPixmap(down_1_xpm), _("Move down"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftDown()));
-		a->setToolTip(_("Move graphics up down 1/3 of its height."));
+		a->setToolTip(_("Move graphics down 1/3 of its height."));
 		bb->addAction(a);		oo->addAction(a);
 		a = new QAction(QPixmap(right_1_xpm), _("Move right"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftRight()));

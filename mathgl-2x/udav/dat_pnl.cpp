@@ -410,7 +410,7 @@ void DatPanel::reSize()
 void DatPanel::squize()
 {
 	QString mx("1"), my("1"), mz("1");
-	if(sizesDialog(_("UDAV - Squeeze data"), _("Enter step of saved points. For example, '1' save all, '2' save each 2nd point, '3' save each 3d and so on."), _("X-direction"), _("Y-direction"), _("Z-direction"), mx, my, mz))
+	if(sizesDialog(_("UDAV - Squeeze data"), _("Enter step of saved points. For example, '1' save all, '2' save each 2nd point, '3' save each 3rd and so on."), _("X-direction"), _("Y-direction"), _("Z-direction"), mx, my, mz))
 	{
 		mglData *d = dynamic_cast<mglData *>(var);
 		if(d)	d->Squeeze(mx.toInt(), my.toInt(), mz.toInt());

@@ -143,7 +143,7 @@ Fl_Widget *add_mem(ScriptWindow *w)
 	Fl_Box *b;
 	Fl_Window *wnd = new Fl_Window(300,30,630,430,0);
 
-	b = new Fl_Box(0, 10, 630, 25, _("Existed data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
+	b = new Fl_Box(0, 10, 630, 25, _("Existing data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
 	b = new Fl_Box(0, 35, 220, 25, _("name"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 	b = new Fl_Box(220, 35, 205, 25, _("dimensions"));
@@ -266,7 +266,7 @@ void ScriptWindow::mem_pressed(int kind)
 const char *hints[] = {
 	_("You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."),
 	_("You can rotate/shift/zoom whole plot by mouse. Just press 'Rotate' toolbutton, click image and hold a mouse button: left button for rotation, right button for zoom/perspective, middle button for shift."),
-	_("You may quickly draw the data from file. Just use: udav 'filename.dat' in command line."),
+	_("You may quickly draw the data from file. Just use: mgllab 'filename.dat' in command line."),
 	_("You can copy the current image to clipboard by pressing Ctrl-Shift-C. Later you can paste it directly into yours document or presentation."),
 	_("You can export image into a set of format (EPS, SVG, PNG, JPEG) by pressing right mouse button inside image and selecting 'Export as ...'."),
 	_("You can setup colors for script highlighting in Property dialog. Just select menu item 'Settings/Properties'."),

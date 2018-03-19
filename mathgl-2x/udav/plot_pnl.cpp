@@ -527,7 +527,7 @@ void PlotPanel::toolLeft(QBoxLayout *h)
 	a = new QAction(QPixmap(":/png/arrow-down.png"), _("Move down"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(shiftDown()));
 	a->setShortcut(Qt::ALT+Qt::Key_Down);
-	a->setToolTip(_("Move graphics up down 1/3 of its height."));
+	a->setToolTip(_("Move graphics down 1/3 of its height."));
 	oo->addAction(a);	t->addAction(a);
 
 	a = new QAction(QPixmap(":/png/arrow-right.png"), _("Move right"), this);

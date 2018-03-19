@@ -221,7 +221,7 @@ void saveas_cb(Fl_Widget*, void *v)
 		if(fp)
 		{
 			fclose(fp);
-			if(fl_choice(_("File is exesist. Overwrite it?"),0,_("No"),_(" Yes "))==2)
+			if(fl_choice(_("File exist. Overwrite it?"),0,_("No"),_(" Yes "))==2)
 				break;
 		}
 		else	break;

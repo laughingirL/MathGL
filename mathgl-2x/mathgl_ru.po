@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-15 15:20+0300\n"
+"POT-Creation-Date: 2018-03-19 13:24+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -670,7 +670,7 @@ msgstr "Добавить текст. Его свойства можно изме
 msgid "Add title for current subplot/inplot"
 msgstr "Добавить заголовок к текущему под-графику"
 
-#: mgllab/table.cpp:794
+#: mgllab/table.cpp:796
 msgid "Add to"
 msgstr "Добавить к"
 
@@ -732,11 +732,11 @@ msgstr "Угол относительно оси z (в градусах)"
 msgid "Animation"
 msgstr "Анимация"
 
-#: mgllab/table.cpp:786
+#: mgllab/table.cpp:788
 msgid "Another"
 msgstr "Другой"
 
-#: mgllab/table.cpp:852
+#: mgllab/table.cpp:854
 msgid "Apply operator (smoothing, integration, difference ...) to data"
 msgstr ""
 "Применить к данным оператор (сглаживание, интегрирование, дифференцирование "
@@ -871,7 +871,7 @@ msgstr "Начало"
 
 #: src/parser.cpp:1483
 msgid "Begin of do-while loop"
-msgstr ""
+msgstr "Начало цикла do-while"
 
 #: udav/calc_dlg.cpp:193
 msgid "Bessel"
@@ -909,7 +909,7 @@ msgstr "Яркость"
 msgid "Brightness of i-th color"
 msgstr "Яркость i-го цвета"
 
-#: mgllab/table.cpp:766
+#: mgllab/table.cpp:768
 msgid "By formula"
 msgstr "По формуле"
 
@@ -947,7 +947,7 @@ msgstr "Калькулятор"
 #: mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749 mgllab/dialogs.cpp:1071
 #: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:479
 #: mgllab/table.cpp:101 mgllab/table.cpp:179 mgllab/table.cpp:353
-#: mgllab/table.cpp:556 mgllab/table.cpp:619 mgllab/table.cpp:674
+#: mgllab/table.cpp:556 mgllab/table.cpp:619 mgllab/table.cpp:675
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -964,7 +964,7 @@ msgstr "График"
 msgid "Cell index"
 msgstr "Индекс ячейки"
 
-#: mgllab/table.cpp:103 mgllab/table.cpp:558 mgllab/table.cpp:770
+#: mgllab/table.cpp:103 mgllab/table.cpp:558 mgllab/table.cpp:772
 msgid "Change"
 msgstr "Изменить"
 
@@ -988,7 +988,7 @@ msgstr "Изменить данные"
 msgid "Change data sizes"
 msgstr "Изменить размер данных"
 
-#: mgllab/table.cpp:559 mgllab/table.cpp:622 mgllab/table.cpp:677
+#: mgllab/table.cpp:559 mgllab/table.cpp:622 mgllab/table.cpp:678
 msgid "Change data values and close this window"
 msgstr "Изменить данные и закрыть окно"
 
@@ -1053,7 +1053,7 @@ msgstr "Цвет(а) или цветовая схема"
 msgid "Colors"
 msgstr "Цвета"
 
-#: mgllab/table.cpp:879
+#: mgllab/table.cpp:881
 msgid ""
 "Colors denote values: magenta - local max, cyan - local min,\n"
 "\tred - Re(v)>0, blue - Re(v)<0, purple - Im(v)>0, teal - Im(v)<0."
@@ -1108,7 +1108,7 @@ msgstr "Вычисляет точки фрактала flame"
 
 #: src/parser.cpp:1499
 msgid "Condition of do-while loop"
-msgstr ""
+msgstr "Условие do-while цикла"
 
 #: src/parser.cpp:1489 src/parser.cpp:1493
 msgid "Conditional operator"
@@ -1162,7 +1162,7 @@ msgstr "Копировать выделение в буфер обмена"
 msgid "Copy text"
 msgstr "Копировать текст"
 
-#: mgllab/table.cpp:778
+#: mgllab/table.cpp:780
 msgid "Cos FFT"
 msgstr "Косинус-Фурье"
 
@@ -1211,7 +1211,7 @@ msgstr "Создание данных и ввод-вывод"
 msgid "Create histogram (distribution) of data values"
 msgstr "Создать гистограмму (распределение) значений данных"
 
-#: udav/dat_pnl.cpp:766 mgllab/table.cpp:758
+#: udav/dat_pnl.cpp:766 mgllab/table.cpp:760
 msgid "Create new"
 msgstr "Создать новый"
 
@@ -1227,7 +1227,7 @@ msgstr "Создать новый массив данных"
 msgid "Create new data array"
 msgstr "Создать новый массив данных"
 
-#: mgllab/table.cpp:836
+#: mgllab/table.cpp:838
 msgid "Create new data with zero filling"
 msgstr "Создать новый массив данных, заполненный нулями"
 
@@ -1239,11 +1239,11 @@ msgstr "Создать новое окно скрипта (Ctrl+N)."
 msgid "Creates new variable from list of numbers or data"
 msgstr "Создать новый массив из списка значений или данных"
 
-#: udav/dat_pnl.cpp:784 mgllab/table.cpp:761
+#: udav/dat_pnl.cpp:784 mgllab/table.cpp:763
 msgid "Crop"
 msgstr "Обрезать"
 
-#: mgllab/table.cpp:858
+#: mgllab/table.cpp:860
 msgid "Crop (cut off edges) data"
 msgstr "Обрезать края массива данных"
 
@@ -1260,7 +1260,7 @@ msgid "Crop the data edges. Useful to cut off the zero-filled area."
 msgstr ""
 "Обрезать края массива данных. Полезно для удаления краев заполненных нулями."
 
-#: mgllab/table.cpp:163 mgllab/table.cpp:772
+#: mgllab/table.cpp:163 mgllab/table.cpp:774
 msgid "CumSum"
 msgstr ""
 
@@ -1324,7 +1324,7 @@ msgstr ""
 msgid "Data handling"
 msgstr "Изменение данных"
 
-#: mgllab/help.cpp:163 mgllab/table.cpp:849
+#: mgllab/help.cpp:163 mgllab/table.cpp:851
 msgid "Data information and preview."
 msgstr "Информация и просмотр данных."
 
@@ -1416,7 +1416,7 @@ msgstr "Описание"
 msgid "Detect curves for maximums of data array"
 msgstr "Найти кривые по максимумам массива данных"
 
-#: mgllab/table.cpp:164 mgllab/table.cpp:774
+#: mgllab/table.cpp:164 mgllab/table.cpp:776
 msgid "Difference"
 msgstr "Дифференцировать"
 
@@ -1449,7 +1449,7 @@ msgstr "Направление по которому данные будут з�
 msgid "Distance between cells"
 msgstr "Расстояние между ячейками"
 
-#: mgllab/table.cpp:797
+#: mgllab/table.cpp:799
 msgid "Divide by"
 msgstr "Разделить на"
 
@@ -1457,7 +1457,7 @@ msgstr "Разделить на"
 msgid "Divide by data or number"
 msgstr "Разделить данные поэлементно на массив или число"
 
-#: mgllab/table.cpp:180 mgllab/table.cpp:354 mgllab/table.cpp:676
+#: mgllab/table.cpp:180 mgllab/table.cpp:354 mgllab/table.cpp:677
 msgid "Do"
 msgstr "OK"
 
@@ -1470,7 +1470,7 @@ msgid "Do integral transform of data"
 msgstr "Выполнить интегральное преобразование данных"
 
 #: mgllab/table.cpp:102 mgllab/table.cpp:557 mgllab/table.cpp:620
-#: mgllab/table.cpp:675
+#: mgllab/table.cpp:676
 msgid "Do nothing and close this window"
 msgstr "Закрыть это окно ничего не выполняя"
 
@@ -2040,7 +2040,7 @@ msgstr "Введите номер среза:"
 #: udav/dat_pnl.cpp:413
 msgid ""
 "Enter step of saved points. For example, '1' save all, '2' save each 2nd "
-"point, '3' save each 3d and so on."
+"point, '3' save each 3rd and so on."
 msgstr ""
 "Введите шаг сохранения. Например, '1' - все точки, '2' - каждая вторая, и т."
 "д."
@@ -2054,7 +2054,7 @@ msgstr "Введите текст"
 msgid "Enter value for %s argument"
 msgstr "Введите значение аргумента %s"
 
-#: mgllab/table.cpp:166 mgllab/table.cpp:784
+#: mgllab/table.cpp:166 mgllab/table.cpp:786
 msgid "Envelop"
 msgstr "Огибающая"
 
@@ -2108,7 +2108,7 @@ msgid "Execute script in external file"
 msgstr "Выполнить скрипт из внешнего файла"
 
 #: mgllab/help.cpp:146
-msgid "Existed data arrays"
+msgid "Existing data arrays"
 msgstr "Массивы данных"
 
 #: mgllab/mgllab.cpp:287
@@ -2139,7 +2139,7 @@ msgstr "Экспорт как 2D ..."
 msgid "Export as 3D ..."
 msgstr "Экспорт как 3D ..."
 
-#: src/exec_dat.cpp:1658 mgllab/table.cpp:844
+#: src/exec_dat.cpp:1658 mgllab/table.cpp:846
 msgid "Export data to PNG file"
 msgstr "Экспорт данных в PNG файл"
 
@@ -2148,7 +2148,7 @@ msgstr "Экспорт данных в PNG файл"
 msgid "Export to GIF"
 msgstr "Экспорт в GIF"
 
-#: mgllab/table.cpp:752
+#: mgllab/table.cpp:754
 msgid "Export to PNG"
 msgstr "Экспорт в PNG"
 
@@ -2174,7 +2174,7 @@ msgstr "Фактор"
 
 #. file menu
 #: widgets/qt.cpp:1079 udav/udav_wnd.cpp:281 udav/dat_pnl.cpp:681
-#: mgllab/mgllab.cpp:274 mgllab/table.cpp:748
+#: mgllab/mgllab.cpp:274 mgllab/table.cpp:750
 msgid "File"
 msgstr "Файл"
 
@@ -2183,7 +2183,7 @@ msgid "File %1 saved"
 msgstr "Файл %1 сохранен."
 
 #: mgllab/mgllab.cpp:224
-msgid "File is exesist. Overwrite it?"
+msgid "File exist. Overwrite it?"
 msgstr "Файл существует. Переписать?"
 
 #: udav/text_pnl.cpp:583
@@ -2202,11 +2202,11 @@ msgstr "Экспорт в файл"
 msgid "File/Recent files"
 msgstr "Файл/Последние файлы"
 
-#: mgllab/table.cpp:765
+#: mgllab/table.cpp:767
 msgid "Fill"
 msgstr "Заполнить"
 
-#: udav/dat_pnl.cpp:611 mgllab/table.cpp:854
+#: udav/dat_pnl.cpp:611 mgllab/table.cpp:856
 msgid "Fill data by formula"
 msgstr "Заполнить по формуле"
 
@@ -2302,11 +2302,11 @@ msgstr "Найти|Заменить"
 msgid "Finish if/else block"
 msgstr "Окончание блока if/else"
 
-#: mgllab/table.cpp:804
+#: mgllab/table.cpp:806
 msgid "First cell"
 msgstr "Первая ячейка"
 
-#: udav/dat_pnl.cpp:721 mgllab/table.cpp:800
+#: udav/dat_pnl.cpp:721 mgllab/table.cpp:802
 msgid "First slice"
 msgstr "Первый срез"
 
@@ -2407,7 +2407,7 @@ msgstr "Вычислить якобиан"
 
 #: src/exec_dat.cpp:1638
 msgid "Get data column filled by formula on column ids"
-msgstr ""
+msgstr "Вычислить данные по формуле из имен колонок"
 
 #: src/exec_dat.cpp:1708
 msgid "Get formated data from file"
@@ -2430,11 +2430,11 @@ msgstr "Найти след матрицы"
 msgid "Global message - %s\n"
 msgstr "Общее сообщение - %s\n"
 
-#: udav/dat_pnl.cpp:723 mgllab/table.cpp:865
+#: udav/dat_pnl.cpp:723 mgllab/table.cpp:867
 msgid "Go to first slice for 3D data (Ctrl-F1)."
 msgstr "Перейти к первому срезу 3D данных (Ctrl-F1)"
 
-#: udav/dat_pnl.cpp:753 mgllab/table.cpp:869
+#: udav/dat_pnl.cpp:753 mgllab/table.cpp:871
 msgid "Go to last slice for 3D data (Ctrl-F4)."
 msgstr "Перейти к последнему срезу 3D данных (Ctrl-F1)"
 
@@ -2639,7 +2639,7 @@ msgstr "HDF4 поддержка отключена. Включите ее и п�
 msgid "HDF5 support was disabled. Please, enable it and rebuild MathGL."
 msgstr "HDF5 поддержка отключена. Включите ее и пересоберите MathGL."
 
-#: mgllab/table.cpp:165 mgllab/table.cpp:779
+#: mgllab/table.cpp:165 mgllab/table.cpp:781
 msgid "Hankel"
 msgstr "Ханкель"
 
@@ -2709,7 +2709,7 @@ msgstr ""
 msgid "Icon list"
 msgstr "Список иконок"
 
-#: mgllab/table.cpp:867
+#: mgllab/table.cpp:869
 msgid "Id of slice on third (z-) dimension"
 msgstr "Номер среза в z-направлении"
 
@@ -2719,7 +2719,7 @@ msgstr "Размер рисунка"
 
 #: src/exec_dat.cpp:1689
 msgid "Immediately display the progress of calculation"
-msgstr ""
+msgstr "Показать прогресс вычислений сразу"
 
 #: src/exec_dat.cpp:1688
 msgid "Immediately print the message"
@@ -2729,15 +2729,15 @@ msgstr "Напечатать это сообщение сразу же"
 msgid "Import Data?"
 msgstr "Импортировать данные?"
 
-#: src/exec_dat.cpp:1669 mgllab/table.cpp:840
+#: src/exec_dat.cpp:1669 mgllab/table.cpp:842
 msgid "Import data from PNG file"
 msgstr "Импортировать данные из PNG файла"
 
-#: mgllab/table.cpp:750
+#: mgllab/table.cpp:752
 msgid "Import from PNG"
 msgstr "Импортировать из PNG"
 
-#: mgllab/table.cpp:767
+#: mgllab/table.cpp:769
 msgid "In range"
 msgstr "В диапазоне"
 
@@ -2786,7 +2786,7 @@ msgstr "Вставить"
 msgid "Insert MGL command"
 msgstr "Вставить команду MGL"
 
-#: mgllab/table.cpp:753
+#: mgllab/table.cpp:755
 msgid "Insert as 'list'"
 msgstr "Вставить как 'list'"
 
@@ -2814,11 +2814,11 @@ msgstr "Вставить последнюю подогнанную формул�
 msgid "Insert slice of data"
 msgstr "Вставить срез данных"
 
-#: mgllab/table.cpp:847
+#: mgllab/table.cpp:849
 msgid "Insert to script as 'list' command"
 msgstr "Вставить в скрипт как команду 'list'"
 
-#: mgllab/table.cpp:163 mgllab/table.cpp:773
+#: mgllab/table.cpp:163 mgllab/table.cpp:775
 msgid "Integrate"
 msgstr "Интегрировать"
 
@@ -2895,7 +2895,7 @@ msgstr "L - морской волны"
 
 #: widgets/qt.cpp:1087 udav/plot_pnl.cpp:481
 msgid "LaTeX"
-msgstr ""
+msgstr "LaTeX"
 
 #: udav/setup_dlg.cpp:66 mgllab/dialogs.cpp:954
 msgid "Label"
@@ -2913,11 +2913,11 @@ msgstr "Язык для mgllab"
 msgid "Laplace transform along direction(s)"
 msgstr "Преобразование Лапласа"
 
-#: mgllab/table.cpp:775
+#: mgllab/table.cpp:777
 msgid "Laplacian"
 msgstr "Лапласиан"
 
-#: udav/dat_pnl.cpp:751 mgllab/table.cpp:803
+#: udav/dat_pnl.cpp:751 mgllab/table.cpp:805
 msgid "Last slice"
 msgstr "Последний срез"
 
@@ -2982,7 +2982,7 @@ msgstr "Загрузить команды из внешней DLL"
 msgid "Load data"
 msgstr "Загрузить данные"
 
-#: mgllab/table.cpp:838
+#: mgllab/table.cpp:840
 msgid "Load data from file"
 msgstr "Загрузить данные из файла"
 
@@ -2998,7 +2998,7 @@ msgstr ""
 msgid "Load fontfaces"
 msgstr "Загрузить шрифт"
 
-#: mgllab/table.cpp:749
+#: mgllab/table.cpp:751
 msgid "Load from file"
 msgstr "Загрузить из файла"
 
@@ -3193,7 +3193,7 @@ msgstr "Максимум Z для обрезания или координат"
 msgid "Maximum is %g\t at x = %ld\ty = %ld\tz = %ld\n"
 msgstr "Максимум %g\t при x = %ld\ty = %ld\tz = %ld\n"
 
-#: mgllab/table.cpp:342 mgllab/table.cpp:789
+#: mgllab/table.cpp:342 mgllab/table.cpp:791
 msgid "Maximum of"
 msgstr "Максимум от"
 
@@ -3250,12 +3250,12 @@ msgstr "Минимум Z для обрезания или координат"
 msgid "Minimum is %g\t at x = %ld\ty = %ld\tz = %ld\n"
 msgstr "Минимум %g\t при x = %ld\ty = %ld\tz = %ld\n"
 
-#: mgllab/table.cpp:342 mgllab/table.cpp:790
+#: mgllab/table.cpp:342 mgllab/table.cpp:792
 msgid "Minimum of"
 msgstr "Минимум от"
 
 #. { _("Wavelet"),	0, wavelet_cb },
-#: mgllab/table.cpp:166 mgllab/table.cpp:781
+#: mgllab/table.cpp:166 mgllab/table.cpp:783
 msgid "Mirror"
 msgstr "Отразить"
 
@@ -3287,6 +3287,10 @@ msgstr "Момент вдоль 'z' для функции"
 msgid "Move down"
 msgstr "Сдвиг вниз"
 
+#: widgets/qt.cpp:1248 udav/plot_pnl.cpp:530
+msgid "Move graphics down 1/3 of its height."
+msgstr "Сдвинуть графику вниз на 1/3 высоты"
+
 #: widgets/qt.cpp:1232 udav/plot_pnl.cpp:506
 msgid "Move graphics left by 1/3 of its width."
 msgstr "Сдвинуть графику влево на 1/3 ширины"
@@ -3298,10 +3302,6 @@ msgstr "Сдвинуть графику вправо на 1/3 ширины"
 #: widgets/qt.cpp:1236 udav/plot_pnl.cpp:512
 msgid "Move graphics up by 1/3 of its height."
 msgstr "Сдвинуть графику вверх на 1/3 высоты"
-
-#: widgets/qt.cpp:1248 udav/plot_pnl.cpp:530
-msgid "Move graphics up down 1/3 of its height."
-msgstr "Сдвинуть графику вниз на 1/3 высоты"
 
 #: widgets/qt.cpp:1230 udav/plot_pnl.cpp:503
 msgid "Move left"
@@ -3335,7 +3335,7 @@ msgstr "Переместить выбранное в предыдущий под
 msgid "Move up"
 msgstr "Сдвиг вверх"
 
-#: mgllab/table.cpp:796
+#: mgllab/table.cpp:798
 msgid "Multiply by"
 msgstr "Умножить на"
 
@@ -3361,7 +3361,7 @@ msgid "Name for output"
 msgstr "Имя для результата"
 
 #. navigation menu
-#: udav/dat_pnl.cpp:720 mgllab/table.cpp:799
+#: udav/dat_pnl.cpp:720 mgllab/table.cpp:801
 msgid "Navigation"
 msgstr "Навигация"
 
@@ -3378,12 +3378,15 @@ msgid ""
 "surface with contour lines by calling commands 'surf' and 'cont' one after "
 "another (in any order). "
 msgstr ""
+"Новый график никогда не удаляет уже нарисованный. Например, можно построить "
+"поверхность с линиями уровня вызывая последовательно 'surf' и 'cont' (в "
+"любом порядке)."
 
 #: udav/text_pnl.cpp:562 udav/plot_pnl.cpp:444
 msgid "New inplot"
 msgstr "Новый под-график"
 
-#: mgllab/table.cpp:671
+#: mgllab/table.cpp:672
 msgid "New order of dimensions"
 msgstr "Новый порядок размерностей"
 
@@ -3411,7 +3414,7 @@ msgstr "Следующий"
 msgid "Next @->"
 msgstr "Следующий @->"
 
-#: udav/dat_pnl.cpp:745 mgllab/table.cpp:802
+#: udav/dat_pnl.cpp:745 mgllab/table.cpp:804
 msgid "Next slice"
 msgstr "Следующий срез"
 
@@ -3463,7 +3466,7 @@ msgstr "Не вращать текст"
 msgid "Normal view"
 msgstr "Обычный вид"
 
-#: mgllab/table.cpp:768
+#: mgllab/table.cpp:770
 msgid "Normalize"
 msgstr "Нормировать"
 
@@ -3533,7 +3536,7 @@ msgstr "OBJ"
 #: mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474 mgllab/mgllab.cpp:480
 #: mgllab/table.cpp:621
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: mgllab/table.cpp:504
 msgid "Only current slice will be inserted"
@@ -3587,7 +3590,7 @@ msgstr "Операция"
 msgid "Operation is not supported for this type of data."
 msgstr "Операция не поддерживается для данного типа данных."
 
-#: mgllab/table.cpp:793
+#: mgllab/table.cpp:795
 msgid "Operations"
 msgstr "Операции"
 
@@ -3748,7 +3751,7 @@ msgstr "Популярные цв.схемы"
 msgid "Prev"
 msgstr "Предыдущий"
 
-#: udav/dat_pnl.cpp:727 mgllab/table.cpp:801
+#: udav/dat_pnl.cpp:727 mgllab/table.cpp:803
 msgid "Prev slice"
 msgstr "Предыдущий срез"
 
@@ -3826,7 +3829,7 @@ msgstr "Команды управления"
 
 #: src/exec_dat.cpp:1637
 msgid "Project periodical data in [v1,v2]"
-msgstr ""
+msgstr "Проецирует периодические данные в [v1,v2]"
 
 #: udav/udav_wnd.cpp:312 mgllab/mgllab.cpp:319 mgllab/mgllab.cpp:458
 msgid "Properties"
@@ -3836,7 +3839,7 @@ msgstr "Свойства"
 msgid "Properties of selected data array"
 msgstr "Свойства выбранного массива данных"
 
-#: mgllab/table.cpp:342 mgllab/table.cpp:791
+#: mgllab/table.cpp:342 mgllab/table.cpp:793
 msgid "Pulse prop."
 msgstr "Свойства импульса"
 
@@ -4016,7 +4019,7 @@ msgstr "Оставить место для подписей сверху (сти
 msgid "Reset settings and clear picture"
 msgstr "Сбросить настройки и обновить рисунок"
 
-#: udav/dat_pnl.cpp:772 mgllab/table.cpp:759
+#: udav/dat_pnl.cpp:772 mgllab/table.cpp:761
 msgid "Resize"
 msgstr "Изменить размер"
 
@@ -4028,7 +4031,7 @@ msgstr "Изменить размер (интерполоировать) дан�
 msgid "Resize data array"
 msgstr "Изменить размер массива данных"
 
-#: mgllab/table.cpp:856
+#: mgllab/table.cpp:858
 msgid "Resize data with smoothing"
 msgstr "Изменить размер массива данных со сглаживанием"
 
@@ -4077,7 +4080,7 @@ msgstr "Правый нижний угол"
 msgid "Right top edge"
 msgstr "Правый верхний угол"
 
-#: mgllab/table.cpp:166 mgllab/table.cpp:782
+#: mgllab/table.cpp:166 mgllab/table.cpp:784
 msgid "Roll"
 msgstr "Сдвинуть"
 
@@ -4190,7 +4193,7 @@ msgstr "Сохранить данные в HDF5 файл"
 msgid "Save data to a file (Ctrl+Shift+S)."
 msgstr "Сохранить данные в файл (Ctrl+Shift+S)."
 
-#: src/exec_dat.cpp:1706 mgllab/table.cpp:842
+#: src/exec_dat.cpp:1706 mgllab/table.cpp:844
 msgid "Save data to file"
 msgstr "Сохранить данные в файл"
 
@@ -4218,7 +4221,7 @@ msgstr "Сохранить скрипт в файл"
 msgid "Save selected data to file."
 msgstr "Сохранить выбранные данные в файл."
 
-#: mgllab/table.cpp:751
+#: mgllab/table.cpp:753
 msgid "Save to file"
 msgstr "Сохранить в файл"
 
@@ -4316,7 +4319,7 @@ msgstr "Задать диапазон осей"
 
 #: src/exec_set.cpp:825
 msgid "Set bit-flags (for advanced users only)"
-msgstr ""
+msgstr "Задает битовый флаг (для опытных пользователей)"
 
 #: src/exec_set.cpp:786
 msgid "Set bounding box for 2d export"
@@ -4448,7 +4451,7 @@ msgstr "Задать диапазон по z"
 
 #: src/exec_set.cpp:822
 msgid "Set scale text in relative subplots too"
-msgstr ""
+msgstr "Задает масштабирование текста в отн.подграфиках"
 
 #: src/exec_set.cpp:824
 msgid "Set scaling factor for further setsize"
@@ -4586,7 +4589,7 @@ msgstr "Настроить анимацию"
 msgid "Sew data along direction(s)"
 msgstr "Сшить данные по направлению"
 
-#: mgllab/table.cpp:166 mgllab/table.cpp:783
+#: mgllab/table.cpp:166 mgllab/table.cpp:785
 msgid "Sew phase"
 msgstr "Сшить фазу"
 
@@ -4720,7 +4723,7 @@ msgstr "Показать предыдущий кадр"
 msgid "Show previous slide (Ctrl+,)."
 msgstr "Показать предыдущий кадр (Ctrl+,)."
 
-#: mgllab/table.cpp:777
+#: mgllab/table.cpp:779
 msgid "Sin FFT"
 msgstr "Синус-Фурье"
 
@@ -4750,7 +4753,7 @@ msgstr "Размер бруска"
 
 #. size menu
 #: udav/mem_pnl.cpp:68 udav/dat_pnl.cpp:765 mgllab/dialogs.cpp:1015
-#: mgllab/table.cpp:757
+#: mgllab/table.cpp:759
 msgid "Sizes"
 msgstr "Размеры"
 
@@ -4762,7 +4765,7 @@ msgstr "Пропустить команды до конца цикла for"
 msgid "Slideshow"
 msgstr "Анимация"
 
-#: mgllab/table.cpp:163 mgllab/table.cpp:771
+#: mgllab/table.cpp:163 mgllab/table.cpp:773
 msgid "Smooth"
 msgstr "Сгладить"
 
@@ -4838,7 +4841,7 @@ msgstr ""
 "Укажите шаг пропуска.\n"
 "Только каждая m-ая точка будет сохранена."
 
-#: udav/dat_pnl.cpp:778 mgllab/table.cpp:760
+#: udav/dat_pnl.cpp:778 mgllab/table.cpp:762
 msgid "Squeeze"
 msgstr "Сжать"
 
@@ -4986,7 +4989,7 @@ msgstr "Подметки"
 msgid "Subtract data or number"
 msgstr "Вычесть данные или число"
 
-#: mgllab/table.cpp:795
+#: mgllab/table.cpp:797
 msgid "Subtract to"
 msgstr "Вычесть"
 
@@ -5003,7 +5006,7 @@ msgid "Summarize data along direction(s)"
 msgstr "Суммировать вдоль направления"
 
 #. { _("Histogram of"),	0, hist_cb },
-#: mgllab/table.cpp:342 mgllab/table.cpp:788
+#: mgllab/table.cpp:342 mgllab/table.cpp:790
 msgid "Summation of"
 msgstr "Сумма от"
 
@@ -5015,7 +5018,7 @@ msgstr "Поменять местами левую и правую части д
 msgid "Swap data along direction(s)"
 msgstr "Поменять местами данные по направлению"
 
-#: mgllab/table.cpp:164 mgllab/table.cpp:776
+#: mgllab/table.cpp:164 mgllab/table.cpp:778
 msgid "Swap parts"
 msgstr "Поменять местами"
 
@@ -5274,11 +5277,11 @@ msgstr "Прозрачность"
 msgid "Transparency type"
 msgstr "Тип прозрачности"
 
-#: mgllab/table.cpp:762
+#: mgllab/table.cpp:764
 msgid "Transpose"
 msgstr "Транспонировать"
 
-#: mgllab/table.cpp:670
+#: mgllab/table.cpp:671
 msgid "Transpose data"
 msgstr "Транспонировать данные"
 
@@ -5286,7 +5289,7 @@ msgstr "Транспонировать данные"
 msgid "Transpose data array"
 msgstr "Транспонировать данные"
 
-#: mgllab/table.cpp:860
+#: mgllab/table.cpp:862
 msgid "Transpose data dimensions"
 msgstr "Транспонировать данные"
 
@@ -5514,7 +5517,7 @@ msgstr "без имени - mgllab"
 
 #: widgets/fltk.cpp:1104
 msgid "Update"
-msgstr ""
+msgstr "Обновить"
 
 #: udav/mem_pnl.cpp:62
 msgid "Update list of data arrays"
@@ -5635,7 +5638,7 @@ msgstr "Вся область"
 
 #: mgllab/mgllab.cpp:477
 msgid "Widget scheme"
-msgstr ""
+msgstr "Вид виджетов"
 
 #: mgllab/dialogs.cpp:329
 msgid "Width"
@@ -5855,11 +5858,21 @@ msgstr ""
 "Команда 'stop' останавливает выполение скрипта. Она полезна если Вы не "
 "хотите выполнять часть скрипта."
 
-#: udav/hint_dlg.cpp:35 mgllab/help.cpp:269
+#: mgllab/help.cpp:269
+msgid ""
+"You may quickly draw the data from file. Just use: mgllab 'filename.dat' in "
+"command line."
+msgstr ""
+"Быстро построить данные из файла можно при использовании: mgllab 'filename."
+"dat'."
+
+#: udav/hint_dlg.cpp:35
 msgid ""
 "You may quickly draw the data from file. Just use: udav 'filename.dat' in "
 "command line."
 msgstr ""
+"Быстро построить данные из файла можно при использовании: udav 'filename."
+"dat'."
 
 #: mgllab/dialogs.cpp:1529
 msgid "You need to enter text!"
@@ -6551,10 +6564,6 @@ msgstr "с шагом"
 #: udav/style_dlg.cpp:227 mgllab/dialogs.cpp:34
 msgid "y - yellow"
 msgstr "y - желтый"
-
-#, fuzzy
-#~ msgid "Progress ..."
-#~ msgstr "Примитивы ..."
 
 #~ msgid "Lower bound"
 #~ msgstr "Нижняя граница"
