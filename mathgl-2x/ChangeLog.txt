@@ -1,5 +1,5 @@
 
-2.4.2 Released 14 March 2018
+2.4.2 Released 20 March 2018
 
 * Add custom dialog for FLTK widgets. This can be constructed from C/C++ code, or from MGL script using special comments "##d##d $I kind|label|par1|par2|..." will create an entry in custom dialog for changing plot properties. Here "$I" is id ($0,$1...$9,$a,$b...$z), "label" is the label of element, "kind" is one following:
 	'e' for editor or input line (parameter is initial value) , 
@@ -8,27 +8,24 @@
 	'b' for check box (parameter is "ini"; also understand "on"=1), 
 	'c' for choice (parameters are possible choices).
 * Add 'progress' for displaying the progress of execution (by '#' symbols in console, or by progress-bar widget).
-* Add 'scaletext' for disabling text size scaling in relative inplots (like columnplot, ...).
-
 * Add 'contp' for contour lines on parametrically specified surface.
-* Add 'flowp' for flow threads on parametrically specified surface.
 * Add 'flow3' for flow threads of 3D vector field, which start from the plain.
+* Add variant of 'flow' for drawing a flow thread, starting from specified point.
+* Add 'scaletext' for disabling text size scaling in relative inplots (like columnplot, ...).
 * Add 'setup' for setting all low-level flags.
 * Add 'coil' for projecting periodical data.
 * Add modulo operation "%" (x%y=fmod(x,y)) to the list of known operations in real-valued formulas.
 * Add style '.' for 'cont' to draw contour lines from saddle points.
 * Add style '.' for 'flow' to draw flow thread from saddle points.
-* Crop output of 'ode' if NAN or INFINITY value occurs.
 * Add option 'value' in 'tube' for setting number of edges manually.
+* Crop output of 'ode' if NAN or INFINITY value occurs.
 * Remove style '~' for 'plot' and 'tens'. Now, all curves try to omit points.
 * Add setup flag MGL_FULL_CURV which disable omitting points of curve.
-* Samples in documentation are generated automatically now (from sample.cpp).
-* Increase the number of samples.
 * Shift axis labels closer to axis.
 * Change size of LaTeX-like commands \sup, \sub to be the same as \overset, \underset.
-* Noticeable speed up drawing, PDE solving, etc.
 * Change ticks drawing in colorbar.
 * Add new section "All samples" of documentation with large set of samples for most of MathGL features.
+* Samples in documentation are generated automatically now (from sample.cpp).
 INCOMPATIBLE:
 * Make obsolete MGL command 'setsizescl'. At this, the similar C/C++/Fortran/... functions still working.
 

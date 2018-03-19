@@ -646,6 +646,7 @@ struct CropDlg : public GeneralDlg
 		n1=mgl_int(z1->value());	n2=mgl_int(z2->value());
 		if(d)	d->Crop(n1,n2,'z');
 		if(c)	c->Crop(n1,n2,'z');
+		hide();
 	}
 	void run(mglDataA *d)
 	{
@@ -683,6 +684,7 @@ public:
 		HADT c = dynamic_cast<HADT>(dat);
 		if(d)	d->Transpose(how->text());
 		if(c)	c->Transpose(how->text());
+		hide();
 	}
 	void run(mglDataA *d)
 	{
