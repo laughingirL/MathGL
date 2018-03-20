@@ -40,6 +40,7 @@ int highlight;
 int mouse_zoom;
 int use_thr;
 int complete_word;
+int wndW=930, wndH=510, txtW=300;
 std::string docdir;
 std::string helpname;
 std::string fontname;
@@ -86,6 +87,10 @@ void save_pref()
 	pref.set("fname3",lastfiles[2].c_str());
 	pref.set("fname4",lastfiles[3].c_str());
 	pref.set("fname5",lastfiles[4].c_str());
+
+	pref.set("wnd_width", wndW);
+	pref.set("wnd_height",wndH);
+	pref.set("txt_width", txtW);
 }
 //-----------------------------------------------------------------------------
 void load_pref(ScriptWindow *w)
@@ -106,6 +111,11 @@ void load_pref(ScriptWindow *w)
 	set_style(font_kind, font_size);
 	pref.get("font_name",s,"");
 	if(s)	{	fontname=s;	free(s);	}
+
+	pref.get("wnd_width", wndW,930);
+	pref.get("wnd_height",wndH,510);
+	pref.get("txt_width", txtW,300);
+
 	pref.get("fname1",s,"");	if(s)	{	lastfiles[0]=s;	free(s);	}
 	pref.get("fname2",s,"");	if(s)	{	lastfiles[1]=s;	free(s);	}
 	pref.get("fname3",s,"");	if(s)	{	lastfiles[2]=s;	free(s);	}
@@ -185,6 +195,14 @@ void close_cb(Fl_Widget*, void* v)
 
 	w->hide();
 	textbuf->remove_modify_callback(changed_cb, w);
+	ScriptWindow *wnd = dynamic_cast<ScriptWindow*>(w);
+	if(wnd)
+	{
+		wndW = wnd->w();
+		wndH = wnd->h();
+		txtW = wnd->editor->w();
+		save_pref();
+	}
 	delete w;
 	num_windows--;
 	if (!num_windows) exit(0);
@@ -339,27 +357,27 @@ extern Fl_RGB_Image img_udav;
 ScriptWindow *new_view()
 {
 	Fl_Group *gg;
-	ScriptWindow *w = new ScriptWindow(930, 510, _("Untitled - mgllab"));
+	ScriptWindow *w = new ScriptWindow(wndW, wndH, _("Untitled - mgllab"));
 	w->begin();
-	w->menu = new Fl_Menu_Bar(0, 0, 930, 30);
+	w->menu = new Fl_Menu_Bar(0, 0, wndW, 30);
 	w->menu->copy(menuitems, w);
 	w->label(_("Untitled - mgllab"));
 
-	Fl_Tile *t = new Fl_Tile(0,30,930,455);
-	add_editor(w);
+	Fl_Tile *t = new Fl_Tile(0,30,wndW,wndH-55);
+	add_editor(w, txtW, wndH);
 
-	w->rtab = new Fl_Tabs(300,30,630,455,0);
-	w->gplot = new Fl_Group(300,30,630,430,_("Canvas"));
-	w->graph = new Fl_MGLView(300,30,630,430,_("Canvas"));
+	w->rtab = new Fl_Tabs(txtW,30,wndW-txtW,wndH-55,0);
+	w->gplot = new Fl_Group(txtW,30,wndW-txtW,wndH-80,_("Canvas"));
+	w->graph = new Fl_MGLView(txtW,30,wndW-txtW,wndH-80,_("Canvas"));
 	w->gplot->resizable(w->graph);	w->gplot->end();	w->graph->adjust();
-	w->ghelp = new Fl_Group(300,30,630,430,_("Help"));
+	w->ghelp = new Fl_Group(txtW,30,wndW-txtW,wndH-80,_("Help"));
 	add_help(w);	w->ghelp->end();	w->ghelp->hide();
-	gg = new Fl_Group(300,30,630,430,_("Memory"));	gg->hide();
+	gg = new Fl_Group(txtW,30,wndW-txtW,wndH-80,_("Memory"));	gg->hide();
 	add_mem(w);		gg->end();
 	w->rtab->end();
 
-//	w->status = new Fl_Output(0,485,930,25);
-	w->status = new Fl_Box(0,485,930,25);	w->status->box(FL_ENGRAVED_BOX);
+//	w->status = new Fl_Output(0,485,wndW,25);
+	w->status = new Fl_Box(0,wndH-25,wndW,25);	w->status->box(FL_ENGRAVED_BOX);
 	w->status->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 	w->set_status(_("Ready"));
 	w->draw = new Fl_MGL(w->graph);	w->draw->e = w;

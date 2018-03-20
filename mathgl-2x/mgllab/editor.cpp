@@ -496,10 +496,10 @@ void paste_cb(Fl_Widget*, void* v)
 //-----------------------------------------------------------------------------
 #include "../widgets/image.h"
 #include "xpm/box.xpm"
-Fl_Widget *add_editor(ScriptWindow *w)
+Fl_Widget *add_editor(ScriptWindow *w, int txtW, int wndH)
 {
-	Fl_Window *w1=new Fl_Window(0,30,300,455,0);
-	Fl_Group *g = new Fl_Group(0,0,290,30);
+	Fl_Window *w1=new Fl_Window(0,30,txtW,wndH-55,0);
+	Fl_Group *g = new Fl_Group(0,0,txtW-10,30);
 	Fl_Button *o;
 
 	o = new Fl_Button(0, 1, 25, 25);	o->image(img_load);	o->callback(open_cb,w);
@@ -527,7 +527,7 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	o->tooltip(_("Show calculator window"));
 	g->end();	g->resizable(0);
 
-	w->editor = new Fl_Text_Editor(0, 28, 300, 425);
+	w->editor = new Fl_Text_Editor(0, 28, txtW, wndH-85);
 	w->editor->textfont(FL_COURIER);
 	w->editor->buffer(textbuf);
 	w->editor->highlight_data(stylebuf, styletable, sizeof(styletable) / sizeof(styletable[0]), 'A', style_unfinished_cb, 0);
