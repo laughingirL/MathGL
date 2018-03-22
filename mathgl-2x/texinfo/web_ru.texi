@@ -54,7 +54,7 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 @itemize
 
 @item @strong{21 March 2018.}
-New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There area custom dialog for FLTK widgets (see @ref{Special commentaries}); display of execution @ref{progress}; new plots @ref{contp}, @ref{flow3}; style of plots @ref{cont}, @ref{flow}, @ref{tube}; change drawing for @ref{axis}, @ref{colorbar}; data handling (@ref{coil}) and setup (@ref{scaletext}, @ref{setup}) functions; modulo operation @samp{@code{%}} in formulas; automatic omit points for all curves; new section @ref{All samples} of documentation; speeding up and bugfixes.
+New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There area custom dialog for FLTK widgets (see @ref{Special comments}); display of execution @ref{progress}; new plots @ref{contp}, @ref{flow3}; style of plots @ref{cont}, @ref{flow}, @ref{tube}; change drawing for @ref{axis}, @ref{colorbar}; data handling (@ref{coil}) and setup (@ref{scaletext}, @ref{setup}) functions; modulo operation @samp{@code{%}} in formulas; automatic omit points for all curves; new section @ref{All samples} of documentation; speeding up and bugfixes.
 
 @item @emph{17 May 2017.}
 New version (v.2.4) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are @code{mgllab} executable, string manipulation in MGL, new functions, plot types and styles, translation to Russian using @code{gettext} and bugfixes, which denoted @ref{News, here}.
@@ -81,7 +81,7 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released.
 @itemize @bullet
 
-@item Add custom dialog for FLTK widgets. This can be constructed from C/C++ code, or from MGL script using @ref{Special commentaries}.
+@item Add custom dialog for FLTK widgets. This can be constructed from C/C++ code, or from MGL script using @ref{Special comments}.
 @item Add @ref{progress} for displaying the progress of execution (by '#' symbols in console, or by progress-bar widget).
 
 @item Add @ref{contp} for contour lines on parametrically specified surface.
