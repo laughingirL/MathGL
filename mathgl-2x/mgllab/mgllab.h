@@ -230,7 +230,7 @@ int check_save(void);
 void load_file(const char *newfile, int ipos, ScriptWindow *e);
 void save_file(const char *newfile, ScriptWindow *e);
 Fl_Widget *add_editor(ScriptWindow *w, int txtW, int wndH);
-Fl_Widget *add_mem(ScriptWindow *w);
+Fl_Widget *add_mem(ScriptWindow *w, int txtW, int wndW, int wndH);
 void set_title(Fl_Window* w);
 //-----------------------------------------------------------------------------
 // Animation
@@ -239,7 +239,7 @@ void animate_dlg_cb(Fl_Widget *, void *v);
 void fill_animate(const char *text, Fl_MGL *dr);
 void argument_set(int id, const char *val);
 //-----------------------------------------------------------------------------
-Fl_Widget *add_help(ScriptWindow *w);
+Fl_Widget *add_help(ScriptWindow *w, int txtW, int wndW, int wndH);
 void help_cb(Fl_Widget*, void*v);
 void link_cb(Fl_Widget*, void*v);
 void example_cb(Fl_Widget*, void*v);

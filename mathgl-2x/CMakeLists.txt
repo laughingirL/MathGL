@@ -381,14 +381,20 @@ if(enable-pthr-widget OR enable-pthread)
 	else(enable-pthread)
 		set(MGL_HAVE_PTHREAD 0)
 	endif(enable-pthread)
+	# cmake v.3.1
 	set(MGL_HAVE_PTHR_WIDGET 1)
 	set(CMAKE_THREAD_PREFER_PTHREAD ON)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	find_package(Threads REQUIRED)
+	# was for v.2.8.12
+	#	include(FindThreads)
 	if(NOT CMAKE_USE_PTHREADS_INIT)
 		message(SEND_ERROR "Couldn't find POSIX threads library.")
 	endif(NOT CMAKE_USE_PTHREADS_INIT)
+	# cmake v.3.1
 	set(MGL_DEP_LIBS Threads::Threads ${MGL_DEP_LIBS})
+	# was for v.2.8.12
+	#	set(MGL_DEP_LIBS ${CMAKE_THREAD_LIBS_INIT} ${MGL_DEP_LIBS})
 else(enable-pthr-widget OR enable-pthread)
 	set(MGL_HAVE_PTHR_WIDGET 0)
 	set(MGL_HAVE_PTHREAD 0)

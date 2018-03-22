@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-20 11:17+0300\n"
+"POT-Creation-Date: 2018-03-22 15:08+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -160,27 +160,27 @@ msgstr " - UDAV переменная"
 #. o = new Fl_Button(420, 400, 90, 25, _(" Refresh"));	o->callback(mem_update_cb,w);
 #. o->image(img_update);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 #. o->tooltip(_("Refresh list of variables."));
-#: mgllab/help.cpp:176
+#: mgllab/help.cpp:180
 msgid " Del.all"
 msgstr " Удал.все"
 
-#: mgllab/help.cpp:164
+#: mgllab/help.cpp:168
 msgid " Delete"
 msgstr " Удалить"
 
-#: mgllab/help.cpp:158
+#: mgllab/help.cpp:162
 msgid " Edit"
 msgstr " Правка"
 
-#: mgllab/help.cpp:161
+#: mgllab/help.cpp:165
 msgid " Info"
 msgstr " Инфо"
 
-#: mgllab/help.cpp:167
+#: mgllab/help.cpp:171
 msgid " New"
 msgstr " Новый"
 
-#: mgllab/help.cpp:170
+#: mgllab/help.cpp:174
 msgid " Save"
 msgstr " Сохранить"
 
@@ -488,7 +488,7 @@ msgstr "1D график"
 msgid "1D plots"
 msgstr "1D графики"
 
-#: mgllab/help.cpp:360
+#: mgllab/help.cpp:364
 msgid "1D view"
 msgstr "1D вид"
 
@@ -504,7 +504,7 @@ msgstr "2D график"
 msgid "2D plots"
 msgstr "2D графики"
 
-#: mgllab/help.cpp:362
+#: mgllab/help.cpp:366
 msgid "2D view"
 msgstr "2D вид"
 
@@ -520,7 +520,7 @@ msgstr "3D данные с размерами из файла"
 msgid "3D plots"
 msgstr "3D графики"
 
-#: mgllab/help.cpp:364
+#: mgllab/help.cpp:368
 msgid "3D view"
 msgstr "3D вид"
 
@@ -556,7 +556,7 @@ msgstr ""
 "<br>(c) Алексей Балакин, 2007-наст.вр.<br><br><a href='http://www.gnu.org/"
 "copyleft/gpl.html'>Лицензия GPL v.2 или более поздняя.</a>"
 
-#: mgllab/help.cpp:304
+#: mgllab/help.cpp:308
 msgid "@<-  Prev"
 msgstr "@<-  Пред."
 
@@ -694,7 +694,7 @@ msgstr "Подобрать метки осей для лучшего вида"
 msgid "Airy and Gamma"
 msgstr "Эйри и Гамма"
 
-#: udav/hint_dlg.cpp:42 mgllab/help.cpp:276
+#: udav/hint_dlg.cpp:42 mgllab/help.cpp:280
 msgid ""
 "All indexes (of data arrays, subplots and so on) are always start from 0."
 msgstr "Все индексы (данных, под-графиков и пр.) всегда начинаются с 0."
@@ -1018,8 +1018,8 @@ msgstr "Очистить рисунок"
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
 #: widgets/fltk.cpp:1102 widgets/qt.cpp:1104 udav/find_dlg.cpp:52
-#: udav/hint_dlg.cpp:70 mgllab/editor.cpp:565 mgllab/help.cpp:308
-#: mgllab/help.cpp:368 mgllab/help.cpp:484
+#: udav/hint_dlg.cpp:70 mgllab/editor.cpp:565 mgllab/help.cpp:312
+#: mgllab/help.cpp:372 mgllab/help.cpp:488
 msgid "Close"
 msgstr "Закрыть"
 
@@ -1288,7 +1288,7 @@ msgstr "Вырезать текст"
 msgid "Cutting"
 msgstr "Обрезание"
 
-#: mgllab/help.cpp:251 mgllab/table.cpp:428 mgllab/table.cpp:457
+#: mgllab/help.cpp:255 mgllab/table.cpp:428 mgllab/table.cpp:457
 msgid ""
 "DAT Files \t*.{dat,csv}\n"
 "HDF Files \t*.{h5,hdf}"
@@ -1324,7 +1324,7 @@ msgstr ""
 msgid "Data handling"
 msgstr "Изменение данных"
 
-#: mgllab/help.cpp:163 mgllab/table.cpp:851
+#: mgllab/help.cpp:167 mgllab/table.cpp:851
 msgid "Data information and preview."
 msgstr "Информация и просмотр данных."
 
@@ -1380,7 +1380,7 @@ msgstr "Задержка, мс"
 msgid "Delay (in sec)"
 msgstr "Задержка, с"
 
-#: mgllab/help.cpp:178
+#: mgllab/help.cpp:182
 msgid "Delete @b all@. data arrays."
 msgstr "Удалить @b все@. массивы данных."
 
@@ -1400,7 +1400,7 @@ msgstr "Удалить выбранное"
 msgid "Delete selected data array"
 msgstr "Удалить выбранные данные"
 
-#: mgllab/help.cpp:166
+#: mgllab/help.cpp:170
 msgid "Delete selected data."
 msgstr "Удалить выбранные данные."
 
@@ -1987,7 +1987,7 @@ msgstr ""
 "Введите формулу для изменения данных\n"
 "x, y, z в диапазоне [0,1], u - сами данные"
 
-#: udav/mem_pnl.cpp:85 mgllab/help.cpp:242
+#: udav/mem_pnl.cpp:85 mgllab/help.cpp:246
 msgid "Enter name for new variable"
 msgstr "Введите имя для нового массива"
 
@@ -2107,7 +2107,7 @@ msgstr "Выполнить скрипт и обновить рисунок (F5).
 msgid "Execute script in external file"
 msgstr "Выполнить скрипт из внешнего файла"
 
-#: mgllab/help.cpp:146
+#: mgllab/help.cpp:148
 msgid "Existing data arrays"
 msgstr "Массивы данных"
 
@@ -2769,7 +2769,7 @@ msgstr "Увеличить размер шрифта"
 msgid "Info"
 msgstr "Инфо"
 
-#: udav/info_dlg.cpp:55 mgllab/help.cpp:354
+#: udav/info_dlg.cpp:55 mgllab/help.cpp:358
 msgid "Information"
 msgstr "Информация"
 
@@ -2966,7 +2966,7 @@ msgstr "Линейно *3"
 msgid "Linear *5"
 msgstr "Линейно *5"
 
-#: mgllab/help.cpp:156
+#: mgllab/help.cpp:159
 msgid "List of available data."
 msgstr "Список доступных данных."
 
@@ -3372,7 +3372,7 @@ msgstr "Навигация"
 msgid "New command"
 msgstr "Новая команда"
 
-#: udav/hint_dlg.cpp:40 mgllab/help.cpp:274
+#: udav/hint_dlg.cpp:40 mgllab/help.cpp:278
 msgid ""
 "New drawing never clears things drawn already. For example, you can make a "
 "surface with contour lines by calling commands 'surf' and 'cont' one after "
@@ -3410,7 +3410,7 @@ msgstr "Новый размер данных по z"
 msgid "Next"
 msgstr "Следующий"
 
-#: mgllab/help.cpp:306
+#: mgllab/help.cpp:310
 msgid "Next @->"
 msgstr "Следующий @->"
 
@@ -3558,7 +3558,7 @@ msgstr ""
 "Открыть и выполнить скрипт или данные (Ctrl+O).\n"
 "Вы можете отключить автоматическое выполнение в настройках."
 
-#: mgllab/help.cpp:169
+#: mgllab/help.cpp:173
 msgid "Open dialog for new data creation."
 msgstr "Открыть диалог создания новых данных."
 
@@ -3578,7 +3578,7 @@ msgstr "Открыть диалог и напечатать график (CTRl+P
 msgid "Open script or data file"
 msgstr "Загрузить скрипт или файл данных"
 
-#: mgllab/help.cpp:160
+#: mgllab/help.cpp:164
 msgid "Open table with selected data for editing."
 msgstr "Открыть таблицу с выбранным массивом данных."
 
@@ -4165,7 +4165,7 @@ msgstr "Насыщенность"
 msgid "Save"
 msgstr "Сохранить"
 
-#: mgllab/help.cpp:250 mgllab/table.cpp:456
+#: mgllab/help.cpp:254 mgllab/table.cpp:456
 msgid "Save Data?"
 msgstr "Сохранить данные?"
 
@@ -4217,7 +4217,7 @@ msgstr "Сохранить скрипт в файл (Ctrl+S)"
 msgid "Save script to file"
 msgstr "Сохранить скрипт в файл"
 
-#: mgllab/help.cpp:172
+#: mgllab/help.cpp:176
 msgid "Save selected data to file."
 msgstr "Сохранить выбранные данные в файл."
 
@@ -4691,7 +4691,7 @@ msgstr "Показать справку по командам MGL (F1)."
 msgid "Show hidden plots"
 msgstr "Показать скрытые графики"
 
-#: mgllab/help.cpp:303
+#: mgllab/help.cpp:307
 msgid "Show hint on startup"
 msgstr "Показать подсказки при старте"
 
@@ -5135,7 +5135,7 @@ msgstr "Текст на кривых"
 msgid "Text style"
 msgstr "Стиль текста"
 
-#: udav/hint_dlg.cpp:48 mgllab/help.cpp:282
+#: udav/hint_dlg.cpp:48 mgllab/help.cpp:286
 msgid ""
 "The calculator can help you to put complex expression in the script. Just "
 "type the expression (which may depend on coordinates x,y,z and so on) and "
@@ -5151,7 +5151,7 @@ msgid ""
 "Would you like to save it now?"
 msgstr "Текущий документ не сохранен. Сохранить сейчас?"
 
-#: udav/hint_dlg.cpp:50 mgllab/help.cpp:284
+#: udav/hint_dlg.cpp:50 mgllab/help.cpp:288
 msgid ""
 "The special dialog (Edit|Insert|New Command) help you select the command, "
 "fill its arguments and put it into the script."
@@ -5190,7 +5190,7 @@ msgstr "Нет запроса. Выхожу.\n"
 msgid "There is no selection to evaluate."
 msgstr "Ничего не выделено для вычисления."
 
-#: udav/hint_dlg.cpp:47 mgllab/help.cpp:281
+#: udav/hint_dlg.cpp:47 mgllab/help.cpp:285
 msgid ""
 "There is powerful calculator with a lot of special functions. You can use "
 "buttons or keyboard to type the expression. Also you can use existed "
@@ -5748,7 +5748,7 @@ msgstr ""
 msgid "Yes"
 msgstr "Да"
 
-#: udav/hint_dlg.cpp:36 mgllab/help.cpp:270
+#: udav/hint_dlg.cpp:36 mgllab/help.cpp:274
 msgid ""
 "You can copy the current image to clipboard by pressing Ctrl-Shift-C. Later "
 "you can paste it directly into yours document or presentation."
@@ -5756,7 +5756,7 @@ msgstr ""
 "Текущий рисунок можно скопировать нажав Ctrl-Shift-C. Позже его можно "
 "вставить в документ или презентацию."
 
-#: udav/hint_dlg.cpp:49 mgllab/help.cpp:283
+#: udav/hint_dlg.cpp:49 mgllab/help.cpp:287
 msgid ""
 "You can easily insert file or folder names, last fitted formula or numerical "
 "value of selection by using menu Edit|Insert."
@@ -5764,7 +5764,7 @@ msgstr ""
 "Можно легко вставить имя файла, путь к папке, последнюю подобранную формулу "
 "и т.л., используя меню Правка|Вставить"
 
-#: udav/hint_dlg.cpp:43 mgllab/help.cpp:277
+#: udav/hint_dlg.cpp:43 mgllab/help.cpp:281
 msgid ""
 "You can edit MGL file in any text editor. Also you can run it in console by "
 "help of commands: mglconv, mglview."
@@ -5773,7 +5773,7 @@ msgstr ""
 "запустить (и просмотреть) прямо из консоли с помошью программ mglconv, "
 "mglview."
 
-#: udav/hint_dlg.cpp:37 mgllab/help.cpp:271
+#: udav/hint_dlg.cpp:37 mgllab/help.cpp:275
 msgid ""
 "You can export image into a set of format (EPS, SVG, PNG, JPEG) by pressing "
 "right mouse button inside image and selecting 'Export as ...'."
@@ -5781,7 +5781,7 @@ msgstr ""
 "Текущий рисунок можно экспортировать во множество форматов (EPS, SVG, PNG, "
 "JPEG и др.), просто нажав правой кнопкой на рисунке и выбрать 'Экспорт'"
 
-#: udav/hint_dlg.cpp:41 mgllab/help.cpp:275
+#: udav/hint_dlg.cpp:41 mgllab/help.cpp:279
 msgid ""
 "You can put several plots in the same image by help of commands 'subplot' or "
 "'inplot'."
@@ -5789,7 +5789,7 @@ msgstr ""
 "Рисунок может содержать несколько вставок (под-графиков) при использовании "
 "команд 'subplot', 'inplot' и пр."
 
-#: udav/hint_dlg.cpp:51 mgllab/help.cpp:285
+#: udav/hint_dlg.cpp:51 mgllab/help.cpp:289
 msgid ""
 "You can put several plotting commands in the same line or in separate "
 "function, for highlighting all of them simultaneously."
@@ -5798,7 +5798,7 @@ msgstr ""
 "разделителем ':' или в функцию. Группа графиков будет подсвечиваться и "
 "перемещаться как целое."
 
-#: udav/hint_dlg.cpp:34 mgllab/help.cpp:268
+#: udav/hint_dlg.cpp:34 mgllab/help.cpp:272
 msgid ""
 "You can rotate/shift/zoom whole plot by mouse. Just press 'Rotate' "
 "toolbutton, click image and hold a mouse button: left button for rotation, "
@@ -5808,7 +5808,7 @@ msgstr ""
 "кнопку 'Вращать' и удерживайте кнопку мыши: левую для вращения, правую для "
 "приближения/перспективы, среднюю для сдвига."
 
-#: udav/hint_dlg.cpp:39 mgllab/help.cpp:273
+#: udav/hint_dlg.cpp:39 mgllab/help.cpp:277
 msgid ""
 "You can save the parameter of animation inside MGL script by using comment "
 "started from '##a ' or '##c ' for loops."
@@ -5816,13 +5816,13 @@ msgstr ""
 "Параметры анимации можно сохранить внутри скрипта с помощью комментариев "
 "'##a' или '##c'."
 
-#: udav/hint_dlg.cpp:38 mgllab/help.cpp:272
+#: udav/hint_dlg.cpp:38 mgllab/help.cpp:276
 msgid ""
 "You can setup colors for script highlighting in Property dialog. Just select "
 "menu item 'Settings/Properties'."
 msgstr "Расцветку скрипта можно настроить в диалоге 'Свойства'."
 
-#: udav/hint_dlg.cpp:33 mgllab/help.cpp:267
+#: udav/hint_dlg.cpp:33 mgllab/help.cpp:271
 msgid ""
 "You can shift axis range by pressing middle button and moving mouse. Also, "
 "you can zoom in/out axis range by using mouse wheel."
@@ -5830,7 +5830,7 @@ msgstr ""
 "Диапазон осей координат можно сместить нажав среднюю кнопку мыши, при этом "
 "колесо мыши приближает/отдаляет график."
 
-#: udav/hint_dlg.cpp:46 mgllab/help.cpp:280
+#: udav/hint_dlg.cpp:46 mgllab/help.cpp:284
 msgid ""
 "You can type arbitrary expression as input argument for data or number. In "
 "last case (for numbers), the first value of data array is used."
@@ -5838,7 +5838,7 @@ msgstr ""
 "Аргументом может быть любое выражение. Если требуется число, то будет "
 "использован первый элемент массива."
 
-#: udav/hint_dlg.cpp:44 mgllab/help.cpp:278
+#: udav/hint_dlg.cpp:44 mgllab/help.cpp:282
 msgid ""
 "You can use command 'once on|off' for marking the block which should be "
 "executed only once. For example, this can be the block of large data reading/"
@@ -5850,7 +5850,7 @@ msgstr ""
 "длительные вычисления и т.д. Нажмите F9 (меню 'Графика|Перезагрузить') для "
 "повторного выполнения этого блока команд."
 
-#: udav/hint_dlg.cpp:45 mgllab/help.cpp:279
+#: udav/hint_dlg.cpp:45 mgllab/help.cpp:283
 msgid ""
 "You can use command 'stop' for terminating script parsing. It is useful if "
 "you don't want to execute a part of script."
@@ -5858,7 +5858,7 @@ msgstr ""
 "Команда 'stop' останавливает выполение скрипта. Она полезна если Вы не "
 "хотите выполнять часть скрипта."
 
-#: mgllab/help.cpp:269
+#: mgllab/help.cpp:273
 msgid ""
 "You may quickly draw the data from file. Just use: mgllab 'filename.dat' in "
 "command line."
@@ -6135,7 +6135,7 @@ msgstr "значение данных равно нулю"
 msgid "default"
 msgstr "по умолчанию"
 
-#: mgllab/help.cpp:149
+#: mgllab/help.cpp:151
 msgid "dimensions"
 msgstr "размерности"
 
@@ -6259,7 +6259,7 @@ msgstr "маркеры"
 msgid "max"
 msgstr "max"
 
-#: mgllab/help.cpp:151
+#: mgllab/help.cpp:153
 msgid "mem. usage"
 msgstr "исп.памяти"
 
@@ -6323,7 +6323,7 @@ msgstr "минимальное значение отрицательно"
 msgid "n - skyblue"
 msgstr "n - небесно-голубой"
 
-#: mgllab/help.cpp:147
+#: mgllab/help.cpp:149
 msgid "name"
 msgstr "имя"
 
@@ -6519,7 +6519,7 @@ msgstr "u - фиолетовый"
 msgid "under"
 msgstr "снизу"
 
-#: udav/mem_pnl.cpp:168 mgllab/help.cpp:199
+#: udav/mem_pnl.cpp:168 mgllab/help.cpp:203
 msgid "unknown"
 msgstr "не знаю"
 

@@ -88,10 +88,10 @@ void about_cb(Fl_Widget*, void*)
 #include "xpm/zoom-out.xpm"
 #include "xpm/zoom-in.xpm"
 #include "xpm/help-faq.xpm"
-Fl_Widget *add_help(ScriptWindow *w)
+Fl_Widget *add_help(ScriptWindow *w, int txtW, int wndW, int wndH)
 {
-	Fl_Window *w1=new Fl_Window(300,30,630,430,0);
-	Fl_Group *g = new Fl_Group(0,0,290,30);
+	Fl_Window *w1=new Fl_Window(txtW,30,wndW-txtW,wndH-80,0);
+	Fl_Group *g = new Fl_Group(0,0,230,30);
 	Fl_Button *o;
 
 	w->link_cmd = new Fl_Input(0,1,150,25);
@@ -107,7 +107,7 @@ Fl_Widget *add_help(ScriptWindow *w)
 
 	g->end();	g->resizable(0);
 
-	w->hd = new Fl_Help_View(0,28,630,400);
+	w->hd = new Fl_Help_View(0,28,wndW-txtW,wndH-110);
 	w1->end();	link_cb(w,w);
 	w1->resizable(w->hd);	return w1;
 }
@@ -136,44 +136,48 @@ void delete_all_cb(Fl_Widget *, void *v)
 	{	Parse->DeleteAll();	((ScriptWindow*)v)->mem_init();	}
 }
 //-----------------------------------------------------------------------------
-Fl_Widget *add_mem(ScriptWindow *w)
+Fl_Widget *add_mem(ScriptWindow *w, int txtW, int wndW, int wndH)
 {
-	static int widths[] = {220,205,0};
+	static int widths[] = {220,205,205,0};
 	Fl_Button *o;
 	Fl_Box *b;
-	Fl_Window *wnd = new Fl_Window(300,30,630,430,0);
+	int ww = wndW-txtW, ws = widths[0]+widths[1]+widths[2];
+	Fl_Window *wnd = new Fl_Window(txtW,30,ww,wndH-80,0);
 
-	b = new Fl_Box(0, 10, 630, 25, _("Existing data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
-	b = new Fl_Box(0, 35, 220, 25, _("name"));
+	Fl_Group *g = new Fl_Group(0,0,ws,30);
+	b = new Fl_Box(0, 10, ww, 25, _("Existing data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
+	b = new Fl_Box(0, 35, widths[0], 25, _("name"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	b = new Fl_Box(220, 35, 205, 25, _("dimensions"));
+	b = new Fl_Box(widths[0], 35, widths[1], 25, _("dimensions"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	b = new Fl_Box(425, 35, 205, 25, _("mem. usage"));
+	b = new Fl_Box(widths[0]+widths[1], 35, widths[2], 25, _("mem. usage"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
+	g->end();	g->resizable(0);
 
-	w->var = new Fl_Select_Browser(0, 60, 630, 335);	w->var->column_char('\t');
+	w->var = new Fl_Select_Browser(0, 60, ww, wndH+(335-510));	w->var->column_char('\t');
 	w->var->align(FL_ALIGN_TOP);	w->var->column_widths(widths);
 	w->var->tooltip(_("List of available data."));
 
+	int dx = (ww-(40+90))/5;
 	o = new Fl_Button(20, 400, 90, 25, _(" Edit"));	o->callback(mem_dlg_cb0,w);
 	o->image(img_grid);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(_("Open table with selected data for editing."));
-	o = new Fl_Button(120, 400, 90, 25, _(" Info"));	o->callback(mem_dlg_cb1,w);
+	o = new Fl_Button(dx+20, 400, 90, 25, _(" Info"));	o->callback(mem_dlg_cb1,w);
 	o->image(img_info);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(_("Data information and preview."));
-	o = new Fl_Button(220, 400, 90, 25, _(" Delete"));	o->callback(mem_dlg_cb2,w);
+	o = new Fl_Button(2*dx+20, 400, 90, 25, _(" Delete"));	o->callback(mem_dlg_cb2,w);
 	o->image(img_delete);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(_("Delete selected data."));
-	o = new Fl_Button(320, 400, 90, 25, _(" New"));	o->callback(mem_dlg_cb3,w);
+	o = new Fl_Button(3*dx+20, 400, 90, 25, _(" New"));	o->callback(mem_dlg_cb3,w);
 	o->image(img_new);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(_("Open dialog for new data creation."));
-	o = new Fl_Button(420, 400, 90, 25, _(" Save"));	o->callback(mem_dlg_cb4,w);
+	o = new Fl_Button(4*dx+20, 400, 90, 25, _(" Save"));	o->callback(mem_dlg_cb4,w);
 	o->image(img_save);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(_("Save selected data to file."));
 // 	o = new Fl_Button(420, 400, 90, 25, _(" Refresh"));	o->callback(mem_update_cb,w);
 // 	o->image(img_update);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 // 	o->tooltip(_("Refresh list of variables."));
-	o = new Fl_Button(520, 400, 90, 25, _(" Del.all"));	o->callback(delete_all_cb,w);
+	o = new Fl_Button(5*dx+20, 400, 90, 25, _(" Del.all"));	o->callback(delete_all_cb,w);
 	o->image(img_clear);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
 	o->tooltip(_("Delete @b all@. data arrays."));
 	wnd->end();	wnd->resizable(w->var);	return wnd;

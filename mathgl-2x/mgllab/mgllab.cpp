@@ -371,9 +371,9 @@ ScriptWindow *new_view()
 	w->graph = new Fl_MGLView(txtW,30,wndW-txtW,wndH-80,_("Canvas"));
 	w->gplot->resizable(w->graph);	w->gplot->end();	w->graph->adjust();
 	w->ghelp = new Fl_Group(txtW,30,wndW-txtW,wndH-80,_("Help"));
-	add_help(w);	w->ghelp->end();	w->ghelp->hide();
+	add_help(w, txtW, wndW, wndH);	w->ghelp->end();	w->ghelp->hide();
 	gg = new Fl_Group(txtW,30,wndW-txtW,wndH-80,_("Memory"));	gg->hide();
-	add_mem(w);		gg->end();
+	add_mem(w, txtW, wndW, wndH);		gg->end();
 	w->rtab->end();
 
 //	w->status = new Fl_Output(0,485,wndW,25);
