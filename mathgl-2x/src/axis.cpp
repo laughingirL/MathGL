@@ -962,10 +962,10 @@ void mglCanvas::Colorbar(const char *sch)
 	bool in = mglchr(sch,'I');
 	mreal sx = (fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B.pf/B1.b[0], x=1;
 	mreal sy = (fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B.pf/B1.b[4], y=0;
-	if(mglchr(sch,'>'))	{	x=in?(1+sx)/2:1;	y=0;	}
-	if(mglchr(sch,'<'))	{	x=in?(1-sx)/2:0;	y=0;	}
-	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+sy)/2:1;	}
-	if(mglchr(sch,'_'))	{	x=0;	y=in?(1-sy)/2:0;	}
+	if(mglchr(sch,'<'))	{	x=in?(1-sx)/2:0.05;	y=0;	}
+	else if(mglchr(sch,'^'))	{	x=0;	y=in?(1+sy)/2:0.95;	}
+	else if(mglchr(sch,'_'))	{	x=0;	y=in?(1-sy)/2:0.05;	}
+	else	{	x=in?(1+sx)/2:0.95;	y=0;	}
 	Colorbar(sch, x, y, 1, 1);
 }
 //-----------------------------------------------------------------------------
