@@ -682,7 +682,7 @@ void static mgl_export_xyz_cb(Fl_Widget*, void* v)
 void static mgl_su_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
-	mreal x1,x2,y1,y2,d;
+	double x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (y2-y1)/3;	y1 -= d;	y2 -= d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
@@ -691,7 +691,7 @@ void static mgl_su_cb(Fl_Widget*, void* v)
 void static mgl_sd_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
-	mreal x1,x2,y1,y2,d;
+	double x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (y2-y1)/3;	y1 += d;	y2 += d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
@@ -700,7 +700,7 @@ void static mgl_sd_cb(Fl_Widget*, void* v)
 void static mgl_sr_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
-	mreal x1,x2,y1,y2,d;
+	double x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (x2-x1)/3;	x1 -= d;	x2 -= d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
@@ -709,7 +709,7 @@ void static mgl_sr_cb(Fl_Widget*, void* v)
 void static mgl_sl_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
-	mreal x1,x2,y1,y2,d;
+	double x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (x2-x1)/3;	x1 += d;	x2 += d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
@@ -718,7 +718,7 @@ void static mgl_sl_cb(Fl_Widget*, void* v)
 void static mgl_sz_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
-	mreal x1,x2,y1,y2,d;
+	double x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (y2-y1)/4;	y1 += d;	y2 -= d;
 	d = (x2-x1)/4;	x1 += d;	x2 -= d;
@@ -728,7 +728,7 @@ void static mgl_sz_cb(Fl_Widget*, void* v)
 void static mgl_so_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
-	mreal x1,x2,y1,y2,d;
+	double x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (y2-y1)/2;	y1 -= d;	y2 += d;
 	d = (x2-x1)/2;	x1 -= d;	x2 += d;
