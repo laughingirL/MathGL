@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include "mgl2/base.h"
 #include "mgl2/data.h"
 #if MGL_HAVE_PNG
 #include <png.h>
@@ -166,31 +167,62 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 	unsigned char *g = 0;
 	int w=0, h=0;
 	if(!mgl_read_image(&g,w,h,fname))	return;
+#ifdef OLD_IMPORT	
+	const mglTexture c(scheme,1);
+	if(c.n<2)	return;
+	d->Create(w,h,1);
+	float *ll = new float[3*c.n-1];
+	mglColor *lc = new mglColor[c.n-1];
+	const mglColor *c0=c.c0;
+	for(long i=0;i<c.n-1;i++)
+	{
+		lc[i] = c.c0[2*i+2]-c.c0[2*i];
+		float tmp = lc[i]*lc[i];
+		ll[3*i] = tmp?1/tmp:0;
+		ll[3*i+1] = c.val[i];
+		ll[3*i+2] = c.val[i+1]-c.val[i];
+	}
+#pragma omp parallel for collapse(2)
+	for(long i=0;i<h;i++)	for(long j=0;j<w;j++)
+	{
+		mglColor cc(g+4*w*(d->ny-i-1)+4*j);
+		float pos=0;
+		float mval=256;
+		for(long k=0;k<c.n-1;k++)
+		{
+			mglColor tc(cc-c0[2*k]);
+			float u = (tc*lc[k])*ll[3*k];	tc -= lc[k]*u;
+			float v = tc*tc;
+			if(v==0)	{	pos=u*ll[3*k+2]+ll[3*k+1];	break;	}
+			if(v<mval)	{	pos=u*ll[3*k+2]+ll[3*k+1];	mval=v;	}
+		}
+		d->a[j+d->nx*i] = v1 + pos*(v2-v1);
+	}
+	delete []g;	delete []ll;	delete []lc;
+#else
 	long num=0;
 	unsigned char *c = mgl_create_scheme(scheme,num);
-	if(num>1)
-	{
-		d->Create(w,h,1);
+	if(num<2)	return;
+	d->Create(w,h,1);
 #pragma omp parallel for collapse(2)
-		for(long i=0;i<h;i++)	for(long j=0;j<w;j++)
+	for(long i=0;i<h;i++)	for(long j=0;j<w;j++)
+	{
+		unsigned pos=0,mval=256*256;
+		const unsigned char *c2=g+4*w*(d->ny-i-1)+4*j;
+		for(long k=0;k<num;k++)
 		{
-			unsigned pos=0,mval=256*256;
-			const unsigned char *c2=g+4*w*(d->ny-i-1)+4*j;
-			for(long k=0;k<num;k++)
-			{
-				const unsigned char *c1=c+3*k;
-//				unsigned val=abs(int(c1[0])-c2[0])+abs(int(c1[1])-c2[1])+abs(int(c1[2])-c2[2]);
-				unsigned val=(int(c1[0])-c2[0])*(int(c1[0])-c2[0]) + 
-					(int(c1[1])-c2[1])*(int(c1[1])-c2[1]) + 
-					(int(c1[2])-c2[2])*(int(c1[2])-c2[2]);
-				if(val==0)		{	pos=k;	break;	}
-				if(val<mval)	{	pos=k;	mval=val;	}
-			}
-			d->a[j+d->nx*i] = v1 + pos*(v2-v1)/num;
+			const unsigned char *c1=c+3*k;
+			register int v0=int(c1[0])-c2[0];
+			register int v1=int(c1[1])-c2[1];
+			register int v2=int(c1[2])-c2[2];
+			register unsigned val = v0*v0+v1*v1+v2*v2;
+			if(val==0)		{	pos=k;	break;	}
+			if(val<mval)	{	pos=k;	mval=val;	}
 		}
+		d->a[j+d->nx*i] = v1 + pos*(v2-v1)/num;
 	}
-	delete []g;
-	delete []c;
+	delete []c;	delete []g;
+#endif
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgl_png_save(const char *fname, int w, int h, unsigned char **p);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 15:08+0300\n"
+"POT-Creation-Date: 2018-03-27 07:26+0300\n"
 "PO-Revision-Date: 2018-03-24 11:08-0400\n"
 "Last-Translator: Diego Sejas Viscarra <dsejas.math@protonmail.com>\n"
 "Language-Team: \n"
@@ -2853,7 +2853,7 @@ msgstr "Estilo itálico"
 msgid "JPEG"
 msgstr "JPEG"
 
-#: src/data_png.cpp:157 src/export.cpp:192
+#: src/data_png.cpp:158 src/export.cpp:192
 msgid "JPEG support was disabled. Please, enable it and rebuild MathGL."
 msgstr "Formato JPEG deshabilitado. Habilítelo y recompile MathGL."
 
@@ -3652,7 +3652,7 @@ msgstr "PNG"
 msgid "PNG Files \t*.png"
 msgstr "Archivos PNG \t*.png"
 
-#: src/canvas_cf.cpp:502 src/canvas_cf.cpp:504 src/data_png.cpp:117
+#: src/canvas_cf.cpp:502 src/canvas_cf.cpp:504 src/data_png.cpp:118
 #: src/export.cpp:75 src/export.cpp:109
 msgid "PNG support was disabled. Please, enable it and rebuild MathGL."
 msgstr "Formato PNG deshabilitado. Habilítelo y recompile MathGL."

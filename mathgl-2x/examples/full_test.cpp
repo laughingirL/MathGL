@@ -73,9 +73,9 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-//	printf("Prim=%lu, Pnt=%lu, Matrix=%lu, Color=%lu, Point=%lu, Light=%lu, ActivePos=%lu\n",
-//		sizeof(mglPrim), sizeof(mglPnt), sizeof(mglMatrix), sizeof(mglColor), sizeof(mglPoint), sizeof(mglLight), sizeof(mglActivePos) );
-	gr->ShearPlot(3, 0, 0.2, 0.1);	gr->Box("r");
+	mglData dat;	dat.Import("Equirectangular-projection.jpg","BbGYw",-1,1);
+	dat.Save("2.dat");
+//	gr->ShearPlot(3, 0, 0.2, 0.1);	gr->Box("r");
 	return;
 	mglParse par;
 	par.Execute(gr,"call 'test' -1\n func 'test' 1\nline $1 0 1 1 'b'\nreturn\n");

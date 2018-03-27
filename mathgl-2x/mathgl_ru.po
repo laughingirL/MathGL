@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 15:08+0300\n"
+"POT-Creation-Date: 2018-03-27 07:26+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -2838,7 +2838,7 @@ msgstr "Курсив"
 msgid "JPEG"
 msgstr ""
 
-#: src/data_png.cpp:157 src/export.cpp:192
+#: src/data_png.cpp:158 src/export.cpp:192
 msgid "JPEG support was disabled. Please, enable it and rebuild MathGL."
 msgstr "JPEG поддержка отключена. Включите ее и пересоберите MathGL."
 
@@ -3636,7 +3636,7 @@ msgstr ""
 msgid "PNG Files \t*.png"
 msgstr "PNG файлы \t*.png"
 
-#: src/canvas_cf.cpp:502 src/canvas_cf.cpp:504 src/data_png.cpp:117
+#: src/canvas_cf.cpp:502 src/canvas_cf.cpp:504 src/data_png.cpp:118
 #: src/export.cpp:75 src/export.cpp:109
 msgid "PNG support was disabled. Please, enable it and rebuild MathGL."
 msgstr "PNG поддержка отключена. Включите ее и пересоберите MathGL."
