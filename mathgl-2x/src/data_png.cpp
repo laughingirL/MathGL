@@ -167,7 +167,7 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 	unsigned char *g = 0;
 	int w=0, h=0;
 	if(!mgl_read_image(&g,w,h,fname))	return;
-#ifdef OLD_IMPORT	
+#ifndef OLD_IMPORT	
 	const mglTexture c(scheme,1);
 	if(c.n<2)	return;
 	d->Create(w,h,1);
@@ -193,8 +193,11 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 			mglColor tc(cc-c0[2*k]);
 			float u = (tc*lc[k])*ll[3*k];	tc -= lc[k]*u;
 			float v = tc*tc;
-			if(v==0)	{	pos=u*ll[3*k+2]+ll[3*k+1];	break;	}
-			if(v<mval)	{	pos=u*ll[3*k+2]+ll[3*k+1];	mval=v;	}
+			if(u>=0 && u<=1)
+			{
+				if(v==0)	{	pos=u*ll[3*k+2]+ll[3*k+1];	break;	}
+				if(v<mval)	{	pos=u*ll[3*k+2]+ll[3*k+1];	mval=v;	}
+			}
 		}
 		d->a[j+d->nx*i] = v1 + pos*(v2-v1);
 	}
