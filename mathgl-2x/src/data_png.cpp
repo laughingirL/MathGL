@@ -167,7 +167,7 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 	unsigned char *g = 0;
 	int w=0, h=0;
 	if(!mgl_read_image(&g,w,h,fname))	return;
-#ifndef OLD_IMPORT	
+#ifdef OLD_IMPORT	
 	const mglTexture c(scheme,1);
 	if(c.n<2)	return;
 	d->Create(w,h,1);
@@ -186,21 +186,33 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 	for(long i=0;i<h;i++)	for(long j=0;j<w;j++)
 	{
 		mglColor cc(g+4*w*(d->ny-i-1)+4*j);
-		float pos=0;
-		float mval=256;
+		float pos=NAN, mval=256;
 		for(long k=0;k<c.n-1;k++)
 		{
 			mglColor tc(cc-c0[2*k]);
 			float u = (tc*lc[k])*ll[3*k];	tc -= lc[k]*u;
-			float v = tc*tc;
-			if(u>=0 && u<=1)
+			float v = tc*tc, u0=ll[3*k+1], du=ll[3*k+2];
+			if(v==0)
 			{
-				if(v==0)	{	pos=u*ll[3*k+2]+ll[3*k+1];	break;	}
-				if(v<mval)	{	pos=u*ll[3*k+2]+ll[3*k+1];	mval=v;	}
+				if(u>=0 && u<=1)	{	pos=u*du+u0;mval=0;	break;	}
+//				else if(u>-v && u<0){	pos=u0;	mval=0;	break;	}
+//				else if(u<1+v)	{	pos=du+u0;	mval=0;	break;	}
+			}
+			else if(v<mval)
+			{
+				if(u>=0 && u<=1)	{	pos=u*du+u0;	mval=v;	}
+//				else if(u>-v && u<0){	pos=u0;	mval=v;	}
+//				else if(u<1+v)	{	pos=du+u0;	mval=v;	}
 			}
 		}
+		long K=c.n-2;
+		float uF = (mglColor(cc-c0[0])*lc[0])*ll[0];
+		float uL = (mglColor(cc-c0[2*K])*lc[K])*ll[3*K];
+		if(mgl_isnan(pos) && uF<0)	pos = 0;
+		if(mgl_isnan(pos) && uL>1)	pos = 1;
 		d->a[j+d->nx*i] = v1 + pos*(v2-v1);
 	}
+printf("\n");
 	delete []g;	delete []ll;	delete []lc;
 #else
 	long num=0;
@@ -222,7 +234,7 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 			if(val==0)		{	pos=k;	break;	}
 			if(val<mval)	{	pos=k;	mval=val;	}
 		}
-		d->a[j+d->nx*i] = v1 + pos*(v2-v1)/num;
+		d->a[j+d->nx*i] = v1 + pos*(v2-v1)/(num-1);
 	}
 	delete []c;	delete []g;
 #endif

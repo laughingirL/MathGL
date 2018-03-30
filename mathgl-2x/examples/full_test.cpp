@@ -73,8 +73,8 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData dat;	dat.Import("Equirectangular-projection.jpg","kw",-1,1);
-	dat.Save("2.dat");
+	mglData dat;	dat.Import("Equirectangular-projection.jpg","BbGYw",-1,1);
+	dat.Save("1.dat");
 //	gr->ShearPlot(3, 0, 0.2, 0.1);	gr->Box("r");
 	return;
 	mglParse par;
