@@ -53,6 +53,9 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 @strong{Latest news}
 @itemize
 
+@item @strong{31 March 2018.}
+Bugfix version (v.2.4.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released.
+
 @item @strong{21 March 2018.}
 New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There area custom dialog for FLTK widgets (see @ref{Special comments}); display of execution @ref{progress}; new plots @ref{contp}, @ref{flow3}; style of plots @ref{cont}, @ref{flow}, @ref{tube}; change drawing for @ref{axis}, @ref{colorbar}; data handling (@ref{coil}) and setup (@ref{scaletext}, @ref{setup}) functions; modulo operation @samp{@code{%}} in formulas; automatic omit points for all curves; new section @ref{All samples} of documentation; speeding up and bugfixes.
 
@@ -76,6 +79,9 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @nav{}
 
 @itemize
+
+@item @strong{31 March 2018.}
+Bugfix version (v.2.4.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released.
 
 @item @strong{21 March 2018.}
 New version (v.2.4.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released.
