@@ -82,6 +82,8 @@ D. Docs about JS interface
 	* Example of 'progress'
 	
 3. Docs about mgllab (overview, dialogs, ...)
+4. Example of Evaluate + ".mx" ???
+5. Add style '^','_' for 'smooth' to find upper/lower bounds.
 
 ZZ. Update time.texi {before release!!!}
 
