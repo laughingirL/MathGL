@@ -74,6 +74,7 @@ void MGL_EXPORT mgl_click_class(void *p);
 void MGL_EXPORT mgl_reload_class(void *p);
 void MGL_EXPORT mgl_prop_class(char id, const char *val, void *p);
 void MGL_EXPORT mgl_prop_func(char id, const char *val, void *p);
+extern MGL_EXPORT const char *mgl_hints[];
 }
 //-----------------------------------------------------------------------------
 /// Abstract class for windows displaying graphics
