@@ -259,6 +259,59 @@ MGL_EXPORT void *mgl_draw_calc(void *p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_parse_comments(const wchar_t *text, double &a1, double &a2, double &da, std::vector<std::wstring> &anim, std::string &ids, std::vector<std::wstring> &par)
+{
+	a1=0;	a2=0;	da=1;
+	const wchar_t *str = wcsstr(text, L"##c");
+	if(str)	// this is animation loop
+	{
+		int res=wscanf(str+3, "%lg%lg%lg", &a1, &a2, &da);
+		da = res<3?1:da;
+		if(res>2 && da*(a2-a1)>0)
+		{
+			for(double a=a1;da*(a2-a)>=0;a+=da)
+			{
+				wchar_t buf[128];	swprintf(buf,128,L"%g",a);
+				anim.push_back(buf);
+			}
+			return;
+		}
+	}
+	str = wcsstr(text, L"##a");
+	while(str)
+	{
+		str += 3;
+		while(*str>0 && *str<=' ' && *str!='\n')	str++;
+		if(*str>' ')
+		{
+			size_t j=0;	while(str[j]>' ')	j++;
+			std::wstring val(str,j);
+			anim.push_back(val);
+		}
+		str = wcsstr(str, L"##a");
+	}
+	str = wcsstr(text, L"##d");	// custom dialog
+	while(str)
+	{
+		str = wcschr(str,'$');
+		if(str)
+		{
+			char id = str[1];	str += 2;
+			while(*str>0 && *str<=' ' && *str!='\n')	str++;
+			if(*str>' ')
+			{
+				long j=0;	while(str[j]!='\n')	j++;
+				while(str[j-1]<=' ')	j--;
+				
+				ids.push_back(id);
+				std::wstring val(str,j);
+				par.push_back(val);
+			}
+		}
+		str = wcsstr(str, L"##d");
+	}
+}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_parse_comments(const char *text, double &a1, double &a2, double &da, std::vector<std::string> &anim, std::string &ids, std::vector<std::string> &par)
 {
 	a1=0;	a2=0;	da=1;
@@ -316,6 +369,14 @@ void MGL_EXPORT mgl_parse_animation(const char *text, std::vector<std::string> &
 {
 	std::string ids;
 	std::vector<std::string> par;
+	double a1, a2, da;
+	mgl_parse_comments(text, a1, a2, da, anim, ids, par);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_parse_animation(const wchar_t *text, std::vector<std::wstring> &anim)
+{
+	std::string ids;
+	std::vector<std::wstring> par;
 	double a1, a2, da;
 	mgl_parse_comments(text, a1, a2, da, anim, ids, par);
 }

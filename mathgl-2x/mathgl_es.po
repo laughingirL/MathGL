@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-17 10:52+0300\n"
+"POT-Creation-Date: 2018-04-19 10:51+0300\n"
 "PO-Revision-Date: 2018-03-24 11:08-0400\n"
 "Last-Translator: Diego Sejas Viscarra <dsejas.math@protonmail.com>\n"
 "Language-Team: \n"
@@ -33,7 +33,7 @@ msgstr ""
 "\t-L loc       especificar lenguaje como loc\n"
 "\t-h           imprimir este mensaje\n"
 
-#: utils/mglconv.cpp:85
+#: utils/mglconv.cpp:86
 #, c-format
 msgid ""
 "\t-1 str       set str as argument $1 for script\n"
@@ -698,7 +698,7 @@ msgstr "Optimizar marcas de los ejes"
 msgid "Airy and Gamma"
 msgstr "Funciones de Airy y Gamma"
 
-#: src/window.cpp:333
+#: src/window.cpp:394
 msgid ""
 "All indexes (of data arrays, subplots and so on) are always start from 0."
 msgstr ""
@@ -3387,7 +3387,7 @@ msgstr "Navegacion"
 msgid "New command"
 msgstr "Nuevo comando"
 
-#: src/window.cpp:331
+#: src/window.cpp:392
 msgid ""
 "New drawing never clears things drawn already. For example, you can make a "
 "surface with contour lines by calling commands 'surf' and 'cont' one after "
@@ -5159,7 +5159,7 @@ msgstr "Texto en contornos"
 msgid "Text style"
 msgstr "Estilo de texto"
 
-#: src/window.cpp:339
+#: src/window.cpp:400
 msgid ""
 "The calculator can help you to put complex expression in the script. Just "
 "type the expression (which may depend on coordinates x,y,z and so on) and "
@@ -5177,7 +5177,7 @@ msgstr ""
 "El archivo actual no se ha guardado.\n"
 "¿Desea guardarlo ahora?"
 
-#: src/window.cpp:341
+#: src/window.cpp:402
 msgid ""
 "The special dialog (Edit|Insert|New Command) help you select the command, "
 "fill its arguments and put it into the script."
@@ -5217,7 +5217,7 @@ msgstr "No hay solicitud. Salir.\n"
 msgid "There is no selection to evaluate."
 msgstr "No hay selección para evaluar."
 
-#: src/window.cpp:338
+#: src/window.cpp:399
 msgid ""
 "There is powerful calculator with a lot of special functions. You can use "
 "buttons or keyboard to type the expression. Also you can use existed "
@@ -5555,7 +5555,7 @@ msgstr "Actualizar lista de arreglos de datos"
 msgid "Upper border for determining color or alpha"
 msgstr "Limite superior para determinar color o alfa"
 
-#: utils/mglconv.cpp:83
+#: utils/mglconv.cpp:84
 #, c-format
 msgid "Usage:\tmglconv [parameter(s)] scriptfile\n"
 msgstr "Uso:\tmglconv [parámetro(s)] script\n"
@@ -5779,7 +5779,7 @@ msgstr "Y/Z"
 msgid "Yes"
 msgstr "Sí"
 
-#: src/window.cpp:343
+#: src/window.cpp:404
 msgid ""
 "You can concatenation of strings and numbers using `,` with out spaces (for "
 "example, `'max(u)=',u.max,' a.u.'` or `'u=',!(1+i2)` for complex numbers). "
@@ -5789,7 +5789,7 @@ msgid ""
 "together."
 msgstr ""
 
-#: src/window.cpp:327
+#: src/window.cpp:388
 msgid ""
 "You can copy the current image to clipboard by pressing Ctrl-Shift-C. Later "
 "you can paste it directly into yours document or presentation."
@@ -5797,7 +5797,7 @@ msgstr ""
 "Puede copiar la imagen actual a memoria presionando Ctrl-Shift-C. Luego se "
 "puede pegar directamente en un documento o presentación."
 
-#: src/window.cpp:340
+#: src/window.cpp:401
 msgid ""
 "You can easily insert file or folder names, last fitted formula or numerical "
 "value of selection by using menu Edit|Insert."
@@ -5806,7 +5806,7 @@ msgstr ""
 "fórmula ajustada o o valores numéricos seleccionados usando el menú Editar|"
 "Insertar."
 
-#: src/window.cpp:334
+#: src/window.cpp:395
 msgid ""
 "You can edit MGL file in any text editor. Also you can run it in console by "
 "help of commands: mglconv, mglview."
@@ -5814,7 +5814,7 @@ msgstr ""
 "Puede editar un archivo MGL en cualquier editor. También lo puede ejecutar "
 "en una terminal con ayuda de los comandos mglconv, mglview."
 
-#: src/window.cpp:328
+#: src/window.cpp:389
 msgid ""
 "You can export image into a set of format (EPS, SVG, PNG, JPEG) by pressing "
 "right mouse button inside image and selecting 'Export as ...'."
@@ -5823,7 +5823,7 @@ msgstr ""
 "presionando el botón derecho del mouse sobre la imagen y seleccionado "
 "\"Exportar como ...'."
 
-#: src/window.cpp:332
+#: src/window.cpp:393
 msgid ""
 "You can put several plots in the same image by help of commands 'subplot' or "
 "'inplot'."
@@ -5831,7 +5831,7 @@ msgstr ""
 "Puede poner varias gráficas en la misma imagen con ayuda de los comando "
 "\"subplot\" o \"inplot\"."
 
-#: src/window.cpp:342
+#: src/window.cpp:403
 msgid ""
 "You can put several plotting commands in the same line or in separate "
 "function, for highlighting all of them simultaneously."
@@ -5839,7 +5839,7 @@ msgstr ""
 "Puede poner varios comandos en la misma línea o en una función separada, "
 "para resaltarlos todos simultáneamente."
 
-#: src/window.cpp:325
+#: src/window.cpp:386
 msgid ""
 "You can rotate/shift/zoom whole plot by mouse. Just press 'Rotate' "
 "toolbutton, click image and hold a mouse button: left button for rotation, "
@@ -5850,7 +5850,7 @@ msgstr ""
 "mouse: izquierdo para rotación, derecho para zoom/perspectiva, del medio "
 "para traslación."
 
-#: src/window.cpp:330
+#: src/window.cpp:391
 msgid ""
 "You can save the parameter of animation inside MGL script by using comment "
 "started from '##a ' or '##c ' for loops."
@@ -5858,7 +5858,7 @@ msgstr ""
 "Puede guardar los parámetros de una animación en un script MGL usando "
 "comentarios que inicien con '##a ' o '##c ' para bucles."
 
-#: src/window.cpp:329
+#: src/window.cpp:390
 msgid ""
 "You can setup colors for script highlighting in Property dialog. Just select "
 "menu item 'Settings/Properties'."
@@ -5866,7 +5866,7 @@ msgstr ""
 "Puede configurar los colores para el resaltado del script en el dialogo "
 "\"Propiedades\". Solo seleccione 'Configuración/Propiedades'."
 
-#: src/window.cpp:324
+#: src/window.cpp:385
 msgid ""
 "You can shift axis range by pressing middle button and moving mouse. Also, "
 "you can zoom in/out axis range by using mouse wheel."
@@ -5876,7 +5876,7 @@ msgstr ""
 "rueda del mouse."
 
 # Needs revision of the English version
-#: src/window.cpp:337
+#: src/window.cpp:398
 msgid ""
 "You can type arbitrary expression as input argument for data or number. In "
 "last case (for numbers), the first value of data array is used."
@@ -5885,7 +5885,7 @@ msgstr ""
 "datos. En el primer caso (para números), el primer valor del arreglo es "
 "usado."
 
-#: src/window.cpp:335
+#: src/window.cpp:396
 msgid ""
 "You can use command 'once on|off' for marking the block which should be "
 "executed only once. For example, this can be the block of large data reading/"
@@ -5897,7 +5897,7 @@ msgstr ""
 "un bloque largo de lectura/creación/manipulación de datos. Presione F9 (o "
 "seleccione 'Gráfica/Recargar') para volver a ejecutar el bloque."
 
-#: src/window.cpp:336
+#: src/window.cpp:397
 msgid ""
 "You can use command 'stop' for terminating script parsing. It is useful if "
 "you don't want to execute a part of script."
@@ -5905,7 +5905,7 @@ msgstr ""
 "Puede usar el comando \"stop\" para terminar la ejecución del script. Esto "
 "es útil si se desea que una parte de este no se ejecute."
 
-#: src/window.cpp:326
+#: src/window.cpp:387
 msgid ""
 "You may quickly draw the data from file. Just use: mgllab 'filename.dat' in "
 "command line."
@@ -6314,7 +6314,7 @@ msgstr "meshnum"
 msgid "mgl_en"
 msgstr "mgl_en"
 
-#: utils/mglconv.cpp:82
+#: utils/mglconv.cpp:83
 #, c-format
 msgid ""
 "mglconv convert mgl script to image file (default PNG).\n"

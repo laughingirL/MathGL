@@ -108,7 +108,6 @@ ZZ. Update time.texi {before release!!!}
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???
-Z. Flat toolbuttons ???
 
 ============= UDAV =============
 
