@@ -373,7 +373,9 @@ using mglDataA::Momentum;
 	 *  ‘x’, ‘y’, ‘z’ for 1st, 2nd or 3d dimension;
 	 *  ‘dN’ for linear averaging over N points;
 	 *  ‘3’ for linear averaging over 3 points;
-	 *  ‘5’ for linear averaging over 5 points.
+	 *  ‘5’ for linear averaging over 5 points;
+	 *  ‘^’ for finding upper bound;
+	 *  ‘_’ for finding lower bound.
 	 *  By default quadratic averaging over 5 points is used. */
 	inline void Smooth(const char *dirs="xyz",mreal delta=0)
 	{	mgl_data_smooth(this,dirs,delta);	}

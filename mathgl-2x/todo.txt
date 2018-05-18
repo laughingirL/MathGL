@@ -32,6 +32,7 @@
 
 6. Add "text3d x y z lx ly lz nx ny nz 'txt' ['stl'='' depth=0.1 depth2=nan]"
 7. Mask in EPS/SVG
+9. Flag to determine discontinuous surfaces
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -99,7 +100,6 @@ ZZ. Update time.texi {before release!!!}
 * Shift/Zoom/Perspective by mouse!!!
 * 1d view -- over longer size + y-size for current slice only
 * info about used memory for graphics
-* abort saving shouldn't switch off "modified" flag (check!)
 * "debug" mode?!? or breakpoints?!
 * something strange with highlighting
 * collect mouse clicks to draw line(s) and save it into data

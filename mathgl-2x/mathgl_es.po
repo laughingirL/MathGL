@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-19 10:51+0300\n"
+"POT-Creation-Date: 2018-05-11 20:22+0300\n"
 "PO-Revision-Date: 2018-03-24 11:08-0400\n"
 "Last-Translator: Diego Sejas Viscarra <dsejas.math@protonmail.com>\n"
 "Language-Team: \n"
@@ -1028,8 +1028,8 @@ msgstr "Borrar imagen"
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
 #: widgets/fltk.cpp:1102 widgets/qt.cpp:1104 udav/find_dlg.cpp:52
-#: udav/hint_dlg.cpp:52 mgllab/editor.cpp:565 mgllab/help.cpp:289
-#: mgllab/help.cpp:349 mgllab/help.cpp:465
+#: udav/hint_dlg.cpp:70 mgllab/editor.cpp:566 mgllab/help.cpp:312
+#: mgllab/help.cpp:372 mgllab/help.cpp:488
 msgid "Close"
 msgstr "Cerrar"
 
@@ -1164,7 +1164,7 @@ msgstr "Copiar rango de números a memoria (Ctrl+Shift+C)."
 msgid "Copy selected text or data to clipboard (Ctrl+C)."
 msgstr "Copiar texto seleccionado o datos a memoria (Ctrl+C)."
 
-#: mgllab/editor.cpp:511
+#: mgllab/editor.cpp:512
 msgid "Copy selection to clipboard"
 msgstr "Copiar selección a memoria"
 
@@ -2249,7 +2249,7 @@ msgstr "Llenar en rango"
 msgid "Fill x-,k-samples for transforms"
 msgstr "Llenar muestreo x o k para transformada"
 
-#: udav/find_dlg.cpp:48 mgllab/editor.cpp:559
+#: udav/find_dlg.cpp:48 mgllab/editor.cpp:560
 msgid "Find"
 msgstr "Buscar"
 
@@ -2281,7 +2281,7 @@ msgstr "Valor minimal en una dirección"
 msgid "Find next"
 msgstr "Buscar siguiente"
 
-#: mgllab/editor.cpp:515
+#: mgllab/editor.cpp:516
 msgid "Find or replace text"
 msgstr "Buscar o reemplazar texto"
 
@@ -2301,11 +2301,11 @@ msgstr "Suma en una dirección"
 msgid "Find triangles of randomly placed points"
 msgstr "Triangulación de puntos arbitrarios"
 
-#: udav/find_dlg.cpp:36 mgllab/editor.cpp:558
+#: udav/find_dlg.cpp:36 mgllab/editor.cpp:559
 msgid "Find what:"
 msgstr "Buscar:"
 
-#: udav/text_pnl.cpp:546 mgllab/editor.cpp:557
+#: udav/text_pnl.cpp:546 mgllab/editor.cpp:558
 msgid "Find/Replace"
 msgstr "Buscar/Reemplazar"
 
@@ -2797,7 +2797,7 @@ msgstr "Gráfica interna"
 msgid "Insert"
 msgstr "Insertar"
 
-#: mgllab/editor.cpp:518
+#: mgllab/editor.cpp:519
 msgid "Insert MGL command"
 msgstr "Insertar comando de MGL"
 
@@ -2805,7 +2805,7 @@ msgstr "Insertar comando de MGL"
 msgid "Insert as 'list'"
 msgstr "Insertar como \"list\""
 
-#: mgllab/editor.cpp:486
+#: mgllab/editor.cpp:487
 msgid "Insert file content?"
 msgstr "¿Insertar contenido de archivo?"
 
@@ -2813,11 +2813,11 @@ msgstr "¿Insertar contenido de archivo?"
 msgid "Insert file name?"
 msgstr "¿Insertar nombre de archivo?"
 
-#: mgllab/editor.cpp:520
+#: mgllab/editor.cpp:521
 msgid "Insert filename"
 msgstr "Insertar nombre de archivo"
 
-#: mgllab/editor.cpp:522
+#: mgllab/editor.cpp:523
 msgid "Insert inplot command"
 msgstr "Insertar comando de gráfica interna"
 
@@ -3154,7 +3154,7 @@ msgstr "Ángulo de rotacion de máscara"
 msgid "Mask size"
 msgstr "Tamaño de máscara"
 
-#: udav/find_dlg.cpp:42 mgllab/editor.cpp:562
+#: udav/find_dlg.cpp:42 mgllab/editor.cpp:563
 msgid "Match case"
 msgstr "Match case"
 
@@ -3460,7 +3460,7 @@ msgstr "No se ingreso dirección/fórmula. No proceder."
 msgid "No filename."
 msgstr "No se ingreso nombre de archivo."
 
-#: mgllab/editor.cpp:584 mgllab/editor.cpp:606 mgllab/editor.cpp:631
+#: mgllab/editor.cpp:585 mgllab/editor.cpp:607 mgllab/editor.cpp:632
 #, c-format
 msgid "No occurrences of '%s' found!"
 msgstr "¡No se encontró ningun '%s'!"
@@ -3589,7 +3589,7 @@ msgstr "Abrir archivo ..."
 msgid "Open printer dialog and print graphics (Ctrl+P)"
 msgstr "Abrir dialogo de impresion e imprimir gráfica (Ctrl+P)"
 
-#: mgllab/editor.cpp:506
+#: mgllab/editor.cpp:507
 msgid "Open script or data file"
 msgstr "Abrir script o archivo de datos"
 
@@ -3681,7 +3681,7 @@ msgstr "Pegar rango de números desde memoria (Ctrl+Shift+P)."
 msgid "Paste text"
 msgstr "Pegar texto"
 
-#: mgllab/editor.cpp:513
+#: mgllab/editor.cpp:514
 msgid "Paste text from clipboard"
 msgstr "Pegar texto desde memoria"
 
@@ -3982,15 +3982,15 @@ msgstr "Borrar filas duplicadas"
 msgid "Remove jump into the data, like phase jumps"
 msgstr "Remover saltos en datos, como saltos de fase"
 
-#: udav/find_dlg.cpp:50 mgllab/editor.cpp:561
+#: udav/find_dlg.cpp:50 mgllab/editor.cpp:562
 msgid "Replace"
 msgstr "Reemplazar"
 
-#: mgllab/editor.cpp:564
+#: mgllab/editor.cpp:565
 msgid "Replace all"
 msgstr "Reemplazar todo"
 
-#: udav/find_dlg.cpp:39 mgllab/editor.cpp:560
+#: udav/find_dlg.cpp:39 mgllab/editor.cpp:561
 msgid "Replace by:"
 msgstr "Reemplazar con:"
 
@@ -3998,7 +3998,7 @@ msgstr "Reemplazar con:"
 msgid "Replace expression by its numerical value."
 msgstr "Reemplazar expresiones con sus valore numericos."
 
-#: mgllab/editor.cpp:630
+#: mgllab/editor.cpp:631
 #, c-format
 msgid "Replaced %ld occurrences."
 msgstr "%ld ocurrencias reemplazadas."
@@ -4230,7 +4230,7 @@ msgstr "Guardar script"
 msgid "Save script to a file (Ctrl+S)"
 msgstr "Guardar script a archivo (Ctrl+S)"
 
-#: mgllab/editor.cpp:508
+#: mgllab/editor.cpp:509
 msgid "Save script to file"
 msgstr "Guardar script a archivo"
 
@@ -4254,7 +4254,7 @@ msgstr "Escalar y rotar"
 msgid "Script"
 msgstr "Script"
 
-#: udav/find_dlg.cpp:43 mgllab/editor.cpp:563
+#: udav/find_dlg.cpp:43 mgllab/editor.cpp:564
 msgid "Search backward"
 msgstr "Buscar atras"
 
@@ -4278,7 +4278,7 @@ msgstr "Seleccionar argumento de datos"
 msgid "Select direction"
 msgstr "Seleccionar dirección"
 
-#: mgllab/editor.cpp:653
+#: mgllab/editor.cpp:654
 msgid "Select file name"
 msgstr "Seleccionar nombre de archivo"
 
@@ -4286,7 +4286,7 @@ msgstr "Seleccionar nombre de archivo"
 msgid "Select first the proper kind of arguments"
 msgstr "Seleccione primero los tipos adecuados de argumentos"
 
-#: mgllab/editor.cpp:666
+#: mgllab/editor.cpp:667
 msgid "Select folder name"
 msgstr "Seleccionar nombre de directorio"
 
@@ -4654,7 +4654,7 @@ msgstr ""
 "Mostrar calculadora que escribe y evalua formulas textuales.\n"
 "Las formulas textuales pueden contener variables también."
 
-#: mgllab/editor.cpp:525 mgllab/editor.cpp:527
+#: mgllab/editor.cpp:526 mgllab/editor.cpp:528
 msgid "Show calculator window"
 msgstr "Mostrar ventana de calculadora"
 
@@ -5204,7 +5204,7 @@ msgstr "Hay primitivas del usuario."
 msgid "There is no 'fmt' argument for this command"
 msgstr "No hay argumento \"fmt\" para este comando"
 
-#: udav/text_pnl.cpp:137 mgllab/editor.cpp:680
+#: udav/text_pnl.cpp:137 mgllab/editor.cpp:681
 msgid "There is no fitted formula."
 msgstr "No hay fórmula ajustada."
 

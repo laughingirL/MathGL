@@ -622,7 +622,7 @@ static void *mgl_dif2_z(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nz=t->p[2], nn=t->n;
-	mreal *b=t->a, dd=0.5*nz*nz;
+	mreal *b=t->a, dd=nz*nz;
 	const mreal *a=t->b;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
@@ -638,7 +638,7 @@ static void *mgl_dif2_y(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], ny=t->p[1], nn=t->n;
-	mreal *b=t->a, dd=0.5*ny*ny;
+	mreal *b=t->a, dd=ny*ny;
 	const mreal *a=t->b;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
@@ -654,7 +654,7 @@ static void *mgl_dif2_x(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], nn=t->n;
-	mreal *b=t->a, dd=0.5*nx*nx;
+	mreal *b=t->a, dd=nx*nx;
 	const mreal *a=t->b;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for

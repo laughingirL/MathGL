@@ -358,9 +358,10 @@ void save_file(const char *newfile, ScriptWindow *e)
 	if (textbuf->savefile(newfile))
 		fl_alert(_("Error writing to file \'%s\':\n%s."), newfile, strerror(errno));
 	else
-	{	filename = newfile;	add_filename(filename.c_str(),e);	}
-	changed = 0;
-	textbuf->call_modify_callbacks();
+	{
+		filename = newfile;	add_filename(filename.c_str(),e);
+		changed = 0;	textbuf->call_modify_callbacks();
+	}
 }
 //-----------------------------------------------------------------------------
 void undo_cb(Fl_Widget*, void* v)
