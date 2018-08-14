@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-11 20:22+0300\n"
+"POT-Creation-Date: 2018-05-10 10:39+0300\n"
 "PO-Revision-Date: 2018-03-24 11:08-0400\n"
 "Last-Translator: Diego Sejas Viscarra <dsejas.math@protonmail.com>\n"
 "Language-Team: \n"
@@ -1028,8 +1028,8 @@ msgstr "Borrar imagen"
 
 #. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
 #: widgets/fltk.cpp:1102 widgets/qt.cpp:1104 udav/find_dlg.cpp:52
-#: udav/hint_dlg.cpp:70 mgllab/editor.cpp:566 mgllab/help.cpp:312
-#: mgllab/help.cpp:372 mgllab/help.cpp:488
+#: udav/hint_dlg.cpp:52 mgllab/editor.cpp:566 mgllab/help.cpp:289
+#: mgllab/help.cpp:349 mgllab/help.cpp:465
 msgid "Close"
 msgstr "Cerrar"
 

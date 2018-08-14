@@ -150,7 +150,7 @@ void MGL_EXPORT mgl_data_limit(HMDT dat, mreal v);
 void MGL_EXPORT mgl_data_limit_(uintptr_t *dat, mreal *v);
 /// Project the periodical data to range [v1,v2] (like mod() function). Separate branches by NAN if sep=true.
 void MGL_EXPORT mgl_data_coil(HMDT dat, mreal v1, mreal v2, int sep);
-void MGL_EXPORT mgl_data_coil_(uintptr_t *dat, mreal &v1, mreal *v2, int *sep);
+void MGL_EXPORT mgl_data_coil_(uintptr_t *dat, mreal *v1, mreal *v2, int *sep);
 
 /// Get sub-array of the data with given fixed indexes
 HMDT MGL_EXPORT mgl_data_subdata(HCDT dat, long xx,long yy,long zz);
