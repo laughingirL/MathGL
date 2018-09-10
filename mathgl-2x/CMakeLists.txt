@@ -254,7 +254,8 @@ MGL_DEPENDENT_OPTION(enable-octave-install "Octave interface will install for al
 
 include_directories( ${MathGL2_SOURCE_DIR}/include ${MathGL2_BINARY_DIR}/include)
 set(MGL_INCLUDE_PATH "${CMAKE_INSTALL_PREFIX}/include/mgl2")
-set(MGL_CGI_PATH_INSTALL "share/mathgl" CACHE STRING "Set CGI install directory")
+set(MGL_CGI_PATH_INSTALL "lib/cgi-bin" CACHE STRING "Set CGI install directory")
+#set(MGL_CGI_PATH_INSTALL "share/mathgl" CACHE STRING "Set CGI install directory")
 set(MGL_CGI_PATH "${CMAKE_INSTALL_PREFIX}/${MGL_CGI_PATH_INSTALL}")
 set(MGL_DEF_FONT "STIX" CACHE STRING "Set default font name")
 

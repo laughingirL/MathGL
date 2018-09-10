@@ -404,7 +404,9 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	bool gz = fname[strlen(fname)-1]=='z';
 	long hh = _Gr_->GetHeight(), ww = _Gr_->GetWidth();
 	void *fp = stdout;		// allow to write in stdout
+	bool head = true;
 	if(strcmp(fname,"-"))	fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
+	else	head = false;
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 
 	int x1=gr->BBoxX1, x2=gr->BBoxX2<0?ww:gr->BBoxX2, y1=gr->BBoxY1, y2=gr->BBoxY2<0?hh:gr->BBoxY2;
@@ -412,17 +414,23 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	ww = x2-x1;	hh = y2-y1;
 
 	const std::string loc = setlocale(LC_NUMERIC, "C");
-	mgl_printf(fp, gz, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
-	mgl_printf(fp, gz, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
-	mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", ww, hh);
-
-	mgl_printf(fp, gz, "<!--Created by MathGL library-->\n");
-	mgl_printf(fp, gz, "<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
+	if(head)
+	{
+		mgl_printf(fp, gz, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
+		mgl_printf(fp, gz, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
+		mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", ww, hh);
+		mgl_printf(fp, gz, "<!--Created by MathGL library-->\n");
+		mgl_printf(fp, gz, "<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
+	}
+	else
+	{
+		mgl_printf(fp, gz, "<!--Created by MathGL library-->\n");
+		mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\">\n", ww, hh);
+	}
 
 	// write definition for all glyphs
 	put_desc(gr,fp,gz,"<defs><g id=\"%c%c_%04x\"><path d=\"", "\tM %d %d ",
 			 "L %d %d ", "Z\n", "\"/></g></defs>\n");
-
 
 	// Write background image first
 	const unsigned char *img = mgl_get_background(gr);
@@ -454,7 +462,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	int st=0;
 	mglRGBA cp;
 
-	hh += (y2+y1)/2;
+//	hh += (y2+y1)/2;
 	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q = gr->GetPrm(i);
