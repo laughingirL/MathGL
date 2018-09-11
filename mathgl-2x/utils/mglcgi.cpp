@@ -80,8 +80,8 @@ int main(int argc, char **argv)
 	printf("Content-Type: text/html\n\n");
 	printf("<!DOCTYPE html>\n");
 	printf("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\n");
-	printf("<title>MathGL - library for scientific graphics</title></head><body><h2>MGL script output</h2>\n");
-	printf("<p>The script</p>\n<pre>%s</pre><p>give</p>\n",str);
+	printf("<title>MathGL - library for scientific graphics</title></head><body>\n");
+//	printf("<h2>MGL script output</h2>\n<p>The script</p>\n<pre>%s</pre><p>give</p>\n",str);
 	gr.WriteSVG("-");	fflush(stdout);
 	printf("\n</body></html>\n");
 

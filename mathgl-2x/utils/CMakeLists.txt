@@ -14,7 +14,7 @@ install(
 )
 
 add_executable(mgl.cgi mglcgi.cpp)
-target_link_libraries(mgl.cgi mgl${link_type})
+target_link_libraries(mgl.cgi mgl-static)
 install(
 	TARGETS mgl.cgi
 	EXPORT MathGLTargets
