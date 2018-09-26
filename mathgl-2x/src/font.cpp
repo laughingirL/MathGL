@@ -979,8 +979,11 @@ void MGL_EXPORT mgl_textdomain(const char *argv0, const char *loc)
 	if(!test_transl(MGL_INSTALL_DIR"/share/locale/"))
 		if(!test_transl("/usr/share/locale/"))
 			if(!test_transl("/usr/local/share/locale/"))
-				if(!test_transl(getcwd(NULL,0)))
+			{
+				char* cwd = getcwd(NULL,0);
+				if(!test_transl(cwd))
 				{
+					free(cwd);
 					const char *f = argv0?strrchr(argv0,'/'):NULL;
 #ifdef WIN32
 					if(!f)	f = argv0?strrchr(argv0,'\\'):NULL;
@@ -993,6 +996,8 @@ void MGL_EXPORT mgl_textdomain(const char *argv0, const char *loc)
 					}
 					else	return;
 				}
+				else	if(cwd)	free(cwd);
+			}
 #endif
 }
 void MGL_EXPORT mgl_textdomain_(const char *locale, int l)
