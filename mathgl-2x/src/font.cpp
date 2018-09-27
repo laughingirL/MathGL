@@ -717,7 +717,11 @@ bool mglFont::LoadBin(const char *base, const char *path)
 	Clear();	// first clear old
 	if(!path)	path = MGL_FONT_PATH;
 	char str[256], sep='/';
-	snprintf(str,256,"%s%c%s.vfmb",path,sep,base?base:"");	str[255]=0;
+	if(base && strstr(base,".vfmb"))
+		snprintf(str,256,"%s%c%s",path,sep,base);
+	else
+		snprintf(str,256,"%s%c%s.vfmb",path,sep,base?base:"");
+	str[255]=0;
 	FILE *fp = fopen(str,"rb");		if(!fp)	return false;
 	size_t s, len;
 	bool res = true;
@@ -750,7 +754,7 @@ bool mglFont::Load(const char *base, const char *path)
 	char str[256];
 	std::string loc = setlocale(LC_NUMERIC,"C");
 	if(!path)	path = MGL_FONT_PATH;
-	if(base && *base)
+	if(base && *base)	// try to load binary files
 	{
 		buf = new char[strlen(base)+1];
 		strcpy(buf,base);
@@ -765,6 +769,13 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 	Clear();	// first clear old
 
+	std::string sbase;
+	if(base && strstr(base,".vfm"))	// bypass user-specified extension in base name
+	{
+		size_t len = strlen(base);
+		sbase = std::string(base).substr(0,len-4);
+		base = sbase.c_str();
+	}
 	snprintf(str,256,"%s%c%s.vfm",path,sep,base?base:"");	str[255]=0;
 	std::vector<short> norm, bold, ital, both;
 	if(!(base && *base) || !read_main(str,norm))

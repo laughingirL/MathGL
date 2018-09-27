@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 16:08+0300\n"
+"POT-Creation-Date: 2018-09-27 16:29+0300\n"
 "PO-Revision-Date: 2018-03-24 11:08-0400\n"
 "Last-Translator: Diego Sejas Viscarra <dsejas.math@protonmail.com>\n"
 "Language-Team: \n"
@@ -855,7 +855,7 @@ msgstr "B - azul marino"
 msgid "Backward"
 msgstr "Retroceder"
 
-#: src/font.cpp:953
+#: src/font.cpp:964
 #, c-format
 msgid "Bad '%ls' at %zu\n"
 msgstr "\"%ls\" incorrecto en %zu\n"
