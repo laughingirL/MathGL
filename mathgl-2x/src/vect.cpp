@@ -788,6 +788,7 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 		}
 	}
 	flow(gr, z0, u, v, x, y, ax, ay,ss,vv);
+	flow(gr, z0,-u,-v, x, y, ax, ay,ss,vv);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -1157,6 +1158,7 @@ void MGL_EXPORT mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, 
 		}
 	}
 	flow(gr, u, v, w, x, y, z, ax, ay, az,ss,vv,xo,zo);
+	flow(gr,-u,-v,-w, x, y, z, ax, ay, az,ss,vv,xo,zo);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
