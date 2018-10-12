@@ -6,7 +6,7 @@ set(mgl_src
 	fit.cpp font.cpp obj.cpp other.cpp parser.cpp pde.cpp pixel.cpp pixel_gen.cpp
 	plot.cpp prim.cpp surf.cpp vect.cpp volume.cpp evalc.cpp
 	s_hull/s_hull_pro.cpp window.cpp fractal.cpp
-	exec_dat.cpp exec_gr.cpp exec_set.cpp exec_prm.cpp
+	exec_dat.cpp exec_gr.cpp exec_set.cpp exec_prm.cpp c2mdual.c
 )
 
 set(mgl_hdr

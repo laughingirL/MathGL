@@ -302,8 +302,8 @@ std::string MGL_EXPORT mgl_str_arg(const std::string &str, char ch, int n1, int 
 	{	p=str.find(ch,p+1);	pos.push_back(p?p+1:0);	}
 	std::string res;
 	if(n2<0)	n2=n1;
-	if(n1<0 || n1>=pos.size()-1 || n2<n1)	return res;
-	if(n2>=pos.size())	n2=pos.size()-1;
+	if(n1<0 || n1>=long(pos.size())-1 || n2<n1)	return res;
+	if(n2>=long(pos.size()))	n2=pos.size()-1;
 	res = str.substr(pos[n1],pos[n2+1]-pos[n1]-1);
 	if(res.size()==1 && res[0]==ch)	res.clear();
 	return res;

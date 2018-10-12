@@ -837,7 +837,7 @@ HMDT MGL_EXPORT mgl_find_roots_txt(const char *func, const char *vars, HCDT ini)
 	mglEqTxT par;
 	par.var=vars;	par.FillReal(func);
 	size_t n = par.str.size();
-	if(ini->GetNx()!=n)	return 0;
+	if(ini->GetNx()!=long(n))	return 0;
 	mreal *xx = new mreal[n];
 	mglData *res = new mglData(ini);
 	for(long j=0;j<ini->GetNy()*ini->GetNz();j++)

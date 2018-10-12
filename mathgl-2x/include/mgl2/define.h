@@ -313,15 +313,6 @@ inline long mgl_imax(long a, long b)	{	return a>b?a:b;	}
 inline void mgl_strncpy(char *a, const char *b, size_t s)	{	strncpy(a,b,s);	a[s-1]=0;	}
 //-----------------------------------------------------------------------------
 extern "C" {
-#else
-	#if MGL_HAVE_C99_COMPLEX
-		#include <complex.h>
-		#if MGL_USE_DOUBLE
-			typedef double _Complex dual;
-		#else
-			typedef float _Complex dual;
-		#endif
-	#endif
 #endif
 //-----------------------------------------------------------------------------
 struct cmdual	// complex number (bypass C/C++ incompatibility)
@@ -346,7 +337,18 @@ struct mdual : public cmdual
 	mdual &operator=(mreal r)	{	re=r;	im=0;	return *this;	}
 };
 #else
-typedef struct cmdual mdual;
+typedef struct cmdual cmdual;
+typedef cmdual mdual;
+#if MGL_HAVE_C99_COMPLEX
+	#include <complex.h>
+	#if MGL_USE_DOUBLE
+		typedef double _Complex dual;
+	#else
+		typedef float _Complex dual;
+	#endif
+	dual mdual2c(cmdual c);
+	cmdual c2mdual(dual c);
+#endif
 #endif
 //-----------------------------------------------------------------------------
 extern float mgl_cos[360];	///< contain cosine with step 1 degree

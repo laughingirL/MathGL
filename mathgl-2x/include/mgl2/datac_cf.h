@@ -101,9 +101,9 @@ HADT MGL_EXPORT mgl_datac_tridmat(HCDT A, HCDT B, HCDT C, HCDT D, const char *ho
 uintptr_t MGL_EXPORT mgl_datac_tridmat_(uintptr_t *A, uintptr_t *B, uintptr_t *C, uintptr_t *D, const char *how, int);
 
 /// Returns pointer to internal data array
-MGL_EXPORT dual *mgl_datac_data(HADT dat);
+MGL_EXPORT mdual *mgl_datac_data(HADT dat);
 /// Returns pointer to data element [i,j,k]
-MGL_EXPORT dual *mgl_datac_value(HADT dat, long i,long j,long k);
+MGL_EXPORT mdual *mgl_datac_value(HADT dat, long i,long j,long k);
 
 /// Set the data from HCDT objects for real and imaginary parts
 void MGL_EXPORT mgl_datac_set_ri(HADT dat, HCDT re, HCDT im);
