@@ -86,7 +86,7 @@ void MGL_EXPORT mglStartThreadV(void *(*func)(void *), long n, dual *a, const vo
 	}
 }
 //-----------------------------------------------------------------------------
-cmdual MGL_EXPORT_CONST mgl_expi(dual a)
+cmdual MGL_EXPORT_CONST mgl_expi(mdual a)
 {
 	return mdual(exp(dual(0,1)*dual(a)));
 }

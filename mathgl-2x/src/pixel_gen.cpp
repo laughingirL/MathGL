@@ -319,7 +319,7 @@ void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys) const
 mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
-void static mgl_prm_swap(mglPrim &s1,mglPrim &s2,mglPrim *buf)
+/*void static mgl_prm_swap(mglPrim &s1,mglPrim &s2,mglPrim *buf)
 {
 	memcpy(buf, &s1, sizeof(mglPrim));
 	memcpy(&s1, &s2, sizeof(mglPrim));
@@ -356,7 +356,7 @@ void static sort_prm_c(const size_t l0, const size_t r0, mglStack<mglPrim> &s, m
 	if(l>l0+1)	sort_prm_c(l0,l-1,s,buf);
 	if(r<r0)	sort_prm_c(r,r0,s,buf);
 	if(del)	free(buf);
-}
+}*/
 //-----------------------------------------------------------------------------
 uint32_t mglCanvas::GetColor(const mglPrim &p) const
 {

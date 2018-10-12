@@ -1169,7 +1169,7 @@ void MGL_EXPORT mgl_datac_sinfft_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	mgl_datac_sinfft(_DC_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-static void* mgl_cor(void *par)
+/*static void* mgl_cor(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	dual *a = t->a;
@@ -1179,7 +1179,7 @@ static void* mgl_cor(void *par)
 #endif
 	for(long i=t->id;i<t->n;i+=mglNumThr)	a[i] *= conj(b[i]);
 	return 0;
-}
+}*/
 HADT MGL_EXPORT mgl_datac_correl(HCDT d1, HCDT d2, const char *dir)
 {
 	if(!dir || *dir==0)	return 0;
