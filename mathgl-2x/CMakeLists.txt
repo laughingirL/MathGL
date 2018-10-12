@@ -172,7 +172,7 @@ else(MSVC)
 	option(enable-pthr-widget "Enable POSIX threads for widgets" ON)
 endif(MSVC)
 option(enable-openmp "Enable OpenMP support" ON)
-option(enable-C99complex "Enable C99 complex number support" ON)
+option(disable-C99complex "Enable C99 complex number support" OFF)
 
 if(enable-pthread AND enable-openmp)
 	message(SEND_ERROR "You can't enable POSIX threads and OpenMP at the same time!")
@@ -299,8 +299,8 @@ endif(HAVE_MEMRCHR)
 include(CheckTypeSize)
 check_type_size("long" SIZEOF_LONG)
 
-if(enable-C99complex)
-	unset(MGL_HAVE_C99_COMPLEX)
+if(NOT disable-C99complex)
+# 	unset(MGL_HAVE_C99_COMPLEX)
 	CHECK_CXX_SOURCE_COMPILES(
 	"#include <complex>
 	#include <complex.h>
@@ -312,9 +312,9 @@ if(enable-C99complex)
 	if(NOT MGL_HAVE_C99_COMPLEX)
 		set(MGL_HAVE_C99_COMPLEX 0)
 	endif(NOT MGL_HAVE_C99_COMPLEX)
-else(enable-C99complex)
+else(NOT disable-C99complex)
 	set(MGL_HAVE_C99_COMPLEX 0)
-endif(enable-C99complex)
+endif(NOT disable-C99complex)
 
 #unset(MGL_HAVE_NAN_INF)
 CHECK_CXX_SOURCE_COMPILES(
