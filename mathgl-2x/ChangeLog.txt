@@ -2,6 +2,7 @@
 
 * Improve FlowP()
 * Add styles '^' and '_' for 'smooth' to find upper/lower bound of the data.
+* Introduce struct mdual as interface for C and C++ complex numbers. 
 * Add flag in CMake to manually disable C99 complex numbers
 
 2.4.2.1 Released 31 March 2018

@@ -81,7 +81,7 @@ mdual MGL_EXPORT mgl_atoc(const char *s, int adv)
 			else	{	re=atof(s);	im=0;	}
 		}
 	}
-	return re+im*mgl_I;
+	return mdual(re,im);
 }
 //-----------------------------------------------------------------------------
 void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)
@@ -201,18 +201,18 @@ void MGL_EXPORT mgl_datac_set_double(HADT d, const double *A,long NX,long NY,lon
 	for(long i=0;i<NX*NY*NZ;i++)	d->a[i] = A[i];
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_set_complex(HADT d, const dual *A,long NX,long NY,long NZ)
+void MGL_EXPORT mgl_datac_set_complex(HADT d, const mdual *A,long NX,long NY,long NZ)
 {
 	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	mgl_datac_create(d, NX,NY,NZ);	if(!A)	return;
-	memcpy(d->a,A,NX*NY*NZ*sizeof(float));
+	memcpy(d->a,reinterpret_cast<const dual*>(A),NX*NY*NZ*sizeof(float));
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_set_float_(uintptr_t *d, const float *A,int *NX,int *NY,int *NZ)
 {	mgl_datac_set_float(_DC_,A,*NX,*NY,*NZ);	}
 void MGL_EXPORT mgl_datac_set_double_(uintptr_t *d, const double *A,int *NX,int *NY,int *NZ)
 {	mgl_datac_set_double(_DC_,A,*NX,*NY,*NZ);	}
-void MGL_EXPORT mgl_datac_set_complex_(uintptr_t *d, const dual *A,int *NX,int *NY,int *NZ)
+void MGL_EXPORT mgl_datac_set_complex_(uintptr_t *d, const mdual *A,int *NX,int *NY,int *NZ)
 {	mgl_datac_set_complex(_DC_,A,*NX,*NY,*NZ);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_rearrange(HADT d, long mx,long my,long mz)
@@ -441,18 +441,18 @@ static void *mgl_cfill_x(void *par)
 	}
 	return 0;
 }
-void MGL_EXPORT mgl_datac_fill(HADT d, dual x1,dual x2,char dir)
+void MGL_EXPORT mgl_datac_fill(HADT d, mdual x1, mdual x2,char dir)
 {
 	if(mgl_isnan(x2))	x2=x1;
 	if(dir<'x' || dir>'z')	dir='x';
 	long par[2]={d->nx,d->ny};
-	dual b[2]={x1,x2-x1};
+	dual b[2]={x1,dual(x2)-dual(x1)};
 	if(dir=='x')	b[1] *= d->nx>1 ? 1./(d->nx-1):0;
 	if(dir=='y')	b[1] *= d->ny>1 ? 1./(d->ny-1):0;
 	if(dir=='z')	b[1] *= d->nz>1 ? 1./(d->nz-1):0;
 	mglStartThreadC(mgl_cfill_x,0,d->nx*d->ny*d->nz,d->a,b,0,par,0,0,0,&dir);
 }
-void MGL_EXPORT mgl_datac_fill_(uintptr_t *d, dual *x1,dual *x2,const char *dir,int)
+void MGL_EXPORT mgl_datac_fill_(uintptr_t *d, mdual *x1, mdual *x2, const char *dir,int)
 {	mgl_datac_fill(_DC_,*x1,*x2,*dir);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_squeeze(HADT d, long rx,long ry,long rz,long smooth)

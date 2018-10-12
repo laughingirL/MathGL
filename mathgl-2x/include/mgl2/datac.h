@@ -105,7 +105,7 @@ using mglDataA::Momentum;
 
 	/// Link external data array (don't delete it at exit)
 	inline void Link(dual *A, long NX, long NY=1, long NZ=1)
-	{	mgl_datac_link(this,A,NX,NY,NZ);	}
+	{	mgl_datac_link(this,reinterpret_cast<mdual*>(A),NX,NY,NZ);	}
 	inline void Link(mglDataC &d)	{	Link(d.a,d.nx,d.ny,d.nz);	}
 	/// Allocate memory and copy the data from the gsl_vector
 	inline void Set(gsl_vector *m)	{	mgl_datac_set_vector(this,m);	}
@@ -120,7 +120,7 @@ using mglDataA::Momentum;
 	{	mgl_datac_set_double(this,A,NX,NY,NZ);	}
 	/// Allocate memory and copy the data from the (complex *) array
 	inline void Set(const dual *A,long NX,long NY=1,long NZ=1)
-	{	mgl_datac_set_complex(this,A,NX,NY,NZ);	}
+	{	mgl_datac_set_complex(this,reinterpret_cast<const mdual*>(A),NX,NY,NZ);	}
 	/// Allocate memory and scanf the data from the string
 	inline void Set(const char *str,long NX,long NY=1,long NZ=1)
 	{	mgl_datac_set_values(this,str,NX,NY,NZ);	}
@@ -409,14 +409,14 @@ using mglDataA::Momentum;
 	/// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline dual Linear(mglPoint &dif, mreal x,mreal y=0,mreal z=0)	const
 	{
-		dual val,dx,dy,dz;
+		mdual val,dx,dy,dz;
 		val = mgl_datac_linear_ext(this,x,y,z, &dx, &dy, &dz);
 		dif.Set(dx.real(),dy.real(),dz.real());	return val;
 	}
 	/// Interpolate by line the data and return its derivatives at given point x,\a y,\a z which normalized in range [0, 1]
 	inline dual Linear1(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
 	{
-		dual val,dx,dy,dz;
+		mdual val,dx,dy,dz;
 		val = mgl_datac_linear_ext(this,x,y,z, &dx, &dy, &dz);
 		dif.Set(dx.real(),dy.real(),dz.real());
 		dif.x/=nx>1?nx-1:1;	dif.y/=ny>1?ny-1:1;	dif.z/=nz>1?nz-1:1;
@@ -549,7 +549,7 @@ inline mglDataC mglGSplineCInit(const mglDataA &xdat, const mglDataA &ydat)
 {	return mglDataC(true,mgl_gsplinec_init(&xdat, &ydat));	}
 /// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
 inline dual mglGSplineC(const mglDataA &coef, mreal dx, dual *d1=0, dual *d2=0)
-{	return mgl_gsplinec(&coef, dx, d1,d2);	}
+{	return mgl_gsplinec(&coef, dx, reinterpret_cast<mdual*>(d1), reinterpret_cast<mdual*>(d2));	}
 //-----------------------------------------------------------------------------
 #define _DN_(a)	((mglDataC *)*(a))
 #define _DC_		((mglDataC *)*d)
@@ -570,13 +570,13 @@ public:
 	/// Return value of expression for given x,y,z,u,v,w variables
 	inline dual Eval(dual x, dual y, dual z, dual u, dual v, dual w)
 	{
-		dual var[26];
+		mdual var[26];
 		var['x'-'a']=x;	var['y'-'a']=y;	var['z'-'a']=z;
 		var['u'-'a']=u;	var['v'-'a']=v;	var['w'-'a']=w;
 		return mgl_cexpr_eval_v(ex,var);	}
 	/// Return value of expression for given variables
 	inline dual Eval(dual var[26])
-	{	return mgl_cexpr_eval_v(ex,var);	}
+	{	return mgl_cexpr_eval_v(ex,reinterpret_cast<mdual*>(var));	}
 };
 #endif
 //-----------------------------------------------------------------------------

@@ -291,47 +291,11 @@ extern MGL_EXPORT uint64_t mgl_mask_val[16];
 #define MGL_FULL_CURV 		0x00400000 	///< Disable omitting points in straight-line part(s).
 #define MGL_NO_SCALE_REL 	0x00800000 	///< Disable font scaling in relative inplots
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_C99_COMPLEX
-#include <complex.h>
-#if MGL_USE_DOUBLE
-typedef double _Complex mdual;
-#else
-typedef float _Complex mdual;
-#endif
-#ifndef _Complex_I
-#define _Complex_I	1.0i
-#endif
-const mdual mgl_I=_Complex_I;
-#define mgl_abs(x)	cabs(x)
-#endif
 #ifdef __cplusplus
 #include <string>
 #include <vector>
-// #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
-// MGL_EXTERN template class MGL_EXPORT std::allocator<char>;
-// MGL_EXTERN template class MGL_EXPORT std::allocator<wchar_t>;
-// MGL_EXTERN template struct MGL_EXPORT std::char_traits<char>;
-// MGL_EXTERN template struct MGL_EXPORT std::char_traits<wchar_t>;
-// MGL_EXTERN template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
-// MGL_EXTERN template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
-// MGL_EXTERN template class MGL_EXPORT std::vector<long>;
-// MGL_EXTERN template class MGL_EXPORT std::vector<mreal>;
-// #endif
-//-----------------------------------------------------------------------------
-extern float mgl_cos[360];	///< contain cosine with step 1 degree
-//-----------------------------------------------------------------------------
 #include <complex>
-// #if defined(_MSC_VER)
-// MGL_EXTERN template class MGL_EXPORT std::complex<float>;
-// MGL_EXTERN template class MGL_EXPORT std::complex<double>;
-// #endif
 typedef std::complex<mreal> dual;
-typedef std::complex<double> ddual;
-#if !MGL_HAVE_C99_COMPLEX
-#define mdual dual
-#define mgl_I dual(0,1)
-#define mgl_abs(x)	abs(x)
-#endif
 //-----------------------------------------------------------------------------
 inline bool mgl_isrange(double a, double b)
 {	return fabs(a-b)>MGL_MIN_VAL && a-a==0. && b-b==0.;	}
@@ -353,10 +317,36 @@ inline void mgl_strncpy(char *a, const char *b, size_t s)	{	strncpy(a,b,s);	a[s-
 //-----------------------------------------------------------------------------
 extern "C" {
 #else
-#include <complex.h>
-typedef double _Complex ddual;
-#define dual	mdual
+	#if MGL_HAVE_C99_COMPLEX
+		#include <complex.h>
+		#if MGL_USE_DOUBLE
+			typedef double _Complex dual;
+		#else
+			typedef float _Complex dual;
+		#endif
+	#endif
 #endif
+//-----------------------------------------------------------------------------
+struct mdual	// complex number (bypass C/C++ incompatibility)
+{
+	mreal re,im;	// real and imaginary parts
+#ifdef __cplusplus
+	mdual(const mdual &c)	{	re=c.re;	im=c.im;	}
+	mdual(const std::complex<float> &c)	{	re=c.real();	im=c.imag();	}
+	mdual(const std::complex<double> &c){	re=c.real();	im=c.imag();	}
+	mdual(mreal r=0, mreal i=0)	{	re=r;	im=i;	}
+	mdual &operator=(const mdual &c)	{	re=c.re;	im=c.im;	return *this;	}
+	mdual &operator=(const std::complex<float> &c)	{	re=c.real();	im=c.imag();	return *this;	}
+	mdual &operator=(const std::complex<double> &c)	{	re=c.real();	im=c.imag();	return *this;	}
+	mdual &operator=(mreal re)	{	re=re;	im=0;	return *this;	}
+	operator dual() const	{	return dual(re,im);	}
+	mreal real() const	{	return re;	}
+	mreal imag() const	{	return im;	}
+#endif
+};
+//-----------------------------------------------------------------------------
+extern float mgl_cos[360];	///< contain cosine with step 1 degree
+//-----------------------------------------------------------------------------
 /// Find length of wchar_t string (bypass standard wcslen bug)
 double MGL_EXPORT_CONST mgl_hypot(double x, double y);
 /// Find length of wchar_t string (bypass standard wcslen bug)

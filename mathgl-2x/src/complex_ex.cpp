@@ -503,11 +503,11 @@ void MGL_EXPORT mgl_datac_mul_dat(HADT d, HCDT a)
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_mul_num(HADT d, dual a)
+void MGL_EXPORT mgl_datac_mul_num(HADT d, mdual a)
 {
 	long n=d->GetNN();
 #pragma omp parallel for
-	for(long i=0;i<n;i++)	d->a[i] *= a;
+	for(long i=0;i<n;i++)	d->a[i] *= dual(a);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_div_dat(HADT d, HCDT a)
@@ -537,11 +537,11 @@ void MGL_EXPORT mgl_datac_div_dat(HADT d, HCDT a)
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_div_num(HADT d, dual a)
+void MGL_EXPORT mgl_datac_div_num(HADT d, mdual a)
 {
 	long n=d->GetNN();
 #pragma omp parallel for
-	for(long i=0;i<n;i++)	d->a[i] /= a;
+	for(long i=0;i<n;i++)	d->a[i] /= dual(a);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_add_dat(HADT d, HCDT a)
@@ -571,11 +571,11 @@ void MGL_EXPORT mgl_datac_add_dat(HADT d, HCDT a)
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_add_num(HADT d, dual a)
+void MGL_EXPORT mgl_datac_add_num(HADT d, mdual a)
 {
 	long n=d->GetNN();
 #pragma omp parallel for
-	for(long i=0;i<n;i++)	d->a[i] += a;
+	for(long i=0;i<n;i++)	d->a[i] += dual(a);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_sub_dat(HADT d, HCDT a)
@@ -605,21 +605,21 @@ void MGL_EXPORT mgl_datac_sub_dat(HADT d, HCDT a)
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_sub_num(HADT d, dual a)
+void MGL_EXPORT mgl_datac_sub_num(HADT d, mdual a)
 {
 	long n=d->GetNN();
 #pragma omp parallel for
-	for(long i=0;i<n;i++)	d->a[i] -= a;
+	for(long i=0;i<n;i++)	d->a[i] -= dual(a);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_mul_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_datac_mul_dat(_DC_, _DA_(b));	}
 void MGL_EXPORT mgl_datac_div_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_datac_div_dat(_DC_, _DA_(b));	}
 void MGL_EXPORT mgl_datac_add_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_datac_add_dat(_DC_, _DA_(b));	}
 void MGL_EXPORT mgl_datac_sub_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_datac_sub_dat(_DC_, _DA_(b));	}
-void MGL_EXPORT mgl_datac_mul_num_(uintptr_t *d, dual *b)		{	mgl_datac_mul_num(_DC_, *b);	}
-void MGL_EXPORT mgl_datac_div_num_(uintptr_t *d, dual *b)		{	mgl_datac_div_num(_DC_, *b);	}
-void MGL_EXPORT mgl_datac_add_num_(uintptr_t *d, dual *b)		{	mgl_datac_add_num(_DC_, *b);	}
-void MGL_EXPORT mgl_datac_sub_num_(uintptr_t *d, dual *b)		{	mgl_datac_sub_num(_DC_, *b);	}
+void MGL_EXPORT mgl_datac_mul_num_(uintptr_t *d, mdual *b)		{	mgl_datac_mul_num(_DC_, *b);	}
+void MGL_EXPORT mgl_datac_div_num_(uintptr_t *d, mdual *b)		{	mgl_datac_div_num(_DC_, *b);	}
+void MGL_EXPORT mgl_datac_add_num_(uintptr_t *d, mdual *b)		{	mgl_datac_add_num(_DC_, *b);	}
+void MGL_EXPORT mgl_datac_sub_num_(uintptr_t *d, mdual *b)		{	mgl_datac_sub_num(_DC_, *b);	}
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_section(HCDT dat, HCDT ids, char dir, mreal val)
 {

@@ -88,8 +88,7 @@ void MGL_EXPORT mglStartThreadV(void *(*func)(void *), long n, dual *a, const vo
 //-----------------------------------------------------------------------------
 mdual MGL_EXPORT_CONST mgl_expi(dual a)
 {
-	dual r = exp(dual(0,1)*dual(a));
-	return r.real()+r.imag()*mgl_I;
+	return exp(dual(0,1)*dual(a));
 }
 //-----------------------------------------------------------------------------
 static void *mgl_csmth_x(void *par)
@@ -643,8 +642,7 @@ dual MGL_EXPORT mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mr
 mdual MGL_EXPORT mgl_datac_spline(HCDT d, mreal x,mreal y,mreal z)
 {
 	const mglDataC *dd=dynamic_cast<const mglDataC *>(d);
-	dual r = dd ? mglSpline3st<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z) : d->value(x,y,z);
-	return r.real()+r.imag()*mgl_I;
+	return dd ? mglSpline3st<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z) : d->value(x,y,z);
 }
 //-----------------------------------------------------------------------------
 mdual MGL_EXPORT mgl_datac_spline_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz)
@@ -659,8 +657,7 @@ mdual MGL_EXPORT mgl_datac_spline_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,
 		if(dz)	*dz=rz;
 		return res;
 	}
-	dual r = mglSpline3t<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
-	return r.real()+r.imag()*mgl_I;
+	return mglSpline3t<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
 }
 //-----------------------------------------------------------------------------
 mdual MGL_EXPORT mgl_datac_spline_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
@@ -668,7 +665,7 @@ mdual MGL_EXPORT mgl_datac_spline_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
 mdual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz)
 {	return mgl_datac_spline_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
 //-----------------------------------------------------------------------------
-mdual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz)
+mdual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, mdual *dx,mdual *dy,mdual *dz)
 {
 	long kx=long(x), ky=long(y), kz=long(z);
 	dual b0,b1;
@@ -712,15 +709,14 @@ mdual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,
 	if(dx)	*dx = kx>=0?aa[1]-aa[0]:0;
 	if(dy)	*dy = ky>=0?aa[dn]-aa[0]:0;
 	if(dz)	*dz = b1-b0;
-	dual r = b0 + z*(b1-b0);
-	return r.real()+r.imag()*mgl_I;
+	return b0 + z*(b1-b0);
 }
 mdual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z)
 {	return mgl_datac_linear_ext(d, x,y,z, 0,0,0);	}
 //-----------------------------------------------------------------------------
 mdual MGL_EXPORT mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
 {	return mgl_datac_linear(_DA_(d),*x,*y,*z);	}
-mdual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz)
+mdual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mdual *dx,mdual *dy,mdual *dz)
 {	return mgl_datac_linear_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
 //-----------------------------------------------------------------------------
 long MGL_NO_EXPORT mgl_powers(long N, const char *how);
@@ -881,8 +877,7 @@ mdual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k)
 	if(i<0 || i>=nx || j<0 || j>=ny || k<0 || k>=dat->GetNz())
 		return NAN;
 	const mglDataC *d = dynamic_cast<const mglDataC*>(dat);
-	dual r = d ? d->a[i0] : dual(dat->vthr(i0),0);
-	return r.real()+r.imag()*mgl_I;
+	return d ? d->a[i0] : dual(dat->vthr(i0),0);
 }
 mdual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return mgl_datac_get_value(_DA_(d),*i,*j,*k);	}
@@ -921,7 +916,7 @@ void MGL_EXPORT mgl_datac_join(HADT d, HCDT v)
 void MGL_EXPORT mgl_datac_join_(uintptr_t *d, uintptr_t *val)
 {	mgl_datac_join(_DC_,_DA_(val));	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_put_val(HADT d, dual val, long xx, long yy, long zz)
+void MGL_EXPORT mgl_datac_put_val(HADT d, mdual val, long xx, long yy, long zz)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	if(xx>=nx || yy>=ny || zz>=nz)	return;
@@ -1061,7 +1056,7 @@ void MGL_EXPORT mgl_datac_put_dat(HADT d, HCDT v, long xx, long yy, long zz)
 	else	a[xx+nx*(yy+ny*zz)] = vv;
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_put_val_(uintptr_t *d, dual *val, int *i, int *j, int *k)
+void MGL_EXPORT mgl_datac_put_val_(uintptr_t *d, mdual *val, int *i, int *j, int *k)
 {	mgl_datac_put_val(_DC_,*val, *i,*j,*k);	}
 void MGL_EXPORT mgl_datac_put_dat_(uintptr_t *d, uintptr_t *val, int *i, int *j, int *k)
 {	mgl_datac_put_dat(_DC_,_DA_(val), *i,*j,*k);	}
@@ -1162,7 +1157,7 @@ HADT MGL_EXPORT mgl_gsplinec_init(HCDT x, HCDT v)
 uintptr_t MGL_EXPORT mgl_gsplinec_init_(uintptr_t *x, uintptr_t *v)
 {	return uintptr_t(mgl_gspline_init(_DA_(x),_DA_(v)));	}
 //-----------------------------------------------------------------------------
-mdual MGL_EXPORT mgl_gsplinec(HCDT c, mreal dx, dual *d1, dual *d2)
+mdual MGL_EXPORT mgl_gsplinec(HCDT c, mreal dx, mdual *d1, mdual *d2)
 {
 	long i=0, n = c->GetNx();
 	if(n%5)	return NAN;	// not the table of coefficients
@@ -1182,9 +1177,9 @@ mdual MGL_EXPORT mgl_gsplinec(HCDT c, mreal dx, dual *d1, dual *d2)
 		if(d2)	*d2 = 2*c->v(5*i+3)+6*dx*c->v(5*i+4);
 		res = c->v(5*i+1)+dx*(c->v(5*i+2)+dx*(c->v(5*i+3)+dx*c->v(5*i+4)));
 	}
-	return res.real()+res.imag()*mgl_I;
+	return res;
 }
-mdual MGL_EXPORT mgl_gsplinec_(uintptr_t *c, mreal *dx, dual *d1, dual *d2)
+mdual MGL_EXPORT mgl_gsplinec_(uintptr_t *c, mreal *dx, mdual *d1, mdual *d2)
 {	return mgl_gsplinec(_DA_(c),*dx,d1,d2);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_refill_gs(HADT dat, HCDT xdat, HCDT vdat, mreal x1, mreal x2, long sl)
