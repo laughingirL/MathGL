@@ -1,7 +1,4 @@
 cmake_minimum_required(VERSION 3.1.0)
-if(POLICY CMP0043)
-    cmake_policy(SET CMP0043 OLD)
-endif()
 
 project( MathGL2 )
 
@@ -566,6 +563,7 @@ endif(enable-gif)
 
 if(enable-opengl)
 	set(MGL_HAVE_OPENGL 1)
+	set(OpenGL_GL_PREFERENCE LEGACY)
 	include(FindOpenGL)
 	if(NOT OPENGL_FOUND)
 		message(SEND_ERROR "Couldn't find OpenGL libraries.")
