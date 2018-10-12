@@ -1,9 +1,17 @@
-2.4.3 Released ??? 2018
+2.4.3 Released ??? October 2018
 
-* Improve FlowP()
-* Add styles '^' and '_' for 'smooth' to find upper/lower bound of the data.
-* Introduce struct mdual as interface for C and C++ complex numbers. 
-* Add flag in CMake to manually disable C99 complex numbers
+* Add styles '^' and '_' for command 'smooth' to find upper/lower bound of the data.
+* Improve FlowP() to draw both branches (in positive and negative time direction).
+* Improve CGI interface and update website.
+* Introduce struct mdual as interface for C and C++ complex numbers. It is implicitly converted to std::complex<> in C++. And need to call c2mdual() and mdual2c() in pure C. However mdual is binary compatible with C _Complex numbers.
+* Add flag in CMake to manually disable support of C99 complex numbers.
+* Bypass user-specified extension in base font family name.
+* Improve hints in mgllab and udav.
+* Bugfix for approximate min and max position.
+* Bugfix for position of SVG output.
+* Compatibility fixes for new versions of CMake, compilers and libraries.
+INCOMPATIBLE:
+* Formally pure C interface handle complex numbers by new way due to strict following of C/C++ standards. However, the MathGL library is binary compatible with previous version(s).
 
 2.4.2.1 Released 31 March 2018
 
