@@ -38,12 +38,12 @@ extern "C" {
 typedef void *HADT;
 #endif
 /// Get integer power of x
-mdual MGL_EXPORT_CONST mgl_ipowc(mdual x,int n);
-mdual MGL_EXPORT mgl_ipowc_(mdual *x,int *n);
+cmdual MGL_EXPORT_CONST mgl_ipowc(mdual x,int n);
+cmdual MGL_EXPORT mgl_ipowc_(mdual *x,int *n);
 /// Get complex number from string. Parse (%g,%g), {%g,%g} and [%g,%g] if adv!=0.
-mdual MGL_EXPORT mgl_atoc(const char *s, int adv);
+cmdual MGL_EXPORT mgl_atoc(const char *s, int adv);
 /// Get exp(i*a)
-mdual MGL_EXPORT_CONST mgl_expi(mdual a);
+cmdual MGL_EXPORT_CONST mgl_expi(mdual a);
 
 /// Create HMDT object
 HADT MGL_EXPORT mgl_create_datac();
@@ -84,8 +84,8 @@ void MGL_EXPORT mgl_datac_set_matrix(HADT dat, gsl_matrix *m);
 void MGL_EXPORT mgl_datac_set_value(HADT dat, mdual v, long i, long j, long k);
 void MGL_EXPORT mgl_datac_set_value_(uintptr_t *d, mdual *v, int *i, int *j, int *k);
 /// Get value of data element [i,j,k]
-mdual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k);
-mdual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k);
+cmdual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k);
+cmdual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k);
 /// Allocate memory and scanf the data from the string
 void MGL_EXPORT mgl_datac_set_values(HADT dat, const char *val, long nx, long ny, long nz);
 void MGL_EXPORT mgl_datac_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l);
@@ -353,23 +353,23 @@ HMDT MGL_EXPORT mgl_datac_norm(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_norm_(uintptr_t *dat);
 
 /// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mdual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z);
-mdual MGL_EXPORT mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z);
+cmdual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z);
+cmdual MGL_EXPORT mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z);
 /// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mdual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, mdual *dx,mdual *dy,mdual *dz);
-mdual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mdual *dx,mdual *dy,mdual *dz);
+cmdual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, mdual *dx,mdual *dy,mdual *dz);
+cmdual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mdual *dx,mdual *dy,mdual *dz);
 /// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mdual MGL_EXPORT mgl_datac_spline(HCDT dat, mreal x,mreal y,mreal z);
-mdual MGL_EXPORT mgl_datac_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
+cmdual MGL_EXPORT mgl_datac_spline(HCDT dat, mreal x,mreal y,mreal z);
+cmdual MGL_EXPORT mgl_datac_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 /// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mdual MGL_EXPORT mgl_datac_spline_ext(HCDT dat, mreal x,mreal y,mreal z, mdual *dx,mdual *dy,mdual *dz);
-mdual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mdual *dx,mdual *dy,mdual *dz);
+cmdual MGL_EXPORT mgl_datac_spline_ext(HCDT dat, mreal x,mreal y,mreal z, mdual *dx,mdual *dy,mdual *dz);
+cmdual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mdual *dx,mdual *dy,mdual *dz);
 /// Prepare coefficients for global spline interpolation
 HADT MGL_EXPORT mgl_gsplinec_init(HCDT x, HCDT v);
 uintptr_t MGL_EXPORT mgl_gspline_init_(uintptr_t *x, uintptr_t *v);
 /// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
-mdual MGL_EXPORT mgl_gsplinec(HCDT coef, mreal dx, mdual *d1, mdual *d2);
-mdual MGL_EXPORT mgl_gsplinec_(uintptr_t *c, mreal *dx, mdual *d1, mdual *d2);
+cmdual MGL_EXPORT mgl_gsplinec(HCDT coef, mreal dx, mdual *d1, mdual *d2);
+cmdual MGL_EXPORT mgl_gsplinec_(uintptr_t *c, mreal *dx, mdual *d1, mdual *d2);
 
 /// Find roots for set of nonlinear equations defined by textual formulas
 HADT MGL_EXPORT mgl_find_roots_txt_c(const char *func, const char *vars, HCDT ini);

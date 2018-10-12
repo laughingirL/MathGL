@@ -71,9 +71,6 @@
 #define MGL_LOCAL_PURE		MGL_NO_EXPORT MGL_FUNC_PURE
 
 #if MGL_HAVE_RVAL	// C++11 don't support register keyword
-#if (!defined(_MSC_VER)) || (defined(_MSC_VER) && (_MSC_VER < 1310))
-#define register
-#endif
 #endif
 
 #endif
@@ -327,23 +324,30 @@ extern "C" {
 	#endif
 #endif
 //-----------------------------------------------------------------------------
-struct mdual	// complex number (bypass C/C++ incompatibility)
+struct cmdual	// complex number (bypass C/C++ incompatibility)
 {
 	mreal re,im;	// real and imaginary parts
 #ifdef __cplusplus
-	mdual(const mdual &c)	{	re=c.re;	im=c.im;	}
-	mdual(const std::complex<float> &c)	{	re=c.real();	im=c.imag();	}
-	mdual(const std::complex<double> &c){	re=c.real();	im=c.imag();	}
-	mdual(mreal r=0, mreal i=0)	{	re=r;	im=i;	}
-	mdual &operator=(const mdual &c)	{	re=c.re;	im=c.im;	return *this;	}
-	mdual &operator=(const std::complex<float> &c)	{	re=c.real();	im=c.imag();	return *this;	}
-	mdual &operator=(const std::complex<double> &c)	{	re=c.real();	im=c.imag();	return *this;	}
-	mdual &operator=(mreal re)	{	re=re;	im=0;	return *this;	}
 	operator dual() const	{	return dual(re,im);	}
 	mreal real() const	{	return re;	}
 	mreal imag() const	{	return im;	}
 #endif
 };
+#ifdef __cplusplus
+struct mdual : public cmdual
+{
+	mdual(const cmdual &c)	{	re=c.re;	im=c.im;	}
+	mdual(const std::complex<float> &c)	{	re=c.real();	im=c.imag();	}
+	mdual(const std::complex<double> &c){	re=c.real();	im=c.imag();	}
+	mdual(mreal r=0, mreal i=0)	{	re=r;	im=i;	}
+	mdual &operator=(const cmdual &c)	{	re=c.re;	im=c.im;	return *this;	}
+	mdual &operator=(const std::complex<float> &c)	{	re=c.real();	im=c.imag();	return *this;	}
+	mdual &operator=(const std::complex<double> &c)	{	re=c.real();	im=c.imag();	return *this;	}
+	mdual &operator=(mreal r)	{	re=r;	im=0;	return *this;	}
+};
+#else
+typedef struct cmdual mdual;
+#endif
 //-----------------------------------------------------------------------------
 extern float mgl_cos[360];	///< contain cosine with step 1 degree
 //-----------------------------------------------------------------------------

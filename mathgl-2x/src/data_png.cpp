@@ -227,10 +227,10 @@ printf("\n");
 		for(long k=0;k<num;k++)
 		{
 			const unsigned char *c1=c+3*k;
-			register int v0=int(c1[0])-c2[0];
-			register int v1=int(c1[1])-c2[1];
-			register int v2=int(c1[2])-c2[2];
-			register unsigned val = v0*v0+v1*v1+v2*v2;
+			int v0=int(c1[0])-c2[0];
+			int v1=int(c1[1])-c2[1];
+			int v2=int(c1[2])-c2[2];
+			unsigned val = v0*v0+v1*v1+v2*v2;
 			if(val==0)		{	pos=k;	break;	}
 			if(val<mval)	{	pos=k;	mval=val;	}
 		}

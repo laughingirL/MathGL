@@ -109,7 +109,7 @@ bool is_num(const char *s)	// number
 //-----------------------------------------------------------------------------
 char is_cmd(const char *s)	// command
 {
-	register long i,n=strlen(s)+1;
+	long i,n=strlen(s)+1;
 	char res=0, *w=new char[n];	strcpy(w,s);
 	for(i=0;i<n;i++)	if(!isalnum(s[i]))	w[i]=0;
 	int rts = Parse->CmdType(w);
@@ -338,7 +338,7 @@ void load_file(const char *newfile, int ipos, ScriptWindow *e)
 
 		char *t = textbuf->text();
 #ifndef WIN32
-		register size_t i,l=strlen(t);
+		size_t i,l=strlen(t);
 		for(i=0;i<l;i++)	if(t[i]=='\r')	t[i]=' ';
 		textbuf->text(t);
 #endif

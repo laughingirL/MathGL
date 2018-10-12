@@ -194,10 +194,10 @@ uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int);
 void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
 void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex);
 /// Return value of expression for given x,y,z variables
-mdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, mdual x, mdual y, mdual z);
-mdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, mdual *x, mdual *y, mdual *z);
+cmdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, mdual x, mdual y, mdual z);
+cmdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, mdual *x, mdual *y, mdual *z);
 /// Return value of expression for given variables
-mdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, mdual *vars);
+cmdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, mdual *vars);
 
 //-----------------------------------------------------------------------------
 /// Callback function for asking user a question. Result shouldn't exceed 1024.
