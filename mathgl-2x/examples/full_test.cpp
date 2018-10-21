@@ -73,6 +73,11 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglParse par;
+	par.Execute(gr,"new a 3 3 'x*y'\nsubplot 2 1 0 '':dens a:dens a 'k+/'\n"
+	"subplot 2 1 1 '':mask '+' 'ff00182424f800' 30:dens a '3+'");
+	return;
+	
 	dual c(0,M_PI/2), r=mgl_ipowc(c,2);
 	printf("(%g,%g)\n",r.real(),r.imag());
 	return;
@@ -81,11 +86,10 @@ void test(mglGraph *gr)
 	dat.Save("1.dat");
 //	gr->ShearPlot(3, 0, 0.2, 0.1);	gr->Box("r");
 	return;
-	mglParse par;
-	par.Execute(gr,"call 'test' -1\n func 'test' 1\nline $1 0 1 1 'b'\nreturn\n");
+//	par.Execute(gr,"call 'test' -1\n func 'test' 1\nline $1 0 1 1 'b'\nreturn\n");
 //	par.Execute(gr,"load '/home/balakin/mathgl-code/mathgl-2x/build/examples/libmgl_module.so':baxis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");
-	return;
+//	return;
 }
 //-----------------------------------------------------------------------------
 void mgl_generate_texi()

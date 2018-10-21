@@ -337,6 +337,10 @@ int static mgls_mask(mglGraph *gr, long , mglArg *a, const char *k, const char *
 	int res=0;
 	if(!strcmp(k,"sn"))	gr->SetMask(a[0].s[0],a[1].v);
 	else if(!strcmp(k,"ss"))	gr->SetMask(a[0].s[0],a[1].s.s);
+	else if(!strcmp(k,"snn"))
+	{	gr->SetMask(a[0].s[0],a[1].v);	gr->SetMaskAngle(mgl_int(a[2].v));	}
+	else if(!strcmp(k,"ssn"))
+	{	gr->SetMask(a[0].s[0],a[1].s.s);gr->SetMaskAngle(mgl_int(a[2].v));	}
 	else if(!strcmp(k,"n"))		gr->SetMaskAngle(mgl_int(a[0].v));
 	else res = 1;
 	return res;

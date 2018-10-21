@@ -450,7 +450,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 	{
 		mreal x,y,z,k,v=NAN;
 		HMDT d = mglFormulaCalc(str.substr(0,n), arg, head);
-		long ns[3] = {d->nx, d->ny, d->nz};
+		long ns[3] = {d->nx-1, d->ny-1, d->nz-1};
 		const std::wstring &p=str.substr(n+1);
 		wchar_t ch = p[1];
 		if(c0=='a')
@@ -465,7 +465,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		}
 		else if(c0=='n')
 		{
-			if(ch>='x' && ch<='z')	v = ns[p[1]-'x'];
+			if(ch>='x' && ch<='z')	v = ns[p[1]-'x']+1;
 			else if(!p.compare(L"nmax"))	{	v=d->MaximalNeg();	}
 			else if(!p.compare(L"nmin"))	{	v=d->Minimal();	v = v<0?v:0;	}
 		}
@@ -908,7 +908,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 	{
 		dual v=NAN;
 		HADT d = mglFormulaCalcC(str.substr(0,n), arg, head);
-		long ns[3] = {d->nx, d->ny, d->nz};
+		long ns[3] = {d->nx-1, d->ny-1, d->nz-1};
 		const std::wstring &p=str.substr(n+1);
 		wchar_t ch = p[1];
 		if(c0=='a')
@@ -922,7 +922,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 				else if(ch>='x' && ch<='z')	v = x/ns[ch-'x'];
 			}
 		}
-		else if(c0=='n' && ch>='x' && ch<='z')	v = ns[ch-'x'];
+		else if(c0=='n' && ch>='x' && ch<='z')	v = ns[ch-'x']+1;
 		else if(c0=='k')
 		{
 			mreal x,y,z,k;
@@ -942,8 +942,14 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			mreal x,y,z;
 			if(ch=='a' && p[2]=='x')	v = d->Maximal();
 			else if(ch=='i' && p[2]=='n')	v = d->Minimal();
+			else if(ch=='x' && p[2]=='f')	v = d->Maximal('x',0)/mreal(ns[0]);
+			else if(ch=='x' && p[2]=='l')	v = d->Maximal('x',-1)/mreal(ns[0]);
 			else if(ch=='x')	{	d->Maximal(x,y,z);	v = x/ns[0];	}
+			else if(ch=='y' && p[2]=='f')	v = d->Maximal('y',0)/mreal(ns[1]);
+			else if(ch=='y' && p[2]=='l')	v = d->Maximal('y',-1)/mreal(ns[1]);
 			else if(ch=='y')	{	d->Maximal(x,y,z);	v = y/ns[1];	}
+			else if(ch=='z' && p[2]=='f')	v = d->Maximal('z',0)/mreal(ns[2]);
+			else if(ch=='z' && p[2]=='l')	v = d->Maximal('z',-1)/mreal(ns[2]);
 			else if(ch=='z')	{	d->Maximal(x,y,z);	v = z/ns[2];	}
 		}
 		else if(c0=='s')

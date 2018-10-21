@@ -184,13 +184,13 @@ const char *mmgl_mask="new a 10 10 'x'\n"
 "subplot 5 4 11 '':title '\"<\" mask':dens a '3<'\n"
 "subplot 5 4 12 '':title '\">\" mask':dens a '3>'\n"
 "subplot 5 4 13 '':title '\"j\" mask':dens a '3j'\n"
-"subplot 5 4 14 '':title '\"-;\\\" mask':dens a '3;\\ '\n"
+"subplot 5 4 14 '':title '\"-;\\\" mask':dens a '3\\;'\n"
 "subplot 5 4 15 '':title '\"d\" mask':dens a '3d'\n"
 "subplot 5 4 16 '':title '\"D\" mask':dens a '3D'\n"
 "subplot 5 4 17 '':title '\"*\" mask':dens a '3*'\n"
-"subplot 5 4 18 '':title '\"^\" mask':dens a '3^'\n"
+"subplot 5 4 18 '':title '\"\\^\" mask':dens a '3^'\n"
 "subplot 5 4 19 '':title 'manual mask'\n"
-"mask '+' 'ff00182424f800':dens a '3+'";
+"mask '+' '24242424FF0101FF':dens a '3+'";
 void smgl_mask(mglGraph *gr)
 {
 	mglData a(10,10);	a.Fill(-1,1);
@@ -212,9 +212,9 @@ void smgl_mask(mglGraph *gr)
 	gr->SubPlot(5,4,15,"");	gr->Title("'d' mask");	gr->Dens(a,"3d");
 	gr->SubPlot(5,4,16,"");	gr->Title("'D' mask");	gr->Dens(a,"3D");
 	gr->SubPlot(5,4,17,"");	gr->Title("'*' mask");	gr->Dens(a,"3*");
-	gr->SubPlot(5,4,18,"");	gr->Title("'^' mask");	gr->Dens(a,"3^");
+	gr->SubPlot(5,4,18,"");	gr->Title("'\\^' mask");	gr->Dens(a,"3^");
 	gr->SubPlot(5,4,19,"");	gr->Title("manual mask");
-	gr->SetMask('+', "ff00182424f80000");	gr->Dens(a,"3+");
+	gr->SetMask('+', "24242424FF0101FF");	gr->Dens(a,"3+");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_export="new a 100 100 'x^2*y':new b 100 100\n"
