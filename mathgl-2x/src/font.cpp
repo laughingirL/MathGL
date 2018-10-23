@@ -127,7 +127,7 @@ float mglFont::Width(const wchar_t *str,const char *how) const
 float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) const
 {
 	if(GetNumGlyph()==0 || !str || *str==0)	return 0;
-	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
+	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0, y1,y2;
 	size_t size = mgl_wcslen(str)+1,num=0;
 	if(parse)
 	{
@@ -138,8 +138,8 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 		{
 			if(wcs[i]=='\n')	// parse '\n' symbol
 			{
-				wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,c1,c2);	// find width
-				Puts(buf,-w*(align&3)/2.f,-h - 660*num/fact[0],1.f,font,c1,c2);	// draw it really
+				wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,c1,c2, y1,y2);	// find width
+				Puts(buf,-w*(align&3)/2.f,-h - 660*num/fact[0],1.f,font,c1,c2, y1,y2);	// draw it really
 				buf=wcs+i+1;	num++;	if(w>ww)	ww=w;
 			}
 // 			if(wcs[i]=='\\' && wcs[i+1]=='n' && (wcs[i+2]>' ' || wcschr(L"{}[]()!@#$%^&*/-?.,_=+\\\"", wcs[i+2])))	// parse '\n' symbol
@@ -150,8 +150,8 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 // 			}
 		}
 		// draw string itself
-		w = Puts(buf,0,0,1.f,0x10|font,c1,c2);	// find width
-		Puts(buf,-w*(align&3)/2.f,-h - 660*num/fact[0],1.f,font,c1,c2);	// draw it really
+		w = Puts(buf,0,0,1.f,0x10|font,c1,c2, y1,y2);	// find width
+		Puts(buf,-w*(align&3)/2.f,-h - 660*num/fact[0],1.f,font,c1,c2, y1,y2);	// draw it really
 		if(w>ww)	ww=w;
 		delete []wcs;
 	}
@@ -184,7 +184,7 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 float mglFont::Width(const wchar_t *str,int font) const
 {
 	if(GetNumGlyph()==0 || !str || *str==0)	return 0;
-	float ww=0,w=0;
+	float ww=0,w=0, y1,y2;
 	size_t size = mgl_wcslen(str)+1;
 	if(parse)
 	{
@@ -193,10 +193,10 @@ float mglFont::Width(const wchar_t *str,int font) const
 		Convert(str, wcs);
 		for(size_t i=0;wcs[i];i++)	if(wcs[i]=='\n')	// parse '\n' symbol
 		{
-			wcs[i]=0;	w = Puts(buf,0,0,1.,0x10|font,'k','k');	// find width
+			wcs[i]=0;	w = Puts(buf,0,0,1.,0x10|font,'k','k', y1,y2);	// find width
 			buf=wcs+i+1;	if(w>ww)	ww=w;
 		}
-		w = Puts(buf,0,0,1.,0x10|font,'k','k');
+		w = Puts(buf,0,0,1.,0x10|font,'k','k', y1,y2);
 		if(w<ww)	w=ww;
 		delete []wcs;
 	}
@@ -360,8 +360,9 @@ float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float
 	}
 	else	{	s2[0] = str[i];	*b2 = s2;	i++;	}
 	i--;
-	w1 = Puts(*b1, 0, 0, f1, 0x10|st,'k','k');
-	w2 = Puts(*b2, 0, 0, f2, 0x10|st,'k','k');
+	float y1,y2;
+	w1 = Puts(*b1, 0, 0, f1, 0x10|st,'k','k', y1,y2);
+	w2 = Puts(*b2, 0, 0, f2, 0x10|st,'k','k', y1,y2);
 	return w1>w2 ? w1 : w2;
 }
 //-----------------------------------------------------------------------------
@@ -374,14 +375,15 @@ void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, 
 }
 //-----------------------------------------------------------------------------
 #define MGL_CLEAR_STYLE {st = style;	yy = y;	ff = f;	ccol=c1+dc*i;	a = (st/MGL_FONT_BOLD)&3;}
-float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,float c1,float c2) const
+#define MGL_USE_H12	{if(h1<y1) y1=h1;	if(h2>y2) y2=h2;}
+float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,float c1,float c2, float &y1,float &y2) const
 {
 	if(GetNumGlyph()==0)	return 0;
 	float w=0;				// string width
 	int st = style;			// current style
 	unsigned *b1, *b2;		// pointer to substring
 	unsigned *str;			// string itself
-	float yy=y, ff=f, ww, w1, w2;
+	float yy=y, ff=f, ww, w1, w2, h1,h2;
 	int a = (st/MGL_FONT_BOLD)&3;
 	long i;
 	for(i=0;text[i];i++);
@@ -394,7 +396,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 	{
 		ccol = ccol<0?ccol:c1+dc*i;
 		unsigned s = str[i];		ww = 0;
-		if(s==unsigned(-3))	// recursion call here
+		if(s==unsigned(-3))	// recursion call here for {}-block
 		{
 			i++;	b1 = str+i;
 			for(long k=1;k>0 && str[i];i++)
@@ -403,7 +405,8 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 				if(str[i]==unsigned(-3))	k++;
 			}
 			str[i-1]=0;	i--;
-			ww = Puts(b1, x, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			ww = Puts(b1, x, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
@@ -411,15 +414,19 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s=='\n')	// newline
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff, st);
-			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-660*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
+			Puts(b2, x+(ww-w2)/2, yy-660*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
 			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-9))	// underset or sub
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
-			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-175*ff/fact[a], ff/3, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
+			Puts(b2, x+(ww-w2)/2, yy-175*ff/fact[a], ff/3, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12(-175/fact[a]);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
@@ -427,8 +434,10 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-8))	// overset or sup
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
-			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy+400*ff/fact[a], ff/3, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
+			Puts(b2, x+(ww-w2)/2, yy+400*ff/fact[a], ff/3, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h2,h2);
+			MGL_USE_H12
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
@@ -454,8 +463,10 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-11))	// stackl
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
-			Puts(b1, x, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b1, x, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
+			Puts(b2, x, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
@@ -463,8 +474,10 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-10))	// stacr
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
-			Puts(b1, x+(ww-w1), yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2), yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b1, x+(ww-w1), yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
+			Puts(b2, x+(ww-w2), yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
@@ -472,8 +485,10 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-7))	// stack
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
-			Puts(b1, x+(ww-w1)/2, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b1, x+(ww-w1)/2, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
+			Puts(b2, x+(ww-w2)/2, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
 			MGL_CLEAR_STYLE
@@ -481,8 +496,10 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-6))	// frac
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
-			Puts(b1, x+(ww-w1)/2, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-60*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b1, x+(ww-w1)/2, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
+			Puts(b2, x+(ww-w2)/2, yy-60*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
 			if(gr && !(style&0x10))	// add under-/over- line now
 			{
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
@@ -493,8 +510,10 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-15))	// dfrac
 		{
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff, st);
-			Puts(b1, x+(ww-w1)/2, yy+315*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
-			Puts(b2, x+(ww-w2)/2, yy-405*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol);
+			Puts(b1, x+(ww-w1)/2, yy+315*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
+			Puts(b2, x+(ww-w2)/2, yy-405*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol,ccol, h1,h2);
+			MGL_USE_H12
 			if(gr && !(style&0x10))	// add under-/over- line now
 			{
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
@@ -544,6 +563,8 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 							if(dx<0)	dx=0;
 						}
 					}
+					h1 = yy+ff*glyphs[j].y1[a]/fact[a];	h2 = yy+ff*glyphs[j].y2[a]/fact[a];
+					MGL_USE_H12
 					if(gr && !(style&0x10))
 					{
 						if(st & MGL_FONT_WIRE)	gr->Glyph(x+dx,yy,ff,a+4,j,ccol);
@@ -696,6 +717,28 @@ bool mglFont::read_main(const char *fname, std::vector<short> &buf)
 	}
 	gzclose(fp);	// finish wire normal font
 	return true;
+}
+//-----------------------------------------------------------------------------
+void mglFont::FillY12()
+{
+#pragma omp parallel
+	for(long i=0;i<long(glyphs.size());i++)
+	{
+		for(int s=0;s<4;s++)
+		{
+			int y1=0xffff, y2=-0xffff, nl=glyphs[i].numl[s];
+			const short *ln = Buf+glyphs[i].ln[s];
+			for(long k=0;k<nl;k++)
+			{
+				int y = ln[2*k+1];
+				if(y==0x3fff)	continue;	// line breakthrough
+				if(y<y1)	y1=y;
+				if(y>y2)	y2=y;
+			}
+			glyphs[i].y1[s] = y1;
+			glyphs[i].y2[s] = y2;
+		}
+	}
 }
 //-----------------------------------------------------------------------------
 size_t mglFont::SaveBin(const char *fname)

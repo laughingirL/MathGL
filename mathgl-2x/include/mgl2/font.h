@@ -45,6 +45,7 @@ struct mglGlyphDescr
 	short numt[4];	///< Number of triangles in glyph description (for solid font)
 	short numl[4];	///< Number of lines in glyph description (for wire font)
 	short width[4];	///< Width of glyph for wire font
+	short y1[4], y2[4];	///< minimal and maximal y-coordinates
 	mglGlyphDescr()	{	memset(this,0,sizeof(mglGlyphDescr));	}
 };
 inline bool operator<(const mglGlyphDescr &a,const mglGlyphDescr &b)	{	return a.id<b.id;	}
@@ -97,6 +98,10 @@ public:
 	float Puts(const wchar_t *str,const char *how,float c1,float c2) const;
 	/// Get width of text string for font specified by string
 	float Width(const wchar_t *str,const char *how) const;
+	/// Get height of text string for font specified by integer constant
+	float Height(const char *str, const char *how) const;
+	/// Get height of text string for font specified by integer constant
+	float Height(const wchar_t *str, const char *how) const;
 
 	/// Get internal code for symbol
 	inline long Internal(unsigned s) const	{	return mgl_internal_code(s,glyphs);	}
@@ -118,14 +123,18 @@ protected:
 
 	/// Print text string for font specified by integer constant
 	float Puts(const wchar_t *str,int font,int align, float c1,float c2) const;
+	/// Get height of text string for font specified by integer constant
+	float Height(const wchar_t *str,int font) const;
 	/// Get width of text string for font specified by integer constant
-	float Width(const wchar_t *str,int font=0) const;
+	float Width(const wchar_t *str,int font) const;
 	/// Replace TeX symbols by its UTF code and add font styles
 	void Convert(const wchar_t *str, unsigned *res) const;
+	/// Fill minimal and maximal y-coordinates
+	void FillY12();
 
 	/// Draw string recursively
 	/* x,y - position, f - factor, style: 0x1 - italic, 0x2 - bold, 0x4 - overline, 0x8 - underline, 0x10 - empty (not draw) */
-	float Puts(const unsigned *str, float x,float y,float f,int style,float c1,float c2) const;
+	float Puts(const unsigned *str, float x,float y,float f,int style,float c1,float c2, float &y1, float &y2) const;
 	/// Parse LaTeX command
 	unsigned Parse(const wchar_t *s) const;
 	/// Get symbol for character ch with given font style
