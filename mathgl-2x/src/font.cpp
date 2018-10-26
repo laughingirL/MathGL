@@ -40,6 +40,7 @@
 //-----------------------------------------------------------------------------
 //mglFont mglDefFont("nofont");
 mglFont mglDefFont;
+#define MGL_USE_H12	{if(h1<y1) y1=h1;	if(h2>y2) y2=h2;	h1=1e5;	h2=-1e5;}
 //-----------------------------------------------------------------------------
 size_t MGL_EXPORT mgl_wcslen(const wchar_t *str)
 {
@@ -102,11 +103,10 @@ float mglFont::Puts(const char *str,const char *how,float c1,float c2) const
 	return w;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const char *str,const char *how) const
+float mglFont::Width(const char *str,const char *how, float *y1, float *y2) const
 {
-	int font=0;	float w=0;
-	mglGetStyle(how,&font);
-	MGL_TO_WCS(str,w = Width(wcs,font));
+	float w=0;
+	MGL_TO_WCS(str,w = Width(wcs,how,y1,y2));
 	return w;
 }
 //-----------------------------------------------------------------------------
@@ -117,17 +117,20 @@ float mglFont::Puts(const wchar_t *str,const char *how,float c1,float c2) const
 	return Puts(str, font, align,c1,c2);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const wchar_t *str,const char *how) const
+float mglFont::Width(const wchar_t *str,const char *how, float *y1, float *y2) const
 {
-	int font=0;
-	mglGetStyle(how,&font);
-	return Width(str, font);
+	int font=0, align=1;
+	float v1,v2;
+	if(!y1)	y1 = &v1;
+	if(!y2)	y2 = &v2;
+	mglGetStyle(how,&font,&align);
+	return Width(str, font, align, *y1, *y2);
 }
 //-----------------------------------------------------------------------------
 float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) const
 {
 	if(GetNumGlyph()==0 || !str || *str==0)	return 0;
-	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0, y1,y2;
+	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0, y1=0,y2=0;
 	size_t size = mgl_wcslen(str)+1,num=0;
 	if(parse)
 	{
@@ -181,11 +184,13 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 	return ww;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const wchar_t *str,int font) const
+float mglFont::Width(const wchar_t *str,int font, int align, float &y1, float &y2) const
 {
 	if(GetNumGlyph()==0 || !str || *str==0)	return 0;
-	float ww=0,w=0, y1,y2;
-	size_t size = mgl_wcslen(str)+1;
+	float ww=0,w=0, h1=1e5,h2=-1e5;
+	float h = (align&4) ? 500./fact[0] : 0;
+	size_t size = mgl_wcslen(str)+1, num=0;
+	y1=1e5;	y2=-1e5;
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size], *buf=wcs;
@@ -193,10 +198,14 @@ float mglFont::Width(const wchar_t *str,int font) const
 		Convert(str, wcs);
 		for(size_t i=0;wcs[i];i++)	if(wcs[i]=='\n')	// parse '\n' symbol
 		{
-			wcs[i]=0;	w = Puts(buf,0,0,1.,0x10|font,'k','k', y1,y2);	// find width
-			buf=wcs+i+1;	if(w>ww)	ww=w;
+			wcs[i]=0;	w = Puts(buf,0,0,1.,0x10|font,'k','k', h1,h2);	// find width
+			h1 -= h+660*num/fact[0];	h2 -= h+660*num/fact[0];
+			MGL_USE_H12
+			buf=wcs+i+1;	if(w>ww)	ww=w;	num++;
 		}
-		w = Puts(buf,0,0,1.,0x10|font,'k','k', y1,y2);
+		w = Puts(buf,0,0,1.,0x10|font,'k','k', h1,h2);
+		h1 -= h+660*num/fact[0];	h2 -= h+660*num/fact[0];
+		MGL_USE_H12
 		if(w<ww)	w=ww;
 		delete []wcs;
 	}
@@ -208,6 +217,8 @@ float mglFont::Width(const wchar_t *str,int font) const
 			long j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
 			if(j==-1)	continue;
 			w+= GetWidth(s,j)/fact[s];
+			h1 = glyphs[j].y1[s]/fact[s];	h2 = glyphs[j].y2[s]/fact[s];
+			MGL_USE_H12
 		}
 	}
 	return w;
@@ -360,7 +371,7 @@ float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float
 	}
 	else	{	s2[0] = str[i];	*b2 = s2;	i++;	}
 	i--;
-	float y1,y2;
+	float y1=0,y2=0;
 	w1 = Puts(*b1, 0, 0, f1, 0x10|st,'k','k', y1,y2);
 	w2 = Puts(*b2, 0, 0, f2, 0x10|st,'k','k', y1,y2);
 	return w1>w2 ? w1 : w2;
@@ -375,7 +386,6 @@ void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, 
 }
 //-----------------------------------------------------------------------------
 #define MGL_CLEAR_STYLE {st = style;	yy = y;	ff = f;	ccol=c1+dc*i;	a = (st/MGL_FONT_BOLD)&3;}
-#define MGL_USE_H12	{if(h1<y1) y1=h1;	if(h2>y2) y2=h2;}
 float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,float c1,float c2, float &y1,float &y2) const
 {
 	if(GetNumGlyph()==0)	return 0;
@@ -383,7 +393,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 	int st = style;			// current style
 	unsigned *b1, *b2;		// pointer to substring
 	unsigned *str;			// string itself
-	float yy=y, ff=f, ww, w1, w2, h1,h2;
+	float yy=y, ff=f, ww, w1, w2, h1=1e5,h2=-1e5;
 	int a = (st/MGL_FONT_BOLD)&3;
 	long i;
 	for(i=0;text[i];i++);
@@ -784,7 +794,9 @@ bool mglFont::LoadBin(const char *base, const char *path)
 		if(s<len)	res = false;
 	}
 //	if(!res)	Clear();
-	fclose(fp);		return res;
+	fclose(fp);
+	if(res)	FillY12();
+	return res;
 }
 //-----------------------------------------------------------------------------
 bool mglFont::Load(const char *base, const char *path)
@@ -825,6 +837,7 @@ bool mglFont::Load(const char *base, const char *path)
 	{
 		read_def();	setlocale(LC_NUMERIC,loc.c_str());
 		if(buf)	delete []buf;
+		FillY12();
 		return true;
 	}
 	fact[1] = fact[2] = fact[3] = fact[0];
@@ -936,6 +949,7 @@ bool mglFont::Load(const char *base, const char *path)
 	// Finally normalize all factors
 	fact[0] *= mgl_fgen;	fact[1] *= mgl_fgen;
 	fact[2] *= mgl_fgen;	fact[3] *= mgl_fgen;
+	FillY12();
 	setlocale(LC_NUMERIC,loc.c_str());
 	if(buf)	delete []buf;
 	return true;

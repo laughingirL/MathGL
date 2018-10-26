@@ -74,8 +74,9 @@ void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
 	mglParse par;
-	par.Execute(gr,"new a 3 3 'x*y'\nsubplot 2 1 0 '':dens a:dens a 'k+/'\n"
-	"subplot 2 1 1 '':mask '+' 'ff00182424f800' 30:dens a '3+'");
+	par.Execute(gr,"text 0 0 'ab' '@'");
+//	par.Execute(gr,"new a 3 3 'x*y'\nsubplot 2 1 0 '':dens a:dens a 'k+/'\n"
+//	"subplot 2 1 1 '':mask '+' 'ff00182424f800' 30:dens a '3+'");
 	return;
 	
 	dual c(0,M_PI/2), r=mgl_ipowc(c,2);

@@ -93,15 +93,11 @@ public:
 	/// Print text string for font specified by string
 	float Puts(const char *str,const char *how,float c1,float c2) const;
 	/// Get width of text string for font specified by string
-	float Width(const char *str,const char *how) const;
+	float Width(const char *str, const char *how, float *y1=0, float *y2=0) const;
 	/// Print text string for font specified by string
 	float Puts(const wchar_t *str,const char *how,float c1,float c2) const;
 	/// Get width of text string for font specified by string
-	float Width(const wchar_t *str,const char *how) const;
-	/// Get height of text string for font specified by integer constant
-	float Height(const char *str, const char *how) const;
-	/// Get height of text string for font specified by integer constant
-	float Height(const wchar_t *str, const char *how) const;
+	float Width(const wchar_t *str,const char *how, float *y1=0, float *y2=0) const;
 
 	/// Get internal code for symbol
 	inline long Internal(unsigned s) const	{	return mgl_internal_code(s,glyphs);	}
@@ -126,7 +122,7 @@ protected:
 	/// Get height of text string for font specified by integer constant
 	float Height(const wchar_t *str,int font) const;
 	/// Get width of text string for font specified by integer constant
-	float Width(const wchar_t *str,int font) const;
+	float Width(const wchar_t *str,int font,int align, float &y1, float &y2) const;
 	/// Replace TeX symbols by its UTF code and add font styles
 	void Convert(const wchar_t *str, unsigned *res) const;
 	/// Fill minimal and maximal y-coordinates

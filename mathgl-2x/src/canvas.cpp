@@ -522,21 +522,22 @@ pthread_mutex_lock(&mutexPtx);
 		if(strchr(font,'@'))	// draw box around text
 		{
 			long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
-			w = fnt->Width(text,font);	h = fnt->Height(font);
+			float y1, y2;
+			w = fnt->Width(text,font, &y1,&y2);	h = fnt->Height(font);
 			float d=-w*align/2.-h*0.2;	w+=h*0.4;
-			pt = q;	pp.Set(d,-h*0.4);		PostScale(&Bt,pp);
+			pt = q;	pp.Set(d,y1-h*0.2);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k1=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
-			pt = q;	pp.Set(w+d,-h*0.4);		PostScale(&Bt,pp);
+			pt = q;	pp.Set(w+d,y1-h*0.2);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k2=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
-			pt = q;	pp.Set(d,h*1.2);			PostScale(&Bt,pp);
+			pt = q;	pp.Set(d,y2+h*0.2);			PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k3=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
-			pt = q;	pp.Set(w+d,h*1.2);		PostScale(&Bt,pp);
+			pt = q;	pp.Set(w+d,y2+h*0.2);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k4=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
