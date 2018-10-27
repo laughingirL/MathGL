@@ -496,6 +496,8 @@ public:
 	inline mreal GetFontSize() const	{	return FontSize;	}
 	mreal TextWidth(const char *text, const char *font, mreal size) const MGL_FUNC_PURE;
 	mreal TextWidth(const wchar_t *text, const char *font, mreal size) const MGL_FUNC_PURE;
+	mreal TextHeight(const char *text, const char *font, mreal size) const MGL_FUNC_PURE;
+	mreal TextHeight(const wchar_t *text, const char *font, mreal size) const MGL_FUNC_PURE;
 	mreal TextHeight(const char *font, mreal size) const MGL_FUNC_PURE;
 	inline mreal FontFactor() const		{	return font_factor;	}
 	virtual mreal GetRatio() const MGL_FUNC_CONST;

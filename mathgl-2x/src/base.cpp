@@ -196,6 +196,12 @@ mreal mglBase::TextWidth(const char *text, const char *font, mreal size) const
 {	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/20.16;	}
 mreal mglBase::TextWidth(const wchar_t *text, const char *font, mreal size) const
 {	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/20.16;	}
+mreal mglBase::TextHeight(const char *text, const char *font, mreal size) const
+{	float y1,y2;	fnt->Width(text,(font&&*font)?font:FontDef);
+	return (size<0?-size*FontSize:size)*font_factor*(y2-y1)/20.16;	}
+mreal mglBase::TextHeight(const wchar_t *text, const char *font, mreal size) const
+{	float y1,y2;	fnt->Width(text,(font&&*font)?font:FontDef);
+	return (size<0?-size*FontSize:size)*font_factor*(y2-y1)/20.16;	}
 mreal mglBase::TextHeight(const char *font, mreal size) const
 {	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/20.16; }
 void mglBase::AddActive(long k,int n)

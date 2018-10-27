@@ -1,7 +1,8 @@
-2.4.3 Released ??? October 2018
+2.4.3 Released ??? November 2018
 
+* Add subpixel smoothing for masks
 * Boxes around text (style '@') now use actual height and position of the text.
-* Add mask for EPS export. Note, mask angles are reduced to 45*(0,1,...7) degrees for reducing pattern size in the EPS.
+* Add mask to EPS export. Note, mask angles are reduced to 45*(0,1,...7) degrees for decreasing pattern size in the EPS.
 * Update default masks: '*' become dot, '^' become bricks, 'd' become plus, 'D' become tacks, ';' and 'j' change lengths. Note, you can use brush.ods to prepare user-defined masks.
 * Add styles '^' and '_' for command 'smooth' to find upper/lower bound of the data.
 * Improve FlowP() to draw both branches (in positive and negative time direction).

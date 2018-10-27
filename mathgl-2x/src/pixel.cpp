@@ -394,13 +394,47 @@ void mglCanvas::combine(unsigned char *c1, const unsigned char *c2) const
 	}
 }
 //-----------------------------------------------------------------------------
-bool inline visible(long i, long j, const unsigned char m[8], mreal pw, int a)	// Check if pixel visible
+// it looks as MSV=4 is optimal for speed-vs-quality
+#define MSV 4
+int inline visible(long i, long j, const unsigned char m[8], mreal pw, int a)	// Check if pixel visible
 {
 	float c = mgl_cos[(a+360)%360], s = mgl_cos[(a+450)%360];
-//	int ii = int(0.5+(i*c+j*s)/pw)%8, jj = int(0.5+(j*c-i*s)/pw)%8;
-//	if(ii<0)	ii+=8;	if(jj<0)	jj+=8;
-	int ii = int(0.5+(i*c+j*s)/pw)&7, jj = int(0.5+(j*c-i*s)/pw)&7;
-	return m[jj] & (1L<<ii);
+	int ii,jj,ss=0;
+#if MSV==4
+	ii = int(0.5+((i-0.33)*c+(j-0.33)*s)/pw)&7;	jj = int(0.5+((j-0.33)*c-(i-0.33)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+((i-0.33)*c+(j+0.33)*s)/pw)&7;	jj = int(0.5+((j+0.33)*c-(i-0.33)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+((i+0.33)*c+(j-0.33)*s)/pw)&7;	jj = int(0.5+((j-0.33)*c-(i+0.33)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+((i+0.33)*c+(j+0.33)*s)/pw)&7;	jj = int(0.5+((j+0.33)*c-(i+0.33)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+#elif MSV==9
+	ii = int(0.5+((i-0.25)*c+(j-0.25)*s)/pw)&7;	jj = int(0.5+((j-0.25)*c-(i-0.25)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+((i-0.25)*c+j*s)/pw)&7;	jj = int(0.5+(j*c-(i-0.25)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+((i-0.25)*c+(j+0.25)*s)/pw)&7;	jj = int(0.5+((j+0.25)*c-(i-0.25)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+
+	ii = int(0.5+(i*c+(j-0.25)*s)/pw)&7;	jj = int(0.5+((j-0.25)*c-i*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+(i*c+j*s)/pw)&7;	jj = int(0.5+(j*c-i*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+(i*c+(j+0.25)*s)/pw)&7;	jj = int(0.5+((j+0.25)*c-i*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+
+	ii = int(0.5+((i+0.25)*c+(j-0.25)*s)/pw)&7;	jj = int(0.5+((j-0.25)*c-(i+0.25)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+((i+0.25)*c+j*s)/pw)&7;	jj = int(0.5+(j*c-(i+0.25)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+	ii = int(0.5+((i+0.25)*c+(j+0.25)*s)/pw)&7;	jj = int(0.5+((j+0.25)*c-(i+0.25)*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+#elif MSV==1
+	ii = int(0.5+(i*c+j*s)/pw)&7;	jj = int(0.5+(j*c-i*s)/pw)&7;
+	if(m[jj] & (1L<<ii))	ss++;
+#endif
+	return ss;
 }
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v + (r3+r0-r1-r2)*u*v
@@ -450,7 +484,8 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	
 	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 	{
-		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
+		int ms = (pd==MGL_SOLID_MASK) ? 4 : visible(i,j,d->m, pw,ang);
+		if(ms!=0)
 		{
 			float xx = (i-x0), yy = (j-y0), s;
 			s = dsx*xx + dsy*yy + (dd+d3.y*xx-d3.x*yy)*(dd+d3.y*xx-d3.x*yy);
@@ -470,6 +505,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 					if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
 				}
 				mglPnt p(pp+d1*u+d2*v+d3*(u*v));	col2int(p,r,oi);
+				r[3] = ms*r[3]/MSV;
 				if(r[3])	pnt_plot(i,j,p.z,r,oi);
 			}
 		}
@@ -515,12 +551,14 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 
 	if(Quality&MGL_DRAW_NORM)	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 	{
-		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
+		int ms = (pd==MGL_SOLID_MASK) ? 4 : visible(i,j,d->m, pw,ang);
+		if(ms!=0)
 		{
 			float xx = (i-x0), yy = (j-y0);
 			float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 			if(u<0 || v<0 || u+v>1)	continue;
 			mglPnt p(pp+d1*u+d2*v);	col2int(p,r,oi);
+			r[3] = ms*r[3]/MSV;
 			if(r[3])	pnt_plot(i,j,p.z+dz,r,oi);
 		}
 	}
@@ -528,13 +566,16 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	{
 		col2int(p1,r,oi);
 		float zz = p1.z+dz, dz1=d1.z, dz2=d2.z;
-		if(r[3])	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+		unsigned char ra = r[3];
+		if(ra)	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 		{
-			if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
+			int ms = (pd==MGL_SOLID_MASK) ? 4 : visible(i,j,d->m, pw,ang);
+			if(ms!=0)
 			{
 				float xx = (i-x0), yy = (j-y0);
 				float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 				if(u<0 || v<0 || u+v>1)	continue;
+				r[3] = ms*ra/MSV;
 				pnt_plot(i,j,zz+dz1*u+dz2*v,r,oi);
 			}
 		}

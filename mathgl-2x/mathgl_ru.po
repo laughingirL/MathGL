@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-27 00:18+0300\n"
+"POT-Creation-Date: 2018-10-27 00:43+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -3147,7 +3147,7 @@ msgstr "Учитывать регистр"
 msgid "MathGL - about"
 msgstr "MathGL - о программе"
 
-#: src/base.cpp:259
+#: src/base.cpp:265
 #, c-format
 msgid "MathGL message - %s\n"
 msgstr "Сообщение MathGL - %s\n"
@@ -5165,7 +5165,7 @@ msgid ""
 msgstr "Повторяющиеся или близкие точки при триангуляции"
 
 #. mglScrStr
-#: src/base.cpp:245
+#: src/base.cpp:251
 msgid "There is changing temporary data in script"
 msgstr "Попытка изменить временные данные в скрипте"
 
@@ -5201,22 +5201,22 @@ msgstr ""
 "переменные из скрипта."
 
 #. mglScrCmd
-#: src/base.cpp:243
+#: src/base.cpp:249
 msgid "There is too long string(s) in script"
 msgstr "Слишком длинная строка в скрипте"
 
 #. mglScrLong
-#: src/base.cpp:244
+#: src/base.cpp:250
 msgid "There is unbalanced ' in script"
 msgstr "Лишняя кавычка ' в скрипте"
 
 #. mglWarnSpc
-#: src/base.cpp:241
+#: src/base.cpp:247
 msgid "There is wrong argument(s) in script"
 msgstr "Неправильные аргументы команды в скрипте"
 
 #. mglScrArg
-#: src/base.cpp:242
+#: src/base.cpp:248
 msgid "There is wrong command(s) in script"
 msgstr "В скрипте неправильная команд(ы)"
 
@@ -6063,7 +6063,7 @@ msgid "attach light"
 msgstr "прикрепить свет"
 
 #. mglWarnFmt
-#: src/base.cpp:238
+#: src/base.cpp:244
 msgid "axis ranges are incompatible"
 msgstr "размеры осей неправильные"
 
@@ -6104,7 +6104,7 @@ msgid "click at %g, %g, %g"
 msgstr "клик в %g, %g, %g"
 
 #. mglWarnCnt
-#: src/base.cpp:234
+#: src/base.cpp:240
 msgid "couldn't open file"
 msgstr "не могу открыть файл"
 
@@ -6117,17 +6117,17 @@ msgid "cutting"
 msgstr "обрезание"
 
 #. -----------------------------------------------------------------------------
-#: src/base.cpp:225
+#: src/base.cpp:231
 msgid "data dimension(s) is incompatible"
 msgstr "размеры данных несовместимы"
 
 #. mglWarnDim
-#: src/base.cpp:226
+#: src/base.cpp:232
 msgid "data dimension(s) is too small"
 msgstr "размеры данных слишком малы"
 
 #. mglWarnMem
-#: src/base.cpp:230
+#: src/base.cpp:236
 msgid "data values are zero"
 msgstr "значение данных равно нулю"
 
@@ -6159,7 +6159,7 @@ msgid "factor"
 msgstr "множитель"
 
 #. mglWarnSize
-#: src/base.cpp:237
+#: src/base.cpp:243
 msgid "format is not supported for that build"
 msgstr "формат не поддерживается для этой сборки"
 
@@ -6225,7 +6225,7 @@ msgid "left"
 msgstr "слева"
 
 #. mglWarnOpen
-#: src/base.cpp:235
+#: src/base.cpp:241
 msgid "light: ID is out of range"
 msgstr "light: ID вне диапазона"
 
@@ -6316,7 +6316,7 @@ msgid "min"
 msgstr "min"
 
 #. mglWarnLow
-#: src/base.cpp:227
+#: src/base.cpp:233
 msgid "minimal data value is negative"
 msgstr "минимальное значение отрицательно"
 
@@ -6330,12 +6330,12 @@ msgid "name"
 msgstr "имя"
 
 #. mglWarnNeg
-#: src/base.cpp:228
+#: src/base.cpp:234
 msgid "no file or wrong data dimensions"
 msgstr "нет файла или неверные размеры"
 
 #. mglWarnZero
-#: src/base.cpp:231
+#: src/base.cpp:237
 msgid "no legend entries"
 msgstr "нет записей легенды"
 
@@ -6357,12 +6357,12 @@ msgid "none or default"
 msgstr "нет или по умолчанию"
 
 #. mglWarnFile
-#: src/base.cpp:229
+#: src/base.cpp:235
 msgid "not enough memory"
 msgstr "не хватает памяти"
 
 #. mglWarnNull
-#: src/base.cpp:240
+#: src/base.cpp:246
 msgid "not enough space for plot"
 msgstr "не достаточно места для графика"
 
@@ -6371,7 +6371,7 @@ msgid "not used"
 msgstr "не используется"
 
 #. mglWarnSlc
-#: src/base.cpp:233
+#: src/base.cpp:239
 msgid "number of contours is zero or negative"
 msgstr "число контуров меньше или равно нуля"
 
@@ -6401,7 +6401,7 @@ msgid "plain"
 msgstr "карта"
 
 #. mglWarnTern
-#: src/base.cpp:239
+#: src/base.cpp:245
 msgid "pointer is NULL"
 msgstr "указатель равен NULL"
 
@@ -6454,12 +6454,12 @@ msgid "save slides"
 msgstr "сохранить кадры"
 
 #. mglWarnLId
-#: src/base.cpp:236
+#: src/base.cpp:242
 msgid "size(s) is zero or negative"
 msgstr "размер(ы) меньше или равны нулю"
 
 #. mglWarnLeg
-#: src/base.cpp:232
+#: src/base.cpp:238
 msgid "slice value is out of range"
 msgstr "срез вне диапазона"
 

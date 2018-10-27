@@ -31,11 +31,9 @@
 2. Quality=3 for mirror+shadows? Couldn't be in bitmap only mode
 4. "latex on" option ?!?
 5. Add "text3d x y z lx ly lz nx ny nz 'txt' ['stl'='' depth=0.1 depth2=nan]"
-6. Flag to determine discontinuous surfaces
+6. Flag to determine discontinuous surfaces in 'fsurf'
 
-9. Smooth masks (like dashing)
 10. Add command 'clabel'?
-11. Adjust box around the text using actual height of symbols in the text
 12. Check and extend 'ctick'
 13. Check '[xyz]tick' for named factor + named labels
 
