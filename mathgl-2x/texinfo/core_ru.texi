@@ -548,15 +548,15 @@ MGL не требует создания данного типа объекто�
 @cindex SetMaskAngle
 
 @anchor{mask}
-@deftypefn {Команда MGL} {} mask 'id' 'hex'
-@deftypefnx {Команда MGL} {} mask 'id' hex
+@deftypefn {Команда MGL} {} mask 'id' 'hex' [angle]
+@deftypefnx {Команда MGL} {} mask 'id' hex [angle]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetMask (@code{char} id, @code{const char *}hex)
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetMask (@code{char} id, @code{uint64_t} hex)
 @deftypefnx {Функция С} @code{void} mgl_set_mask (@code{HMGL} gr, @code{const char *}hex)
 @deftypefnx {Функция С} @code{void} mgl_set_mask_val (@code{HMGL} gr, @code{uint64_t} hex)
 @end ifclear
-Задает новую матрицу @var{hex} размером 8*8 для маски с заданным @var{id}. Изменения действуют глобально для всех последующих использований данного @var{id}. Значения по умолчанию (см. @ref{Color scheme}): @samp{-} -- 000000FF00000000, @samp{+} -- 080808FF08080808,	@samp{=} -- 0000FF00FF000000,	@samp{;} -- 0000007700000000, @samp{o} -- 0000182424180000,	@samp{O} -- 0000183C3C180000,	@samp{s} -- 00003C24243C0000,	@samp{S} -- 00003C3C3C3C0000, @samp{~} -- 0000060990600000,	@samp{<} -- 0060584658600000,	@samp{>} -- 00061A621A060000,	@samp{j} -- 0000005F00000000, @samp{d} -- 0008142214080000,	@samp{D} -- 00081C3E1C080000,	@samp{*} -- 8142241818244281,	@samp{^} -- 0000001824420000.
+Задает новую матрицу @var{hex} размером 8*8 для маски с заданным @var{id}. Изменения действуют глобально для всех последующих использований данного @var{id}. Значения по умолчанию (см. @ref{Color scheme}): @samp{-} -- 000000FF00000000, @samp{+} -- 080808FF08080808,	@samp{=} -- 0000FF00FF000000,	@samp{;} -- 0000007700000000, @samp{o} -- 0000182424180000,	@samp{O} -- 0000183C3C180000,	@samp{s} -- 00003C24243C0000,	@samp{S} -- 00003C3C3C3C0000, @samp{~} -- 0000060990600000,	@samp{<} -- 0060584658600000,	@samp{>} -- 00061A621A060000,	@samp{j} -- 0000005F00000000, @samp{d} -- 0008142214080000,	@samp{D} -- 00081C3E1C080000,	@samp{*} -- 8142241818244281,	@samp{^} -- 0000001824420000. Параметр @var{angle} позволяет сразу задать и угол поворота маски. ВАЖНО: при экспорте в EPS угол поворота будет приведен к ближайшему кратному 45 градусам.
 @end deftypefn
 
 @deftypefn {Команда MGL} {} mask angle
@@ -564,7 +564,7 @@ MGL не требует создания данного типа объекто�
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetMaskAngle (@code{int} angle)
 @deftypefnx {Функция С} @code{void} mgl_set_mask_angle (@code{HMGL} gr, @code{int} angle)
 @end ifclear
-Задает угол поворота маски в градусах. Отмечу, что символы @samp{\}, @samp{/}, @samp{I} в цветовой схеме задают угол поворота в 45, -45 и 90 градусов соответственно.
+Задает угол поворота маски в градусах. Отмечу, что символы @samp{\}, @samp{/}, @samp{I} в цветовой схеме задают угол поворота в 45, -45 и 90 градусов соответственно. ВАЖНО: при экспорте в EPS угол поворота будет приведен к ближайшему кратному 45 градусам.
 @end deftypefn
 
 @c ==================================================================
@@ -919,7 +919,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @deftypefn {Команда MGL} {} xtick @code{val [sub=0 org=nan 'fact'='']}
 @deftypefnx {Команда MGL} {} ytick @code{val [sub=0 org=nan 'fact'='']}
 @deftypefnx {Команда MGL} {} ztick @code{val [sub=0 org=nan 'fact'='']}
-@deftypefnx {Команда MGL} {} ctick @code{val [sub=0 org=nan 'fact'='']}
+@deftypefnx {Команда MGL} {} ctick @code{val ['fact'='']}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{mreal} d=@code{0}, @code{int} ns=@code{0}, @code{mreal} org=@code{NAN}, @code{const char *}fact=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{mreal} d=@code{0}, @code{int} ns=@code{0}, @code{mreal} org=@code{NAN}, @code{const wchar_t *}fact)
@@ -933,9 +933,11 @@ Ternary -- специальный тип графика для 3 зависим�
 @deftypefn {Команда MGL} {} xtick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {Команда MGL} {} ytick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {Команда MGL} {} ztick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
+@deftypefnx {Команда MGL} {} ctick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {Команда MGL} {} xtick vdat 'lbls' [@code{add=off}]
 @deftypefnx {Команда MGL} {} ytick vdat 'lbls' [@code{add=off}]
 @deftypefnx {Команда MGL} {} ztick vdat 'lbls' [@code{add=off}]
+@deftypefnx {Команда MGL} {} ctick vdat 'lbls' [@code{add=off}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const char *}lbl, @code{bool} add=@code{false})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const wchar_t *}lbl, @code{bool} add=@code{false})
@@ -2127,17 +2129,19 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @anchor{ylabel}
 @anchor{zlabel}
 @anchor{tlabel}
+@anchor{clabel}
 @deftypefn {Команда MGL} {} xlabel 'text' [@code{pos=1}]
 @deftypefnx {Команда MGL} {} ylabel 'text' [@code{pos=1}]
 @deftypefnx {Команда MGL} {} zlabel 'text' [@code{pos=1}]
 @deftypefnx {Команда MGL} {} tlabel 'text' [@code{pos=1}]
+@deftypefnx {Команда MGL} {} clabel 'text' [@code{pos=1}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{mreal} pos=@code{1}, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{mreal} pos=@code{1}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{mreal} pos, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_labelw (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{mreal} pos, @code{const char *}opt)
 @end ifclear
-Выводит подпись @var{text} для оси @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (где @samp{t} -- ``тернарная'' ось @math{t=1-x-y}). Параметр @var{pos} задает положение подписи: при @var{pos}=0 -- по центру оси, при @var{pos}>0 -- около максимальных значений, при @var{pos}<0 -- около минимальных значений. Опция @code{value} задает дополнительный сдвиг текста. @xref{Text printing}.
+Выводит подпись @var{text} для оси @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t},@samp{c}, где @samp{t} -- ``тернарная'' ось @math{t=1-x-y}; @samp{c} -- для цвета (следует вызывать после @ref{colorbar}). Параметр @var{pos} задает положение подписи: при @var{pos}=0 -- по центру оси, при @var{pos}>0 -- около максимальных значений, при @var{pos}<0 -- около минимальных значений. Опция @code{value} задает дополнительный сдвиг текста. @xref{Text printing}.
 @end deftypefn
 
 @c ##################################################################

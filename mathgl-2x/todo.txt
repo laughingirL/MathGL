@@ -81,12 +81,7 @@ D. Docs about JS interface
 	
 3. Docs about mgllab (overview, dialogs, ...)
 4. Example of Evaluate + ".mx" ???
-5. Add style '^','_' for 'smooth' to find upper/lower bounds.
 6. Example with qgl_example.cpp
-7. Denote that LoadFont() need first argument without extension! Or parse "*.vfm", "*.vfmb" internally.
-8. Denote change of 'mask' -- add angle. Denote export reduction in EPS format
-9. Extend 'ctick'
-10. Docs about 'clabel'
 
 ZZ. Update time.texi {before release!!!}
 

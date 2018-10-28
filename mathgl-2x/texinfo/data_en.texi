@@ -1211,7 +1211,11 @@ Smooths the data on specified direction or directions. String @var{dirs} specifi
 @item
 @samp{5} for linear averaging over 5 points,
 @item
-@samp{d1}...@samp{d9} for linear averaging over (2*N+1)-th points.
+@samp{d1}...@samp{d9} for linear averaging over (2*N+1)-th points,
+@item
+@samp{^} for finding upper bound,
+@item
+@samp{_} for finding lower bound.
 @end itemize
 By default quadratic averaging over 5 points is used.
 @end deftypefn

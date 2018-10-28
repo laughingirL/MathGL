@@ -1197,7 +1197,11 @@ These functions change the data in some direction like differentiations, integra
 @item
 @samp{5} -- линейное усреднение по 5 точкам,
 @item
-@samp{d1}...@samp{d9} -- линейное усреднение по (2*N+1) точкам.
+@samp{d1}...@samp{d9} -- линейное усреднение по (2*N+1) точкам,
+@item
+@samp{^} -- определение верхней границы,
+@item
+@samp{_} -- определение нижней границы.
 @end itemize
 По умолчанию используется квадратичное усреднение по 5 точкам.
 @end deftypefn

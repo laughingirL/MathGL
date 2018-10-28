@@ -550,15 +550,15 @@ Sets the gray-scale mode on/off.
 @cindex SetMaskAngle
 
 @anchor{mask}
-@deftypefn {MGL command} {} mask 'id' 'hex'
-@deftypefnx {Команда MGL} {} mask 'id' hex
+@deftypefn {MGL command} {} mask 'id' 'hex' [angle]
+@deftypefnx {Команда MGL} {} mask 'id' hex [angle]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetMask (@code{char} id, @code{const char *}hex)
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetMask (@code{char} id, @code{uint64_t} hex)
 @deftypefnx {C function} @code{void} mgl_set_mask (@code{HMGL} gr, @code{const char *}hex)
 @deftypefnx {C function} @code{void} mgl_set_mask_val (@code{HMGL} gr, @code{uint64_t} hex)
 @end ifclear
-Sets new bit matrix @var{hex} of size 8*8 for mask with given @var{id}. This is global setting which influence on any later usage of symbol @var{id}. The predefined masks are (see @ref{Color scheme}): @samp{-} is 000000FF00000000, @samp{+} is 080808FF08080808,	@samp{=} is 0000FF00FF000000,	@samp{;} is 0000007700000000, @samp{o} is 0000182424180000,	@samp{O} is 0000183C3C180000,	@samp{s} is 00003C24243C0000,	@samp{S} is 00003C3C3C3C0000, @samp{~} is 0000060990600000,	@samp{<} is 0060584658600000,	@samp{>} is 00061A621A060000,	@samp{j} is 0000005F00000000, @samp{d} is 0008142214080000,	@samp{D} is 00081C3E1C080000,	@samp{*} is 8142241818244281,	@samp{^} is 0000001824420000.
+Sets new bit matrix @var{hex} of size 8*8 for mask with given @var{id}. This is global setting which influence on any later usage of symbol @var{id}. The predefined masks are (see @ref{Color scheme}): @samp{-} is 000000FF00000000, @samp{+} is 080808FF08080808,	@samp{=} is 0000FF00FF000000,	@samp{;} is 0000007700000000, @samp{o} is 0000182424180000,	@samp{O} is 0000183C3C180000,	@samp{s} is 00003C24243C0000,	@samp{S} is 00003C3C3C3C0000, @samp{~} is 0000060990600000,	@samp{<} is 0060584658600000,	@samp{>} is 00061A621A060000,	@samp{j} is 0000005F00000000, @samp{d} is 0008142214080000,	@samp{D} is 00081C3E1C080000,	@samp{*} is 8142241818244281,	@samp{^} is 0000001824420000. Parameter @var{angle} set the rotation angle too. IMPORTANT: the rotation angle will be replaced by a multiple of 45 degrees at export to EPS.
 @end deftypefn
 
 @deftypefn {MGL command} {} mask angle
@@ -566,7 +566,7 @@ Sets new bit matrix @var{hex} of size 8*8 for mask with given @var{id}. This is 
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetMaskAngle (@code{int} angle)
 @deftypefnx {C function} @code{void} mgl_set_mask_angle (@code{HMGL} gr, @code{int} angle)
 @end ifclear
-Sets the default rotation angle (in degrees) for masks. Note, you can use symbols @samp{\}, @samp{/}, @samp{I} in color scheme for setting rotation angles as 45, -45 and 90 degrees correspondingly.
+Sets the default rotation angle (in degrees) for masks. Note, you can use symbols @samp{\}, @samp{/}, @samp{I} in color scheme for setting rotation angles as 45, -45 and 90 degrees correspondingly. IMPORTANT: the rotation angle will be replaced by a multiple of 45 degrees at export to EPS.
 @end deftypefn
 
 
@@ -921,7 +921,7 @@ Set the ticks step, number of sub-ticks and initial ticks position to be the mos
 @deftypefn {MGL command} {} xtick @code{val [sub=0 org=nan 'fact'='']}
 @deftypefnx {MGL command} {} ytick @code{val [sub=0 org=nan 'fact'='']}
 @deftypefnx {MGL command} {} ztick @code{val [sub=0 org=nan 'fact'='']}
-@deftypefnx {MGL command} {} ctick @code{val [sub=0 org=nan 'fact'='']}
+@deftypefnx {MGL command} {} ctick @code{val ['fact'='']}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{mreal} d=@code{0}, @code{int} ns=@code{0}, @code{mreal} org=@code{NAN}, @code{const char *}fact=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{mreal} d, @code{int} ns, @code{mreal} org, @code{const wchar_t *}fact)
@@ -935,9 +935,11 @@ Set the ticks step @var{d}, number of sub-ticks @var{ns} (used for positive @var
 @deftypefn {MGL command} {} xtick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {MGL command} {} ytick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {MGL command} {} ztick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
+@deftypefnx {MGL command} {} ctick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {MGL command} {} xtick vdat 'lbls' [@code{add=off}]
 @deftypefnx {MGL command} {} ytick vdat 'lbls' [@code{add=off}]
 @deftypefnx {MGL command} {} ztick vdat 'lbls' [@code{add=off}]
+@deftypefnx {MGL command} {} ctick vdat 'lbls' [@code{add=off}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const char *}lbl, @code{bool} add=@code{false})
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const wchar_t *}lbl, @code{bool} add=@code{false})
@@ -2164,17 +2166,19 @@ Draws bounding box outside the plotting volume with color @var{col}. If @var{col
 @anchor{ylabel}
 @anchor{zlabel}
 @anchor{tlabel}
+@anchor{clabel}
 @deftypefn {MGL command} {} xlabel 'text' [@code{pos=1}]
 @deftypefnx {MGL command} {} ylabel 'text' [@code{pos=1}]
 @deftypefnx {MGL command} {} zlabel 'text' [@code{pos=1}]
 @deftypefnx {MGL command} {} tlabel 'text' [@code{pos=1}]
+@deftypefnx {MGL command} {} clabel 'text' [@code{pos=1}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{mreal} pos=@code{1}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{mreal} pos=@code{1}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{mreal} pos, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_labelw (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{mreal} pos, @code{const char *}opt)
 @end ifclear
-Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. Option @code{value} set additional shifting of the label. @xref{Text printing}.
+Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t},@samp{c}, where @samp{t} is ``ternary'' axis @math{t=1-x-y}; @samp{c} is color axis (should be called after @ref{colorbar}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. Option @code{value} set additional shifting of the label. @xref{Text printing}.
 @end deftypefn
 
 @c ##################################################################
