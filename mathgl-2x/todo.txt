@@ -33,10 +33,6 @@
 5. Add "text3d x y z lx ly lz nx ny nz 'txt' ['stl'='' depth=0.1 depth2=nan]"
 6. Flag to determine discontinuous surfaces in 'fsurf'
 
-10. Add command 'clabel'?
-12. Check and extend 'ctick'
-13. Check '[xyz]tick' for named factor + named labels
-
 ZZ. Update *.i for new functions {before release!!!}
 
 curve_draw: step?, bifurcation?, flow3d
@@ -89,6 +85,8 @@ D. Docs about JS interface
 6. Example with qgl_example.cpp
 7. Denote that LoadFont() need first argument without extension! Or parse "*.vfm", "*.vfmb" internally.
 8. Denote change of 'mask' -- add angle. Denote export reduction in EPS format
+9. Extend 'ctick'
+10. Docs about 'clabel'
 
 ZZ. Update time.texi {before release!!!}
 

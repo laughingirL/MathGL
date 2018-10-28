@@ -185,13 +185,26 @@ int static mgls_crange(mglGraph *gr, long , mglArg *a, const char *k, const char
 	return res;
 }
 //-----------------------------------------------------------------------------
-int static mgls_ctick(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int static mgls_ctick(mglGraph *gr, long n, mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->SetTickTempl('c',a[0].s.w);
 	else if(!strcmp(k,"n"))	gr->SetTicks('c',a[0].v,0,0);
 	else if(!strcmp(k,"ns"))	gr->SetTicks('c',a[0].v,0,0,a[1].s.w);
-	else res = 1;
+	else if(!strcmp(k,"ds"))	gr->SetTicksVal('c', *(a[0].d), a[1].s.w);
+	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('c', *(a[0].d), a[1].s.w, a[2].v);
+	else if(!strncmp(k,"ns",2))
+	{
+		std::wstring s;
+		std::vector<mreal> v;
+		for(long i=0;i<n/2;i++)
+		{
+			if(a[2*i].type==2 && a[2*i+1].type==1)
+			{	v.push_back(a[2*i].v);	s += std::wstring(a[2*i+1].s.w)+L"\n";	}
+			else	break;
+		}
+		gr->SetTicksVal('c',mglDataS(v),s.c_str(),v.size()==1?true:false);
+	}	else res = 1;
 	return res;
 }
 //-----------------------------------------------------------------------------

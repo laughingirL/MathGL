@@ -801,6 +801,12 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 
 	mglAxis ty(ay);
 
+	if(dir=='c')
+	{
+		AdjustTicks(ac,fc!=0);	aa = &ac;	// TODO
+		p = ac.org+(ac.a.y?1.15:1)*ac.dir;	q = ac.dir;
+		pos = ac.a.x>0?1:-1;	shift += ac.sh;
+	}
 	if(dir=='x')
 	{
 		AdjustTicks(ax,fx!=0);	aa = &ax;
@@ -863,8 +869,16 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 			mglPnt &pp = Pnt[kk];
 			if(pp.u<0 || (pp.u==0 && pp.v<0))
 			{	pp.u=-pp.u;	pp.v=-pp.v;	pp.w=-pp.w;	}
-			ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
-			text_plot(kk,text,font,-1.4,(ff[0]=='T'?0.3:0.35)+shift);
+			if(dir=='c' &&  ac.a.y!=0)
+			{
+				ff[0] = ac.a.y>0?'T':'t';	strcat(font,ff);
+				text_plot(kk,text,font,-1.4,ac.a.y>0?shift:0);
+			}
+			else
+			{
+				ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
+				text_plot(kk,text,font,-1.4,(ff[0]=='T'?0.3:0.35)+shift);
+			}
 		}
 	}
 	LoadState();

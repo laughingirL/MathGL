@@ -116,7 +116,7 @@ MGL_NO_EXPORT wchar_t *mgl_str_copy(const char *s)
 //-----------------------------------------------------------------------------
 bool mglParser::CheckForName(const std::wstring &s)
 {
-	return !isalpha(s[0]) || s.find_first_of(L"!@#$%%^&*()-+|,.<>:")!=std::wstring::npos || s==L"rnd" || FindNum(s.c_str());
+	return !isalpha(s[0]) || s.find_first_of(L"!@#$%%^&*/()-+|,.<>:")!=std::wstring::npos || s==L"rnd" || FindNum(s.c_str());
 //	return !isalpha(s[0])||s.find_first_of(L".:()")!=std::wstring::npos;
 }
 //-----------------------------------------------------------------------------

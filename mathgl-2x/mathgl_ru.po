@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-27 00:43+0300\n"
+"POT-Creation-Date: 2018-10-27 18:02+0300\n"
 "PO-Revision-Date: 2017-04-19 01:17+0300\n"
 "Last-Translator: Alexey Balakin <mathgl.abalakin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -606,7 +606,7 @@ msgstr "Добавить эллипс. Его свойства можно изм
 msgid "Add inplot"
 msgstr "Добавить под-график"
 
-#: src/exec_set.cpp:779
+#: src/exec_set.cpp:792
 msgid "Add legend entry"
 msgstr "Добавить запись легенды"
 
@@ -666,7 +666,7 @@ msgstr "Добавить текст"
 msgid "Add text which properties can be changed later by mouse."
 msgstr "Добавить текст. Его свойства можно изменить позже мышью."
 
-#: src/exec_prm.cpp:648
+#: src/exec_prm.cpp:658
 msgid "Add title for current subplot/inplot"
 msgstr "Добавить заголовок к текущему под-графику"
 
@@ -674,7 +674,7 @@ msgstr "Добавить заголовок к текущему под-граф�
 msgid "Add to"
 msgstr "Добавить к"
 
-#: src/exec_set.cpp:780
+#: src/exec_set.cpp:793
 msgid "Add user-defined symbol"
 msgstr "Добавить пользовательский символ"
 
@@ -686,7 +686,7 @@ msgstr "Подогнать размер картинки под область �
 msgid "Adjust size"
 msgstr "Подогнать размер"
 
-#: src/exec_set.cpp:781
+#: src/exec_set.cpp:794
 msgid "Adjust ticks for best view"
 msgstr "Подобрать метки осей для лучшего вида"
 
@@ -787,7 +787,7 @@ msgstr "Соотношение сторон по y и z"
 msgid "Aspect x/z"
 msgstr "Стороны x/z"
 
-#: src/exec_set.cpp:787
+#: src/exec_set.cpp:800
 msgid "Attach light settings to inplot"
 msgstr "Привязать настройки света к под-графику"
 
@@ -976,7 +976,7 @@ msgstr "Изменить размер данных"
 msgid "Change canvas size to fill whole region (F6)."
 msgstr "Подогнать размер рисунка под размер окна (F6)."
 
-#: src/exec_set.cpp:791
+#: src/exec_set.cpp:804
 msgid "Change current directory"
 msgstr "Сменить директорию"
 
@@ -996,7 +996,7 @@ msgstr "Изменить данные и закрыть окно"
 msgid "Change font"
 msgstr "Изменить шрифт"
 
-#: src/exec_set.cpp:842
+#: src/exec_set.cpp:855
 msgid "Change view angles - use 'rotate' for plot rotation"
 msgstr "Изменяет углы обзора, а не поворот как 'rotate'"
 
@@ -1008,11 +1008,11 @@ msgstr "Очистить"
 msgid "Clear all"
 msgstr "Удалить все"
 
-#: src/exec_set.cpp:792
+#: src/exec_set.cpp:805
 msgid "Clear legend entries"
 msgstr "Удалить записи легенды"
 
-#: src/exec_set.cpp:793
+#: src/exec_set.cpp:806
 msgid "Clear picture"
 msgstr "Очистить рисунок"
 
@@ -1090,19 +1090,19 @@ msgstr "Опции команды"
 msgid "Comments"
 msgstr "Комментарий"
 
-#: src/exec_prm.cpp:636
+#: src/exec_prm.cpp:646
 msgid "Computes the attractor of an IFS"
 msgstr "Вычисляет точки фрактала IFS"
 
-#: src/exec_prm.cpp:637
+#: src/exec_prm.cpp:647
 msgid "Computes the attractor of an IFS for 3d case"
 msgstr "Вычисляет точки фрактала IFS в 3d случае"
 
-#: src/exec_prm.cpp:638
+#: src/exec_prm.cpp:648
 msgid "Computes the attractor of an IFS with parameters from *.ifs file"
 msgstr "Вычисляет точки фрактала IFS с параметрами из файла"
 
-#: src/exec_prm.cpp:632
+#: src/exec_prm.cpp:642
 msgid "Computes the flame fractal"
 msgstr "Вычисляет точки фрактала flame"
 
@@ -1518,7 +1518,7 @@ msgstr "Нарисовать диаграмму STFA"
 msgid "Draw TeX mark at point position"
 msgstr "Нарисовать ТеХ символы в положении точек"
 
-#: src/exec_prm.cpp:615
+#: src/exec_prm.cpp:624
 msgid "Draw angle arc"
 msgstr "Нарисовать дугу"
 
@@ -1542,11 +1542,11 @@ msgstr "Нарисовать поверхность ленточками с за
 msgid "Draw binormales for 1D data"
 msgstr "Нарисовать нормаль и бинормаль для кривой"
 
-#: src/exec_prm.cpp:641
+#: src/exec_prm.cpp:651
 msgid "Draw bitmap (logo) along axis range"
 msgstr "Нарисовать растр (логотип) в области осей координат"
 
-#: src/exec_prm.cpp:619
+#: src/exec_prm.cpp:628
 msgid "Draw bounding box"
 msgstr "Нарисовать ограничивающий параллелепипед"
 
@@ -1566,7 +1566,7 @@ msgstr "Нарисовать свечной график"
 msgid "Draw chart"
 msgstr "Нарисовать линейчатую (круговую) диаграмму"
 
-#: src/exec_prm.cpp:620
+#: src/exec_prm.cpp:629
 msgid "Draw circle"
 msgstr "Нарисовать окружность (круг)"
 
@@ -1574,11 +1574,11 @@ msgstr "Нарисовать окружность (круг)"
 msgid "Draw cloud"
 msgstr "Нарисовать облако для 3D данных"
 
-#: src/exec_prm.cpp:621
+#: src/exec_prm.cpp:631
 msgid "Draw colorbar"
 msgstr "Нарисовать цветовую шкалу"
 
-#: src/exec_prm.cpp:622
+#: src/exec_prm.cpp:632
 msgid "Draw cone"
 msgstr "Нарисовать конус"
 
@@ -1622,7 +1622,7 @@ msgstr "Нарисовать цилиндры по линиям уровней"
 msgid "Draw contour tubes for surface of triangles"
 msgstr "Нарисовать цилиндры по линиям уровней для поверхности из треугольников"
 
-#: src/exec_prm.cpp:623
+#: src/exec_prm.cpp:633
 msgid "Draw curve"
 msgstr "Нарисовать кривую"
 
@@ -1658,15 +1658,15 @@ msgstr "Нарисовать векторное поле каплями"
 msgid "Draw dots for arbitrary data points"
 msgstr "Нарисовать набор точек"
 
-#: src/exec_prm.cpp:624
+#: src/exec_prm.cpp:634
 msgid "Draw drop"
 msgstr "Нарисовать каплю"
 
-#: src/exec_prm.cpp:625
+#: src/exec_prm.cpp:635
 msgid "Draw ellipse"
 msgstr "Нарисовать эллипс"
 
-#: src/exec_prm.cpp:626
+#: src/exec_prm.cpp:636
 msgid "Draw error box"
 msgstr "Нарисовать размер ошибки"
 
@@ -1674,19 +1674,19 @@ msgstr "Нарисовать размер ошибки"
 msgid "Draw error boxes"
 msgstr "Нарисовать размеры ошибок для 1D данных"
 
-#: src/exec_prm.cpp:627
+#: src/exec_prm.cpp:637
 msgid "Draw face (quadrangle)"
 msgstr "Нарисовать грань (четырехугольник)"
 
-#: src/exec_prm.cpp:628
+#: src/exec_prm.cpp:638
 msgid "Draw face perpendicular to x-axis"
 msgstr "Нарисовать грань поперек оси x"
 
-#: src/exec_prm.cpp:629
+#: src/exec_prm.cpp:639
 msgid "Draw face perpendicular to y-axis"
 msgstr "Нарисовать грань поперек оси y"
 
-#: src/exec_prm.cpp:630
+#: src/exec_prm.cpp:640
 msgid "Draw face perpendicular to z-axis"
 msgstr "Нарисовать грань поперек оси z"
 
@@ -1710,7 +1710,7 @@ msgstr "Нарисовать линии тока для векторного п�
 msgid "Draw gradient lines for scalar field"
 msgstr "Нарисовать линии градиента для скалярного поля"
 
-#: src/exec_prm.cpp:635
+#: src/exec_prm.cpp:645
 msgid "Draw grid"
 msgstr "Нарисовать сетку осей координат"
 
@@ -1754,27 +1754,32 @@ msgstr "Нарисовать поверхность уровня с заданн
 msgid "Draw label at arbitrary position"
 msgstr "Вывести надписи для 1D данных"
 
-#: src/exec_prm.cpp:649
+#: src/exec_prm.cpp:630
+#, fuzzy
+msgid "Draw label for colorbar"
+msgstr "Вывести подпись оси t"
+
+#: src/exec_prm.cpp:659
 msgid "Draw label for t-axis"
 msgstr "Вывести подпись оси t"
 
-#: src/exec_prm.cpp:650
+#: src/exec_prm.cpp:660
 msgid "Draw label for x-axis"
 msgstr "Вывести подпись оси x"
 
-#: src/exec_prm.cpp:651
+#: src/exec_prm.cpp:661
 msgid "Draw label for y-axis"
 msgstr "Вывести подпись оси y"
 
-#: src/exec_prm.cpp:652
+#: src/exec_prm.cpp:662
 msgid "Draw label for z-axis"
 msgstr "Вывести подпись оси z"
 
-#: src/exec_prm.cpp:639
+#: src/exec_prm.cpp:649
 msgid "Draw legend"
 msgstr "Нарисовать легенду графика"
 
-#: src/exec_prm.cpp:640
+#: src/exec_prm.cpp:650
 msgid "Draw line"
 msgstr "Нарисовать прямую линию"
 
@@ -1790,11 +1795,11 @@ msgstr "Нарисовать маркеры переменного размер�
 msgid "Draw mesh surface"
 msgstr "Нарисовать сетчатую поверхность"
 
-#: src/exec_prm.cpp:618
+#: src/exec_prm.cpp:627
 msgid "Draw point (ball)"
 msgstr "Нарисовать точку"
 
-#: src/exec_prm.cpp:642
+#: src/exec_prm.cpp:652
 msgid "Draw polygon"
 msgstr "Нарисовать полигон"
 
@@ -1810,11 +1815,11 @@ msgstr "Нарисовать круговой график"
 msgid "Draw reconstructed surface for arbitrary data points"
 msgstr "Нарисовать поверхность по произвольным точкам"
 
-#: src/exec_prm.cpp:643
+#: src/exec_prm.cpp:653
 msgid "Draw rectangle"
 msgstr "Нарисовать прямоугольник"
 
-#: src/exec_prm.cpp:644
+#: src/exec_prm.cpp:654
 msgid "Draw rhombus"
 msgstr "Нарисовать ромб"
 
@@ -1858,7 +1863,7 @@ msgstr "Нарисовать поверхность с заданным цвет
 msgid "Draw solid surface transpared by other data"
 msgstr "Нарисовать поверхность с заданной прозрачностью"
 
-#: src/exec_prm.cpp:645
+#: src/exec_prm.cpp:655
 msgid "Draw sphere"
 msgstr "Нарисовать сферу"
 
@@ -1894,11 +1899,11 @@ msgstr "Нарисовать таблицу значений данных"
 msgid "Draw tension plot for 1D data"
 msgstr "Нарисовать кривую с заданным цветом"
 
-#: src/exec_prm.cpp:647
+#: src/exec_prm.cpp:657
 msgid "Draw text at some position or along curve"
 msgstr "Вывести текст в точке или вдоль кривой"
 
-#: src/exec_prm.cpp:646
+#: src/exec_prm.cpp:656
 msgid "Draw user-defined symbol at given position and direction"
 msgstr "Нарисовать символ в заданных точке и направлении"
 
@@ -2974,7 +2979,7 @@ msgstr "Список доступных данных."
 msgid "Load Data?"
 msgstr "Загрузить данные?"
 
-#: src/exec_set.cpp:808
+#: src/exec_set.cpp:821
 msgid "Load commands from external DLL"
 msgstr "Загрузить команды из внешней DLL"
 
@@ -2994,7 +2999,7 @@ msgstr ""
 "Загрузить данные. Данные будут удалены только\n"
 "при выходе из программы без запроса на сохранение (Ctrl+Shift+O)."
 
-#: src/exec_set.cpp:809
+#: src/exec_set.cpp:822
 msgid "Load fontfaces"
 msgstr "Загрузить шрифт"
 
@@ -3002,7 +3007,7 @@ msgstr "Загрузить шрифт"
 msgid "Load from file"
 msgstr "Загрузить из файла"
 
-#: src/exec_prm.cpp:617
+#: src/exec_prm.cpp:626
 msgid "Load image for background"
 msgstr "Загрузить фоновое изображение"
 
@@ -3710,7 +3715,7 @@ msgstr "Поместить редактор сверху"
 msgid "Plot ID"
 msgstr "ID графика"
 
-#: src/exec_prm.cpp:633
+#: src/exec_prm.cpp:643
 msgid "Plot curve by formula"
 msgstr "Построить кривую по формуле"
 
@@ -3739,7 +3744,7 @@ msgstr "Настройки графика"
 msgid "Plot style"
 msgstr "Стиль графика"
 
-#: src/exec_prm.cpp:634
+#: src/exec_prm.cpp:644
 msgid "Plot surface by formula"
 msgstr "Построить поверхность по формуле"
 
@@ -3775,7 +3780,7 @@ msgstr "Примитивы"
 msgid "Primitives ..."
 msgstr "Примитивы ..."
 
-#: src/exec_set.cpp:841
+#: src/exec_set.cpp:854
 msgid "Print MathGL version or check if it is valid"
 msgstr "Вывести версию MathGL или проверить, что она подходит"
 
@@ -3807,7 +3812,7 @@ msgstr "Напечатать график"
 msgid "Print script"
 msgstr "Напечатать скрипт"
 
-#: src/exec_prm.cpp:631
+#: src/exec_prm.cpp:641
 msgid "Print string from file"
 msgstr "Вывести строку в файл"
 
@@ -3877,7 +3882,7 @@ msgstr "Выход"
 msgid "R - maroon"
 msgstr "R - темно-красный"
 
-#: src/exec_set.cpp:822
+#: src/exec_set.cpp:835
 msgid "Rasterize plot and save to background"
 msgstr "Растеризовать график и установить вместо фона"
 
@@ -4015,7 +4020,7 @@ msgstr "Оставить место для подписей справа (сти
 msgid "Reserve space for labels at top side (style '^')"
 msgstr "Оставить место для подписей сверху (стиль '^')"
 
-#: src/exec_set.cpp:823
+#: src/exec_set.cpp:836
 msgid "Reset settings and clear picture"
 msgstr "Сбросить настройки и обновить рисунок"
 
@@ -4113,7 +4118,7 @@ msgstr "Поворот"
 msgid "Rotate picture by holding left mouse button"
 msgstr "Вращать рисунок при удержании кнопок мыши"
 
-#: src/exec_set.cpp:824
+#: src/exec_set.cpp:837
 msgid "Rotate plot"
 msgstr "Вращать график"
 
@@ -4277,7 +4282,7 @@ msgstr "Выбрать путь к папке"
 msgid "Select kind of plot"
 msgstr "Выбрать тип графика"
 
-#: src/exec_set.cpp:840
+#: src/exec_set.cpp:853
 msgid "Select variant of plot style(s)"
 msgstr "Выбрать вариант стиля графика"
 
@@ -4285,15 +4290,15 @@ msgstr "Выбрать вариант стиля графика"
 msgid "Set"
 msgstr "Задать"
 
-#: src/exec_set.cpp:836
+#: src/exec_set.cpp:849
 msgid "Set additional tick and axis labels shift"
 msgstr "Задает дополнительный сдвиш меток осей"
 
-#: src/exec_set.cpp:784
+#: src/exec_set.cpp:797
 msgid "Set ambient light brightness"
 msgstr "Задает яркость фонового освещения"
 
-#: src/exec_set.cpp:805
+#: src/exec_set.cpp:818
 msgid "Set arbitrary position of plot in picture"
 msgstr "Задать произвольную область рисования внутри рисунка"
 
@@ -4301,35 +4306,35 @@ msgstr "Задать произвольную область рисования 
 msgid "Set arguments"
 msgstr "Задать аргументы"
 
-#: src/exec_set.cpp:786
+#: src/exec_set.cpp:799
 msgid "Set aspect ration"
 msgstr "Задать соотношение сторон"
 
-#: src/exec_set.cpp:788
+#: src/exec_set.cpp:801
 msgid "Set axis and tick style"
 msgstr "Задать стиль осей и меток"
 
-#: src/exec_set.cpp:814
+#: src/exec_set.cpp:827
 msgid "Set axis origin"
 msgstr "Задать начало координат"
 
-#: src/exec_set.cpp:821
+#: src/exec_set.cpp:834
 msgid "Set axis ranges"
 msgstr "Задать диапазон осей"
 
-#: src/exec_set.cpp:829
+#: src/exec_set.cpp:842
 msgid "Set bit-flags (for advanced users only)"
 msgstr "Задает битовый флаг (для опытных пользователей)"
 
-#: src/exec_set.cpp:790
+#: src/exec_set.cpp:803
 msgid "Set bounding box for 2d export"
 msgstr "Задать границы для 2d экспорта"
 
-#: src/exec_set.cpp:811
+#: src/exec_set.cpp:824
 msgid "Set brush for given mask id"
 msgstr "Задать кисть для маски с выбранным id"
 
-#: src/exec_set.cpp:795
+#: src/exec_set.cpp:808
 msgid "Set color range"
 msgstr "Задать диапазон цвета"
 
@@ -4345,23 +4350,23 @@ msgstr "Вкл/выкл обрезание для конкретного гра�
 msgid "Set data sizes manually"
 msgstr "Задать размеры данных вручную"
 
-#: src/exec_set.cpp:789
+#: src/exec_set.cpp:802
 msgid "Set default bars width"
 msgstr "Задать размер полос по умолчанию"
 
-#: src/exec_set.cpp:819
+#: src/exec_set.cpp:832
 msgid "Set default filename"
 msgstr "Задать имя файла по умолчанию"
 
-#: src/exec_set.cpp:783
+#: src/exec_set.cpp:796
 msgid "Set default transparency"
 msgstr "Задать прозрачность по умолчанию"
 
-#: src/exec_set.cpp:798
+#: src/exec_set.cpp:811
 msgid "Set diffusive light brightness"
 msgstr "Задать яркость рассеянного света"
 
-#: src/exec_set.cpp:799
+#: src/exec_set.cpp:812
 msgid "Set draw region for quality&4"
 msgstr "Задать область рисования при quality&4"
 
@@ -4385,75 +4390,75 @@ msgstr "Задать область рисования как ячейку бр�
 msgid "Set lighting off/on for particular plot"
 msgstr "Вкл/выкл освещение отдельного графика"
 
-#: src/exec_set.cpp:812
+#: src/exec_set.cpp:825
 msgid "Set number of lines in mesh/fall/vect and so on"
 msgstr "Задать примерное число линий в mesh/fall/vect ..."
 
-#: src/exec_set.cpp:806
+#: src/exec_set.cpp:819
 msgid "Set number of marks in the legend"
 msgstr "Задать число маркеров в легенде"
 
-#: src/exec_set.cpp:800
+#: src/exec_set.cpp:813
 msgid "Set number of visible faces"
 msgstr "Задать число видимых граней"
 
-#: src/exec_set.cpp:816
+#: src/exec_set.cpp:829
 msgid "Set palette for 1D plots"
 msgstr "Задать палитру для 1D графиков"
 
-#: src/exec_set.cpp:818
+#: src/exec_set.cpp:831
 msgid "Set perspective"
 msgstr "Задать перспективу"
 
-#: src/exec_set.cpp:827
+#: src/exec_set.cpp:840
 msgid "Set picture size"
 msgstr "Задать размер рисунка"
 
-#: src/exec_set.cpp:820
+#: src/exec_set.cpp:833
 msgid "Set plot quality"
 msgstr "Задать качество рисования картинки"
 
-#: src/exec_set.cpp:833
+#: src/exec_set.cpp:846
 msgid "Set position of plot as cell of matrix"
 msgstr "Задать область рисования как ячейку матрицы"
 
-#: src/exec_set.cpp:813
+#: src/exec_set.cpp:826
 msgid "Set position of plot block in matrix"
 msgstr "Задать область рисования как блок в матрице"
 
-#: src/exec_set.cpp:794
+#: src/exec_set.cpp:807
 msgid "Set position of plot inside cell of column"
 msgstr "Задать область рисования как ячейку колонки"
 
-#: src/exec_set.cpp:804
+#: src/exec_set.cpp:817
 msgid "Set position of plot inside cell of matrix"
 msgstr "Задать область рисования внутри ячейки колонки"
 
-#: src/exec_set.cpp:832
+#: src/exec_set.cpp:845
 msgid "Set position of plot inside cell of rotated stick"
 msgstr "Задать область рисования как ячейку повернутого бруска"
 
-#: src/exec_set.cpp:831
+#: src/exec_set.cpp:844
 msgid "Set position of plot inside cell of sheared stick"
 msgstr "Задать область рисования как ячейку наклоненной колонки"
 
-#: src/exec_set.cpp:844
+#: src/exec_set.cpp:857
 msgid "Set range for x-axis"
 msgstr "Задать диапазон по x"
 
-#: src/exec_set.cpp:846
+#: src/exec_set.cpp:859
 msgid "Set range for y-axis"
 msgstr "Задать диапазон по y"
 
-#: src/exec_set.cpp:850
+#: src/exec_set.cpp:863
 msgid "Set range for z-axis"
 msgstr "Задать диапазон по z"
 
-#: src/exec_set.cpp:826
+#: src/exec_set.cpp:839
 msgid "Set scale text in relative subplots too"
 msgstr "Задает масштабирование текста в отн.подграфиках"
 
-#: src/exec_set.cpp:828
+#: src/exec_set.cpp:841
 msgid "Set scaling factor for further setsize"
 msgstr "Задать множитель для всех 'setsize'"
 
@@ -4465,51 +4470,51 @@ msgstr "Задать аргументы скрипта"
 msgid "Set size for text, marks and others"
 msgstr "Задать размер текста, маркеров и пр."
 
-#: src/exec_set.cpp:785
+#: src/exec_set.cpp:798
 msgid "Set size of arrows"
 msgstr "Задать размер стрелок"
 
-#: src/exec_set.cpp:810
+#: src/exec_set.cpp:823
 msgid "Set size of markers"
 msgstr "Задать размер маркеров"
 
-#: src/exec_set.cpp:817
+#: src/exec_set.cpp:830
 msgid "Set size of semi-transparent area around line"
 msgstr "Задать размер полупрозрачной области около линии"
 
-#: src/exec_set.cpp:815
+#: src/exec_set.cpp:828
 msgid "Set tick labels drawing at origin"
 msgstr "Разрешить вывод меток осей в начале координат"
 
-#: src/exec_set.cpp:835
+#: src/exec_set.cpp:848
 msgid "Set tick length"
 msgstr "Задать длину меток осей"
 
-#: src/exec_set.cpp:796
+#: src/exec_set.cpp:809
 msgid "Set ticks for colorbar"
 msgstr "Задать метки для цветовой шкалы"
 
-#: src/exec_set.cpp:845
+#: src/exec_set.cpp:858
 msgid "Set ticks for x-axis"
 msgstr "Задать метки для оси x"
 
-#: src/exec_set.cpp:847
+#: src/exec_set.cpp:860
 msgid "Set ticks for y-axis"
 msgstr "Задать метки для оси y"
 
-#: src/exec_set.cpp:851
+#: src/exec_set.cpp:864
 msgid "Set ticks for z-axis"
 msgstr "Задать метки для оси z"
 
-#: src/exec_set.cpp:837
+#: src/exec_set.cpp:850
 msgid "Set ticks in time format"
 msgstr "Задать метки в формате времени"
 
-#: src/exec_set.cpp:839
+#: src/exec_set.cpp:852
 msgid "Set ticks tuning"
 msgstr "Включить оптимизацию меток осей"
 
-#: src/exec_set.cpp:825
+#: src/exec_set.cpp:838
 msgid "Set to auto rotate text or not"
 msgstr "Разрешить поворот текста"
 
@@ -4517,7 +4522,7 @@ msgstr "Разрешить поворот текста"
 msgid "Set to use whole area (style '#')"
 msgstr "Задать использование всей области (стиль '#')"
 
-#: src/exec_set.cpp:838
+#: src/exec_set.cpp:851
 msgid "Set type transparency"
 msgstr "Задать тип прозрачности"
 
@@ -4561,19 +4566,19 @@ msgstr "Настроить анимацию"
 msgid "Setup colors for:"
 msgstr "Настроить цвета:"
 
-#: src/exec_set.cpp:802
+#: src/exec_set.cpp:815
 msgid "Setup font"
 msgstr "Настроить шрифт"
 
-#: src/exec_set.cpp:807
+#: src/exec_set.cpp:820
 msgid "Setup light"
 msgstr "Настроить освещение"
 
-#: src/exec_prm.cpp:616
+#: src/exec_prm.cpp:625
 msgid "Setup or draw axis"
 msgstr "Настроить или нарисовать оси"
 
-#: src/exec_set.cpp:797
+#: src/exec_set.cpp:810
 msgid "Setup plot points cutting"
 msgstr "Настроить обрезание точек графика"
 
@@ -4597,7 +4602,7 @@ msgstr "Сшить фазу"
 msgid "Sharp colors"
 msgstr "Контрастные"
 
-#: src/exec_set.cpp:830
+#: src/exec_set.cpp:843
 msgid "Shear plot"
 msgstr "Наклон графика"
 
@@ -5022,11 +5027,11 @@ msgstr "Поменять местами данные по направлению
 msgid "Swap parts"
 msgstr "Поменять местами"
 
-#: src/exec_set.cpp:801
+#: src/exec_set.cpp:814
 msgid "Switch on/off fog"
 msgstr "Вкл/выкл туман"
 
-#: src/exec_set.cpp:803
+#: src/exec_set.cpp:816
 msgid "Switch on/off gray-scale mode"
 msgstr "Вкл/выкл режим оттенков серого"
 
@@ -5062,11 +5067,11 @@ msgstr ""
 msgid "Switch on/off mouse zoom of selected region."
 msgstr "Вкл/выкл приближение мышью выбранной области."
 
-#: src/exec_set.cpp:834
+#: src/exec_set.cpp:847
 msgid "Switch on/off to use ternary axis"
 msgstr "Указать тип тернарных координат или проекций"
 
-#: src/exec_set.cpp:782
+#: src/exec_set.cpp:795
 msgid "Switch on/off transparency"
 msgstr "Вкл/выкл прозрачность"
 
@@ -5667,7 +5672,7 @@ msgstr "Сетчатый график"
 msgid "Wire style"
 msgstr "Контур"
 
-#: src/exec_set.cpp:843
+#: src/exec_set.cpp:856
 msgid "Write current image to graphical file"
 msgstr "Сохранить текущий рисунок в файл"
 
@@ -5944,7 +5949,7 @@ msgstr "Размер по Z"
 msgid "Z-slice from"
 msgstr "Z срез от"
 
-#: src/exec_set.cpp:849
+#: src/exec_set.cpp:862
 msgid "Zoom axis range"
 msgstr "Увеличить диапазон осей координат"
 
@@ -5993,7 +5998,7 @@ msgstr "Уменьшить текст"
 msgid "Zoom out the picture"
 msgstr "Отдалить рисунок"
 
-#: src/exec_set.cpp:848
+#: src/exec_set.cpp:861
 msgid "Zoom plot region"
 msgstr "Приблизить область рисунка"
 

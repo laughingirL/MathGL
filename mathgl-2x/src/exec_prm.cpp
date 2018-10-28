@@ -575,6 +575,15 @@ int static mgls_title(mglGraph *gr, long , mglArg *a, const char *k, const char 
 	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
+int static mgls_clabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"s"))	gr->Label('c', a[0].s.w, 1, opt);
+	else if(!strcmp(k,"sn"))	gr->Label('c', a[0].s.w, a[1].v, opt);
+	else res = 1;
+	return res;
+}
+//-----------------------------------------------------------------------------
 int static mgls_tlabel(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -618,6 +627,7 @@ mglCommand mgls_prm_cmd[] = {
 	{"ball",_("Draw point (ball)"),"ball posx posy ['fmt']|posx posy posz ['fmt']", mgls_ball ,13},
 	{"box",_("Draw bounding box"),"box ['fmt' ticks]", mgls_box ,12},
 	{"circle",_("Draw circle"),"circle x y r ['fmt']|x y z r ['fmt']", mgls_circle ,13},
+	{"clabel",_("Draw label for colorbar"),"clabel 'txt' [pos]", mgls_clabel ,12},
 	{"colorbar",_("Draw colorbar"),"colorbar ['fmt']|Vdat ['fmt']|'sch' x y [w h]|Vdat 'sch' x y [w h]", mgls_colorbar ,12},
 	{"cone",_("Draw cone"),"cone x1 y1 z1 x2 y2 z2 r1 [r2 'fmt' edge]", mgls_cone ,13},
 	{"curve",_("Draw curve"),"curve x1 y1 dx1 dy1 x2 y2 dx2 dy2 ['fmt']|x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2 ['fmt']", mgls_curve ,13},
