@@ -104,6 +104,7 @@ ZZ. Update time.texi {before release!!!}
 * collect mouse clicks to draw line(s) and save it into data
 * select 'bbox' by mouse
 * dialog to visual construct "custom dialog" + read/add "##d" to the end of file.
+* check manual dash/mask
 
 X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
 Y. Window with Zoom/Hidden ???
