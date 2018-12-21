@@ -18,7 +18,7 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 //-----------------------------------------------------------------------------
-#include <Fl/Fl_RGB_Image.H>
+#include <FL/Fl_RGB_Image.H>
 
 extern MGL_EXPORT Fl_RGB_Image img_load;
 extern MGL_EXPORT Fl_RGB_Image img_save;

@@ -19,10 +19,10 @@
 #include <locale.h>
 #include <getopt.h>
 #include "mgllab.h"
-#include <Fl/Fl_Spinner.H>
-#include <Fl/Fl_Output.H>
-#include <Fl/Fl_Select_Browser.H>
-#include <Fl/Fl_Printer.H>
+#include <FL/Fl_Spinner.H>
+#include <FL/Fl_Output.H>
+#include <FL/Fl_Select_Browser.H>
+#include <FL/Fl_Printer.H>
 //-----------------------------------------------------------------------------
 #ifndef MGL_DOC_DIR
 #ifdef WIN32

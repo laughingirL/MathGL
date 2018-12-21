@@ -23,8 +23,8 @@
 #include "mgl2/mgl.h"
 #if USE_FLTK
 	#include "mgl2/fltk.h"
-	#include <Fl/Fl.H>
-	#include <Fl/Fl_Preferences.H>
+	#include <FL/Fl.H>
+	#include <FL/Fl_Preferences.H>
 #else
 	#include "mgl2/qt.h"
 #endif

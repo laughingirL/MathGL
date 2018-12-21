@@ -34,14 +34,14 @@
 #include <FL/Fl_Text_Editor.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Counter.H>
-#include <Fl/Fl_Scroll.H>
+#include <FL/Fl_Scroll.H>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Help_View.H>
-#include <Fl/Fl_Table.H>
-#include <Fl/Fl_Round_Button.H>
-#include <Fl/Fl_Float_Input.H>
-#include <Fl/Fl_Multiline_Input.H>
-#include <Fl/Fl_Multiline_Output.H>
+#include <FL/Fl_Table.H>
+#include <FL/Fl_Round_Button.H>
+#include <FL/Fl_Float_Input.H>
+#include <FL/Fl_Multiline_Input.H>
+#include <FL/Fl_Multiline_Output.H>
 //-----------------------------------------------------------------------------
 #include "mgl2/Fl_MathGL.h"
 //-----------------------------------------------------------------------------

@@ -92,6 +92,15 @@ ZZ. Update time.texi {before release!!!}
 как настроить (configuration)
 какие есть примеры использования (examples)
 
+
+
+Shortly, there are 3 steps:
+1. Download binary for the platform you want to use (32bit or 64bit) and unpack it somewhere. Note, if mix 32bit and 64bit binaries in the same executable, when a compiler under Windows will not give warning about it, but yours program will be crushed!
+2. Get all requires libraries (probably some of them is installed on your PC). Also you can just use MathgL utilities (like, http://downloads.sourceforge.net/mathgl/mgl_scripts-2.4.2.win64.7z) which contain all required DLLs.
+3. Use MathGL libraries. For MinGW (or clang, or GNU gcc, and so on) compiler you just need to provide option -I path_incl, -L path_lib, where path_inc and path_lib are paths to MathGL include/ and lib/ folders. Alternatively, you can copy MathGL binaries to the MinGW folders (include/ to include/, lib/ to lib/ and so on) and do nothing special else. For Visual Studio you need to create the import library first. Finally, add the MathGL library to the project -- in MinGW compiler add option -lmgl (and similar ones if you use MathGL widgets).
+
+Instead of steps 1-2, you can download sources and build the MathGL libraries with dependencies/features, which you need. Note, that minimal version have no external dependencies but support plot export to BMP, EPS and SVG only, have no special functions, nonlinear fitting and use slow Fourier transform. The build system use CMake and is rather standard. After building binaries, continue from step 3 :-).
+
 ============= mgllab ===========
 
 * Manual data changing should be written into script ?!?
@@ -106,7 +115,7 @@ ZZ. Update time.texi {before release!!!}
 * dialog to visual construct "custom dialog" + read/add "##d" to the end of file.
 * check manual dash/mask
 
-X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size
+X. Own file-chooser dialog -- separate path and fname fields + add sorting by date|size ???
 Y. Window with Zoom/Hidden ???
 
 ============= UDAV =============
