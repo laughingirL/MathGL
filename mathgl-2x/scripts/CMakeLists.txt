@@ -13,10 +13,10 @@ endif(enable-dep-dll)
 
 if(WIN32)
    set(dest ${CMAKE_INSTALL_PREFIX})
-#	install(FILES ${CMAKE_SOURCE_DIR}/scripts/FindMathGL2.cmake DESTINATION ${CMAKE_INSTALL_PREFIX} RENAME mathgl2-config.cmake)
+	install(FILES ${CMAKE_SOURCE_DIR}/scripts/FindMathGL2.cmake DESTINATION ${CMAKE_INSTALL_PREFIX} RENAME mathgl2-config.cmake)
 else(WIN32)
    set(dest ${MathGL_INSTALL_LIB_DIR}/cmake/mathgl2/)
-#	install(FILES ${CMAKE_SOURCE_DIR}/scripts/FindMathGL2.cmake DESTINATION ${MathGL_INSTALL_LIB_DIR}/cmake/mathgl2/ RENAME mathgl2-config.cmake)
+	install(FILES ${CMAKE_SOURCE_DIR}/scripts/FindMathGL2.cmake DESTINATION ${MathGL_INSTALL_LIB_DIR}/cmake/mathgl2/ RENAME mathgl2-config.cmake)
 endif(WIN32)
 
 #export(TARGETS MathGLTargets FILE "${PROJECT_BINARY_DIR}/MathGL2Targets.cmake")

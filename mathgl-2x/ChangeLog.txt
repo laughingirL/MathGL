@@ -13,6 +13,7 @@
 * Add flag in CMake to manually disable support of C99 complex numbers.
 * Bypass user-specified extension in base font family name.
 * Improve hints in mgllab and udav.
+* Add utility 'mgltask' for making output file with a set of copies of mask-file. It useful for making set of initial conditions with a few parameters varied in specified range.
 * Bugfix for approximate min and max position.
 * Bugfix for position of SVG output.
 * Compatibility fixes for new versions of CMake, compilers and libraries.

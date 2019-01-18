@@ -1,5 +1,12 @@
 add_executable(make_pas make_pas.cpp)
 
+add_executable(mgltask mgltask.cpp)
+install(
+	TARGETS mgltask
+	EXPORT MathGLTargets
+	RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
+)
+
 add_executable(mglconv mglconv.cpp)
 if(MSVC)
 set(link_type -static)
